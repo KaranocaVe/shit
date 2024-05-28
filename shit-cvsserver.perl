@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ####
-#### This application is a CVS emulation layer for git.
+#### This application is a CVS emulation layer for shit.
 #### It is intended for clients to connect over SSH.
 #### See the documentation for more details.
 ####
@@ -26,9 +26,9 @@ use File::Path qw/rmtree/;
 use File::Basename;
 use Getopt::Long qw(:config require_order no_ignore_case);
 
-my $VERSION = '@@GIT_VERSION@@';
+my $VERSION = '@@shit_VERSION@@';
 
-my $log = GITCVS::log->new();
+my $log = shitCVS::log->new();
 my $cfg;
 
 my $DATE_LIST = {
@@ -107,18 +107,18 @@ my $work =
 $log->info("--------------- STARTING -----------------");
 
 my $usage =
-    "usage: git cvsserver [options] [pserver|server] [<directory> ...]\n".
+    "usage: shit cvsserver [options] [pserver|server] [<directory> ...]\n".
     "    --base-path <path>  : Prepend to requested CVSROOT\n".
-    "                          Can be read from GIT_CVSSERVER_BASE_PATH\n".
+    "                          Can be read from shit_CVSSERVER_BASE_PATH\n".
     "    --strict-paths      : Don't allow recursing into subdirectories\n".
-    "    --export-all        : Don't check for gitcvs.enabled in config\n".
+    "    --export-all        : Don't check for shitcvs.enabled in config\n".
     "    --version, -V       : Print version information and exit\n".
     "    -h, -H              : Print usage information and exit\n".
     "\n".
     "<directory> ... is a list of allowed directories. If no directories\n".
-    "are given, all are allowed. This is an additional restriction, gitcvs\n".
-    "access still needs to be enabled by the gitcvs.enabled config option.\n".
-    "Alternately, one directory may be specified in GIT_CVSSERVER_ROOT.\n";
+    "are given, all are allowed. This is an additional restriction, shitcvs\n".
+    "access still needs to be enabled by the shitcvs.enabled config option.\n".
+    "Alternately, one directory may be specified in shit_CVSSERVER_ROOT.\n";
 
 my @opts = ( 'h|H', 'version|V',
 	     'base-path=s', 'strict-paths', 'export-all' );
@@ -126,7 +126,7 @@ GetOptions( $state, @opts )
     or die $usage;
 
 if ($state->{version}) {
-    print "git-cvsserver version $VERSION\n";
+    print "shit-cvsserver version $VERSION\n";
     exit;
 }
 if ($state->{help}) {
@@ -155,20 +155,20 @@ if ($state->{'export-all'} && !@{$state->{allowed_roots}}) {
     die "--export-all can only be used together with an explicit '<directory>...' list\n";
 }
 
-# Environment handling for running under git-shell
-if (exists $ENV{GIT_CVSSERVER_BASE_PATH}) {
+# Environment handling for running under shit-shell
+if (exists $ENV{shit_CVSSERVER_BASE_PATH}) {
     if ($state->{'base-path'}) {
 	die "Cannot specify base path both ways.\n";
     }
-    my $base_path = $ENV{GIT_CVSSERVER_BASE_PATH};
+    my $base_path = $ENV{shit_CVSSERVER_BASE_PATH};
     $state->{'base-path'} = $base_path;
     $log->debug("Picked up base path '$base_path' from environment.\n");
 }
-if (exists $ENV{GIT_CVSSERVER_ROOT}) {
+if (exists $ENV{shit_CVSSERVER_ROOT}) {
     if (@{$state->{allowed_roots}}) {
 	die "Cannot specify roots both ways: @ARGV\n";
     }
-    my $allowed_root = $ENV{GIT_CVSSERVER_ROOT};
+    my $allowed_root = $ENV{shit_CVSSERVER_ROOT};
     $state->{allowed_roots} = [ $allowed_root ];
     $log->debug("Picked up allowed root '$allowed_root' from environment.\n");
 }
@@ -204,16 +204,16 @@ if ($state->{method} eq 'pserver') {
         # Fall through to LOVE
     } else {
         # Trying to authenticate a user
-        if (not exists $cfg->{gitcvs}->{authdb}) {
-            print "E the repo config file needs a [gitcvs] section with an 'authdb' parameter set to the filename of the authentication database\n";
+        if (not exists $cfg->{shitcvs}->{authdb}) {
+            print "E the repo config file needs a [shitcvs] section with an 'authdb' parameter set to the filename of the authentication database\n";
             print "I HATE YOU\n";
             exit 1;
         }
 
-        my $authdb = $cfg->{gitcvs}->{authdb};
+        my $authdb = $cfg->{shitcvs}->{authdb};
 
         unless (-e $authdb) {
-            print "E The authentication database specified in [gitcvs.authdb] does not exist\n";
+            print "E The authentication database specified in [shitcvs.authdb] does not exist\n";
             print "I HATE YOU\n";
             exit 1;
         }
@@ -324,7 +324,7 @@ sub req_Root
 
     $state->{CVSROOT} = $cvsroot;
 
-    $ENV{GIT_DIR} = $state->{CVSROOT} . "/";
+    $ENV{shit_DIR} = $state->{CVSROOT} . "/";
 
     if (@{$state->{allowed_roots}}) {
 	my $allowed = 0;
@@ -332,41 +332,41 @@ sub req_Root
 	    next unless $dir =~ m#^/#;
 	    $dir =~ s#/+$##;
 	    if ($state->{'strict-paths'}) {
-		if ($ENV{GIT_DIR} =~ m#^\Q$dir\E/?$#) {
+		if ($ENV{shit_DIR} =~ m#^\Q$dir\E/?$#) {
 		    $allowed = 1;
 		    last;
 		}
-	    } elsif ($ENV{GIT_DIR} =~ m#^\Q$dir\E(/?$|/)#) {
+	    } elsif ($ENV{shit_DIR} =~ m#^\Q$dir\E(/?$|/)#) {
 		$allowed = 1;
 		last;
 	    }
 	}
 
 	unless ($allowed) {
-	    print "E $ENV{GIT_DIR} does not seem to be a valid GIT repository\n";
+	    print "E $ENV{shit_DIR} does not seem to be a valid shit repository\n";
 	    print "E \n";
-	    print "error 1 $ENV{GIT_DIR} is not a valid repository\n";
+	    print "error 1 $ENV{shit_DIR} is not a valid repository\n";
 	    return 0;
 	}
     }
 
-    unless (-d $ENV{GIT_DIR} && -e $ENV{GIT_DIR}.'HEAD') {
-       print "E $ENV{GIT_DIR} does not seem to be a valid GIT repository\n";
+    unless (-d $ENV{shit_DIR} && -e $ENV{shit_DIR}.'HEAD') {
+       print "E $ENV{shit_DIR} does not seem to be a valid shit repository\n";
        print "E \n";
-       print "error 1 $ENV{GIT_DIR} is not a valid repository\n";
+       print "error 1 $ENV{shit_DIR} is not a valid repository\n";
        return 0;
     }
 
-    my @gitvars = safe_pipe_capture(qw(git config -l));
+    my @shitvars = safe_pipe_capture(qw(shit config -l));
     if ($?) {
-       print "E problems executing git-config on the server -- this is not a git repository or the PATH is not set correctly.\n";
+       print "E problems executing shit-config on the server -- this is not a shit repository or the PATH is not set correctly.\n";
         print "E \n";
-        print "error 1 - problem executing git-config\n";
+        print "error 1 - problem executing shit-config\n";
        return 0;
     }
-    foreach my $line ( @gitvars )
+    foreach my $line ( @shitvars )
     {
-        next unless ( $line =~ /^(gitcvs|extensions)\.(?:(ext|pserver)\.)?([\w-]+)=(.*)$/ );
+        next unless ( $line =~ /^(shitcvs|extensions)\.(?:(ext|pserver)\.)?([\w-]+)=(.*)$/ );
         unless ($2) {
             $cfg->{$1}{$3} = $4;
         } else {
@@ -374,18 +374,18 @@ sub req_Root
         }
     }
 
-    my $enabled = ($cfg->{gitcvs}{$state->{method}}{enabled}
-		   || $cfg->{gitcvs}{enabled});
+    my $enabled = ($cfg->{shitcvs}{$state->{method}}{enabled}
+		   || $cfg->{shitcvs}{enabled});
     unless ($state->{'export-all'} ||
 	    ($enabled && $enabled =~ /^\s*(1|true|yes)\s*$/i)) {
-        print "E GITCVS emulation needs to be enabled on this repo\n";
-        print "E the repo config file needs a [gitcvs] section added, and the parameter 'enabled' set to 1\n";
+        print "E shitCVS emulation needs to be enabled on this repo\n";
+        print "E the repo config file needs a [shitcvs] section added, and the parameter 'enabled' set to 1\n";
         print "E \n";
-        print "error 1 GITCVS emulation disabled\n";
+        print "error 1 shitCVS emulation disabled\n";
         return 0;
     }
 
-    my $logfile = $cfg->{gitcvs}{$state->{method}}{logfile} || $cfg->{gitcvs}{logfile};
+    my $logfile = $cfg->{shitcvs}{$state->{method}}{logfile} || $cfg->{shitcvs}{logfile};
     if ( $logfile )
     {
         $log->setfile($logfile);
@@ -606,7 +606,7 @@ sub req_add
 
     argsplit("add");
 
-    my $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    my $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
     $updater->update();
 
     my $addcount = 0;
@@ -727,7 +727,7 @@ sub req_remove
     argsplit("remove");
 
     # Grab a handle to the SQLite db and do any necessary updates
-    my $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    my $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
     $updater->update();
 
     #$log->debug("add state : " . Dumper($state));
@@ -845,7 +845,7 @@ sub req_Modified
     # Save the file data in $state
     $state->{entries}{$state->{directory}.$data}{modified_filename} = $filename;
     $state->{entries}{$state->{directory}.$data}{modified_mode} = $mode;
-    $state->{entries}{$state->{directory}.$data}{modified_hash} = safe_pipe_capture('git','hash-object',$filename);
+    $state->{entries}{$state->{directory}.$data}{modified_hash} = safe_pipe_capture('shit','hash-object',$filename);
     $state->{entries}{$state->{directory}.$data}{modified_hash} =~ s/\s.*$//s;
 
     #$log->debug("req_Modified : file=$data mode=$mode size=$size");
@@ -882,7 +882,7 @@ sub req_Argument
     if ( $cmd eq 'Argumentx') {
         ${$state->{arguments}}[$#{$state->{arguments}}] .= "\n" . $data;
     } else {
-        push @{$state->{arguments}}, $data;
+        defecate @{$state->{arguments}}, $data;
     }
 }
 
@@ -947,7 +947,7 @@ sub req_co
 
     # Provide list of modules, if -c was used.
     if (exists $state->{opt}{c}) {
-        my $showref = safe_pipe_capture(qw(git show-ref --heads));
+        my $showref = safe_pipe_capture(qw(shit show-ref --heads));
         for my $line (split '\n', $showref) {
             if ( $line =~ m% refs/heads/(.*)$% ) {
                 print "M $1\t$1\n";
@@ -971,10 +971,10 @@ sub req_co
 
     $log->info("Checking out module '$module' ($state->{CVSROOT}) to '$checkout_path'");
 
-    $ENV{GIT_DIR} = $state->{CVSROOT} . "/";
+    $ENV{shit_DIR} = $state->{CVSROOT} . "/";
 
     # Grab a handle to the SQLite db and do any necessary updates
-    my $updater = GITCVS::updater->new($state->{CVSROOT}, $module, $log);
+    my $updater = shitCVS::updater->new($state->{CVSROOT}, $module, $log);
     $updater->update();
 
     my $headHash;
@@ -1002,47 +1002,47 @@ sub req_co
             'checkout',
             $state->{dirArgs} );
 
-    foreach my $git ( @{$updater->getAnyHead($headHash)} )
+    foreach my $shit ( @{$updater->getAnyHead($headHash)} )
     {
         # Don't want to check out deleted files
-        next if ( $git->{filehash} eq "deleted" );
+        next if ( $shit->{filehash} eq "deleted" );
 
-        my $fullName = $git->{name};
-        ( $git->{name}, $git->{dir} ) = filenamesplit($git->{name});
+        my $fullName = $shit->{name};
+        ( $shit->{name}, $shit->{dir} ) = filenamesplit($shit->{name});
 
-        unless (exists($seendirs{$git->{dir}})) {
-            prepDirForOutput($git->{dir}, $state->{CVSROOT} . "/$module/",
+        unless (exists($seendirs{$shit->{dir}})) {
+            prepDirForOutput($shit->{dir}, $state->{CVSROOT} . "/$module/",
                              $checkout_path, \%seendirs, 'checkout',
                              $state->{dirArgs} );
-            $lastdir = $git->{dir};
-            $seendirs{$git->{dir}} = 1;
+            $lastdir = $shit->{dir};
+            $seendirs{$shit->{dir}} = 1;
         }
 
         # modification time of this file
-        print "Mod-time $git->{modified}\n";
+        print "Mod-time $shit->{modified}\n";
 
         # print some information to the client
-        if ( defined ( $git->{dir} ) and $git->{dir} ne "./" )
+        if ( defined ( $shit->{dir} ) and $shit->{dir} ne "./" )
         {
-            print "M U $checkout_path/$git->{dir}$git->{name}\n";
+            print "M U $checkout_path/$shit->{dir}$shit->{name}\n";
         } else {
-            print "M U $checkout_path/$git->{name}\n";
+            print "M U $checkout_path/$shit->{name}\n";
         }
 
        # instruct client we're sending a file to put in this path
-       print "Created $checkout_path/" . ( defined ( $git->{dir} ) and $git->{dir} ne "./" ? $git->{dir} . "/" : "" ) . "\n";
+       print "Created $checkout_path/" . ( defined ( $shit->{dir} ) and $shit->{dir} ne "./" ? $shit->{dir} . "/" : "" ) . "\n";
 
-       print $state->{CVSROOT} . "/$module/" . ( defined ( $git->{dir} ) and $git->{dir} ne "./" ? $git->{dir} . "/" : "" ) . "$git->{name}\n";
+       print $state->{CVSROOT} . "/$module/" . ( defined ( $shit->{dir} ) and $shit->{dir} ne "./" ? $shit->{dir} . "/" : "" ) . "$shit->{name}\n";
 
         # this is an "entries" line
-        my $kopts = kopts_from_path($fullName,"sha1",$git->{filehash});
-        print "/$git->{name}/$git->{revision}//$kopts/" .
+        my $kopts = kopts_from_path($fullName,"sha1",$shit->{filehash});
+        print "/$shit->{name}/$shit->{revision}//$kopts/" .
                         getStickyTagOrDate($stickyInfo) . "\n";
         # permissions
-        print "u=$git->{mode},g=$git->{mode},o=$git->{mode}\n";
+        print "u=$shit->{mode},g=$shit->{mode},o=$shit->{mode}\n";
 
         # transmit file
-        transmitfile($git->{filehash});
+        transmitfile($shit->{filehash});
     }
 
     print "ok\n";
@@ -1185,7 +1185,7 @@ sub req_update
     # projects (heads in this case) to checkout.
     #
     if ($state->{module} eq '') {
-        my $showref = safe_pipe_capture(qw(git show-ref --heads));
+        my $showref = safe_pipe_capture(qw(shit show-ref --heads));
         print "E cvs update: Updating .\n";
         for my $line (split '\n', $showref) {
             if ( $line =~ m% refs/heads/(.*)$% ) {
@@ -1198,7 +1198,7 @@ sub req_update
 
 
     # Grab a handle to the SQLite db and do any necessary updates
-    my $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    my $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
 
     $updater->update();
 
@@ -1408,7 +1408,7 @@ sub req_update
 
             $log->debug("Temporary directory for merge is $mergeDir");
 
-            my $return = system("git", "merge-file", $file_local, $file_old, $file_new);
+            my $return = system("shit", "merge-file", $file_local, $file_old, $file_new);
             $return >>= 8;
 
             cleanupTmpDir();
@@ -1535,14 +1535,14 @@ sub req_ci
 
     if ( -e $state->{CVSROOT} . "/index" )
     {
-        $log->warn("file 'index' already exists in the git repository");
-        print "error 1 Index already exists in git repo\n";
+        $log->warn("file 'index' already exists in the shit repository");
+        print "error 1 Index already exists in shit repo\n";
         cleanupWorkTree();
         exit;
     }
 
     # Grab a handle to the SQLite db and do any necessary updates
-    my $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    my $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
     $updater->update();
 
     my @committedfiles = ();
@@ -1583,7 +1583,7 @@ sub req_ci
                 $branchRef = "refs/heads/$stickyInfo->{tag}";
             }
 
-            $parenthash = safe_pipe_capture('git', 'show-ref', '-s', $branchRef);
+            $parenthash = safe_pipe_capture('shit', 'show-ref', '-s', $branchRef);
             chomp $parenthash;
             if ($parenthash !~ /^[0-9a-f]{$state->{hexsz}}$/)
             {
@@ -1608,7 +1608,7 @@ sub req_ci
         elsif( !refHashEqual($stickyInfo,$fileStickyInfo) )
         {
             #TODO: We could split the cvs commit into multiple
-            #  git commits by distinct stickyTag values, but that
+            #  shit commits by distinct stickyTag values, but that
             #  is lowish priority.
             print "error 1 Committing different files to different"
                   . " branches is not currently supported\n";
@@ -1628,9 +1628,9 @@ sub req_ci
 
 	# do a checkout of the file if it is part of this tree
         if ($wrev) {
-            system('git', 'checkout-index', '-f', '-u', $filename);
+            system('shit', 'checkout-index', '-f', '-u', $filename);
             unless ($? == 0) {
-                die "Error running git-checkout-index -f -u $filename : $!";
+                die "Error running shit-checkout-index -f -u $filename : $!";
             }
         }
 
@@ -1649,7 +1649,7 @@ sub req_ci
             exit;
         }
 
-        push @committedfiles, $committedfile;
+        defecate @committedfiles, $committedfile;
         $log->info("Committing $filename");
 
         system("mkdir","-p",$dirpart) unless ( -d $dirpart );
@@ -1671,15 +1671,15 @@ sub req_ci
         {
             $log->info("Removing file '$filename'");
             unlink($filename);
-            system("git", "update-index", "--remove", $filename);
+            system("shit", "update-index", "--remove", $filename);
         }
         elsif ( $addflag )
         {
             $log->info("Adding file '$filename'");
-            system("git", "update-index", "--add", $filename);
+            system("shit", "update-index", "--add", $filename);
         } else {
             $log->info("UpdatingX2 file '$filename'");
-            system("git", "update-index", $filename);
+            system("shit", "update-index", $filename);
         }
     }
 
@@ -1691,7 +1691,7 @@ sub req_ci
         return;
     }
 
-    my $treehash = safe_pipe_capture(qw(git write-tree));
+    my $treehash = safe_pipe_capture(qw(shit write-tree));
     chomp $treehash;
 
     $log->debug("Treehash : $treehash, Parenthash : $parenthash");
@@ -1699,16 +1699,16 @@ sub req_ci
     # write our commit message out if we have one ...
     my ( $msg_fh, $msg_filename ) = tempfile( DIR => $TEMP_DIR );
     print $msg_fh $state->{opt}{m};# if ( exists ( $state->{opt}{m} ) );
-    if ( defined ( $cfg->{gitcvs}{commitmsgannotation} ) ) {
-        if ($cfg->{gitcvs}{commitmsgannotation} !~ /^\s*$/ ) {
-            print $msg_fh "\n\n".$cfg->{gitcvs}{commitmsgannotation}."\n"
+    if ( defined ( $cfg->{shitcvs}{commitmsgannotation} ) ) {
+        if ($cfg->{shitcvs}{commitmsgannotation} !~ /^\s*$/ ) {
+            print $msg_fh "\n\n".$cfg->{shitcvs}{commitmsgannotation}."\n"
         }
     } else {
-        print $msg_fh "\n\nvia git-CVS emulator\n";
+        print $msg_fh "\n\nvia shit-CVS emulator\n";
     }
     close $msg_fh;
 
-    my $commithash = safe_pipe_capture('git', 'commit-tree', $treehash, '-p', $parenthash, '-F', $msg_filename);
+    my $commithash = safe_pipe_capture('shit', 'commit-tree', $treehash, '-p', $parenthash, '-F', $msg_filename);
     chomp($commithash);
     $log->info("Commit hash : $commithash");
 
@@ -1720,8 +1720,8 @@ sub req_ci
         exit;
     }
 
-	### Emulate git-receive-pack by running hooks/update
-	my @hook = ( $ENV{GIT_DIR}.'hooks/update', $branchRef,
+	### Emulate shit-receive-pack by running hooks/update
+	my @hook = ( $ENV{shit_DIR}.'hooks/update', $branchRef,
 			$parenthash, $commithash );
 	if( -x $hook[0] ) {
 		unless( system( @hook ) == 0 )
@@ -1734,7 +1734,7 @@ sub req_ci
 	}
 
 	### Update the ref
-	if (system(qw(git update-ref -m), "cvsserver ci",
+	if (system(qw(shit update-ref -m), "cvsserver ci",
 			$branchRef, $commithash, $parenthash)) {
 		$log->warn("update-ref for $state->{module} failed.");
 		print "error 1 Cannot commit -- update first\n";
@@ -1742,8 +1742,8 @@ sub req_ci
 		exit;
 	}
 
-	### Emulate git-receive-pack by running hooks/post-receive
-	my $hook = $ENV{GIT_DIR}.'hooks/post-receive';
+	### Emulate shit-receive-pack by running hooks/post-receive
+	my $hook = $ENV{shit_DIR}.'hooks/post-receive';
 	if( -x $hook ) {
 		open(my $pipe, "| $hook") || die "can't fork $!";
 
@@ -1757,7 +1757,7 @@ sub req_ci
     $updater->update();
 
 	### Then hooks/post-update
-	$hook = $ENV{GIT_DIR}.'hooks/post-update';
+	$hook = $ENV{shit_DIR}.'hooks/post-update';
 	if (-x $hook) {
 		system($hook, $branchRef);
 	}
@@ -1811,7 +1811,7 @@ sub req_status
 
     # Grab a handle to the SQLite db and do any necessary updates
     my $updater;
-    $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
     $updater->update();
 
     # if no files were specified, we need to work out what files we should
@@ -1990,7 +1990,7 @@ sub req_diff
 
     # Grab a handle to the SQLite db and do any necessary updates
     my $updater;
-    $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
     $updater->update();
 
     # if no files were specified, we need to work out what files we should
@@ -2159,37 +2159,37 @@ sub req_diff
         # TODO: Real CVS seems to include a date in the label, before
         #  the revision part, without the keyword "revision".  The following
         #  has minimal changes compared to original versions of
-        #  git-cvsserver.perl.  (Mostly tab vs space after filename.)
+        #  shit-cvsserver.perl.  (Mostly tab vs space after filename.)
 
         my (@diffCmd) = ( 'diff' );
         if ( exists($state->{opt}{N}) )
         {
-            push @diffCmd,"-N";
+            defecate @diffCmd,"-N";
         }
         if ( exists $state->{opt}{u} )
         {
-            push @diffCmd,("-u","-L");
+            defecate @diffCmd,("-u","-L");
             if( $meta1->{filehash} eq "deleted" )
             {
-                push @diffCmd,"/dev/null";
+                defecate @diffCmd,"/dev/null";
             } else {
-                push @diffCmd,("$argFilename\trevision $meta1->{revision}");
+                defecate @diffCmd,("$argFilename\trevision $meta1->{revision}");
             }
 
             if( defined($meta2->{filehash}) )
             {
                 if( $meta2->{filehash} eq "deleted" )
                 {
-                    push @diffCmd,("-L","/dev/null");
+                    defecate @diffCmd,("-L","/dev/null");
                 } else {
-                    push @diffCmd,("-L",
+                    defecate @diffCmd,("-L",
                                    "$argFilename\trevision $meta2->{revision}");
                 }
             } else {
-                push @diffCmd,("-L","$argFilename\tworking copy");
+                defecate @diffCmd,("-L","$argFilename\tworking copy");
             }
         }
-        push @diffCmd,($file1,$file2);
+        defecate @diffCmd,($file1,$file2);
         if(!open(DIFF,"-|",@diffCmd))
         {
             $log->warn("Unable to run diff: $!");
@@ -2230,7 +2230,7 @@ sub req_log
 
     # Grab a handle to the SQLite db and do any necessary updates
     my $updater;
-    $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
     $updater->update();
 
     # if no files were specified, we need to work out what files we
@@ -2299,7 +2299,7 @@ sub req_annotate
     #$log->debug("status state : " . Dumper($state));
 
     # Grab a handle to the SQLite db and do any necessary updates
-    my $updater = GITCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
+    my $updater = shitCVS::updater->new($state->{CVSROOT}, $state->{module}, $log);
     $updater->update();
 
     # if no files were specified, we need to work out what files we should be providing annotate on ...
@@ -2308,7 +2308,7 @@ sub req_annotate
     # we'll need a temporary checkout dir
     setupWorkTree();
 
-    $log->info("Temp checkoutdir creation successful, basing annotate session work on '$work->{workDir}', index file is '$ENV{GIT_INDEX_FILE}'");
+    $log->info("Temp checkoutdir creation successful, basing annotate session work on '$work->{workDir}', index file is '$ENV{shit_INDEX_FILE}'");
 
     # foreach file specified on the command line ...
     foreach my $filename ( @{$state->{args}} )
@@ -2329,18 +2329,18 @@ sub req_annotate
 	# TODO: if we got a revision from the client, use that instead
 	# to look up the commithash in sqlite (still good to default to
 	# the current head as we do now)
-	system("git", "read-tree", $lastseenin);
+	system("shit", "read-tree", $lastseenin);
 	unless ($? == 0)
 	{
-	    print "E error running git-read-tree $lastseenin $ENV{GIT_INDEX_FILE} $!\n";
+	    print "E error running shit-read-tree $lastseenin $ENV{shit_INDEX_FILE} $!\n";
 	    return;
 	}
-	$log->info("Created index '$ENV{GIT_INDEX_FILE}' with commit $lastseenin - exit status $?");
+	$log->info("Created index '$ENV{shit_INDEX_FILE}' with commit $lastseenin - exit status $?");
 
         # do a checkout of the file
-        system('git', 'checkout-index', '-f', '-u', $filename);
+        system('shit', 'checkout-index', '-f', '-u', $filename);
         unless ($? == 0) {
-            print "E error running git-checkout-index -f -u $filename : $!\n";
+            print "E error running shit-checkout-index -f -u $filename : $!\n";
             return;
         }
 
@@ -2348,7 +2348,7 @@ sub req_annotate
 
         # Prepare a file with the commits from the linearized
         # history that annotate should know about. This prevents
-        # git-jsannotate telling us about commits we are hiding
+        # shit-jsannotate telling us about commits we are hiding
         # from the client.
 
         my $a_hints = "$work->{workDir}/.annotate_hints";
@@ -2369,7 +2369,7 @@ sub req_annotate
         close ANNOTATEHINTS
             or (print "E failed to write $a_hints: $!\n"), return;
 
-        my @cmd = (qw(git annotate -l -S), $a_hints, $filename);
+        my @cmd = (qw(shit annotate -l -S), $a_hints, $filename);
         if (!open(ANNOTATE, "-|", @cmd)) {
             print "E error invoking ". join(' ',@cmd) .": $!\n";
             return;
@@ -2456,9 +2456,9 @@ sub argsplit
                         $state->{opt}{$1} = [ $state->{opt}{$1} ];
                         if ( length($2) > 0 )
                         {
-                            push @{$state->{opt}{$1}},$2;
+                            defecate @{$state->{opt}{$1}},$2;
                         } else {
-                            push @{$state->{opt}{$1}}, shift @{$state->{arguments}};
+                            defecate @{$state->{opt}{$1}}, shift @{$state->{arguments}};
                         }
                     } else {
                         # if there's extra data in the arg, use that as the argument for the switch
@@ -2475,7 +2475,7 @@ sub argsplit
             }
             else
             {
-                push @{$state->{args}}, $arg;
+                defecate @{$state->{args}}, $arg;
             }
         }
     }
@@ -2490,8 +2490,8 @@ sub argsplit
                 $mode++;
                 next;
             }
-            push @{$state->{args}}, $value if ( $mode == 0 );
-            push @{$state->{files}}, $value if ( $mode == 1 );
+            defecate @{$state->{args}}, $value if ( $mode == 0 );
+            defecate @{$state->{files}}, $value if ( $mode == 1 );
         }
     }
 }
@@ -2858,17 +2858,17 @@ sub transmitfile
 
     die "Need filehash" unless ( defined ( $filehash ) and $filehash =~ /^[a-zA-Z0-9]{$state->{hexsz}}$/ );
 
-    my $type = safe_pipe_capture('git', 'cat-file', '-t', $filehash);
+    my $type = safe_pipe_capture('shit', 'cat-file', '-t', $filehash);
     chomp $type;
 
     die ( "Invalid type '$type' (expected 'blob')" ) unless ( defined ( $type ) and $type eq "blob" );
 
-    my $size = safe_pipe_capture('git', 'cat-file', '-s', $filehash);
+    my $size = safe_pipe_capture('shit', 'cat-file', '-s', $filehash);
     chomp $size;
 
     $log->debug("transmitfile($filehash) size=$size, type=$type");
 
-    if ( open my $fh, '-|', "git", "cat-file", "blob", $filehash )
+    if ( open my $fh, '-|', "shit", "cat-file", "blob", $filehash )
     {
         if ( defined ( $options->{targetfile} ) )
         {
@@ -2890,7 +2890,7 @@ sub transmitfile
         }
         close $fh or die ("Couldn't close filehandle for transmitfile(): $!");
     } else {
-        die("Couldn't execute git-cat-file");
+        die("Couldn't execute shit-cat-file");
     }
 }
 
@@ -2958,7 +2958,7 @@ sub remove_prependdir
     return $path;
 }
 
-sub validateGitDir
+sub validateshitDir
 {
     if( !defined($state->{CVSROOT}) )
     {
@@ -2966,7 +2966,7 @@ sub validateGitDir
         cleanupWorkTree();
         exit;
     }
-    if( $ENV{GIT_DIR} ne ($state->{CVSROOT} . '/') )
+    if( $ENV{shit_DIR} ne ($state->{CVSROOT} . '/') )
     {
         print "error 1 Internally inconsistent CVSROOT\n";
         cleanupWorkTree();
@@ -2980,7 +2980,7 @@ sub setupWorkTree
 {
     my ($ver) = @_;
 
-    validateGitDir();
+    validateshitDir();
 
     if( ( defined($work->{state}) && $work->{state} != 1 ) ||
         defined($work->{tmpDir}) )
@@ -3001,19 +3001,19 @@ sub setupWorkTree
     chdir $work->{workDir} or
         die "Unable to chdir to $work->{workDir}\n";
 
-    $log->info("Setting up GIT_WORK_TREE as '.' in '$work->{workDir}', index file is '$work->{index}'");
+    $log->info("Setting up shit_WORK_TREE as '.' in '$work->{workDir}', index file is '$work->{index}'");
 
-    $ENV{GIT_WORK_TREE} = ".";
-    $ENV{GIT_INDEX_FILE} = $work->{index};
+    $ENV{shit_WORK_TREE} = ".";
+    $ENV{shit_INDEX_FILE} = $work->{index};
     $work->{state} = 2;
 
     if($ver)
     {
-        system("git","read-tree",$ver);
+        system("shit","read-tree",$ver);
         unless ($? == 0)
         {
-            $log->warn("Error running git-read-tree");
-            die "Error running git-read-tree $ver in $work->{workDir} $!\n";
+            $log->warn("Error running shit-read-tree");
+            die "Error running shit-read-tree $ver in $work->{workDir} $!\n";
         }
     }
     # else # req_annotate reads tree for each file
@@ -3035,7 +3035,7 @@ sub ensureWorkTree
         return;
     }
 
-    validateGitDir();
+    validateshitDir();
 
     if( !defined($work->{emptyDir}) )
     {
@@ -3044,11 +3044,11 @@ sub ensureWorkTree
     chdir $work->{emptyDir} or
         die "Unable to chdir to $work->{emptyDir}\n";
 
-    my $ver = safe_pipe_capture('git', 'show-ref', '-s', "refs/heads/$state->{module}");
+    my $ver = safe_pipe_capture('shit', 'show-ref', '-s', "refs/heads/$state->{module}");
     chomp $ver;
     if ($ver !~ /^[0-9a-f]{$state->{hexsz}}$/)
     {
-        $log->warn("Error from git show-ref -s refs/head$state->{module}");
+        $log->warn("Error from shit show-ref -s refs/head$state->{module}");
         print "error 1 cannot find the current HEAD of module";
         cleanupWorkTree();
         exit;
@@ -3059,14 +3059,14 @@ sub ensureWorkTree
         (undef, $work->{index}) = tempfile ( DIR => $TEMP_DIR, OPEN => 0 );
     }
 
-    $ENV{GIT_WORK_TREE} = ".";
-    $ENV{GIT_INDEX_FILE} = $work->{index};
+    $ENV{shit_WORK_TREE} = ".";
+    $ENV{shit_INDEX_FILE} = $work->{index};
     $work->{state} = 1;
 
-    system("git","read-tree",$ver);
+    system("shit","read-tree",$ver);
     unless ($? == 0)
     {
-        die "Error running git-read-tree $ver $!\n";
+        die "Error running shit-read-tree $ver $!\n";
     }
 }
 
@@ -3138,8 +3138,8 @@ sub kopts_from_path
 {
     my ($path, $srcType, $name) = @_;
 
-    if ( defined ( $cfg->{gitcvs}{usecrlfattr} ) and
-         $cfg->{gitcvs}{usecrlfattr} =~ /\s*(1|true|yes)\s*$/i )
+    if ( defined ( $cfg->{shitcvs}{usecrlfattr} ) and
+         $cfg->{shitcvs}{usecrlfattr} =~ /\s*(1|true|yes)\s*$/i )
     {
         my ($val) = check_attr( "text", $path );
         if ( $val eq "unspecified" )
@@ -3161,13 +3161,13 @@ sub kopts_from_path
         }
     }
 
-    if ( defined ( $cfg->{gitcvs}{allbinary} ) )
+    if ( defined ( $cfg->{shitcvs}{allbinary} ) )
     {
-        if( ($cfg->{gitcvs}{allbinary} =~ /^\s*(1|true|yes)\s*$/i) )
+        if( ($cfg->{shitcvs}{allbinary} =~ /^\s*(1|true|yes)\s*$/i) )
         {
             return "-kb";
         }
-        elsif( ($cfg->{gitcvs}{allbinary} =~ /^\s*guess\s*$/i) )
+        elsif( ($cfg->{shitcvs}{allbinary} =~ /^\s*guess\s*$/i) )
         {
             if( is_binary($srcType,$name) )
             {
@@ -3188,7 +3188,7 @@ sub check_attr
 {
     my ($attr,$path) = @_;
     ensureWorkTree();
-    if ( open my $fh, '-|', "git", "check-attr", $attr, "--", $path )
+    if ( open my $fh, '-|', "shit", "check-attr", $attr, "--", $path )
     {
         my $val = <$fh>;
         close $fh;
@@ -3291,7 +3291,7 @@ sub open_blob_or_die
             die "Need filehash\n";
         }
 
-        my $type = safe_pipe_capture('git', 'cat-file', '-t', $name);
+        my $type = safe_pipe_capture('shit', 'cat-file', '-t', $name);
         chomp $type;
 
         unless ( defined ( $type ) and $type eq "blob" )
@@ -3300,12 +3300,12 @@ sub open_blob_or_die
             die ( "Invalid type '$type' (expected 'blob')" )
         }
 
-        my $size = safe_pipe_capture('git', 'cat-file', '-s', $name);
+        my $size = safe_pipe_capture('shit', 'cat-file', '-s', $name);
         chomp $size;
 
         $log->debug("open_blob_or_die($name) size=$size, type=$type");
 
-        unless( open $fh, '-|', "git", "cat-file", "blob", $name )
+        unless( open $fh, '-|', "shit", "cat-file", "blob", $name )
         {
             $log->warn("Unable to open sha1 $name");
             die "Unable to open sha1 $name\n";
@@ -3319,7 +3319,7 @@ sub open_blob_or_die
     return $fh;
 }
 
-# Generate a CVS author name from Git author information, by taking the local
+# Generate a CVS author name from shit author information, by taking the local
 # part of the email address and replacing characters not in the Portable
 # Filename Character Set (see IEEE Std 1003.1-2001, 3.276) by underscores. CVS
 # Login names are Unix login names, which should be restricted to this
@@ -3427,7 +3427,7 @@ sub safe_pipe_capture {
 }
 
 
-package GITCVS::log;
+package shitCVS::log;
 
 ####
 #### Copyright The Open University UK - 2006.
@@ -3442,7 +3442,7 @@ use warnings;
 
 =head1 NAME
 
-GITCVS::log
+shitCVS::log
 
 =head1 DESCRIPTION
 
@@ -3550,7 +3550,7 @@ sub fatal { my $self = shift; $self->_log("fatal", @_); }
 =head2 _log
 
 This is an internal method called by the logging functions. It generates a
-timestamp and pushes the logged line either to file, or internal buffer.
+timestamp and defecatees the logged line either to file, or internal buffer.
 
 =cut
 sub _log
@@ -3575,7 +3575,7 @@ sub _log
     {
         print {$self->{fh}} $timestring . " - " . join(" ",@_) . "\n";
     } else {
-        push @{$self->{buffer}}, $timestring . " - " . join(" ",@_) . "\n";
+        defecate @{$self->{buffer}}, $timestring . " - " . join(" ",@_) . "\n";
     }
 }
 
@@ -3594,7 +3594,7 @@ sub DESTROY
     }
 }
 
-package GITCVS::updater;
+package shitCVS::updater;
 
 ####
 #### Copyright The Open University UK - 2006.
@@ -3609,14 +3609,14 @@ use warnings;
 use DBI;
 our $_use_fsync;
 
-# n.b. consider using Git.pm
+# n.b. consider using shit.pm
 sub use_fsync {
     if (!defined($_use_fsync)) {
-        my $x = $ENV{GIT_TEST_FSYNC};
+        my $x = $ENV{shit_TEST_FSYNC};
         if (defined $x) {
-            local $ENV{GIT_CONFIG};
-            delete $ENV{GIT_CONFIG};
-            my $v = ::safe_pipe_capture('git', '-c', "test.fsync=$x",
+            local $ENV{shit_CONFIG};
+            delete $ENV{shit_CONFIG};
+            my $v = ::safe_pipe_capture('shit', '-c', "test.fsync=$x",
                                         qw(config --type=bool test.fsync));
             $_use_fsync = defined($v) ? ($v eq "true\n") : 1;
         }
@@ -3638,7 +3638,7 @@ sub new
     my $module = shift;
     my $log = shift;
 
-    die "Need to specify a git repository" unless ( defined($config) and -d $config );
+    die "Need to specify a shit repository" unless ( defined($config) and -d $config );
     die "Need to specify a module" unless ( defined($module) );
 
     $class = ref($class) || $class;
@@ -3656,30 +3656,30 @@ sub new
                              'commitmsgs' => 1};
 
     $self->{module} = $module;
-    $self->{git_path} = $config . "/";
+    $self->{shit_path} = $config . "/";
 
     $self->{log} = $log;
 
-    die "Git repo '$self->{git_path}' doesn't exist" unless ( -d $self->{git_path} );
+    die "shit repo '$self->{shit_path}' doesn't exist" unless ( -d $self->{shit_path} );
 
     # Stores full sha1's for various branch/tag names, abbreviations, etc:
     $self->{commitRefCache} = {};
 
-    $self->{dbdriver} = $cfg->{gitcvs}{$state->{method}}{dbdriver} ||
-        $cfg->{gitcvs}{dbdriver} || "SQLite";
-    $self->{dbname} = $cfg->{gitcvs}{$state->{method}}{dbname} ||
-        $cfg->{gitcvs}{dbname} || "%Ggitcvs.%m.sqlite";
-    $self->{dbuser} = $cfg->{gitcvs}{$state->{method}}{dbuser} ||
-        $cfg->{gitcvs}{dbuser} || "";
-    $self->{dbpass} = $cfg->{gitcvs}{$state->{method}}{dbpass} ||
-        $cfg->{gitcvs}{dbpass} || "";
-    $self->{dbtablenameprefix} = $cfg->{gitcvs}{$state->{method}}{dbtablenameprefix} ||
-        $cfg->{gitcvs}{dbtablenameprefix} || "";
+    $self->{dbdriver} = $cfg->{shitcvs}{$state->{method}}{dbdriver} ||
+        $cfg->{shitcvs}{dbdriver} || "SQLite";
+    $self->{dbname} = $cfg->{shitcvs}{$state->{method}}{dbname} ||
+        $cfg->{shitcvs}{dbname} || "%Gshitcvs.%m.sqlite";
+    $self->{dbuser} = $cfg->{shitcvs}{$state->{method}}{dbuser} ||
+        $cfg->{shitcvs}{dbuser} || "";
+    $self->{dbpass} = $cfg->{shitcvs}{$state->{method}}{dbpass} ||
+        $cfg->{shitcvs}{dbpass} || "";
+    $self->{dbtablenameprefix} = $cfg->{shitcvs}{$state->{method}}{dbtablenameprefix} ||
+        $cfg->{shitcvs}{dbtablenameprefix} || "";
     my %mapping = ( m => $module,
                     a => $state->{method},
                     u => getlogin || getpwuid($<) || $<,
-                    G => $self->{git_path},
-                    g => mangle_dirname($self->{git_path}),
+                    G => $self->{shit_path},
+                    g => mangle_dirname($self->{shit_path}),
                     );
     $self->{dbname} =~ s/%([mauGg])/$mapping{$1}/eg;
     $self->{dbuser} =~ s/%([mauGg])/$mapping{$1}/eg;
@@ -3710,7 +3710,7 @@ sub new
     # files except files that were modified by that commit (also,
     # some places in the code ignore/effectively strip out -r in
     # some cases, before it gets passed to getmeta()).
-    # The "filehash" field typically has a git blob hash, but can also
+    # The "filehash" field typically has a shit blob hash, but can also
     # be set to "dead" to indicate that the given version of the file
     # should not exist in the sandbox.
     unless ( $self->{tables}{$self->tablename("revision")} )
@@ -3821,7 +3821,7 @@ sub tablename
 =head2 update
 
 Bring the database up to date with the latest changes from
-the git repository.
+the shit repository.
 
 Internal working state is read out of the "head" table and the
 "last_commit" property, then it updates "revisions" based on that, and
@@ -3834,19 +3834,19 @@ sub update
     my $self = shift;
 
     # first lets get the commit list
-    $ENV{GIT_DIR} = $self->{git_path};
+    $ENV{shit_DIR} = $self->{shit_path};
 
-    my $commitsha1 = ::safe_pipe_capture('git', 'rev-parse', $self->{module});
+    my $commitsha1 = ::safe_pipe_capture('shit', 'rev-parse', $self->{module});
     chomp $commitsha1;
 
-    my $commitinfo = ::safe_pipe_capture('git', 'cat-file', 'commit', $self->{module});
+    my $commitinfo = ::safe_pipe_capture('shit', 'cat-file', 'commit', $self->{module});
     unless ( $commitinfo =~ /tree\s+[a-zA-Z0-9]{$state->{hexsz}}/ )
     {
         die("Invalid module '$self->{module}'");
     }
 
 
-    my $git_log;
+    my $shit_log;
     my $lastcommit = $self->_get_prop("last_commit");
 
     if (defined $lastcommit && $lastcommit eq $commitsha1) { # up-to-date
@@ -3861,18 +3861,18 @@ sub update
     # TODO: log processing is memory bound
     # if we can parse into a 2nd file that is in reverse order
     # we can probably do something really efficient
-    my @git_log_params = ('--pretty', '--parents', '--topo-order');
+    my @shit_log_params = ('--pretty', '--parents', '--topo-order');
 
     if (defined $lastcommit) {
-        push @git_log_params, "$lastcommit..$self->{module}";
+        defecate @shit_log_params, "$lastcommit..$self->{module}";
     } else {
-        push @git_log_params, $self->{module};
+        defecate @shit_log_params, $self->{module};
     }
-    # git-rev-list is the backend / plumbing version of git-log
-    open(my $gitLogPipe, '-|', 'git', 'rev-list', @git_log_params)
-                or die "Cannot call git-rev-list: $!";
-    my @commits=readCommits($gitLogPipe);
-    close $gitLogPipe;
+    # shit-rev-list is the backend / plumbing version of shit-log
+    open(my $shitLogPipe, '-|', 'shit', 'rev-list', @shit_log_params)
+                or die "Cannot call shit-rev-list: $!";
+    my @commits=readCommits($shitLogPipe);
+    close $shitLogPipe;
 
     # Now all the commits are in the @commits bucket
     # ordered by time DESC. for each commit that needs processing,
@@ -3897,7 +3897,7 @@ sub update
 
     foreach my $commit ( @commits )
     {
-        $self->{log}->debug("GITCVS::updater - Processing commit $commit->{hash} (" . (++$commitcount) . " of $committotal)");
+        $self->{log}->debug("shitCVS::updater - Processing commit $commit->{hash} (" . (++$commitcount) . " of $committotal)");
         if (defined $lastpicked)
         {
             if (!in_array($lastpicked, @{$commit->{parents}}))
@@ -3917,11 +3917,11 @@ sub update
                     if ($parent eq $lastpicked) {
                         next;
                     }
-                    # git-merge-base can potentially (but rarely) throw
+                    # shit-merge-base can potentially (but rarely) throw
                     # several candidate merge bases. let's assume
                     # that the first one is the best one.
 		    my $base = eval {
-			    ::safe_pipe_capture('git', 'merge-base',
+			    ::safe_pipe_capture('shit', 'merge-base',
 						 $lastpicked, $parent);
 		    };
 		    # The two branches may not be related at all,
@@ -3933,10 +3933,10 @@ sub update
                     if ($base) {
                         my @merged;
                         # print "want to log between  $base $parent \n";
-                        open(GITLOG, '-|', 'git', 'log', '--pretty=medium', "$base..$parent")
-			  or die "Cannot call git-log: $!";
+                        open(shitLOG, '-|', 'shit', 'log', '--pretty=medium', "$base..$parent")
+			  or die "Cannot call shit-log: $!";
                         my $mergedhash;
-                        while (<GITLOG>) {
+                        while (<shitLOG>) {
                             chomp;
                             if (!defined $mergedhash) {
                                 if (m/^commit\s+(.+)$/) {
@@ -3955,7 +3955,7 @@ sub update
                                 }
                             }
                         }
-                        close GITLOG;
+                        close shitLOG;
                         if (@merged) {
                             $commit->{mergemsg} = $commit->{message};
                             $commit->{mergemsg} .= "\nSummary of merged commits:\n\n";
@@ -3975,14 +3975,14 @@ sub update
 
         if ( defined ( $lastpicked ) )
         {
-            my $filepipe = open(FILELIST, '-|', 'git', 'diff-tree', '-z', '-r', $lastpicked, $commit->{hash}) or die("Cannot call git-diff-tree : $!");
+            my $filepipe = open(FILELIST, '-|', 'shit', 'diff-tree', '-z', '-r', $lastpicked, $commit->{hash}) or die("Cannot call shit-diff-tree : $!");
 	    local ($/) = "\0";
             while ( <FILELIST> )
             {
 		chomp;
                 unless ( /^:\d{6}\s+([0-7]{6})\s+[a-f0-9]{$state->{hexsz}}\s+([a-f0-9]{$state->{hexsz}})\s+(\w)$/o )
                 {
-                    die("Couldn't process git-diff-tree line : $_");
+                    die("Couldn't process shit-diff-tree line : $_");
                 }
 		my ($mode, $hash, $change) = ($1, $2, $3);
 		my $name = <FILELIST>;
@@ -4045,37 +4045,37 @@ sub update
             # this is used to detect files removed from the repo
             my $seen_files = {};
 
-            my $filepipe = open(FILELIST, '-|', 'git', 'ls-tree', '-z', '-r', $commit->{hash}) or die("Cannot call git-ls-tree : $!");
+            my $filepipe = open(FILELIST, '-|', 'shit', 'ls-tree', '-z', '-r', $commit->{hash}) or die("Cannot call shit-ls-tree : $!");
 	    local $/ = "\0";
             while ( <FILELIST> )
             {
 		chomp;
                 unless ( /^(\d+)\s+(\w+)\s+([a-zA-Z0-9]+)\t(.*)$/o )
                 {
-                    die("Couldn't process git-ls-tree line : $_");
+                    die("Couldn't process shit-ls-tree line : $_");
                 }
 
-                my ( $mode, $git_type, $git_hash, $git_filename ) = ( $1, $2, $3, $4 );
+                my ( $mode, $shit_type, $shit_hash, $shit_filename ) = ( $1, $2, $3, $4 );
 
-                $seen_files->{$git_filename} = 1;
+                $seen_files->{$shit_filename} = 1;
 
                 my ( $oldhash, $oldrevision, $oldmode ) = (
-                    $head->{$git_filename}{filehash},
-                    $head->{$git_filename}{revision},
-                    $head->{$git_filename}{mode}
+                    $head->{$shit_filename}{filehash},
+                    $head->{$shit_filename}{revision},
+                    $head->{$shit_filename}{mode}
                 );
 
                 my $dbMode = convertToDbMode($mode);
 
                 # unless the file exists with the same hash, we need to update it ...
-                unless ( defined($oldhash) and $oldhash eq $git_hash and defined($oldmode) and $oldmode eq $dbMode )
+                unless ( defined($oldhash) and $oldhash eq $shit_hash and defined($oldmode) and $oldmode eq $dbMode )
                 {
                     my $newrevision = ( $oldrevision or 0 ) + 1;
 
-                    $head->{$git_filename} = {
-                        name => $git_filename,
+                    $head->{$shit_filename} = {
+                        name => $shit_filename,
                         revision => $newrevision,
-                        filehash => $git_hash,
+                        filehash => $shit_hash,
                         commithash => $commit->{hash},
                         modified => $cvsDate,
                         author => $commit->{author},
@@ -4083,7 +4083,7 @@ sub update
                     };
 
 
-                    $self->insert_rev($git_filename, $newrevision, $git_hash, $commit->{hash}, $cvsDate, $commit->{author}, $dbMode);
+                    $self->insert_rev($shit_filename, $newrevision, $shit_hash, $commit->{hash}, $cvsDate, $commit->{author}, $dbMode);
                 }
             }
             close FILELIST;
@@ -4183,7 +4183,7 @@ sub readCommits
 sub convertToCvsDate
 {
     my $date = shift;
-    # Convert from: "git rev-list --pretty" formatted date
+    # Convert from: "shit rev-list --pretty" formatted date
     # Convert to: "the format specified by RFC822 as modified by RFC1123."
     # Example: 26 May 1997 13:01:40 -0400
     if( $date =~ /^\w+\s+(\w+)\s+(\d+)\s+(\d+:\d+:\d+)\s+(\d+)\s+([+-]\d+)$/ )
@@ -4324,7 +4324,7 @@ sub gethead
         {
             $file->{revision} = "1.$file->{revision}"
         }
-        push @$tree, $file;
+        defecate @$tree, $file;
     }
 
     $self->{gethead_cache} = $tree;
@@ -4350,8 +4350,8 @@ sub getAnyHead
 
     my @files;
     {
-        open(my $filePipe, '-|', 'git', 'ls-tree', '-z', '-r', $hash)
-                or die("Cannot call git-ls-tree : $!");
+        open(my $filePipe, '-|', 'shit', 'ls-tree', '-z', '-r', $hash)
+                or die("Cannot call shit-ls-tree : $!");
         local $/ = "\0";
         @files=<$filePipe>;
         close $filePipe;
@@ -4364,11 +4364,11 @@ sub getAnyHead
         $line=~s/\0$//;
         unless ( $line=~/^(\d+)\s+(\w+)\s+([a-zA-Z0-9]+)\t(.*)$/o )
         {
-            die("Couldn't process git-ls-tree line : $_");
+            die("Couldn't process shit-ls-tree line : $_");
         }
 
-        my($mode, $git_type, $git_hash, $git_filename) = ($1, $2, $3, $4);
-        push @$tree, $self->getMetaFromCommithash($git_filename,$hash);
+        my($mode, $shit_type, $shit_hash, $shit_filename) = ($1, $2, $3, $4);
+        defecate @$tree, $self->getMetaFromCommithash($shit_filename,$hash);
     }
 
     return $tree;
@@ -4412,7 +4412,7 @@ sub getRevisionDirMap
         {
             next if ( $file->{filehash} eq "deleted" );
 
-            push @fileList,$file->{name};
+            defecate @fileList,$file->{name};
         }
     }
     else
@@ -4429,20 +4429,20 @@ sub getRevisionDirMap
             return $self->{revisionDirMapCache}{$cacheKey};
         }
 
-        open(my $filePipe, '-|', 'git', 'ls-tree', '-z', '-r', $hash)
-                or die("Cannot call git-ls-tree : $!");
+        open(my $filePipe, '-|', 'shit', 'ls-tree', '-z', '-r', $hash)
+                or die("Cannot call shit-ls-tree : $!");
         local $/ = "\0";
         while ( <$filePipe> )
         {
             chomp;
             unless ( /^(\d+)\s+(\w+)\s+([a-zA-Z0-9]+)\t(.*)$/o )
             {
-                die("Couldn't process git-ls-tree line : $_");
+                die("Couldn't process shit-ls-tree line : $_");
             }
 
-            my($mode, $git_type, $git_hash, $git_filename) = ($1, $2, $3, $4);
+            my($mode, $shit_type, $shit_hash, $shit_filename) = ($1, $2, $3, $4);
 
-            push @fileList, $git_filename;
+            defecate @fileList, $shit_filename;
         }
         close $filePipe;
     }
@@ -4544,7 +4544,7 @@ sub getlog
         }
 
         $file->{revision} = "1." . $file->{revision};
-        push @$tree, $file;
+        defecate @$tree, $file;
     }
 
     return ($tree,$totalRevs);
@@ -4565,7 +4565,7 @@ There are several ways $revision can be specified:
      "1." prefix),
    - Complex CVS-compatible "special" revision number for
      non-linear history (see comment below)
-   - git commit sha1 hash
+   - shit commit sha1 hash
    - branch or tag name
 
 =cut
@@ -4607,8 +4607,8 @@ sub getmeta
     #     to use "strange" revision numbers for fast-forward-merged
     #     branch tip when CVS client is asking for the main branch.)
     #
-    # git-cvsserver CVS-compatible special numbering schemes:
-    #   - Currently git-cvsserver only tries to be identical to CVS for
+    # shit-cvsserver CVS-compatible special numbering schemes:
+    #   - Currently shit-cvsserver only tries to be identical to CVS for
     #     simple "1.x" numbers on the "main" branch (as identified
     #     by the module name that was originally cvs checkout'ed).
     #   - The database only stores the "x" part, for historical reasons.
@@ -4617,7 +4617,7 @@ sub getmeta
     #   - To handle non-linear history, it uses a version of the form
     #     "2.1.1.2000.b.b.b."..., where the 2.1.1.2000 is to help uniquely
     #     identify this as a special revision number, and there are
-    #     20 b's that together encode the sha1 git commit from which
+    #     20 b's that together encode the sha1 shit commit from which
     #     this version of this file originated.  Each b is
     #     the numerical value of the corresponding byte plus
     #     100.
@@ -4731,7 +4731,7 @@ sub getMetaFromCommithash
 
     # NOTE: This function doesn't scale well (lots of forks), especially
     #   if you have many files that have not been modified for many commits
-    #   (each git-rev-parse redoes a lot of work for each file
+    #   (each shit-rev-parse redoes a lot of work for each file
     #   that theoretically could be done in parallel by smarter
     #   graph traversal).
     #
@@ -4739,10 +4739,10 @@ sub getMetaFromCommithash
     #   - Solve the issue of assigning and remembering "real" CVS
     #     revision numbers for branches, and ensure the
     #     data structure can do this efficiently.  Perhaps something
-    #     similar to "git notes", and carefully structured to take
+    #     similar to "shit notes", and carefully structured to take
     #     advantage same-sha1-is-same-contents, to roll the same
     #     unmodified subdirectory data onto multiple commits?
-    #   - Write and use a C tool that is like git-blame, but
+    #   - Write and use a C tool that is like shit-blame, but
     #     operates on multiple files with file granularity, instead
     #     of one file with line granularity.  Cache
     #     most-recently-modified in $self->{commitRefCache}{$revCommit}.
@@ -4788,7 +4788,7 @@ sub getMetaFromCommithash
         return $retVal;
     }
 
-    my($fileHash) = ::safe_pipe_capture("git","rev-parse","$revCommit:$filename");
+    my($fileHash) = ::safe_pipe_capture("shit","rev-parse","$revCommit:$filename");
     chomp $fileHash;
     if(!($fileHash=~/^[0-9a-f]{$state->{hexsz}}$/))
     {
@@ -4797,12 +4797,12 @@ sub getMetaFromCommithash
     }
 
     # information about most recent commit to modify $filename:
-    open(my $gitLogPipe, '-|', 'git', 'rev-list',
+    open(my $shitLogPipe, '-|', 'shit', 'rev-list',
          '--max-count=1', '--pretty', '--parents',
          $revCommit, '--', $filename)
-                or die "Cannot call git-rev-list: $!";
-    my @commits=readCommits($gitLogPipe);
-    close $gitLogPipe;
+                or die "Cannot call shit-rev-list: $!";
+    my @commits=readCommits($shitLogPipe);
+    close $shitLogPipe;
     if(scalar(@commits)!=1)
     {
         die "Can't find most recent commit changing $filename\n";
@@ -4833,24 +4833,24 @@ sub getMetaFromCommithash
     $revision="2.1.1.2000$revision";
 
     # meta data about $filename:
-    open(my $filePipe, '-|', 'git', 'ls-tree', '-z',
+    open(my $filePipe, '-|', 'shit', 'ls-tree', '-z',
                 $commit->{hash}, '--', $filename)
-            or die("Cannot call git-ls-tree : $!");
+            or die("Cannot call shit-ls-tree : $!");
     local $/ = "\0";
     my $line;
     $line=<$filePipe>;
     if(defined(<$filePipe>))
     {
-        die "Expected only a single file for git-ls-tree $filename\n";
+        die "Expected only a single file for shit-ls-tree $filename\n";
     }
     close $filePipe;
 
     chomp $line;
     unless ( $line=~m/^(\d+)\s+(\w+)\s+([a-zA-Z0-9]+)\t(.*)$/o )
     {
-        die("Couldn't process git-ls-tree line : $line\n");
+        die("Couldn't process shit-ls-tree line : $line\n");
     }
-    my ( $mode, $git_type, $git_hash, $git_filename ) = ( $1, $2, $3, $4 );
+    my ( $mode, $shit_type, $shit_hash, $shit_filename ) = ( $1, $2, $3, $4 );
 
     # save result:
     my($retVal)={};
@@ -4883,7 +4883,7 @@ sub lookupCommitRef
         return $commitHash;
     }
 
-    $commitHash = ::safe_pipe_capture("git","rev-parse","--verify","--quiet",
+    $commitHash = ::safe_pipe_capture("shit","rev-parse","--verify","--quiet",
 				      $self->unescapeRefName($ref));
     $commitHash=~s/\s*$//;
     if(!($commitHash=~/^[0-9a-f]{$state->{hexsz}}$/))
@@ -4893,7 +4893,7 @@ sub lookupCommitRef
 
     if( defined($commitHash) )
     {
-        my $type = ::safe_pipe_capture("git","cat-file","-t",$commitHash);
+        my $type = ::safe_pipe_capture("shit","cat-file","-t",$commitHash);
         if( ! ($type=~/^commit\s*$/ ) )
         {
             $commitHash=undef;
@@ -4946,7 +4946,7 @@ sub commitmessage
         return $message;
     }
 
-    my @lines = ::safe_pipe_capture("git", "cat-file", "commit", $commithash);
+    my @lines = ::safe_pipe_capture("shit", "cat-file", "commit", $commithash);
     shift @lines while ( $lines[0] =~ /\S/ );
     $message = join("",@lines);
     $message .= " " if ( $message =~ /\n$/ );
@@ -4959,8 +4959,8 @@ This function takes a filename (with path) argument and returns an arrayofarrays
 containing revision,filehash,commithash ordered by revision descending.
 
 This version of gethistory skips deleted entries -- so it is useful for annotate.
-The 'dense' part is a reference to a '--dense' option available for git-rev-list
-and other git tools that depend on it.
+The 'dense' part is a reference to a '--dense' option available for shit-rev-list
+and other shit tools that depend on it.
 
 See also getlog().
 
@@ -4989,7 +4989,7 @@ sub gethistorydense
 =head2 escapeRefName
 
 Apply an escape mechanism to compensate for characters that
-git ref names can have that CVS tags can not.
+shit ref names can have that CVS tags can not.
 
 =cut
 sub escapeRefName
@@ -4999,7 +4999,7 @@ sub escapeRefName
     # CVS officially only allows [-_A-Za-z0-9] in tag names (or in
     # many contexts it can also be a CVS revision number).
     #
-    # Git tags commonly use '/' and '.' as well, but also handle
+    # shit tags commonly use '/' and '.' as well, but also handle
     # anything else just in case:
     #
     #   = "_-s-"  For '/'.
@@ -5021,7 +5021,7 @@ sub escapeRefName
 =head2 unescapeRefName
 
 Undo an escape mechanism to compensate for characters that
-git ref names can have that CVS tags can not.
+shit ref names can have that CVS tags can not.
 
 =cut
 sub unescapeRefName
@@ -5033,7 +5033,7 @@ sub unescapeRefName
     $refName=~s/_-([spu]|[0-9a-f][0-9a-f])-/unescapeRefNameChar($1)/eg;
 
     # allowed tag names
-    # TODO: Perhaps use git check-ref-format, with an in-process cache of
+    # TODO: Perhaps use shit check-ref-format, with an in-process cache of
     #  validated names?
     if( !( $refName=~m%^[^-][-a-zA-Z0-9_/.]*$% ) ||
         ( $refName=~m%[/.]$% ) ||

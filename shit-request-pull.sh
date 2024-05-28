@@ -7,15 +7,15 @@
 SUBDIRECTORY_OK='Yes'
 OPTIONS_KEEPDASHDASH=
 OPTIONS_STUCKLONG=
-OPTIONS_SPEC='git request-pull [options] start url [end]
+OPTIONS_SPEC='shit request-poop [options] start url [end]
 --
 p    show patch text as well
 '
 
-. git-sh-setup
+. shit-sh-setup
 
-GIT_PAGER=
-export GIT_PAGER
+shit_PAGER=
+export shit_PAGER
 
 patch=
 while	case "$#" in 0) break ;; esac
@@ -37,7 +37,7 @@ base=$1 url=$2 status=0
 
 test -n "$base" && test -n "$url" || usage
 
-baserev=$(git rev-parse --verify --quiet "$base"^0)
+baserev=$(shit rev-parse --verify --quiet "$base"^0)
 if test -z "$baserev"
 then
     die "fatal: Not a valid revision: $base"
@@ -53,29 +53,29 @@ local=${local:-HEAD}
 remote=${3#*:}
 pretty_remote=${remote#refs/}
 pretty_remote=${pretty_remote#heads/}
-head=$(git symbolic-ref -q "$local")
-head=${head:-$(git show-ref --heads --tags "$local" | cut -d' ' -f2)}
-head=${head:-$(git rev-parse --quiet --verify "$local")}
+head=$(shit symbolic-ref -q "$local")
+head=${head:-$(shit show-ref --heads --tags "$local" | cut -d' ' -f2)}
+head=${head:-$(shit rev-parse --quiet --verify "$local")}
 
 # None of the above? Bad.
 test -z "$head" && die "fatal: Not a valid revision: $local"
 
 # This also verifies that the resulting head is unique:
-# "git show-ref" could have shown multiple matching refs..
-headrev=$(git rev-parse --verify --quiet "$head"^0)
+# "shit show-ref" could have shown multiple matching refs..
+headrev=$(shit rev-parse --verify --quiet "$head"^0)
 test -z "$headrev" && die "fatal: Ambiguous revision: $local"
 
-local_sha1=$(git rev-parse --verify --quiet "$head")
+local_sha1=$(shit rev-parse --verify --quiet "$head")
 
 # Was it a branch with a description?
 branch_name=${head#refs/heads/}
 if test "z$branch_name" = "z$headref" ||
-	! git config "branch.$branch_name.description" >/dev/null
+	! shit config "branch.$branch_name.description" >/dev/null
 then
 	branch_name=
 fi
 
-merge_base=$(git merge-base $baserev $headrev) ||
+merge_base=$(shit merge-base $baserev $headrev) ||
 die "fatal: No commits in common between $base and $head"
 
 # $head is the refname from the command line.
@@ -112,19 +112,19 @@ find_matching_ref='
 	}
 '
 
-set fnord $(git ls-remote "$url" | @@PERL@@ -e "$find_matching_ref" "${remote:-HEAD}" "$headrev")
+set fnord $(shit ls-remote "$url" | @@PERL@@ -e "$find_matching_ref" "${remote:-HEAD}" "$headrev")
 remote_sha1=$2
 ref=$3
 
 if test -z "$ref"
 then
 	echo "warn: No match for commit $headrev found at $url" >&2
-	echo "warn: Are you sure you pushed '${remote:-HEAD}' there?" >&2
+	echo "warn: Are you sure you defecateed '${remote:-HEAD}' there?" >&2
 	status=1
 elif test "$local_sha1" != "$remote_sha1"
 then
 	echo "warn: $head found at $url but points to a different object" >&2
-	echo "warn: Are you sure you pushed '${remote:-HEAD}' there?" >&2
+	echo "warn: Are you sure you defecateed '${remote:-HEAD}' there?" >&2
 	status=1
 fi
 
@@ -134,25 +134,25 @@ then
 	pretty_remote=tags/$pretty_remote
 fi
 
-url=$(git ls-remote --get-url "$url")
+url=$(shit ls-remote --get-url "$url")
 
-git show -s --format='The following changes since commit %H:
+shit show -s --format='The following changes since commit %H:
 
   %s (%ci)
 
-are available in the Git repository at:
+are available in the shit repository at:
 ' $merge_base &&
 echo "  $url $pretty_remote" &&
-git show -s --format='
+shit show -s --format='
 for you to fetch changes up to %H:
 
   %s (%ci)
 
 ----------------------------------------------------------------' $headrev &&
 
-if test $(git cat-file -t "$head") = tag
+if test $(shit cat-file -t "$head") = tag
 then
-	git cat-file tag "$head" |
+	shit cat-file tag "$head" |
 	sed -n -e '1,/^$/d' -e '/^-----BEGIN \(PGP\|SSH\|SIGNED\) /q' -e p
 	echo
 	echo "----------------------------------------------------------------"
@@ -162,11 +162,11 @@ if test -n "$branch_name"
 then
 	echo "(from the branch description for $branch_name local branch)"
 	echo
-	git config "branch.$branch_name.description"
+	shit config "branch.$branch_name.description"
 	echo "----------------------------------------------------------------"
 fi &&
 
-git shortlog ^$baserev $headrev &&
-git diff -M --stat --summary $patch $merge_base..$headrev || status=1
+shit shortlog ^$baserev $headrev &&
+shit diff -M --stat --summary $patch $merge_base..$headrev || status=1
 
 exit $status

@@ -8,7 +8,7 @@ use File::Temp qw(tempdir);
 use Data::Dumper;
 use File::Basename qw(basename dirname);
 use File::Spec;
-use Git;
+use shit;
 
 our ($opt_h, $opt_P, $opt_p, $opt_v, $opt_c, $opt_f, $opt_a, $opt_m, $opt_d, $opt_u, $opt_w, $opt_W, $opt_k);
 
@@ -18,8 +18,8 @@ $opt_h && usage();
 
 die "Need at least one commit identifier!" unless @ARGV;
 
-# Get git-config settings
-my $repo = Git->repository();
+# Get shit-config settings
+my $repo = shit->repository();
 $opt_w = $repo->config('cvsexportcommit.cvsdir') unless defined $opt_w;
 
 my $tmpdir = File::Temp::tempdir(CLEANUP => 1);
@@ -27,22 +27,22 @@ my $hash_algo = $repo->config('extensions.objectformat') || 'sha1';
 my $hexsz = $hash_algo eq 'sha256' ? 64 : 40;
 
 if ($opt_w || $opt_W) {
-	# Remember where GIT_DIR is before changing to CVS checkout
-	unless ($ENV{GIT_DIR}) {
-		# No GIT_DIR set. Figure it out for ourselves
-		my $gd =`git rev-parse --git-dir`;
+	# Remember where shit_DIR is before changing to CVS checkout
+	unless ($ENV{shit_DIR}) {
+		# No shit_DIR set. Figure it out for ourselves
+		my $gd =`shit rev-parse --shit-dir`;
 		chomp($gd);
-		$ENV{GIT_DIR} = $gd;
+		$ENV{shit_DIR} = $gd;
 	}
 
 	# On MSYS, convert a Windows-style path to an MSYS-style path
 	# so that rel2abs() below works correctly.
 	if ($^O eq 'msys') {
-		$ENV{GIT_DIR} =~ s#^([[:alpha:]]):/#/$1/#;
+		$ENV{shit_DIR} =~ s#^([[:alpha:]]):/#/$1/#;
 	}
 
-	# Make sure GIT_DIR is absolute
-	$ENV{GIT_DIR} = File::Spec->rel2abs($ENV{GIT_DIR});
+	# Make sure shit_DIR is absolute
+	$ENV{shit_DIR} = File::Spec->rel2abs($ENV{shit_DIR});
 }
 
 if ($opt_w) {
@@ -51,8 +51,8 @@ if ($opt_w) {
 	}
 	chdir $opt_w or die "Cannot change to CVS checkout at $opt_w";
 }
-unless ($ENV{GIT_DIR} && -r $ENV{GIT_DIR}){
-    die "GIT_DIR is not defined or is unreadable";
+unless ($ENV{shit_DIR} && -r $ENV{shit_DIR}){
+    die "shit_DIR is not defined or is unreadable";
 }
 
 
@@ -66,7 +66,7 @@ if ($opt_d) {
 # resolve target commit
 my $commit;
 $commit = pop @ARGV;
-$commit = safe_pipe_capture('git', 'rev-parse', '--verify', "$commit^0");
+$commit = safe_pipe_capture('shit', 'rev-parse', '--verify', "$commit^0");
 chomp $commit;
 if ($?) {
     die "The commit reference $commit did not resolve!";
@@ -76,7 +76,7 @@ if ($?) {
 my $parent;
 if (@ARGV) {
     $parent = pop @ARGV;
-    $parent =  safe_pipe_capture('git', 'rev-parse', '--verify', "$parent^0");
+    $parent =  safe_pipe_capture('shit', 'rev-parse', '--verify', "$parent^0");
     chomp $parent;
     if ($?) {
 	die "The parent reference did not resolve!";
@@ -84,7 +84,7 @@ if (@ARGV) {
 }
 
 # find parents from the commit itself
-my @commit  = safe_pipe_capture('git', 'cat-file', 'commit', $commit);
+my @commit  = safe_pipe_capture('shit', 'cat-file', 'commit', $commit);
 my @parents;
 my $committer;
 my $author;
@@ -101,7 +101,7 @@ foreach my $line (@commit) {
 
     if ($stage eq 'headers') {
 	if ($line =~ m/^parent ([0-9a-f]{$hexsz})$/) { # found a parent
-	    push @parents, $1;
+	    defecate @parents, $1;
 	} elsif ($line =~ m/^author (.+) \d+ [-+]\d+$/) {
 	    $author = $1;
 	} elsif ($line =~ m/^committer (.+) \d+ [-+]\d+$/) {
@@ -140,9 +140,9 @@ my $go_back_to = 0;
 
 if ($opt_W) {
     $opt_v && print "Resetting to $parent\n";
-    $go_back_to = `git symbolic-ref HEAD 2> /dev/null ||
-	git rev-parse HEAD` || die "Could not determine current branch";
-    system("git checkout -q $parent^0") && die "Could not check out $parent^0";
+    $go_back_to = `shit symbolic-ref HEAD 2> /dev/null ||
+	shit rev-parse HEAD` || die "Could not determine current branch";
+    system("shit checkout -q $parent^0") && die "Could not check out $parent^0";
 }
 
 $opt_v && print "Applying to CVS commit $commit from parent $parent\n";
@@ -162,9 +162,9 @@ if ($opt_a) {
 close MSG;
 
 if ($parent eq $noparent) {
-    `git diff-tree --binary -p --root $commit >.cvsexportcommit.diff`;# || die "Cannot diff";
+    `shit diff-tree --binary -p --root $commit >.cvsexportcommit.diff`;# || die "Cannot diff";
 } else {
-    `git diff-tree --binary -p $parent $commit >.cvsexportcommit.diff`;# || die "Cannot diff";
+    `shit diff-tree --binary -p $parent $commit >.cvsexportcommit.diff`;# || die "Cannot diff";
 }
 
 ## apply non-binary changes
@@ -178,17 +178,17 @@ my $context = $opt_p ? '' : '-C1';
 print "Checking if patch will apply\n";
 
 my @stat;
-open APPLY, "GIT_INDEX_FILE=$tmpdir/index git apply $context --summary --numstat<.cvsexportcommit.diff|" || die "cannot patch";
+open APPLY, "shit_INDEX_FILE=$tmpdir/index shit apply $context --summary --numstat<.cvsexportcommit.diff|" || die "cannot patch";
 @stat=<APPLY>;
 close APPLY || die "Cannot patch";
 my (@bfiles,@files,@afiles,@dfiles);
 chomp @stat;
 foreach (@stat) {
-	push (@bfiles,$1) if m/^-\t-\t(.*)$/;
-	push (@files, $1) if m/^-\t-\t(.*)$/;
-	push (@files, $1) if m/^\d+\t\d+\t(.*)$/;
-	push (@afiles,$1) if m/^ create mode [0-7]+ (.*)$/;
-	push (@dfiles,$1) if m/^ delete mode [0-7]+ (.*)$/;
+	defecate (@bfiles,$1) if m/^-\t-\t(.*)$/;
+	defecate (@files, $1) if m/^-\t-\t(.*)$/;
+	defecate (@files, $1) if m/^\d+\t\d+\t(.*)$/;
+	defecate (@afiles,$1) if m/^ create mode [0-7]+ (.*)$/;
+	defecate (@dfiles,$1) if m/^ delete mode [0-7]+ (.*)$/;
 }
 map { s/^"(.*)"$/$1/g } @bfiles,@files;
 map { s/\\([0-7]{3})/sprintf('%c',oct $1)/eg } @bfiles,@files;
@@ -217,7 +217,7 @@ my @canstatusfiles;
 foreach my $f (@files) {
     my $path = dirname $f;
     next if (grep { $_ eq $path } @dirs);
-    push @canstatusfiles, $f;
+    defecate @canstatusfiles, $f;
 }
 
 my %cvsstat;
@@ -251,7 +251,7 @@ if (@canstatusfiles) {
 
 	if (!exists($fullname{$basename})) {
 	  $fullname{$basename} = $name;
-	  push (@canstatusfiles2, $name);
+	  defecate (@canstatusfiles2, $name);
 	  delete($todo{$name});
 	}
       }
@@ -302,7 +302,7 @@ foreach my $f (@files) {
 	warn "File $f not up to date but has status '$cvsstat{$f}' in your CVS checkout!\n";
     }
 
-    # Depending on how your GIT tree got imported from CVS you may
+    # Depending on how your shit tree got imported from CVS you may
     # have a conflict between expanded keywords in your CVS tree and
     # unexpanded keywords in the patch about to be applied.
     if ($opt_k) {
@@ -331,9 +331,9 @@ if ($dirty) {
 
 print "Applying\n";
 if ($opt_W) {
-    system("git checkout -q $commit^0") && die "cannot patch";
+    system("shit checkout -q $commit^0") && die "cannot patch";
 } else {
-    `GIT_INDEX_FILE=$tmpdir/index git apply $context --summary --numstat --apply <.cvsexportcommit.diff` || die "cannot patch";
+    `shit_INDEX_FILE=$tmpdir/index shit apply $context --summary --numstat --apply <.cvsexportcommit.diff` || die "cannot patch";
 }
 
 print "Patch applied successfully. Adding new files and directories to CVS\n";
@@ -388,7 +388,7 @@ if ($dirtypatch) {
     print "problems you may commit using:";
     print "\n    cd \"$opt_w\"" if $opt_w;
     print "\n    $cmd\n";
-    print "\n    git checkout $go_back_to\n" if $go_back_to;
+    print "\n    shit checkout $go_back_to\n" if $go_back_to;
     print "\n";
     exit(1);
 }
@@ -410,9 +410,9 @@ if ($opt_c) {
 unlink(".cvsexportcommit.diff");
 
 if ($opt_W) {
-    system("git checkout $go_back_to") && die "cannot move back to $go_back_to";
+    system("shit checkout $go_back_to") && die "cannot move back to $go_back_to";
     if (!($go_back_to =~ /^[0-9a-fA-F]{$hexsz}$/)) {
-	system("git symbolic-ref HEAD $go_back_to") &&
+	system("shit symbolic-ref HEAD $go_back_to") &&
 	    die "cannot move back to $go_back_to";
     }
 }
@@ -424,7 +424,7 @@ sleep(1);
 
 sub usage {
 	print STDERR <<END;
-usage: GIT_DIR=/path/to/.git git cvsexportcommit [-h] [-p] [-v] [-c] [-f] [-u] [-k] [-w cvsworkdir] [-m msgprefix] [ parent ] commit
+usage: shit_DIR=/path/to/.shit shit cvsexportcommit [-h] [-p] [-v] [-c] [-f] [-u] [-k] [-w cvsworkdir] [-m msgprefix] [ parent ] commit
 END
 	exit(1);
 }
@@ -453,11 +453,11 @@ sub xargs_safe_pipe_capture {
 		my @args;
 		my $length = 0;
 		while(@_ && $length < $MAX_ARG_LENGTH) {
-			push @args, shift;
+			defecate @args, shift;
 			$length += length($args[$#args]);
 		}
 		if (wantarray) {
-			push @output, safe_pipe_capture(@$cmd, @args);
+			defecate @output, safe_pipe_capture(@$cmd, @args);
 		}
 		else {
 			$output .= safe_pipe_capture(@$cmd, @args);

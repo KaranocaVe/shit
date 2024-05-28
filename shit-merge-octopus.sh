@@ -5,7 +5,7 @@
 # Resolve two or more trees.
 #
 
-. git-sh-setup
+. shit-sh-setup
 
 LF='
 '
@@ -41,14 +41,14 @@ esac
 # MRC is the current "merge reference commit"
 # MRT is the current "merge result tree"
 
-if ! git diff-index --quiet --cached HEAD --
+if ! shit diff-index --quiet --cached HEAD --
 then
     gettextln "Error: Your local changes to the following files would be overwritten by merge"
-    git diff-index --cached --name-only HEAD -- | sed -e 's/^/    /'
+    shit diff-index --cached --name-only HEAD -- | sed -e 's/^/    /'
     exit 2
 fi
-MRC=$(git rev-parse --verify -q $head)
-MRT=$(git write-tree)
+MRC=$(shit rev-parse --verify -q $head)
+MRT=$(shit write-tree)
 NON_FF_MERGE=0
 OCTOPUS_FAILURE=0
 for SHA1 in $remotes
@@ -63,13 +63,13 @@ do
 		exit 2
 	esac
 
-	eval pretty_name=\${GITHEAD_$SHA1:-$SHA1}
+	eval pretty_name=\${shitHEAD_$SHA1:-$SHA1}
 	if test "$SHA1" = "$pretty_name"
 	then
 		SHA1_UP="$(echo "$SHA1" | tr a-z A-Z)"
-		eval pretty_name=\${GITHEAD_$SHA1_UP:-$pretty_name}
+		eval pretty_name=\${shitHEAD_$SHA1_UP:-$pretty_name}
 	fi
-	common=$(git merge-base --all $SHA1 $MRC) ||
+	common=$(shit merge-base --all $SHA1 $MRC) ||
 		die "$(eval_gettext "Unable to find common commit with \$pretty_name")"
 
 	case "$LF$common$LF" in
@@ -87,22 +87,22 @@ do
 		# We still need to count this as part of the parent set.
 
 		eval_gettextln "Fast-forwarding to: \$pretty_name"
-		git read-tree -u -m $head $SHA1 || exit
-		MRC=$SHA1 MRT=$(git write-tree)
+		shit read-tree -u -m $head $SHA1 || exit
+		MRC=$SHA1 MRT=$(shit write-tree)
 		continue
 	fi
 
 	NON_FF_MERGE=1
 
 	eval_gettextln "Trying simple merge with \$pretty_name"
-	git read-tree -u -m --aggressive  $common $MRT $SHA1 || exit 2
-	next=$(git write-tree 2>/dev/null)
+	shit read-tree -u -m --aggressive  $common $MRT $SHA1 || exit 2
+	next=$(shit write-tree 2>/dev/null)
 	if test $? -ne 0
 	then
 		gettextln "Simple merge did not work, trying automatic merge."
-		git merge-index -o git-merge-one-file -a ||
+		shit merge-index -o shit-merge-one-file -a ||
 		OCTOPUS_FAILURE=1
-		next=$(git write-tree 2>/dev/null)
+		next=$(shit write-tree 2>/dev/null)
 	fi
 
 	MRC="$MRC $SHA1"

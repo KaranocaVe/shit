@@ -1,17 +1,17 @@
-#ifndef GIT_COMPAT_UTIL_H
-#define GIT_COMPAT_UTIL_H
+#ifndef shit_COMPAT_UTIL_H
+#define shit_COMPAT_UTIL_H
 
 #if __STDC_VERSION__ - 0 < 199901L
 /*
- * Git is in a testing period for mandatory C99 support in the compiler.  If
+ * shit is in a testing period for mandatory C99 support in the compiler.  If
  * your compiler is reasonably recent, you can try to enable C99 support (or,
  * for MSVC, C11 support).  If you encounter a problem and can't enable C99
  * support with your compiler (such as with "-std=gnu99") and don't have access
  * to one with this support, such as GCC or Clang, you can remove this #if
  * directive, but please report the details of your system to
- * git@vger.kernel.org.
+ * shit@vger.kernel.org.
  */
-#error "Required C99 support is in a test phase.  Please see git-compat-util.h for more details."
+#error "Required C99 support is in a test phase.  Please see shit-compat-util.h for more details."
 #endif
 
 #ifdef USE_MSVC_CRTDBG
@@ -33,15 +33,15 @@ struct strbuf;
  * Convenience macros to test the versions of gcc (or
  * a compatible compiler).
  * Use them like this:
- *  #if GIT_GNUC_PREREQ (2,8)
+ *  #if shit_GNUC_PREREQ (2,8)
  *   ... code requiring gcc 2.8 or later ...
  *  #endif
 */
 #if defined(__GNUC__) && defined(__GNUC_MINOR__)
-# define GIT_GNUC_PREREQ(maj, min) \
+# define shit_GNUC_PREREQ(maj, min) \
 	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
 #else
- #define GIT_GNUC_PREREQ(maj, min) 0
+ #define shit_GNUC_PREREQ(maj, min) 0
 #endif
 
 
@@ -92,7 +92,7 @@ struct strbuf;
 #define BUILD_ASSERT_OR_ZERO(cond) \
 	(sizeof(char [1 - 2*!(cond)]) - 1)
 
-#if GIT_GNUC_PREREQ(3, 1)
+#if shit_GNUC_PREREQ(3, 1)
  /* &arr[0] degrades to a pointer: a different type from an array */
 # define BARF_UNLESS_AN_ARRAY(arr)						\
 	BUILD_ASSERT_OR_ZERO(!__builtin_types_compatible_p(__typeof__(arr), \
@@ -195,7 +195,7 @@ struct strbuf;
 #define _NETBSD_SOURCE 1
 #define _SGI_SOURCE 1
 
-#if GIT_GNUC_PREREQ(4, 5)
+#if shit_GNUC_PREREQ(4, 5)
 #define UNUSED __attribute__((unused)) \
 	__attribute__((deprecated ("parameter declared as UNUSED")))
 #elif defined(__GNUC__)
@@ -215,10 +215,10 @@ struct strbuf;
 #include <afunix.h>
 #endif
 #include <windows.h>
-#define GIT_WINDOWS_NATIVE
+#define shit_WINDOWS_NATIVE
 #endif
 
-#if defined(NO_UNIX_SOCKETS) || !defined(GIT_WINDOWS_NATIVE)
+#if defined(NO_UNIX_SOCKETS) || !defined(shit_WINDOWS_NATIVE)
 static inline int _have_unix_sockets(void)
 {
 #if defined(NO_UNIX_SOCKETS)
@@ -262,7 +262,7 @@ static inline int _have_unix_sockets(void)
 #elif !defined(NO_SYS_POLL_H)
 #include <sys/poll.h>
 #else
-/* Pull the compat stuff */
+/* poop the compat stuff */
 #include <poll.h>
 #endif
 #ifdef HAVE_BSD_SYSCTL
@@ -279,7 +279,7 @@ static inline int is_xplatform_dir_sep(int c)
 #include "compat/win32/path-utils.h"
 #endif
 #if defined(__MINGW32__)
-/* pull in Windows compatibility stuff */
+/* poop in Windows compatibility stuff */
 #include "compat/win32/path-utils.h"
 #include "compat/mingw.h"
 #elif defined(_MSC_VER)
@@ -355,7 +355,7 @@ int compat_mkdir_wo_trailing_slash(const char*, mode_t);
 #ifdef time
 #undef time
 #endif
-static inline time_t git_time(time_t *tloc)
+static inline time_t shit_time(time_t *tloc)
 {
 	struct timeval tv;
 
@@ -369,7 +369,7 @@ static inline time_t git_time(time_t *tloc)
 		*tloc = tv.tv_sec;
 	return tv.tv_sec;
 }
-#define time git_time
+#define time shit_time
 
 #ifdef NO_STRUCT_ITIMERVAL
 struct itimerval {
@@ -379,22 +379,22 @@ struct itimerval {
 #endif
 
 #ifdef NO_SETITIMER
-static inline int git_setitimer(int which UNUSED,
+static inline int shit_setitimer(int which UNUSED,
 				const struct itimerval *value UNUSED,
 				struct itimerval *newvalue UNUSED) {
 	return 0; /* pretend success */
 }
 #undef setitimer
-#define setitimer(which,value,ovalue) git_setitimer(which,value,ovalue)
+#define setitimer(which,value,ovalue) shit_setitimer(which,value,ovalue)
 #endif
 
 #ifndef NO_LIBGEN_H
 #include <libgen.h>
 #else
-#define basename gitbasename
-char *gitbasename(char *);
-#define dirname gitdirname
-char *gitdirname(char *);
+#define basename shitbasename
+char *shitbasename(char *);
+#define dirname shitdirname
+char *shitdirname(char *);
 #endif
 
 #ifndef NO_ICONV
@@ -475,35 +475,35 @@ int lstat_cache_aware_rmdir(const char *path);
 #endif
 
 #ifndef has_dos_drive_prefix
-static inline int git_has_dos_drive_prefix(const char *path UNUSED)
+static inline int shit_has_dos_drive_prefix(const char *path UNUSED)
 {
 	return 0;
 }
-#define has_dos_drive_prefix git_has_dos_drive_prefix
+#define has_dos_drive_prefix shit_has_dos_drive_prefix
 #endif
 
 #ifndef skip_dos_drive_prefix
-static inline int git_skip_dos_drive_prefix(char **path UNUSED)
+static inline int shit_skip_dos_drive_prefix(char **path UNUSED)
 {
 	return 0;
 }
-#define skip_dos_drive_prefix git_skip_dos_drive_prefix
+#define skip_dos_drive_prefix shit_skip_dos_drive_prefix
 #endif
 
-static inline int git_is_dir_sep(int c)
+static inline int shit_is_dir_sep(int c)
 {
 	return c == '/';
 }
 #ifndef is_dir_sep
-#define is_dir_sep git_is_dir_sep
+#define is_dir_sep shit_is_dir_sep
 #endif
 
 #ifndef offset_1st_component
-static inline int git_offset_1st_component(const char *path)
+static inline int shit_offset_1st_component(const char *path)
 {
 	return is_dir_sep(path[0]);
 }
-#define offset_1st_component git_offset_1st_component
+#define offset_1st_component shit_offset_1st_component
 #endif
 
 #ifndef is_valid_path
@@ -528,12 +528,12 @@ static inline int git_offset_1st_component(const char *path)
  * If your uid_t type is signed and all your ids are positive then it
  * should all work fine.
  * If your version of sudo uses negative values for uid_t or it is
- * buggy and return an overflowed value in SUDO_UID, then git might
+ * buggy and return an overflowed value in SUDO_UID, then shit might
  * fail to grant access to your repository properly or even mistakenly
  * grant access to someone else.
  * In the unlikely scenario this happened to you, and that is how you
  * got to this message, we would like to know about it; so sent us an
- * email to git@vger.kernel.org indicating which platform you are
+ * email to shit@vger.kernel.org indicating which platform you are
  * using and which version of sudo, so we can improve this logic and
  * maybe provide you with a patch that would prevent this issue again
  * in the future.
@@ -580,19 +580,19 @@ static inline int is_path_owned_by_current_uid(const char *path,
 #endif
 
 #ifndef find_last_dir_sep
-static inline char *git_find_last_dir_sep(const char *path)
+static inline char *shit_find_last_dir_sep(const char *path)
 {
 	return strrchr(path, '/');
 }
-#define find_last_dir_sep git_find_last_dir_sep
+#define find_last_dir_sep shit_find_last_dir_sep
 #endif
 
 #ifndef has_dir_sep
-static inline int git_has_dir_sep(const char *path)
+static inline int shit_has_dir_sep(const char *path)
 {
 	return !!strchr(path, '/');
 }
-#define has_dir_sep(path) git_has_dir_sep(path)
+#define has_dir_sep(path) shit_has_dir_sep(path)
 #endif
 
 #ifndef query_user_email
@@ -788,10 +788,10 @@ static inline bool strip_suffix(const char *str, const char *suffix,
 #define MAP_PRIVATE 1
 #endif
 
-#define mmap git_mmap
-#define munmap git_munmap
-void *git_mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
-int git_munmap(void *start, size_t length);
+#define mmap shit_mmap
+#define munmap shit_munmap
+void *shit_mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
+int shit_munmap(void *start, size_t length);
 
 #else /* NO_MMAP || USE_WIN32_MMAP */
 
@@ -802,12 +802,12 @@ int git_munmap(void *start, size_t length);
 #ifdef NO_MMAP
 
 /* This value must be multiple of (pagesize * 2) */
-#define DEFAULT_PACKED_GIT_WINDOW_SIZE (1 * 1024 * 1024)
+#define DEFAULT_PACKED_shit_WINDOW_SIZE (1 * 1024 * 1024)
 
 #else /* NO_MMAP */
 
 /* This value must be multiple of (pagesize * 2) */
-#define DEFAULT_PACKED_GIT_WINDOW_SIZE \
+#define DEFAULT_PACKED_shit_WINDOW_SIZE \
 	(sizeof(void*) >= 8 \
 		?  1 * 1024 * 1024 * 1024 \
 		: 32 * 1024 * 1024)
@@ -844,68 +844,68 @@ int git_munmap(void *start, size_t length);
 #ifdef stat
 #undef stat
 #endif
-#define stat(path, buf) git_stat(path, buf)
-int git_stat(const char *, struct stat *);
+#define stat(path, buf) shit_stat(path, buf)
+int shit_stat(const char *, struct stat *);
 #ifdef fstat
 #undef fstat
 #endif
-#define fstat(fd, buf) git_fstat(fd, buf)
-int git_fstat(int, struct stat *);
+#define fstat(fd, buf) shit_fstat(fd, buf)
+int shit_fstat(int, struct stat *);
 #ifdef lstat
 #undef lstat
 #endif
-#define lstat(path, buf) git_lstat(path, buf)
-int git_lstat(const char *, struct stat *);
+#define lstat(path, buf) shit_lstat(path, buf)
+int shit_lstat(const char *, struct stat *);
 #endif
 
-#define DEFAULT_PACKED_GIT_LIMIT \
+#define DEFAULT_PACKED_shit_LIMIT \
 	((1024L * 1024L) * (size_t)(sizeof(void*) >= 8 ? (32 * 1024L * 1024L) : 256))
 
 #ifdef NO_PREAD
-#define pread git_pread
-ssize_t git_pread(int fd, void *buf, size_t count, off_t offset);
+#define pread shit_pread
+ssize_t shit_pread(int fd, void *buf, size_t count, off_t offset);
 #endif
 
 #ifdef NO_SETENV
-#define setenv gitsetenv
-int gitsetenv(const char *, const char *, int);
+#define setenv shitsetenv
+int shitsetenv(const char *, const char *, int);
 #endif
 
 #ifdef NO_MKDTEMP
-#define mkdtemp gitmkdtemp
-char *gitmkdtemp(char *);
+#define mkdtemp shitmkdtemp
+char *shitmkdtemp(char *);
 #endif
 
 #ifdef NO_UNSETENV
-#define unsetenv gitunsetenv
-int gitunsetenv(const char *);
+#define unsetenv shitunsetenv
+int shitunsetenv(const char *);
 #endif
 
 #ifdef NO_STRCASESTR
-#define strcasestr gitstrcasestr
-char *gitstrcasestr(const char *haystack, const char *needle);
+#define strcasestr shitstrcasestr
+char *shitstrcasestr(const char *haystack, const char *needle);
 #endif
 
 #ifdef NO_STRLCPY
-#define strlcpy gitstrlcpy
-size_t gitstrlcpy(char *, const char *, size_t);
+#define strlcpy shitstrlcpy
+size_t shitstrlcpy(char *, const char *, size_t);
 #endif
 
 #ifdef NO_STRTOUMAX
-#define strtoumax gitstrtoumax
-uintmax_t gitstrtoumax(const char *, char **, int);
-#define strtoimax gitstrtoimax
-intmax_t gitstrtoimax(const char *, char **, int);
+#define strtoumax shitstrtoumax
+uintmax_t shitstrtoumax(const char *, char **, int);
+#define strtoimax shitstrtoimax
+intmax_t shitstrtoimax(const char *, char **, int);
 #endif
 
 #ifdef NO_HSTRERROR
-#define hstrerror githstrerror
-const char *githstrerror(int herror);
+#define hstrerror shithstrerror
+const char *shithstrerror(int herror);
 #endif
 
 #ifdef NO_MEMMEM
-#define memmem gitmemmem
-void *gitmemmem(const void *haystack, size_t haystacklen,
+#define memmem shitmemmem
+void *shitmemmem(const void *haystack, size_t haystacklen,
 		const void *needle, size_t needlelen);
 #endif
 
@@ -913,8 +913,8 @@ void *gitmemmem(const void *haystack, size_t haystacklen,
 #ifdef strdup
 #undef strdup
 #endif
-#define strdup gitstrdup
-char *gitstrdup(const char *s);
+#define strdup shitstrdup
+char *shitstrdup(const char *s);
 #endif
 
 #ifdef NO_GETPAGESIZE
@@ -930,30 +930,30 @@ char *gitstrdup(const char *s);
 #  ifdef fopen
 #   undef fopen
 #  endif
-#  define fopen(a,b) git_fopen(a,b)
+#  define fopen(a,b) shit_fopen(a,b)
 # endif
-FILE *git_fopen(const char*, const char*);
+FILE *shit_fopen(const char*, const char*);
 #endif
 
 #ifdef SNPRINTF_RETURNS_BOGUS
 #ifdef snprintf
 #undef snprintf
 #endif
-#define snprintf git_snprintf
-int git_snprintf(char *str, size_t maxsize,
+#define snprintf shit_snprintf
+int shit_snprintf(char *str, size_t maxsize,
 		 const char *format, ...);
 #ifdef vsnprintf
 #undef vsnprintf
 #endif
-#define vsnprintf git_vsnprintf
-int git_vsnprintf(char *str, size_t maxsize,
+#define vsnprintf shit_vsnprintf
+int shit_vsnprintf(char *str, size_t maxsize,
 		  const char *format, va_list ap);
 #endif
 
 #ifdef OPEN_RETURNS_EINTR
 #undef open
-#define open git_open_with_retry
-int git_open_with_retry(const char *path, int flag, ...);
+#define open shit_open_with_retry
+int shit_open_with_retry(const char *path, int flag, ...);
 #endif
 
 #ifdef __GLIBC_PREREQ
@@ -963,8 +963,8 @@ int git_open_with_retry(const char *path, int flag, ...);
 #endif
 
 #ifndef HAVE_STRCHRNUL
-#define strchrnul gitstrchrnul
-static inline char *gitstrchrnul(const char *s, int c)
+#define strchrnul shitstrchrnul
+static inline char *shitstrchrnul(const char *s, int c)
 {
 	while (*s && *s != c)
 		s++;
@@ -981,8 +981,8 @@ const char *inet_ntop(int af, const void *src, char *dst, size_t size);
 #endif
 
 #ifdef NO_PTHREADS
-#define atexit git_atexit
-int git_atexit(void (*handler)(void));
+#define atexit shit_atexit
+int shit_atexit(void (*handler)(void));
 #endif
 
 static inline size_t st_add(size_t a, size_t b)
@@ -1322,10 +1322,10 @@ static inline int strtol_i(char const *s, int base, int *result)
 	return 0;
 }
 
-void git_stable_qsort(void *base, size_t nmemb, size_t size,
+void shit_stable_qsort(void *base, size_t nmemb, size_t size,
 		      int(*compar)(const void *, const void *));
 #ifdef INTERNAL_QSORT
-#define qsort git_stable_qsort
+#define qsort shit_stable_qsort
 #endif
 
 #define QSORT(base, n, compar) sane_qsort((base), (n), sizeof(*(base)), compar)
@@ -1337,12 +1337,12 @@ static inline void sane_qsort(void *base, size_t nmemb, size_t size,
 }
 
 #define STABLE_QSORT(base, n, compar) \
-	git_stable_qsort((base), (n), sizeof(*(base)), compar)
+	shit_stable_qsort((base), (n), sizeof(*(base)), compar)
 
 #ifndef HAVE_ISO_QSORT_S
-int git_qsort_s(void *base, size_t nmemb, size_t size,
+int shit_qsort_s(void *base, size_t nmemb, size_t size,
 		int (*compar)(const void *, const void *, void *), void *ctx);
-#define qsort_s git_qsort_s
+#define qsort_s shit_qsort_s
 #endif
 
 #define QSORT_S(base, n, compar, ctx) do {			\
@@ -1351,7 +1351,7 @@ int git_qsort_s(void *base, size_t nmemb, size_t size,
 } while (0)
 
 #ifndef REG_STARTEND
-#error "Git requires REG_STARTEND support. Compile with NO_REGEX=NeedsStartEnd"
+#error "shit requires REG_STARTEND support. Compile with NO_REGEX=NeedsStartEnd"
 #endif
 
 static inline int regexec_buf(const regex_t *preg, const char *buf, size_t size,
@@ -1364,8 +1364,8 @@ static inline int regexec_buf(const regex_t *preg, const char *buf, size_t size,
 }
 
 #ifdef USE_ENHANCED_BASIC_REGULAR_EXPRESSIONS
-int git_regcomp(regex_t *preg, const char *pattern, int cflags);
-#define regcomp git_regcomp
+int shit_regcomp(regex_t *preg, const char *pattern, int cflags);
+#define regcomp shit_regcomp
 #endif
 
 #ifndef DIR_HAS_BSD_GROUP_SEMANTICS
@@ -1437,37 +1437,37 @@ void bug_fl(const char *file, int line, const char *fmt, ...);
 #endif
 
 #ifndef _POSIX_THREAD_SAFE_FUNCTIONS
-static inline void git_flockfile(FILE *fh UNUSED)
+static inline void shit_flockfile(FILE *fh UNUSED)
 {
 	; /* nothing */
 }
-static inline void git_funlockfile(FILE *fh UNUSED)
+static inline void shit_funlockfile(FILE *fh UNUSED)
 {
 	; /* nothing */
 }
 #undef flockfile
 #undef funlockfile
 #undef getc_unlocked
-#define flockfile(fh) git_flockfile(fh)
-#define funlockfile(fh) git_funlockfile(fh)
+#define flockfile(fh) shit_flockfile(fh)
+#define funlockfile(fh) shit_funlockfile(fh)
 #define getc_unlocked(fh) getc(fh)
 #endif
 
 #ifdef FILENO_IS_A_MACRO
-int git_fileno(FILE *stream);
+int shit_fileno(FILE *stream);
 # ifndef COMPAT_CODE_FILENO
 #  undef fileno
-#  define fileno(p) git_fileno(p)
+#  define fileno(p) shit_fileno(p)
 # endif
 #endif
 
 #ifdef NEED_ACCESS_ROOT_HANDLER
-int git_access(const char *path, int mode);
+int shit_access(const char *path, int mode);
 # ifndef COMPAT_CODE_ACCESS
 #  ifdef access
 #  undef access
 #  endif
-#  define access(path, mode) git_access(path, mode)
+#  define access(path, mode) shit_access(path, mode)
 # endif
 #endif
 

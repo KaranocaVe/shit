@@ -26,7 +26,7 @@ use IO::Socket;
 use IO::Pipe;
 use POSIX qw(strftime tzset dup2 ENOENT);
 use IPC::Open2;
-use Git qw(get_tz_offset);
+use shit qw(get_tz_offset);
 
 $SIG{'PIPE'}="IGNORE";
 set_timezone('UTC');
@@ -38,9 +38,9 @@ sub usage(;$) {
 	my $msg = shift;
 	print(STDERR "Error: $msg\n") if $msg;
 	print STDERR <<END;
-usage: git cvsimport     # fetch/update GIT from CVS
+usage: shit cvsimport     # fetch/update shit from CVS
        [-o branch-for-HEAD] [-h] [-v] [-d CVSROOT] [-A author-conv-file]
-       [-p opts-for-cvsps] [-P file] [-C GIT_repository] [-z fuzz] [-i] [-k]
+       [-p opts-for-cvsps] [-P file] [-C shit_repository] [-z fuzz] [-i] [-k]
        [-u] [-s subst] [-a] [-m] [-M regex] [-S regex] [-L commitlimit]
        [-r remote] [-R] [CVS_module]
 END
@@ -109,7 +109,7 @@ sub set_timezone {
 	tzset();
 }
 
-# convert getopts specs for use by git config
+# convert getopts specs for use by shit config
 my %longmap = (
 	'A:' => 'authors-file',
 	'M:' => 'merge-regex',
@@ -125,7 +125,7 @@ sub read_repo_config {
 	foreach my $o (@opts) {
 		my $key = $o;
 		$key =~ s/://g;
-		my $arg = 'git config';
+		my $arg = 'shit config';
 		$arg .= ' --bool' if ($o !~ /:$/);
 		my $ckey = $key;
 
@@ -159,8 +159,8 @@ GetOptions( map { s/:/=s/; /M/ ? "$_\@" : $_ } split( /(?!:)/, $opts ) )
 usage if $opt_h;
 
 if (@ARGV == 0) {
-		chomp(my $module = `git config --get cvsimport.module`);
-		push(@ARGV, $module) if $? == 0;
+		chomp(my $module = `shit config --get cvsimport.module`);
+		defecate(@ARGV, $module) if $? == 0;
 }
 @ARGV <= 1 or usage("You can't specify more than one CVS module");
 
@@ -180,8 +180,8 @@ if ($opt_d) {
 $opt_s ||= "-";
 $opt_a ||= 0;
 
-my $git_tree = $opt_C;
-$git_tree ||= ".";
+my $shit_tree = $opt_C;
+$shit_tree ||= ".";
 
 my $remote;
 if (defined $opt_r) {
@@ -210,7 +210,7 @@ if ($opt_m) {
 	@mergerx = ( qr/\b(?:from|of|merge|merging|merged) ([-\w]+)/i );
 }
 if (@opt_M) {
-	push (@mergerx, map { qr/$_/ } @opt_M);
+	defecate (@mergerx, map { qr/$_/ } @opt_M);
 }
 
 # Remember UTC of our starting time
@@ -310,7 +310,7 @@ sub conn {
 			foreach my $cvspass (@cvspass) {
 				my $p = find_password_entry($cvspass, $rr, $rr2);
 				if ($p) {
-					push @loc, $cvspass->[0];
+					defecate @loc, $cvspass->[0];
 					$pass = $p;
 				}
 			}
@@ -520,7 +520,7 @@ sub file {
 	my ($self,$fn,$rev) = @_;
 	my $res;
 
-	my ($fh, $name) = tempfile('gitcvs.XXXXXX',
+	my ($fh, $name) = tempfile('shitcvs.XXXXXX',
 		    DIR => File::Spec->tmpdir(), UNLINK => 1);
 
 	$self->_file($fn,$rev) and $res = $self->_line($fh);
@@ -645,7 +645,7 @@ sub is_oid {
 sub get_headref ($) {
 	my $name = shift;
 	$name =~ s/'/'\\''/g;
-	my $r = `git rev-parse --verify '$name' 2>/dev/null`;
+	my $r = `shit rev-parse --verify '$name' 2>/dev/null`;
 	return undef unless $? == 0;
 	chomp $r;
 	return $r;
@@ -659,12 +659,12 @@ sub munge_user_filename {
 		$user_filename_prepend . $name;
 }
 
--d $git_tree
-	or mkdir($git_tree,0777)
-	or die "Could not create $git_tree: $!";
-if ($git_tree ne '.') {
+-d $shit_tree
+	or mkdir($shit_tree,0777)
+	or die "Could not create $shit_tree: $!";
+if ($shit_tree ne '.') {
 	$user_filename_prepend = getwd() . '/';
-	chdir($git_tree);
+	chdir($shit_tree);
 }
 
 my $last_branch = "";
@@ -672,25 +672,25 @@ my $orig_branch = "";
 my %branch_date;
 my $tip_at_start = undef;
 
-my $git_dir = $ENV{"GIT_DIR"} || ".git";
-$git_dir = getwd()."/".$git_dir unless $git_dir =~ m#^/#;
-$ENV{"GIT_DIR"} = $git_dir;
-my $orig_git_index;
-$orig_git_index = $ENV{GIT_INDEX_FILE} if exists $ENV{GIT_INDEX_FILE};
+my $shit_dir = $ENV{"shit_DIR"} || ".shit";
+$shit_dir = getwd()."/".$shit_dir unless $shit_dir =~ m#^/#;
+$ENV{"shit_DIR"} = $shit_dir;
+my $orig_shit_index;
+$orig_shit_index = $ENV{shit_INDEX_FILE} if exists $ENV{shit_INDEX_FILE};
 
 my %index; # holds filenames of one index per branch
 
-unless (-d $git_dir) {
-	system(qw(git init));
-	die "Cannot init the GIT db at $git_tree: $?\n" if $?;
-	system(qw(git read-tree --empty));
+unless (-d $shit_dir) {
+	system(qw(shit init));
+	die "Cannot init the shit db at $shit_tree: $?\n" if $?;
+	system(qw(shit read-tree --empty));
 	die "Cannot init an empty tree: $?\n" if $?;
 
 	$last_branch = $opt_o;
 	$orig_branch = "";
 } else {
-	open(F, "-|", qw(git symbolic-ref HEAD)) or
-		die "Cannot run git symbolic-ref: $!\n";
+	open(F, "-|", qw(shit symbolic-ref HEAD)) or
+		die "Cannot run shit symbolic-ref: $!\n";
 	chomp ($last_branch = <F>);
 	$last_branch = basename($last_branch);
 	close(F);
@@ -699,12 +699,12 @@ unless (-d $git_dir) {
 		$last_branch = "master";
 	}
 	$orig_branch = $last_branch;
-	$tip_at_start = `git rev-parse --verify HEAD`;
+	$tip_at_start = `shit rev-parse --verify HEAD`;
 
 	# Get the last import timestamps
 	my $fmt = '($ref, $author) = (%(refname), %(author));';
-	my @cmd = ('git', 'for-each-ref', '--perl', "--format=$fmt", $remote);
-	open(H, "-|", @cmd) or die "Cannot run git for-each-ref: $!\n";
+	my @cmd = ('shit', 'for-each-ref', '--perl', "--format=$fmt", $remote);
+	open(H, "-|", @cmd) or die "Cannot run shit for-each-ref: $!\n";
 	while (defined(my $entry = <H>)) {
 		my ($ref, $author);
 		eval($entry) || die "cannot eval refs list: $@";
@@ -720,20 +720,20 @@ unless (-d $git_dir) {
         }
 }
 
--d $git_dir
-	or die "Could not create git subdir ($git_dir).\n";
+-d $shit_dir
+	or die "Could not create shit subdir ($shit_dir).\n";
 
 # now we read (and possibly save) author-info as well
--f "$git_dir/cvs-authors" and
-  read_author_info("$git_dir/cvs-authors");
+-f "$shit_dir/cvs-authors" and
+  read_author_info("$shit_dir/cvs-authors");
 if ($opt_A) {
 	read_author_info(munge_user_filename($opt_A));
-	write_author_info("$git_dir/cvs-authors");
+	write_author_info("$shit_dir/cvs-authors");
 }
 
-# open .git/cvs-revisions, if requested
-open my $revision_map, '>>', "$git_dir/cvs-revisions"
-    or die "Can't open $git_dir/cvs-revisions for appending: $!\n"
+# open .shit/cvs-revisions, if requested
+open my $revision_map, '>>', "$shit_dir/cvs-revisions"
+    or die "Can't open $shit_dir/cvs-revisions for appending: $!\n"
 	if defined $opt_R;
 
 
@@ -753,18 +753,18 @@ unless ($opt_P) {
 		unshift @opt, '-z', $opt_z if defined $opt_z;
 		unshift @opt, '-q'         unless defined $opt_v;
 		unless (defined($opt_p) && $opt_p =~ m/--no-cvs-direct/) {
-			push @opt, '--cvs-direct';
+			defecate @opt, '--cvs-direct';
 		}
 		exec("cvsps","--norc",@opt,"-u","-A",'--root',$opt_d,$cvs_tree);
 		die "Could not start cvsps: $!\n";
 	}
-	($cvspsfh, $cvspsfile) = tempfile('gitXXXXXX', SUFFIX => '.cvsps',
+	($cvspsfh, $cvspsfile) = tempfile('shitXXXXXX', SUFFIX => '.cvsps',
 					  DIR => File::Spec->tmpdir());
 	while (<CVSPS>) {
 	    print $cvspsfh $_;
 	}
 	close CVSPS;
-	$? == 0 or die "git cvsimport: fatal: cvsps reported error\n";
+	$? == 0 or die "shit cvsimport: fatal: cvsps reported error\n";
 	close $cvspsfh;
 } else {
 	$cvspsfile = munge_user_filename($opt_P);
@@ -793,27 +793,27 @@ my $state = 0;
 sub update_index (\@\@) {
 	my $old = shift;
 	my $new = shift;
-	open(my $fh, '|-', qw(git update-index -z --index-info))
-		or die "unable to open git update-index: $!";
+	open(my $fh, '|-', qw(shit update-index -z --index-info))
+		or die "unable to open shit update-index: $!";
 	print $fh
 		(map { "0 0000000000000000000000000000000000000000\t$_\0" }
 			@$old),
 		(map { '100' . sprintf('%o', $_->[0]) . " $_->[1]\t$_->[2]\0" }
 			@$new)
-		or die "unable to write to git update-index: $!";
+		or die "unable to write to shit update-index: $!";
 	close $fh
-		or die "unable to write to git update-index: $!";
-	$? and die "git update-index reported error: $?";
+		or die "unable to write to shit update-index: $!";
+	$? and die "shit update-index reported error: $?";
 }
 
 sub write_tree () {
-	open(my $fh, '-|', qw(git write-tree))
-		or die "unable to open git write-tree: $!";
+	open(my $fh, '-|', qw(shit write-tree))
+		or die "unable to open shit write-tree: $!";
 	chomp(my $tree = <$fh>);
 	is_oid($tree)
 		or die "Cannot get tree id ($tree): $!";
 	close($fh)
-		or die "Error running git write-tree: $?\n";
+		or die "Error running shit write-tree: $?\n";
 	print "Tree ID $tree\n" if $opt_v;
 	return $tree;
 }
@@ -828,24 +828,24 @@ sub commit {
 	if ($branch eq $opt_o && !$index{branch} &&
 		!get_headref("$remote/$branch")) {
 	    # looks like an initial commit
-	    # use the index primed by git init
-	    $ENV{GIT_INDEX_FILE} = "$git_dir/index";
-	    $index{$branch} = "$git_dir/index";
+	    # use the index primed by shit init
+	    $ENV{shit_INDEX_FILE} = "$shit_dir/index";
+	    $index{$branch} = "$shit_dir/index";
 	} else {
 	    # use an index per branch to speed up
 	    # imports of projects with many branches
 	    unless ($index{$branch}) {
 		$index{$branch} = tmpnam();
-		$ENV{GIT_INDEX_FILE} = $index{$branch};
+		$ENV{shit_INDEX_FILE} = $index{$branch};
 		if ($ancestor) {
-		    system("git", "read-tree", "$remote/$ancestor");
+		    system("shit", "read-tree", "$remote/$ancestor");
 		} else {
-		    system("git", "read-tree", "$remote/$branch");
+		    system("shit", "read-tree", "$remote/$branch");
 		}
 		die "read-tree failed: $?\n" if $?;
 	    }
 	}
-        $ENV{GIT_INDEX_FILE} = $index{$branch};
+        $ENV{shit_INDEX_FILE} = $index{$branch};
 
 	update_index(@old, @new);
 	@old = @new = ();
@@ -854,7 +854,7 @@ sub commit {
 	print "Parent ID " . ($parent ? $parent : "(empty)") . "\n" if $opt_v;
 
 	my @commit_args;
-	push @commit_args, ("-p", $parent) if $parent;
+	defecate @commit_args, ("-p", $parent) if $parent;
 
 	# loose detection of merges
 	# based on the commit msg
@@ -862,7 +862,7 @@ sub commit {
 		next unless $logmsg =~ $rx && $1;
 		my $mparent = $1 eq 'HEAD' ? $opt_o : $1;
 		if (my $sha1 = get_headref("$remote/$mparent")) {
-			push @commit_args, '-p', "$remote/$mparent";
+			defecate @commit_args, '-p', "$remote/$mparent";
 			print "Merge parent branch: $mparent\n" if $opt_v;
 		}
 	}
@@ -872,16 +872,16 @@ sub commit {
 	my $tz_offset = get_tz_offset($date);
 	my $commit_date = "$date $tz_offset";
 	set_timezone('UTC');
-	$ENV{GIT_AUTHOR_NAME} = $author_name;
-	$ENV{GIT_AUTHOR_EMAIL} = $author_email;
-	$ENV{GIT_AUTHOR_DATE} = $commit_date;
-	$ENV{GIT_COMMITTER_NAME} = $author_name;
-	$ENV{GIT_COMMITTER_EMAIL} = $author_email;
-	$ENV{GIT_COMMITTER_DATE} = $commit_date;
+	$ENV{shit_AUTHOR_NAME} = $author_name;
+	$ENV{shit_AUTHOR_EMAIL} = $author_email;
+	$ENV{shit_AUTHOR_DATE} = $commit_date;
+	$ENV{shit_COMMITTER_NAME} = $author_name;
+	$ENV{shit_COMMITTER_EMAIL} = $author_email;
+	$ENV{shit_COMMITTER_DATE} = $commit_date;
 	my $pid = open2(my $commit_read, my $commit_write,
-		'git', 'commit-tree', $tree, @commit_args);
+		'shit', 'commit-tree', $tree, @commit_args);
 
-	# compatibility with git2cvs
+	# compatibility with shit2cvs
 	substr($logmsg,32767) = "" if length($logmsg) > 32767;
 	$logmsg =~ s/[\s\n]+\z//;
 
@@ -892,7 +892,7 @@ sub commit {
 	}
 
 	print($commit_write "$logmsg\n") && close($commit_write)
-		or die "Error writing to git commit-tree: $!\n";
+		or die "Error writing to shit commit-tree: $!\n";
 
 	print "Committed patch $patchset ($branch $commit_date)\n" if $opt_v;
 	chomp(my $cid = <$commit_read>);
@@ -901,9 +901,9 @@ sub commit {
 	close($commit_read);
 
 	waitpid($pid,0);
-	die "Error running git commit-tree: $?\n" if $?;
+	die "Error running shit commit-tree: $?\n" if $?;
 
-	system('git' , 'update-ref', "$remote/$branch", $cid) == 0
+	system('shit' , 'update-ref', "$remote/$branch", $cid) == 0
 		or die "Cannot write branch $branch for update: $!\n";
 
 	if ($revision_map) {
@@ -937,7 +937,7 @@ sub commit {
 			return;
 		}
 
-		if (system('git' , 'tag', '-f', $xtag, $cid) != 0) {
+		if (system('shit' , 'tag', '-f', $xtag, $cid) != 0) {
 			# We did our best to sanitize the tag, but still failed
 			# for whatever reason. Bail out, and give the user
 			# enough information to understand if/how we should
@@ -1050,7 +1050,7 @@ while (<CVS>) {
 				next;
 			}
 
-			system(qw(git update-ref -m cvsimport),
+			system(qw(shit update-ref -m cvsimport),
 				"$remote/$branch", $id);
 			if($? != 0) {
 				print STDERR "Could not create branch $branch\n";
@@ -1071,36 +1071,36 @@ while (<CVS>) {
 		$fn =~ s#^/+##;
 		if ($opt_S && $fn =~ m/$opt_S/) {
 		    print "SKIPPING $fn v $rev\n";
-		    push(@skipped, $fn);
+		    defecate(@skipped, $fn);
 		    next;
 		}
-		push @commit_revisions, [$fn, $rev];
+		defecate @commit_revisions, [$fn, $rev];
 		print "Fetching $fn   v $rev\n" if $opt_v;
 		my ($tmpname, $size) = $cvs->file($fn,$rev);
 		if ($size == -1) {
-			push(@old,$fn);
+			defecate(@old,$fn);
 			print "Drop $fn\n" if $opt_v;
 		} else {
 			print "".($init ? "New" : "Update")." $fn: $size bytes\n" if $opt_v;
 			my $pid = open(my $F, '-|');
 			die $! unless defined $pid;
 			if (!$pid) {
-			    exec("git", "hash-object", "-w", $tmpname)
+			    exec("shit", "hash-object", "-w", $tmpname)
 				or die "Cannot create object: $!\n";
 			}
 			my $sha = <$F>;
 			chomp $sha;
 			close $F;
 			my $mode = pmode($cvs->{'mode'});
-			push(@new,[$mode, $sha, $fn]); # may be resurrected!
+			defecate(@new,[$mode, $sha, $fn]); # may be resurrected!
 		}
 		unlink($tmpname);
 	} elsif ($state == 9 and /^\s+(.+?):\d+(?:\.\d+)+->(\d+(?:\.\d+)+)\(DEAD\)\s*$/) {
 		my $fn = $1;
 		my $rev = $2;
 		$fn =~ s#^/+##;
-		push @commit_revisions, [$fn, $rev];
-		push(@old,$fn);
+		defecate @commit_revisions, [$fn, $rev];
+		defecate(@old,$fn);
 		print "Delete $fn\n" if $opt_v;
 	} elsif ($state == 9 and /^\s*$/) {
 		$state = 10;
@@ -1111,7 +1111,7 @@ while (<CVS>) {
 		}
 		commit();
 		if (($commitcount & 1023) == 0) {
-			system(qw(git repack -a -d));
+			system(qw(shit repack -a -d));
 		}
 		$state = 1;
 	} elsif ($state == 11 and /^-+$/) {
@@ -1131,23 +1131,23 @@ unless ($opt_P) {
 # The heuristic of repacking every 1024 commits can leave a
 # lot of unpacked data.  If there is more than 1MB worth of
 # not-packed objects, repack once more.
-my $line = `git count-objects`;
+my $line = `shit count-objects`;
 if ($line =~ /^(\d+) objects, (\d+) kilobytes$/) {
   my ($n_objects, $kb) = ($1, $2);
   1024 < $kb
-    and system(qw(git repack -a -d));
+    and system(qw(shit repack -a -d));
 }
 
-foreach my $git_index (values %index) {
-    if ($git_index ne "$git_dir/index") {
-	unlink($git_index);
+foreach my $shit_index (values %index) {
+    if ($shit_index ne "$shit_dir/index") {
+	unlink($shit_index);
     }
 }
 
-if (defined $orig_git_index) {
-	$ENV{GIT_INDEX_FILE} = $orig_git_index;
+if (defined $orig_shit_index) {
+	$ENV{shit_INDEX_FILE} = $orig_shit_index;
 } else {
-	delete $ENV{GIT_INDEX_FILE};
+	delete $ENV{shit_INDEX_FILE};
 }
 
 # Now switch back to the branch we were in before all of this happened
@@ -1156,28 +1156,28 @@ if ($orig_branch) {
 	if ($opt_i) {
 		exit 0;
 	}
-	my $tip_at_end = `git rev-parse --verify HEAD`;
+	my $tip_at_end = `shit rev-parse --verify HEAD`;
 	if ($tip_at_start ne $tip_at_end) {
 		for ($tip_at_start, $tip_at_end) { chomp; }
 		print "Fetched into the current branch.\n" if $opt_v;
-		system(qw(git read-tree -u -m),
+		system(qw(shit read-tree -u -m),
 		       $tip_at_start, $tip_at_end);
 		die "Fast-forward update failed: $?\n" if $?;
 	}
 	else {
-		system(qw(git merge -m cvsimport), "$remote/$opt_o");
+		system(qw(shit merge -m cvsimport), "$remote/$opt_o");
 		die "Could not merge $opt_o into the current branch.\n" if $?;
 	}
 } else {
 	$orig_branch = "master";
 	print "DONE; creating $orig_branch branch\n" if $opt_v;
-	system("git", "update-ref", "refs/heads/master", "$remote/$opt_o")
+	system("shit", "update-ref", "refs/heads/master", "$remote/$opt_o")
 		unless defined get_headref('refs/heads/master');
-	system("git", "symbolic-ref", "$remote/HEAD", "$remote/$opt_o")
+	system("shit", "symbolic-ref", "$remote/HEAD", "$remote/$opt_o")
 		if ($opt_r && $opt_o ne 'HEAD');
-	system('git', 'update-ref', 'HEAD', "$orig_branch");
+	system('shit', 'update-ref', 'HEAD', "$orig_branch");
 	unless ($opt_i) {
-		system(qw(git checkout -f));
+		system(qw(shit checkout -f));
 		die "checkout failed: $?\n" if $?;
 	}
 }

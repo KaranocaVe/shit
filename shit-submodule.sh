@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# git-submodule.sh: add, init, update or list git submodules
+# shit-submodule.sh: add, init, update or list shit submodules
 #
 # Copyright (c) 2007 Lars Hjemli
 
@@ -16,18 +16,18 @@ USAGE="[--quiet] [--cached]
    or: $dashless [--quiet] summary [--cached|--files] [--summary-limit <n>] [commit] [--] [<path>...]
    or: $dashless [--quiet] foreach [--recursive] <command>
    or: $dashless [--quiet] sync [--recursive] [--] [<path>...]
-   or: $dashless [--quiet] absorbgitdirs [--] [<path>...]"
+   or: $dashless [--quiet] absorbshitdirs [--] [<path>...]"
 OPTIONS_SPEC=
 SUBDIRECTORY_OK=Yes
-. git-sh-setup
+. shit-sh-setup
 require_work_tree
-wt_prefix=$(git rev-parse --show-prefix)
+wt_prefix=$(shit rev-parse --show-prefix)
 cd_to_toplevel
 
-# Tell the rest of git that any URLs we get don't come
+# Tell the rest of shit that any URLs we get don't come
 # directly from the user, so it can apply policy as appropriate.
-GIT_PROTOCOL_FROM_USER=0
-export GIT_PROTOCOL_FROM_USER
+shit_PROTOCOL_FROM_USER=0
+export shit_PROTOCOL_FROM_USER
 
 command=
 quiet=
@@ -59,7 +59,7 @@ isnumber()
 }
 
 #
-# Add a new submodule to the working tree, .gitmodules and the index
+# Add a new submodule to the working tree, .shitmodules and the index
 #
 # $@ = repo path
 #
@@ -129,7 +129,7 @@ cmd_add()
 		usage
 	fi
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper add ${quiet:+--quiet} ${force:+--force} ${progress:+"--progress"} ${branch:+--branch "$branch"} ${reference_path:+--reference "$reference_path"} ${dissociate:+--dissociate} ${custom_name:+--name "$custom_name"} ${depth:+"$depth"} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper add ${quiet:+--quiet} ${force:+--force} ${progress:+"--progress"} ${branch:+--branch "$branch"} ${reference_path:+--reference "$reference_path"} ${dissociate:+--dissociate} ${custom_name:+--name "$custom_name"} ${depth:+"$depth"} -- "$@"
 }
 
 #
@@ -160,11 +160,11 @@ cmd_foreach()
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper foreach ${quiet:+--quiet} ${recursive:+--recursive} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper foreach ${quiet:+--quiet} ${recursive:+--recursive} -- "$@"
 }
 
 #
-# Register submodules in .git/config
+# Register submodules in .shit/config
 #
 # $@ = requested paths (default to all)
 #
@@ -191,11 +191,11 @@ cmd_init()
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper init ${quiet:+--quiet} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper init ${quiet:+--quiet} -- "$@"
 }
 
 #
-# Unregister submodules from .git/config and remove their work tree
+# Unregister submodules from .shit/config and remove their work tree
 #
 cmd_deinit()
 {
@@ -227,7 +227,7 @@ cmd_deinit()
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper deinit ${quiet:+--quiet} ${force:+--force} ${deinit_all:+--all} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper deinit ${quiet:+--quiet} ${force:+--force} ${deinit_all:+--all} -- "$@"
 }
 
 #
@@ -338,7 +338,7 @@ cmd_update()
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper update \
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper update \
 		${quiet:+--quiet} \
 		${force:+--force} \
 		${progress:+"--progress"} \
@@ -399,7 +399,7 @@ cmd_set_branch() {
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper set-branch ${quiet:+--quiet} ${branch:+--branch "$branch"} ${default:+--default} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper set-branch ${quiet:+--quiet} ${branch:+--branch "$branch"} ${default:+--default} -- "$@"
 }
 
 #
@@ -428,7 +428,7 @@ cmd_set_url() {
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper set-url ${quiet:+--quiet} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper set-url ${quiet:+--quiet} -- "$@"
 }
 
 #
@@ -480,7 +480,7 @@ cmd_summary() {
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper summary ${files:+--files} ${cached:+--cached} ${for_status:+--for-status} ${summary_limit:+-n $summary_limit} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper summary ${files:+--files} ${cached:+--cached} ${for_status:+--for-status} ${summary_limit:+-n $summary_limit} -- "$@"
 }
 #
 # List all submodules, prefixed with:
@@ -521,12 +521,12 @@ cmd_status()
 		shift
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper status ${quiet:+--quiet} ${cached:+--cached} ${recursive:+--recursive} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper status ${quiet:+--quiet} ${cached:+--cached} ${recursive:+--recursive} -- "$@"
 }
 #
 # Sync remote urls for submodules
 # This makes the value for remote.$remote.url match the value
-# specified in .gitmodules.
+# specified in .shitmodules.
 #
 cmd_sync()
 {
@@ -554,12 +554,12 @@ cmd_sync()
 		esac
 	done
 
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper sync ${quiet:+--quiet} ${recursive:+--recursive} -- "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper sync ${quiet:+--quiet} ${recursive:+--recursive} -- "$@"
 }
 
-cmd_absorbgitdirs()
+cmd_absorbshitdirs()
 {
-	git ${wt_prefix:+-C "$wt_prefix"} submodule--helper absorbgitdirs "$@"
+	shit ${wt_prefix:+-C "$wt_prefix"} submodule--helper absorbshitdirs "$@"
 }
 
 # This loop parses the command line arguments to find the
@@ -571,7 +571,7 @@ cmd_absorbgitdirs()
 while test $# != 0 && test -z "$command"
 do
 	case "$1" in
-	add | foreach | init | deinit | update | set-branch | set-url | status | summary | sync | absorbgitdirs)
+	add | foreach | init | deinit | update | set-branch | set-url | status | summary | sync | absorbshitdirs)
 		command=$1
 		;;
 	-q|--quiet)

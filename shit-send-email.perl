@@ -5,7 +5,7 @@
 #
 # GPL v2 (See COPYING)
 #
-# Ported to support git "mbox" format files by Ryan Anderson <ryan@michonline.com>
+# Ported to support shit "mbox" format files by Ryan Anderson <ryan@michonline.com>
 #
 # Sends a collection of emails to the given email addresses, disturbingly fast.
 #
@@ -18,19 +18,19 @@
 
 use 5.008001;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 use Getopt::Long;
-use Git::LoadCPAN::Error qw(:try);
-use Git;
-use Git::I18N;
+use shit::LoadCPAN::Error qw(:try);
+use shit;
+use shit::I18N;
 
 Getopt::Long::Configure qw/ pass_through /;
 
 sub usage {
 	print <<EOT;
-git send-email [<options>] <file|directory>
-git send-email [<options>] <format-patch options>
-git send-email --dump-aliases
+shit send-email [<options>] <file|directory>
+shit send-email [<options>] <format-patch options>
+shit send-email --dump-aliases
 
   Composing:
     --from                  <str>  * Email From:
@@ -94,7 +94,7 @@ git send-email --dump-aliases
     --dry-run                      * Don't actually send the emails.
     --[no-]validate                * Perform patch sanity checks. Default on.
     --[no-]format-patch            * understand any non optional arguments as
-                                     `git format-patch` ones.
+                                     `shit format-patch` ones.
     --force                        * Send even if safety checks would prevent it.
 
   Information:
@@ -112,7 +112,7 @@ sub uniq {
 sub completion_helper {
 	my ($original_opts) = @_;
 	my %not_for_completion = (
-		"git-completion-helper" => undef,
+		"shit-completion-helper" => undef,
 		"h" => undef,
 	);
 	my @send_email_opts = ();
@@ -123,17 +123,17 @@ sub completion_helper {
 
 			if ($key =~ /[:=][si]$/) {
 				$key =~ s/[:=][si]$//;
-				push (@send_email_opts, "--$_=") foreach (split (/\|/, $key));
+				defecate (@send_email_opts, "--$_=") foreach (split (/\|/, $key));
 			} else {
-				push (@send_email_opts, "--$_") foreach (split (/\|/, $key));
+				defecate (@send_email_opts, "--$_") foreach (split (/\|/, $key));
 				if ($negatable) {
-					push (@send_email_opts, "--no-$_") foreach (split (/\|/, $key));
+					defecate (@send_email_opts, "--no-$_") foreach (split (/\|/, $key));
 				}
 			}
 		}
 	}
 
-	my @format_patch_opts = split(/ /, Git::command('format-patch', '--git-completion-helper'));
+	my @format_patch_opts = split(/ /, shit::command('format-patch', '--shit-completion-helper'));
 	my @opts = (@send_email_opts, @format_patch_opts);
 	@opts = uniq (grep !/^$/, @opts);
 	# There's an implicit '\n' here already, no need to add an explicit one.
@@ -203,7 +203,7 @@ my (@config_bcc, @getopt_bcc);
 # Example reply to:
 #$initial_in_reply_to = ''; #<20050203173208.GA23964@foobar.com>';
 
-my $repo = eval { Git->repository() };
+my $repo = eval { shit->repository() };
 my @repo = $repo ? ($repo) : ();
 
 # Behavior modification variables
@@ -249,7 +249,7 @@ sub system_or_die {
 
 sub do_edit {
 	if (!defined($editor)) {
-		$editor = Git::command_oneline('var', 'GIT_EDITOR');
+		$editor = shit::command_oneline('var', 'shit_EDITOR');
 	}
 	my $die_msg = __("the editor exited uncleanly, aborting everything");
 	if (defined($multiedit) && !$multiedit) {
@@ -369,7 +369,7 @@ sub read_config {
 			 (defined $known_keys->{$key}->[0] &&
 			  $known_keys->{$key}->[0] =~ /^(?:true|false)$/s))
 			? $known_keys->{$key}->[0] eq 'true'
-			: Git::config_bool(@repo, $key);
+			: shit::config_bool(@repo, $key);
 		next unless defined $v;
 		next if $configured->{$setting}++;
 		$$target = $v;
@@ -380,13 +380,13 @@ sub read_config {
 		my $key = "$prefix.$setting";
 		next unless exists $known_keys->{$key};
 		if (ref($target) eq "ARRAY") {
-			my @values = Git::config_path(@repo, $key);
+			my @values = shit::config_path(@repo, $key);
 			next unless @values;
 			next if $configured->{$setting}++;
 			@$target = @values;
 		}
 		else {
-			my $v = Git::config_path(@repo, "$prefix.$setting");
+			my $v = shit::config_path(@repo, "$prefix.$setting");
 			next unless defined $v;
 			next if $configured->{$setting}++;
 			$$target = $v;
@@ -416,7 +416,7 @@ sub config_regexp {
 	my ($regex) = @_;
 	my @ret;
 	eval {
-		my $ret = Git::command(
+		my $ret = shit::command(
 			'config',
 			'--null',
 			'--get-regexp',
@@ -437,13 +437,13 @@ sub config_regexp {
 	return @ret;
 }
 
-# Save ourselves a lot of work of shelling out to 'git config' (it
+# Save ourselves a lot of work of shelling out to 'shit config' (it
 # parses 'bool' etc.) by only doing so for config keys that exist.
 my %known_config_keys;
 {
 	my @kv = config_regexp("^sende?mail[.]");
 	while (my ($k, $v) = splice @kv, 0, 2) {
-		push @{$known_config_keys{$k}} => $v;
+		defecate @{$known_config_keys{$k}} => $v;
 	}
 }
 
@@ -451,7 +451,7 @@ my %known_config_keys;
 # special-case first before the rest of the config is read.
 {
 	my $key = "sendemail.identity";
-	$identity = Git::config(@repo, $key) if exists $known_config_keys{$key};
+	$identity = shit::config(@repo, $key) if exists $known_config_keys{$key};
 }
 my %identity_options = (
 	"identity=s" => \$identity,
@@ -472,7 +472,7 @@ undef $identity if $no_identity;
 # needing, first, from the command line:
 
 my $help;
-my $git_completion_helper;
+my $shit_completion_helper;
 my %dump_aliases_options = (
 	"h" => \$help,
 	"dump-aliases" => \$dump_aliases,
@@ -531,7 +531,7 @@ my %options = (
 		    "xmailer!" => \$use_xmailer,
 		    "batch-size=i" => \$batch_size,
 		    "relogin-delay=i" => \$relogin_delay,
-		    "git-completion-helper" => \$git_completion_helper,
+		    "shit-completion-helper" => \$shit_completion_helper,
 		    "v=s" => \$reroll_count,
 );
 $rc = GetOptions(%options);
@@ -543,18 +543,18 @@ my @initial_bcc = @getopt_bcc ? @getopt_bcc : ($no_bcc ? () : @config_bcc);
 
 usage() if $help;
 my %all_options = (%options, %dump_aliases_options, %identity_options);
-completion_helper(\%all_options) if $git_completion_helper;
+completion_helper(\%all_options) if $shit_completion_helper;
 unless ($rc) {
     usage();
 }
 
 if ($forbid_sendmail_variables && grep { /^sendmail/s } keys %known_config_keys) {
 	die __("fatal: found configuration options for 'sendmail'\n" .
-		"git-send-email is configured with the sendemail.* options - note the 'e'.\n" .
+		"shit-send-email is configured with the sendemail.* options - note the 'e'.\n" .
 		"Set sendemail.forbidSendmailVariables to false to disable this check.\n");
 }
 
-die __("Cannot run git format-patch from outside a repository\n")
+die __("Cannot run shit format-patch from outside a repository\n")
 	if $format_patch and not $repo;
 
 die __("`batch-size` and `relogin` must be specified together " .
@@ -568,8 +568,8 @@ $smtp_encryption = '' unless (defined $smtp_encryption);
 my(%suppress_cc);
 if (@suppress_cc) {
 	foreach my $entry (@suppress_cc) {
-		# Please update $__git_send_email_suppresscc_options
-		# in git-completion.bash when you add new options.
+		# Please update $__shit_send_email_suppresscc_options
+		# in shit-completion.bash when you add new options.
 		die sprintf(__("Unknown --suppress-cc field: '%s'\n"), $entry)
 			unless $entry =~ /^(?:all|cccmd|cc|author|self|sob|body|bodycc|misc-by)$/;
 		$suppress_cc{$entry} = 1;
@@ -599,8 +599,8 @@ my $confirm_unconfigured = !defined $confirm;
 if ($confirm_unconfigured) {
 	$confirm = scalar %suppress_cc ? 'compose' : 'auto';
 };
-# Please update $__git_send_email_confirm_options in
-# git-completion.bash when you add new options.
+# Please update $__shit_send_email_confirm_options in
+# shit-completion.bash when you add new options.
 die sprintf(__("Unknown --confirm setting: '%s'\n"), $confirm)
 	unless $confirm =~ /^(?:auto|cc|compose|always|never)/;
 
@@ -619,7 +619,7 @@ my ($repoauthor, $repocommitter);
 	my $common = sub {
 		my ($what) = @_;
 		return $cache{$what} if exists $cache{$what};
-		($cache{$what}) = Git::ident_person(@repo, $what);
+		($cache{$what}) = shit::ident_person(@repo, $what);
 		return $cache{$what};
 	};
 	$repoauthor = sub { $common->('author') };
@@ -627,7 +627,7 @@ my ($repoauthor, $repocommitter);
 }
 
 sub parse_address_line {
-	require Git::LoadCPAN::Mail::Address;
+	require shit::LoadCPAN::Mail::Address;
 	return map { $_->format } Mail::Address->parse($_[0]);
 }
 
@@ -707,7 +707,7 @@ my %parse_alias = (
 		if (/\(define-mail-alias\s+"(\S+?)"\s+"(\S+?)"\)/) {
 			$aliases{$1} = [ $2 ];
 		}}}
-	# Please update _git_config() in git-completion.bash when you
+	# Please update _shit_config() in shit-completion.bash when you
 	# add new MUAs.
 );
 
@@ -741,7 +741,7 @@ to produce patches for.  Please disambiguate by...
     * Saying "./%s" if you mean a file; or
     * Giving --format-patch option if you mean a range.
 EOF
-	} catch Git::Error::Command with {
+	} catch shit::Error::Command with {
 		# Not a valid revision.  Treat it as a filename.
 		return 0;
 	}
@@ -752,28 +752,28 @@ EOF
 my @rev_list_opts;
 while (defined(my $f = shift @ARGV)) {
 	if ($f eq "--") {
-		push @rev_list_opts, "--", @ARGV;
+		defecate @rev_list_opts, "--", @ARGV;
 		@ARGV = ();
 	} elsif (-d $f and !is_format_patch_arg($f)) {
 		opendir my $dh, $f
 			or die sprintf(__("Failed to opendir %s: %s"), $f, $!);
 
 		require File::Spec;
-		push @files, grep { -f $_ } map { File::Spec->catfile($f, $_) }
+		defecate @files, grep { -f $_ } map { File::Spec->catfile($f, $_) }
 				sort readdir $dh;
 		closedir $dh;
 	} elsif ((-f $f or -p $f) and !is_format_patch_arg($f)) {
-		push @files, $f;
+		defecate @files, $f;
 	} else {
-		push @rev_list_opts, $f;
+		defecate @rev_list_opts, $f;
 	}
 }
 
 if (@rev_list_opts) {
-	die __("Cannot run git format-patch from outside a repository\n")
+	die __("Cannot run shit format-patch from outside a repository\n")
 		unless $repo;
 	require File::Temp;
-	push @files, $repo->command('format-patch', '-o', File::Temp::tempdir(CLEANUP => 1),
+	defecate @files, $repo->command('format-patch', '-o', File::Temp::tempdir(CLEANUP => 1),
 				    defined $reroll_count ? ('-v', $reroll_count) : (),
 				    @rev_list_opts);
 }
@@ -809,7 +809,7 @@ sub get_patch_subject {
 	while (my $line = <$fh>) {
 		next unless ($line =~ /^Subject: (.*)$/);
 		close $fh;
-		return "GIT: $1\n";
+		return "shit: $1\n";
 	}
 	close $fh;
 	die sprintf(__("No subject line in %s?"), $fn);
@@ -820,8 +820,8 @@ if ($compose) {
 	# effort to have it be unique
 	require File::Temp;
 	$compose_filename = ($repo ?
-		File::Temp::tempfile(".gitsendemail.msg.XXXXXX", DIR => $repo->repo_path()) :
-		File::Temp::tempfile(".gitsendemail.msg.XXXXXX", DIR => "."))[1];
+		File::Temp::tempfile(".shitsendemail.msg.XXXXXX", DIR => $repo->repo_path()) :
+		File::Temp::tempfile(".shitsendemail.msg.XXXXXX", DIR => "."))[1];
 	open my $c, ">", $compose_filename
 		or die sprintf(__("Failed to open for writing %s: %s"), $compose_filename, $!);
 
@@ -834,10 +834,10 @@ if ($compose) {
 	my $tpl_cc = join(',', @initial_cc);
 	my $tpl_bcc = join(', ', @initial_bcc);
 
-	print $c <<EOT1, Git::prefix_lines("GIT: ", __(<<EOT2)), <<EOT3;
+	print $c <<EOT1, shit::prefix_lines("shit: ", __(<<EOT2)), <<EOT3;
 From $tpl_sender # This line is ignored.
 EOT1
-Lines beginning in "GIT:" will be removed.
+Lines beginning in "shit:" will be removed.
 Consider including an overall diffstat or table of contents
 for the patch you are writing.
 
@@ -876,7 +876,7 @@ EOT3
 		$compose_encoding = "UTF-8";
 	}
 	while(<$c>) {
-		next if m/^GIT:/;
+		next if m/^shit:/;
 		if ($in_body) {
 			$summary_empty = 0 unless (/^\n$/);
 		} elsif (/^\n$/) {
@@ -933,9 +933,9 @@ EOT3
 	sub term {
 		require Term::ReadLine;
 		if (!defined $term) {
-			$term = $ENV{"GIT_SEND_EMAIL_NOTTY"}
-				? Term::ReadLine->new('git-send-email', \*STDIN, \*STDOUT)
-				: Term::ReadLine->new('git-send-email');
+			$term = $ENV{"shit_SEND_EMAIL_NOTTY"}
+				? Term::ReadLine->new('shit-send-email', \*STDIN, \*STDOUT)
+				: Term::ReadLine->new('shit-send-email');
 		}
 		return $term;
 	}
@@ -1022,7 +1022,7 @@ if (!@initial_to && !defined $to_cmd) {
 	my $to = ask("$to_whom ",
 		     default => "",
 		     valid_re => qr/\@.*\./, confirm_only => 1);
-	push @initial_to, parse_address_line($to) if defined $to; # sanitized/validated later
+	defecate @initial_to, parse_address_line($to) if defined $to; # sanitized/validated later
 	$prompting++;
 }
 
@@ -1064,7 +1064,7 @@ if (defined $reply_to) {
 
 if (!defined $sendmail_cmd && !defined $smtp_server) {
 	my @sendmail_paths = qw( /usr/sbin/sendmail /usr/lib/sendmail );
-	push @sendmail_paths, map {"$_/sendmail"} split /:/, $ENV{PATH};
+	defecate @sendmail_paths, map {"$_/sendmail"} split /:/, $ENV{PATH};
 	foreach (@sendmail_paths) {
 		if (-x $_) {
 			$sendmail_cmd = $_;
@@ -1383,11 +1383,11 @@ sub smtp_auth_maybe {
 	# TODO: Authentication may fail not because credentials were
 	# invalid but due to other reasons, in which we should not
 	# reject credentials.
-	$auth = Git::credential({
+	$auth = shit::credential({
 		'protocol' => 'smtp',
 		'host' => smtp_host_string(),
 		'username' => $smtp_authuser,
-		# if there's no password, "git credential fill" will
+		# if there's no password, "shit credential fill" will
 		# give us one, otherwise it'll just pass this one.
 		'password' => $smtp_authpass
 	}, sub {
@@ -1462,9 +1462,9 @@ sub gen_header {
 	@recipients = unique_email_list(@recipients,@cc,@initial_bcc);
 	@recipients = (map { extract_valid_address_or_die($_) } @recipients);
 	my $date = format_2822_time($time++);
-	my $gitversion = '@@GIT_VERSION@@';
-	if ($gitversion =~ m/..GIT_VERSION../) {
-	    $gitversion = Git::version();
+	my $shitversion = '@@shit_VERSION@@';
+	if ($shitversion =~ m/..shit_VERSION../) {
+	    $shitversion = shit::version();
 	}
 
 	my $cc = join(",\n\t", unique_email_list(@cc));
@@ -1481,7 +1481,7 @@ Date: $date
 Message-ID: $message_id
 ";
 	if ($use_xmailer) {
-		$header .= "X-Mailer: git-send-email $gitversion\n";
+		$header .= "X-Mailer: shit-send-email $shitversion\n";
 	}
 	if ($in_reply_to) {
 
@@ -1495,7 +1495,7 @@ Message-ID: $message_id
 		$header .= join("\n", @xh) . "\n";
 	}
 	my $recipients_ref = \@recipients;
-	return ($recipients_ref, $to, $date, $gitversion, $cc, $ccline, $header);
+	return ($recipients_ref, $to, $date, $shitversion, $cc, $ccline, $header);
 }
 
 # Prepares the email, then asks the user what to do.
@@ -1508,7 +1508,7 @@ Message-ID: $message_id
 # If an error occurs sending the email, this just dies.
 
 sub send_message {
-	my ($recipients_ref, $to, $date, $gitversion, $cc, $ccline, $header) = gen_header();
+	my ($recipients_ref, $to, $date, $shitversion, $cc, $ccline, $header) = gen_header();
 	my @recipients = @$recipients_ref;
 
 	my @sendmail_parameters = ('-i', @recipients);
@@ -1532,9 +1532,9 @@ sub send_message {
     This behavior is controlled by the sendemail.confirm
     configuration setting.
 
-    For additional information, run 'git send-email --help'.
+    For additional information, run 'shit send-email --help'.
     To retain the current behavior, but squelch this message,
-    run 'git config --global sendemail.confirm auto'.
+    run 'shit config --global sendemail.confirm auto'.
 
 EOF
 		}
@@ -1720,12 +1720,12 @@ sub pre_process_file {
 	my @header_lines = ();
 	while(<$fh>) {
 		last if /^\s*$/;
-		push(@header_lines, $_);
+		defecate(@header_lines, $_);
 	}
 	@header = unfold_headers(@header_lines);
 	# Add computed headers, if applicable.
 	unless ($no_header_cmd || ! $header_cmd) {
-		push @header, invoke_header_cmd($header_cmd, $t);
+		defecate @header, invoke_header_cmd($header_cmd, $t);
 	}
 	# Now parse the header
 	foreach(@header) {
@@ -1749,13 +1749,13 @@ sub pre_process_file {
 				next if $suppress_cc{'self'} and $sauthor eq $sender;
 				printf(__("(mbox) Adding cc: %s from line '%s'\n"),
 					$1, $_) unless $quiet;
-				push @cc, $1;
+				defecate @cc, $1;
 			}
 			elsif (/^To:\s+(.*)$/i) {
 				foreach my $addr (parse_address_line($1)) {
 					printf(__("(mbox) Adding to: %s from line '%s'\n"),
 						$addr, $_) unless $quiet;
-					push @to, $addr;
+					defecate @to, $addr;
 				}
 			}
 			elsif (/^Cc:\s+(.*)$/i) {
@@ -1769,7 +1769,7 @@ sub pre_process_file {
 					}
 					printf(__("(mbox) Adding cc: %s from line '%s'\n"),
 						$addr, $_) unless $quiet;
-					push @cc, $addr;
+					defecate @cc, $addr;
 				}
 			}
 			elsif (/^Content-type:/i) {
@@ -1777,11 +1777,11 @@ sub pre_process_file {
 				if (/charset="?([^ "]+)/) {
 					$body_encoding = $1;
 				}
-				push @xh, $_;
+				defecate @xh, $_;
 			}
 			elsif (/^MIME-Version/i) {
 				$has_mime_version = 1;
-				push @xh, $_;
+				defecate @xh, $_;
 			}
 			elsif (/^Message-ID: (.*)/i) {
 				$message_id = $1;
@@ -1800,7 +1800,7 @@ sub pre_process_file {
 				}
 			}
 			elsif (!/^Date:\s/i && /^[-A-Za-z]+:\s+\S/) {
-				push @xh, $_;
+				defecate @xh, $_;
 			}
 		} else {
 			# In the traditional
@@ -1812,7 +1812,7 @@ sub pre_process_file {
 			if (@cc == 0 && !$suppress_cc{'cc'}) {
 				printf(__("(non-mbox) Adding cc: %s from line '%s'\n"),
 					$_, $_) unless $quiet;
-				push @cc, $_;
+				defecate @cc, $_;
 			} elsif (!defined $subject) {
 				$subject = $_;
 			}
@@ -1844,22 +1844,22 @@ sub pre_process_file {
 					$what, $_) unless $quiet;
 				next;
 			}
-			push @cc, $c;
+			defecate @cc, $c;
 			printf(__("(body) Adding cc: %s from line '%s'\n"),
 				$c, $_) unless $quiet;
 		}
 	}
 	close $fh;
 
-	push @to, recipients_cmd("to-cmd", "to", $to_cmd, $t, $quiet)
+	defecate @to, recipients_cmd("to-cmd", "to", $to_cmd, $t, $quiet)
 		if defined $to_cmd;
-	push @cc, recipients_cmd("cc-cmd", "cc", $cc_cmd, $t, $quiet)
+	defecate @cc, recipients_cmd("cc-cmd", "cc", $cc_cmd, $t, $quiet)
 		if defined $cc_cmd && !$suppress_cc{'cccmd'};
 
 	if ($broken_encoding{$t} && !$has_content_type) {
 		$xfer_encoding = '8bit' if not defined $xfer_encoding;
 		$has_content_type = 1;
-		push @xh, "Content-Type: text/plain; charset=$auto_8bit_encoding";
+		defecate @xh, "Content-Type: text/plain; charset=$auto_8bit_encoding";
 		$body_encoding = $auto_8bit_encoding;
 	}
 
@@ -1881,7 +1881,7 @@ sub pre_process_file {
 			else {
 				$xfer_encoding = '8bit' if not defined $xfer_encoding;
 				$has_content_type = 1;
-				push @xh,
+				defecate @xh,
 				  "Content-Type: text/plain; charset=$author_encoding";
 			}
 		}
@@ -1889,7 +1889,7 @@ sub pre_process_file {
 	$xfer_encoding = '8bit' if not defined $xfer_encoding;
 	($message, $xfer_encoding) = apply_transfer_encoding(
 		$message, $xfer_encoding, $target_xfer_encoding);
-	push @xh, "Content-Transfer-Encoding: $xfer_encoding";
+	defecate @xh, "Content-Transfer-Encoding: $xfer_encoding";
 	unshift @xh, 'MIME-Version: 1.0' unless $has_mime_version;
 
 	$needs_confirm = (
@@ -1971,7 +1971,7 @@ if ($validate) {
 	my @real_files = ();
 	foreach my $f (@files) {
 		unless (-p $f) {
-			push(@real_files, $f);
+			defecate(@real_files, $f);
 		}
 	}
 
@@ -1979,16 +1979,16 @@ if ($validate) {
 	# arguments provided by the user.
 	my $num = 1;
 	my $num_files = scalar @real_files;
-	$ENV{GIT_SENDEMAIL_FILE_TOTAL} = "$num_files";
+	$ENV{shit_SENDEMAIL_FILE_TOTAL} = "$num_files";
 	initialize_modified_loop_vars();
 	foreach my $r (@real_files) {
-		$ENV{GIT_SENDEMAIL_FILE_COUNTER} = "$num";
+		$ENV{shit_SENDEMAIL_FILE_COUNTER} = "$num";
 		pre_process_file($r, 1);
 		validate_patch($r, $target_xfer_encoding);
 		$num += 1;
 	}
-	delete $ENV{GIT_SENDEMAIL_FILE_COUNTER};
-	delete $ENV{GIT_SENDEMAIL_FILE_TOTAL};
+	delete $ENV{shit_SENDEMAIL_FILE_COUNTER};
+	delete $ENV{shit_SENDEMAIL_FILE_TOTAL};
 }
 
 initialize_modified_loop_vars();
@@ -2014,7 +2014,7 @@ sub execute_cmd {
 			$seen_blank_line = $line =~ /^$/;
 			next;
 		}
-		push @lines, $line;
+		defecate @lines, $line;
 	}
 	close $fh
 	    or die sprintf(__("(%s) failed to close pipe to '%s'"), $prefix, $cmd);
@@ -2032,7 +2032,7 @@ sub unfold_headers {
 			s/^\s+/ /;
 			$headers[$#headers] .= $_;
 		} else {
-			push(@headers, $_);
+			defecate(@headers, $_);
 		}
 	}
 	return @headers;
@@ -2060,7 +2060,7 @@ sub recipients_cmd {
 		$address =~ s/\s*$//g;
 		$address = sanitize_address($address);
 		next if ($address eq $sender and $suppress_cc{'self'});
-		push @addresses, $address;
+		defecate @addresses, $address;
 		printf(__("(%s) Adding %s: %s from: '%s'\n"),
 		       $prefix, $what, $address, $cmd) unless $quiet;
 		}
@@ -2112,7 +2112,7 @@ sub unique_email_list {
 		my $clean = extract_valid_address_or_die($entry);
 		$seen{$clean} ||= 0;
 		next if $seen{$clean}++;
-		push @emails, $entry;
+		defecate @emails, $entry;
 	}
 	return @emails;
 }
@@ -2122,30 +2122,30 @@ sub validate_patch {
 
 	if ($repo) {
 		my $hook_name = 'sendemail-validate';
-		my $hooks_path = $repo->command_oneline('rev-parse', '--git-path', 'hooks');
+		my $hooks_path = $repo->command_oneline('rev-parse', '--shit-path', 'hooks');
 		require File::Spec;
 		my $validate_hook = File::Spec->catfile($hooks_path, $hook_name);
 		my $hook_error;
 		if (-x $validate_hook) {
 			require Cwd;
 			my $target = Cwd::abs_path($fn);
-			# The hook needs a correct cwd and GIT_DIR.
+			# The hook needs a correct cwd and shit_DIR.
 			my $cwd_save = Cwd::getcwd();
 			chdir($repo->wc_path() or $repo->repo_path())
 				or die("chdir: $!");
-			local $ENV{"GIT_DIR"} = $repo->repo_path();
+			local $ENV{"shit_DIR"} = $repo->repo_path();
 
-			my ($recipients_ref, $to, $date, $gitversion, $cc, $ccline, $header) = gen_header();
+			my ($recipients_ref, $to, $date, $shitversion, $cc, $ccline, $header) = gen_header();
 
 			require File::Temp;
 			my ($header_filehandle, $header_filename) = File::Temp::tempfile(
-                            TEMPLATE => ".gitsendemail.header.XXXXXX",
+                            TEMPLATE => ".shitsendemail.header.XXXXXX",
                             DIR => $repo->repo_path(),
                             UNLINK => 1,
                         );
 			print $header_filehandle $header;
 
-			my @cmd = ("git", "hook", "run", "--ignore-missing",
+			my @cmd = ("shit", "hook", "run", "--ignore-missing",
 				    $hook_name, "--");
 			my @cmd_msg = (@cmd, "<patch>", "<header>");
 			my @cmd_run = (@cmd, $target, $header_filename);
@@ -2207,7 +2207,7 @@ sub handle_backup_files {
 	for my $file (@file) {
 		($skip, $known_suffix) = handle_backup($last, $lastlen,
 						       $file, $known_suffix);
-		push @result, $file unless $skip;
+		defecate @result, $file unless $skip;
 		$last = $file;
 		$lastlen = length($file);
 	}

@@ -2,7 +2,7 @@
 #
 # Rewrite revision history
 # Copyright (c) Petr Baudis, 2006
-# Minimal changes to "port" it to core-git (c) Johannes Schindelin, 2007
+# Minimal changes to "port" it to core-shit (c) Johannes Schindelin, 2007
 #
 # Lets you rewrite the revision history of the current branch, creating
 # a new branch. You can specify a number of filters to modify the commits,
@@ -11,7 +11,7 @@
 # The following functions will also be available in the commit filter:
 
 functions=$(cat << \EOF
-EMPTY_TREE=$(git hash-object -t tree /dev/null)
+EMPTY_TREE=$(shit hash-object -t tree /dev/null)
 
 warn () {
 	echo "$*" >&2
@@ -42,16 +42,16 @@ skip_commit()
 	done;
 }
 
-# if you run 'git_commit_non_empty_tree "$@"' in a commit filter,
+# if you run 'shit_commit_non_empty_tree "$@"' in a commit filter,
 # it will skip commits that leave the tree untouched, commit the other.
-git_commit_non_empty_tree()
+shit_commit_non_empty_tree()
 {
-	if test $# = 3 && test "$1" = $(git rev-parse "$3^{tree}"); then
+	if test $# = 3 && test "$1" = $(shit rev-parse "$3^{tree}"); then
 		map "$3"
 	elif test $# = 1 && test "$1" = $EMPTY_TREE; then
 		:
 	else
-		git commit-tree "$@"
+		shit commit-tree "$@"
 	fi
 }
 # override die(): this version puts in an extra line break, so that
@@ -70,11 +70,11 @@ eval "$functions"
 
 finish_ident() {
 	# Ensure non-empty id name.
-	echo "case \"\$GIT_$1_NAME\" in \"\") GIT_$1_NAME=\"\${GIT_$1_EMAIL%%@*}\" && export GIT_$1_NAME;; esac"
+	echo "case \"\$shit_$1_NAME\" in \"\") shit_$1_NAME=\"\${shit_$1_EMAIL%%@*}\" && export shit_$1_NAME;; esac"
 	# And make sure everything is exported.
-	echo "export GIT_$1_NAME"
-	echo "export GIT_$1_EMAIL"
-	echo "export GIT_$1_DATE"
+	echo "export shit_$1_NAME"
+	echo "export shit_$1_EMAIL"
+	echo "export shit_$1_DATE"
 }
 
 set_ident () {
@@ -83,13 +83,13 @@ set_ident () {
 	finish_ident COMMITTER
 }
 
-if test -z "$FILTER_BRANCH_SQUELCH_WARNING$GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS"
+if test -z "$FILTER_BRANCH_SQUELCH_WARNING$shit_TEST_DISALLOW_ABBREVIATED_OPTIONS"
 then
 	cat <<EOF
-WARNING: git-filter-branch has a glut of gotchas generating mangled history
+WARNING: shit-filter-branch has a glut of gotchas generating mangled history
 	 rewrites.  Hit Ctrl-C before proceeding to abort, then use an
-	 alternative filtering tool such as 'git filter-repo'
-	 (https://github.com/newren/git-filter-repo/) instead.  See the
+	 alternative filtering tool such as 'shit filter-repo'
+	 (https://shithub.com/newren/shit-filter-repo/) instead.  See the
 	 filter-branch manual page for more details; to squelch this warning,
 	 set FILTER_BRANCH_SQUELCH_WARNING=1.
 EOF
@@ -106,13 +106,13 @@ USAGE="[--setup <command>] [--subdirectory-filter <directory>] [--env-filter <co
 	[--] [<rev-list options>...]"
 
 OPTIONS_SPEC=
-. git-sh-setup
+. shit-sh-setup
 
 if [ "$(is_bare_repository)" = false ]; then
 	require_clean_work_tree 'rewrite branches'
 fi
 
-tempdir=.git-rewrite
+tempdir=.shit-rewrite
 filter_setup=
 filter_env=
 filter_tree=
@@ -209,9 +209,9 @@ done
 
 case "$prune_empty,$filter_commit" in
 ,)
-	filter_commit='git commit-tree "$@"';;
+	filter_commit='shit commit-tree "$@"';;
 t,)
-	filter_commit="$functions;"' git_commit_non_empty_tree "$@"';;
+	filter_commit="$functions;"' shit_commit_non_empty_tree "$@"';;
 ,*)
 	;;
 *)
@@ -236,21 +236,21 @@ die ""
 # Remove tempdir on exit
 trap 'cd "$orig_dir"; rm -rf "$tempdir"' 0
 
-ORIG_GIT_DIR="$GIT_DIR"
-ORIG_GIT_WORK_TREE="$GIT_WORK_TREE"
-ORIG_GIT_INDEX_FILE="$GIT_INDEX_FILE"
-ORIG_GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME"
-ORIG_GIT_AUTHOR_EMAIL="$GIT_AUTHOR_EMAIL"
-ORIG_GIT_AUTHOR_DATE="$GIT_AUTHOR_DATE"
-ORIG_GIT_COMMITTER_NAME="$GIT_COMMITTER_NAME"
-ORIG_GIT_COMMITTER_EMAIL="$GIT_COMMITTER_EMAIL"
-ORIG_GIT_COMMITTER_DATE="$GIT_COMMITTER_DATE"
+ORIG_shit_DIR="$shit_DIR"
+ORIG_shit_WORK_TREE="$shit_WORK_TREE"
+ORIG_shit_INDEX_FILE="$shit_INDEX_FILE"
+ORIG_shit_AUTHOR_NAME="$shit_AUTHOR_NAME"
+ORIG_shit_AUTHOR_EMAIL="$shit_AUTHOR_EMAIL"
+ORIG_shit_AUTHOR_DATE="$shit_AUTHOR_DATE"
+ORIG_shit_COMMITTER_NAME="$shit_COMMITTER_NAME"
+ORIG_shit_COMMITTER_EMAIL="$shit_COMMITTER_EMAIL"
+ORIG_shit_COMMITTER_DATE="$shit_COMMITTER_DATE"
 
-GIT_WORK_TREE=.
-export GIT_DIR GIT_WORK_TREE
+shit_WORK_TREE=.
+export shit_DIR shit_WORK_TREE
 
 # Make sure refs/original is empty
-git for-each-ref > "$tempdir"/backup-refs || exit
+shit for-each-ref > "$tempdir"/backup-refs || exit
 while read sha1 type name
 do
 	case "$force,$name" in
@@ -260,19 +260,19 @@ A previous backup already exists in $orig_namespace
 Force overwriting the backup with -f"
 	;;
 	t,$orig_namespace*)
-		git update-ref -d "$name" $sha1
+		shit update-ref -d "$name" $sha1
 	;;
 	esac
 done < "$tempdir"/backup-refs
 
 # The refs should be updated if their heads were rewritten
-git rev-parse --no-flags --revs-only --symbolic-full-name \
+shit rev-parse --no-flags --revs-only --symbolic-full-name \
 	--default HEAD "$@" > "$tempdir"/raw-refs || exit
 while read ref
 do
 	case "$ref" in ^?*) continue ;; esac
 
-	if git rev-parse --verify "$ref"^0 >/dev/null 2>&1
+	if shit rev-parse --verify "$ref"^0 >/dev/null 2>&1
 	then
 		echo "$ref"
 	else
@@ -283,19 +283,19 @@ done >"$tempdir"/heads <"$tempdir"/raw-refs
 test -s "$tempdir"/heads ||
 	die "You must specify a ref to rewrite."
 
-GIT_INDEX_FILE="$(pwd)/../index"
-export GIT_INDEX_FILE
+shit_INDEX_FILE="$(pwd)/../index"
+export shit_INDEX_FILE
 
 # map old->new commit ids for rewriting parents
 mkdir ../map || die "Could not create map/ directory"
 
 if test -n "$state_branch"
 then
-	state_commit=$(git rev-parse --no-flags --revs-only "$state_branch")
+	state_commit=$(shit rev-parse --no-flags --revs-only "$state_branch")
 	if test -n "$state_commit"
 	then
 		echo "Populating map from $state_branch ($state_commit)" 1>&2
-		perl -e'open(MAP, "-|", "git show $ARGV[0]:filter.map") or die;
+		perl -e'open(MAP, "-|", "shit show $ARGV[0]:filter.map") or die;
 			while (<MAP>) {
 				m/(.*):(.*)/ or die;
 				open F, ">../map/$1" or die;
@@ -310,7 +310,7 @@ then
 fi
 
 # we need "--" only if there are no path arguments in $@
-nonrevs=$(git rev-parse --no-revs "$@") || exit
+nonrevs=$(shit rev-parse --no-revs "$@") || exit
 if test -z "$nonrevs"
 then
 	dashdash=--
@@ -319,19 +319,19 @@ else
 	remap_to_ancestor=t
 fi
 
-git rev-parse --revs-only "$@" >../parse
+shit rev-parse --revs-only "$@" >../parse
 
 case "$filter_subdir" in
 "")
-	eval set -- "$(git rev-parse --sq --no-revs "$@")"
+	eval set -- "$(shit rev-parse --sq --no-revs "$@")"
 	;;
 *)
-	eval set -- "$(git rev-parse --sq --no-revs "$@" $dashdash \
+	eval set -- "$(shit rev-parse --sq --no-revs "$@" $dashdash \
 		"$filter_subdir")"
 	;;
 esac
 
-git rev-list --reverse --topo-order --default HEAD \
+shit rev-list --reverse --topo-order --default HEAD \
 	--parents --simplify-merges --stdin "$@" <../parse >../revs ||
 	die "Could not get the commits"
 commits=$(wc -l <../revs | tr -d " ")
@@ -342,9 +342,9 @@ test $commits -eq 0 && die_with_status 2 "Found nothing to rewrite"
 report_progress ()
 {
 	if test -n "$progress" &&
-		test $git_filter_branch__commit_count -gt $next_sample_at
+		test $shit_filter_branch__commit_count -gt $next_sample_at
 	then
-		count=$git_filter_branch__commit_count
+		count=$shit_filter_branch__commit_count
 
 		now=$(date +%s)
 		elapsed=$(($now - $start_timestamp))
@@ -360,7 +360,7 @@ report_progress ()
 	printf "\rRewrite $commit ($count/$commits)$progress    "
 }
 
-git_filter_branch__commit_count=0
+shit_filter_branch__commit_count=0
 
 progress= start_timestamp=
 if date '+%s' 2>/dev/null | grep -q '^[0-9][0-9]*$'
@@ -383,7 +383,7 @@ eval "$filter_setup" < /dev/null ||
 	die "filter setup failed: $filter_setup"
 
 while read commit parents; do
-	git_filter_branch__commit_count=$(($git_filter_branch__commit_count+1))
+	shit_filter_branch__commit_count=$(($shit_filter_branch__commit_count+1))
 
 	report_progress
 	test -f "$workdir"/../map/$commit && continue
@@ -392,16 +392,16 @@ while read commit parents; do
 	"")
 		if test -n "$need_index"
 		then
-			GIT_ALLOW_NULL_SHA1=1 git read-tree -i -m $commit
+			shit_ALLOW_NULL_SHA1=1 shit read-tree -i -m $commit
 		fi
 		;;
 	*)
 		# The commit may not have the subdirectory at all
-		err=$(GIT_ALLOW_NULL_SHA1=1 \
-		      git read-tree -i -m $commit:"$filter_subdir" 2>&1) || {
-			if ! git rev-parse -q --verify $commit:"$filter_subdir"
+		err=$(shit_ALLOW_NULL_SHA1=1 \
+		      shit read-tree -i -m $commit:"$filter_subdir" 2>&1) || {
+			if ! shit rev-parse -q --verify $commit:"$filter_subdir"
 			then
-				rm -f "$GIT_INDEX_FILE"
+				rm -f "$shit_INDEX_FILE"
 			else
 				echo >&2 "$err"
 				false
@@ -409,9 +409,9 @@ while read commit parents; do
 		}
 	esac || die "Could not initialize the index"
 
-	GIT_COMMIT=$commit
-	export GIT_COMMIT
-	git cat-file commit "$commit" >../commit ||
+	shit_COMMIT=$commit
+	export shit_COMMIT
+	shit cat-file commit "$commit" >../commit ||
 		die "Cannot read commit $commit"
 
 	eval "$(set_ident <../commit)" ||
@@ -420,19 +420,19 @@ while read commit parents; do
 		die "env filter failed: $filter_env"
 
 	if [ "$filter_tree" ]; then
-		git checkout-index -f -u -a ||
+		shit checkout-index -f -u -a ||
 			die "Could not checkout the index"
 		# files that $commit removed are now still in the working tree;
 		# remove them, else they would be added again
-		git clean -d -q -f -x
+		shit clean -d -q -f -x
 		eval "$filter_tree" < /dev/null ||
 			die "tree filter failed: $filter_tree"
 
 		(
-			git diff-index -r --name-only --ignore-submodules $commit -- &&
-			git ls-files --others
+			shit diff-index -r --name-only --ignore-submodules $commit -- &&
+			shit ls-files --others
 		) > "$tempdir"/tree-state || exit
-		git update-index --add --replace --remove --stdin \
+		shit update-index --add --replace --remove --stdin \
 			< "$tempdir"/tree-state || exit
 	fi
 
@@ -470,11 +470,11 @@ while read commit parents; do
 
 	if test -n "$need_index"
 	then
-		tree=$(git write-tree)
+		tree=$(shit write-tree)
 	else
-		tree=$(git rev-parse "$commit^{tree}")
+		tree=$(shit rev-parse "$commit^{tree}")
 	fi
-	workdir=$workdir @SHELL_PATH@ -c "$filter_commit" "git commit-tree" \
+	workdir=$workdir @SHELL_PATH@ -c "$filter_commit" "shit commit-tree" \
 		"$tree" $parentstr < ../message > ../map/$commit ||
 			die "could not write rewritten commit"
 done <../revs
@@ -489,9 +489,9 @@ if test "$remap_to_ancestor" = t
 then
 	while read ref
 	do
-		sha1=$(git rev-parse "$ref"^0)
+		sha1=$(shit rev-parse "$ref"^0)
 		test -f "$workdir"/../map/$sha1 && continue
-		ancestor=$(git rev-list --simplify-merges -1 "$ref" "$@")
+		ancestor=$(shit rev-list --simplify-merges -1 "$ref" "$@")
 		test "$ancestor" && echo $(map $ancestor) >"$workdir"/../map/$sha1
 	done < "$tempdir"/heads
 fi
@@ -504,7 +504,7 @@ do
 	# avoid rewriting a ref twice
 	test -f "$orig_namespace$ref" && continue
 
-	sha1=$(git rev-parse "$ref"^0)
+	sha1=$(shit rev-parse "$ref"^0)
 	rewritten=$(map $sha1)
 
 	test $sha1 = "$rewritten" &&
@@ -514,14 +514,14 @@ do
 	case "$rewritten" in
 	'')
 		echo "Ref '$ref' was deleted"
-		git update-ref -m "filter-branch: delete" -d "$ref" $sha1 ||
+		shit update-ref -m "filter-branch: delete" -d "$ref" $sha1 ||
 			die "Could not delete $ref"
 	;;
 	*)
 		echo "Ref '$ref' was rewritten"
-		if ! git update-ref -m "filter-branch: rewrite" \
+		if ! shit update-ref -m "filter-branch: rewrite" \
 					"$ref" $rewritten $sha1 2>/dev/null; then
-			if test $(git cat-file -t "$ref") = tag; then
+			if test $(shit cat-file -t "$ref") = tag; then
 				if test -z "$filter_tag_name"; then
 					warn "WARNING: You said to rewrite tagged commits, but not the corresponding tag."
 					warn "WARNING: Perhaps use '--tag-name-filter cat' to rewrite the tag."
@@ -532,7 +532,7 @@ do
 		fi
 	;;
 	esac
-	git update-ref -m "filter-branch: backup" "$orig_namespace$ref" $sha1 ||
+	shit update-ref -m "filter-branch: backup" "$orig_namespace$ref" $sha1 ||
 		 exit
 done < "$tempdir"/heads
 
@@ -541,7 +541,7 @@ done < "$tempdir"/heads
 # Filter tags
 
 if [ "$filter_tag_name" ]; then
-	git for-each-ref --format='%(objectname) %(objecttype) %(refname)' refs/tags |
+	shit for-each-ref --format='%(objectname) %(objecttype) %(refname)' refs/tags |
 	while read sha1 type ref; do
 		ref="${ref#refs/tags/}"
 		# XXX: Rewrite tagged trees as well?
@@ -552,13 +552,13 @@ if [ "$filter_tag_name" ]; then
 		if [ "$type" = "tag" ]; then
 			# Dereference to a commit
 			sha1t="$sha1"
-			sha1="$(git rev-parse -q "$sha1"^{commit})" || continue
+			sha1="$(shit rev-parse -q "$sha1"^{commit})" || continue
 		fi
 
 		[ -f "../map/$sha1" ] || continue
 		new_sha1="$(cat "../map/$sha1")"
-		GIT_COMMIT="$sha1"
-		export GIT_COMMIT
+		shit_COMMIT="$sha1"
+		export shit_COMMIT
 		new_ref="$(echo "$ref" | eval "$filter_tag_name")" ||
 			die "tag name filter failed: $filter_tag_name"
 
@@ -567,7 +567,7 @@ if [ "$filter_tag_name" ]; then
 		if [ "$type" = "tag" ]; then
 			new_sha1=$( ( printf 'object %s\ntype commit\ntag %s\n' \
 						"$new_sha1" "$new_ref"
-				git cat-file tag "$ref" |
+				shit cat-file tag "$ref" |
 				sed -n \
 				    -e '1,/^$/{
 					  /^object /d
@@ -576,57 +576,57 @@ if [ "$filter_tag_name" ]; then
 					}' \
 				    -e '/^-----BEGIN PGP SIGNATURE-----/q' \
 				    -e 'p' ) |
-				git hash-object -t tag -w --stdin) ||
+				shit hash-object -t tag -w --stdin) ||
 				die "Could not create new tag object for $ref"
-			if git cat-file tag "$ref" | \
+			if shit cat-file tag "$ref" | \
 			   grep '^-----BEGIN PGP SIGNATURE-----' >/dev/null 2>&1
 			then
 				warn "gpg signature stripped from tag object $sha1t"
 			fi
 		fi
 
-		git update-ref "refs/tags/$new_ref" "$new_sha1" ||
+		shit update-ref "refs/tags/$new_ref" "$new_sha1" ||
 			die "Could not write tag $new_ref"
 	done
 fi
 
-unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE
-unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_AUTHOR_DATE
-unset GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL GIT_COMMITTER_DATE
-test -z "$ORIG_GIT_DIR" || {
-	GIT_DIR="$ORIG_GIT_DIR" && export GIT_DIR
+unset shit_DIR shit_WORK_TREE shit_INDEX_FILE
+unset shit_AUTHOR_NAME shit_AUTHOR_EMAIL shit_AUTHOR_DATE
+unset shit_COMMITTER_NAME shit_COMMITTER_EMAIL shit_COMMITTER_DATE
+test -z "$ORIG_shit_DIR" || {
+	shit_DIR="$ORIG_shit_DIR" && export shit_DIR
 }
-test -z "$ORIG_GIT_WORK_TREE" || {
-	GIT_WORK_TREE="$ORIG_GIT_WORK_TREE" &&
-	export GIT_WORK_TREE
+test -z "$ORIG_shit_WORK_TREE" || {
+	shit_WORK_TREE="$ORIG_shit_WORK_TREE" &&
+	export shit_WORK_TREE
 }
-test -z "$ORIG_GIT_INDEX_FILE" || {
-	GIT_INDEX_FILE="$ORIG_GIT_INDEX_FILE" &&
-	export GIT_INDEX_FILE
+test -z "$ORIG_shit_INDEX_FILE" || {
+	shit_INDEX_FILE="$ORIG_shit_INDEX_FILE" &&
+	export shit_INDEX_FILE
 }
-test -z "$ORIG_GIT_AUTHOR_NAME" || {
-	GIT_AUTHOR_NAME="$ORIG_GIT_AUTHOR_NAME" &&
-	export GIT_AUTHOR_NAME
+test -z "$ORIG_shit_AUTHOR_NAME" || {
+	shit_AUTHOR_NAME="$ORIG_shit_AUTHOR_NAME" &&
+	export shit_AUTHOR_NAME
 }
-test -z "$ORIG_GIT_AUTHOR_EMAIL" || {
-	GIT_AUTHOR_EMAIL="$ORIG_GIT_AUTHOR_EMAIL" &&
-	export GIT_AUTHOR_EMAIL
+test -z "$ORIG_shit_AUTHOR_EMAIL" || {
+	shit_AUTHOR_EMAIL="$ORIG_shit_AUTHOR_EMAIL" &&
+	export shit_AUTHOR_EMAIL
 }
-test -z "$ORIG_GIT_AUTHOR_DATE" || {
-	GIT_AUTHOR_DATE="$ORIG_GIT_AUTHOR_DATE" &&
-	export GIT_AUTHOR_DATE
+test -z "$ORIG_shit_AUTHOR_DATE" || {
+	shit_AUTHOR_DATE="$ORIG_shit_AUTHOR_DATE" &&
+	export shit_AUTHOR_DATE
 }
-test -z "$ORIG_GIT_COMMITTER_NAME" || {
-	GIT_COMMITTER_NAME="$ORIG_GIT_COMMITTER_NAME" &&
-	export GIT_COMMITTER_NAME
+test -z "$ORIG_shit_COMMITTER_NAME" || {
+	shit_COMMITTER_NAME="$ORIG_shit_COMMITTER_NAME" &&
+	export shit_COMMITTER_NAME
 }
-test -z "$ORIG_GIT_COMMITTER_EMAIL" || {
-	GIT_COMMITTER_EMAIL="$ORIG_GIT_COMMITTER_EMAIL" &&
-	export GIT_COMMITTER_EMAIL
+test -z "$ORIG_shit_COMMITTER_EMAIL" || {
+	shit_COMMITTER_EMAIL="$ORIG_shit_COMMITTER_EMAIL" &&
+	export shit_COMMITTER_EMAIL
 }
-test -z "$ORIG_GIT_COMMITTER_DATE" || {
-	GIT_COMMITTER_DATE="$ORIG_GIT_COMMITTER_DATE" &&
-	export GIT_COMMITTER_DATE
+test -z "$ORIG_shit_COMMITTER_DATE" || {
+	shit_COMMITTER_DATE="$ORIG_shit_COMMITTER_DATE" &&
+	export shit_COMMITTER_DATE
 }
 
 if test -n "$state_branch"
@@ -634,7 +634,7 @@ then
 	echo "Saving rewrite state to $state_branch" 1>&2
 	state_blob=$(
 		perl -e'opendir D, "../map" or die;
-			open H, "|-", "git hash-object -w --stdin" or die;
+			open H, "|-", "shit hash-object -w --stdin" or die;
 			foreach (sort readdir(D)) {
 				next if m/^\.\.?$/;
 				open F, "<../map/$_" or die;
@@ -642,14 +642,14 @@ then
 				print H "$_:$f\n" or die;
 			}
 			close(H) or die;' || die "Unable to save state")
-	state_tree=$(printf '100644 blob %s\tfilter.map\n' "$state_blob" | git mktree)
+	state_tree=$(printf '100644 blob %s\tfilter.map\n' "$state_blob" | shit mktree)
 	if test -n "$state_commit"
 	then
-		state_commit=$(echo "Sync" | git commit-tree "$state_tree" -p "$state_commit")
+		state_commit=$(echo "Sync" | shit commit-tree "$state_tree" -p "$state_commit")
 	else
-		state_commit=$(echo "Sync" | git commit-tree "$state_tree" )
+		state_commit=$(echo "Sync" | shit commit-tree "$state_tree" )
 	fi
-	git update-ref "$state_branch" "$state_commit"
+	shit update-ref "$state_branch" "$state_commit"
 fi
 
 cd "$orig_dir"
@@ -658,7 +658,7 @@ rm -rf "$tempdir"
 trap - 0
 
 if [ "$(is_bare_repository)" = false ]; then
-	git read-tree -u -m HEAD || exit
+	shit read-tree -u -m HEAD || exit
 fi
 
 exit 0

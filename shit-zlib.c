@@ -2,8 +2,8 @@
  * zlib wrappers to make sure we don't silently miss errors
  * at init time.
  */
-#include "git-compat-util.h"
-#include "git-zlib.h"
+#include "shit-compat-util.h"
+#include "shit-zlib.h"
 
 static const char *zerr_to_string(int status)
 {
@@ -35,7 +35,7 @@ static inline uInt zlib_buf_cap(unsigned long len)
 	return (ZLIB_BUF_MAX < len) ? ZLIB_BUF_MAX : len;
 }
 
-static void zlib_pre_call(git_zstream *s)
+static void zlib_pre_call(shit_zstream *s)
 {
 	s->z.next_in = s->next_in;
 	s->z.next_out = s->next_out;
@@ -45,7 +45,7 @@ static void zlib_pre_call(git_zstream *s)
 	s->z.avail_out = zlib_buf_cap(s->avail_out);
 }
 
-static void zlib_post_call(git_zstream *s)
+static void zlib_post_call(shit_zstream *s)
 {
 	unsigned long bytes_consumed;
 	unsigned long bytes_produced;
@@ -65,7 +65,7 @@ static void zlib_post_call(git_zstream *s)
 	s->avail_out -= bytes_produced;
 }
 
-void git_inflate_init(git_zstream *strm)
+void shit_inflate_init(shit_zstream *strm)
 {
 	int status;
 
@@ -78,7 +78,7 @@ void git_inflate_init(git_zstream *strm)
 	    strm->z.msg ? strm->z.msg : "no message");
 }
 
-void git_inflate_init_gzip_only(git_zstream *strm)
+void shit_inflate_init_gzip_only(shit_zstream *strm)
 {
 	/*
 	 * Use default 15 bits, +16 is to accept only gzip and to
@@ -96,7 +96,7 @@ void git_inflate_init_gzip_only(git_zstream *strm)
 	    strm->z.msg ? strm->z.msg : "no message");
 }
 
-void git_inflate_end(git_zstream *strm)
+void shit_inflate_end(shit_zstream *strm)
 {
 	int status;
 
@@ -109,7 +109,7 @@ void git_inflate_end(git_zstream *strm)
 	      strm->z.msg ? strm->z.msg : "no message");
 }
 
-int git_inflate(git_zstream *strm, int flush)
+int shit_inflate(shit_zstream *strm, int flush)
 {
 	int status;
 
@@ -151,12 +151,12 @@ int git_inflate(git_zstream *strm, int flush)
 #define deflateBound(c,s)  ((s) + (((s) + 7) >> 3) + (((s) + 63) >> 6) + 11)
 #endif
 
-unsigned long git_deflate_bound(git_zstream *strm, unsigned long size)
+unsigned long shit_deflate_bound(shit_zstream *strm, unsigned long size)
 {
 	return deflateBound(&strm->z, size);
 }
 
-void git_deflate_init(git_zstream *strm, int level)
+void shit_deflate_init(shit_zstream *strm, int level)
 {
 	int status;
 
@@ -170,7 +170,7 @@ void git_deflate_init(git_zstream *strm, int level)
 	    strm->z.msg ? strm->z.msg : "no message");
 }
 
-static void do_git_deflate_init(git_zstream *strm, int level, int windowBits)
+static void do_shit_deflate_init(shit_zstream *strm, int level, int windowBits)
 {
 	int status;
 
@@ -186,25 +186,25 @@ static void do_git_deflate_init(git_zstream *strm, int level, int windowBits)
 	    strm->z.msg ? strm->z.msg : "no message");
 }
 
-void git_deflate_init_gzip(git_zstream *strm, int level)
+void shit_deflate_init_gzip(shit_zstream *strm, int level)
 {
 	/*
 	 * Use default 15 bits, +16 is to generate gzip header/trailer
 	 * instead of the zlib wrapper.
 	 */
-	do_git_deflate_init(strm, level, 15 + 16);
+	do_shit_deflate_init(strm, level, 15 + 16);
 }
 
-void git_deflate_init_raw(git_zstream *strm, int level)
+void shit_deflate_init_raw(shit_zstream *strm, int level)
 {
 	/*
 	 * Use default 15 bits, negate the value to get raw compressed
 	 * data without zlib header and trailer.
 	 */
-	do_git_deflate_init(strm, level, -15);
+	do_shit_deflate_init(strm, level, -15);
 }
 
-int git_deflate_abort(git_zstream *strm)
+int shit_deflate_abort(shit_zstream *strm)
 {
 	int status;
 
@@ -214,9 +214,9 @@ int git_deflate_abort(git_zstream *strm)
 	return status;
 }
 
-void git_deflate_end(git_zstream *strm)
+void shit_deflate_end(shit_zstream *strm)
 {
-	int status = git_deflate_abort(strm);
+	int status = shit_deflate_abort(strm);
 
 	if (status == Z_OK)
 		return;
@@ -224,7 +224,7 @@ void git_deflate_end(git_zstream *strm)
 	      strm->z.msg ? strm->z.msg : "no message");
 }
 
-int git_deflate_end_gently(git_zstream *strm)
+int shit_deflate_end_gently(shit_zstream *strm)
 {
 	int status;
 
@@ -234,7 +234,7 @@ int git_deflate_end_gently(git_zstream *strm)
 	return status;
 }
 
-int git_deflate(git_zstream *strm, int flush)
+int shit_deflate(shit_zstream *strm, int flush)
 {
 	int status;
 

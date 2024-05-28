@@ -5,13 +5,13 @@
 #
 # Resolve two trees, using enhanced multi-base read-tree.
 
-. git-sh-setup
+. shit-sh-setup
 
 # Abort if index does not match HEAD
-if ! git diff-index --quiet --cached HEAD --
+if ! shit diff-index --quiet --cached HEAD --
 then
     gettextln "Error: Your local changes to the following files would be overwritten by merge"
-    git diff-index --cached --name-only HEAD -- | sed -e 's/^/    /'
+    shit diff-index --cached --name-only HEAD -- | sed -e 's/^/    /'
     exit 2
 fi
 
@@ -47,15 +47,15 @@ then
 	exit 2
 fi
 
-git update-index -q --refresh
-git read-tree -u -m --aggressive $bases $head $remotes || exit 2
+shit update-index -q --refresh
+shit read-tree -u -m --aggressive $bases $head $remotes || exit 2
 echo "Trying simple merge."
-if result_tree=$(git write-tree 2>/dev/null)
+if result_tree=$(shit write-tree 2>/dev/null)
 then
 	exit 0
 else
 	echo "Simple merge failed, trying Automatic merge."
-	if git merge-index -o git-merge-one-file -a
+	if shit merge-index -o shit-merge-one-file -a
 	then
 		exit 0
 	else

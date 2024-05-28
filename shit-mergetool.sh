@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# This program resolves merge conflicts in git
+# This program resolves merge conflicts in shit
 #
 # Copyright (c) 2006 Theodore Y. Ts'o
 # Copyright (c) 2009-2016 David Aguilar
@@ -11,11 +11,11 @@
 
 USAGE='[--tool=tool] [--tool-help] [-y|--no-prompt|--prompt] [-g|--gui|--no-gui] [-O<orderfile>] [file to merge] ...'
 SUBDIRECTORY_OK=Yes
-NONGIT_OK=Yes
+NONshit_OK=Yes
 OPTIONS_SPEC=
 TOOL_MODE=merge
-. git-sh-setup
-. git-mergetool--lib
+. shit-sh-setup
+. shit-mergetool--lib
 
 # Returns true if the mode reflects a symlink
 is_symlink () {
@@ -39,12 +39,12 @@ base_present () {
 }
 
 mergetool_tmpdir_init () {
-	if test "$(git config --bool mergetool.writeToTemp)" != true
+	if test "$(shit config --bool mergetool.writeToTemp)" != true
 	then
 		MERGETOOL_TMPDIR=.
 		return 0
 	fi
-	if MERGETOOL_TMPDIR=$(mktemp -d -t "git-mergetool-XXXXXX" 2>/dev/null)
+	if MERGETOOL_TMPDIR=$(mktemp -d -t "shit-mergetool-XXXXXX" 2>/dev/null)
 	then
 		return 0
 	fi
@@ -96,14 +96,14 @@ resolve_symlink_merge () {
 		read ans || return 1
 		case "$ans" in
 		[lL]*)
-			git checkout-index -f --stage=2 -- "$MERGED"
-			git add -- "$MERGED"
+			shit checkout-index -f --stage=2 -- "$MERGED"
+			shit add -- "$MERGED"
 			cleanup_temp_files --save-backup
 			return 0
 			;;
 		[rR]*)
-			git checkout-index -f --stage=3 -- "$MERGED"
-			git add -- "$MERGED"
+			shit checkout-index -f --stage=3 -- "$MERGED"
+			shit add -- "$MERGED"
 			cleanup_temp_files --save-backup
 			return 0
 			;;
@@ -126,7 +126,7 @@ resolve_deleted_merge () {
 		read ans || return 1
 		case "$ans" in
 		[mMcC]*)
-			git add -- "$MERGED"
+			shit add -- "$MERGED"
 			if test "$merge_keep_backup" = "true"
 			then
 				cleanup_temp_files --save-backup
@@ -136,7 +136,7 @@ resolve_deleted_merge () {
 			return 0
 			;;
 		[dD]*)
-			git rm -- "$MERGED" > /dev/null
+			shit rm -- "$MERGED" > /dev/null
 			cleanup_temp_files
 			return 0
 			;;
@@ -160,36 +160,36 @@ resolve_submodule_merge () {
 		[lL]*)
 			if ! local_present
 			then
-				if test -n "$(git ls-tree HEAD -- "$MERGED")"
+				if test -n "$(shit ls-tree HEAD -- "$MERGED")"
 				then
 					# Local isn't present, but it's a subdirectory
-					git ls-tree --full-name -r HEAD -- "$MERGED" |
-					git update-index --index-info || exit $?
+					shit ls-tree --full-name -r HEAD -- "$MERGED" |
+					shit update-index --index-info || exit $?
 				else
 					test -e "$MERGED" && mv -- "$MERGED" "$BACKUP"
-					git update-index --force-remove "$MERGED"
+					shit update-index --force-remove "$MERGED"
 					cleanup_temp_files --save-backup
 				fi
 			elif is_submodule "$local_mode"
 			then
 				stage_submodule "$MERGED" "$local_sha1"
 			else
-				git checkout-index -f --stage=2 -- "$MERGED"
-				git add -- "$MERGED"
+				shit checkout-index -f --stage=2 -- "$MERGED"
+				shit add -- "$MERGED"
 			fi
 			return 0
 			;;
 		[rR]*)
 			if ! remote_present
 			then
-				if test -n "$(git ls-tree MERGE_HEAD -- "$MERGED")"
+				if test -n "$(shit ls-tree MERGE_HEAD -- "$MERGED")"
 				then
 					# Remote isn't present, but it's a subdirectory
-					git ls-tree --full-name -r MERGE_HEAD -- "$MERGED" |
-					git update-index --index-info || exit $?
+					shit ls-tree --full-name -r MERGE_HEAD -- "$MERGED" |
+					shit update-index --index-info || exit $?
 				else
 					test -e "$MERGED" && mv -- "$MERGED" "$BACKUP"
-					git update-index --force-remove "$MERGED"
+					shit update-index --force-remove "$MERGED"
 				fi
 			elif is_submodule "$remote_mode"
 			then
@@ -199,8 +199,8 @@ resolve_submodule_merge () {
 				stage_submodule "$MERGED" "$remote_sha1"
 			else
 				test -e "$MERGED" && mv -- "$MERGED" "$BACKUP"
-				git checkout-index -f --stage=3 -- "$MERGED"
-				git add -- "$MERGED"
+				shit checkout-index -f --stage=3 -- "$MERGED"
+				shit add -- "$MERGED"
 			fi
 			cleanup_temp_files --save-backup
 			return 0
@@ -220,28 +220,28 @@ stage_submodule () {
 	# Find $path relative to work tree
 	work_tree_root=$(cd_to_toplevel && pwd)
 	work_rel_path=$(cd "$path" &&
-		GIT_WORK_TREE="${work_tree_root}" git rev-parse --show-prefix
+		shit_WORK_TREE="${work_tree_root}" shit rev-parse --show-prefix
 	)
 	test -n "$work_rel_path" ||
 	die "fatal: unable to get path of module $path relative to work tree"
-	git update-index --add --replace --cacheinfo 160000 "$submodule_sha1" "${work_rel_path%/}" || die
+	shit update-index --add --replace --cacheinfo 160000 "$submodule_sha1" "${work_rel_path%/}" || die
 }
 
 checkout_staged_file () {
-	tmpfile="$(git checkout-index --temp --stage="$1" "$2" 2>/dev/null)" &&
+	tmpfile="$(shit checkout-index --temp --stage="$1" "$2" 2>/dev/null)" &&
 	tmpfile=${tmpfile%%'	'*}
 
 	if test $? -eq 0 && test -n "$tmpfile"
 	then
-		mv -- "$(git rev-parse --show-cdup)$tmpfile" "$3"
+		mv -- "$(shit rev-parse --show-cdup)$tmpfile" "$3"
 	else
 		>"$3"
 	fi
 }
 
 hide_resolved () {
-	git merge-file --ours -q -p "$LOCAL" "$BASE" "$REMOTE" >"$LCONFL"
-	git merge-file --theirs -q -p "$LOCAL" "$BASE" "$REMOTE" >"$RCONFL"
+	shit merge-file --ours -q -p "$LOCAL" "$BASE" "$REMOTE" >"$LCONFL"
+	shit merge-file --theirs -q -p "$LOCAL" "$BASE" "$REMOTE" >"$RCONFL"
 	mv -- "$LCONFL" "$LOCAL"
 	mv -- "$RCONFL" "$REMOTE"
 }
@@ -249,7 +249,7 @@ hide_resolved () {
 merge_file () {
 	MERGED="$1"
 
-	f=$(git ls-files -u -- "$MERGED")
+	f=$(shit ls-files -u -- "$MERGED")
 	if test -z "$f"
 	then
 		if test ! -f "$MERGED"
@@ -337,12 +337,12 @@ merge_file () {
 	global_config="mergetool.hideResolved"
 	tool_config="mergetool.${merge_tool}.hideResolved"
 
-	if enabled=$(git config --type=bool "$tool_config")
+	if enabled=$(shit config --type=bool "$tool_config")
 	then
 		# The user has a specific preference for a specific tool and no
 		# other preferences should override that.
 		: ;
-	elif enabled=$(git config --type=bool "$global_config")
+	elif enabled=$(shit config --type=bool "$global_config")
 	then
 		# The user has a general preference for all tools.
 		#
@@ -423,7 +423,7 @@ merge_file () {
 		rm -- "$BACKUP"
 	fi
 
-	git add -- "$MERGED"
+	shit add -- "$MERGED"
 	cleanup_temp_files
 	return 0
 }
@@ -450,8 +450,8 @@ print_noop_and_exit () {
 }
 
 main () {
-	prompt=$(git config --bool mergetool.prompt)
-	GIT_MERGETOOL_GUI=
+	prompt=$(shit config --bool mergetool.prompt)
+	shit_MERGETOOL_GUI=
 	guessed_merge_tool=false
 	orderfile=
 
@@ -478,10 +478,10 @@ main () {
 			esac
 			;;
 		--no-gui)
-			GIT_MERGETOOL_GUI=false
+			shit_MERGETOOL_GUI=false
 			;;
 		-g|--gui)
-			GIT_MERGETOOL_GUI=true
+			shit_MERGETOOL_GUI=true
 			;;
 		-y|--no-prompt)
 			prompt=false
@@ -506,7 +506,7 @@ main () {
 		shift
 	done
 
-	git_dir_init
+	shit_dir_init
 	require_work_tree
 
 	if test -z "$merge_tool"
@@ -521,23 +521,23 @@ main () {
 			exit $subshell_exit_status
 		fi
 	fi
-	merge_keep_backup="$(git config --bool mergetool.keepBackup || echo true)"
-	merge_keep_temporaries="$(git config --bool mergetool.keepTemporaries || echo false)"
+	merge_keep_backup="$(shit config --bool mergetool.keepBackup || echo true)"
+	merge_keep_temporaries="$(shit config --bool mergetool.keepTemporaries || echo false)"
 
-	prefix=$(git rev-parse --show-prefix) || exit 1
+	prefix=$(shit rev-parse --show-prefix) || exit 1
 	cd_to_toplevel
 
 	if test -n "$orderfile"
 	then
 		orderfile=$(
-			git rev-parse --prefix "$prefix" -- "$orderfile" |
+			shit rev-parse --prefix "$prefix" -- "$orderfile" |
 			sed -e 1d
 		)
 	fi
 
-	if test $# -eq 0 && test -e "$GIT_DIR/MERGE_RR"
+	if test $# -eq 0 && test -e "$shit_DIR/MERGE_RR"
 	then
-		set -- $(git rerere remaining)
+		set -- $(shit rerere remaining)
 		if test $# -eq 0
 		then
 			print_noop_and_exit
@@ -545,10 +545,10 @@ main () {
 	elif test $# -ge 0
 	then
 		# rev-parse provides the -- needed for 'set'
-		eval "set $(git rev-parse --sq --prefix "$prefix" -- "$@")"
+		eval "set $(shit rev-parse --sq --prefix "$prefix" -- "$@")"
 	fi
 
-	files=$(git -c core.quotePath=false \
+	files=$(shit -c core.quotePath=false \
 		diff --name-only --diff-filter=U \
 		${orderfile:+"-O$orderfile"} -- "$@")
 

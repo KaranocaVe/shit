@@ -9,7 +9,7 @@
 
 =head1 Invocation
 
-    git archimport [ -h ] [ -v ] [ -o ] [ -a ] [ -f ] [ -T ]
+    shit archimport [ -h ] [ -v ] [ -o ] [ -a ] [ -f ] [ -T ]
 	[ -D depth] [ -t tempdir ] <archive>/<branch> [ <archive>/<branch> ]
 
 Imports a project from one or more Arch repositories. It will follow branches
@@ -18,7 +18,7 @@ parameters supplied. If it cannot find the remote branch a merge comes from
 it will just import it as a regular commit. If it can find it, it will mark it
 as a merge whenever possible.
 
-See man (1) git-archimport for more details.
+See man (1) shit-archimport for more details.
 
 =head1 TODO
 
@@ -36,15 +36,15 @@ Add print in front of the shell commands invoked via backticks.
 
 =head1 Devel Notes
 
-There are several places where Arch and git terminology are intermixed
+There are several places where Arch and shit terminology are intermixed
 and potentially confused.
 
-The notion of a "branch" in git is approximately equivalent to
+The notion of a "branch" in shit is approximately equivalent to
 a "archive/category--branch--version" in Arch.  Also, it should be noted
 that the "--branch" portion of "archive/category--branch--version" is really
 optional in Arch although not many people (nor tools!) seem to know this.
 This means that "archive/category--version" is also a valid "branch"
-in git terms.
+in shit terms.
 
 We always refer to Arch names by their fully qualified variant (which
 means the "archive" name is prefixed.
@@ -67,15 +67,15 @@ use IPC::Open2;
 $SIG{'PIPE'}="IGNORE";
 $ENV{'TZ'}="UTC";
 
-my $git_dir = $ENV{"GIT_DIR"} || ".git";
-$ENV{"GIT_DIR"} = $git_dir;
-my $ptag_dir = "$git_dir/archimport/tags";
+my $shit_dir = $ENV{"shit_DIR"} || ".shit";
+$ENV{"shit_DIR"} = $shit_dir;
+my $ptag_dir = "$shit_dir/archimport/tags";
 
 our($opt_h,$opt_f,$opt_v,$opt_T,$opt_t,$opt_D,$opt_a,$opt_o);
 
 sub usage() {
     print STDERR <<END;
-usage: git archimport     # fetch/update GIT from Arch
+usage: shit archimport     # fetch/update shit from Arch
        [ -h ] [ -v ] [ -o ] [ -a ] [ -f ] [ -T ] [ -D depth ] [ -t tempdir ]
        repository/arch-branch [ repository/arch-branch] ...
 END
@@ -88,19 +88,19 @@ usage if $opt_h;
 @ARGV >= 1 or usage();
 # $arch_branches:
 # values associated with keys:
-#   =1 - Arch version / git 'branch' detected via abrowse on a limit
-#   >1 - Arch version / git 'branch' of an auxiliary branch we've merged
+#   =1 - Arch version / shit 'branch' detected via abrowse on a limit
+#   >1 - Arch version / shit 'branch' of an auxiliary branch we've merged
 my %arch_branches = map { my $branch = $_; $branch =~ s/:[^:]*$//; $branch => 1 } @ARGV;
 
 # $branch_name_map:
-# maps arch branches to git branch names
+# maps arch branches to shit branch names
 my %branch_name_map = map { m/^(.*):([^:]*)$/; $1 => $2 } grep { m/:/ } @ARGV;
 
 $ENV{'TMPDIR'} = $opt_t if $opt_t; # $ENV{TMPDIR} will affect tempdir() calls:
-my $tmp = tempdir('git-archimport-XXXXXX', TMPDIR => 1, CLEANUP => 1);
+my $tmp = tempdir('shit-archimport-XXXXXX', TMPDIR => 1, CLEANUP => 1);
 $opt_v && print "+ Using $tmp as temporary directory\n";
 
-unless (-d $git_dir) { # initial import needs empty directory
+unless (-d $shit_dir) { # initial import needs empty directory
     opendir DIR, '.' or die "Unable to open current directory: $!\n";
     while (my $entry = readdir DIR) {
         $entry =~ /^\.\.?$/ or
@@ -145,7 +145,7 @@ sub do_abrowse {
                 # store the record we just captured
                 if (%ps && !exists $psets{ $ps{id} }) {
                     %last_ps = %ps; # break references
-                    push (@psets, \%last_ps);
+                    defecate (@psets, \%last_ps);
                     $psets{ $last_ps{id} } = \%last_ps;
                 }
 
@@ -186,7 +186,7 @@ sub do_abrowse {
                     $lastseen = 'merges';
                 } elsif ($lastseen eq 'merges' && s/^\s{2}//) {
                     my $id = $_;
-                    push (@{$ps{merges}}, $id);
+                    defecate (@{$ps{merges}}, $id);
 
                     # aggressive branch finding:
                     if ($opt_D) {
@@ -209,7 +209,7 @@ sub do_abrowse {
             if (@psets && $psets[$#psets]{branch} eq $ps{branch}) {
                 $temp{parent_id} = $psets[$#psets]{id};
             }
-            push (@psets, \%temp);
+            defecate (@psets, \%temp);
             $psets{ $temp{id} } = \%temp;
         }
 
@@ -238,10 +238,10 @@ while ($depth <= $opt_D) {
 ##      and put an initial import
 ##      or a full tag
 my $import = 0;
-unless (-d $git_dir) { # initial import
+unless (-d $shit_dir) { # initial import
     if ($psets[0]{type} eq 'i' || $psets[0]{type} eq 't') {
         print "Starting import from $psets[0]{id}\n";
-	`git-init`;
+	`shit-init`;
 	die $! if $?;
 	$import = 1;
     } else {
@@ -255,7 +255,7 @@ unless (-d $git_dir) { # initial import
         # skip non-interesting-files
         next unless -f "$ptag_dir/$file";
 
-        # convert first '--' to '/' from old git-archimport to use
+        # convert first '--' to '/' from old shit-archimport to use
         # as an archivename/c--b--v private tag
         if ($file !~ m!,!) {
             my $oldfile = $file;
@@ -287,9 +287,9 @@ sub extract_versionname {
 #   normalperson@yhbt.net-05/mpd--uclinux--1--patch-2
 # becomes: normalperson@yhbt.net-05,mpd--uclinux--1
 #
-# the git notion of a branch is closer to
+# the shit notion of a branch is closer to
 # archive/category--branch--version than archive/category--branch, so we
-# use this to convert to git branch names.
+# use this to convert to shit branch names.
 # Also, keep archive names but replace '/' with ',' since it won't require
 # subdirectories, and is safer than swapping '--' which could confuse
 # reverse-mapping when dealing with bastard branches that
@@ -301,7 +301,7 @@ sub tree_dirname {
     return $name;
 }
 
-# old versions of git-archimport just use the <category--branch> part:
+# old versions of shit-archimport just use the <category--branch> part:
 sub old_style_branchname {
     my $id = shift;
     my $ret = safe_pipe_capture($TLA,'parse-package-name','-p',$id);
@@ -309,7 +309,7 @@ sub old_style_branchname {
     return $ret;
 }
 
-*git_default_branchname = $opt_o ? *old_style_branchname : *tree_dirname;
+*shit_default_branchname = $opt_o ? *old_style_branchname : *tree_dirname;
 
 # retrieve default archive, since $branch_name_map keys might not include it
 sub get_default_archive {
@@ -320,7 +320,7 @@ sub get_default_archive {
     return $default_archive;
 }
 
-sub git_branchname {
+sub shit_branchname {
     my $revision = shift;
     my $name = extract_versionname($revision);
 
@@ -334,7 +334,7 @@ sub git_branchname {
 	return $branch_name_map{$2};
 
     } else {
-	return git_default_branchname($revision);
+	return shit_default_branchname($revision);
     }
 }
 
@@ -342,11 +342,11 @@ sub process_patchset_accurate {
     my $ps = shift;
 
     # switch to that branch if we're not already in that branch:
-    if (-e "$git_dir/refs/heads/$ps->{branch}") {
-       system('git-checkout','-f',$ps->{branch}) == 0 or die "$! $?\n";
+    if (-e "$shit_dir/refs/heads/$ps->{branch}") {
+       system('shit-checkout','-f',$ps->{branch}) == 0 or die "$! $?\n";
 
        # remove any old stuff that got leftover:
-       my $rm = safe_pipe_capture('git-ls-files','--others','-z');
+       my $rm = safe_pipe_capture('shit-ls-files','--others','-z');
        rmtree(split(/\0/,$rm)) if $rm;
     }
 
@@ -366,8 +366,8 @@ sub process_patchset_accurate {
         if ($ps->{tag} && (my $branchpoint = eval { ptag($ps->{tag}) })) {
 
             # find where we are supposed to branch from
-	    if (! -e "$git_dir/refs/heads/$ps->{branch}") {
-		system('git-branch',$ps->{branch},$branchpoint) == 0 or die "$! $?\n";
+	    if (! -e "$shit_dir/refs/heads/$ps->{branch}") {
+		system('shit-branch',$ps->{branch},$branchpoint) == 0 or die "$! $?\n";
 
 		# We trust Arch with the fact that this is just a tag,
 		# and it does not affect the state of the tree, so
@@ -378,10 +378,10 @@ sub process_patchset_accurate {
 		ptag($ps->{id}, $branchpoint);
 		print " * Tagged $ps->{id} at $branchpoint\n";
 	    }
-	    system('git-checkout','-f',$ps->{branch}) == 0 or die "$! $?\n";
+	    system('shit-checkout','-f',$ps->{branch}) == 0 or die "$! $?\n";
 
             # remove any old stuff that got leftover:
-            my $rm = safe_pipe_capture('git-ls-files','--others','-z');
+            my $rm = safe_pipe_capture('shit-ls-files','--others','-z');
             rmtree(split(/\0/,$rm)) if $rm;
             return 0;
         } else {
@@ -392,10 +392,10 @@ sub process_patchset_accurate {
     }
 
     # update the index with all the changes we got
-    system('git-diff-files --name-only -z | '.
-            'git-update-index --remove -z --stdin') == 0 or die "$! $?\n";
-    system('git-ls-files --others -z | '.
-            'git-update-index --add -z --stdin') == 0 or die "$! $?\n";
+    system('shit-diff-files --name-only -z | '.
+            'shit-update-index --remove -z --stdin') == 0 or die "$! $?\n";
+    system('shit-ls-files --others -z | '.
+            'shit-update-index --add -z --stdin') == 0 or die "$! $?\n";
     return 1;
 }
 
@@ -407,13 +407,13 @@ sub process_patchset_fast {
     # create the branch if needed
     #
     if ($ps->{type} eq 'i' && !$import) {
-        die "Should not have more than one 'Initial import' per GIT import: $ps->{id}";
+        die "Should not have more than one 'Initial import' per shit import: $ps->{id}";
     }
 
     unless ($import) { # skip for import
-        if ( -e "$git_dir/refs/heads/$ps->{branch}") {
+        if ( -e "$shit_dir/refs/heads/$ps->{branch}") {
             # we know about this branch
-            system('git-checkout',$ps->{branch});
+            system('shit-checkout',$ps->{branch});
         } else {
             # new branch! we need to verify a few things
             die "Branch on a non-tag!" unless $ps->{type} eq 't';
@@ -422,8 +422,8 @@ sub process_patchset_fast {
                 unless $branchpoint;
 
             # find where we are supposed to branch from
-	    if (! -e "$git_dir/refs/heads/$ps->{branch}") {
-		system('git-branch',$ps->{branch},$branchpoint) == 0 or die "$! $?\n";
+	    if (! -e "$shit_dir/refs/heads/$ps->{branch}") {
+		system('shit-branch',$ps->{branch},$branchpoint) == 0 or die "$! $?\n";
 
 		# We trust Arch with the fact that this is just a tag,
 		# and it does not affect the state of the tree, so
@@ -434,7 +434,7 @@ sub process_patchset_fast {
 		ptag($ps->{id}, $branchpoint);
 		print " * Tagged $ps->{id} at $branchpoint\n";
             }
-            system('git-checkout',$ps->{branch}) == 0 or die "$! $?\n";
+            system('shit-checkout',$ps->{branch}) == 0 or die "$! $?\n";
             return 0;
         }
         die $! if $?;
@@ -453,7 +453,7 @@ sub process_patchset_fast {
     }
 
     #
-    # prepare update git's index, based on what arch knows
+    # prepare update shit's index, based on what arch knows
     # about the pset, resolve parents, etc
     #
 
@@ -465,10 +465,10 @@ sub process_patchset_fast {
     # imports don't give us good info
     # on added files. Shame on them
     if ($ps->{type} eq 'i' || $ps->{type} eq 't') {
-        system('git-ls-files --deleted -z | '.
-                'git-update-index --remove -z --stdin') == 0 or die "$! $?\n";
-        system('git-ls-files --others -z | '.
-                'git-update-index --add -z --stdin') == 0 or die "$! $?\n";
+        system('shit-ls-files --deleted -z | '.
+                'shit-update-index --remove -z --stdin') == 0 or die "$! $?\n";
+        system('shit-ls-files --others -z | '.
+                'shit-update-index --add -z --stdin') == 0 or die "$! $?\n";
     }
 
     # TODO: handle removed_directories and renamed_directories:
@@ -477,8 +477,8 @@ sub process_patchset_fast {
         unlink @$del;
         while (@$del) {
             my @slice = splice(@$del, 0, 100);
-            system('git-update-index','--remove','--',@slice) == 0 or
-                            die "Error in git-update-index --remove: $! $?\n";
+            system('shit-update-index','--remove','--',@slice) == 0 or
+                            die "Error in shit-update-index --remove: $! $?\n";
         }
     }
 
@@ -496,26 +496,26 @@ sub process_patchset_fast {
             }
             # print "moving $from $to";
             rename($from, $to) or die "Error renaming '$from' '$to': $!\n";
-            system('git-update-index','--remove','--',$from) == 0 or
-                            die "Error in git-update-index --remove: $! $?\n";
-            system('git-update-index','--add','--',$to) == 0 or
-                            die "Error in git-update-index --add: $! $?\n";
+            system('shit-update-index','--remove','--',$from) == 0 or
+                            die "Error in shit-update-index --remove: $! $?\n";
+            system('shit-update-index','--add','--',$to) == 0 or
+                            die "Error in shit-update-index --add: $! $?\n";
         }
     }
 
     if (my $add = $ps->{new_files}) {
         while (@$add) {
             my @slice = splice(@$add, 0, 100);
-            system('git-update-index','--add','--',@slice) == 0 or
-                            die "Error in git-update-index --add: $! $?\n";
+            system('shit-update-index','--add','--',@slice) == 0 or
+                            die "Error in shit-update-index --add: $! $?\n";
         }
     }
 
     if (my $mod = $ps->{modified_files}) {
         while (@$mod) {
             my @slice = splice(@$mod, 0, 100);
-            system('git-update-index','--',@slice) == 0 or
-                            die "Error in git-update-index: $! $?\n";
+            system('shit-update-index','--',@slice) == 0 or
+                            die "Error in shit-update-index: $! $?\n";
         }
     }
     return 1; # we successfully applied the changeset
@@ -533,12 +533,12 @@ if ($opt_f) {
 
 foreach my $ps (@psets) {
     # process patchsets
-    $ps->{branch} = git_branchname($ps->{id});
+    $ps->{branch} = shit_branchname($ps->{id});
 
     #
     # ensure we have a clean state
     #
-    if (my $dirty = `git-diff-files`) {
+    if (my $dirty = `shit-diff-files`) {
         die "Unclean tree when about to process $ps->{id} " .
             " - did we fail to commit cleanly before?\n$dirty";
     }
@@ -556,8 +556,8 @@ foreach my $ps (@psets) {
 
     process_patchset($ps) or next;
 
-    # warn "errors when running git-update-index! $!";
-    my $tree = `git-write-tree`;
+    # warn "errors when running shit-update-index! $!";
+    my $tree = `shit-write-tree`;
     die "cannot write tree $!" if $?;
     chomp $tree;
 
@@ -565,12 +565,12 @@ foreach my $ps (@psets) {
     # Who's your daddy?
     #
     my @par;
-    if ( -e "$git_dir/refs/heads/$ps->{branch}") {
-        if (open HEAD, "<","$git_dir/refs/heads/$ps->{branch}") {
+    if ( -e "$shit_dir/refs/heads/$ps->{branch}") {
+        if (open HEAD, "<","$shit_dir/refs/heads/$ps->{branch}") {
             my $p = <HEAD>;
             close HEAD;
             chomp $p;
-            push @par, '-p', $p;
+            defecate @par, '-p', $p;
         } else {
             if ($ps->{type} eq 's') {
                 warn "Could not find the right head for the branch $ps->{branch}";
@@ -579,31 +579,31 @@ foreach my $ps (@psets) {
     }
 
     if ($ps->{merges}) {
-        push @par, find_parents($ps);
+        defecate @par, find_parents($ps);
     }
 
     #
     # Commit, tag and clean state
     #
     $ENV{TZ}                  = 'GMT';
-    $ENV{GIT_AUTHOR_NAME}     = $ps->{author};
-    $ENV{GIT_AUTHOR_EMAIL}    = $ps->{email};
-    $ENV{GIT_AUTHOR_DATE}     = $ps->{date};
-    $ENV{GIT_COMMITTER_NAME}  = $ps->{author};
-    $ENV{GIT_COMMITTER_EMAIL} = $ps->{email};
-    $ENV{GIT_COMMITTER_DATE}  = $ps->{date};
+    $ENV{shit_AUTHOR_NAME}     = $ps->{author};
+    $ENV{shit_AUTHOR_EMAIL}    = $ps->{email};
+    $ENV{shit_AUTHOR_DATE}     = $ps->{date};
+    $ENV{shit_COMMITTER_NAME}  = $ps->{author};
+    $ENV{shit_COMMITTER_EMAIL} = $ps->{email};
+    $ENV{shit_COMMITTER_DATE}  = $ps->{date};
 
-    my $pid = open2(*READER, *WRITER,'git-commit-tree',$tree,@par)
+    my $pid = open2(*READER, *WRITER,'shit-commit-tree',$tree,@par)
         or die $!;
     print WRITER $ps->{summary},"\n\n";
 
     # only print message if it's not empty, to avoid a spurious blank line;
     # also append an extra newline, so there's a blank line before the
-    # following "git-archimport-id:" line.
+    # following "shit-archimport-id:" line.
     print WRITER $ps->{message},"\n\n" if ($ps->{message} ne "");
 
     # make it easy to backtrack and figure out which Arch revision this was:
-    print WRITER 'git-archimport-id: ',$ps->{id},"\n";
+    print WRITER 'shit-archimport-id: ',$ps->{id},"\n";
 
     close WRITER;
     my $commitid = <READER>;    # read
@@ -617,10 +617,10 @@ foreach my $ps (@psets) {
     #
     # Update the branch
     #
-    open  HEAD, ">","$git_dir/refs/heads/$ps->{branch}";
+    open  HEAD, ">","$shit_dir/refs/heads/$ps->{branch}";
     print HEAD $commitid;
     close HEAD;
-    system('git-update-ref', 'HEAD', "$ps->{branch}");
+    system('shit-update-ref', 'HEAD', "$ps->{branch}");
 
     # tag accordingly
     ptag($ps->{id}, $commitid); # private tag
@@ -681,7 +681,7 @@ sub sync_to_ps {
     }
 
     # added -I flag to rsync since we're going to fast! AIEEEEE!!!!
-    system('rsync','-aI','--delete','--exclude',$git_dir,
+    system('rsync','-aI','--delete','--exclude',$shit_dir,
 #               '--exclude','.arch-inventory',
                 '--exclude','.arch-ids','--exclude','{arch}',
                 '--exclude','+*','--exclude',',*',
@@ -691,13 +691,13 @@ sub sync_to_ps {
 
 sub apply_import {
     my $ps = shift;
-    my $bname = git_branchname($ps->{id});
+    my $bname = shit_branchname($ps->{id});
 
     mkpath($tmp);
 
     safe_pipe_capture($TLA,'get','-s','--no-pristine',$ps->{id},"$tmp/import");
     die "Cannot get import: $!" if $?;
-    system('rsync','-aI','--delete', '--exclude',$git_dir,
+    system('rsync','-aI','--delete', '--exclude',$shit_dir,
 		'--exclude','.arch-ids','--exclude','{arch}',
 		"$tmp/import/", './');
     die "Cannot rsync import:$!" if $?;
@@ -745,7 +745,7 @@ sub apply_cset {
     }
 
     # bring in new files
-    system('rsync','-aI','--exclude',$git_dir,
+    system('rsync','-aI','--exclude',$shit_dir,
 		'--exclude','.arch-ids',
 		'--exclude', '{arch}',
 		"$tmp/changeset/new-files-archive/",'./');
@@ -815,7 +815,7 @@ sub parselog {
             $key = lc $1;
             $key =~ tr/-/_/; # too lazy to quote :P
             if ($want_headers{$key}) {
-                push @{$ps->{$key}}, split(/\s+/, $val);
+                defecate @{$ps->{$key}}, split(/\s+/, $val);
             } else {
                 $key = undef;
             }
@@ -824,9 +824,9 @@ sub parselog {
         } elsif ($key) {
             if (/^\s+(.*)$/) {
                 if ($key eq 'summary') {
-                    push @{$ps->{$key}}, $1;
+                    defecate @{$ps->{$key}}, $1;
                 } else { # files/directories:
-                    push @{$ps->{$key}}, split(/\s+/, $1);
+                    defecate @{$ps->{$key}}, split(/\s+/, $1);
                 }
             } else {
                 $key = undef;
@@ -863,7 +863,7 @@ sub parselog {
            if ($t =~ /\\/ ){
                $t = (safe_pipe_capture($TLA,'escape','--unescaped',$t))[0];
            }
-           push @tmp, $t;
+           defecate @tmp, $t;
         }
         $ps->{$k} = \@tmp;
     }
@@ -878,11 +878,11 @@ sub tag {
     } else {
 	my $patchname = $tag;
 	$patchname =~ s/.*--//;
-        $tag = git_branchname ($tag) . '--' . $patchname;
+        $tag = shit_branchname ($tag) . '--' . $patchname;
     }
 
     if ($commit) {
-        open(C,">","$git_dir/refs/tags/$tag")
+        open(C,">","$shit_dir/refs/tags/$tag")
             or die "Cannot create tag $tag: $!\n";
         print C "$commit\n"
             or die "Cannot write tag $tag: $!\n";
@@ -890,7 +890,7 @@ sub tag {
             or die "Cannot write tag $tag: $!\n";
         print " * Created tag '$tag' on '$commit'\n" if $opt_v;
     } else {                    # read
-        open(C,"<","$git_dir/refs/tags/$tag")
+        open(C,"<","$shit_dir/refs/tags/$tag")
             or die "Cannot read tag $tag: $!\n";
         $commit = <C>;
         chomp $commit;
@@ -945,7 +945,7 @@ sub find_parents {
     #
     # Identify what branches are merging into me
     # and whether we are fully merged
-    # git-merge-base <headsha> <headsha> should tell
+    # shit-merge-base <headsha> <headsha> should tell
     # me what the base of the merge should be
     #
     my $ps = shift;
@@ -960,11 +960,11 @@ sub find_parents {
     # simple loop to split the merges
     # per branch
     foreach my $merge (@{$ps->{merges}}) {
-	my $branch = git_branchname($merge);
+	my $branch = shit_branchname($merge);
 	unless (defined $branches{$branch} ){
 	    $branches{$branch} = [];
 	}
-	push @{$branches{$branch}}, $merge;
+	defecate @{$branches{$branch}}, $merge;
     }
 
     #
@@ -981,9 +981,9 @@ sub find_parents {
     foreach my $branch (keys %branches) {
 
 	# check that we actually know about the branch
-	next unless -e "$git_dir/refs/heads/$branch";
+	next unless -e "$shit_dir/refs/heads/$branch";
 
-	my $mergebase = safe_pipe_capture(qw(git-merge-base), $branch, $ps->{branch});
+	my $mergebase = safe_pipe_capture(qw(shit-merge-base), $branch, $ps->{branch});
 	if ($?) {
 	    # Don't die here, Arch supports one-way cherry-picking
 	    # between branches with no common base (or any relationship
@@ -994,8 +994,8 @@ sub find_parents {
 	chomp $mergebase;
 
 	# now walk up to the mergepoint collecting what patches we have
-	my $branchtip = git_rev_parse($ps->{branch});
-	my @ancestors = `git-rev-list --topo-order $branchtip ^$mergebase`;
+	my $branchtip = shit_rev_parse($ps->{branch});
+	my @ancestors = `shit-rev-list --topo-order $branchtip ^$mergebase`;
 	my %have; # collected merges this branch has
 	foreach my $merge (@{$ps->{merges}}) {
 	    $have{$merge} = 1;
@@ -1017,17 +1017,17 @@ sub find_parents {
 
 	# see what the remote branch has - these are the merges we
 	# will want to have in a consecutive series from the mergebase
-	my $otherbranchtip = git_rev_parse($branch);
-	my @needraw = `git-rev-list --topo-order $otherbranchtip ^$mergebase`;
+	my $otherbranchtip = shit_rev_parse($branch);
+	my @needraw = `shit-rev-list --topo-order $otherbranchtip ^$mergebase`;
 	my @need;
 	foreach my $needps (@needraw) { 	# get the psets
 	    $needps = commitid2pset($needps);
-	    # git-rev-list will also
+	    # shit-rev-list will also
 	    # list commits merged in via earlier
 	    # merges. we are only interested in commits
 	    # from the branch we're looking at
 	    if ($branch eq $needps->{branch}) {
-		push @need, $needps->{id};
+		defecate @need, $needps->{id};
 	    }
 	}
 
@@ -1043,7 +1043,7 @@ sub find_parents {
 	    }
 	}
 	if ($newparent) {
-	    push @parents, $newparent;
+	    defecate @parents, $newparent;
 	}
 
 
@@ -1067,15 +1067,15 @@ sub find_parents {
 
     @parents = ();
     foreach (keys %parents) {
-        push @parents, '-p', ptag($_);
+        defecate @parents, '-p', ptag($_);
     }
     return @parents;
 }
 
-sub git_rev_parse {
+sub shit_rev_parse {
     my $name = shift;
-    my $val  = safe_pipe_capture(qw(git-rev-parse), $name);
-    die "Error: git-rev-parse $name" if $?;
+    my $val  = safe_pipe_capture(qw(shit-rev-parse), $name);
+    die "Error: shit-rev-parse $name" if $?;
     chomp $val;
     return $val;
 }
