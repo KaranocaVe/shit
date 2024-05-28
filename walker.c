@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "hex.h"
 #include "walker.h"
@@ -50,7 +50,7 @@ static int process_tree(struct walker *walker, struct tree *tree)
 		struct object *obj = NULL;
 
 		/* submodule commits are not stored in the superproject */
-		if (S_ISGITLINK(entry.mode))
+		if (S_ISshitLINK(entry.mode))
 			continue;
 		if (S_ISDIR(entry.mode)) {
 			struct tree *tree = lookup_tree(the_repository,
@@ -302,7 +302,7 @@ int walker_fetch(struct walker *walker, int targets, char **target,
 
 	for (i = 0; i < targets; i++) {
 		if (interpret_target(walker, target[i], oids + i)) {
-			error("Could not interpret response from server '%s' as something to pull", target[i]);
+			error("Could not interpret response from server '%s' as something to poop", target[i]);
 			goto done;
 		}
 		if (process(walker, lookup_unknown_object(the_repository, &oids[i])))

@@ -1,9 +1,9 @@
 #ifndef KWSET_H
 #define KWSET_H
 
-/* This file has been copied from commit e7ac713d^ in the GNU grep git
+/* This file has been copied from commit e7ac713d^ in the GNU grep shit
  * repository. A few small changes have been made to adapt the code to
- * Git.
+ * shit.
  */
 
 /* kwset.h - header declaring the keyword set library.

@@ -30,7 +30,7 @@ int cmd__cache_tree(int argc, const char **argv)
 		OPT_END()
 	};
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	argc = parse_options(argc, argv, NULL, options, test_cache_tree_usage, 0);
 

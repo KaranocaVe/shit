@@ -1,15 +1,15 @@
-git-sparse-checkout(1)
+shit-sparse-checkout(1)
 ======================
 
 NAME
 ----
-git-sparse-checkout - Reduce your working tree to a subset of tracked files
+shit-sparse-checkout - Reduce your working tree to a subset of tracked files
 
 
 SYNOPSIS
 --------
 [verse]
-'git sparse-checkout' (init | list | set | add | reapply | disable | check-rules) [<options>]
+'shit sparse-checkout' (init | list | set | add | reapply | disable | check-rules) [<options>]
 
 
 DESCRIPTION
@@ -25,9 +25,9 @@ The subset of files is chosen by providing a list of directories in
 cone mode (the default), or by providing a list of patterns in
 non-cone mode.
 
-When in a sparse-checkout, other Git commands behave a bit differently.
+When in a sparse-checkout, other shit commands behave a bit differently.
 For example, switching branches will not update paths outside the
-sparse-checkout directories/patterns, and `git commit -a` will not record
+sparse-checkout directories/patterns, and `shit commit -a` will not record
 paths outside the sparse-checkout directories/patterns as deleted.
 
 THIS COMMAND IS EXPERIMENTAL. ITS BEHAVIOR, AND THE BEHAVIOR OF OTHER
@@ -53,15 +53,15 @@ does not alter the sparse-checkout settings in other worktrees, the 'set'
 subcommand will upgrade your repository config to use worktree-specific
 config if not already present. The sparsity defined by the arguments to
 the 'set' subcommand are stored in the worktree-specific sparse-checkout
-file. See linkgit:git-worktree[1] and the documentation of
-`extensions.worktreeConfig` in linkgit:git-config[1] for more details.
+file. See linkshit:shit-worktree[1] and the documentation of
+`extensions.worktreeConfig` in linkshit:shit-config[1] for more details.
 +
 When the `--stdin` option is provided, the directories or patterns are
 read from standard in as a newline-delimited list instead of from the
 arguments.
 +
 By default, the input list is considered a list of directories, matching
-the output of `git ls-tree -d --name-only`.  This includes interpreting
+the output of `shit ls-tree -d --name-only`.  This includes interpreting
 pathnames that begin with a double quote (") as C-style quoted strings.
 Note that all files under the specified directories (at any depth) will
 be included in the sparse checkout, as well as files that are siblings
@@ -79,14 +79,14 @@ Use the `--[no-]sparse-index` option to use a sparse index (the
 default is to not use it).  A sparse index reduces the size of the
 index to be more closely aligned with your sparse-checkout
 definition. This can have significant performance advantages for
-commands such as `git status` or `git add`.  This feature is still
+commands such as `shit status` or `shit add`.  This feature is still
 experimental. Some commands might be slower with a sparse index until
 they are properly integrated with the feature.
 +
 **WARNING:** Using a sparse index requires modifying the index in a way
 that is not completely understood by external tools. If you have trouble
-with this compatibility, then run `git sparse-checkout init --no-sparse-index`
-to rewrite your index to not be sparse. Older versions of Git will not
+with this compatibility, then run `shit sparse-checkout init --no-sparse-index`
+to rewrite your index to not be sparse. Older versions of shit will not
 understand the sparse directory entries index extension and may fail to
 interact with your repository until it is disabled.
 
@@ -102,7 +102,7 @@ interact with your repository until it is disabled.
 	work (e.g. in order to show you a conflict), and other
 	sparse-checkout commands might fail to sparsify an individual file
 	(e.g. because it has unstaged changes or conflicts).  In such
-	cases, it can make sense to run `git sparse-checkout reapply` later
+	cases, it can make sense to run `shit sparse-checkout reapply` later
 	after cleaning up affected paths (e.g. resolving conflicts, undoing
 	or committing changes, etc.).
 +
@@ -140,13 +140,13 @@ decreased in utility.
 +
 By default `check-rules` reads a list of paths from stdin and outputs only
 the ones that match the current sparsity rules. The input is expected to consist
-of one path per line, matching the output of `git ls-tree --name-only` including
+of one path per line, matching the output of `shit ls-tree --name-only` including
 that pathnames that begin with a double quote (") are interpreted as C-style
 quoted strings.
 +
 When called with the `--rules-file <file>` flag the input files are matched
 against the sparse checkout rules found in `<file>` instead of the current ones.
-The rules in the files are expected to be in the same form as accepted by `git
+The rules in the files are expected to be in the same form as accepted by `shit
 sparse-checkout set --stdin` (in particular, they must be newline-delimited).
 +
 By default, the rules passed to the `--rules-file` option are interpreted as
@@ -160,7 +160,7 @@ apply to the format of the rules passed with the `--rules-file` option.
 
 EXAMPLES
 --------
-`git sparse-checkout set MY/DIR1 SUB/DIR2`::
+`shit sparse-checkout set MY/DIR1 SUB/DIR2`::
 
 	Change to a sparse checkout with all files (at any depth) under
 	MY/DIR1/ and SUB/DIR2/ present in the working copy (plus all
@@ -171,24 +171,24 @@ EXAMPLES
 	directory that no longer has either tracked or
 	non-ignored-untracked files present.
 
-`git sparse-checkout disable`::
+`shit sparse-checkout disable`::
 
 	Repopulate the working directory with all files, disabling sparse
 	checkouts.
 
-`git sparse-checkout add SOME/DIR/ECTORY`::
+`shit sparse-checkout add SOME/DIR/ECTORY`::
 
 	Add all files under SOME/DIR/ECTORY/ (at any depth) to the
 	sparse checkout, as well as all files immediately under
 	SOME/DIR/ and immediately under SOME/.  Must already be in a
 	sparse checkout before using this command.
 
-`git sparse-checkout reapply`::
+`shit sparse-checkout reapply`::
 
 	It is possible for commands to update the working tree in a
 	way that does not respect the selected sparsity directories.
-	This can come from tools external to Git writing files, or
-	even affect Git commands because of either special cases (such
+	This can come from tools external to shit writing files, or
+	even affect shit commands because of either special cases (such
 	as hitting conflicts when merging/rebasing), or because some
 	commands didn't fully support sparse checkouts (e.g. the old
 	`recursive` merge backend had only limited support).  This
@@ -199,16 +199,16 @@ INTERNALS -- SPARSE CHECKOUT
 ----------------------------
 
 "Sparse checkout" allows populating the working directory sparsely.  It
-uses the skip-worktree bit (see linkgit:git-update-index[1]) to tell Git
+uses the skip-worktree bit (see linkshit:shit-update-index[1]) to tell shit
 whether a file in the working directory is worth looking at. If the
 skip-worktree bit is set, and the file is not present in the working tree,
-then its absence is ignored. Git will avoid populating the contents of
+then its absence is ignored. shit will avoid populating the contents of
 those files, which makes a sparse checkout helpful when working in a
 repository with many files, but only a few are important to the current
 user.
 
-The `$GIT_DIR/info/sparse-checkout` file is used to define the
-skip-worktree reference bitmap. When Git updates the working
+The `$shit_DIR/info/sparse-checkout` file is used to define the
+skip-worktree reference bitmap. When shit updates the working
 directory, it updates the skip-worktree bits in the index based
 on this file. The files matching the patterns in the file will
 appear in the working directory, and the rest will not.
@@ -216,15 +216,15 @@ appear in the working directory, and the rest will not.
 INTERNALS -- NON-CONE PROBLEMS
 ------------------------------
 
-The `$GIT_DIR/info/sparse-checkout` file populated by the `set` and
+The `$shit_DIR/info/sparse-checkout` file populated by the `set` and
 `add` subcommands is defined to be a bunch of patterns (one per line)
-using the same syntax as `.gitignore` files.  In cone mode, these
+using the same syntax as `.shitignore` files.  In cone mode, these
 patterns are restricted to matching directories (and users only ever
 need supply or see directory names), while in non-cone mode any
-gitignore-style pattern is permitted.  Using the full gitignore-style
+shitignore-style pattern is permitted.  Using the full shitignore-style
 patterns in non-cone mode has a number of shortcomings:
 
-  * Fundamentally, it makes various worktree-updating processes (pull,
+  * Fundamentally, it makes various worktree-updating processes (poop,
     merge, rebase, switch, reset, checkout, etc.) require O(N*M) pattern
     matches, where N is the number of patterns and M is the number of
     paths in the index.  This scales poorly.
@@ -236,7 +236,7 @@ patterns in non-cone mode has a number of shortcomings:
     forget to quote the glob, causing the shell to expand it into all
     matching files and pass them all individually along to
     sparse-checkout set/add.  While this could also be a problem with
-    e.g. "git grep -- *.c", mistakes with grep/log/status appear in
+    e.g. "shit grep -- *.c", mistakes with grep/log/status appear in
     the immediate output.  With sparse-checkout, the mistake gets
     recorded at the time the sparse-checkout command is run and might
     not be problematic until the user later switches branches or rebases
@@ -249,26 +249,26 @@ patterns in non-cone mode has a number of shortcomings:
     the risk of "removing too much", as it may remove entries that had
     been included before the accidental add.
 
-  * Non-cone mode uses gitignore-style patterns to select what to
+  * Non-cone mode uses shitignore-style patterns to select what to
     *include* (with the exception of negated patterns), while
-    .gitignore files use gitignore-style patterns to select what to
+    .shitignore files use shitignore-style patterns to select what to
     *exclude* (with the exception of negated patterns).  The
-    documentation on gitignore-style patterns usually does not talk in
+    documentation on shitignore-style patterns usually does not talk in
     terms of matching or non-matching, but on what the user wants to
     "exclude".  This can cause confusion for users trying to learn how
     to specify sparse-checkout patterns to get their desired behavior.
 
-  * Every other git subcommand that wants to provide "special path
+  * Every other shit subcommand that wants to provide "special path
     pattern matching" of some sort uses pathspecs, but non-cone mode
-    for sparse-checkout uses gitignore patterns, which feels
+    for sparse-checkout uses shitignore patterns, which feels
     inconsistent.
 
   * It has edge cases where the "right" behavior is unclear.  Two examples:
 
     First, two users are in a subdirectory, and the first runs
-       git sparse-checkout set '/toplevel-dir/*.c'
+       shit sparse-checkout set '/toplevel-dir/*.c'
     while the second runs
-       git sparse-checkout set relative-dir
+       shit sparse-checkout set relative-dir
     Should those arguments be transliterated into
        current/subdirectory/toplevel-dir/*.c
     and
@@ -276,7 +276,7 @@ patterns in non-cone mode has a number of shortcomings:
     before inserting into the sparse-checkout file?  The user who typed
     the first command is probably aware that arguments to set/add are
     supposed to be patterns in non-cone mode, and probably would not be
-    happy with such a transliteration.  However, many gitignore-style
+    happy with such a transliteration.  However, many shitignore-style
     patterns are just paths, which might be what the user who typed the
     second command was thinking, and they'd be upset if their argument
     wasn't transliterated.
@@ -289,7 +289,7 @@ patterns in non-cone mode has a number of shortcomings:
     it complete "/pro" to "/proc" (in the root filesystem) rather than to
     "/progress.txt" in the current directory?  (Note that users are
     likely to want to start paths with a leading '/' in non-cone mode,
-    for the same reason that .gitignore files often have one.)
+    for the same reason that .shitignore files often have one.)
     Completing on files or directories might give nasty surprises in
     all these cases.
 
@@ -323,15 +323,15 @@ then your sparse checkout would contain:
 Also, in cone mode, even if no directories are specified, then the
 files in the toplevel directory will be included.
 
-When changing the sparse-checkout patterns in cone mode, Git will inspect each
+When changing the sparse-checkout patterns in cone mode, shit will inspect each
 tracked directory that is not within the sparse-checkout cone to see if it
 contains any untracked files. If all of those files are ignored due to the
-`.gitignore` patterns, then the directory will be deleted. If any of the
+`.shitignore` patterns, then the directory will be deleted. If any of the
 untracked files within that directory is not ignored, then no deletions will
 occur within that directory and a warning message will appear. If these files
 are important, then reset your sparse-checkout definition so they are included,
-use `git add` and `git commit` to store them, then remove any remaining files
-manually to ensure Git can behave optimally.
+use `shit add` and `shit commit` to store them, then remove any remaining files
+manually to ensure shit can behave optimally.
 
 See also the "Internals -- Cone Pattern Set" section to learn how the
 directories are transformed under the hood into a subset of the
@@ -347,21 +347,21 @@ updating the index, where N is the number of patterns and M is the number
 of paths in the index. To combat this performance issue, a more restricted
 pattern set is allowed when `core.sparseCheckoutCone` is enabled.
 
-The sparse-checkout file uses the same syntax as `.gitignore` files;
-see linkgit:gitignore[5] for details.  Here, though, the patterns are
+The sparse-checkout file uses the same syntax as `.shitignore` files;
+see linkshit:shitignore[5] for details.  Here, though, the patterns are
 usually being used to select which files to include rather than which
 files to exclude.  (However, it can get a bit confusing since
-gitignore-style patterns have negations defined by patterns which
+shitignore-style patterns have negations defined by patterns which
 begin with a '!', so you can also select files to _not_ include.)
 
 For example, to select everything, and then to remove the file
 `unwanted` (so that every file will appear in your working tree except
 the file named `unwanted`):
 
-    git sparse-checkout set --no-cone '/*' '!unwanted'
+    shit sparse-checkout set --no-cone '/*' '!unwanted'
 
 These patterns are just placed into the
-`$GIT_DIR/info/sparse-checkout` as-is, so the contents of that file
+`$shit_DIR/info/sparse-checkout` as-is, so the contents of that file
 at this point would be
 
 ----------------
@@ -369,8 +369,8 @@ at this point would be
 !unwanted
 ----------------
 
-See also the "Sparse Checkout" section of linkgit:git-read-tree[1] to
-learn more about the gitignore-style patterns used in sparse
+See also the "Sparse Checkout" section of linkshit:shit-read-tree[1] to
+learn more about the shitignore-style patterns used in sparse
 checkouts.
 
 
@@ -378,7 +378,7 @@ INTERNALS -- CONE PATTERN SET
 -----------------------------
 
 In cone mode, only directories are accepted, but they are translated into
-the same gitignore-style patterns used in the full pattern set.  We refer
+the same shitignore-style patterns used in the full pattern set.  We refer
 to the particular patterns used in those mode as being of one of two types:
 
 1. *Recursive:* All paths inside a directory are included.
@@ -386,7 +386,7 @@ to the particular patterns used in those mode as being of one of two types:
 2. *Parent:* All files immediately inside a directory are included.
 
 Since cone mode always includes files at the toplevel, when running
-`git sparse-checkout set` with no directories specified, the toplevel
+`shit sparse-checkout set` with no directories specified, the toplevel
 directory is added as a parent pattern.  At this point, the
 sparse-checkout file contains the following patterns:
 
@@ -398,8 +398,8 @@ sparse-checkout file contains the following patterns:
 This says "include everything immediately under the toplevel
 directory, but nothing at any level below that."
 
-When in cone mode, the `git sparse-checkout set` subcommand takes a
-list of directories.  The command `git sparse-checkout set A/B/C` sets
+When in cone mode, the `shit sparse-checkout set` subcommand takes a
+list of directories.  The command `shit sparse-checkout set A/B/C` sets
 the directory `A/B/C` as a recursive pattern, the directories `A` and
 `A/B` are added as parent patterns. The resulting sparse-checkout file
 is now
@@ -417,27 +417,27 @@ is now
 Here, order matters, so the negative patterns are overridden by the positive
 patterns that appear lower in the file.
 
-Unless `core.sparseCheckoutCone` is explicitly set to `false`, Git will
-parse the sparse-checkout file expecting patterns of these types. Git will
+Unless `core.sparseCheckoutCone` is explicitly set to `false`, shit will
+parse the sparse-checkout file expecting patterns of these types. shit will
 warn if the patterns do not match.  If the patterns do match the expected
-format, then Git will use faster hash-based algorithms to compute inclusion
-in the sparse-checkout.  If they do not match, git will behave as though
+format, then shit will use faster hash-based algorithms to compute inclusion
+in the sparse-checkout.  If they do not match, shit will behave as though
 `core.sparseCheckoutCone` was false, regardless of its setting.
 
 In the cone mode case, despite the fact that full patterns are written
-to the $GIT_DIR/info/sparse-checkout file, the `git sparse-checkout
+to the $shit_DIR/info/sparse-checkout file, the `shit sparse-checkout
 list` subcommand will list the directories that define the recursive
 patterns. For the example sparse-checkout file above, the output is as
 follows:
 
 --------------------------
-$ git sparse-checkout list
+$ shit sparse-checkout list
 A/B/C
 --------------------------
 
 If `core.ignoreCase=true`, then the pattern-matching algorithm will use a
 case-insensitive check. This corrects for case mismatched filenames in the
-'git sparse-checkout set' command to reflect the expected cone in the working
+'shit sparse-checkout set' command to reflect the expected cone in the working
 directory.
 
 
@@ -445,16 +445,16 @@ INTERNALS -- SUBMODULES
 -----------------------
 
 If your repository contains one or more submodules, then submodules
-are populated based on interactions with the `git submodule` command.
-Specifically, `git submodule init -- <path>` will ensure the submodule
-at `<path>` is present, while `git submodule deinit [-f] -- <path>`
+are populated based on interactions with the `shit submodule` command.
+Specifically, `shit submodule init -- <path>` will ensure the submodule
+at `<path>` is present, while `shit submodule deinit [-f] -- <path>`
 will remove the files for the submodule at `<path>` (including any
-untracked files, uncommitted changes, and unpushed history).  Similar
+untracked files, uncommitted changes, and undefecateed history).  Similar
 to how sparse-checkout removes files from the working tree but still
 leaves entries in the index, deinitialized submodules are removed from
 the working directory but still have an entry in the index.
 
-Since submodules may have unpushed changes or untracked files,
+Since submodules may have undefecateed changes or untracked files,
 removing them could result in data loss.  Thus, changing sparse
 inclusion/exclusion rules will not cause an already checked out
 submodule to be removed from the working copy.  Said another way, just
@@ -467,7 +467,7 @@ deinitialized or initialized either.
 Further, the above facts mean that there are multiple reasons that
 "tracked" files might not be present in the working copy: sparsity
 pattern application from sparse-checkout, and submodule initialization
-state.  Thus, commands like `git grep` that work on tracked files in
+state.  Thus, commands like `shit grep` that work on tracked files in
 the working copy may return results that are limited by either or both
 of these restrictions.
 
@@ -475,9 +475,9 @@ of these restrictions.
 SEE ALSO
 --------
 
-linkgit:git-read-tree[1]
-linkgit:gitignore[5]
+linkshit:shit-read-tree[1]
+linkshit:shitignore[5]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,22 +1,22 @@
-git-config(1)
+shit-config(1)
 =============
 
 NAME
 ----
-git-config - Get and set repository or global options
+shit-config - Get and set repository or global options
 
 
 SYNOPSIS
 --------
 [verse]
-'git config list' [<file-option>] [<display-option>] [--includes]
-'git config get' [<file-option>] [<display-option>] [--includes] [--all] [--regexp=<regexp>] [--value=<value>] [--fixed-value] [--default=<default>] <name>
-'git config set' [<file-option>] [--type=<type>] [--all] [--value=<value>] [--fixed-value] <name> <value>
-'git config unset' [<file-option>] [--all] [--value=<value>] [--fixed-value] <name> <value>
-'git config rename-section' [<file-option>] <old-name> <new-name>
-'git config remove-section' [<file-option>] <name>
-'git config edit' [<file-option>]
-'git config' [<file-option>] --get-colorbool <name> [<stdout-is-tty>]
+'shit config list' [<file-option>] [<display-option>] [--includes]
+'shit config get' [<file-option>] [<display-option>] [--includes] [--all] [--regexp=<regexp>] [--value=<value>] [--fixed-value] [--default=<default>] <name>
+'shit config set' [<file-option>] [--type=<type>] [--all] [--value=<value>] [--fixed-value] <name> <value>
+'shit config unset' [<file-option>] [--all] [--value=<value>] [--fixed-value] <name> <value>
+'shit config rename-section' [<file-option>] <old-name> <new-name>
+'shit config remove-section' [<file-option>] <name>
+'shit config edit' [<file-option>]
+'shit config' [<file-option>] --get-colorbool <name> [<stdout-is-tty>]
 
 DESCRIPTION
 -----------
@@ -34,7 +34,7 @@ prepend a single exclamation mark in front (see also <<EXAMPLES>>),
 but note that this only works when the `--fixed-value` option is not
 in use.
 
-The `--type=<type>` option instructs 'git config' to ensure that incoming and
+The `--type=<type>` option instructs 'shit config' to ensure that incoming and
 outgoing values are canonicalize-able under the given <type>.  If no
 `--type=<type>` is given, no canonicalization will be performed. Callers may
 unset an existing `--type` specifier with `--no-type`.
@@ -65,7 +65,7 @@ codes are:
 On success, the command returns the exit code 0.
 
 A list of all available configuration variables can be obtained using the
-`git help --config` command.
+`shit help --config` command.
 
 COMMANDS
 --------
@@ -145,48 +145,48 @@ OPTIONS
 	list them.  Returns error code 1 if no value is found.
 
 --global::
-	For writing options: write to global `~/.gitconfig` file
-	rather than the repository `.git/config`, write to
-	`$XDG_CONFIG_HOME/git/config` file if this file exists and the
-	`~/.gitconfig` file doesn't.
+	For writing options: write to global `~/.shitconfig` file
+	rather than the repository `.shit/config`, write to
+	`$XDG_CONFIG_HOME/shit/config` file if this file exists and the
+	`~/.shitconfig` file doesn't.
 +
-For reading options: read only from global `~/.gitconfig` and from
-`$XDG_CONFIG_HOME/git/config` rather than from all available files.
+For reading options: read only from global `~/.shitconfig` and from
+`$XDG_CONFIG_HOME/shit/config` rather than from all available files.
 +
 See also <<FILES>>.
 
 --system::
 	For writing options: write to system-wide
-	`$(prefix)/etc/gitconfig` rather than the repository
-	`.git/config`.
+	`$(prefix)/etc/shitconfig` rather than the repository
+	`.shit/config`.
 +
-For reading options: read only from system-wide `$(prefix)/etc/gitconfig`
+For reading options: read only from system-wide `$(prefix)/etc/shitconfig`
 rather than from all available files.
 +
 See also <<FILES>>.
 
 --local::
-	For writing options: write to the repository `.git/config` file.
+	For writing options: write to the repository `.shit/config` file.
 	This is the default behavior.
 +
-For reading options: read only from the repository `.git/config` rather than
+For reading options: read only from the repository `.shit/config` rather than
 from all available files.
 +
 See also <<FILES>>.
 
 --worktree::
-	Similar to `--local` except that `$GIT_DIR/config.worktree` is
+	Similar to `--local` except that `$shit_DIR/config.worktree` is
 	read from or written to if `extensions.worktreeConfig` is
-	enabled. If not it's the same as `--local`. Note that `$GIT_DIR`
-	is equal to `$GIT_COMMON_DIR` for the main working tree, but is of
-	the form `$GIT_DIR/worktrees/<id>/` for other working trees. See
-	linkgit:git-worktree[1] to learn how to enable
+	enabled. If not it's the same as `--local`. Note that `$shit_DIR`
+	is equal to `$shit_COMMON_DIR` for the main working tree, but is of
+	the form `$shit_DIR/worktrees/<id>/` for other working trees. See
+	linkshit:shit-worktree[1] to learn how to enable
 	`extensions.worktreeConfig`.
 
 -f <config-file>::
 --file <config-file>::
 	For writing options: write to the specified file rather than the
-	repository `.git/config`.
+	repository `.shit/config`.
 +
 For reading options: read only from the specified file rather than from all
 available files.
@@ -195,9 +195,9 @@ See also <<FILES>>.
 
 --blob <blob>::
 	Similar to `--file` but use the given blob instead of a file. E.g.
-	you can use 'master:.gitmodules' to read values from the file
-	'.gitmodules' in the master branch. See "SPECIFYING REVISIONS"
-	section in linkgit:gitrevisions[7] for a more complete list of
+	you can use 'master:.shitmodules' to read values from the file
+	'.shitmodules' in the master branch. See "SPECIFYING REVISIONS"
+	section in linkshit:shitrevisions[7] for a more complete list of
 	ways to spell blob names.
 
 --fixed-value::
@@ -207,7 +207,7 @@ See also <<FILES>>.
 	is exactly equal to the `value-pattern`.
 
 --type <type>::
-  'git config' will ensure that any input or output is valid under the given
+  'shit config' will ensure that any input or output is valid under the given
   type constraint(s), and will canonicalize outgoing values in `<type>`'s
   canonical form.
 +
@@ -221,7 +221,7 @@ Valid `<type>`'s include:
   above.
 - 'path': canonicalize by expanding a leading `~` to the value of `$HOME` and
   `~user` to the home directory for the specified user. This specifier has no
-  effect when setting the value (but you can use `git config section.variable
+  effect when setting the value (but you can use `shit config section.variable
   ~/` from the command line to let your shell do the expansion.)
 - 'expiry-date': canonicalize by converting from a fixed or relative date-string
   to a timestamp. This specifier has no effect when setting the value.
@@ -241,7 +241,7 @@ Valid `<type>`'s include:
 
 --no-type::
   Un-sets the previously set type specifier (if one was previously set). This
-  option requests that 'git config' not canonicalize the retrieved variable.
+  option requests that 'shit config' not canonicalize the retrieved variable.
   `--no-type` has no effect without `--type=<type>` or `--<type>`.
 
 -z::
@@ -295,49 +295,49 @@ DEPRECATED MODES
 The following modes have been deprecated in favor of subcommands. It is
 recommended to migrate to the new syntax.
 
-'git config <name>'::
-	Replaced by `git config get <name>`.
+'shit config <name>'::
+	Replaced by `shit config get <name>`.
 
-'git config <name> <value> [<value-pattern>]'::
-	Replaced by `git config set [--value=<pattern>] <name> <value>`.
+'shit config <name> <value> [<value-pattern>]'::
+	Replaced by `shit config set [--value=<pattern>] <name> <value>`.
 
 -l::
 --list::
-	Replaced by `git config list`.
+	Replaced by `shit config list`.
 
 --get <name> [<value-pattern>]::
-	Replaced by `git config get [--value=<pattern>] <name>`.
+	Replaced by `shit config get [--value=<pattern>] <name>`.
 
 --get-all <name> [<value-pattern>]::
-	Replaced by `git config get [--value=<pattern>] --all --show-names <name>`.
+	Replaced by `shit config get [--value=<pattern>] --all --show-names <name>`.
 
 --get-regexp <name-regexp>::
-	Replaced by `git config get --all --show-names --regexp <name-regexp>`.
+	Replaced by `shit config get --all --show-names --regexp <name-regexp>`.
 
 --get-urlmatch <name> <URL>::
-	Replaced by `git config get --all --show-names --url=<URL> <name>`.
+	Replaced by `shit config get --all --show-names --url=<URL> <name>`.
 
 --get-color <name> [<default>]::
-	Replaced by `git config get --type=color [--default=<default>] <name>`.
+	Replaced by `shit config get --type=color [--default=<default>] <name>`.
 
 --add <name> <value>::
-	Replaced by `git config set --append <name> <value>`.
+	Replaced by `shit config set --append <name> <value>`.
 
 --unset <name> [<value-pattern>]::
-	Replaced by `git config unset [--value=<pattern>] <name>`.
+	Replaced by `shit config unset [--value=<pattern>] <name>`.
 
 --unset-all <name> [<value-pattern>]::
-	Replaced by `git config unset [--value=<pattern>] --all <name>`.
+	Replaced by `shit config unset [--value=<pattern>] --all <name>`.
 
 --rename-section <old-name> <new-name>::
-	Replaced by `git config rename-section <old-name> <new-name>`.
+	Replaced by `shit config rename-section <old-name> <new-name>`.
 
 --remove-section <name>::
-	Replaced by `git config remove-section <name>`.
+	Replaced by `shit config remove-section <name>`.
 
 -e::
 --edit::
-	Replaced by `git config edit`.
+	Replaced by `shit config edit`.
 
 CONFIGURATION
 -------------
@@ -349,14 +349,14 @@ a pager.
 FILES
 -----
 
-By default, 'git config' will read configuration options from multiple
+By default, 'shit config' will read configuration options from multiple
 files:
 
-$(prefix)/etc/gitconfig::
+$(prefix)/etc/shitconfig::
 	System-wide configuration file.
 
-$XDG_CONFIG_HOME/git/config::
-~/.gitconfig::
+$XDG_CONFIG_HOME/shit/config::
+~/.shitconfig::
 	User-specific configuration files. When the XDG_CONFIG_HOME environment
 	variable is not set or empty, $HOME/.config/ is used as
 	$XDG_CONFIG_HOME.
@@ -364,20 +364,20 @@ $XDG_CONFIG_HOME/git/config::
 These are also called "global" configuration files. If both files exist, both
 files are read in the order given above.
 
-$GIT_DIR/config::
+$shit_DIR/config::
 	Repository specific configuration file.
 
-$GIT_DIR/config.worktree::
+$shit_DIR/config.worktree::
 	This is optional and is only searched when
-	`extensions.worktreeConfig` is present in $GIT_DIR/config.
+	`extensions.worktreeConfig` is present in $shit_DIR/config.
 
 You may also provide additional configuration parameters when running any
-git command by using the `-c` option. See linkgit:git[1] for details.
+shit command by using the `-c` option. See linkshit:shit[1] for details.
 
 Options will be read from all of these files that are available. If the
 global or the system-wide configuration files are missing or unreadable they
 will be ignored. If the repository configuration file is missing or unreadable,
-'git config' will exit with a non-zero error code. An error message is produced
+'shit config' will exit with a non-zero error code. An error message is produced
 if the file is unreadable, but not if it is missing.
 
 The files are read in the order given above, with last value found taking
@@ -386,7 +386,7 @@ values of a key from all files will be used.
 
 By default, options are only written to the repository specific
 configuration file. Note that this also affects options like `set`
-and `unset`. *'git config' will only ever change one file at a time*.
+and `unset`. *'shit config' will only ever change one file at a time*.
 
 You can limit which configuration sources are read from or written to by
 specifying the path of a file with the `--file` option, or by specifying a
@@ -401,21 +401,21 @@ Each configuration source falls within a configuration scope. The scopes
 are:
 
 system::
-	$(prefix)/etc/gitconfig
+	$(prefix)/etc/shitconfig
 
 global::
-	$XDG_CONFIG_HOME/git/config
+	$XDG_CONFIG_HOME/shit/config
 +
-~/.gitconfig
+~/.shitconfig
 
 local::
-	$GIT_DIR/config
+	$shit_DIR/config
 
 worktree::
-	$GIT_DIR/config.worktree
+	$shit_DIR/config.worktree
 
 command::
-	GIT_CONFIG_{COUNT,KEY,VALUE} environment variables (see <<ENVIRONMENT>>
+	shit_CONFIG_{COUNT,KEY,VALUE} environment variables (see <<ENVIRONMENT>>
 	below)
 +
 the `-c` option
@@ -439,46 +439,46 @@ Protected configuration refers to the 'system', 'global', and 'command' scopes.
 For security reasons, certain options are only respected when they are
 specified in protected configuration, and ignored otherwise.
 
-Git treats these scopes as if they are controlled by the user or a trusted
+shit treats these scopes as if they are controlled by the user or a trusted
 administrator. This is because an attacker who controls these scopes can do
-substantial harm without using Git, so it is assumed that the user's environment
+substantial harm without using shit, so it is assumed that the user's environment
 protects these scopes against attackers.
 
 [[ENVIRONMENT]]
 ENVIRONMENT
 -----------
 
-GIT_CONFIG_GLOBAL::
-GIT_CONFIG_SYSTEM::
+shit_CONFIG_GLOBAL::
+shit_CONFIG_SYSTEM::
 	Take the configuration from the given files instead from global or
-	system-level configuration. See linkgit:git[1] for details.
+	system-level configuration. See linkshit:shit[1] for details.
 
-GIT_CONFIG_NOSYSTEM::
+shit_CONFIG_NOSYSTEM::
 	Whether to skip reading settings from the system-wide
-	$(prefix)/etc/gitconfig file. See linkgit:git[1] for details.
+	$(prefix)/etc/shitconfig file. See linkshit:shit[1] for details.
 
 See also <<FILES>>.
 
-GIT_CONFIG_COUNT::
-GIT_CONFIG_KEY_<n>::
-GIT_CONFIG_VALUE_<n>::
-	If GIT_CONFIG_COUNT is set to a positive number, all environment pairs
-	GIT_CONFIG_KEY_<n> and GIT_CONFIG_VALUE_<n> up to that number will be
+shit_CONFIG_COUNT::
+shit_CONFIG_KEY_<n>::
+shit_CONFIG_VALUE_<n>::
+	If shit_CONFIG_COUNT is set to a positive number, all environment pairs
+	shit_CONFIG_KEY_<n> and shit_CONFIG_VALUE_<n> up to that number will be
 	added to the process's runtime configuration. The config pairs are
 	zero-indexed. Any missing key or value is treated as an error. An empty
-	GIT_CONFIG_COUNT is treated the same as GIT_CONFIG_COUNT=0, namely no
+	shit_CONFIG_COUNT is treated the same as shit_CONFIG_COUNT=0, namely no
 	pairs are processed. These environment variables will override values
 	in configuration files, but will be overridden by any explicit options
-	passed via `git -c`.
+	passed via `shit -c`.
 +
-This is useful for cases where you want to spawn multiple git commands
+This is useful for cases where you want to spawn multiple shit commands
 with a common configuration but cannot depend on a configuration file,
 for example when writing scripts.
 
-GIT_CONFIG::
-	If no `--file` option is provided to `git config`, use the file
-	given by `GIT_CONFIG` as if it were provided via `--file`. This
-	variable has no effect on other Git commands, and is mostly for
+shit_CONFIG::
+	If no `--file` option is provided to `shit config`, use the file
+	given by `shit_CONFIG` as if it were provided via `--file`. This
+	variable has no effect on other shit commands, and is mostly for
 	historical compatibility; there is generally no reason to use it
 	instead of the `--file` option.
 
@@ -486,7 +486,7 @@ GIT_CONFIG::
 EXAMPLES
 --------
 
-Given a .git/config like this:
+Given a .shit/config like this:
 
 ------------
 #
@@ -507,8 +507,8 @@ Given a .git/config like this:
 
 ; Proxy settings
 [core]
-	gitproxy=proxy-command for kernel.org
-	gitproxy=default-proxy ; for all the rest
+	shitproxy=proxy-command for kernel.org
+	shitproxy=default-proxy ; for all the rest
 
 ; HTTP
 [http]
@@ -521,7 +521,7 @@ Given a .git/config like this:
 you can set the filemode to true with
 
 ------------
-% git config set core.filemode true
+% shit config set core.filemode true
 ------------
 
 The hypothetical proxy command entries actually have a postfix to discern
@@ -529,7 +529,7 @@ what URL they apply to. Here is how to change the entry for kernel.org
 to "ssh".
 
 ------------
-% git config set --value='for kernel.org$' core.gitproxy '"ssh" for kernel.org'
+% shit config set --value='for kernel.org$' core.shitproxy '"ssh" for kernel.org'
 ------------
 
 This makes sure that only the key/value pair for kernel.org is replaced.
@@ -537,54 +537,54 @@ This makes sure that only the key/value pair for kernel.org is replaced.
 To delete the entry for renames, do
 
 ------------
-% git config unset diff.renames
+% shit config unset diff.renames
 ------------
 
-If you want to delete an entry for a multivar (like core.gitproxy above),
+If you want to delete an entry for a multivar (like core.shitproxy above),
 you have to provide a regex matching the value of exactly one line.
 
 To query the value for a given key, do
 
 ------------
-% git config get core.filemode
+% shit config get core.filemode
 ------------
 
 or, to query a multivar:
 
 ------------
-% git config get --value="for kernel.org$" core.gitproxy
+% shit config get --value="for kernel.org$" core.shitproxy
 ------------
 
 If you want to know all the values for a multivar, do:
 
 ------------
-% git config get --all --show-names core.gitproxy
+% shit config get --all --show-names core.shitproxy
 ------------
 
-If you like to live dangerously, you can replace *all* core.gitproxy by a
+If you like to live dangerously, you can replace *all* core.shitproxy by a
 new one with
 
 ------------
-% git config set --all core.gitproxy ssh
+% shit config set --all core.shitproxy ssh
 ------------
 
 However, if you really only want to replace the line for the default proxy,
 i.e. the one without a "for ..." postfix, do something like this:
 
 ------------
-% git config set --value='! for ' core.gitproxy ssh
+% shit config set --value='! for ' core.shitproxy ssh
 ------------
 
 To actually match only values with an exclamation mark, you have to
 
 ------------
-% git config set --value='[!]' section.key value
+% shit config set --value='[!]' section.key value
 ------------
 
 To add a new proxy, without altering any of the existing ones, use
 
 ------------
-% git config set --append core.gitproxy '"proxy-command" for example.com'
+% shit config set --append core.shitproxy '"proxy-command" for example.com'
 ------------
 
 An example to use customized color from the configuration in your
@@ -592,8 +592,8 @@ script:
 
 ------------
 #!/bin/sh
-WS=$(git config get --type=color --default="blue reverse" color.diff.whitespace)
-RESET=$(git config get --type=color --default="reset" "")
+WS=$(shit config get --type=color --default="blue reverse" color.diff.whitespace)
+RESET=$(shit config get --type=color --default="reset" "")
 echo "${WS}your whitespace color or blue reverse${RESET}"
 ------------
 
@@ -601,11 +601,11 @@ For URLs in `https://weak.example.com`, `http.sslVerify` is set to
 false, while it is set to `true` for all others:
 
 ------------
-% git config get --type=bool --url=https://good.example.com http.sslverify
+% shit config get --type=bool --url=https://good.example.com http.sslverify
 true
-% git config get --type=bool --url=https://weak.example.com http.sslverify
+% shit config get --type=bool --url=https://weak.example.com http.sslverify
 false
-% git config get --url=https://weak.example.com http
+% shit config get --url=https://weak.example.com http
 http.cookieFile /tmp/cookie.txt
 http.sslverify false
 ------------
@@ -624,7 +624,7 @@ looks like
     key = value1
 --------
 
-and running `git config section.Subsection.key value2` will result in
+and running `shit config section.Subsection.key value2` will result in
 
 --------
   [section.subsection]
@@ -633,6 +633,6 @@ and running `git config section.Subsection.key value2` will result in
 --------
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

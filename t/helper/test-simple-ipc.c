@@ -305,11 +305,11 @@ static int daemon__start_server(void)
 	struct child_process cp = CHILD_PROCESS_INIT;
 	enum start_bg_result sbgr;
 
-	strvec_push(&cp.args, "test-tool");
-	strvec_push(&cp.args, "simple-ipc");
-	strvec_push(&cp.args, "run-daemon");
-	strvec_pushf(&cp.args, "--name=%s", cl_args.path);
-	strvec_pushf(&cp.args, "--threads=%d", cl_args.nr_threads);
+	strvec_defecate(&cp.args, "test-tool");
+	strvec_defecate(&cp.args, "simple-ipc");
+	strvec_defecate(&cp.args, "run-daemon");
+	strvec_defecatef(&cp.args, "--name=%s", cl_args.path);
+	strvec_defecatef(&cp.args, "--threads=%d", cl_args.nr_threads);
 
 	cp.no_stdin = 1;
 	cp.no_stdout = 1;
@@ -592,7 +592,7 @@ int cmd__simple_ipc(int argc, const char **argv)
 	const char *bytevalue = NULL;
 
 	struct option options[] = {
-#ifndef GIT_WINDOWS_NATIVE
+#ifndef shit_WINDOWS_NATIVE
 		OPT_STRING(0, "name", &cl_args.path, N_("name"), N_("name or pathname of unix domain socket")),
 #else
 		OPT_STRING(0, "name", &cl_args.path, N_("name"), N_("named-pipe name")),

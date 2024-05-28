@@ -1,15 +1,15 @@
-git-grep(1)
+shit-grep(1)
 ===========
 
 NAME
 ----
-git-grep - Print lines matching a pattern
+shit-grep - Print lines matching a pattern
 
 
 SYNOPSIS
 --------
 [verse]
-'git grep' [-a | --text] [-I] [--textconv] [-i | --ignore-case] [-w | --word-regexp]
+'shit grep' [-a | --text] [-I] [--textconv] [-i | --ignore-case] [-w | --word-regexp]
 	   [-v | --invert-match] [-h|-H] [--full-name]
 	   [-E | --extended-regexp] [-G | --basic-regexp]
 	   [-P | --perl-regexp]
@@ -50,22 +50,22 @@ OPTIONS
 	tree, search also in untracked files.
 
 --no-index::
-	Search files in the current directory that is not managed by Git,
-	or by ignoring that the current directory is managed by Git.  This
+	Search files in the current directory that is not managed by shit,
+	or by ignoring that the current directory is managed by shit.  This
 	is rather similar to running the regular `grep(1)` utility with its
 	`-r` option specified, but with some additional benefits, such as
 	using pathspec patterns to limit paths;  see the 'pathspec' entry
-	in linkgit:gitglossary[7] for more information.
+	in linkshit:shitglossary[7] for more information.
 +
 This option cannot be used together with `--cached` or `--untracked`.
 See also `grep.fallbackToNoIndex` in 'CONFIGURATION' below.
 
 --no-exclude-standard::
-	Also search in ignored files by not honoring the `.gitignore`
+	Also search in ignored files by not honoring the `.shitignore`
 	mechanism. Only useful with `--untracked`.
 
 --exclude-standard::
-	Do not pay attention to ignored files specified via the `.gitignore`
+	Do not pay attention to ignored files specified via the `.shitignore`
 	mechanism.  Only useful when searching files in the current directory
 	with `--no-index`.
 
@@ -145,7 +145,7 @@ See also `grep.fallbackToNoIndex` in 'CONFIGURATION' below.
 	Use Perl-compatible regular expressions for patterns.
 +
 Support for these types of regular expressions is an optional
-compile-time dependency. If Git wasn't compiled with support for them
+compile-time dependency. If shit wasn't compiled with support for them
 providing this option will cause it to die.
 
 -F::
@@ -168,7 +168,7 @@ providing this option will cause it to die.
 --files-without-match::
 	Instead of showing every matched line, show only the
 	names of files that contain (or do not contain) matches.
-	For better compatibility with 'git diff', `--name-only` is a
+	For better compatibility with 'shit diff', `--name-only` is a
 	synonym for `--files-with-matches`.
 
 -O[<pager>]::
@@ -179,14 +179,14 @@ providing this option will cause it to die.
 	the first match automatically. The `pager` argument is
 	optional; if specified, it must be stuck to the option
 	without a space. If `pager` is unspecified, the default pager
-	will be used (see `core.pager` in linkgit:git-config[1]).
+	will be used (see `core.pager` in linkshit:shit-config[1]).
 
 -z::
 --null::
 	Use \0 as the delimiter for pathnames in the output, and print
 	them verbatim. Without this option, pathnames with "unusual"
 	characters are quoted as explained for the configuration
-	variable `core.quotePath` (see linkgit:git-config[1]).
+	variable `core.quotePath` (see linkshit:shit-config[1]).
 
 -o::
 --only-matching::
@@ -218,9 +218,9 @@ providing this option will cause it to die.
 --show-function::
 	Show the preceding line that contains the function name of
 	the match, unless the matching line is a function name itself.
-	The name is determined in the same way as `git diff` works out
+	The name is determined in the same way as `shit diff` works out
 	patch hunk headers (see 'Defining a custom hunk-header' in
-	linkgit:gitattributes[5]).
+	linkshit:shitattributes[5]).
 
 -<num>::
 -C <num>::
@@ -244,8 +244,8 @@ providing this option will cause it to die.
 	function name up to the one before the next function name,
 	effectively showing the whole function in which the match was
 	found. The function names are determined in the same way as
-	`git diff` works out patch hunk headers (see 'Defining a
-	custom hunk-header' in linkgit:gitattributes[5]).
+	`shit diff` works out patch hunk headers (see 'Defining a
+	custom hunk-header' in linkshit:shitattributes[5]).
 
 -m <num>::
 --max-count <num>::
@@ -265,12 +265,12 @@ providing this option will cause it to die.
 Passing the pattern via <file> allows for providing a search pattern
 containing a \0.
 +
-Not all pattern types support patterns containing \0. Git will error
+Not all pattern types support patterns containing \0. shit will error
 out if a given pattern type can't support such a pattern. The
 `--perl-regexp` pattern type when compiled against the PCRE v2 backend
 has the widest support for these types of patterns.
 +
-In versions of Git before 2.23.0 patterns containing \0 would be
+In versions of shit before 2.23.0 patterns containing \0 would be
 silently considered fixed. This was never documented, there were also
 odd and undocumented interactions between e.g. non-ASCII patterns
 containing \0 and `--ignore-case`.
@@ -317,24 +317,24 @@ question doesn't support them.
 	Both leading paths match and glob(7) patterns are supported.
 +
 For more details about the <pathspec> syntax, see the 'pathspec' entry
-in linkgit:gitglossary[7].
+in linkshit:shitglossary[7].
 
 EXAMPLES
 --------
 
-`git grep 'time_t' -- '*.[ch]'`::
+`shit grep 'time_t' -- '*.[ch]'`::
 	Looks for `time_t` in all tracked .c and .h files in the working
 	directory and its subdirectories.
 
-`git grep -e '#define' --and \( -e MAX_PATH -e PATH_MAX \)`::
+`shit grep -e '#define' --and \( -e MAX_PATH -e PATH_MAX \)`::
 	Looks for a line that has `#define` and either `MAX_PATH` or
 	`PATH_MAX`.
 
-`git grep --all-match -e NODE -e Unexpected`::
+`shit grep --all-match -e NODE -e Unexpected`::
 	Looks for a line that has `NODE` or `Unexpected` in
 	files that have lines that match both.
 
-`git grep solution -- :^Documentation`::
+`shit grep solution -- :^Documentation`::
 	Looks for `solution`, excluding files in `Documentation`.
 
 NOTES ON THREADS
@@ -355,6 +355,6 @@ include::includes/cmd-config-section-all.txt[]
 
 include::config/grep.txt[]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

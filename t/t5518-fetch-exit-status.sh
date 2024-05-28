@@ -5,8 +5,8 @@
 
 test_description='fetch exit status test'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -14,27 +14,27 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success setup '
 
 	>file &&
-	git add file &&
-	git commit -m initial &&
+	shit add file &&
+	shit commit -m initial &&
 
-	git checkout -b side &&
+	shit checkout -b side &&
 	echo side >file &&
-	git commit -a -m side &&
+	shit commit -a -m side &&
 
-	git checkout main &&
+	shit checkout main &&
 	echo next >file &&
-	git commit -a -m next
+	shit commit -a -m next
 '
 
 test_expect_success 'non-fast-forward fetch' '
 
-	test_must_fail git fetch . main:side
+	test_must_fail shit fetch . main:side
 
 '
 
 test_expect_success 'forced update' '
 
-	git fetch . +main:side
+	shit fetch . +main:side
 
 '
 

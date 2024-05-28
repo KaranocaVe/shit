@@ -25,8 +25,8 @@ test_expect_success 'ceiling' '
 	test_config early.config ceiling &&
 	mkdir -p sub &&
 	(
-		GIT_CEILING_DIRECTORIES="$PWD" &&
-		export GIT_CEILING_DIRECTORIES &&
+		shit_CEILING_DIRECTORIES="$PWD" &&
+		export shit_CEILING_DIRECTORIES &&
 		cd sub &&
 		test-tool config read_early_config early.config
 	) >output &&
@@ -34,14 +34,14 @@ test_expect_success 'ceiling' '
 '
 
 test_expect_success 'ceiling #2' '
-	mkdir -p xdg/git &&
-	git config -f xdg/git/config early.config xdg &&
+	mkdir -p xdg/shit &&
+	shit config -f xdg/shit/config early.config xdg &&
 	test_config early.config ceiling &&
 	mkdir -p sub &&
 	(
 		XDG_CONFIG_HOME="$PWD"/xdg &&
-		GIT_CEILING_DIRECTORIES="$PWD" &&
-		export GIT_CEILING_DIRECTORIES XDG_CONFIG_HOME &&
+		shit_CEILING_DIRECTORIES="$PWD" &&
+		export shit_CEILING_DIRECTORIES XDG_CONFIG_HOME &&
 		cd sub &&
 		test-tool config read_early_config early.config
 	) >output &&
@@ -50,12 +50,12 @@ test_expect_success 'ceiling #2' '
 
 cmdline_config="'test.source=cmdline'"
 test_expect_success 'read config file in right order' '
-	echo "[test]source = home" >>.gitconfig &&
-	git init foo &&
+	echo "[test]source = home" >>.shitconfig &&
+	shit init foo &&
 	(
 		cd foo &&
-		echo "[test]source = repo" >>.git/config &&
-		GIT_CONFIG_PARAMETERS=$cmdline_config test-tool config \
+		echo "[test]source = repo" >>.shit/config &&
+		shit_CONFIG_PARAMETERS=$cmdline_config test-tool config \
 			read_early_config test.source >actual &&
 		cat >expected <<-\EOF &&
 		home
@@ -68,25 +68,25 @@ test_expect_success 'read config file in right order' '
 
 test_with_config () {
 	rm -rf throwaway &&
-	git init throwaway &&
+	shit init throwaway &&
 	(
 		cd throwaway &&
-		echo "$*" >.git/config &&
+		echo "$*" >.shit/config &&
 		test-tool config read_early_config early.config
 	)
 }
 
-test_expect_success 'ignore .git/ with incompatible repository version' '
+test_expect_success 'ignore .shit/ with incompatible repository version' '
 	test_with_config "[core]repositoryformatversion = 999999" 2>err &&
-	test_grep "warning:.* Expected git repo version <= [1-9]" err
+	test_grep "warning:.* Expected shit repo version <= [1-9]" err
 '
 
-test_expect_failure 'ignore .git/ with invalid repository version' '
+test_expect_failure 'ignore .shit/ with invalid repository version' '
 	test_with_config "[core]repositoryformatversion = invalid"
 '
 
 
-test_expect_failure 'ignore .git/ with invalid config' '
+test_expect_failure 'ignore .shit/ with invalid config' '
 	test_with_config "["
 '
 
@@ -95,9 +95,9 @@ test_expect_success 'early config and onbranch' '
 	test_with_config "[includeif \"onbranch:topic\"]path=../broken"
 '
 
-test_expect_success 'onbranch config outside of git repo' '
+test_expect_success 'onbranch config outside of shit repo' '
 	test_config_global includeIf.onbranch:topic.path non-existent &&
-	nongit git help
+	nonshit shit help
 '
 
 test_done

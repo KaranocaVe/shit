@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "advice.h"
 #include "gettext.h"
@@ -13,7 +13,7 @@
 
 static int identical_to_template_hook(const char *name, const char *path)
 {
-	const char *env = getenv("GIT_CLONE_TEMPLATE_DIR");
+	const char *env = getenv("shit_CLONE_TEMPLATE_DIR");
 	const char *template_dir = get_template_dir(env && *env ? env : NULL);
 	struct strbuf template_path = STRBUF_INIT;
 	int found_template_hook, ret;
@@ -42,7 +42,7 @@ const char *find_hook(const char *name)
 	int found_hook;
 
 	strbuf_reset(&path);
-	strbuf_git_path(&path, "hooks/%s", name);
+	strbuf_shit_path(&path, "hooks/%s", name);
 	found_hook = access(path.buf, X_OK) >= 0;
 #ifdef STRIP_EXTENSION
 	if (!found_hook) {
@@ -64,19 +64,19 @@ const char *find_hook(const char *name)
 				advise(_("The '%s' hook was ignored because "
 					 "it's not set as executable.\n"
 					 "You can disable this warning with "
-					 "`git config advice.ignoredHook false`."),
+					 "`shit config advice.ignoredHook false`."),
 				       path.buf);
 			}
 		}
 		return NULL;
 	}
-	if (!git_hooks_path && git_env_bool("GIT_CLONE_PROTECTION_ACTIVE", 0) &&
+	if (!shit_hooks_path && shit_env_bool("shit_CLONE_PROTECTION_ACTIVE", 0) &&
 	    !identical_to_template_hook(name, path.buf))
-		die(_("active `%s` hook found during `git clone`:\n\t%s\n"
+		die(_("active `%s` hook found during `shit clone`:\n\t%s\n"
 		      "For security reasons, this is disallowed by default.\n"
 		      "If this is intentional and the hook should actually "
 		      "be run, please\nrun the command again with "
-		      "`GIT_CLONE_PROTECTION_ACTIVE=false`"),
+		      "`shit_CLONE_PROTECTION_ACTIVE=false`"),
 		    name, path.buf);
 	return path.buf;
 }
@@ -98,7 +98,7 @@ static int pick_next_hook(struct child_process *cp,
 		return 0;
 
 	cp->no_stdin = 1;
-	strvec_pushv(&cp->env, hook_cb->options->env.v);
+	strvec_defecatev(&cp->env, hook_cb->options->env.v);
 	/* reopen the file for stdin; run_command closes it. */
 	if (hook_cb->options->path_to_stdin) {
 		cp->no_stdin = 0;
@@ -108,8 +108,8 @@ static int pick_next_hook(struct child_process *cp,
 	cp->trace2_hook_name = hook_cb->hook_name;
 	cp->dir = hook_cb->options->dir;
 
-	strvec_push(&cp->args, hook_path);
-	strvec_pushv(&cp->args, hook_cb->options->args.v);
+	strvec_defecate(&cp->args, hook_path);
+	strvec_defecatev(&cp->args, hook_cb->options->args.v);
 
 	/*
 	 * This pick_next_hook() will be called again, we're only
@@ -221,7 +221,7 @@ int run_hooks_l(const char *hook_name, ...)
 
 	va_start(ap, hook_name);
 	while ((arg = va_arg(ap, const char *)))
-		strvec_push(&opt.args, arg);
+		strvec_defecate(&opt.args, arg);
 	va_end(ap);
 
 	return run_hooks_opt(hook_name, &opt);

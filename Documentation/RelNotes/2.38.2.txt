@@ -1,8 +1,8 @@
-Git 2.38.2 Release Notes
+shit 2.38.2 Release Notes
 ========================
 
 This is to backport various fixes accumulated during the development
-towards Git 2.39, the next feature release.
+towards shit 2.39, the next feature release.
 
 
 Fixes since v2.38.1
@@ -14,21 +14,21 @@ Fixes since v2.38.1
  * The codepath that reads from the index v4 had unaligned memory
    accesses, which has been corrected.
 
- * "git remote rename" failed to rename a remote without fetch
+ * "shit remote rename" failed to rename a remote without fetch
    refspec, which has been corrected.
 
- * "git clone" did not like to see the "--bare" and the "--origin"
+ * "shit clone" did not like to see the "--bare" and the "--origin"
    options used together without a good reason.
 
  * Fix messages incorrectly marked for translation.
 
- * "git fsck" failed to release contents of tree objects already used
+ * "shit fsck" failed to release contents of tree objects already used
    from the memory, which has been fixed.
 
- * "git rebase -i" can mistakenly attempt to apply a fixup to a commit
+ * "shit rebase -i" can mistakenly attempt to apply a fixup to a commit
    itself, which has been corrected.
 
- * In read-only repositories, "git merge-tree" tried to come up with a
+ * In read-only repositories, "shit merge-tree" tried to come up with a
    merge result tree object, which it failed (which is not wrong) and
    led to a segfault (which is bad), which has been corrected.
 
@@ -41,27 +41,27 @@ Fixes since v2.38.1
  * The codepath to sign learned to report errors when it fails to read
    from "ssh-keygen".
 
- * "GIT_EDITOR=: git branch --edit-description" resulted in failure,
+ * "shit_EDITOR=: shit branch --edit-description" resulted in failure,
    which has been corrected.
 
- * Documentation on various Boolean GIT_* environment variables have
+ * Documentation on various Boolean shit_* environment variables have
    been clarified.
 
- * "git multi-pack-index repack/expire" used to repack unreachable
+ * "shit multi-pack-index repack/expire" used to repack unreachable
    cruft into a new pack, which have been corrected.
 
  * The code to clean temporary object directories (used for
    quarantine) tried to remove them inside its signal handler, which
    was a no-no.
 
- * "git branch --edit-description" on an unborh branch misleadingly
+ * "shit branch --edit-description" on an unborh branch misleadingly
    said that no such branch exists, which has been corrected.
 
- * GitHub CI settings have been adjusted to recent reality, merging
-   and cherry-picking necessary topics that have been prepared for Git
+ * shitHub CI settings have been adjusted to recent reality, merging
+   and cherry-picking necessary topics that have been prepared for shit
    2.39.
 
- * `git rebase --update-refs` would delete references when all `update-ref`
+ * `shit rebase --update-refs` would delete references when all `update-ref`
    commands in the sequencer were removed, which has been corrected.
 
 Also contains various documentation updates and code clean-ups.

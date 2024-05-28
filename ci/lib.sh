@@ -1,6 +1,6 @@
 # Library of functions shared by all CI scripts
 
-if test true = "$GITHUB_ACTIONS"
+if test true = "$shitHUB_ACTIONS"
 then
 	begin_group () {
 		need_to_end_group=t
@@ -14,7 +14,7 @@ then
 		need_to_end_group=
 		echo '::endgroup::' >&2
 	}
-elif test true = "$GITLAB_CI"
+elif test true = "$shitLAB_CI"
 then
 	begin_group () {
 		need_to_end_group=t
@@ -66,18 +66,18 @@ trap "end_group 'CI setup'" EXIT
 set -e
 
 skip_branch_tip_with_tag () {
-	# Sometimes, a branch is pushed at the same time the tag that points
-	# at the same commit as the tip of the branch is pushed, and building
+	# Sometimes, a branch is defecateed at the same time the tag that points
+	# at the same commit as the tip of the branch is defecateed, and building
 	# both at the same time is a waste.
 	#
-	# When the build is triggered by a push to a tag, $CI_BRANCH will
+	# When the build is triggered by a defecate to a tag, $CI_BRANCH will
 	# have that tagname, e.g. v2.14.0.  Let's see if $CI_BRANCH is
 	# exactly at a tag, and if so, if it is different from $CI_BRANCH.
 	# That way, we can tell if we are building the tip of a branch that
 	# is tagged and we can skip the build because we won't be skipping a
 	# build of a tag.
 
-	if TAG=$(git describe --exact-match "$CI_BRANCH" 2>/dev/null) &&
+	if TAG=$(shit describe --exact-match "$CI_BRANCH" 2>/dev/null) &&
 		test "$TAG" != "$CI_BRANCH"
 	then
 		echo "$(tput setaf 2)Tip of $CI_BRANCH is exactly at $TAG$(tput sgr0)"
@@ -85,18 +85,18 @@ skip_branch_tip_with_tag () {
 	fi
 }
 
-# Check whether we can use the path passed via the first argument as Git
+# Check whether we can use the path passed via the first argument as shit
 # repository.
-is_usable_git_repository () {
-	# We require Git in our PATH, otherwise we cannot access repositories
+is_usable_shit_repository () {
+	# We require shit in our PATH, otherwise we cannot access repositories
 	# at all.
-	if ! command -v git >/dev/null
+	if ! command -v shit >/dev/null
 	then
 		return 1
 	fi
 
-	# And the target directory needs to be a proper Git repository.
-	if ! git -C "$1" rev-parse 2>/dev/null
+	# And the target directory needs to be a proper shit repository.
+	if ! shit -C "$1" rev-parse 2>/dev/null
 	then
 		return 1
 	fi
@@ -106,12 +106,12 @@ is_usable_git_repository () {
 # job if we encounter the same tree again and can provide a useful info
 # message.
 save_good_tree () {
-	if ! is_usable_git_repository .
+	if ! is_usable_shit_repository .
 	then
 		return
 	fi
 
-	echo "$(git rev-parse $CI_COMMIT^{tree}) $CI_COMMIT $CI_JOB_NUMBER $CI_JOB_ID" >>"$good_trees_file"
+	echo "$(shit rev-parse $CI_COMMIT^{tree}) $CI_COMMIT $CI_JOB_NUMBER $CI_JOB_ID" >>"$good_trees_file"
 	# limit the file size
 	tail -1000 "$good_trees_file" >"$good_trees_file".tmp
 	mv "$good_trees_file".tmp "$good_trees_file"
@@ -121,17 +121,17 @@ save_good_tree () {
 # successfully before (e.g. because the branch got rebased, changing only
 # the commit messages).
 skip_good_tree () {
-	if test true = "$GITHUB_ACTIONS"
+	if test true = "$shitHUB_ACTIONS"
 	then
 		return
 	fi
 
-	if ! is_usable_git_repository .
+	if ! is_usable_shit_repository .
 	then
 		return
 	fi
 
-	if ! good_tree_info="$(grep "^$(git rev-parse $CI_COMMIT^{tree}) " "$good_trees_file")"
+	if ! good_tree_info="$(grep "^$(shit rev-parse $CI_COMMIT^{tree}) " "$good_trees_file")"
 	then
 		# Haven't seen this tree yet, or no cached good trees file yet.
 		# Continue the build job.
@@ -162,12 +162,12 @@ skip_good_tree () {
 }
 
 check_unignored_build_artifacts () {
-	if ! is_usable_git_repository .
+	if ! is_usable_shit_repository .
 	then
 		return
 	fi
 
-	! git ls-files --other --exclude-standard --error-unmatch \
+	! shit ls-files --other --exclude-standard --error-unmatch \
 		-- ':/*' 2>/dev/null ||
 	{
 		echo "$(tput setaf 1)error: found unignored build artifacts$(tput sgr0)"
@@ -199,7 +199,7 @@ create_failed_test_artifacts () {
 	done
 }
 
-# GitHub Action doesn't set TERM, which is required by tput
+# shitHub Action doesn't set TERM, which is required by tput
 export TERM=${TERM:-dumb}
 
 # Clear MAKEFLAGS that may come from the outside world.
@@ -222,37 +222,37 @@ then
 	# among *all* phases)
 	cache_dir="$HOME/test-cache/$SYSTEM_PHASENAME"
 
-	GIT_TEST_OPTS="--write-junit-xml"
+	shit_TEST_OPTS="--write-junit-xml"
 	JOBS=10
-elif test true = "$GITHUB_ACTIONS"
+elif test true = "$shitHUB_ACTIONS"
 then
-	CI_TYPE=github-actions
-	CI_BRANCH="$GITHUB_REF"
-	CI_COMMIT="$GITHUB_SHA"
+	CI_TYPE=shithub-actions
+	CI_BRANCH="$shitHUB_REF"
+	CI_COMMIT="$shitHUB_SHA"
 	CI_OS_NAME="$(echo "$RUNNER_OS" | tr A-Z a-z)"
 	test macos != "$CI_OS_NAME" || CI_OS_NAME=osx
-	CI_REPO_SLUG="$GITHUB_REPOSITORY"
-	CI_JOB_ID="$GITHUB_RUN_ID"
+	CI_REPO_SLUG="$shitHUB_REPOSITORY"
+	CI_JOB_ID="$shitHUB_RUN_ID"
 	CC="${CC_PACKAGE:-${CC:-gcc}}"
 	DONT_SKIP_TAGS=t
 	handle_failed_tests () {
-		echo "FAILED_TEST_ARTIFACTS=t/failed-test-artifacts" >>$GITHUB_ENV
+		echo "FAILED_TEST_ARTIFACTS=t/failed-test-artifacts" >>$shitHUB_ENV
 		create_failed_test_artifacts
 		return 1
 	}
 
 	cache_dir="$HOME/none"
 
-	GIT_TEST_OPTS="--github-workflow-markup"
+	shit_TEST_OPTS="--shithub-workflow-markup"
 	JOBS=10
-elif test true = "$GITLAB_CI"
+elif test true = "$shitLAB_CI"
 then
-	CI_TYPE=gitlab-ci
+	CI_TYPE=shitlab-ci
 	CI_BRANCH="$CI_COMMIT_REF_NAME"
 	CI_COMMIT="$CI_COMMIT_SHA"
 	case "$CI_JOB_IMAGE" in
 	macos-*)
-		# GitLab CI has Python installed via multiple package managers,
+		# shitLab CI has Python installed via multiple package managers,
 		# most notably via asdf and Homebrew. Ensure that our builds
 		# pick up the Homebrew one by prepending it to our PATH as the
 		# asdf one breaks tests.
@@ -288,17 +288,17 @@ else
 fi
 
 MAKEFLAGS="$MAKEFLAGS --jobs=$JOBS"
-GIT_PROVE_OPTS="--timer --jobs $JOBS"
+shit_PROVE_OPTS="--timer --jobs $JOBS"
 
-GIT_TEST_OPTS="$GIT_TEST_OPTS --verbose-log -x"
+shit_TEST_OPTS="$shit_TEST_OPTS --verbose-log -x"
 case "$CI_OS_NAME" in
 windows|windows_nt)
-	GIT_TEST_OPTS="$GIT_TEST_OPTS --no-chain-lint --no-bin-wrappers"
+	shit_TEST_OPTS="$shit_TEST_OPTS --no-chain-lint --no-bin-wrappers"
 	;;
 esac
 
-export GIT_TEST_OPTS
-export GIT_PROVE_OPTS
+export shit_TEST_OPTS
+export shit_PROVE_OPTS
 
 good_trees_file="$cache_dir/good-trees"
 
@@ -315,7 +315,7 @@ fi
 
 export DEVELOPER=1
 export DEFAULT_TEST_TARGET=prove
-export GIT_TEST_CLONE_2GB=true
+export shit_TEST_CLONE_2GB=true
 export SKIP_DASHED_BUILT_INS=YesPlease
 
 case "$distro" in
@@ -336,14 +336,14 @@ ubuntu-*)
 	fi
 	MAKEFLAGS="$MAKEFLAGS PYTHON_PATH=/usr/bin/$PYTHON_PACKAGE"
 
-	export GIT_TEST_HTTPD=true
+	export shit_TEST_HTTPD=true
 
 	# The Linux build installs the defined dependency versions below.
 	# The OS X build installs much more recent versions, whichever
 	# were recorded in the Homebrew database upon creating the OS X
 	# image.
 	# Keep that in mind when you encounter a broken OS X build!
-	export LINUX_GIT_LFS_VERSION="1.5.2"
+	export LINUX_shit_LFS_VERSION="1.5.2"
 	;;
 macos-*)
 	MAKEFLAGS="$MAKEFLAGS PYTHON_PATH=$(which python3)"
@@ -365,12 +365,12 @@ linux-musl)
 	CC=gcc
 	MAKEFLAGS="$MAKEFLAGS PYTHON_PATH=/usr/bin/python3 USE_LIBPCRE2=Yes"
 	MAKEFLAGS="$MAKEFLAGS NO_REGEX=Yes ICONV_OMITS_BOM=Yes"
-	MAKEFLAGS="$MAKEFLAGS GIT_TEST_UTF8_LOCALE=C.UTF-8"
+	MAKEFLAGS="$MAKEFLAGS shit_TEST_UTF8_LOCALE=C.UTF-8"
 	;;
 linux-leaks|linux-reftable-leaks)
 	export SANITIZE=leak
-	export GIT_TEST_PASSING_SANITIZE_LEAK=true
-	export GIT_TEST_SANITIZE_LEAK_LOG=true
+	export shit_TEST_PASSING_SANITIZE_LEAK=true
+	export shit_TEST_SANITIZE_LEAK_LOG=true
 	;;
 linux-asan-ubsan)
 	export SANITIZE=address,undefined

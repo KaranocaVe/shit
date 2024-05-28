@@ -114,7 +114,7 @@ struct utsname {
 
 /*
  * sanitize preprocessor namespace polluted by Windows headers defining
- * macros which collide with git local versions
+ * macros which collide with shit local versions
  */
 #undef HELP_COMMAND /* from winuser.h */
 
@@ -279,7 +279,7 @@ char *mingw_getcwd(char *pointer, int len);
  * (and secretly updates both when you set one or the other), but it uses CP_ACP
  * to do the conversion rather than CP_UTF8.
  *
- * Since everything in the git code base is UTF8, we define the mingw_ routines
+ * Since everything in the shit code base is UTF8, we define the mingw_ routines
  * to access the CRT using the UNICODE routines and manually convert them to
  * UTF8.  This also avoids round-trip problems.
  *
@@ -287,7 +287,7 @@ char *mingw_getcwd(char *pointer, int len);
  * from the CRT.  But to access "_environ" we would have to statically link
  * to the CRT (/MT).
  *
- * We require NO_SETENV (and let gitsetenv() call our mingw_putenv).
+ * We require NO_SETENV (and let shitsetenv() call our mingw_putenv).
  */
 #define getenv       mingw_getenv
 #define putenv       mingw_putenv
@@ -421,9 +421,9 @@ int mingw_execvp(const char *cmd, char *const *argv);
 int mingw_execv(const char *cmd, char *const *argv);
 #define execv mingw_execv
 
-static inline unsigned int git_ntohl(unsigned int x)
+static inline unsigned int shit_ntohl(unsigned int x)
 { return (unsigned int)ntohl(x); }
-#define ntohl git_ntohl
+#define ntohl shit_ntohl
 
 sig_handler_t mingw_signal(int sig, sig_handler_t handler);
 #define signal mingw_signal
@@ -445,7 +445,7 @@ void winansi_init(void);
 HANDLE winansi_get_osfhandle(int fd);
 
 /*
- * git specific compatibility
+ * shit specific compatibility
  */
 
 static inline void convert_slashes(char *path)
@@ -484,7 +484,7 @@ int is_path_owned_by_current_sid(const char *path, struct strbuf *report);
  *
  * The `allow_literal_nul` parameter controls whether the path `NUL` should
  * be considered valid (this makes sense e.g. before opening files, as it is
- * perfectly legitimate to open `NUL` on Windows, just as it is to open
+ * perfectly leshitimate to open `NUL` on Windows, just as it is to open
  * `/dev/null` on Unix/Linux).
  *
  * Returns 1 upon success, otherwise 0.
@@ -520,7 +520,7 @@ int is_valid_win32_path(const char *path, int allow_literal_nul);
  * invalid       | a0-ff             |   1   |   1    |  1
  *
  * (a) encoded as UTF-16 surrogate pair
- * (b) encoded as two hex digits
+ * (b) encoded as two hex dishits
  *
  * Note that, while the UTF-8 encoding scheme can be extended to 5-byte, 6-byte
  * or even indefinite-byte sequences, the largest valid code point \u10ffff
@@ -604,9 +604,9 @@ int xwcstoutf(char *utf, const wchar_t *wcs, size_t utflen);
 extern CRITICAL_SECTION pinfo_cs;
 
 /*
- * Git, like most portable C applications, implements a main() function. On
+ * shit, like most portable C applications, implements a main() function. On
  * Windows, this main() function would receive parameters encoded in the
- * current locale, but Git for Windows would prefer UTF-8 encoded  parameters.
+ * current locale, but shit for Windows would prefer UTF-8 encoded  parameters.
  *
  * To make that happen, we still declare main() here, and then declare and
  * implement wmain() (which is the Unicode variant of main()) and compile with
@@ -618,11 +618,11 @@ int wmain(int argc, const wchar_t **w_argv);
 int main(int argc, const char **argv);
 
 /*
- * For debugging: if a problem occurs, say, in a Git process that is spawned
- * from another Git process which in turn is spawned from yet another Git
+ * For debugging: if a problem occurs, say, in a shit process that is spawned
+ * from another shit process which in turn is spawned from yet another shit
  * process, it can be quite daunting to figure out what is going on.
  *
- * Call this function to open a new MinTTY (this assumes you are in Git for
+ * Call this function to open a new MinTTY (this assumes you are in shit for
  * Windows' SDK) with a GDB that attaches to the current process right away.
  */
 void open_in_gdb(void);

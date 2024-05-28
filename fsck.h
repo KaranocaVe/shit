@@ -1,5 +1,5 @@
-#ifndef GIT_FSCK_H
-#define GIT_FSCK_H
+#ifndef shit_FSCK_H
+#define shit_FSCK_H
 
 #include "object.h"
 #include "oidset.h"
@@ -52,18 +52,18 @@ enum fsck_msg_type {
 	FUNC(TREE_NOT_SORTED, ERROR) \
 	FUNC(UNKNOWN_TYPE, ERROR) \
 	FUNC(ZERO_PADDED_DATE, ERROR) \
-	FUNC(GITMODULES_MISSING, ERROR) \
-	FUNC(GITMODULES_BLOB, ERROR) \
-	FUNC(GITMODULES_LARGE, ERROR) \
-	FUNC(GITMODULES_NAME, ERROR) \
-	FUNC(GITMODULES_SYMLINK, ERROR) \
-	FUNC(GITMODULES_URL, ERROR) \
-	FUNC(GITMODULES_PATH, ERROR) \
-	FUNC(GITMODULES_UPDATE, ERROR) \
-	FUNC(GITATTRIBUTES_MISSING, ERROR) \
-	FUNC(GITATTRIBUTES_LARGE, ERROR) \
-	FUNC(GITATTRIBUTES_LINE_LENGTH, ERROR) \
-	FUNC(GITATTRIBUTES_BLOB, ERROR) \
+	FUNC(shitMODULES_MISSING, ERROR) \
+	FUNC(shitMODULES_BLOB, ERROR) \
+	FUNC(shitMODULES_LARGE, ERROR) \
+	FUNC(shitMODULES_NAME, ERROR) \
+	FUNC(shitMODULES_SYMLINK, ERROR) \
+	FUNC(shitMODULES_URL, ERROR) \
+	FUNC(shitMODULES_PATH, ERROR) \
+	FUNC(shitMODULES_UPDATE, ERROR) \
+	FUNC(shitATTRIBUTES_MISSING, ERROR) \
+	FUNC(shitATTRIBUTES_LARGE, ERROR) \
+	FUNC(shitATTRIBUTES_LINE_LENGTH, ERROR) \
+	FUNC(shitATTRIBUTES_BLOB, ERROR) \
 	FUNC(SYMLINK_TARGET_MISSING, ERROR) \
 	FUNC(SYMLINK_TARGET_BLOB, ERROR) \
 	/* warnings */ \
@@ -71,18 +71,18 @@ enum fsck_msg_type {
 	FUNC(FULL_PATHNAME, WARN) \
 	FUNC(HAS_DOT, WARN) \
 	FUNC(HAS_DOTDOT, WARN) \
-	FUNC(HAS_DOTGIT, WARN) \
+	FUNC(HAS_DOTshit, WARN) \
 	FUNC(NULL_SHA1, WARN) \
 	FUNC(ZERO_PADDED_FILEMODE, WARN) \
 	FUNC(NUL_IN_COMMIT, WARN) \
 	FUNC(LARGE_PATHNAME, WARN) \
 	FUNC(SYMLINK_TARGET_LENGTH, WARN) \
-	FUNC(SYMLINK_POINTS_TO_GIT_DIR, WARN) \
+	FUNC(SYMLINK_POINTS_TO_shit_DIR, WARN) \
 	/* infos (reported as warnings, but ignored by default) */ \
 	FUNC(BAD_FILEMODE, INFO) \
-	FUNC(GITMODULES_PARSE, INFO) \
-	FUNC(GITIGNORE_SYMLINK, INFO) \
-	FUNC(GITATTRIBUTES_SYMLINK, INFO) \
+	FUNC(shitMODULES_PARSE, INFO) \
+	FUNC(shitIGNORE_SYMLINK, INFO) \
+	FUNC(shitATTRIBUTES_SYMLINK, INFO) \
 	FUNC(MAILMAP_SYMLINK, INFO) \
 	FUNC(BAD_TAG_NAME, INFO) \
 	FUNC(MISSING_TAGGER_ENTRY, INFO) \
@@ -128,7 +128,7 @@ int fsck_error_function(struct fsck_options *o,
 			const struct object_id *oid, enum object_type object_type,
 			enum fsck_msg_type msg_type, enum fsck_msg_id msg_id,
 			const char *message);
-int fsck_error_cb_print_missing_gitmodules(struct fsck_options *o,
+int fsck_error_cb_print_missing_shitmodules(struct fsck_options *o,
 					   const struct object_id *oid,
 					   enum object_type object_type,
 					   enum fsck_msg_type msg_type,
@@ -141,10 +141,10 @@ struct fsck_options {
 	unsigned strict:1;
 	enum fsck_msg_type *msg_type;
 	struct oidset skiplist;
-	struct oidset gitmodules_found;
-	struct oidset gitmodules_done;
-	struct oidset gitattributes_found;
-	struct oidset gitattributes_done;
+	struct oidset shitmodules_found;
+	struct oidset shitmodules_done;
+	struct oidset shitattributes_found;
+	struct oidset shitattributes_done;
 	struct oidset symlink_targets_found;
 	struct oidset symlink_targets_done;
 	kh_oid_map_t *object_names;
@@ -152,33 +152,33 @@ struct fsck_options {
 
 #define FSCK_OPTIONS_DEFAULT { \
 	.skiplist = OIDSET_INIT, \
-	.gitmodules_found = OIDSET_INIT, \
-	.gitmodules_done = OIDSET_INIT, \
-	.gitattributes_found = OIDSET_INIT, \
-	.gitattributes_done = OIDSET_INIT, \
+	.shitmodules_found = OIDSET_INIT, \
+	.shitmodules_done = OIDSET_INIT, \
+	.shitattributes_found = OIDSET_INIT, \
+	.shitattributes_done = OIDSET_INIT, \
 	.symlink_targets_found = OIDSET_INIT, \
 	.symlink_targets_done = OIDSET_INIT, \
 	.error_func = fsck_error_function \
 }
 #define FSCK_OPTIONS_STRICT { \
 	.strict = 1, \
-	.gitmodules_found = OIDSET_INIT, \
-	.gitmodules_done = OIDSET_INIT, \
-	.gitattributes_found = OIDSET_INIT, \
-	.gitattributes_done = OIDSET_INIT, \
+	.shitmodules_found = OIDSET_INIT, \
+	.shitmodules_done = OIDSET_INIT, \
+	.shitattributes_found = OIDSET_INIT, \
+	.shitattributes_done = OIDSET_INIT, \
 	.symlink_targets_found = OIDSET_INIT, \
 	.symlink_targets_done = OIDSET_INIT, \
 	.error_func = fsck_error_function, \
 }
-#define FSCK_OPTIONS_MISSING_GITMODULES { \
+#define FSCK_OPTIONS_MISSING_shitMODULES { \
 	.strict = 1, \
-	.gitmodules_found = OIDSET_INIT, \
-	.gitmodules_done = OIDSET_INIT, \
-	.gitattributes_found = OIDSET_INIT, \
-	.gitattributes_done = OIDSET_INIT, \
+	.shitmodules_found = OIDSET_INIT, \
+	.shitmodules_done = OIDSET_INIT, \
+	.shitattributes_found = OIDSET_INIT, \
+	.shitattributes_done = OIDSET_INIT, \
 	.symlink_targets_found = OIDSET_INIT, \
 	.symlink_targets_done = OIDSET_INIT, \
-	.error_func = fsck_error_cb_print_missing_gitmodules, \
+	.error_func = fsck_error_cb_print_missing_shitmodules, \
 }
 
 /* descend in all linked child objects
@@ -207,7 +207,7 @@ int fsck_buffer(const struct object_id *oid, enum object_type,
 
 /*
  * fsck a tag, and pass info about it back to the caller. This is
- * exposed fsck_object() internals for git-mktag(1).
+ * exposed fsck_object() internals for shit-mktag(1).
  */
 int fsck_tag_standalone(const struct object_id *oid, const char *buffer,
 			unsigned long size, struct fsck_options *options,
@@ -248,10 +248,10 @@ const char *fsck_describe_object(struct fsck_options *options,
 
 struct key_value_info;
 /*
- * git_config() callback for use by fsck-y tools that want to support
+ * shit_config() callback for use by fsck-y tools that want to support
  * fsck.<msg> fsck.skipList etc.
  */
-int git_fsck_config(const char *var, const char *value,
+int shit_fsck_config(const char *var, const char *value,
 		    const struct config_context *ctx, void *cb);
 
 #endif

@@ -31,7 +31,7 @@ test_expect_success 'create commits with glob characters' '
 
 test_expect_success 'tree_entry_interesting matches bar' '
 	echo bar >expect &&
-	git log --format=%s -- "bar" >actual &&
+	shit log --format=%s -- "bar" >actual &&
 	test_cmp expect actual
 '
 
@@ -41,7 +41,7 @@ test_expect_success 'tree_entry_interesting matches :(icase)bar' '
 	bAr
 	bar
 	EOF
-	git log --format=%s -- ":(icase)bar" >actual &&
+	shit log --format=%s -- ":(icase)bar" >actual &&
 	test_cmp expect actual
 '
 
@@ -51,7 +51,7 @@ test_expect_success 'tree_entry_interesting matches :(icase)bar with prefix' '
 	fOo/bAr
 	fOo/bar
 	EOF
-	( cd fOo && git log --format=%s -- ":(icase)bar" ) >actual &&
+	( cd fOo && shit log --format=%s -- ":(icase)bar" ) >actual &&
 	test_cmp expect actual
 '
 
@@ -67,7 +67,7 @@ test_expect_success 'tree_entry_interesting matches :(icase)bar with empty prefi
 	foo/bAr
 	foo/bar
 	EOF
-	( cd fOo && git log --format=%s -- ":(icase)../foo/bar" ) >actual &&
+	( cd fOo && shit log --format=%s -- ":(icase)../foo/bar" ) >actual &&
 	test_cmp expect actual
 '
 
@@ -77,7 +77,7 @@ test_expect_success 'match_pathspec matches :(icase)bar' '
 	bAr
 	bar
 	EOF
-	git ls-files ":(icase)bar" >actual &&
+	shit ls-files ":(icase)bar" >actual &&
 	test_cmp expect actual
 '
 
@@ -87,7 +87,7 @@ test_expect_success 'match_pathspec matches :(icase)bar with prefix' '
 	fOo/bAr
 	fOo/bar
 	EOF
-	( cd fOo && git ls-files --full-name ":(icase)bar" ) >actual &&
+	( cd fOo && shit ls-files --full-name ":(icase)bar" ) >actual &&
 	test_cmp expect actual
 '
 
@@ -98,13 +98,13 @@ test_expect_success 'match_pathspec matches :(icase)bar with empty prefix' '
 	fOo/bAr
 	fOo/bar
 	EOF
-	( cd fOo && git ls-files --full-name ":(icase)bar" ../bar ) >actual &&
+	( cd fOo && shit ls-files --full-name ":(icase)bar" ../bar ) >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success '"git diff" can take magic :(icase) pathspec' '
+test_expect_success '"shit diff" can take magic :(icase) pathspec' '
 	echo FOO/BAR >expect &&
-	git diff --name-only HEAD^ HEAD -- ":(icase)foo/bar" >actual &&
+	shit diff --name-only HEAD^ HEAD -- ":(icase)foo/bar" >actual &&
 	test_cmp expect actual
 '
 

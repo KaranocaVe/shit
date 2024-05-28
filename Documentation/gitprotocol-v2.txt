@@ -1,9 +1,9 @@
-gitprotocol-v2(5)
+shitprotocol-v2(5)
 =================
 
 NAME
 ----
-gitprotocol-v2 - Git Wire Protocol, Version 2
+shitprotocol-v2 - shit Wire Protocol, Version 2
 
 SYNOPSIS
 --------
@@ -13,7 +13,7 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-This document presents a specification for a version 2 of Git's wire
+This document presents a specification for a version 2 of shit's wire
 protocol.  Protocol v2 will improve upon v1 in the following ways:
 
   * Instead of multiple service names, multiple commands will be
@@ -38,7 +38,7 @@ Packet-Line Framing
 -------------------
 
 All communication is done using packet-line framing, just as in v1.  See
-linkgit:gitprotocol-pack[5] and linkgit:gitprotocol-common[5] for more information.
+linkshit:shitprotocol-pack[5] and linkshit:shitprotocol-common[5] for more information.
 
 In protocol v2 these special packets will have the following semantics:
 
@@ -52,23 +52,23 @@ Initial Client Request
 
 In general a client can request to speak protocol v2 by sending
 `version=2` through the respective side-channel for the transport being
-used which inevitably sets `GIT_PROTOCOL`.  More information can be
-found in linkgit:gitprotocol-pack[5] and linkgit:gitprotocol-http[5], as well as the
-`GIT_PROTOCOL` definition in `git.txt`. In all cases the
+used which inevitably sets `shit_PROTOCOL`.  More information can be
+found in linkshit:shitprotocol-pack[5] and linkshit:shitprotocol-http[5], as well as the
+`shit_PROTOCOL` definition in `shit.txt`. In all cases the
 response from the server is the capability advertisement.
 
-Git Transport
+shit Transport
 ~~~~~~~~~~~~~
 
-When using the git:// transport, you can request to use protocol v2 by
+When using the shit:// transport, you can request to use protocol v2 by
 sending "version=2" as an extra parameter:
 
-   003egit-upload-pack /project.git\0host=myserver.com\0\0version=2\0
+   003eshit-upload-pack /project.shit\0host=myserver.com\0\0version=2\0
 
 SSH and File Transport
 ~~~~~~~~~~~~~~~~~~~~~~
 
-When using either the ssh:// or file:// transport, the GIT_PROTOCOL
+When using either the ssh:// or file:// transport, the shit_PROTOCOL
 environment variable must be set explicitly to include "version=2".
 The server may need to be configured to allow this environment variable
 to pass.
@@ -77,11 +77,11 @@ HTTP Transport
 ~~~~~~~~~~~~~~
 
 When using the http:// or https:// transport a client makes a "smart"
-info/refs request as described in linkgit:gitprotocol-http[5] and requests that
-v2 be used by supplying "version=2" in the `Git-Protocol` header.
+info/refs request as described in linkshit:shitprotocol-http[5] and requests that
+v2 be used by supplying "version=2" in the `shit-Protocol` header.
 
-   C: GET $GIT_URL/info/refs?service=git-upload-pack HTTP/1.0
-   C: Git-Protocol: version=2
+   C: GET $shit_URL/info/refs?service=shit-upload-pack HTTP/1.0
+   C: shit-Protocol: version=2
 
 A v2 server would reply:
 
@@ -93,13 +93,13 @@ A v2 server would reply:
    S: <capability-advertisement>
 
 Subsequent requests are then made directly to the service
-`$GIT_URL/git-upload-pack`. (This works the same for git-receive-pack).
+`$shit_URL/shit-upload-pack`. (This works the same for shit-receive-pack).
 
 Uses the `--http-backend-info-refs` option to
-linkgit:git-upload-pack[1].
+linkshit:shit-upload-pack[1].
 
 The server may need to be configured to pass this header's contents via
-the `GIT_PROTOCOL` variable. See the discussion in `git-http-backend.txt`.
+the `shit_PROTOCOL` variable. See the discussion in `shit-http-backend.txt`.
 
 Capability Advertisement
 ------------------------
@@ -120,8 +120,8 @@ to be executed by the client.
     capability-list = *capability
     capability = PKT-LINE(key[=value] LF)
 
-    key = 1*(ALPHA | DIGIT | "-_")
-    value = 1*(ALPHA | DIGIT | " -_.,?\/{}[]()<>!@#$%^&*+=:;")
+    key = 1*(ALPHA | DIshit | "-_")
+    value = 1*(ALPHA | DIshit | " -_.,?\/{}[]()<>!@#$%^&*+=:;")
 
 Command Request
 ---------------
@@ -165,7 +165,7 @@ Capabilities
 There are two different types of capabilities: normal capabilities,
 which can be used to convey information or alter the behavior of a
 request, and commands, which are the core actions that a client wants to
-perform (fetch, push, etc).
+perform (fetch, defecate, etc).
 
 Protocol version 2 is stateless by default.  This means that all commands
 must only last a single round and be stateless from the perspective of the
@@ -186,7 +186,7 @@ request to the server (but it MUST NOT do so if the server did not
 advertise the agent capability). The `X` and `Y` strings may contain any
 printable ASCII characters except space (i.e., the byte range 32 < x <
 127), and are typically of the form "package/version" (e.g.,
-"git/1.8.3.1"). The agent strings are purely informative for statistics
+"shit/1.8.3.1"). The agent strings are purely informative for statistics
 and debugging purposes, and MUST NOT be used to programmatically assume
 the presence or absence of particular features.
 
@@ -314,13 +314,13 @@ included in the clients request as well as the potential addition of the
     deepen-since <timestamp>
 	Requests that the shallow clone/fetch should be cut at a
 	specific time, instead of depth.  Internally it's equivalent to
-	doing "git rev-list --max-age=<timestamp>". Cannot be used with
+	doing "shit rev-list --max-age=<timestamp>". Cannot be used with
 	"deepen".
 
     deepen-not <rev>
 	Requests that the shallow clone/fetch should be cut at a
 	specific revision specified by '<rev>', instead of a depth.
-	Internally it's equivalent of doing "git rev-list --not <rev>".
+	Internally it's equivalent of doing "shit rev-list --not <rev>".
 	Cannot be used with "deepen", but can be used with
 	"deepen-since".
 
@@ -406,7 +406,7 @@ header. Most sections are sent only when the packfile is sent.
     wanted-ref = obj-id SP refname
 
     packfile-uris = PKT-LINE("packfile-uris" LF) *packfile-uri
-    packfile-uri = PKT-LINE(40*(HEXDIGIT) SP *%x20-ff LF)
+    packfile-uri = PKT-LINE(40*(HEXDIshit) SP *%x20-ff LF)
 
     packfile = PKT-LINE("packfile" LF)
 	       *PKT-LINE(%x01-03 *%x00-ff)
@@ -487,9 +487,9 @@ header. Most sections are sent only when the packfile is sent.
 	* Always begins with the section header "packfile-uris".
 
 	* For each URI the server sends, it sends a hash of the pack's
-	  contents (as output by git index-pack) followed by the URI.
+	  contents (as output by shit index-pack) followed by the URI.
 
-	* The hashes are 40 hex characters long. When Git upgrades to a new
+	* The hashes are 40 hex characters long. When shit upgrades to a new
 	  hash algorithm, this might need to be updated. (It should match
 	  whatever index-pack outputs after "pack\t" or "keep\t".
 
@@ -593,7 +593,7 @@ capability values and proceed with the 'bundle-uri` dialog they
 support.
 
 The 'bundle-uri' command is intended to be issued before `fetch` to
-get URIs to bundle files (see linkgit:git-bundle[1]) to "seed" and
+get URIs to bundle files (see linkshit:shit-bundle[1]) to "seed" and
 inform the subsequent `fetch` command.
 
 The client CAN issue `bundle-uri` before or after any other valid
@@ -606,16 +606,16 @@ DISCUSSION of bundle-uri
 
 The intent of the feature is optimize for server resource consumption
 in the common case by changing the common case of fetching a very
-large PACK during linkgit:git-clone[1] into a smaller incremental
+large PACK during linkshit:shit-clone[1] into a smaller incremental
 fetch.
 
 It also allows servers to achieve better caching in combination with
-an `uploadpack.packObjectsHook` (see linkgit:git-config[1]).
+an `uploadpack.packObjectsHook` (see linkshit:shit-config[1]).
 
 By having new clones or fetches be a more predictable and common
 negotiation against the tips of recently produces *.bundle file(s).
 Servers might even pre-generate the results of such negotiations for
-the `uploadpack.packObjectsHook` as new pushes come in.
+the `uploadpack.packObjectsHook` as new defecatees come in.
 
 One way that servers could take advantage of these bundles is that the
 server would anticipate that fresh clones will download a known bundle,
@@ -635,8 +635,8 @@ list of key-value pairs provided as packet lines with value
 the `bundle.*` namespace to construct a list of bundles. These keys are
 grouped by a `bundle.<id>.` subsection, where each key corresponding to a
 given `<id>` contributes attributes to the bundle defined by that `<id>`.
-See linkgit:git-config[1] for the specific details of these keys and how
-the Git client will interpret their values.
+See linkshit:shit-config[1] for the specific details of these keys and how
+the shit client will interpret their values.
 
 Clients MUST parse the line according to the above format, lines that do
 not conform to the format SHOULD be discarded. The user MAY be warned in
@@ -648,16 +648,16 @@ bundle-uri CLIENT AND SERVER EXPECTATIONS
 URI CONTENTS::
 The content at the advertised URIs MUST be one of two types.
 +
-The advertised URI may contain a bundle file that `git bundle verify`
+The advertised URI may contain a bundle file that `shit bundle verify`
 would accept. I.e. they MUST contain one or more reference tips for
 use by the client, MUST indicate prerequisites (in any) with standard
 "-" prefixes, and MUST indicate their "object-format", if
 applicable.
 +
-The advertised URI may alternatively contain a plaintext file that `git
+The advertised URI may alternatively contain a plaintext file that `shit
 config --list` would accept (with the `--file` option). The key-value
 pairs in this list are in the `bundle.*` namespace (see
-linkgit:git-config[1]).
+linkshit:shit-config[1]).
 
 bundle-uri CLIENT ERROR RECOVERY::
 A client MUST above all gracefully degrade on errors, whether that
@@ -697,7 +697,7 @@ WHEN ADVERTISED BUNDLE(S) REQUIRE NO FURTHER NEGOTIATION::
 If after issuing `bundle-uri` and `ls-refs`, and getting the header(s)
 of the bundle(s) the client finds that the ref tips it wants can be
 retrieved entirely from advertised bundle(s), the client MAY disconnect
-from the Git server. The results of such a 'clone' or 'fetch' should be
+from the shit server. The results of such a 'clone' or 'fetch' should be
 indistinguishable from the state attained without using bundle-uri.
 
 EARLY CLIENT DISCONNECTIONS AND ERROR RECOVERY::
@@ -741,7 +741,7 @@ bundle-uri PROTOCOL FEATURES
 
 The client constructs a bundle list from the `<key>=<value>` pairs
 provided by the server. These pairs are part of the `bundle.*` namespace
-as documented in linkgit:git-config[1]. In this section, we discuss some
+as documented in linkshit:shit-config[1]. In this section, we discuss some
 of these keys and describe the actions the client will do in response to
 this information.
 
@@ -781,6 +781,6 @@ retrieving the header from a bundle at the indicated URI, and thus
 save themselves and the server(s) the request(s) needed to inspect the
 headers of that bundle or bundles.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

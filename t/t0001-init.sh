@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git init'
+test_description='shit init'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -21,8 +21,8 @@ check_config () {
 		return 1
 	fi
 
-	bare=$(cd "$1" && git config --bool core.bare)
-	worktree=$(cd "$1" && git config core.worktree) ||
+	bare=$(cd "$1" && shit config --bool core.bare)
+	worktree=$(cd "$1" && shit config core.worktree) ||
 	worktree=unset
 
 	test "$bare" = "$2" && test "$worktree" = "$3" || {
@@ -33,131 +33,131 @@ check_config () {
 }
 
 test_expect_success 'plain' '
-	git init plain &&
-	check_config plain/.git false unset
+	shit init plain &&
+	check_config plain/.shit false unset
 '
 
 test_expect_success 'plain nested in bare' '
 	(
-		git init --bare bare-ancestor.git &&
-		cd bare-ancestor.git &&
+		shit init --bare bare-ancestor.shit &&
+		cd bare-ancestor.shit &&
 		mkdir plain-nested &&
 		cd plain-nested &&
-		git init
+		shit init
 	) &&
-	check_config bare-ancestor.git/plain-nested/.git false unset
+	check_config bare-ancestor.shit/plain-nested/.shit false unset
 '
 
-test_expect_success 'plain through aliased command, outside any git repo' '
+test_expect_success 'plain through aliased command, outside any shit repo' '
 	(
 		HOME=$(pwd)/alias-config &&
 		export HOME &&
 		mkdir alias-config &&
-		echo "[alias] aliasedinit = init" >alias-config/.gitconfig &&
+		echo "[alias] aliasedinit = init" >alias-config/.shitconfig &&
 
-		GIT_CEILING_DIRECTORIES=$(pwd) &&
-		export GIT_CEILING_DIRECTORIES &&
+		shit_CEILING_DIRECTORIES=$(pwd) &&
+		export shit_CEILING_DIRECTORIES &&
 
 		mkdir plain-aliased &&
 		cd plain-aliased &&
-		git aliasedinit
+		shit aliasedinit
 	) &&
-	check_config plain-aliased/.git false unset
+	check_config plain-aliased/.shit false unset
 '
 
 test_expect_success 'plain nested through aliased command' '
 	(
-		git init plain-ancestor-aliased &&
+		shit init plain-ancestor-aliased &&
 		cd plain-ancestor-aliased &&
-		echo "[alias] aliasedinit = init" >>.git/config &&
+		echo "[alias] aliasedinit = init" >>.shit/config &&
 		mkdir plain-nested &&
 		cd plain-nested &&
-		git aliasedinit
+		shit aliasedinit
 	) &&
-	check_config plain-ancestor-aliased/plain-nested/.git false unset
+	check_config plain-ancestor-aliased/plain-nested/.shit false unset
 '
 
 test_expect_success 'plain nested in bare through aliased command' '
 	(
-		git init --bare bare-ancestor-aliased.git &&
-		cd bare-ancestor-aliased.git &&
+		shit init --bare bare-ancestor-aliased.shit &&
+		cd bare-ancestor-aliased.shit &&
 		echo "[alias] aliasedinit = init" >>config &&
 		mkdir plain-nested &&
 		cd plain-nested &&
-		git aliasedinit
+		shit aliasedinit
 	) &&
-	check_config bare-ancestor-aliased.git/plain-nested/.git false unset
+	check_config bare-ancestor-aliased.shit/plain-nested/.shit false unset
 '
 
-test_expect_success 'No extra GIT_* on alias scripts' '
+test_expect_success 'No extra shit_* on alias scripts' '
 	write_script script <<-\EOF &&
 	env |
 		sed -n \
-			-e "/^GIT_PREFIX=/d" \
-			-e "/^GIT_TEXTDOMAINDIR=/d" \
-			-e "/^GIT_TRACE2_PARENT/d" \
-			-e "/^GIT_/s/=.*//p" |
+			-e "/^shit_PREFIX=/d" \
+			-e "/^shit_TEXTDOMAINDIR=/d" \
+			-e "/^shit_TRACE2_PARENT/d" \
+			-e "/^shit_/s/=.*//p" |
 		sort
 	EOF
 	./script >expected &&
-	git config alias.script \!./script &&
-	( mkdir sub && cd sub && git script >../actual ) &&
+	shit config alias.script \!./script &&
+	( mkdir sub && cd sub && shit script >../actual ) &&
 	test_cmp expected actual
 '
 
-test_expect_success 'plain with GIT_WORK_TREE' '
+test_expect_success 'plain with shit_WORK_TREE' '
 	mkdir plain-wt &&
-	test_must_fail env GIT_WORK_TREE="$(pwd)/plain-wt" git init plain-wt
+	test_must_fail env shit_WORK_TREE="$(pwd)/plain-wt" shit init plain-wt
 '
 
 test_expect_success 'plain bare' '
-	git --bare init plain-bare-1 &&
+	shit --bare init plain-bare-1 &&
 	check_config plain-bare-1 true unset
 '
 
-test_expect_success 'plain bare with GIT_WORK_TREE' '
+test_expect_success 'plain bare with shit_WORK_TREE' '
 	mkdir plain-bare-2 &&
 	test_must_fail \
-		env GIT_WORK_TREE="$(pwd)/plain-bare-2" \
-		git --bare init plain-bare-2
+		env shit_WORK_TREE="$(pwd)/plain-bare-2" \
+		shit --bare init plain-bare-2
 '
 
-test_expect_success 'GIT_DIR bare' '
-	mkdir git-dir-bare.git &&
-	GIT_DIR=git-dir-bare.git git init &&
-	check_config git-dir-bare.git true unset
+test_expect_success 'shit_DIR bare' '
+	mkdir shit-dir-bare.shit &&
+	shit_DIR=shit-dir-bare.shit shit init &&
+	check_config shit-dir-bare.shit true unset
 '
 
 test_expect_success 'init --bare' '
-	git init --bare init-bare.git &&
-	check_config init-bare.git true unset
+	shit init --bare init-bare.shit &&
+	check_config init-bare.shit true unset
 '
 
-test_expect_success 'GIT_DIR non-bare' '
+test_expect_success 'shit_DIR non-bare' '
 
 	(
 		mkdir non-bare &&
 		cd non-bare &&
-		GIT_DIR=.git git init
+		shit_DIR=.shit shit init
 	) &&
-	check_config non-bare/.git false unset
+	check_config non-bare/.shit false unset
 '
 
-test_expect_success 'GIT_DIR & GIT_WORK_TREE (1)' '
+test_expect_success 'shit_DIR & shit_WORK_TREE (1)' '
 
 	(
-		mkdir git-dir-wt-1.git &&
-		GIT_WORK_TREE=$(pwd) GIT_DIR=git-dir-wt-1.git git init
+		mkdir shit-dir-wt-1.shit &&
+		shit_WORK_TREE=$(pwd) shit_DIR=shit-dir-wt-1.shit shit init
 	) &&
-	check_config git-dir-wt-1.git false "$(pwd)"
+	check_config shit-dir-wt-1.shit false "$(pwd)"
 '
 
-test_expect_success 'GIT_DIR & GIT_WORK_TREE (2)' '
-	mkdir git-dir-wt-2.git &&
+test_expect_success 'shit_DIR & shit_WORK_TREE (2)' '
+	mkdir shit-dir-wt-2.shit &&
 	test_must_fail env \
-		GIT_WORK_TREE="$(pwd)" \
-		GIT_DIR=git-dir-wt-2.git \
-		git --bare init
+		shit_WORK_TREE="$(pwd)" \
+		shit_DIR=shit-dir-wt-2.shit \
+		shit --bare init
 '
 
 test_expect_success 'reinit' '
@@ -165,8 +165,8 @@ test_expect_success 'reinit' '
 	(
 		mkdir again &&
 		cd again &&
-		git -c init.defaultBranch=initial init >out1 2>err1 &&
-		git init >out2 2>err2
+		shit -c init.defaultBranch=initial init >out1 2>err1 &&
+		shit init >out2 2>err2
 	) &&
 	test_grep "Initialized empty" again/out1 &&
 	test_grep "Reinitialized existing" again/out2 &&
@@ -177,23 +177,23 @@ test_expect_success 'reinit' '
 test_expect_success 'init with --template' '
 	mkdir template-source &&
 	echo content >template-source/file &&
-	git init --template=template-source template-custom &&
-	test_cmp template-source/file template-custom/.git/file
+	shit init --template=template-source template-custom &&
+	test_cmp template-source/file template-custom/.shit/file
 '
 
 test_expect_success 'init with --template (blank)' '
-	git init template-plain &&
-	test_path_is_file template-plain/.git/info/exclude &&
-	git init --template= template-blank &&
-	test_path_is_missing template-blank/.git/info/exclude
+	shit init template-plain &&
+	test_path_is_file template-plain/.shit/info/exclude &&
+	shit init --template= template-blank &&
+	test_path_is_missing template-blank/.shit/info/exclude
 '
 
 init_no_templatedir_env () {
 	(
-		sane_unset GIT_TEMPLATE_DIR &&
-		NO_SET_GIT_TEMPLATE_DIR=t &&
-		export NO_SET_GIT_TEMPLATE_DIR &&
-		git init "$1"
+		sane_unset shit_TEMPLATE_DIR &&
+		NO_SET_shit_TEMPLATE_DIR=t &&
+		export NO_SET_shit_TEMPLATE_DIR &&
+		shit init "$1"
 	)
 }
 
@@ -203,7 +203,7 @@ test_expect_success 'init with init.templatedir set' '
 	test_config_global init.templatedir "${HOME}/templatedir-source" &&
 
 	init_no_templatedir_env templatedir-set &&
-	test_cmp templatedir-source/file templatedir-set/.git/file
+	test_cmp templatedir-source/file templatedir-set/.shit/file
 '
 
 test_expect_success 'init with init.templatedir using ~ expansion' '
@@ -212,59 +212,59 @@ test_expect_success 'init with init.templatedir using ~ expansion' '
 	test_config_global init.templatedir "~/templatedir-source" &&
 
 	init_no_templatedir_env templatedir-expansion &&
-	test_cmp templatedir-source/file templatedir-expansion/.git/file
+	test_cmp templatedir-source/file templatedir-expansion/.shit/file
 '
 
 test_expect_success 'init --bare/--shared overrides system/global config' '
 	test_config_global core.bare false &&
 	test_config_global core.sharedRepository 0640 &&
-	git init --bare --shared=0666 init-bare-shared-override &&
+	shit init --bare --shared=0666 init-bare-shared-override &&
 	check_config init-bare-shared-override true unset &&
 	test x0666 = \
-	x$(git config -f init-bare-shared-override/config core.sharedRepository)
+	x$(shit config -f init-bare-shared-override/config core.sharedRepository)
 '
 
 test_expect_success 'init honors global core.sharedRepository' '
 	test_config_global core.sharedRepository 0666 &&
-	git init shared-honor-global &&
+	shit init shared-honor-global &&
 	test x0666 = \
-	x$(git config -f shared-honor-global/.git/config core.sharedRepository)
+	x$(shit config -f shared-honor-global/.shit/config core.sharedRepository)
 '
 
 test_expect_success 'init allows insanely long --template' '
-	git init --template=$(printf "x%09999dx" 1) test
+	shit init --template=$(printf "x%09999dx" 1) test
 '
 
 test_expect_success 'init creates a new directory' '
 	rm -fr newdir &&
-	git init newdir &&
-	test_path_is_dir newdir/.git/refs
+	shit init newdir &&
+	test_path_is_dir newdir/.shit/refs
 '
 
 test_expect_success 'init creates a new bare directory' '
 	rm -fr newdir &&
-	git init --bare newdir &&
+	shit init --bare newdir &&
 	test_path_is_dir newdir/refs
 '
 
 test_expect_success 'init recreates a directory' '
 	rm -fr newdir &&
 	mkdir newdir &&
-	git init newdir &&
-	test_path_is_dir newdir/.git/refs
+	shit init newdir &&
+	test_path_is_dir newdir/.shit/refs
 '
 
 test_expect_success 'init recreates a new bare directory' '
 	rm -fr newdir &&
 	mkdir newdir &&
-	git init --bare newdir &&
+	shit init --bare newdir &&
 	test_path_is_dir newdir/refs
 '
 
 test_expect_success 'init creates a new deep directory' '
 	rm -fr newdir &&
-	git init newdir/a/b/c &&
-	test_path_is_dir newdir/a/b/c/.git/refs
+	shit init newdir/a/b/c &&
+	test_path_is_dir newdir/a/b/c/.shit/refs
 '
 
 test_expect_success POSIXPERM 'init creates a new deep directory (umask vs. shared)' '
@@ -276,7 +276,7 @@ test_expect_success POSIXPERM 'init creates a new deep directory (umask vs. shar
 		# Remove a default ACL if possible.
 		(setfacl -k newdir 2>/dev/null || true) &&
 		umask 002 &&
-		git init --bare --shared=0660 newdir/a/b/c &&
+		shit init --bare --shared=0660 newdir/a/b/c &&
 		test_path_is_dir newdir/a/b/c/refs &&
 		ls -ld newdir/a newdir/a/b > lsab.out &&
 		! grep -v "^drwxrw[sx]r-x" lsab.out &&
@@ -288,7 +288,7 @@ test_expect_success POSIXPERM 'init creates a new deep directory (umask vs. shar
 test_expect_success 'init notices EEXIST (1)' '
 	rm -fr newdir &&
 	>newdir &&
-	test_must_fail git init newdir &&
+	test_must_fail shit init newdir &&
 	test_path_is_file newdir
 '
 
@@ -296,7 +296,7 @@ test_expect_success 'init notices EEXIST (2)' '
 	rm -fr newdir &&
 	mkdir newdir &&
 	>newdir/a &&
-	test_must_fail git init newdir/a/b &&
+	test_must_fail shit init newdir/a/b &&
 	test_path_is_file newdir/a
 '
 
@@ -305,50 +305,50 @@ test_expect_success POSIXPERM,SANITY 'init notices EPERM' '
 	rm -fr newdir &&
 	mkdir newdir &&
 	chmod -w newdir &&
-	test_must_fail git init newdir/a/b
+	test_must_fail shit init newdir/a/b
 '
 
 test_expect_success 'init creates a new bare directory with global --bare' '
 	rm -rf newdir &&
-	git --bare init newdir &&
+	shit --bare init newdir &&
 	test_path_is_dir newdir/refs
 '
 
-test_expect_success 'init prefers command line to GIT_DIR' '
+test_expect_success 'init prefers command line to shit_DIR' '
 	rm -rf newdir &&
 	mkdir otherdir &&
-	GIT_DIR=otherdir git --bare init newdir &&
+	shit_DIR=otherdir shit --bare init newdir &&
 	test_path_is_dir newdir/refs &&
 	test_path_is_missing otherdir/refs
 '
 
-test_expect_success 'init with separate gitdir' '
+test_expect_success 'init with separate shitdir' '
 	rm -rf newdir &&
-	git init --separate-git-dir realgitdir newdir &&
-	newdir_git="$(cat newdir/.git)" &&
-	test_cmp_fspath "$(pwd)/realgitdir" "${newdir_git#gitdir: }" &&
-	test_path_is_dir realgitdir/refs
+	shit init --separate-shit-dir realshitdir newdir &&
+	newdir_shit="$(cat newdir/.shit)" &&
+	test_cmp_fspath "$(pwd)/realshitdir" "${newdir_shit#shitdir: }" &&
+	test_path_is_dir realshitdir/refs
 '
 
-test_expect_success 'explicit bare & --separate-git-dir incompatible' '
-	test_must_fail git init --bare --separate-git-dir goop.git bare.git 2>err &&
+test_expect_success 'explicit bare & --separate-shit-dir incompatible' '
+	test_must_fail shit init --bare --separate-shit-dir goop.shit bare.shit 2>err &&
 	test_grep "cannot be used together" err
 '
 
-test_expect_success 'implicit bare & --separate-git-dir incompatible' '
-	test_when_finished "rm -rf bare.git" &&
-	mkdir -p bare.git &&
-	test_must_fail env GIT_DIR=. \
-		git -C bare.git init --separate-git-dir goop.git 2>err &&
+test_expect_success 'implicit bare & --separate-shit-dir incompatible' '
+	test_when_finished "rm -rf bare.shit" &&
+	mkdir -p bare.shit &&
+	test_must_fail env shit_DIR=. \
+		shit -C bare.shit init --separate-shit-dir goop.shit 2>err &&
 	test_grep "incompatible" err
 '
 
-test_expect_success 'bare & --separate-git-dir incompatible within worktree' '
-	test_when_finished "rm -rf bare.git linkwt seprepo" &&
+test_expect_success 'bare & --separate-shit-dir incompatible within worktree' '
+	test_when_finished "rm -rf bare.shit linkwt seprepo" &&
 	test_commit gumby &&
-	git clone --bare . bare.git &&
-	git -C bare.git worktree add --detach ../linkwt &&
-	test_must_fail git -C linkwt init --separate-git-dir seprepo 2>err &&
+	shit clone --bare . bare.shit &&
+	shit -C bare.shit worktree add --detach ../linkwt &&
+	test_must_fail shit -C linkwt init --separate-shit-dir seprepo 2>err &&
 	test_grep "incompatible" err
 '
 
@@ -383,7 +383,7 @@ check_long_base_path () {
 	fi &&
 	(
 		cd $p127 &&
-		git init newdir
+		shit init newdir
 	)
 }
 
@@ -395,80 +395,80 @@ test_expect_success GETCWD_IGNORES_PERMS 'init in long restricted base path' '
 	check_long_base_path 0111
 '
 
-test_expect_success 're-init on .git file' '
-	( cd newdir && git init )
+test_expect_success 're-init on .shit file' '
+	( cd newdir && shit init )
 '
 
-test_expect_success 're-init to update git link' '
-	git -C newdir init --separate-git-dir ../surrealgitdir &&
-	newdir_git="$(cat newdir/.git)" &&
-	test_cmp_fspath "$(pwd)/surrealgitdir" "${newdir_git#gitdir: }" &&
-	test_path_is_dir surrealgitdir/refs &&
-	test_path_is_missing realgitdir/refs
+test_expect_success 're-init to update shit link' '
+	shit -C newdir init --separate-shit-dir ../surrealshitdir &&
+	newdir_shit="$(cat newdir/.shit)" &&
+	test_cmp_fspath "$(pwd)/surrealshitdir" "${newdir_shit#shitdir: }" &&
+	test_path_is_dir surrealshitdir/refs &&
+	test_path_is_missing realshitdir/refs
 '
 
-test_expect_success 're-init to move gitdir' '
-	rm -rf newdir realgitdir surrealgitdir &&
-	git init newdir &&
-	git -C newdir init --separate-git-dir ../realgitdir &&
-	newdir_git="$(cat newdir/.git)" &&
-	test_cmp_fspath "$(pwd)/realgitdir" "${newdir_git#gitdir: }" &&
-	test_path_is_dir realgitdir/refs
+test_expect_success 're-init to move shitdir' '
+	rm -rf newdir realshitdir surrealshitdir &&
+	shit init newdir &&
+	shit -C newdir init --separate-shit-dir ../realshitdir &&
+	newdir_shit="$(cat newdir/.shit)" &&
+	test_cmp_fspath "$(pwd)/realshitdir" "${newdir_shit#shitdir: }" &&
+	test_path_is_dir realshitdir/refs
 '
 
-test_expect_success SYMLINKS 're-init to move gitdir symlink' '
-	rm -rf newdir realgitdir &&
-	git init newdir &&
+test_expect_success SYMLINKS 're-init to move shitdir symlink' '
+	rm -rf newdir realshitdir &&
+	shit init newdir &&
 	(
 	cd newdir &&
-	mv .git here &&
-	ln -s here .git &&
-	git init --separate-git-dir ../realgitdir
+	mv .shit here &&
+	ln -s here .shit &&
+	shit init --separate-shit-dir ../realshitdir
 	) &&
-	echo "gitdir: $(pwd)/realgitdir" >expected &&
-	test_cmp expected newdir/.git &&
+	echo "shitdir: $(pwd)/realshitdir" >expected &&
+	test_cmp expected newdir/.shit &&
 	test_cmp expected newdir/here &&
-	test_path_is_dir realgitdir/refs
+	test_path_is_dir realshitdir/refs
 '
 
-sep_git_dir_worktree ()  {
+sep_shit_dir_worktree ()  {
 	test_when_finished "rm -rf mainwt linkwt seprepo" &&
-	git init mainwt &&
+	shit init mainwt &&
 	test_commit -C mainwt gumby &&
-	git -C mainwt worktree add --detach ../linkwt &&
-	git -C "$1" init --separate-git-dir ../seprepo &&
-	git -C mainwt rev-parse --git-common-dir >expect &&
-	git -C linkwt rev-parse --git-common-dir >actual &&
+	shit -C mainwt worktree add --detach ../linkwt &&
+	shit -C "$1" init --separate-shit-dir ../seprepo &&
+	shit -C mainwt rev-parse --shit-common-dir >expect &&
+	shit -C linkwt rev-parse --shit-common-dir >actual &&
 	test_cmp expect actual
 }
 
-test_expect_success 're-init to move gitdir with linked worktrees' '
-	sep_git_dir_worktree mainwt
+test_expect_success 're-init to move shitdir with linked worktrees' '
+	sep_shit_dir_worktree mainwt
 '
 
-test_expect_success 're-init to move gitdir within linked worktree' '
-	sep_git_dir_worktree linkwt
+test_expect_success 're-init to move shitdir within linked worktree' '
+	sep_shit_dir_worktree linkwt
 '
 
-test_expect_success MINGW '.git hidden' '
+test_expect_success MINGW '.shit hidden' '
 	rm -rf newdir &&
 	(
-		sane_unset GIT_DIR GIT_WORK_TREE &&
+		sane_unset shit_DIR shit_WORK_TREE &&
 		mkdir newdir &&
 		cd newdir &&
-		git init &&
-		test_path_is_hidden .git
+		shit init &&
+		test_path_is_hidden .shit
 	) &&
-	check_config newdir/.git false unset
+	check_config newdir/.shit false unset
 '
 
-test_expect_success MINGW 'bare git dir not hidden' '
+test_expect_success MINGW 'bare shit dir not hidden' '
 	rm -rf newdir &&
 	(
-		sane_unset GIT_DIR GIT_WORK_TREE GIT_CONFIG &&
+		sane_unset shit_DIR shit_WORK_TREE shit_CONFIG &&
 		mkdir newdir &&
 		cd newdir &&
-		git --bare init
+		shit --bare init
 	) &&
 	! is_hidden newdir
 '
@@ -476,120 +476,120 @@ test_expect_success MINGW 'bare git dir not hidden' '
 test_expect_success 'remote init from does not use config from cwd' '
 	rm -rf newdir &&
 	test_config core.logallrefupdates true &&
-	git init newdir &&
+	shit init newdir &&
 	echo true >expect &&
-	git -C newdir config --bool core.logallrefupdates >actual &&
+	shit -C newdir config --bool core.logallrefupdates >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 're-init from a linked worktree' '
-	git init main-worktree &&
+	shit init main-worktree &&
 	(
 		cd main-worktree &&
 		test_commit first &&
-		git worktree add ../linked-worktree &&
-		mv .git/info/exclude expected-exclude &&
-		cp .git/config expected-config &&
-		find .git/worktrees -print | sort >expected &&
-		git -C ../linked-worktree init &&
-		test_cmp expected-exclude .git/info/exclude &&
-		test_cmp expected-config .git/config &&
-		find .git/worktrees -print | sort >actual &&
+		shit worktree add ../linked-worktree &&
+		mv .shit/info/exclude expected-exclude &&
+		cp .shit/config expected-config &&
+		find .shit/worktrees -print | sort >expected &&
+		shit -C ../linked-worktree init &&
+		test_cmp expected-exclude .shit/info/exclude &&
+		test_cmp expected-config .shit/config &&
+		find .shit/worktrees -print | sort >actual &&
 		test_cmp expected actual
 	)
 '
 
-test_expect_success 'init honors GIT_DEFAULT_HASH' '
-	GIT_DEFAULT_HASH=sha1 git init sha1 &&
-	git -C sha1 rev-parse --show-object-format >actual &&
+test_expect_success 'init honors shit_DEFAULT_HASH' '
+	shit_DEFAULT_HASH=sha1 shit init sha1 &&
+	shit -C sha1 rev-parse --show-object-format >actual &&
 	echo sha1 >expected &&
 	test_cmp expected actual &&
-	GIT_DEFAULT_HASH=sha256 git init sha256 &&
-	git -C sha256 rev-parse --show-object-format >actual &&
+	shit_DEFAULT_HASH=sha256 shit init sha256 &&
+	shit -C sha256 rev-parse --show-object-format >actual &&
 	echo sha256 >expected &&
 	test_cmp expected actual
 '
 
 test_expect_success 'init honors --object-format' '
-	git init --object-format=sha1 explicit-sha1 &&
-	git -C explicit-sha1 rev-parse --show-object-format >actual &&
+	shit init --object-format=sha1 explicit-sha1 &&
+	shit -C explicit-sha1 rev-parse --show-object-format >actual &&
 	echo sha1 >expected &&
 	test_cmp expected actual &&
-	git init --object-format=sha256 explicit-sha256 &&
-	git -C explicit-sha256 rev-parse --show-object-format >actual &&
+	shit init --object-format=sha256 explicit-sha256 &&
+	shit -C explicit-sha256 rev-parse --show-object-format >actual &&
 	echo sha256 >expected &&
 	test_cmp expected actual
 '
 
 test_expect_success 'extensions.objectFormat is not allowed with repo version 0' '
-	git init --object-format=sha256 explicit-v0 &&
-	git -C explicit-v0 config core.repositoryformatversion 0 &&
-	test_must_fail git -C explicit-v0 rev-parse --show-object-format
+	shit init --object-format=sha256 explicit-v0 &&
+	shit -C explicit-v0 config core.repositoryformatversion 0 &&
+	test_must_fail shit -C explicit-v0 rev-parse --show-object-format
 '
 
 test_expect_success 'init rejects attempts to initialize with different hash' '
-	test_must_fail git -C sha1 init --object-format=sha256 &&
-	test_must_fail git -C sha256 init --object-format=sha1
+	test_must_fail shit -C sha1 init --object-format=sha256 &&
+	test_must_fail shit -C sha256 init --object-format=sha1
 '
 
 test_expect_success DEFAULT_REPO_FORMAT 'extensions.refStorage is not allowed with repo version 0' '
 	test_when_finished "rm -rf refstorage" &&
-	git init refstorage &&
-	git -C refstorage config extensions.refStorage files &&
-	test_must_fail git -C refstorage rev-parse 2>err &&
+	shit init refstorage &&
+	shit -C refstorage config extensions.refStorage files &&
+	test_must_fail shit -C refstorage rev-parse 2>err &&
 	grep "repo version is 0, but v1-only extension found" err
 '
 
 test_expect_success DEFAULT_REPO_FORMAT 'extensions.refStorage with files backend' '
 	test_when_finished "rm -rf refstorage" &&
-	git init refstorage &&
-	git -C refstorage config core.repositoryformatversion 1 &&
-	git -C refstorage config extensions.refStorage files &&
+	shit init refstorage &&
+	shit -C refstorage config core.repositoryformatversion 1 &&
+	shit -C refstorage config extensions.refStorage files &&
 	test_commit -C refstorage A &&
-	git -C refstorage rev-parse --verify HEAD
+	shit -C refstorage rev-parse --verify HEAD
 '
 
 test_expect_success DEFAULT_REPO_FORMAT 'extensions.refStorage with unknown backend' '
 	test_when_finished "rm -rf refstorage" &&
-	git init refstorage &&
-	git -C refstorage config core.repositoryformatversion 1 &&
-	git -C refstorage config extensions.refStorage garbage &&
-	test_must_fail git -C refstorage rev-parse 2>err &&
+	shit init refstorage &&
+	shit -C refstorage config core.repositoryformatversion 1 &&
+	shit -C refstorage config extensions.refStorage garbage &&
+	test_must_fail shit -C refstorage rev-parse 2>err &&
 	grep "invalid value for ${SQ}extensions.refstorage${SQ}: ${SQ}garbage${SQ}" err
 '
 
-test_expect_success DEFAULT_REPO_FORMAT 'init with GIT_DEFAULT_REF_FORMAT=files' '
+test_expect_success DEFAULT_REPO_FORMAT 'init with shit_DEFAULT_REF_FORMAT=files' '
 	test_when_finished "rm -rf refformat" &&
-	GIT_DEFAULT_REF_FORMAT=files git init refformat &&
+	shit_DEFAULT_REF_FORMAT=files shit init refformat &&
 	echo 0 >expect &&
-	git -C refformat config core.repositoryformatversion >actual &&
+	shit -C refformat config core.repositoryformatversion >actual &&
 	test_cmp expect actual &&
-	test_must_fail git -C refformat config extensions.refstorage
+	test_must_fail shit -C refformat config extensions.refstorage
 '
 
-test_expect_success 'init with GIT_DEFAULT_REF_FORMAT=garbage' '
+test_expect_success 'init with shit_DEFAULT_REF_FORMAT=garbage' '
 	test_when_finished "rm -rf refformat" &&
 	cat >expect <<-EOF &&
 	fatal: unknown ref storage format ${SQ}garbage${SQ}
 	EOF
-	test_must_fail env GIT_DEFAULT_REF_FORMAT=garbage git init refformat 2>err &&
+	test_must_fail env shit_DEFAULT_REF_FORMAT=garbage shit init refformat 2>err &&
 	test_cmp expect err
 '
 
 test_expect_success 'init with --ref-format=files' '
 	test_when_finished "rm -rf refformat" &&
-	git init --ref-format=files refformat &&
+	shit init --ref-format=files refformat &&
 	echo files >expect &&
-	git -C refformat rev-parse --show-ref-format >actual &&
+	shit -C refformat rev-parse --show-ref-format >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 're-init with same format' '
 	test_when_finished "rm -rf refformat" &&
-	git init --ref-format=files refformat &&
-	git init --ref-format=files refformat &&
+	shit init --ref-format=files refformat &&
+	shit init --ref-format=files refformat &&
 	echo files >expect &&
-	git -C refformat rev-parse --show-ref-format >actual &&
+	shit -C refformat rev-parse --show-ref-format >actual &&
 	test_cmp expect actual
 '
 
@@ -598,55 +598,55 @@ test_expect_success 'init with --ref-format=garbage' '
 	cat >expect <<-EOF &&
 	fatal: unknown ref storage format ${SQ}garbage${SQ}
 	EOF
-	test_must_fail git init --ref-format=garbage refformat 2>err &&
+	test_must_fail shit init --ref-format=garbage refformat 2>err &&
 	test_cmp expect err
 '
 
 test_expect_success MINGW 'core.hidedotfiles = false' '
-	git config --global core.hidedotfiles false &&
+	shit config --global core.hidedotfiles false &&
 	rm -rf newdir &&
 	mkdir newdir &&
 	(
-		sane_unset GIT_DIR GIT_WORK_TREE GIT_CONFIG &&
-		git -C newdir init
+		sane_unset shit_DIR shit_WORK_TREE shit_CONFIG &&
+		shit -C newdir init
 	) &&
-	! is_hidden newdir/.git
+	! is_hidden newdir/.shit
 '
 
 test_expect_success MINGW 'redirect std handles' '
-	GIT_REDIRECT_STDOUT=output.txt git rev-parse --git-dir &&
-	test .git = "$(cat output.txt)" &&
-	test -z "$(GIT_REDIRECT_STDOUT=off git rev-parse --git-dir)" &&
+	shit_REDIRECT_STDOUT=output.txt shit rev-parse --shit-dir &&
+	test .shit = "$(cat output.txt)" &&
+	test -z "$(shit_REDIRECT_STDOUT=off shit rev-parse --shit-dir)" &&
 	test_must_fail env \
-		GIT_REDIRECT_STDOUT=output.txt \
-		GIT_REDIRECT_STDERR="2>&1" \
-		git rev-parse --git-dir --verify refs/invalid &&
-	grep "^\\.git\$" output.txt &&
+		shit_REDIRECT_STDOUT=output.txt \
+		shit_REDIRECT_STDERR="2>&1" \
+		shit rev-parse --shit-dir --verify refs/invalid &&
+	grep "^\\.shit\$" output.txt &&
 	grep "Needed a single revision" output.txt
 '
 
 test_expect_success '--initial-branch' '
-	git init --initial-branch=hello initial-branch-option &&
-	git -C initial-branch-option symbolic-ref HEAD >actual &&
+	shit init --initial-branch=hello initial-branch-option &&
+	shit -C initial-branch-option symbolic-ref HEAD >actual &&
 	echo refs/heads/hello >expect &&
 	test_cmp expect actual &&
 
 	: re-initializing should not change the branch name &&
-	git init --initial-branch=ignore initial-branch-option 2>err &&
+	shit init --initial-branch=ignore initial-branch-option 2>err &&
 	test_grep "ignored --initial-branch" err &&
-	git -C initial-branch-option symbolic-ref HEAD >actual &&
+	shit -C initial-branch-option symbolic-ref HEAD >actual &&
 	grep hello actual
 '
 
 test_expect_success 'overridden default initial branch name (config)' '
 	test_config_global init.defaultBranch nmb &&
-	GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME= git init initial-branch-config &&
-	git -C initial-branch-config symbolic-ref HEAD >actual &&
+	shit_TEST_DEFAULT_INITIAL_BRANCH_NAME= shit init initial-branch-config &&
+	shit -C initial-branch-config symbolic-ref HEAD >actual &&
 	grep nmb actual
 '
 
 test_expect_success 'advice on unconfigured init.defaultBranch' '
-	GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME= git -c color.advice=always \
+	shit_TEST_DEFAULT_INITIAL_BRANCH_NAME= shit -c color.advice=always \
 		init unconfigured-default-branch-name 2>err &&
 	test_decode_color <err >decoded &&
 	test_grep "<YELLOW>hint: " decoded
@@ -654,27 +654,27 @@ test_expect_success 'advice on unconfigured init.defaultBranch' '
 
 test_expect_success 'overridden default main branch name (env)' '
 	test_config_global init.defaultBranch nmb &&
-	GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=env git init main-branch-env &&
-	git -C main-branch-env symbolic-ref HEAD >actual &&
+	shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=env shit init main-branch-env &&
+	shit -C main-branch-env symbolic-ref HEAD >actual &&
 	grep env actual
 '
 
 test_expect_success 'invalid default branch name' '
-	test_must_fail env GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME="with space" \
-		git init initial-branch-invalid 2>err &&
+	test_must_fail env shit_TEST_DEFAULT_INITIAL_BRANCH_NAME="with space" \
+		shit init initial-branch-invalid 2>err &&
 	test_grep "invalid branch name" err
 '
 
 test_expect_success 'branch -m with the initial branch' '
-	git init rename-initial &&
-	git -C rename-initial branch -m renamed &&
+	shit init rename-initial &&
+	shit -C rename-initial branch -m renamed &&
 	echo renamed >expect &&
-	git -C rename-initial symbolic-ref --short HEAD >actual &&
+	shit -C rename-initial symbolic-ref --short HEAD >actual &&
 	test_cmp expect actual &&
 
-	git -C rename-initial branch -m renamed again &&
+	shit -C rename-initial branch -m renamed again &&
 	echo again >expect &&
-	git -C rename-initial symbolic-ref --short HEAD >actual &&
+	shit -C rename-initial symbolic-ref --short HEAD >actual &&
 	test_cmp expect actual
 '
 

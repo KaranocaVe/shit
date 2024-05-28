@@ -9,18 +9,18 @@
  *
  * as www.google.com puts it.
  *
- * This port has been properly assigned for git use by IANA:
- * git (Assigned-9418) [I06-050728-0001].
+ * This port has been properly assigned for shit use by IANA:
+ * shit (Assigned-9418) [I06-050728-0001].
  *
- *	git  9418/tcp   git pack transfer service
- *	git  9418/udp   git pack transfer service
+ *	shit  9418/tcp   shit pack transfer service
+ *	shit  9418/udp   shit pack transfer service
  *
  * with Linus Torvalds <torvalds@osdl.org> as the point of
  * contact. September 2005.
  *
  * See https://www.iana.org/assignments/port-numbers
  */
-#define DEFAULT_GIT_PORT 9418
+#define DEFAULT_shit_PORT 9418
 
 enum protocol_version {
 	protocol_unknown_version = -1,
@@ -39,7 +39,7 @@ enum protocol_version get_protocol_version_config(void);
 
 /*
  * Used by a server to determine which protocol version should be used based on
- * a client's request, communicated via the 'GIT_PROTOCOL' environment variable
+ * a client's request, communicated via the 'shit_PROTOCOL' environment variable
  * by setting appropriate values for the key 'version'.  If a client doesn't
  * request a particular protocol version, a default of 'protocol_v0' will be
  * used.

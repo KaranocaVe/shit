@@ -12,29 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BUILD_LABEL=$(shell cut -d" " -f3 ../../GIT-VERSION-FILE)
+BUILD_LABEL=$(shell cut -d" " -f3 ../../shit-VERSION-FILE)
 TAR_OUT=$(shell go env GOOS)_$(shell go env GOARCH).tar.gz
 
-all: git-remote-persistent-https git-remote-persistent-https--proxy \
-	git-remote-persistent-http
+all: shit-remote-persistent-https shit-remote-persistent-https--proxy \
+	shit-remote-persistent-http
 
-git-remote-persistent-https--proxy: git-remote-persistent-https
-	ln -f -s git-remote-persistent-https git-remote-persistent-https--proxy
+shit-remote-persistent-https--proxy: shit-remote-persistent-https
+	ln -f -s shit-remote-persistent-https shit-remote-persistent-https--proxy
 
-git-remote-persistent-http: git-remote-persistent-https
-	ln -f -s git-remote-persistent-https git-remote-persistent-http
+shit-remote-persistent-http: shit-remote-persistent-https
+	ln -f -s shit-remote-persistent-https shit-remote-persistent-http
 
-git-remote-persistent-https:
+shit-remote-persistent-https:
 	case $$(go version) in \
 	"go version go"1.[0-5].*) EQ=" " ;; *) EQ="=" ;; esac && \
-	go build -o git-remote-persistent-https \
+	go build -o shit-remote-persistent-https \
 		-ldflags "-X main._BUILD_EMBED_LABEL$${EQ}$(BUILD_LABEL)"
 
 clean:
-	rm -f git-remote-persistent-http* *.tar.gz
+	rm -f shit-remote-persistent-http* *.tar.gz
 
 tar: clean all
-	@chmod 555 git-remote-persistent-https
-	@tar -czf $(TAR_OUT) git-remote-persistent-http* README LICENSE
+	@chmod 555 shit-remote-persistent-https
+	@tar -czf $(TAR_OUT) shit-remote-persistent-http* README LICENSE
 	@echo
 	@echo "Created $(TAR_OUT)"

@@ -1,22 +1,22 @@
-gitattributes(5)
+shitattributes(5)
 ================
 
 NAME
 ----
-gitattributes - Defining attributes per path
+shitattributes - Defining attributes per path
 
 SYNOPSIS
 --------
-$GIT_DIR/info/attributes, .gitattributes
+$shit_DIR/info/attributes, .shitattributes
 
 
 DESCRIPTION
 -----------
 
-A `gitattributes` file is a simple text file that gives
+A `shitattributes` file is a simple text file that gives
 `attributes` to pathnames.
 
-Each line in `gitattributes` file is of form:
+Each line in `shitattributes` file is of form:
 
 	pattern attr1 attr2 ...
 
@@ -59,7 +59,7 @@ overrides an earlier line.  This overriding is done per
 attribute.
 
 The rules by which the pattern matches paths are the same as in
-`.gitignore` files (see linkgit:gitignore[5]), with a few exceptions:
+`.shitignore` files (see linkshit:shitignore[5]), with a few exceptions:
 
   - negative patterns are forbidden
 
@@ -67,33 +67,33 @@ The rules by which the pattern matches paths are the same as in
     inside that directory (so using the trailing-slash `path/` syntax is
     pointless in an attributes file; use `path/**` instead)
 
-When deciding what attributes are assigned to a path, Git
-consults `$GIT_DIR/info/attributes` file (which has the highest
-precedence), `.gitattributes` file in the same directory as the
+When deciding what attributes are assigned to a path, shit
+consults `$shit_DIR/info/attributes` file (which has the highest
+precedence), `.shitattributes` file in the same directory as the
 path in question, and its parent directories up to the toplevel of the
-work tree (the further the directory that contains `.gitattributes`
+work tree (the further the directory that contains `.shitattributes`
 is from the path in question, the lower its precedence). Finally
 global and system-wide files are considered (they have the lowest
 precedence).
 
-When the `.gitattributes` file is missing from the work tree, the
+When the `.shitattributes` file is missing from the work tree, the
 path in the index is used as a fall-back.  During checkout process,
-`.gitattributes` in the index is used and then the file in the
+`.shitattributes` in the index is used and then the file in the
 working tree is used as a fall-back.
 
 If you wish to affect only a single repository (i.e., to assign
 attributes to files that are particular to
 one user's workflow for that repository), then
-attributes should be placed in the `$GIT_DIR/info/attributes` file.
+attributes should be placed in the `$shit_DIR/info/attributes` file.
 Attributes which should be version-controlled and distributed to other
 repositories (i.e., attributes of interest to all users) should go into
-`.gitattributes` files. Attributes that should affect all repositories
+`.shitattributes` files. Attributes that should affect all repositories
 for a single user should be placed in a file specified by the
-`core.attributesFile` configuration option (see linkgit:git-config[1]).
-Its default value is $XDG_CONFIG_HOME/git/attributes. If $XDG_CONFIG_HOME
-is either not set or empty, $HOME/.config/git/attributes is used instead.
+`core.attributesFile` configuration option (see linkshit:shit-config[1]).
+Its default value is $XDG_CONFIG_HOME/shit/attributes. If $XDG_CONFIG_HOME
+is either not set or empty, $HOME/.config/shit/attributes is used instead.
 Attributes for all users on a system should be placed in the
-`$(prefix)/etc/gitattributes` file.
+`$(prefix)/etc/shitattributes` file.
 
 Sometimes you would need to override a setting of an attribute
 for a path to `Unspecified` state.  This can be done by listing
@@ -111,14 +111,14 @@ trigger a warning.
 ~~~~~~~~~~~~~~~~~~~~
 This attribute is for filtering files by their file bit modes (40000,
 120000, 160000, 100755, 100644). e.g. ':(attr:builtin_objectmode=160000)'.
-You may also check these values with `git check-attr builtin_objectmode -- <file>`.
-If the object is not in the index `git check-attr --cached` will return unspecified.
+You may also check these values with `shit check-attr builtin_objectmode -- <file>`.
+If the object is not in the index `shit check-attr --cached` will return unspecified.
 
 
 EFFECTS
 -------
 
-Certain operations by Git can be influenced by assigning
+Certain operations by shit can be influenced by assigning
 particular attributes to a path.  Currently, the following
 operations are attributes-aware.
 
@@ -127,10 +127,10 @@ Checking-out and checking-in
 
 These attributes affect how the contents stored in the
 repository are copied to the working tree files when commands
-such as 'git switch', 'git checkout'  and 'git merge' run.
+such as 'shit switch', 'shit checkout'  and 'shit merge' run.
 They also affect how
-Git stores the contents you prepare in the working tree in the
-repository upon 'git add' and 'git commit'.
+shit stores the contents you prepare in the working tree in the
+repository upon 'shit add' and 'shit commit'.
 
 `text`
 ^^^^^^
@@ -139,7 +139,7 @@ This attribute marks the path as a text file, which enables end-of-line
 conversion: When a matching file is added to the index, the file's line
 endings are normalized to LF in the index.  Conversely, when the file is
 copied from the index to the working directory, its line endings may be
-converted from LF to CRLF depending on the `eol` attribute, the Git
+converted from LF to CRLF depending on the `eol` attribute, the shit
 config, and the platform (see explanation of `eol` below).
 
 Set::
@@ -147,28 +147,28 @@ Set::
 	Setting the `text` attribute on a path enables end-of-line
 	conversion on checkin and checkout as described above.  Line endings
 	are normalized to LF in the index every time the file is checked in,
-	even if the file was previously added to Git with CRLF line endings.
+	even if the file was previously added to shit with CRLF line endings.
 
 Unset::
 
-	Unsetting the `text` attribute on a path tells Git not to
+	Unsetting the `text` attribute on a path tells shit not to
 	attempt any end-of-line conversion upon checkin or checkout.
 
 Set to string value "auto"::
 
-	When `text` is set to "auto", Git decides by itself whether the file
+	When `text` is set to "auto", shit decides by itself whether the file
 	is text or binary.  If it is text and the file was not already in
-	Git with CRLF endings, line endings are converted on checkin and
+	shit with CRLF endings, line endings are converted on checkin and
 	checkout as described above.  Otherwise, no conversion is done on
 	checkin or checkout.
 
 Unspecified::
 
-	If the `text` attribute is unspecified, Git uses the
+	If the `text` attribute is unspecified, shit uses the
 	`core.autocrlf` configuration variable to determine if the
 	file should be converted.
 
-Any other value causes Git to act as if `text` has been left
+Any other value causes shit to act as if `text` has been left
 unspecified.
 
 `eol`
@@ -194,7 +194,7 @@ Unspecified::
 	If the `eol` attribute is unspecified for a file, its line endings
 	in the working directory are determined by the `core.autocrlf` or
 	`core.eol` configuration variable (see the definitions of those
-	options in linkgit:git-config[1]).  If `text` is set but neither of
+	options in linkshit:shit-config[1]).  If `text` is set but neither of
 	those variables is, the default is `eol=crlf` on Windows and
 	`eol=lf` on all other platforms.
 
@@ -213,7 +213,7 @@ crlf=input	eol=lf
 End-of-line conversion
 ^^^^^^^^^^^^^^^^^^^^^^
 
-While Git normally leaves file contents alone, it can be configured to
+While shit normally leaves file contents alone, it can be configured to
 normalize line endings to LF in the repository and, optionally, to
 convert them to CRLF when files are checked out.
 
@@ -241,7 +241,7 @@ the repository have their line endings normalized, you can set the
 
 The attributes allow a fine-grained control, how the line endings
 are converted.
-Here is an example that will make Git normalize .txt, .vcproj and .sh
+Here is an example that will make shit normalize .txt, .vcproj and .sh
 files, ensure that .vcproj files have CRLF and .sh files have LF in
 the working directory, and prevent .jpg files from being normalized
 regardless of their content.
@@ -255,73 +255,73 @@ regardless of their content.
 ------------------------
 
 NOTE: When `text=auto` conversion is enabled in a cross-platform
-project using push and pull to a central repository the text files
+project using defecate and poop to a central repository the text files
 containing CRLFs should be normalized.
 
 From a clean working directory:
 
 -------------------------------------------------
-$ echo "* text=auto" >.gitattributes
-$ git add --renormalize .
-$ git status        # Show files that will be normalized
-$ git commit -m "Introduce end-of-line normalization"
+$ echo "* text=auto" >.shitattributes
+$ shit add --renormalize .
+$ shit status        # Show files that will be normalized
+$ shit commit -m "Introduce end-of-line normalization"
 -------------------------------------------------
 
-If any files that should not be normalized show up in 'git status',
-unset their `text` attribute before running 'git add -u'.
+If any files that should not be normalized show up in 'shit status',
+unset their `text` attribute before running 'shit add -u'.
 
 ------------------------
 manual.pdf	-text
 ------------------------
 
-Conversely, text files that Git does not detect can have normalization
+Conversely, text files that shit does not detect can have normalization
 enabled manually.
 
 ------------------------
 weirdchars.txt	text
 ------------------------
 
-If `core.safecrlf` is set to "true" or "warn", Git verifies if
+If `core.safecrlf` is set to "true" or "warn", shit verifies if
 the conversion is reversible for the current setting of
-`core.autocrlf`.  For "true", Git rejects irreversible
-conversions; for "warn", Git only prints a warning but accepts
+`core.autocrlf`.  For "true", shit rejects irreversible
+conversions; for "warn", shit only prints a warning but accepts
 an irreversible conversion.  The safety triggers to prevent such
 a conversion done to the files in the work tree, but there are a
 few exceptions.  Even though...
 
-- 'git add' itself does not touch the files in the work tree, the
+- 'shit add' itself does not touch the files in the work tree, the
   next checkout would, so the safety triggers;
 
-- 'git apply' to update a text file with a patch does touch the files
+- 'shit apply' to update a text file with a patch does touch the files
   in the work tree, but the operation is about text files and CRLF
   conversion is about fixing the line ending inconsistencies, so the
   safety does not trigger;
 
-- 'git diff' itself does not touch the files in the work tree, it is
-  often run to inspect the changes you intend to next 'git add'.  To
+- 'shit diff' itself does not touch the files in the work tree, it is
+  often run to inspect the changes you intend to next 'shit add'.  To
   catch potential problems early, safety triggers.
 
 
 `working-tree-encoding`
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Git recognizes files encoded in ASCII or one of its supersets (e.g.
+shit recognizes files encoded in ASCII or one of its supersets (e.g.
 UTF-8, ISO-8859-1, ...) as text files. Files encoded in certain other
 encodings (e.g. UTF-16) are interpreted as binary and consequently
-built-in Git text processing tools (e.g. 'git diff') as well as most Git
+built-in shit text processing tools (e.g. 'shit diff') as well as most shit
 web front ends do not visualize the contents of these files by default.
 
-In these cases you can tell Git the encoding of a file in the working
+In these cases you can tell shit the encoding of a file in the working
 directory with the `working-tree-encoding` attribute. If a file with this
-attribute is added to Git, then Git re-encodes the content from the
-specified encoding to UTF-8. Finally, Git stores the UTF-8 encoded
+attribute is added to shit, then shit re-encodes the content from the
+specified encoding to UTF-8. Finally, shit stores the UTF-8 encoded
 content in its internal data structure (called "the index"). On checkout
 the content is re-encoded back to the specified encoding.
 
 Please note that using the `working-tree-encoding` attribute may have a
 number of pitfalls:
 
-- Alternative Git implementations (e.g. JGit or libgit2) and older Git
+- Alternative shit implementations (e.g. Jshit or libshit2) and older shit
   versions (as of March 2018) do not support the `working-tree-encoding`
   attribute. If you decide to use the `working-tree-encoding` attribute
   in your repository, then it is strongly recommended to ensure that all
@@ -330,12 +330,12 @@ number of pitfalls:
 For example, Microsoft Visual Studio resources files (`*.rc`) or
 PowerShell script files (`*.ps1`) are sometimes encoded in UTF-16.
 If you declare `*.ps1` as files as UTF-16 and you add `foo.ps1` with
-a `working-tree-encoding` enabled Git client, then `foo.ps1` will be
+a `working-tree-encoding` enabled shit client, then `foo.ps1` will be
 stored as UTF-8 internally. A client without `working-tree-encoding`
 support will checkout `foo.ps1` as UTF-8 encoded file. This will
 typically cause trouble for the users of this file.
 +
-If a Git client that does not support the `working-tree-encoding`
+If a shit client that does not support the `working-tree-encoding`
 attribute adds a new file `bar.ps1`, then `bar.ps1` will be
 stored "as-is" internally (in this example probably as UTF-16).
 A client with `working-tree-encoding` support will interpret the
@@ -345,20 +345,20 @@ That operation will fail and cause an error.
 - Reencoding content to non-UTF encodings can cause errors as the
   conversion might not be UTF-8 round trip safe. If you suspect your
   encoding to not be round trip safe, then add it to
-  `core.checkRoundtripEncoding` to make Git check the round trip
-  encoding (see linkgit:git-config[1]). SHIFT-JIS (Japanese character
+  `core.checkRoundtripEncoding` to make shit check the round trip
+  encoding (see linkshit:shit-config[1]). SHIFT-JIS (Japanese character
   set) is known to have round trip issues with UTF-8 and is checked by
   default.
 
 - Reencoding content requires resources that might slow down certain
-  Git operations (e.g 'git checkout' or 'git add').
+  shit operations (e.g 'shit checkout' or 'shit add').
 
 Use the `working-tree-encoding` attribute only if you cannot store a file
-in UTF-8 encoding and if you want Git to be able to process the content
+in UTF-8 encoding and if you want shit to be able to process the content
 as text.
 
 As an example, use the following attributes if your '*.ps1' files are
-UTF-16 encoded with byte order mark (BOM) and you want Git to perform
+UTF-16 encoded with byte order mark (BOM) and you want shit to perform
 automatic line ending conversion based on your platform.
 
 ------------------------
@@ -366,7 +366,7 @@ automatic line ending conversion based on your platform.
 ------------------------
 
 Use the following attributes if your '*.ps1' files are UTF-16 little
-endian encoded without BOM and you want Git to use Windows line endings
+endian encoded without BOM and you want shit to use Windows line endings
 in the working directory (use `UTF-16LE-BOM` instead of `UTF-16LE` if
 you want UTF-16 little endian with BOM).
 Please note, it is highly recommended to
@@ -395,7 +395,7 @@ file foo.ps1
 `ident`
 ^^^^^^^
 
-When the attribute `ident` is set for a path, Git replaces
+When the attribute `ident` is set for a path, shit replaces
 `$Id$` in the blob object with `$Id:`, followed by the
 40-character hexadecimal blob object name, followed by a dollar
 sign `$` upon checkout.  Any byte sequence that begins with
@@ -417,9 +417,9 @@ output is used to update the worktree file.  Similarly, the
 `clean` command is used to convert the contents of worktree file
 upon checkin. By default these commands process only a single
 blob and terminate. If a long running `process` filter is used
-in place of `clean` and/or `smudge` filters, then Git can process
+in place of `clean` and/or `smudge` filters, then shit can process
 all blobs with a single filter command invocation for the entire
-life of a single Git command, for example `git add --all`. If a
+life of a single shit command, for example `shit add --all`. If a
 long running `process` filter is configured then it always takes
 precedence over a configured single blob filter. See section
 below for the description of the protocol used to communicate with
@@ -434,7 +434,7 @@ the appropriate filter program, the project should still be usable.
 
 Another use of the content filtering is to store the content that cannot
 be directly used in the repository (e.g. a UUID that refers to the true
-content stored outside Git, or an encrypted content) and turn it into a
+content stored outside shit, or an encrypted content) and turn it into a
 usable form upon checkout (e.g. download the external content, or decrypt
 the encrypted content).
 
@@ -448,9 +448,9 @@ into a usable content by setting the filter.<driver>.required configuration
 variable to `true`.
 
 Note: Whenever the clean filter is changed, the repo should be renormalized:
-$ git add --renormalize .
+$ shit add --renormalize .
 
-For example, in .gitattributes, you would assign the `filter`
+For example, in .shitattributes, you would assign the `filter`
 attribute for paths.
 
 ------------------------
@@ -458,7 +458,7 @@ attribute for paths.
 ------------------------
 
 Then you would define a "filter.indent.clean" and "filter.indent.smudge"
-configuration in your .git/config to specify a pair of commands to
+configuration in your .shit/config to specify a pair of commands to
 modify the contents of C programs when the source files are checked
 in ("clean" is run) and checked out (no change is made because the
 command is "cat").
@@ -496,8 +496,8 @@ substitution.  For example:
 
 ------------------------
 [filter "p4"]
-	clean = git-p4-filter --clean %f
-	smudge = git-p4-filter --smudge %f
+	clean = shit-p4-filter --clean %f
+	smudge = shit-p4-filter --smudge %f
 ------------------------
 
 Note that "%f" is the name of the path that is being worked on. Depending
@@ -510,33 +510,33 @@ Long Running Filter Process
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If the filter command (a string value) is defined via
-`filter.<driver>.process` then Git can process all blobs with a
-single filter invocation for the entire life of a single Git
+`filter.<driver>.process` then shit can process all blobs with a
+single filter invocation for the entire life of a single shit
 command. This is achieved by using the long-running process protocol
 (described in technical/long-running-process-protocol.txt).
 
-When Git encounters the first file that needs to be cleaned or smudged,
+When shit encounters the first file that needs to be cleaned or smudged,
 it starts the filter and performs the handshake. In the handshake, the
-welcome message sent by Git is "git-filter-client", only version 2 is
+welcome message sent by shit is "shit-filter-client", only version 2 is
 supported, and the supported capabilities are "clean", "smudge", and
 "delay".
 
-Afterwards Git sends a list of "key=value" pairs terminated with
+Afterwards shit sends a list of "key=value" pairs terminated with
 a flush packet. The list will contain at least the filter command
 (based on the supported capabilities) and the pathname of the file
 to filter relative to the repository root. Right after the flush packet
-Git sends the content split in zero or more pkt-line packets and a
+shit sends the content split in zero or more pkt-line packets and a
 flush packet to terminate content. Please note, that the filter
 must not send any response before it received the content and the
 final flush packet. Also note that the "value" of a "key=value" pair
 can contain the "=" character whereas the key would never contain
 that character.
 ------------------------
-packet:          git> command=smudge
-packet:          git> pathname=path/testfile.dat
-packet:          git> 0000
-packet:          git> CONTENT
-packet:          git> 0000
+packet:          shit> command=smudge
+packet:          shit> pathname=path/testfile.dat
+packet:          shit> 0000
+packet:          shit> CONTENT
+packet:          shit> 0000
 ------------------------
 
 The filter is expected to respond with a list of "key=value" pairs
@@ -550,127 +550,127 @@ or keep the status as is with an empty list. Please note that the
 empty list must be terminated with a flush packet regardless.
 
 ------------------------
-packet:          git< status=success
-packet:          git< 0000
-packet:          git< SMUDGED_CONTENT
-packet:          git< 0000
-packet:          git< 0000  # empty list, keep "status=success" unchanged!
+packet:          shit< status=success
+packet:          shit< 0000
+packet:          shit< SMUDGED_CONTENT
+packet:          shit< 0000
+packet:          shit< 0000  # empty list, keep "status=success" unchanged!
 ------------------------
 
 If the result content is empty then the filter is expected to respond
 with a "success" status and a flush packet to signal the empty content.
 ------------------------
-packet:          git< status=success
-packet:          git< 0000
-packet:          git< 0000  # empty content!
-packet:          git< 0000  # empty list, keep "status=success" unchanged!
+packet:          shit< status=success
+packet:          shit< 0000
+packet:          shit< 0000  # empty content!
+packet:          shit< 0000  # empty list, keep "status=success" unchanged!
 ------------------------
 
 In case the filter cannot or does not want to process the content,
 it is expected to respond with an "error" status.
 ------------------------
-packet:          git< status=error
-packet:          git< 0000
+packet:          shit< status=error
+packet:          shit< 0000
 ------------------------
 
 If the filter experiences an error during processing, then it can
 send the status "error" after the content was (partially or
 completely) sent.
 ------------------------
-packet:          git< status=success
-packet:          git< 0000
-packet:          git< HALF_WRITTEN_ERRONEOUS_CONTENT
-packet:          git< 0000
-packet:          git< status=error
-packet:          git< 0000
+packet:          shit< status=success
+packet:          shit< 0000
+packet:          shit< HALF_WRITTEN_ERRONEOUS_CONTENT
+packet:          shit< 0000
+packet:          shit< status=error
+packet:          shit< 0000
 ------------------------
 
 In case the filter cannot or does not want to process the content
-as well as any future content for the lifetime of the Git process,
+as well as any future content for the lifetime of the shit process,
 then it is expected to respond with an "abort" status at any point
 in the protocol.
 ------------------------
-packet:          git< status=abort
-packet:          git< 0000
+packet:          shit< status=abort
+packet:          shit< 0000
 ------------------------
 
-Git neither stops nor restarts the filter process in case the
-"error"/"abort" status is set. However, Git sets its exit code
+shit neither stops nor restarts the filter process in case the
+"error"/"abort" status is set. However, shit sets its exit code
 according to the `filter.<driver>.required` flag, mimicking the
 behavior of the `filter.<driver>.clean` / `filter.<driver>.smudge`
 mechanism.
 
 If the filter dies during the communication or does not adhere to
-the protocol then Git will stop the filter process and restart it
+the protocol then shit will stop the filter process and restart it
 with the next file that needs to be processed. Depending on the
-`filter.<driver>.required` flag Git will interpret that as error.
+`filter.<driver>.required` flag shit will interpret that as error.
 
 Delay
 ^^^^^
 
-If the filter supports the "delay" capability, then Git can send the
+If the filter supports the "delay" capability, then shit can send the
 flag "can-delay" after the filter command and pathname. This flag
 denotes that the filter can delay filtering the current blob (e.g. to
 compensate network latencies) by responding with no content but with
 the status "delayed" and a flush packet.
 ------------------------
-packet:          git> command=smudge
-packet:          git> pathname=path/testfile.dat
-packet:          git> can-delay=1
-packet:          git> 0000
-packet:          git> CONTENT
-packet:          git> 0000
-packet:          git< status=delayed
-packet:          git< 0000
+packet:          shit> command=smudge
+packet:          shit> pathname=path/testfile.dat
+packet:          shit> can-delay=1
+packet:          shit> 0000
+packet:          shit> CONTENT
+packet:          shit> 0000
+packet:          shit< status=delayed
+packet:          shit< 0000
 ------------------------
 
 If the filter supports the "delay" capability then it must support the
-"list_available_blobs" command. If Git sends this command, then the
+"list_available_blobs" command. If shit sends this command, then the
 filter is expected to return a list of pathnames representing blobs
 that have been delayed earlier and are now available.
 The list must be terminated with a flush packet followed
 by a "success" status that is also terminated with a flush packet. If
 no blobs for the delayed paths are available, yet, then the filter is
 expected to block the response until at least one blob becomes
-available. The filter can tell Git that it has no more delayed blobs
+available. The filter can tell shit that it has no more delayed blobs
 by sending an empty list. As soon as the filter responds with an empty
-list, Git stops asking. All blobs that Git has not received at this
+list, shit stops asking. All blobs that shit has not received at this
 point are considered missing and will result in an error.
 
 ------------------------
-packet:          git> command=list_available_blobs
-packet:          git> 0000
-packet:          git< pathname=path/testfile.dat
-packet:          git< pathname=path/otherfile.dat
-packet:          git< 0000
-packet:          git< status=success
-packet:          git< 0000
+packet:          shit> command=list_available_blobs
+packet:          shit> 0000
+packet:          shit< pathname=path/testfile.dat
+packet:          shit< pathname=path/otherfile.dat
+packet:          shit< 0000
+packet:          shit< status=success
+packet:          shit< 0000
 ------------------------
 
-After Git received the pathnames, it will request the corresponding
+After shit received the pathnames, it will request the corresponding
 blobs again. These requests contain a pathname and an empty content
 section. The filter is expected to respond with the smudged content
 in the usual way as explained above.
 ------------------------
-packet:          git> command=smudge
-packet:          git> pathname=path/testfile.dat
-packet:          git> 0000
-packet:          git> 0000  # empty content!
-packet:          git< status=success
-packet:          git< 0000
-packet:          git< SMUDGED_CONTENT
-packet:          git< 0000
-packet:          git< 0000  # empty list, keep "status=success" unchanged!
+packet:          shit> command=smudge
+packet:          shit> pathname=path/testfile.dat
+packet:          shit> 0000
+packet:          shit> 0000  # empty content!
+packet:          shit< status=success
+packet:          shit< 0000
+packet:          shit< SMUDGED_CONTENT
+packet:          shit< 0000
+packet:          shit< 0000  # empty list, keep "status=success" unchanged!
 ------------------------
 
 Example
 ^^^^^^^
 
 A long running filter demo implementation can be found in
-`contrib/long-running-filter/example.pl` located in the Git
+`contrib/long-running-filter/example.pl` located in the shit
 core repository. If you develop your own long running filter
-process then the `GIT_TRACE_PACKET` environment variables can be
-very helpful for debugging (see linkgit:git[1]).
+process then the `shit_TRACE_PACKET` environment variables can be
+very helpful for debugging (see linkshit:shit[1]).
 
 Please note that you cannot use an existing `filter.<driver>.clean`
 or `filter.<driver>.smudge` command with `filter.<driver>.process`
@@ -700,7 +700,7 @@ clean/smudge filter or text/eol/ident attributes, merging anything
 where the attribute is not in place would normally cause merge
 conflicts.
 
-To prevent these unnecessary merge conflicts, Git can be told to run a
+To prevent these unnecessary merge conflicts, shit can be told to run a
 virtual check-out and check-in of all three stages of a file when
 resolving a three-way merge by setting the `merge.renormalize`
 configuration variable.  This prevents changes caused by check-in
@@ -720,11 +720,11 @@ Generating diff text
 `diff`
 ^^^^^^
 
-The attribute `diff` affects how Git generates diffs for particular
-files. It can tell Git whether to generate a textual patch for the path
+The attribute `diff` affects how shit generates diffs for particular
+files. It can tell shit whether to generate a textual patch for the path
 or to treat the path as a binary file.  It can also affect what line is
-shown on the hunk header `@@ -k,l +n,m @@` line, tell Git to use an
-external command to generate the diff, or ask Git to convert binary
+shown on the hunk header `@@ -k,l +n,m @@` line, tell shit to use an
+external command to generate the diff, or ask shit to convert binary
 files to a text format before generating the diff.
 
 Set::
@@ -752,29 +752,29 @@ String::
 	specify one or more options, as described in the following
 	section. The options for the diff driver "foo" are defined
 	by the configuration variables in the "diff.foo" section of the
-	Git config file.
+	shit config file.
 
 
 Defining an external diff driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The definition of a diff driver is done in `gitconfig`, not
-`gitattributes` file, so strictly speaking this manual page is a
+The definition of a diff driver is done in `shitconfig`, not
+`shitattributes` file, so strictly speaking this manual page is a
 wrong place to talk about it.  However...
 
 To define an external diff driver `jcdiff`, add a section to your
-`$GIT_DIR/config` file (or `$HOME/.gitconfig` file) like this:
+`$shit_DIR/config` file (or `$HOME/.shitconfig` file) like this:
 
 ----------------------------------------------------------------
 [diff "jcdiff"]
 	command = j-c-diff
 ----------------------------------------------------------------
 
-When Git needs to show you a diff for the path with `diff`
+When shit needs to show you a diff for the path with `diff`
 attribute set to `jcdiff`, it calls the command you specified
 with the above configuration, i.e. `j-c-diff`, with 7
-parameters, just like `GIT_EXTERNAL_DIFF` program is called.
-See linkgit:git[1] for details.
+parameters, just like `shit_EXTERNAL_DIFF` program is called.
+See linkshit:shit[1] for details.
 
 Setting the internal diff algorithm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -785,7 +785,7 @@ one may want to use the `minimal` diff algorithm for .json files, and the
 `histogram` for .c files, and so on without having to pass in the algorithm
 through the command line each time.
 
-First, in `.gitattributes`, assign the `diff` attribute for paths.
+First, in `.shitattributes`, assign the `diff` attribute for paths.
 
 ------------------------
 *.json diff=<name>
@@ -799,8 +799,8 @@ algorithm, choosing from `myers`, `patience`, `minimal`, or `histogram`.
   algorithm = histogram
 ----------------------------------------------------------------
 
-This diff algorithm applies to user facing diff output like git-diff(1),
-git-show(1) and is used for the `--stat` output as well. The merge machinery
+This diff algorithm applies to user facing diff output like shit-diff(1),
+shit-show(1) and is used for the `--stat` output as well. The merge machinery
 will not use the diff algorithm set through this method.
 
 NOTE: If `diff.<name>.command` is defined for path with the
@@ -822,7 +822,7 @@ matches what GNU 'diff -p' output uses.  This default selection however
 is not suited for some contents, and you can use a customized pattern
 to make a selection.
 
-First, in .gitattributes, you would assign the `diff` attribute
+First, in .shitattributes, you would assign the `diff` attribute
 for paths.
 
 ------------------------
@@ -832,7 +832,7 @@ for paths.
 Then, you would define a "diff.tex.xfuncname" configuration to
 specify a regular expression that matches a line that you would
 want to appear as the hunk header "TEXT". Add a section to your
-`$GIT_DIR/config` file (or `$HOME/.gitconfig` file) like this:
+`$shit_DIR/config` file (or `$HOME/.shitconfig` file) like this:
 
 ------------------------
 [diff "tex"]
@@ -848,7 +848,7 @@ backslash, and zero or more occurrences of `sub` followed by
 There are a few built-in patterns to make this easier, and `tex`
 is one of them, so you do not have to write the above in your
 configuration file (you still need to enable this with the
-attribute mechanism, via `.gitattributes`).  The following built in
+attribute mechanism, via `.shitattributes`).  The following built in
 patterns are available:
 
 - `ada` suitable for source code in the Ada language.
@@ -906,13 +906,13 @@ patterns are available:
 Customizing word diff
 ^^^^^^^^^^^^^^^^^^^^^
 
-You can customize the rules that `git diff --word-diff` uses to
+You can customize the rules that `shit diff --word-diff` uses to
 split words in a line, by specifying an appropriate regular expression
 in the "diff.*.wordRegex" configuration variable.  For example, in TeX
 a backslash followed by a sequence of letters forms a command, but
 several such commands can be run together without intervening
 whitespace.  To separate them, use a regular expression in your
-`$GIT_DIR/config` file (or `$HOME/.gitconfig` file) like this:
+`$shit_DIR/config` file (or `$HOME/.shitconfig` file) like this:
 
 ------------------------
 [diff "tex"]
@@ -941,7 +941,7 @@ resulting text on stdout.
 For example, to show the diff of the exif information of a
 file instead of the binary information (assuming you have the
 exif tool installed), add the following section to your
-`$GIT_DIR/config` file (or `$HOME/.gitconfig` file):
+`$shit_DIR/config` file (or `$HOME/.shitconfig` file):
 
 ------------------------
 [diff "jpg"]
@@ -952,8 +952,8 @@ NOTE: The text conversion is generally a one-way conversion;
 in this example, we lose the actual image contents and focus
 just on the text data. This means that diffs generated by
 textconv are _not_ suitable for applying. For this reason,
-only `git diff` and the `git log` family of commands (i.e.,
-log, whatchanged, show) will perform text conversion. `git
+only `shit diff` and the `shit log` family of commands (i.e.,
+log, whatchanged, show) will perform text conversion. `shit
 format-patch` will never generate this output. If you want to
 send somebody a text-converted diff of a binary file (e.g.,
 because it quickly conveys the changes you have made), you
@@ -961,7 +961,7 @@ should generate it separately and send it as a comment _in
 addition to_ the usual binary diff that you might send.
 
 Because text conversion can be slow, especially when doing a
-large number of them with `git log -p`, Git provides a mechanism
+large number of them with `shit log -p`, shit provides a mechanism
 to cache the output and use it in future diffs.  To enable
 caching, set the "cachetextconv" variable in your diff driver's
 config. For example:
@@ -974,11 +974,11 @@ config. For example:
 
 This will cache the result of running "exif" on each blob
 indefinitely. If you change the textconv config variable for a
-diff driver, Git will automatically invalidate the cache entries
+diff driver, shit will automatically invalidate the cache entries
 and re-run the textconv filter. If you want to invalidate the
 cache manually (e.g., because your version of "exif" was updated
 and now produces better output), you can remove the cache
-manually with `git update-ref -d refs/notes/textconv/jpg` (where
+manually with `shit update-ref -d refs/notes/textconv/jpg` (where
 "jpg" is the name of the diff driver, as in the example above).
 
 Choosing textconv versus external diff
@@ -995,7 +995,7 @@ output to resemble unified diff. You are free to locate and report
 changes in the most appropriate way for your data format.
 
 A textconv, by comparison, is much more limiting. You provide a
-transformation of the data into a line-oriented text format, and Git
+transformation of the data into a line-oriented text format, and shit
 uses its regular diff tools to generate the output. There are several
 advantages to choosing this method:
 
@@ -1004,18 +1004,18 @@ advantages to choosing this method:
    existing programs can be used as textconv filters (e.g., exif,
    odt2txt).
 
-2. Git diff features. By performing only the transformation step
-   yourself, you can still utilize many of Git's diff features,
+2. shit diff features. By performing only the transformation step
+   yourself, you can still utilize many of shit's diff features,
    including colorization, word-diff, and combined diffs for merges.
 
 3. Caching. Textconv caching can speed up repeated diffs, such as those
-   you might trigger by running `git log -p`.
+   you might trigger by running `shit log -p`.
 
 
 Marking files as binary
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Git usually guesses correctly whether a blob contains text or binary
+shit usually guesses correctly whether a blob contains text or binary
 data by examining the beginning of the contents. However, sometimes you
 may want to override its decision, either because a blob contains binary
 data later in the file, or because the content, while technically
@@ -1024,13 +1024,13 @@ many postscript files contain only ASCII characters, but produce noisy
 and meaningless diffs.
 
 The simplest way to mark a file as binary is to unset the diff
-attribute in the `.gitattributes` file:
+attribute in the `.shitattributes` file:
 
 ------------------------
 *.ps -diff
 ------------------------
 
-This will cause Git to generate `Binary files differ` (or a binary
+This will cause shit to generate `Binary files differ` (or a binary
 patch, if binary patches are enabled) instead of a regular diff.
 
 However, one may also want to specify other diff driver attributes. For
@@ -1052,8 +1052,8 @@ Performing a three-way merge
 ^^^^^^^
 
 The attribute `merge` affects how three versions of a file are
-merged when a file-level merge is necessary during `git merge`,
-and other commands such as `git revert` and `git cherry-pick`.
+merged when a file-level merge is necessary during `shit merge`,
+and other commands such as `shit revert` and `shit cherry-pick`.
 
 Set::
 
@@ -1119,12 +1119,12 @@ union::
 Defining a custom merge driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The definition of a merge driver is done in the `.git/config`
-file, not in the `gitattributes` file, so strictly speaking this
+The definition of a merge driver is done in the `.shit/config`
+file, not in the `shitattributes` file, so strictly speaking this
 manual page is a wrong place to talk about it.  However...
 
 To define a custom merge driver `filfre`, add a section to your
-`$GIT_DIR/config` file (or `$HOME/.gitconfig` file) like this:
+`$shit_DIR/config` file (or `$HOME/.shitconfig` file) like this:
 
 ----------------------------------------------------------------
 [merge "filfre"]
@@ -1170,13 +1170,13 @@ This attribute controls the length of conflict markers left in
 the work tree file during a conflicted merge.  Only a positive
 integer has a meaningful effect.
 
-For example, this line in `.gitattributes` can be used to tell the merge
+For example, this line in `.shitattributes` can be used to tell the merge
 machinery to leave much longer (instead of the usual 7-character-long)
-conflict markers when merging the file `Documentation/git-merge.txt`
+conflict markers when merging the file `Documentation/shit-merge.txt`
 results in a conflict.
 
 ------------------------
-Documentation/git-merge.txt	conflict-marker-size=32
+Documentation/shit-merge.txt	conflict-marker-size=32
 ------------------------
 
 
@@ -1188,12 +1188,12 @@ Checking whitespace errors
 
 The `core.whitespace` configuration variable allows you to define what
 'diff' and 'apply' should consider whitespace errors for all paths in
-the project (See linkgit:git-config[1]).  This attribute gives you finer
+the project (See linkshit:shit-config[1]).  This attribute gives you finer
 control per path.
 
 Set::
 
-	Notice all types of potential whitespace errors known to Git.
+	Notice all types of potential whitespace errors known to shit.
 	The tab width is taken from the value of the `core.whitespace`
 	configuration variable.
 
@@ -1225,12 +1225,12 @@ archive files.
 `export-subst`
 ^^^^^^^^^^^^^^
 
-If the attribute `export-subst` is set for a file then Git will expand
+If the attribute `export-subst` is set for a file then shit will expand
 several placeholders when adding this file to an archive.  The
 expansion depends on the availability of a commit ID, i.e., if
-linkgit:git-archive[1] has been given a tree instead of a commit or a
+linkshit:shit-archive[1] has been given a tree instead of a commit or a
 tag then no replacement will be done.  The placeholders are the same
-as those for the option `--pretty=format:` of linkgit:git-log[1],
+as those for the option `--pretty=format:` of linkshit:shit-log[1],
 except that they need to be wrapped like this: `$Format:PLACEHOLDERS$`
 in the file.  E.g. the string `$Format:%H$` will be replaced by the
 commit hash.  However, only one `%(describe)` placeholder is expanded
@@ -1254,14 +1254,14 @@ Viewing files in GUI tools
 ^^^^^^^^^^
 
 The value of this attribute specifies the character encoding that should
-be used by GUI tools (e.g. linkgit:gitk[1] and linkgit:git-gui[1]) to
+be used by GUI tools (e.g. linkshit:shitk[1] and linkshit:shit-gui[1]) to
 display the contents of the relevant file. Note that due to performance
-considerations linkgit:gitk[1] does not use this attribute unless you
+considerations linkshit:shitk[1] does not use this attribute unless you
 manually enable per-file encodings in its options.
 
 If this attribute is not set or has an invalid value, the value of the
 `gui.encoding` configuration variable is used instead
-(See linkgit:git-config[1]).
+(See linkshit:shit-config[1]).
 
 
 USING MACRO ATTRIBUTES
@@ -1293,10 +1293,10 @@ state.
 DEFINING MACRO ATTRIBUTES
 -------------------------
 
-Custom macro attributes can be defined only in top-level gitattributes
-files (`$GIT_DIR/info/attributes`, the `.gitattributes` file at the
+Custom macro attributes can be defined only in top-level shitattributes
+files (`$shit_DIR/info/attributes`, the `.shitattributes` file at the
 top level of the working tree, or the global or system-wide
-gitattributes files), not in `.gitattributes` files in working tree
+shitattributes files), not in `.shitattributes` files in working tree
 subdirectories.  The built-in macro attribute "binary" is equivalent
 to:
 
@@ -1307,24 +1307,24 @@ to:
 NOTES
 -----
 
-Git does not follow symbolic links when accessing a `.gitattributes`
+shit does not follow symbolic links when accessing a `.shitattributes`
 file in the working tree. This keeps behavior consistent when the file
 is accessed from the index or a tree versus from the filesystem.
 
 EXAMPLES
 --------
 
-If you have these three `gitattributes` file:
+If you have these three `shitattributes` file:
 
 ----------------------------------------------------------------
-(in $GIT_DIR/info/attributes)
+(in $shit_DIR/info/attributes)
 
 a*	foo !bar -baz
 
-(in .gitattributes)
+(in .shitattributes)
 abc	foo bar baz
 
-(in t/.gitattributes)
+(in t/.shitattributes)
 ab*	merge=filfre
 abc	-foo -bar
 *.c	frotz
@@ -1332,19 +1332,19 @@ abc	-foo -bar
 
 the attributes given to path `t/abc` are computed as follows:
 
-1. By examining `t/.gitattributes` (which is in the same
-   directory as the path in question), Git finds that the first
+1. By examining `t/.shitattributes` (which is in the same
+   directory as the path in question), shit finds that the first
    line matches.  `merge` attribute is set.  It also finds that
    the second line matches, and attributes `foo` and `bar`
    are unset.
 
-2. Then it examines `.gitattributes` (which is in the parent
+2. Then it examines `.shitattributes` (which is in the parent
    directory), and finds that the first line matches, but
-   `t/.gitattributes` file already decided how `merge`, `foo`
+   `t/.shitattributes` file already decided how `merge`, `foo`
    and `bar` attributes should be given to this path, so it
    leaves `foo` and `bar` unset.  Attribute `baz` is set.
 
-3. Finally it examines `$GIT_DIR/info/attributes`.  This file
+3. Finally it examines `$shit_DIR/info/attributes`.  This file
    is used to override the in-tree settings.  The first line is
    a match, and `foo` is set, `bar` is reverted to unspecified
    state, and `baz` is unset.
@@ -1362,8 +1362,8 @@ frotz	unspecified
 
 SEE ALSO
 --------
-linkgit:git-check-attr[1].
+linkshit:shit-check-attr[1].
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

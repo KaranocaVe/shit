@@ -1,25 +1,25 @@
 #!/bin/sh
 
-test_description='respect crlf in git archive'
+test_description='respect crlf in shit archive'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success setup '
 
-	git config core.autocrlf true &&
+	shit config core.autocrlf true &&
 
 	printf "CRLF line ending\r\nAnd another\r\n" >sample &&
-	git add sample &&
+	shit add sample &&
 
 	test_tick &&
-	git commit -m Initial
+	shit commit -m Initial
 
 '
 
 test_expect_success 'tar archive' '
 
-	git archive --format=tar HEAD >test.tar &&
+	shit archive --format=tar HEAD >test.tar &&
 	mkdir untarred &&
 	"$TAR" xf test.tar -C untarred &&
 
@@ -29,12 +29,12 @@ test_expect_success 'tar archive' '
 
 test_expect_success UNZIP 'zip archive' '
 
-	git archive --format=zip HEAD >test.zip &&
+	shit archive --format=zip HEAD >test.zip &&
 
 	mkdir unzipped &&
 	(
 		cd unzipped &&
-		"$GIT_UNZIP" ../test.zip
+		"$shit_UNZIP" ../test.zip
 	) &&
 
 	test_cmp sample unzipped/sample

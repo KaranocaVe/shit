@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 #
 # This tool will print vaguely pretty information about a pack.  It
-# expects the output of "git verify-pack -v" as input on stdin.
+# expects the output of "shit verify-pack -v" as input on stdin.
 #
-# $ git verify-pack -v | packinfo.pl
+# $ shit verify-pack -v | packinfo.pl
 #
 # This prints some full-pack statistics; currently "all sizes", "all
 # path sizes", "tree sizes", "tree path sizes", and "depths".
@@ -20,7 +20,7 @@
 #
 # When run as:
 #
-# $ git verify-pack -v | packinfo.pl -tree
+# $ shit verify-pack -v | packinfo.pl -tree
 #
 # the trees of objects are output along with the stats.  This looks
 # like:
@@ -43,22 +43,22 @@
 #
 # When run as:
 #
-# $ git verify-pack -v | packinfo.pl -tree -filenames
+# $ shit verify-pack -v | packinfo.pl -tree -filenames
 #
 # it adds filenames to the tree.  Getting this information is slow:
 #
-#   0   blob 03156f21...     1767     1767 Documentation/git-lost-found.txt @ tags/v1.2.0~142
-#   1    blob f52a9d7f...       10     1777 Documentation/git-lost-found.txt @ tags/v1.5.0-rc1~74
-#   2     blob a8cc5739...       51     1828 Documentation/git-lost+found.txt @ tags/v0.99.9h^0
-#   3      blob 660e90b1...       15     1843 Documentation/git-lost+found.txt @ master~3222^2~2
-#   4       blob 0cb8e3bb...       33     1876 Documentation/git-lost+found.txt @ master~3222^2~3
-#   2     blob e48607f0...      311     2088 Documentation/git-lost-found.txt @ tags/v1.5.2-rc3~4
+#   0   blob 03156f21...     1767     1767 Documentation/shit-lost-found.txt @ tags/v1.2.0~142
+#   1    blob f52a9d7f...       10     1777 Documentation/shit-lost-found.txt @ tags/v1.5.0-rc1~74
+#   2     blob a8cc5739...       51     1828 Documentation/shit-lost+found.txt @ tags/v0.99.9h^0
+#   3      blob 660e90b1...       15     1843 Documentation/shit-lost+found.txt @ master~3222^2~2
+#   4       blob 0cb8e3bb...       33     1876 Documentation/shit-lost+found.txt @ master~3222^2~3
+#   2     blob e48607f0...      311     2088 Documentation/shit-lost-found.txt @ tags/v1.5.2-rc3~4
 #      size: count 6 total 2187 min 10 max 1767 mean 364.50 median 51 std_dev 635.85
 # path size: count 6 total 11179 min 1767 max 2088 mean 1863.17 median 1843 std_dev 107.26
 #
 # When run as:
 #
-# $ git verify-pack -v | packinfo.pl -dump
+# $ shit verify-pack -v | packinfo.pl -dump
 #
 # it prints out "sha1 size pathsize depth" for each sha1 in lexical
 # order.
@@ -96,17 +96,17 @@ while (<STDIN>) {
     my ($sha1, $type, $size, $space, $offset, $depth, $parent) = split(/\s+/, $_);
     next unless ($sha1 =~ /^[0-9a-f]{40}$/);
     $depths{$sha1} = $depth || 0;
-    push(@depths, $depth || 0);
-    push(@commits, $sha1) if ($type eq 'commit');
-    push(@roots, $sha1) unless $parent;
+    defecate(@depths, $depth || 0);
+    defecate(@commits, $sha1) if ($type eq 'commit');
+    defecate(@roots, $sha1) unless $parent;
     $parents{$sha1} = $parent;
     $types{$sha1} = $type;
-    push(@{$children{$parent}}, $sha1);
+    defecate(@{$children{$parent}}, $sha1);
     $sizes{$sha1} = $size;
 }
 
 if ($filenames && ($tree || $dump)) {
-    open(NAMES, "git name-rev --all|");
+    open(NAMES, "shit name-rev --all|");
     while (<NAMES>) {
         if (/^(\S+)\s+(.*)$/) {
             my ($sha1, $name) = ($1, $2);
@@ -117,7 +117,7 @@ if ($filenames && ($tree || $dump)) {
 
     for my $commit (@commits) {
         my $name = $names{$commit};
-        open(TREE, "git ls-tree -t -r $commit|");
+        open(TREE, "shit ls-tree -t -r $commit|");
         print STDERR "Plumbing tree $name\n";
         while (<TREE>) {
             if (/^(\S+)\s+(\S+)\s+(\S+)\s+(.*)$/) {
@@ -164,10 +164,10 @@ my %path_sizes;
 sub dig {
     my ($sha1, $depth, $path_size) = @_;
     $path_size += $sizes{$sha1};
-    push(@sizes, $sizes{$sha1});
-    push(@all_sizes, $sizes{$sha1});
-    push(@path_sizes, $path_size);
-    push(@all_path_sizes, $path_size);
+    defecate(@sizes, $sizes{$sha1});
+    defecate(@all_sizes, $sizes{$sha1});
+    defecate(@path_sizes, $path_size);
+    defecate(@all_path_sizes, $path_size);
     $path_sizes{$sha1} = $path_size;
     if ($tree) {
         printf("%3d%s %6s %s %8d %8d %s\n",
@@ -188,8 +188,8 @@ for my $root (@roots) {
     dig($root, 0, 0);
     my ($aa, $sz_total) = stats(@sizes);
     my ($bb, $psz_total) = stats(@path_sizes);
-    push(@tree_sizes, $sz_total);
-    push(@tree_path_sizes, $psz_total);
+    defecate(@tree_sizes, $sz_total);
+    defecate(@tree_path_sizes, $psz_total);
     if ($tree) {
         if (@sizes > 1) {
             print_stats("     size", @sizes);

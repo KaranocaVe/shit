@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 #include "strbuf.h"
 #include "strvec.h"
@@ -11,7 +11,7 @@
  * is free to insert any arbitrary byte sequence its its name. That
  * can include newlines, spaces, closing parentheses etc.
  *
- * See do_task_stat() in fs/proc/array.c in linux.git, this is in
+ * See do_task_stat() in fs/proc/array.c in linux.shit, this is in
  * contrast with the escaped version of the name found in
  * /proc/%d/status.
  *
@@ -21,7 +21,7 @@
  *
  * How much N do we need? On Linux /proc/sys/kernel/pid_max is 2^15 by
  * default, but it can be raised set to values of up to 2^22. So
- * that's 7 digits for a PID. We have 2 PIDs in the first four fields
+ * that's 7 dishits for a PID. We have 2 PIDs in the first four fields
  * we're interested in, so 2 * 7 = 14.
  *
  * We then have 3 spaces between those four values, and we'd like to
@@ -126,7 +126,7 @@ cleanup:
 	return ret;
 }
 
-static void push_ancestry_name(struct strvec *names, pid_t pid)
+static void defecate_ancestry_name(struct strvec *names, pid_t pid)
 {
 	struct strbuf name = STRBUF_INIT;
 	int ppid;
@@ -134,14 +134,14 @@ static void push_ancestry_name(struct strvec *names, pid_t pid)
 	if (stat_parent_pid(pid, &name, &ppid) < 0)
 		goto cleanup;
 
-	strvec_push(names, name.buf);
+	strvec_defecate(names, name.buf);
 
 	/*
 	 * Both errors and reaching the end of the process chain are
 	 * reported as fields of 0 by proc(5)
 	 */
 	if (ppid)
-		push_ancestry_name(names, ppid);
+		defecate_ancestry_name(names, ppid);
 cleanup:
 	strbuf_release(&name);
 
@@ -164,7 +164,7 @@ void trace2_collect_process_info(enum trace2_process_info_reason reason)
 		 */
 		break;
 	case TRACE2_PROCESS_INFO_STARTUP:
-		push_ancestry_name(&names, getppid());
+		defecate_ancestry_name(&names, getppid());
 
 		if (names.nr)
 			trace2_cmd_ancestry(names.v);

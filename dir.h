@@ -11,7 +11,7 @@ struct repository;
 
 /**
  * The directory listing API is used to enumerate paths in the work tree,
- * optionally taking `.git/info/exclude` and `.gitignore` files per directory
+ * optionally taking `.shit/info/exclude` and `.shitignore` files per directory
  * into account.
  */
 
@@ -19,7 +19,7 @@ struct repository;
  * Calling sequence
  * ----------------
  *
- * Note: The index may be checked for .gitignore files that are
+ * Note: The index may be checked for .shitignore files that are
  * CE_SKIP_WORKTREE marked. If you want to exclude files, make sure you have
  * loaded the index first.
  *
@@ -28,7 +28,7 @@ struct repository;
  * - To add single exclude pattern, call `add_pattern_list()` and then
  *   `add_pattern()`.
  *
- * - To add patterns from a file (e.g. `.git/info/exclude`), call
+ * - To add patterns from a file (e.g. `.shit/info/exclude`), call
  *   `add_patterns_from_file()` , and/or set `dir.exclude_per_dir`.
  *
  * - A short-hand function `setup_standard_excludes()` can be used to set
@@ -154,12 +154,12 @@ struct oid_stat {
  *  directory are excluded:
  *
  *   - The list of files and directories of the directory in question
- *   - The $GIT_DIR/index
+ *   - The $shit_DIR/index
  *   - dir_struct flags
- *   - The content of $GIT_DIR/info/exclude
+ *   - The content of $shit_DIR/info/exclude
  *   - The content of core.excludesfile
- *   - The content (or the lack) of .gitignore of all parent directories
- *     from $GIT_WORK_TREE
+ *   - The content (or the lack) of .shitignore of all parent directories
+ *     from $shit_WORK_TREE
  *   - The check_only flag in read_directory_recursive (for
  *     DIR_HIDE_EMPTY_DIRECTORIES)
  *
@@ -185,7 +185,7 @@ struct untracked_cache_dir {
 	/* all data except 'dirs' in this struct are good */
 	unsigned int valid : 1;
 	unsigned int recurse : 1;
-	/* null object ID means this directory does not have .gitignore */
+	/* null object ID means this directory does not have .shitignore */
 	struct object_id exclude_oid;
 	char name[FLEX_ARRAY];
 };
@@ -204,7 +204,7 @@ struct untracked_cache {
 	struct untracked_cache_dir *root;
 	/* Statistics */
 	int dir_created;
-	int gitignore_invalidated;
+	int shitignore_invalidated;
 	int dir_invalidated;
 	int dir_opened;
 	/* fsmonitor invalidation data */
@@ -234,13 +234,13 @@ struct dir_struct {
 		DIR_HIDE_EMPTY_DIRECTORIES = 1<<2,
 
 		/**
-		 * If set, recurse into a directory that looks like a Git directory.
+		 * If set, recurse into a directory that looks like a shit directory.
 		 * Otherwise it is shown as a directory.
 		 */
-		DIR_NO_GITLINKS = 1<<3,
+		DIR_NO_shitLINKS = 1<<3,
 
 		/**
-		 * Special mode for git-add. Return ignored files in `ignored[]` and
+		 * Special mode for shit-add. Return ignored files in `ignored[]` and
 		 * untracked files in `entries[]`. Only returns ignored files that match
 		 * pathspec exactly (no wildcards). Does not recurse into ignored
 		 * directories.
@@ -279,7 +279,7 @@ struct dir_struct {
 		 */
 		DIR_SHOW_IGNORED_TOO_MODE_MATCHING = 1<<8,
 
-		DIR_SKIP_NESTED_GIT = 1<<9
+		DIR_SKIP_NESTED_shit = 1<<9
 	} flags;
 
 	/* The number of members in `entries[]` array. */
@@ -306,7 +306,7 @@ struct dir_struct {
 	 * setup_standard_excludes() mechanism that replaces this.
 	 *
 	 * This field tracks the name of the file to be read in each directory
-	 * for excluded files (typically `.gitignore`).
+	 * for excluded files (typically `.shitignore`).
 	 */
 	const char *exclude_per_dir;
 
@@ -324,7 +324,7 @@ struct dir_struct {
 		 * EXC_DIRS lists patterns obtained from per-directory ignore
 		 *          files.
 		 * EXC_FILE lists patterns from fallback ignore files, e.g.
-		 *   - .git/info/exclude
+		 *   - .shit/info/exclude
 		 *   - core.excludesfile
 		 *
 		 * Each group contains multiple exclude lists, a single list
@@ -491,14 +491,14 @@ static inline int is_dot_or_dotdot(const char *name)
 int is_empty_dir(const char *dir);
 
 /*
- * Retrieve the "humanish" basename of the given Git URL.
+ * Retrieve the "humanish" basename of the given shit URL.
  *
  * For example:
- * 	/path/to/repo.git => "repo"
- * 	host.xz:foo/.git => "foo"
+ * 	/path/to/repo.shit => "repo"
+ * 	host.xz:foo/.shit => "foo"
  * 	http://example.com/user/bar.baz => "bar.baz"
  */
-char *git_url_basename(const char *repo, int is_bundle, int is_bare);
+char *shit_url_basename(const char *repo, int is_bundle, int is_bare);
 void strip_dir_trailing_slashes(char *dir);
 
 void setup_standard_excludes(struct dir_struct *dir);
@@ -516,10 +516,10 @@ int get_sparse_checkout_patterns(struct pattern_list *pl);
 #define REMOVE_DIR_EMPTY_ONLY 01
 
 /*
- * If any Git work trees are found within path, skip them without
+ * If any shit work trees are found within path, skip them without
  * considering it an error.
  */
-#define REMOVE_DIR_KEEP_NESTED_GIT 02
+#define REMOVE_DIR_KEEP_NESTED_shit 02
 
 /* Remove the contents of path, but leave path itself. */
 #define REMOVE_DIR_KEEP_TOPLEVEL 04
@@ -559,7 +559,7 @@ int paths_collide(const char *a, const char *b);
  * The prefix part of pattern must not contains wildcards.
  */
 struct pathspec_item;
-int git_fnmatch(const struct pathspec_item *item,
+int shit_fnmatch(const struct pathspec_item *item,
 		const char *pattern, const char *string,
 		int prefix);
 
@@ -600,18 +600,18 @@ void add_untracked_cache(struct index_state *istate);
 void remove_untracked_cache(struct index_state *istate);
 
 /*
- * Connect a worktree to a git directory by creating (or overwriting) a
- * '.git' file containing the location of the git directory. In the git
+ * Connect a worktree to a shit directory by creating (or overwriting) a
+ * '.shit' file containing the location of the shit directory. In the shit
  * directory set the core.worktree setting to indicate where the worktree is.
  * When `recurse_into_nested` is set, recurse into any nested submodules,
  * connecting them as well.
  */
-void connect_work_tree_and_git_dir(const char *work_tree,
-				   const char *git_dir,
+void connect_work_tree_and_shit_dir(const char *work_tree,
+				   const char *shit_dir,
 				   int recurse_into_nested);
-void relocate_gitdir(const char *path,
-		     const char *old_git_dir,
-		     const char *new_git_dir);
+void relocate_shitdir(const char *path,
+		     const char *old_shit_dir,
+		     const char *new_shit_dir);
 
 /**
  * The "enum path_matches_kind" determines how path_match_flags() will

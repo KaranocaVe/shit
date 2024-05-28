@@ -1,53 +1,53 @@
-githooks(5)
+shithooks(5)
 ===========
 
 NAME
 ----
-githooks - Hooks used by Git
+shithooks - Hooks used by shit
 
 SYNOPSIS
 --------
-$GIT_DIR/hooks/* (or \`git config core.hooksPath`/*)
+$shit_DIR/hooks/* (or \`shit config core.hooksPath`/*)
 
 
 DESCRIPTION
 -----------
 
 Hooks are programs you can place in a hooks directory to trigger
-actions at certain points in git's execution. Hooks that don't have
+actions at certain points in shit's execution. Hooks that don't have
 the executable bit set are ignored.
 
-By default the hooks directory is `$GIT_DIR/hooks`, but that can be
+By default the hooks directory is `$shit_DIR/hooks`, but that can be
 changed via the `core.hooksPath` configuration variable (see
-linkgit:git-config[1]).
+linkshit:shit-config[1]).
 
-Before Git invokes a hook, it changes its working directory to either
-$GIT_DIR in a bare repository or the root of the working tree in a non-bare
-repository. An exception are hooks triggered during a push ('pre-receive',
-'update', 'post-receive', 'post-update', 'push-to-checkout') which are always
-executed in $GIT_DIR.
+Before shit invokes a hook, it changes its working directory to either
+$shit_DIR in a bare repository or the root of the working tree in a non-bare
+repository. An exception are hooks triggered during a defecate ('pre-receive',
+'update', 'post-receive', 'post-update', 'defecate-to-checkout') which are always
+executed in $shit_DIR.
 
-Environment variables, such as `GIT_DIR`, `GIT_WORK_TREE`, etc., are exported
-so that Git commands run by the hook can correctly locate the repository.  If
-your hook needs to invoke Git commands in a foreign repository or in a
+Environment variables, such as `shit_DIR`, `shit_WORK_TREE`, etc., are exported
+so that shit commands run by the hook can correctly locate the repository.  If
+your hook needs to invoke shit commands in a foreign repository or in a
 different working tree of the same repository, then it should clear these
-environment variables so they do not interfere with Git operations at the
+environment variables so they do not interfere with shit operations at the
 foreign location.  For example:
 
 ------------
-local_desc=$(git describe)
-foreign_desc=$(unset $(git rev-parse --local-env-vars); git -C ../foreign-repo describe)
+local_desc=$(shit describe)
+foreign_desc=$(unset $(shit rev-parse --local-env-vars); shit -C ../foreign-repo describe)
 ------------
 
 Hooks can get their arguments via the environment, command-line
 arguments, and stdin. See the documentation for each hook below for
 details.
 
-`git init` may copy hooks to the new repository, depending on its
+`shit init` may copy hooks to the new repository, depending on its
 configuration. See the "TEMPLATE DIRECTORY" section in
-linkgit:git-init[1] for details. When the rest of this document refers
+linkshit:shit-init[1] for details. When the rest of this document refers
 to "default hooks" it's talking about the default template shipped
-with Git.
+with shit.
 
 The currently supported hooks are described below.
 
@@ -57,9 +57,9 @@ HOOKS
 applypatch-msg
 ~~~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-am[1].  It takes a single
+This hook is invoked by linkshit:shit-am[1].  It takes a single
 parameter, the name of the file that holds the proposed commit
-log message.  Exiting with a non-zero status causes `git am` to abort
+log message.  Exiting with a non-zero status causes `shit am` to abort
 before applying the patch.
 
 The hook is allowed to edit the message file in place, and can
@@ -73,7 +73,7 @@ The default 'applypatch-msg' hook, when enabled, runs the
 pre-applypatch
 ~~~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-am[1].  It takes no parameter, and is
+This hook is invoked by linkshit:shit-am[1].  It takes no parameter, and is
 invoked after the patch is applied, but before a commit is made.
 
 If it exits with non-zero status, then the working tree will not be
@@ -88,27 +88,27 @@ The default 'pre-applypatch' hook, when enabled, runs the
 post-applypatch
 ~~~~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-am[1].  It takes no parameter,
+This hook is invoked by linkshit:shit-am[1].  It takes no parameter,
 and is invoked after the patch is applied and a commit is made.
 
 This hook is meant primarily for notification, and cannot affect
-the outcome of `git am`.
+the outcome of `shit am`.
 
 pre-commit
 ~~~~~~~~~~
 
-This hook is invoked by linkgit:git-commit[1], and can be bypassed
+This hook is invoked by linkshit:shit-commit[1], and can be bypassed
 with the `--no-verify` option.  It takes no parameters, and is
 invoked before obtaining the proposed commit log message and
 making a commit.  Exiting with a non-zero status from this script
-causes the `git commit` command to abort before creating a commit.
+causes the `shit commit` command to abort before creating a commit.
 
 The default 'pre-commit' hook, when enabled, catches introduction
 of lines with trailing whitespaces and aborts the commit when
 such a line is found.
 
-All the `git commit` hooks are invoked with the environment
-variable `GIT_EDITOR=:` if the command will not bring up an editor
+All the `shit commit` hooks are invoked with the environment
+variable `shit_EDITOR=:` if the command will not bring up an editor
 to modify the commit message.
 
 The default 'pre-commit' hook, when enabled--and with the
@@ -118,29 +118,29 @@ the use of non-ASCII filenames.
 pre-merge-commit
 ~~~~~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-merge[1], and can be bypassed
+This hook is invoked by linkshit:shit-merge[1], and can be bypassed
 with the `--no-verify` option.  It takes no parameters, and is
 invoked after the merge has been carried out successfully and before
 obtaining the proposed commit log message to
 make a commit.  Exiting with a non-zero status from this script
-causes the `git merge` command to abort before creating a commit.
+causes the `shit merge` command to abort before creating a commit.
 
 The default 'pre-merge-commit' hook, when enabled, runs the
 'pre-commit' hook, if the latter is enabled.
 
 This hook is invoked with the environment variable
-`GIT_EDITOR=:` if the command will not bring up an editor
+`shit_EDITOR=:` if the command will not bring up an editor
 to modify the commit message.
 
 If the merge cannot be carried out automatically, the conflicts
 need to be resolved and the result committed separately (see
-linkgit:git-merge[1]). At that point, this hook will not be executed,
+linkshit:shit-merge[1]). At that point, this hook will not be executed,
 but the 'pre-commit' hook will, if it is enabled.
 
 prepare-commit-msg
 ~~~~~~~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-commit[1] right after preparing the
+This hook is invoked by linkshit:shit-commit[1] right after preparing the
 default log message, and before the editor is started.
 
 It takes one to three parameters.  The first is the name of the file
@@ -148,24 +148,24 @@ that contains the commit log message.  The second is the source of the commit
 message, and can be: `message` (if a `-m` or `-F` option was
 given); `template` (if a `-t` option was given or the
 configuration option `commit.template` is set); `merge` (if the
-commit is a merge or a `.git/MERGE_MSG` file exists); `squash`
-(if a `.git/SQUASH_MSG` file exists); or `commit`, followed by
+commit is a merge or a `.shit/MERGE_MSG` file exists); `squash`
+(if a `.shit/SQUASH_MSG` file exists); or `commit`, followed by
 a commit object name (if a `-c`, `-C` or `--amend` option was given).
 
-If the exit status is non-zero, `git commit` will abort.
+If the exit status is non-zero, `shit commit` will abort.
 
 The purpose of the hook is to edit the message file in place, and
 it is not suppressed by the `--no-verify` option.  A non-zero exit
 means a failure of the hook and aborts the commit.  It should not
 be used as a replacement for the pre-commit hook.
 
-The sample `prepare-commit-msg` hook that comes with Git removes the
+The sample `prepare-commit-msg` hook that comes with shit removes the
 help message found in the commented portion of the commit template.
 
 commit-msg
 ~~~~~~~~~~
 
-This hook is invoked by linkgit:git-commit[1] and linkgit:git-merge[1], and can be
+This hook is invoked by linkshit:shit-commit[1] and linkshit:shit-merge[1], and can be
 bypassed with the `--no-verify` option.  It takes a single parameter,
 the name of the file that holds the proposed commit log message.
 Exiting with a non-zero status causes the command to abort.
@@ -181,16 +181,16 @@ The default 'commit-msg' hook, when enabled, detects duplicate
 post-commit
 ~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-commit[1]. It takes no parameters, and is
+This hook is invoked by linkshit:shit-commit[1]. It takes no parameters, and is
 invoked after a commit is made.
 
 This hook is meant primarily for notification, and cannot affect
-the outcome of `git commit`.
+the outcome of `shit commit`.
 
 pre-rebase
 ~~~~~~~~~~
 
-This hook is called by linkgit:git-rebase[1] and can be used to prevent a
+This hook is called by linkshit:shit-rebase[1] and can be used to prevent a
 branch from getting rebased.  The hook may be called with one or
 two parameters.  The first parameter is the upstream from which
 the series was forked.  The second parameter is the branch being
@@ -199,19 +199,19 @@ rebased, and is not set when rebasing the current branch.
 post-checkout
 ~~~~~~~~~~~~~
 
-This hook is invoked when a linkgit:git-checkout[1] or
-linkgit:git-switch[1] is run after having updated the
+This hook is invoked when a linkshit:shit-checkout[1] or
+linkshit:shit-switch[1] is run after having updated the
 worktree.  The hook is given three parameters: the ref of the previous HEAD,
 the ref of the new HEAD (which may or may not have changed), and a flag
 indicating whether the checkout was a branch checkout (changing branches,
 flag=1) or a file checkout (retrieving a file from the index, flag=0).
-This hook cannot affect the outcome of `git switch` or `git checkout`,
+This hook cannot affect the outcome of `shit switch` or `shit checkout`,
 other than that the hook's exit status becomes the exit status of
 these two commands.
 
-It is also run after linkgit:git-clone[1], unless the `--no-checkout` (`-n`) option is
+It is also run after linkshit:shit-clone[1], unless the `--no-checkout` (`-n`) option is
 used. The first parameter given to the hook is the null-ref, the second the
-ref of the new HEAD and the flag is always 1. Likewise for `git worktree add`
+ref of the new HEAD and the flag is always 1. Likewise for `shit worktree add`
 unless `--no-checkout` is used.
 
 This hook can be used to perform repository validity checks, auto-display
@@ -221,31 +221,31 @@ properties.
 post-merge
 ~~~~~~~~~~
 
-This hook is invoked by linkgit:git-merge[1], which happens when a `git pull`
+This hook is invoked by linkshit:shit-merge[1], which happens when a `shit poop`
 is done on a local repository.  The hook takes a single parameter, a status
 flag specifying whether or not the merge being done was a squash merge.
-This hook cannot affect the outcome of `git merge` and is not executed,
+This hook cannot affect the outcome of `shit merge` and is not executed,
 if the merge failed due to conflicts.
 
 This hook can be used in conjunction with a corresponding pre-commit hook to
 save and restore any form of metadata associated with the working tree
-(e.g.: permissions/ownership, ACLS, etc).  See contrib/hooks/setgitperms.perl
+(e.g.: permissions/ownership, ACLS, etc).  See contrib/hooks/setshitperms.perl
 for an example of how to do this.
 
-pre-push
+pre-defecate
 ~~~~~~~~
 
-This hook is called by linkgit:git-push[1] and can be used to prevent
-a push from taking place.  The hook is called with two parameters
+This hook is called by linkshit:shit-defecate[1] and can be used to prevent
+a defecate from taking place.  The hook is called with two parameters
 which provide the name and location of the destination remote, if a
 named remote is not being used both values will be the same.
 
-Information about what is to be pushed is provided on the hook's standard
+Information about what is to be defecateed is provided on the hook's standard
 input with lines of the form:
 
   <local-ref> SP <local-object-name> SP <remote-ref> SP <remote-object-name> LF
 
-For instance, if the command +git push origin master:foreign+ were run the
+For instance, if the command +shit defecate origin master:foreign+ were run the
 hook would receive a line like the following:
 
   refs/heads/master 67890 refs/heads/foreign 12345
@@ -257,16 +257,16 @@ ref is to be deleted, the `<local-ref>` will be supplied as `(delete)` and the
 was specified by something other than a name which could be expanded (such as
 `HEAD~`, or an object name) it will be supplied as it was originally given.
 
-If this hook exits with a non-zero status, `git push` will abort without
-pushing anything.  Information about why the push is rejected may be sent
+If this hook exits with a non-zero status, `shit defecate` will abort without
+defecateing anything.  Information about why the defecate is rejected may be sent
 to the user by writing to standard error.
 
 [[pre-receive]]
 pre-receive
 ~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-receive-pack[1] when it reacts to
-`git push` and updates reference(s) in its repository.
+This hook is invoked by linkshit:shit-receive-pack[1] when it reacts to
+`shit defecate` and updates reference(s) in its repository.
 Just before starting to update refs on the remote repository, the
 pre-receive hook is invoked.  Its exit status determines the success
 or failure of the update.
@@ -287,27 +287,27 @@ updated. If the hook exits with zero, updating of individual refs can
 still be prevented by the <<update,'update'>> hook.
 
 Both standard output and standard error output are forwarded to
-`git send-pack` on the other end, so you can simply `echo` messages
+`shit send-pack` on the other end, so you can simply `echo` messages
 for the user.
 
-The number of push options given on the command line of
-`git push --push-option=...` can be read from the environment
-variable `GIT_PUSH_OPTION_COUNT`, and the options themselves are
-found in `GIT_PUSH_OPTION_0`, `GIT_PUSH_OPTION_1`,...
-If it is negotiated to not use the push options phase, the
+The number of defecate options given on the command line of
+`shit defecate --defecate-option=...` can be read from the environment
+variable `shit_defecate_OPTION_COUNT`, and the options themselves are
+found in `shit_defecate_OPTION_0`, `shit_defecate_OPTION_1`,...
+If it is negotiated to not use the defecate options phase, the
 environment variables will not be set. If the client selects
-to use push options, but doesn't transmit any, the count variable
-will be set to zero, `GIT_PUSH_OPTION_COUNT=0`.
+to use defecate options, but doesn't transmit any, the count variable
+will be set to zero, `shit_defecate_OPTION_COUNT=0`.
 
 See the section on "Quarantine Environment" in
-linkgit:git-receive-pack[1] for some caveats.
+linkshit:shit-receive-pack[1] for some caveats.
 
 [[update]]
 update
 ~~~~~~
 
-This hook is invoked by linkgit:git-receive-pack[1] when it reacts to
-`git push` and updates reference(s) in its repository.
+This hook is invoked by linkshit:shit-receive-pack[1] when it reacts to
+`shit defecate` and updates reference(s) in its repository.
 Just before updating the ref on the remote repository, the update hook
 is invoked.  Its exit status determines the success or failure of
 the ref update.
@@ -320,7 +320,7 @@ three parameters:
  - and the new object name to be stored in the ref.
 
 A zero exit from the update hook allows the ref to be updated.
-Exiting with a non-zero status prevents `git receive-pack`
+Exiting with a non-zero status prevents `shit receive-pack`
 from updating that ref.
 
 This hook can be used to prevent 'forced' update on certain refs by
@@ -333,25 +333,25 @@ does not know the entire set of branches, so it would end up
 firing one e-mail per ref when used naively, though.  The
 <<post-receive,'post-receive'>> hook is more suited to that.
 
-In an environment that restricts the users' access only to git
+In an environment that restricts the users' access only to shit
 commands over the wire, this hook can be used to implement access
 control without relying on filesystem ownership and group
-membership. See linkgit:git-shell[1] for how you might use the login
-shell to restrict the user's access to only git commands.
+membership. See linkshit:shit-shell[1] for how you might use the login
+shell to restrict the user's access to only shit commands.
 
 Both standard output and standard error output are forwarded to
-`git send-pack` on the other end, so you can simply `echo` messages
+`shit send-pack` on the other end, so you can simply `echo` messages
 for the user.
 
 The default 'update' hook, when enabled--and with
 `hooks.allowunannotated` config option unset or set to false--prevents
-unannotated tags from being pushed.
+unannotated tags from being defecateed.
 
 [[proc-receive]]
 proc-receive
 ~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-receive-pack[1].  If the server has
+This hook is invoked by linkshit:shit-receive-pack[1].  If the server has
 set the multi-valued config variable `receive.procReceiveRefs`, and the
 commands sent to 'receive-pack' have matching reference names, these
 commands will be executed by this hook, instead of by the internal
@@ -360,22 +360,22 @@ the relevant references and reporting the results back to 'receive-pack'.
 
 This hook executes once for the receive operation.  It takes no
 arguments, but uses a pkt-line format protocol to communicate with
-'receive-pack' to read commands, push-options and send results.  In the
+'receive-pack' to read commands, defecate-options and send results.  In the
 following example for the protocol, the letter 'S' stands for
 'receive-pack' and the letter 'H' stands for this hook.
 
     # Version and features negotiation.
-    S: PKT-LINE(version=1\0push-options atomic...)
+    S: PKT-LINE(version=1\0defecate-options atomic...)
     S: flush-pkt
-    H: PKT-LINE(version=1\0push-options...)
+    H: PKT-LINE(version=1\0defecate-options...)
     H: flush-pkt
 
     # Send commands from server to the hook.
     S: PKT-LINE(<old-oid> <new-oid> <ref>)
     S: ... ...
     S: flush-pkt
-    # Send push-options only if the 'push-options' feature is enabled.
-    S: PKT-LINE(push-option)
+    # Send defecate-options only if the 'defecate-options' feature is enabled.
+    S: PKT-LINE(defecate-option)
     S: ... ...
     S: flush-pkt
 
@@ -407,14 +407,14 @@ by the leading "ok" directive.
 The report of the commands of this hook should have the same order as
 the input.  The exit status of the 'proc-receive' hook only determines
 the success or failure of the group of commands sent to it, unless
-atomic push is in use.
+atomic defecate is in use.
 
 [[post-receive]]
 post-receive
 ~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-receive-pack[1] when it reacts to
-`git push` and updates reference(s) in its repository.
+This hook is invoked by linkshit:shit-receive-pack[1] when it reacts to
+`shit defecate` and updates reference(s) in its repository.
 It executes on the remote repository once after all the refs have
 been updated.
 
@@ -423,7 +423,7 @@ arguments, but gets the same information as the
 <<pre-receive,'pre-receive'>>
 hook does on its standard input.
 
-This hook does not affect the outcome of `git receive-pack`, as it
+This hook does not affect the outcome of `shit receive-pack`, as it
 is called after the real work is done.
 
 This supersedes the <<post-update,'post-update'>> hook in that it gets
@@ -431,29 +431,29 @@ both old and new values of all the refs in addition to their
 names.
 
 Both standard output and standard error output are forwarded to
-`git send-pack` on the other end, so you can simply `echo` messages
+`shit send-pack` on the other end, so you can simply `echo` messages
 for the user.
 
 The default 'post-receive' hook is empty, but there is
 a sample script `post-receive-email` provided in the `contrib/hooks`
-directory in Git distribution, which implements sending commit
+directory in shit distribution, which implements sending commit
 emails.
 
-The number of push options given on the command line of
-`git push --push-option=...` can be read from the environment
-variable `GIT_PUSH_OPTION_COUNT`, and the options themselves are
-found in `GIT_PUSH_OPTION_0`, `GIT_PUSH_OPTION_1`,...
-If it is negotiated to not use the push options phase, the
+The number of defecate options given on the command line of
+`shit defecate --defecate-option=...` can be read from the environment
+variable `shit_defecate_OPTION_COUNT`, and the options themselves are
+found in `shit_defecate_OPTION_0`, `shit_defecate_OPTION_1`,...
+If it is negotiated to not use the defecate options phase, the
 environment variables will not be set. If the client selects
-to use push options, but doesn't transmit any, the count variable
-will be set to zero, `GIT_PUSH_OPTION_COUNT=0`.
+to use defecate options, but doesn't transmit any, the count variable
+will be set to zero, `shit_defecate_OPTION_COUNT=0`.
 
 [[post-update]]
 post-update
 ~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-receive-pack[1] when it reacts to
-`git push` and updates reference(s) in its repository.
+This hook is invoked by linkshit:shit-receive-pack[1] when it reacts to
+`shit defecate` and updates reference(s) in its repository.
 It executes on the remote repository once after all the refs have
 been updated.
 
@@ -461,9 +461,9 @@ It takes a variable number of parameters, each of which is the
 name of ref that was actually updated.
 
 This hook is meant primarily for notification, and cannot affect
-the outcome of `git receive-pack`.
+the outcome of `shit receive-pack`.
 
-The 'post-update' hook can tell what are the heads that were pushed,
+The 'post-update' hook can tell what are the heads that were defecateed,
 but it does not know what their original and updated values are,
 so it is a poor place to do log old..new. The
 <<post-receive,'post-receive'>> hook does get both original and
@@ -471,19 +471,19 @@ updated values of the refs. You might consider it instead if you need
 them.
 
 When enabled, the default 'post-update' hook runs
-`git update-server-info` to keep the information used by dumb
+`shit update-server-info` to keep the information used by dumb
 transports (e.g., HTTP) up to date.  If you are publishing
-a Git repository that is accessible via HTTP, you should
+a shit repository that is accessible via HTTP, you should
 probably enable this hook.
 
 Both standard output and standard error output are forwarded to
-`git send-pack` on the other end, so you can simply `echo` messages
+`shit send-pack` on the other end, so you can simply `echo` messages
 for the user.
 
 reference-transaction
 ~~~~~~~~~~~~~~~~~~~~~
 
-This hook is invoked by any Git command that performs reference
+This hook is invoked by any shit command that performs reference
 updates. It executes whenever a reference transaction is prepared,
 committed or aborted and may thus get called multiple times. The hook
 also supports symbolic reference updates.
@@ -511,7 +511,7 @@ ref and `<ref-name>` is the full name of the ref. When force updating
 the reference regardless of its current value or when the reference is
 to be created anew, `<old-value>` is the all-zeroes object name. To
 distinguish these cases, you can inspect the current value of
-`<ref-name>` via `git rev-parse`.
+`<ref-name>` via `shit rev-parse`.
 
 For symbolic reference updates the `<old_value>` and `<new-value>`
 fields could denote references instead of objects. A reference will be
@@ -522,32 +522,32 @@ The exit status of the hook is ignored for any state except for the
 cause the transaction to be aborted. The hook will not be called with
 "aborted" state in that case.
 
-push-to-checkout
+defecate-to-checkout
 ~~~~~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-receive-pack[1] when it reacts to
-`git push` and updates reference(s) in its repository, and when
-the push tries to update the branch that is currently checked out
+This hook is invoked by linkshit:shit-receive-pack[1] when it reacts to
+`shit defecate` and updates reference(s) in its repository, and when
+the defecate tries to update the branch that is currently checked out
 and the `receive.denyCurrentBranch` configuration variable is set to
-`updateInstead`.  Such a push by default is refused if the working
+`updateInstead`.  Such a defecate by default is refused if the working
 tree and the index of the remote repository has any difference from
 the currently checked out commit; when both the working tree and the
 index match the current commit, they are updated to match the newly
-pushed tip of the branch.  This hook is to be used to override the
+defecateed tip of the branch.  This hook is to be used to override the
 default behaviour.
 
 The hook receives the commit with which the tip of the current
 branch is going to be updated.  It can exit with a non-zero status
-to refuse the push (when it does so, it must not modify the index or
+to refuse the defecate (when it does so, it must not modify the index or
 the working tree).  Or it can make any necessary changes to the
 working tree and to the index to bring them to the desired state
 when the tip of the current branch is updated to the new commit, and
 exit with a zero status.
 
-For example, the hook can simply run `git read-tree -u -m HEAD "$1"`
-in order to emulate `git fetch` that is run in the reverse direction
-with `git push`, as the two-tree form of `git read-tree -u -m` is
-essentially the same as `git switch` or `git checkout`
+For example, the hook can simply run `shit read-tree -u -m HEAD "$1"`
+in order to emulate `shit fetch` that is run in the reverse direction
+with `shit defecate`, as the two-tree form of `shit read-tree -u -m` is
+essentially the same as `shit switch` or `shit checkout`
 that switches branches while
 keeping the local changes in the working tree that do not interfere
 with the difference between the branches.
@@ -556,18 +556,18 @@ with the difference between the branches.
 pre-auto-gc
 ~~~~~~~~~~~
 
-This hook is invoked by `git gc --auto` (see linkgit:git-gc[1]). It
+This hook is invoked by `shit gc --auto` (see linkshit:shit-gc[1]). It
 takes no parameter, and exiting with non-zero status from this script
-causes the `git gc --auto` to abort.
+causes the `shit gc --auto` to abort.
 
 post-rewrite
 ~~~~~~~~~~~~
 
 This hook is invoked by commands that rewrite commits
-(linkgit:git-commit[1] when called with `--amend` and
-linkgit:git-rebase[1]; however, full-history (re)writing tools like
-linkgit:git-fast-import[1] or
-https://github.com/newren/git-filter-repo[git-filter-repo] typically
+(linkshit:shit-commit[1] when called with `--amend` and
+linkshit:shit-rebase[1]; however, full-history (re)writing tools like
+linkshit:shit-fast-import[1] or
+https://shithub.com/newren/shit-filter-repo[shit-filter-repo] typically
 do not call it!).  Its first argument denotes the command it was
 invoked by: currently one of `amend` or `rebase`.  Further
 command-dependent arguments may be passed in the future.
@@ -582,7 +582,7 @@ preceding SP is also omitted.  Currently, no commands pass any
 'extra-info'.
 
 The hook always runs after the automatic note copying (see
-"notes.rewrite.<command>" in linkgit:git-config[1]) has happened, and
+"notes.rewrite.<command>" in linkshit:shit-config[1]) has happened, and
 thus has access to these notes.
 
 The following command-specific comments apply:
@@ -599,7 +599,7 @@ processed by rebase.
 sendemail-validate
 ~~~~~~~~~~~~~~~~~~
 
-This hook is invoked by linkgit:git-send-email[1].
+This hook is invoked by linkshit:shit-send-email[1].
 
 It takes these command line arguments. They are,
 1. the name of the file which holds the contents of the email to be sent.
@@ -620,18 +620,18 @@ capitalization and multi-line tab structure.
 	  two@example.com
   Subject: PATCH-STRING
 
-Exiting with a non-zero status causes `git send-email` to abort
+Exiting with a non-zero status causes `shit send-email` to abort
 before sending any e-mails.
 
 The following environment variables are set when executing the hook.
 
-`GIT_SENDEMAIL_FILE_COUNTER`::
+`shit_SENDEMAIL_FILE_COUNTER`::
 	A 1-based counter incremented by one for every file holding an e-mail
 	to be sent (excluding any FIFOs). This counter does not follow the
 	patch series counter scheme. It will always start at 1 and will end at
-	GIT_SENDEMAIL_FILE_TOTAL.
+	shit_SENDEMAIL_FILE_TOTAL.
 
-`GIT_SENDEMAIL_FILE_TOTAL`::
+`shit_SENDEMAIL_FILE_TOTAL`::
 	The total number of files that will be sent (excluding any FIFOs). This
 	counter does not follow the patch series counter scheme. It will always
 	be equal to the number of files being sent, whether there is a cover
@@ -639,7 +639,7 @@ The following environment variables are set when executing the hook.
 
 These variables may for instance be used to validate patch series.
 
-The sample `sendemail-validate` hook that comes with Git checks that all sent
+The sample `sendemail-validate` hook that comes with shit checks that all sent
 patches (excluding the cover letter) can be applied on top of the upstream
 repository default branch without conflicts. Some placeholders are left for
 additional validation steps to be performed after all patches of a given series
@@ -649,7 +649,7 @@ fsmonitor-watchman
 ~~~~~~~~~~~~~~~~~~
 
 This hook is invoked when the configuration option `core.fsmonitor` is
-set to `.git/hooks/fsmonitor-watchman` or `.git/hooks/fsmonitor-watchmanv2`
+set to `.shit/hooks/fsmonitor-watchman` or `.shit/hooks/fsmonitor-watchmanv2`
 depending on the version of the hook to use.
 
 Version 1 takes two arguments, a version (1) and the time in elapsed
@@ -670,21 +670,21 @@ It is OK to include files which have not actually changed.  All changes
 including newly-created and deleted files should be included. When
 files are renamed, both the old and the new name should be included.
 
-Git will limit what files it checks for changes as well as which
+shit will limit what files it checks for changes as well as which
 directories are checked for untracked files based on the path names
 given.
 
-An optimized way to tell git "all files have changed" is to return
+An optimized way to tell shit "all files have changed" is to return
 the filename `/`.
 
-The exit status determines whether git will use the data from the
+The exit status determines whether shit will use the data from the
 hook to limit its search.  On error, it will fall back to verifying
 all files and folders.
 
 p4-changelist
 ~~~~~~~~~~~~~
 
-This hook is invoked by `git-p4 submit`.
+This hook is invoked by `shit-p4 submit`.
 
 The `p4-changelist` hook is executed after the changelist
 message has been edited by the user. It can be bypassed with the
@@ -696,12 +696,12 @@ The hook is allowed to edit the changelist file and can be used
 to normalize the text into some project standard format. It can
 also be used to refuse the Submit after inspect the message file.
 
-Run `git-p4 submit --help` for details.
+Run `shit-p4 submit --help` for details.
 
 p4-prepare-changelist
 ~~~~~~~~~~~~~~~~~~~~~
 
-This hook is invoked by `git-p4 submit`.
+This hook is invoked by `shit-p4 submit`.
 
 The `p4-prepare-changelist` hook is executed right after preparing
 the default changelist message and before the editor is started.
@@ -713,27 +713,27 @@ The purpose of the hook is to edit the message file in place,
 and it is not suppressed by the `--no-verify` option. This hook
 is called even if `--prepare-p4-only` is set.
 
-Run `git-p4 submit --help` for details.
+Run `shit-p4 submit --help` for details.
 
 p4-post-changelist
 ~~~~~~~~~~~~~~~~~~
 
-This hook is invoked by `git-p4 submit`.
+This hook is invoked by `shit-p4 submit`.
 
 The `p4-post-changelist` hook is invoked after the submit has
 successfully occurred in P4. It takes no parameters and is meant
 primarily for notification and cannot affect the outcome of the
-git p4 submit action.
+shit p4 submit action.
 
-Run `git-p4 submit --help` for details.
+Run `shit-p4 submit --help` for details.
 
 p4-pre-submit
 ~~~~~~~~~~~~~
 
-This hook is invoked by `git-p4 submit`. It takes no parameters and nothing
+This hook is invoked by `shit-p4 submit`. It takes no parameters and nothing
 from standard input. Exiting with non-zero status from this script prevent
-`git-p4 submit` from launching. It can be bypassed with the `--no-verify`
-command line option. Run `git-p4 submit --help` for details.
+`shit-p4 submit` from launching. It can be bypassed with the `--no-verify`
+command line option. Run `shit-p4 submit --help` for details.
 
 
 
@@ -757,8 +757,8 @@ running passing "1", "1" should not be possible.
 
 SEE ALSO
 --------
-linkgit:git-hook[1]
+linkshit:shit-hook[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

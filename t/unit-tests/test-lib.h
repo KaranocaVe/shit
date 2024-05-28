@@ -1,7 +1,7 @@
 #ifndef TEST_LIB_H
 #define TEST_LIB_H
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 /*
  * Run a test function, returns 1 if the test succeeds, 0 if it

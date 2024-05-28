@@ -1,21 +1,21 @@
-git-difftool(1)
+shit-difftool(1)
 ===============
 
 NAME
 ----
-git-difftool - Show changes using common diff tools
+shit-difftool - Show changes using common diff tools
 
 SYNOPSIS
 --------
 [verse]
-'git difftool' [<options>] [<commit> [<commit>]] [--] [<path>...]
+'shit difftool' [<options>] [<commit> [<commit>]] [--] [<path>...]
 
 DESCRIPTION
 -----------
-'git difftool' is a Git command that allows you to compare and edit files
-between revisions using common diff tools.  'git difftool' is a frontend
-to 'git diff' and accepts the same options and arguments. See
-linkgit:git-diff[1].
+'shit difftool' is a shit command that allows you to compare and edit files
+between revisions using common diff tools.  'shit difftool' is a frontend
+to 'shit diff' and accepts the same options and arguments. See
+linkshit:shit-diff[1].
 
 OPTIONS
 -------
@@ -45,26 +45,26 @@ OPTIONS
 -t <tool>::
 --tool=<tool>::
 	Use the diff tool specified by <tool>.  Valid values include
-	emerge, kompare, meld, and vimdiff. Run `git difftool --tool-help`
+	emerge, kompare, meld, and vimdiff. Run `shit difftool --tool-help`
 	for the list of valid <tool> settings.
 +
-If a diff tool is not specified, 'git difftool'
+If a diff tool is not specified, 'shit difftool'
 will use the configuration variable `diff.tool`.  If the
-configuration variable `diff.tool` is not set, 'git difftool'
+configuration variable `diff.tool` is not set, 'shit difftool'
 will pick a suitable default.
 +
 You can explicitly provide a full path to the tool by setting the
 configuration variable `difftool.<tool>.path`. For example, you
 can configure the absolute path to kdiff3 by setting
-`difftool.kdiff3.path`. Otherwise, 'git difftool' assumes the
+`difftool.kdiff3.path`. Otherwise, 'shit difftool' assumes the
 tool is available in PATH.
 +
 Instead of running one of the known diff tools,
-'git difftool' can be customized to run an alternative program
+'shit difftool' can be customized to run an alternative program
 by specifying the command line to invoke in a configuration
 variable `difftool.<tool>.cmd`.
 +
-When 'git difftool' is invoked with this tool (either through the
+When 'shit difftool' is invoked with this tool (either through the
 `-t` or `--tool` option or the `diff.tool` configuration variable)
 the configured command line will be invoked with the following
 variables available: `$LOCAL` is set to the name of the temporary
@@ -78,24 +78,24 @@ with custom merge tool commands and has the same value as `$MERGED`.
 	Print a list of diff tools that may be used with `--tool`.
 
 --[no-]symlinks::
-	'git difftool''s default behavior is to create symlinks to the
+	'shit difftool''s default behavior is to create symlinks to the
 	working tree when run in `--dir-diff` mode and the right-hand
 	side of the comparison yields the same content as the file in
 	the working tree.
 +
-Specifying `--no-symlinks` instructs 'git difftool' to create copies
+Specifying `--no-symlinks` instructs 'shit difftool' to create copies
 instead.  `--no-symlinks` is the default on Windows.
 
 -x <command>::
 --extcmd=<command>::
 	Specify a custom command for viewing diffs.
-	'git-difftool' ignores the configured defaults and runs
+	'shit-difftool' ignores the configured defaults and runs
 	`<command> $LOCAL $REMOTE` when this option is specified.
 	Additionally, `$BASE` is set in the environment.
 
 -g::
 --[no-]gui::
-	When 'git-difftool' is invoked with the `-g` or `--gui` option
+	When 'shit-difftool' is invoked with the `-g` or `--gui` option
 	the default diff tool will be read from the configured
 	`diff.guitool` variable instead of `diff.tool`. This may be
 	selected automatically using the configuration variable
@@ -106,17 +106,17 @@ instead.  `--no-symlinks` is the default on Windows.
 
 --[no-]trust-exit-code::
 	Errors reported by the diff tool are ignored by default.
-	Use `--trust-exit-code` to make 'git-difftool' exit when an
+	Use `--trust-exit-code` to make 'shit-difftool' exit when an
 	invoked diff tool returns a non-zero exit code.
 +
-'git-difftool' will forward the exit code of the invoked tool when
+'shit-difftool' will forward the exit code of the invoked tool when
 `--trust-exit-code` is used.
 
-See linkgit:git-diff[1] for the full list of supported options.
+See linkshit:shit-diff[1] for the full list of supported options.
 
 CONFIGURATION
 -------------
-'git difftool' falls back to 'git mergetool' config variables when the
+'shit difftool' falls back to 'shit mergetool' config variables when the
 difftool equivalents have not been defined.
 
 include::includes/cmd-config-section-rest.txt[]
@@ -125,15 +125,15 @@ include::config/difftool.txt[]
 
 SEE ALSO
 --------
-linkgit:git-diff[1]::
+linkshit:shit-diff[1]::
 	 Show changes between commits, commit and working tree, etc
 
-linkgit:git-mergetool[1]::
+linkshit:shit-mergetool[1]::
 	Run merge conflict resolution tools to resolve merge conflicts
 
-linkgit:git-config[1]::
+linkshit:shit-config[1]::
 	 Get and set repository or global options
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

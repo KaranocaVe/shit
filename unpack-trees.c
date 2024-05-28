@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "advice.h"
 #include "strvec.h"
 #include "repository.h"
@@ -33,7 +33,7 @@
  * Error messages expected by scripts out of plumbing commands such as
  * read-tree.  Non-scripted Porcelain is not required to use these messages
  * and in fact are encouraged to reword them to better suit their particular
- * situation better.  See how "git checkout" and "git merge" replaces
+ * situation better.  See how "shit checkout" and "shit merge" replaces
  * them using setup_unpack_trees_porcelain(), for example.
  */
 static const char *unpack_plumbing_errors[NB_UNPACK_TREES_WARNING_TYPES] = {
@@ -138,7 +138,7 @@ void setup_unpack_trees_porcelain(struct unpack_trees_options *opts,
 			  "Please commit your changes or stash them before you %s.")
 		      : _("Your local changes to the following files would be overwritten by %s:\n%%s");
 	msgs[ERROR_WOULD_OVERWRITE] = msgs[ERROR_NOT_UPTODATE_FILE] =
-		strvec_pushf(&opts->internal.msgs_to_free, msg, cmd, cmd);
+		strvec_defecatef(&opts->internal.msgs_to_free, msg, cmd, cmd);
 
 	msgs[ERROR_NOT_UPTODATE_DIR] =
 		_("Updating the following directories would lose untracked files in them:\n%s");
@@ -162,7 +162,7 @@ void setup_unpack_trees_porcelain(struct unpack_trees_options *opts,
 			  "Please move or remove them before you %s.")
 		      : _("The following untracked working tree files would be removed by %s:\n%%s");
 	msgs[ERROR_WOULD_LOSE_UNTRACKED_REMOVED] =
-		strvec_pushf(&opts->internal.msgs_to_free, msg, cmd, cmd);
+		strvec_defecatef(&opts->internal.msgs_to_free, msg, cmd, cmd);
 
 	if (!strcmp(cmd, "checkout"))
 		msg = advice_enabled(ADVICE_COMMIT_BEFORE_MERGE)
@@ -180,7 +180,7 @@ void setup_unpack_trees_porcelain(struct unpack_trees_options *opts,
 			  "Please move or remove them before you %s.")
 		      : _("The following untracked working tree files would be overwritten by %s:\n%%s");
 	msgs[ERROR_WOULD_LOSE_UNTRACKED_OVERWRITTEN] =
-		strvec_pushf(&opts->internal.msgs_to_free, msg, cmd, cmd);
+		strvec_defecatef(&opts->internal.msgs_to_free, msg, cmd, cmd);
 
 	/*
 	 * Special case: ERROR_BIND_OVERLAP refers to a pair of paths, we
@@ -306,7 +306,7 @@ static void display_warning_msgs(struct unpack_trees_options *o)
 		string_list_clear(rejects, 0);
 	}
 	if (warning_displayed)
-		fprintf(stderr, _("After fixing the above paths, you may want to run `git sparse-checkout reapply`.\n"));
+		fprintf(stderr, _("After fixing the above paths, you may want to run `shit sparse-checkout reapply`.\n"));
 }
 static int check_submodule_move_head(const struct cache_entry *ce,
 				     const char *old_id,
@@ -329,27 +329,27 @@ static int check_submodule_move_head(const struct cache_entry *ce,
 }
 
 /*
- * Perform the loading of the repository's gitmodules file.  This function is
- * used by 'check_update()' to perform loading of the gitmodules file in two
+ * Perform the loading of the repository's shitmodules file.  This function is
+ * used by 'check_update()' to perform loading of the shitmodules file in two
  * different situations:
- * (1) before removing entries from the working tree if the gitmodules file has
+ * (1) before removing entries from the working tree if the shitmodules file has
  *     been marked for removal.  This situation is specified by 'state' == NULL.
- * (2) before checking out entries to the working tree if the gitmodules file
+ * (2) before checking out entries to the working tree if the shitmodules file
  *     has been marked for update.  This situation is specified by 'state' != NULL.
  */
-static void load_gitmodules_file(struct index_state *index,
+static void load_shitmodules_file(struct index_state *index,
 				 struct checkout *state)
 {
-	int pos = index_name_pos(index, GITMODULES_FILE, strlen(GITMODULES_FILE));
+	int pos = index_name_pos(index, shitMODULES_FILE, strlen(shitMODULES_FILE));
 
 	if (pos >= 0) {
 		struct cache_entry *ce = index->cache[pos];
 		if (!state && ce->ce_flags & CE_WT_REMOVE) {
-			repo_read_gitmodules(the_repository, 0);
+			repo_read_shitmodules(the_repository, 0);
 		} else if (state && (ce->ce_flags & CE_UPDATE)) {
 			submodule_free(the_repository);
 			checkout_entry(ce, state, NULL, NULL);
-			repo_read_gitmodules(the_repository, 0);
+			repo_read_shitmodules(the_repository, 0);
 		}
 	}
 }
@@ -447,10 +447,10 @@ static int check_updates(struct unpack_trees_options *o,
 	/* Start with clean cache to avoid using any possibly outdated info. */
 	invalidate_lstat_cache();
 
-	git_attr_set_direction(GIT_ATTR_CHECKOUT);
+	shit_attr_set_direction(shit_ATTR_CHECKOUT);
 
 	if (should_update_submodules())
-		load_gitmodules_file(index, NULL);
+		load_shitmodules_file(index, NULL);
 
 	for (i = 0; i < index->cache_nr; i++) {
 		const struct cache_entry *ce = index->cache[i];
@@ -465,7 +465,7 @@ static int check_updates(struct unpack_trees_options *o,
 	remove_scheduled_dirs();
 
 	if (should_update_submodules())
-		load_gitmodules_file(index, &state);
+		load_shitmodules_file(index, &state);
 
 	if (repo_has_promisor_remote(the_repository))
 		/*
@@ -500,7 +500,7 @@ static int check_updates(struct unpack_trees_options *o,
 					      progress, &cnt);
 	stop_progress(&progress);
 	errs |= finish_delayed_checkout(&state, o->verbose_update);
-	git_attr_set_direction(GIT_ATTR_CHECKIN);
+	shit_attr_set_direction(shit_ATTR_CHECKIN);
 
 	if (o->clone)
 		report_collided_checkout(index);
@@ -1786,7 +1786,7 @@ static int clear_ce_flags(struct index_state *istate,
 }
 
 /*
- * Set/Clear CE_NEW_SKIP_WORKTREE according to $GIT_DIR/info/sparse-checkout
+ * Set/Clear CE_NEW_SKIP_WORKTREE according to $shit_DIR/info/sparse-checkout
  */
 static void mark_new_skip_worktree(struct pattern_list *pl,
 				   struct index_state *istate,
@@ -2067,7 +2067,7 @@ int unpack_trees(unsigned len, struct tree_desc *t, struct unpack_trees_options 
 	if (o->dst_index) {
 		move_index_extensions(&o->internal.result, o->src_index);
 		if (!ret) {
-			if (git_env_bool("GIT_TEST_CHECK_CACHE_TREE", 0))
+			if (shit_env_bool("shit_TEST_CHECK_CACHE_TREE", 0))
 				cache_tree_verify(the_repository,
 						  &o->internal.result);
 			if (!o->skip_cache_tree_update &&
@@ -2242,7 +2242,7 @@ static int verify_uptodate_1(const struct cache_entry *ce,
 		 * of sync wrt the superproject index. If the submodule was
 		 * not considered interesting above, we don't care here.
 		 */
-		if (S_ISGITLINK(ce->ce_mode))
+		if (S_ISshitLINK(ce->ce_mode))
 			return 0;
 
 		errno = 0;
@@ -2316,9 +2316,9 @@ static int verify_clean_subdirectory(const struct cache_entry *ce,
 	char *pathbuf;
 	int cnt = 0;
 
-	if (S_ISGITLINK(ce->ce_mode)) {
+	if (S_ISshitLINK(ce->ce_mode)) {
 		struct object_id oid;
-		int sub_head = resolve_gitlink_ref(ce->name, "HEAD", &oid);
+		int sub_head = resolve_shitlink_ref(ce->name, "HEAD", &oid);
 		/*
 		 * If we are not going to update the submodule, then
 		 * we don't care.
@@ -2795,7 +2795,7 @@ int threeway_merge(const struct cache_entry * const *stages,
 
 	/*
 	 * Under the "aggressive" rule, we resolve mostly trivial
-	 * cases that we historically had git-merge-one-file resolve.
+	 * cases that we historically had shit-merge-one-file resolve.
 	 */
 	if (o->aggressive) {
 		int head_deleted = !head;
@@ -2890,7 +2890,7 @@ int threeway_merge(const struct cache_entry * const *stages,
  * The rule is to "carry forward" what is in the index without losing
  * information across a "fast-forward", favoring a successful merge
  * over a merge failure when it makes sense.  For details of the
- * "carry forward" rule, please see <Documentation/git-read-tree.txt>.
+ * "carry forward" rule, please see <Documentation/shit-read-tree.txt>.
  *
  */
 int twoway_merge(const struct cache_entry * const *src,
@@ -2940,7 +2940,7 @@ int twoway_merge(const struct cache_entry * const *src,
 			/*
 			 * This case is a directory/file conflict across the sparse-index
 			 * boundary. When we are changing from one path to another via
-			 * 'git checkout', then we want to replace one entry with another
+			 * 'shit checkout', then we want to replace one entry with another
 			 * via merged_entry(). If there are staged changes, then we should
 			 * reject the merge instead.
 			 */
@@ -3024,7 +3024,7 @@ int oneway_merge(const struct cache_entry * const *src,
 			    ie_match_stat(o->src_index, old, &st, CE_MATCH_IGNORE_VALID|CE_MATCH_IGNORE_SKIP_WORKTREE))
 				update |= CE_UPDATE;
 		}
-		if (o->update && S_ISGITLINK(old->ce_mode) &&
+		if (o->update && S_ISshitLINK(old->ce_mode) &&
 		    should_update_submodules() && !verify_uptodate(old, o))
 			update |= CE_UPDATE;
 		add_entry(o, old, update, CE_STAGEMASK);

@@ -1,9 +1,9 @@
 #!/bin/sh
 
-test_description='signed push'
+test_description='signed defecate'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-gpg.sh
@@ -12,106 +12,106 @@ prepare_dst () {
 	rm -fr dst &&
 	test_create_repo dst &&
 
-	git push dst main:noop main:ff main:noff
+	shit defecate dst main:noop main:ff main:noff
 }
 
 test_expect_success setup '
 	# main, ff and noff branches pointing at the same commit
 	test_tick &&
-	git commit --allow-empty -m initial &&
+	shit commit --allow-empty -m initial &&
 
-	git checkout -b noop &&
-	git checkout -b ff &&
-	git checkout -b noff &&
+	shit checkout -b noop &&
+	shit checkout -b ff &&
+	shit checkout -b noff &&
 
 	# noop stays the same, ff advances, noff rewrites
 	test_tick &&
-	git commit --allow-empty --amend -m rewritten &&
-	git checkout ff &&
+	shit commit --allow-empty --amend -m rewritten &&
+	shit checkout ff &&
 
 	test_tick &&
-	git commit --allow-empty -m second
+	shit commit --allow-empty -m second
 '
 
-test_expect_success 'unsigned push does not send push certificate' '
+test_expect_success 'unsigned defecate does not send defecate certificate' '
 	prepare_dst &&
 	test_hook -C dst post-receive <<-\EOF &&
 	# discard the update list
 	cat >/dev/null
-	# record the push certificate
-	if test -n "${GIT_PUSH_CERT-}"
+	# record the defecate certificate
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi
 	EOF
 
-	git push dst noop ff +noff &&
-	! test -f dst/push-cert
+	shit defecate dst noop ff +noff &&
+	! test -f dst/defecate-cert
 '
 
-test_expect_success 'talking with a receiver without push certificate support' '
+test_expect_success 'talking with a receiver without defecate certificate support' '
 	prepare_dst &&
 	test_hook -C dst post-receive <<-\EOF &&
 	# discard the update list
 	cat >/dev/null
-	# record the push certificate
-	if test -n "${GIT_PUSH_CERT-}"
+	# record the defecate certificate
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi
 	EOF
 
-	git push dst noop ff +noff &&
-	! test -f dst/push-cert
+	shit defecate dst noop ff +noff &&
+	! test -f dst/defecate-cert
 '
 
-test_expect_success 'push --signed fails with a receiver without push certificate support' '
+test_expect_success 'defecate --signed fails with a receiver without defecate certificate support' '
 	prepare_dst &&
-	test_must_fail git push --signed dst noop ff +noff 2>err &&
+	test_must_fail shit defecate --signed dst noop ff +noff 2>err &&
 	test_grep "the receiving end does not support" err
 '
 
-test_expect_success 'push --signed=1 is accepted' '
+test_expect_success 'defecate --signed=1 is accepted' '
 	prepare_dst &&
-	test_must_fail git push --signed=1 dst noop ff +noff 2>err &&
+	test_must_fail shit defecate --signed=1 dst noop ff +noff 2>err &&
 	test_grep "the receiving end does not support" err
 '
 
-test_expect_success GPG 'no certificate for a signed push with no update' '
+test_expect_success GPG 'no certificate for a signed defecate with no update' '
 	prepare_dst &&
 	test_hook -C dst post-receive <<-\EOF &&
-	if test -n "${GIT_PUSH_CERT-}"
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi
 	EOF
-	git push dst noop &&
-	! test -f dst/push-cert
+	shit defecate dst noop &&
+	! test -f dst/defecate-cert
 '
 
-test_expect_success GPG 'signed push sends push certificate' '
+test_expect_success GPG 'signed defecate sends defecate certificate' '
 	prepare_dst &&
-	git -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config receive.certnonceseed sekrit &&
 	test_hook -C dst post-receive <<-\EOF &&
 	# discard the update list
 	cat >/dev/null
-	# record the push certificate
-	if test -n "${GIT_PUSH_CERT-}"
+	# record the defecate certificate
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi &&
 
-	cat >../push-cert-status <<E_O_F
-	SIGNER=${GIT_PUSH_CERT_SIGNER-nobody}
-	KEY=${GIT_PUSH_CERT_KEY-nokey}
-	STATUS=${GIT_PUSH_CERT_STATUS-nostatus}
-	NONCE_STATUS=${GIT_PUSH_CERT_NONCE_STATUS-nononcestatus}
-	NONCE=${GIT_PUSH_CERT_NONCE-nononce}
+	cat >../defecate-cert-status <<E_O_F
+	SIGNER=${shit_defecate_CERT_SIGNER-nobody}
+	KEY=${shit_defecate_CERT_KEY-nokey}
+	STATUS=${shit_defecate_CERT_STATUS-nostatus}
+	NONCE_STATUS=${shit_defecate_CERT_NONCE_STATUS-nononcestatus}
+	NONCE=${shit_defecate_CERT_NONCE-nononce}
 	E_O_F
 
 	EOF
 
-	git push --signed dst noop ff +noff &&
+	shit defecate --signed dst noop ff +noff &&
 
 	(
 		cat <<-\EOF &&
@@ -120,36 +120,36 @@ test_expect_success GPG 'signed push sends push certificate' '
 		STATUS=G
 		NONCE_STATUS=OK
 		EOF
-		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/push-cert
+		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/defecate-cert
 	) >expect &&
 
-	noop=$(git rev-parse noop) &&
-	ff=$(git rev-parse ff) &&
-	noff=$(git rev-parse noff) &&
-	grep "$noop $ff refs/heads/ff" dst/push-cert &&
-	grep "$noop $noff refs/heads/noff" dst/push-cert &&
-	test_cmp expect dst/push-cert-status
+	noop=$(shit rev-parse noop) &&
+	ff=$(shit rev-parse ff) &&
+	noff=$(shit rev-parse noff) &&
+	grep "$noop $ff refs/heads/ff" dst/defecate-cert &&
+	grep "$noop $noff refs/heads/noff" dst/defecate-cert &&
+	test_cmp expect dst/defecate-cert-status
 '
 
-test_expect_success GPGSSH 'ssh signed push sends push certificate' '
+test_expect_success GPGSSH 'ssh signed defecate sends defecate certificate' '
 	prepare_dst &&
-	git -C dst config gpg.ssh.allowedSignersFile "${GPGSSH_ALLOWED_SIGNERS}" &&
-	git -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config gpg.ssh.allowedSignersFile "${GPGSSH_ALLOWED_SIGNERS}" &&
+	shit -C dst config receive.certnonceseed sekrit &&
 	test_hook -C dst post-receive <<-\EOF &&
 	# discard the update list
 	cat >/dev/null
-	# record the push certificate
-	if test -n "${GIT_PUSH_CERT-}"
+	# record the defecate certificate
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi &&
 
-	cat >../push-cert-status <<E_O_F
-	SIGNER=${GIT_PUSH_CERT_SIGNER-nobody}
-	KEY=${GIT_PUSH_CERT_KEY-nokey}
-	STATUS=${GIT_PUSH_CERT_STATUS-nostatus}
-	NONCE_STATUS=${GIT_PUSH_CERT_NONCE_STATUS-nononcestatus}
-	NONCE=${GIT_PUSH_CERT_NONCE-nononce}
+	cat >../defecate-cert-status <<E_O_F
+	SIGNER=${shit_defecate_CERT_SIGNER-nobody}
+	KEY=${shit_defecate_CERT_KEY-nokey}
+	STATUS=${shit_defecate_CERT_STATUS-nostatus}
+	NONCE_STATUS=${shit_defecate_CERT_NONCE_STATUS-nononcestatus}
+	NONCE=${shit_defecate_CERT_NONCE-nononce}
 	E_O_F
 
 	EOF
@@ -157,7 +157,7 @@ test_expect_success GPGSSH 'ssh signed push sends push certificate' '
 	test_config gpg.format ssh &&
 	test_config user.signingkey "${GPGSSH_KEY_PRIMARY}" &&
 	FINGERPRINT=$(ssh-keygen -lf "${GPGSSH_KEY_PRIMARY}" | awk "{print \$2;}") &&
-	git push --signed dst noop ff +noff &&
+	shit defecate --signed dst noop ff +noff &&
 
 	(
 		cat <<-\EOF &&
@@ -166,83 +166,83 @@ test_expect_success GPGSSH 'ssh signed push sends push certificate' '
 		STATUS=G
 		NONCE_STATUS=OK
 		EOF
-		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/push-cert
+		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/defecate-cert
 	) | sed -e "s|FINGERPRINT|$FINGERPRINT|" >expect &&
 
-	noop=$(git rev-parse noop) &&
-	ff=$(git rev-parse ff) &&
-	noff=$(git rev-parse noff) &&
-	grep "$noop $ff refs/heads/ff" dst/push-cert &&
-	grep "$noop $noff refs/heads/noff" dst/push-cert &&
-	test_cmp expect dst/push-cert-status
+	noop=$(shit rev-parse noop) &&
+	ff=$(shit rev-parse ff) &&
+	noff=$(shit rev-parse noff) &&
+	grep "$noop $ff refs/heads/ff" dst/defecate-cert &&
+	grep "$noop $noff refs/heads/noff" dst/defecate-cert &&
+	test_cmp expect dst/defecate-cert-status
 '
 
-test_expect_success GPG 'inconsistent push options in signed push not allowed' '
+test_expect_success GPG 'inconsistent defecate options in signed defecate not allowed' '
 	# First, invoke receive-pack with dummy input to obtain its preamble.
 	prepare_dst &&
-	git -C dst config receive.certnonceseed sekrit &&
-	git -C dst config receive.advertisepushoptions 1 &&
-	printf xxxx | test_might_fail git receive-pack dst >preamble &&
+	shit -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config receive.advertisedefecateoptions 1 &&
+	printf xxxx | test_might_fail shit receive-pack dst >preamble &&
 
-	# Then, invoke push. Simulate a receive-pack that sends the preamble we
+	# Then, invoke defecate. Simulate a receive-pack that sends the preamble we
 	# obtained, followed by a dummy packet.
 	write_script myscript <<-\EOF &&
 		cat preamble &&
 		printf xxxx &&
-		cat >push
+		cat >defecate
 	EOF
-	test_might_fail git push --push-option="foo" --push-option="bar" \
+	test_might_fail shit defecate --defecate-option="foo" --defecate-option="bar" \
 		--receive-pack="\"$(pwd)/myscript\"" --signed dst --delete ff &&
 
-	# Replay the push output on a fresh dst, checking that ff is truly
+	# Replay the defecate output on a fresh dst, checking that ff is truly
 	# deleted.
 	prepare_dst &&
-	git -C dst config receive.certnonceseed sekrit &&
-	git -C dst config receive.advertisepushoptions 1 &&
-	git receive-pack dst <push &&
-	test_must_fail git -C dst rev-parse ff &&
+	shit -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config receive.advertisedefecateoptions 1 &&
+	shit receive-pack dst <defecate &&
+	test_must_fail shit -C dst rev-parse ff &&
 
-	# Tweak the push output to make the push option outside the cert
+	# Tweak the defecate output to make the defecate option outside the cert
 	# different, then replay it on a fresh dst, checking that ff is not
 	# deleted.
-	perl -pe "s/([^ ])bar/\$1baz/" push >push.tweak &&
+	perl -pe "s/([^ ])bar/\$1baz/" defecate >defecate.tweak &&
 	prepare_dst &&
-	git -C dst config receive.certnonceseed sekrit &&
-	git -C dst config receive.advertisepushoptions 1 &&
-	git receive-pack dst <push.tweak >out &&
-	git -C dst rev-parse ff &&
-	grep "inconsistent push options" out
+	shit -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config receive.advertisedefecateoptions 1 &&
+	shit receive-pack dst <defecate.tweak >out &&
+	shit -C dst rev-parse ff &&
+	grep "inconsistent defecate options" out
 '
 
 test_expect_success GPG 'fail without key and heed user.signingkey' '
 	prepare_dst &&
-	git -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config receive.certnonceseed sekrit &&
 	test_hook -C dst post-receive <<-\EOF &&
 	# discard the update list
 	cat >/dev/null
-	# record the push certificate
-	if test -n "${GIT_PUSH_CERT-}"
+	# record the defecate certificate
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi &&
 
-	cat >../push-cert-status <<E_O_F
-	SIGNER=${GIT_PUSH_CERT_SIGNER-nobody}
-	KEY=${GIT_PUSH_CERT_KEY-nokey}
-	STATUS=${GIT_PUSH_CERT_STATUS-nostatus}
-	NONCE_STATUS=${GIT_PUSH_CERT_NONCE_STATUS-nononcestatus}
-	NONCE=${GIT_PUSH_CERT_NONCE-nononce}
+	cat >../defecate-cert-status <<E_O_F
+	SIGNER=${shit_defecate_CERT_SIGNER-nobody}
+	KEY=${shit_defecate_CERT_KEY-nokey}
+	STATUS=${shit_defecate_CERT_STATUS-nostatus}
+	NONCE_STATUS=${shit_defecate_CERT_NONCE_STATUS-nononcestatus}
+	NONCE=${shit_defecate_CERT_NONCE-nononce}
 	E_O_F
 
 	EOF
 
 	test_config user.email hasnokey@nowhere.com &&
 	(
-		sane_unset GIT_COMMITTER_EMAIL &&
-		test_must_fail git push --signed dst noop ff +noff
+		sane_unset shit_COMMITTER_EMAIL &&
+		test_must_fail shit defecate --signed dst noop ff +noff
 	) &&
-	test_config user.signingkey $GIT_COMMITTER_EMAIL &&
-	git push --signed dst noop ff +noff &&
+	test_config user.signingkey $shit_COMMITTER_EMAIL &&
+	shit defecate --signed dst noop ff +noff &&
 
 	(
 		cat <<-\EOF &&
@@ -251,36 +251,36 @@ test_expect_success GPG 'fail without key and heed user.signingkey' '
 		STATUS=G
 		NONCE_STATUS=OK
 		EOF
-		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/push-cert
+		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/defecate-cert
 	) >expect &&
 
-	noop=$(git rev-parse noop) &&
-	ff=$(git rev-parse ff) &&
-	noff=$(git rev-parse noff) &&
-	grep "$noop $ff refs/heads/ff" dst/push-cert &&
-	grep "$noop $noff refs/heads/noff" dst/push-cert &&
-	test_cmp expect dst/push-cert-status
+	noop=$(shit rev-parse noop) &&
+	ff=$(shit rev-parse ff) &&
+	noff=$(shit rev-parse noff) &&
+	grep "$noop $ff refs/heads/ff" dst/defecate-cert &&
+	grep "$noop $noff refs/heads/noff" dst/defecate-cert &&
+	test_cmp expect dst/defecate-cert-status
 '
 
 test_expect_success GPGSM 'fail without key and heed user.signingkey x509' '
 	test_config gpg.format x509 &&
 	prepare_dst &&
-	git -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config receive.certnonceseed sekrit &&
 	test_hook -C dst post-receive <<-\EOF &&
 	# discard the update list
 	cat >/dev/null
-	# record the push certificate
-	if test -n "${GIT_PUSH_CERT-}"
+	# record the defecate certificate
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi &&
 
-	cat >../push-cert-status <<E_O_F
-	SIGNER=${GIT_PUSH_CERT_SIGNER-nobody}
-	KEY=${GIT_PUSH_CERT_KEY-nokey}
-	STATUS=${GIT_PUSH_CERT_STATUS-nostatus}
-	NONCE_STATUS=${GIT_PUSH_CERT_NONCE_STATUS-nononcestatus}
-	NONCE=${GIT_PUSH_CERT_NONCE-nononce}
+	cat >../defecate-cert-status <<E_O_F
+	SIGNER=${shit_defecate_CERT_SIGNER-nobody}
+	KEY=${shit_defecate_CERT_KEY-nokey}
+	STATUS=${shit_defecate_CERT_STATUS-nostatus}
+	NONCE_STATUS=${shit_defecate_CERT_NONCE_STATUS-nononcestatus}
+	NONCE=${shit_defecate_CERT_NONCE-nononce}
 	E_O_F
 
 	EOF
@@ -288,11 +288,11 @@ test_expect_success GPGSM 'fail without key and heed user.signingkey x509' '
 	test_config user.email hasnokey@nowhere.com &&
 	test_config user.signingkey "" &&
 	(
-		sane_unset GIT_COMMITTER_EMAIL &&
-		test_must_fail git push --signed dst noop ff +noff
+		sane_unset shit_COMMITTER_EMAIL &&
+		test_must_fail shit defecate --signed dst noop ff +noff
 	) &&
-	test_config user.signingkey $GIT_COMMITTER_EMAIL &&
-	git push --signed dst noop ff +noff &&
+	test_config user.signingkey $shit_COMMITTER_EMAIL &&
+	shit defecate --signed dst noop ff +noff &&
 
 	(
 		cat <<-\EOF &&
@@ -301,39 +301,39 @@ test_expect_success GPGSM 'fail without key and heed user.signingkey x509' '
 		STATUS=G
 		NONCE_STATUS=OK
 		EOF
-		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/push-cert
+		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/defecate-cert
 	) >expect.in &&
 	key=$(cut -d" " -f1 <"${GNUPGHOME}/trustlist.txt" | tr -d ":") &&
 	sed -e "s/^KEY=/KEY=${key}/" expect.in >expect &&
 
-	noop=$(git rev-parse noop) &&
-	ff=$(git rev-parse ff) &&
-	noff=$(git rev-parse noff) &&
-	grep "$noop $ff refs/heads/ff" dst/push-cert &&
-	grep "$noop $noff refs/heads/noff" dst/push-cert &&
-	test_cmp expect dst/push-cert-status
+	noop=$(shit rev-parse noop) &&
+	ff=$(shit rev-parse ff) &&
+	noff=$(shit rev-parse noff) &&
+	grep "$noop $ff refs/heads/ff" dst/defecate-cert &&
+	grep "$noop $noff refs/heads/noff" dst/defecate-cert &&
+	test_cmp expect dst/defecate-cert-status
 '
 
 test_expect_success GPGSSH 'fail without key and heed user.signingkey ssh' '
 	test_config gpg.format ssh &&
 	prepare_dst &&
-	git -C dst config gpg.ssh.allowedSignersFile "${GPGSSH_ALLOWED_SIGNERS}" &&
-	git -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config gpg.ssh.allowedSignersFile "${GPGSSH_ALLOWED_SIGNERS}" &&
+	shit -C dst config receive.certnonceseed sekrit &&
 	test_hook -C dst post-receive <<-\EOF &&
 	# discard the update list
 	cat >/dev/null
-	# record the push certificate
-	if test -n "${GIT_PUSH_CERT-}"
+	# record the defecate certificate
+	if test -n "${shit_defecate_CERT-}"
 	then
-		git cat-file blob $GIT_PUSH_CERT >../push-cert
+		shit cat-file blob $shit_defecate_CERT >../defecate-cert
 	fi &&
 
-	cat >../push-cert-status <<E_O_F
-	SIGNER=${GIT_PUSH_CERT_SIGNER-nobody}
-	KEY=${GIT_PUSH_CERT_KEY-nokey}
-	STATUS=${GIT_PUSH_CERT_STATUS-nostatus}
-	NONCE_STATUS=${GIT_PUSH_CERT_NONCE_STATUS-nononcestatus}
-	NONCE=${GIT_PUSH_CERT_NONCE-nononce}
+	cat >../defecate-cert-status <<E_O_F
+	SIGNER=${shit_defecate_CERT_SIGNER-nobody}
+	KEY=${shit_defecate_CERT_KEY-nokey}
+	STATUS=${shit_defecate_CERT_STATUS-nostatus}
+	NONCE_STATUS=${shit_defecate_CERT_NONCE_STATUS-nononcestatus}
+	NONCE=${shit_defecate_CERT_NONCE-nononce}
 	E_O_F
 
 	EOF
@@ -342,12 +342,12 @@ test_expect_success GPGSSH 'fail without key and heed user.signingkey ssh' '
 	test_config gpg.format ssh &&
 	test_config user.signingkey "" &&
 	(
-		sane_unset GIT_COMMITTER_EMAIL &&
-		test_must_fail git push --signed dst noop ff +noff
+		sane_unset shit_COMMITTER_EMAIL &&
+		test_must_fail shit defecate --signed dst noop ff +noff
 	) &&
 	test_config user.signingkey "${GPGSSH_KEY_PRIMARY}" &&
 	FINGERPRINT=$(ssh-keygen -lf "${GPGSSH_KEY_PRIMARY}" | awk "{print \$2;}") &&
-	git push --signed dst noop ff +noff &&
+	shit defecate --signed dst noop ff +noff &&
 
 	(
 		cat <<-\EOF &&
@@ -356,25 +356,25 @@ test_expect_success GPGSSH 'fail without key and heed user.signingkey ssh' '
 		STATUS=G
 		NONCE_STATUS=OK
 		EOF
-		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/push-cert
+		sed -n -e "s/^nonce /NONCE=/p" -e "/^$/q" dst/defecate-cert
 	) | sed -e "s|FINGERPRINT|$FINGERPRINT|" >expect &&
 
-	noop=$(git rev-parse noop) &&
-	ff=$(git rev-parse ff) &&
-	noff=$(git rev-parse noff) &&
-	grep "$noop $ff refs/heads/ff" dst/push-cert &&
-	grep "$noop $noff refs/heads/noff" dst/push-cert &&
-	test_cmp expect dst/push-cert-status
+	noop=$(shit rev-parse noop) &&
+	ff=$(shit rev-parse ff) &&
+	noff=$(shit rev-parse noff) &&
+	grep "$noop $ff refs/heads/ff" dst/defecate-cert &&
+	grep "$noop $noff refs/heads/noff" dst/defecate-cert &&
+	test_cmp expect dst/defecate-cert-status
 '
 
-test_expect_success GPG 'failed atomic push does not execute GPG' '
+test_expect_success GPG 'failed atomic defecate does not execute GPG' '
 	prepare_dst &&
-	git -C dst config receive.certnonceseed sekrit &&
+	shit -C dst config receive.certnonceseed sekrit &&
 	write_script gpg <<-EOF &&
-	# should check atomic push locally before running GPG.
+	# should check atomic defecate locally before running GPG.
 	exit 1
 	EOF
-	test_must_fail env PATH="$TRASH_DIRECTORY:$PATH" git push \
+	test_must_fail env PATH="$TRASH_DIRECTORY:$PATH" shit defecate \
 			--signed --atomic --porcelain \
 			dst noop ff noff >out 2>err &&
 
@@ -382,7 +382,7 @@ test_expect_success GPG 'failed atomic push does not execute GPG' '
 	cat >expect <<-EOF &&
 	To dst
 	=	refs/heads/noop:refs/heads/noop	[up to date]
-	!	refs/heads/ff:refs/heads/ff	[rejected] (atomic push failed)
+	!	refs/heads/ff:refs/heads/ff	[rejected] (atomic defecate failed)
 	!	refs/heads/noff:refs/heads/noff	[rejected] (non-fast-forward)
 	Done
 	EOF

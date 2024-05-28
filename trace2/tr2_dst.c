@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "sigchain.h"
 #include "strbuf.h"
@@ -15,7 +15,7 @@
  * Sentinel file used to detect when we should discard new traces to avoid
  * writing too many trace files to a directory.
  */
-#define DISCARD_SENTINEL_NAME "git-trace2-discard"
+#define DISCARD_SENTINEL_NAME "shit-trace2-discard"
 
 /*
  * When set to zero, disables directory file count checks. Otherwise, controls
@@ -332,7 +332,7 @@ int tr2_dst_get_trace_fd(struct tr2_dst *dst)
 		return dst->fd;
 	}
 
-	if (strlen(tgt_value) == 1 && isdigit(*tgt_value)) {
+	if (strlen(tgt_value) == 1 && isdishit(*tgt_value)) {
 		dst->fd = atoi(tgt_value);
 		return dst->fd;
 	}
@@ -371,7 +371,7 @@ void tr2_dst_write_line(struct tr2_dst *dst, struct strbuf *buf_line)
 	 * We do not use write_in_full() because we do not want
 	 * a short-write to try again.  We are using O_APPEND mode
 	 * files and the kernel handles the atomic seek+write. If
-	 * another thread or git process is concurrently writing to
+	 * another thread or shit process is concurrently writing to
 	 * this fd or file, our remainder-write may not be contiguous
 	 * with our initial write of this message.  And that will
 	 * confuse readers.  So just don't bother.
@@ -382,7 +382,7 @@ void tr2_dst_write_line(struct tr2_dst *dst, struct strbuf *buf_line)
 	 *
 	 * If we get an IO error, just close the trace dst.
 	 */
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	bytes = write(fd, buf_line->buf, buf_line->len);
 	sigchain_pop(SIGPIPE);
 	if (bytes >= 0)

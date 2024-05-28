@@ -1,16 +1,16 @@
 #!/bin/sh
 
-test_description='fetching via git:// using core.gitproxy'
+test_description='fetching via shit:// using core.shitproxy'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'setup remote repo' '
-	git init remote &&
+	shit init remote &&
 	(cd remote &&
 	 echo content >file &&
-	 git add file &&
-	 git commit -m one
+	 shit add file &&
+	 shit commit -m one
 	)
 '
 
@@ -34,19 +34,19 @@ test_expect_success 'setup proxy script' '
 '
 
 test_expect_success 'setup local repo' '
-	git remote add fake git://example.com/remote &&
-	git config core.gitproxy ./proxy
+	shit remote add fake shit://example.com/remote &&
+	shit config core.shitproxy ./proxy
 '
 
 test_expect_success 'fetch through proxy works' '
-	git fetch fake &&
+	shit fetch fake &&
 	echo one >expect &&
-	git log -1 --format=%s FETCH_HEAD >actual &&
+	shit log -1 --format=%s FETCH_HEAD >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'funny hostnames are rejected before running proxy' '
-	test_must_fail git fetch git://-remote/repo.git 2>stderr &&
+	test_must_fail shit fetch shit://-remote/repo.shit 2>stderr &&
 	! grep "proxying for" stderr
 '
 

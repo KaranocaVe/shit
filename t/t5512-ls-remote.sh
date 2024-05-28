@@ -1,16 +1,16 @@
 #!/bin/sh
 
-test_description='git ls-remote'
+test_description='shit ls-remote'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 generate_references () {
 	for ref
 	do
-		oid=$(git rev-parse "$ref") &&
+		oid=$(shit rev-parse "$ref") &&
 		printf '%s\t%s\n' "$oid" "$ref" || return 1
 	done
 }
@@ -29,45 +29,45 @@ test_expect_success 'set up fake upload-pack' '
 '
 
 test_expect_success 'dies when no remote found' '
-	test_must_fail git ls-remote
+	test_must_fail shit ls-remote
 '
 
 test_expect_success setup '
 	>file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial &&
-	git tag mark &&
-	git tag mark1.1 &&
-	git tag mark1.2 &&
-	git tag mark1.10 &&
-	git show-ref --tags -d >expected.tag.raw &&
+	shit commit -m initial &&
+	shit tag mark &&
+	shit tag mark1.1 &&
+	shit tag mark1.2 &&
+	shit tag mark1.10 &&
+	shit show-ref --tags -d >expected.tag.raw &&
 	sed -e "s/ /	/" expected.tag.raw >expected.tag &&
 	generate_references HEAD >expected.all &&
-	git show-ref -d	>refs &&
+	shit show-ref -d	>refs &&
 	sed -e "s/ /	/" refs >>expected.all &&
 
-	git remote add self "$(pwd)/.git" &&
-	git remote add self2 "."
+	shit remote add self "$(pwd)/.shit" &&
+	shit remote add self2 "."
 '
 
-test_expect_success 'ls-remote --tags .git' '
-	git ls-remote --tags .git >actual &&
+test_expect_success 'ls-remote --tags .shit' '
+	shit ls-remote --tags .shit >actual &&
 	test_cmp expected.tag actual
 '
 
-test_expect_success 'ls-remote .git' '
-	git ls-remote .git >actual &&
+test_expect_success 'ls-remote .shit' '
+	shit ls-remote .shit >actual &&
 	test_cmp expected.all actual
 '
 
 test_expect_success 'ls-remote --tags self' '
-	git ls-remote --tags self >actual &&
+	shit ls-remote --tags self >actual &&
 	test_cmp expected.tag actual
 '
 
 test_expect_success 'ls-remote self' '
-	git ls-remote self >actual &&
+	shit ls-remote self >actual &&
 	test_cmp expected.all actual
 '
 
@@ -77,7 +77,7 @@ test_expect_success 'ls-remote --sort="version:refname" --tags self' '
 		refs/tags/mark1.1 \
 		refs/tags/mark1.2 \
 		refs/tags/mark1.10 >expect &&
-	git ls-remote --sort="version:refname" --tags self >actual &&
+	shit ls-remote --sort="version:refname" --tags self >actual &&
 	test_cmp expect actual
 '
 
@@ -87,7 +87,7 @@ test_expect_success 'ls-remote --sort="-version:refname" --tags self' '
 		refs/tags/mark1.2 \
 		refs/tags/mark1.1 \
 		refs/tags/mark >expect &&
-	git ls-remote --sort="-version:refname" --tags self >actual &&
+	shit ls-remote --sort="-version:refname" --tags self >actual &&
 	test_cmp expect actual
 '
 
@@ -97,33 +97,33 @@ test_expect_success 'ls-remote --sort="-refname" --tags self' '
 		refs/tags/mark1.10 \
 		refs/tags/mark1.1 \
 		refs/tags/mark >expect &&
-	git ls-remote --sort="-refname" --tags self >actual &&
+	shit ls-remote --sort="-refname" --tags self >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'dies when no remote specified, multiple remotes found, and no default specified' '
-	test_must_fail git ls-remote
+	test_must_fail shit ls-remote
 '
 
 test_expect_success 'succeeds when no remote specified but only one found' '
-	test_when_finished git remote add self2 "." &&
-	git remote remove self2 &&
-	git ls-remote
+	test_when_finished shit remote add self2 "." &&
+	shit remote remove self2 &&
+	shit ls-remote
 '
 
 test_expect_success 'use "origin" when no remote specified and multiple found' '
-	URL="$(pwd)/.git" &&
+	URL="$(pwd)/.shit" &&
 	echo "From $URL" >exp_err &&
 
-	git remote add origin "$URL" &&
-	git ls-remote 2>actual_err >actual &&
+	shit remote add origin "$URL" &&
+	shit ls-remote 2>actual_err >actual &&
 
 	test_cmp exp_err actual_err &&
 	test_cmp expected.all actual
 '
 
 test_expect_success 'suppress "From <url>" with -q' '
-	git ls-remote -q 2>actual_err &&
+	shit ls-remote -q 2>actual_err &&
 	! test_cmp exp_err actual_err
 '
 
@@ -134,20 +134,20 @@ test_expect_success 'use branch.<name>.remote if possible' '
 	#
 
 	# setup a new remote to differentiate from "origin"
-	git clone . other.git &&
+	shit clone . other.shit &&
 	(
-		cd other.git &&
-		echo "$(git rev-parse HEAD)	HEAD" &&
-		git show-ref	| sed -e "s/ /	/"
+		cd other.shit &&
+		echo "$(shit rev-parse HEAD)	HEAD" &&
+		shit show-ref	| sed -e "s/ /	/"
 	) >exp &&
 
-	URL="other.git" &&
+	URL="other.shit" &&
 	echo "From $URL" >exp_err &&
 
-	git remote add other $URL &&
-	git config branch.main.remote other &&
+	shit remote add other $URL &&
+	shit config branch.main.remote other &&
 
-	git ls-remote 2>actual_err >actual &&
+	shit ls-remote 2>actual_err >actual &&
 	test_cmp exp_err actual_err &&
 	test_cmp exp actual
 '
@@ -161,68 +161,68 @@ test_expect_success 'confuses pattern as remote when no remote specified' '
 		does_not_exist="refs*main"
 	fi &&
 	cat >exp <<-EOF &&
-	fatal: '\''$does_not_exist'\'' does not appear to be a git repository
+	fatal: '\''$does_not_exist'\'' does not appear to be a shit repository
 	fatal: Could not read from remote repository.
 
 	Please make sure you have the correct access rights
 	and the repository exists.
 	EOF
 	#
-	# Do not expect "git ls-remote <pattern>" to work; ls-remote needs
+	# Do not expect "shit ls-remote <pattern>" to work; ls-remote needs
 	# <remote> if you want to feed <pattern>, just like you cannot say
 	# fetch <branch>.
 	# We could just as easily have used "main"; the "*" emphasizes its
 	# role as a pattern.
-	test_must_fail git ls-remote "$does_not_exist" >actual 2>&1 &&
+	test_must_fail shit ls-remote "$does_not_exist" >actual 2>&1 &&
 	test_cmp exp actual
 '
 
 test_expect_success 'die with non-2 for wrong repository even with --exit-code' '
 	{
-		git ls-remote --exit-code ./no-such-repository
+		shit ls-remote --exit-code ./no-such-repository
 		status=$?
 	} &&
 	test $status != 2 && test $status != 0
 '
 
 test_expect_success 'Report success even when nothing matches' '
-	git ls-remote other.git "refs/nsn/*" >actual &&
+	shit ls-remote other.shit "refs/nsn/*" >actual &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'Report no-match with --exit-code' '
-	test_expect_code 2 git ls-remote --exit-code other.git "refs/nsn/*" >actual &&
+	test_expect_code 2 shit ls-remote --exit-code other.shit "refs/nsn/*" >actual &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'Report match with --exit-code' '
-	git ls-remote --exit-code other.git "refs/tags/*" >actual &&
-	git ls-remote . tags/mark* >expect &&
+	shit ls-remote --exit-code other.shit "refs/tags/*" >actual &&
+	shit ls-remote . tags/mark* >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'set up some extra tags for ref hiding' '
-	git tag magic/one &&
-	git tag magic/two
+	shit tag magic/one &&
+	shit tag magic/two
 '
 
 for configsection in transfer uploadpack
 do
 	test_expect_success "Hide some refs with $configsection.hiderefs" '
 		test_config $configsection.hiderefs refs/tags &&
-		git ls-remote . >actual &&
+		shit ls-remote . >actual &&
 		test_unconfig $configsection.hiderefs &&
-		git ls-remote . >expect.raw &&
+		shit ls-remote . >expect.raw &&
 		sed -e "/	refs\/tags\//d" expect.raw >expect &&
 		test_cmp expect actual
 	'
 
 	test_expect_success "Override hiding of $configsection.hiderefs" '
 		test_when_finished "test_unconfig $configsection.hiderefs" &&
-		git config --add $configsection.hiderefs refs/tags &&
-		git config --add $configsection.hiderefs "!refs/tags/magic" &&
-		git config --add $configsection.hiderefs refs/tags/magic/one &&
-		git ls-remote . >actual &&
+		shit config --add $configsection.hiderefs refs/tags &&
+		shit config --add $configsection.hiderefs "!refs/tags/magic" &&
+		shit config --add $configsection.hiderefs refs/tags/magic/one &&
+		shit ls-remote . >actual &&
 		grep refs/tags/magic/two actual &&
 		! grep refs/tags/magic/one actual
 	'
@@ -232,24 +232,24 @@ done
 test_expect_success 'overrides work between mixed transfer/upload-pack hideRefs' '
 	test_config uploadpack.hiderefs refs/tags &&
 	test_config transfer.hiderefs "!refs/tags/magic" &&
-	git ls-remote . >actual &&
+	shit ls-remote . >actual &&
 	grep refs/tags/magic actual
 '
 
 test_expect_success 'protocol v2 supports hiderefs' '
 	test_config uploadpack.hiderefs refs/tags &&
-	git -c protocol.version=2 ls-remote . >actual &&
+	shit -c protocol.version=2 ls-remote . >actual &&
 	! grep refs/tags actual
 '
 
 test_expect_success 'ls-remote --symref' '
-	git fetch origin &&
+	shit fetch origin &&
 	echo "ref: refs/heads/main	HEAD" >expect.v2 &&
 	generate_references \
 		HEAD \
 		refs/heads/main >>expect.v2 &&
 	echo "ref: refs/remotes/origin/main	refs/remotes/origin/HEAD" >>expect.v2 &&
-	oid=$(git rev-parse HEAD) &&
+	oid=$(shit rev-parse HEAD) &&
 	echo "$oid	refs/remotes/origin/HEAD" >>expect.v2 &&
 	generate_references \
 		refs/remotes/origin/main \
@@ -259,39 +259,39 @@ test_expect_success 'ls-remote --symref' '
 		refs/tags/mark1.2 >>expect.v2 &&
 	# v0 does not show non-HEAD symrefs
 	grep -v "ref: refs/remotes" <expect.v2 >expect.v0 &&
-	git -c protocol.version=0 ls-remote --symref >actual.v0 &&
+	shit -c protocol.version=0 ls-remote --symref >actual.v0 &&
 	test_cmp expect.v0 actual.v0 &&
-	git -c protocol.version=2 ls-remote --symref >actual.v2 &&
+	shit -c protocol.version=2 ls-remote --symref >actual.v2 &&
 	test_cmp expect.v2 actual.v2
 '
 
 test_expect_success 'ls-remote with filtered symref (refname)' '
-	rev=$(git rev-parse HEAD) &&
+	rev=$(shit rev-parse HEAD) &&
 	cat >expect <<-EOF &&
 	ref: refs/heads/main	HEAD
 	$rev	HEAD
 	EOF
-	git ls-remote --symref . HEAD >actual &&
+	shit ls-remote --symref . HEAD >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'ls-remote with filtered symref (--heads)' '
-	git symbolic-ref refs/heads/foo refs/tags/mark &&
+	shit symbolic-ref refs/heads/foo refs/tags/mark &&
 	cat >expect.v2 <<-EOF &&
 	ref: refs/tags/mark	refs/heads/foo
 	$rev	refs/heads/foo
 	$rev	refs/heads/main
 	EOF
 	grep -v "^ref: refs/tags/" <expect.v2 >expect.v0 &&
-	git -c protocol.version=0 ls-remote --symref --heads . >actual.v0 &&
+	shit -c protocol.version=0 ls-remote --symref --heads . >actual.v0 &&
 	test_cmp expect.v0 actual.v0 &&
-	git -c protocol.version=2 ls-remote --symref --heads . >actual.v2 &&
+	shit -c protocol.version=2 ls-remote --symref --heads . >actual.v2 &&
 	test_cmp expect.v2 actual.v2
 '
 
 test_expect_success 'indicate no refs in v0 standards-compliant empty remote' '
-	# Git does not produce an output like this, but it does match the
-	# standard and is produced by other implementations like JGit. So
+	# shit does not produce an output like this, but it does match the
+	# standard and is produced by other implementations like Jshit. So
 	# hard-code the case we care about.
 	#
 	# The actual capabilities do not matter; there are none that would
@@ -305,44 +305,44 @@ test_expect_success 'indicate no refs in v0 standards-compliant empty remote' '
 
 	# --exit-code asks the command to exit with 2 when no
 	# matching refs are found.
-	test_expect_code 2 git ls-remote --exit-code --upload-pack=./cat-input .
+	test_expect_code 2 shit ls-remote --exit-code --upload-pack=./cat-input .
 '
 
 test_expect_success 'ls-remote works outside repository' '
-	# It is important for this repo to be inside the nongit
+	# It is important for this repo to be inside the nonshit
 	# area, as we want a repo name that does not include
 	# slashes (because those inhibit some of our configuration
 	# lookups).
-	nongit git init --bare dst.git &&
-	nongit git ls-remote dst.git
+	nonshit shit init --bare dst.shit &&
+	nonshit shit ls-remote dst.shit
 '
 
 test_expect_success 'ls-remote --sort fails gracefully outside repository' '
 	# Use a sort key that requires access to the referenced objects.
-	nongit test_must_fail git ls-remote --sort=authordate "$TRASH_DIRECTORY" 2>err &&
-	test_grep "^fatal: not a git repository, but the field '\''authordate'\'' requires access to object data" err
+	nonshit test_must_fail shit ls-remote --sort=authordate "$TRASH_DIRECTORY" 2>err &&
+	test_grep "^fatal: not a shit repository, but the field '\''authordate'\'' requires access to object data" err
 '
 
 test_expect_success 'ls-remote patterns work with all protocol versions' '
-	git for-each-ref --format="%(objectname)	%(refname)" \
+	shit for-each-ref --format="%(objectname)	%(refname)" \
 		refs/heads/main refs/remotes/origin/main >expect &&
-	git -c protocol.version=0 ls-remote . main >actual.v0 &&
+	shit -c protocol.version=0 ls-remote . main >actual.v0 &&
 	test_cmp expect actual.v0 &&
-	git -c protocol.version=2 ls-remote . main >actual.v2 &&
+	shit -c protocol.version=2 ls-remote . main >actual.v2 &&
 	test_cmp expect actual.v2
 '
 
 test_expect_success 'ls-remote prefixes work with all protocol versions' '
-	git for-each-ref --format="%(objectname)	%(refname)" \
+	shit for-each-ref --format="%(objectname)	%(refname)" \
 		refs/heads/ refs/tags/ >expect &&
-	git -c protocol.version=0 ls-remote --heads --tags . >actual.v0 &&
+	shit -c protocol.version=0 ls-remote --heads --tags . >actual.v0 &&
 	test_cmp expect actual.v0 &&
-	git -c protocol.version=2 ls-remote --heads --tags . >actual.v2 &&
+	shit -c protocol.version=2 ls-remote --heads --tags . >actual.v2 &&
 	test_cmp expect actual.v2
 '
 
 test_expect_success 'v0 clients can handle multiple symrefs' '
-	# Modern versions of Git will not return multiple symref capabilities
+	# Modern versions of shit will not return multiple symref capabilities
 	# for v0, so we have to hard-code the response. Note that we will
 	# always use both v0 and object-format=sha1 here, as the hard-coded
 	# response reflects a server that only supports those.
@@ -376,7 +376,7 @@ test_expect_success 'v0 clients can handle multiple symrefs' '
 	$oid	refs/remotes/origin/main
 	EOF
 
-	git ls-remote --symref --upload-pack=./cat-input . >actual &&
+	shit ls-remote --symref --upload-pack=./cat-input . >actual &&
 	test_cmp expect actual
 '
 

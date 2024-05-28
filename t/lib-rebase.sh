@@ -97,34 +97,34 @@ set_cat_todo_editor () {
 # checks that the revisions in "$2" represent a linear range with the
 # subjects in "$1"
 test_linear_range () {
-	revlist_merges=$(git rev-list --merges "$2") &&
+	revlist_merges=$(shit rev-list --merges "$2") &&
 	test -z "$revlist_merges" &&
 	expected=$1
-	set -- $(git log --reverse --format=%s "$2")
+	set -- $(shit log --reverse --format=%s "$2")
 	test "$expected" = "$*"
 }
 
 reset_rebase () {
-	test_might_fail git rebase --abort &&
-	git reset --hard &&
-	git clean -f
+	test_might_fail shit rebase --abort &&
+	shit reset --hard &&
+	shit clean -f
 }
 
 cherry_pick () {
-	git cherry-pick -n "$2" &&
-	git commit -m "$1" &&
-	git tag "$1"
+	shit cherry-pick -n "$2" &&
+	shit commit -m "$1" &&
+	shit tag "$1"
 }
 
 revert () {
-	git revert -n "$2" &&
-	git commit -m "$1" &&
-	git tag "$1"
+	shit revert -n "$2" &&
+	shit commit -m "$1" &&
+	shit tag "$1"
 }
 
 make_empty () {
-	git commit --allow-empty -m "$1" &&
-	git tag "$1"
+	shit commit --allow-empty -m "$1" &&
+	shit tag "$1"
 }
 
 # Call this (inside test_expect_success) at the end of a test file to
@@ -137,18 +137,18 @@ test_editor_unchanged () {
 	FAKE_COMMIT_AMEND=$FAKE_COMMIT_AMEND
 	FAKE_COMMIT_MESSAGE=$FAKE_COMMIT_MESSAGE
 	FAKE_LINES=$FAKE_LINES
-	GIT_EDITOR=$GIT_EDITOR
-	GIT_SEQUENCE_EDITOR=$GIT_SEQUENCE_EDITOR
-	core.editor=$(git config core.editor)
-	sequence.editor=$(git config sequence.editor)
+	shit_EDITOR=$shit_EDITOR
+	shit_SEQUENCE_EDITOR=$shit_SEQUENCE_EDITOR
+	core.editor=$(shit config core.editor)
+	sequence.editor=$(shit config sequence.editor)
 	EOF'
 	cat >expect <<-\EOF
 	EDITOR=:
 	FAKE_COMMIT_AMEND=
 	FAKE_COMMIT_MESSAGE=
 	FAKE_LINES=
-	GIT_EDITOR=
-	GIT_SEQUENCE_EDITOR=
+	shit_EDITOR=
+	shit_SEQUENCE_EDITOR=
 	core.editor=
 	sequence.editor=
 	EOF
@@ -163,35 +163,35 @@ set_reword_editor () {
 	>reword-oid &&
 
 	# Check rewording keeps the original authorship
-	GIT_AUTHOR_NAME="Reword Author"
-	GIT_AUTHOR_EMAIL="reword.author@example.com"
-	GIT_AUTHOR_DATE=@123456
+	shit_AUTHOR_NAME="Reword Author"
+	shit_AUTHOR_EMAIL="reword.author@example.com"
+	shit_AUTHOR_DATE=@123456
 
 	write_script reword-sequence-editor.sh <<-\EOF &&
 	todo="$(cat "$1")" &&
-	echo "exec git log -1 --pretty=format:'%an <%ae> %at%n%B%n' \
+	echo "exec shit log -1 --pretty=format:'%an <%ae> %at%n%B%n' \
 		>>reword-actual" >"$1" &&
 	printf "%s\n" "$todo" >>"$1"
 	EOF
 
 	write_script reword-editor.sh <<-EOF &&
 	# Save the oid of the first reworded commit so we can check rebase
-	# fast-forwards to it. Also check that we do not write .git/MERGE_MSG
+	# fast-forwards to it. Also check that we do not write .shit/MERGE_MSG
 	# when fast-forwarding
 	if ! test -s reword-oid
 	then
-		git rev-parse HEAD >reword-oid &&
-		if test -f .git/MERGE_MSG
+		shit rev-parse HEAD >reword-oid &&
+		if test -f .shit/MERGE_MSG
 		then
-			echo 1>&2 "error: .git/MERGE_MSG exists"
+			echo 1>&2 "error: .shit/MERGE_MSG exists"
 			exit 1
 		fi
 	fi &&
 	# There should be no uncommited changes
-	git diff --exit-code HEAD &&
+	shit diff --exit-code HEAD &&
 	# The todo-list should be re-read after a reword
-	GIT_SEQUENCE_EDITOR="\"$PWD/reword-sequence-editor.sh\"" \
-		git rebase --edit-todo &&
+	shit_SEQUENCE_EDITOR="\"$PWD/reword-sequence-editor.sh\"" \
+		shit rebase --edit-todo &&
 	echo edited >>"\$1"
 	EOF
 
@@ -203,10 +203,10 @@ set_reword_editor () {
 # Expects the first pick to be a fast-forward
 check_reworded_commits () {
 	test_cmp_rev "$(cat reword-oid)" "$1^{commit}" &&
-	git log --format="%an <%ae> %at%n%B%nedited%n" --no-walk=unsorted "$@" \
+	shit log --format="%an <%ae> %at%n%B%nedited%n" --no-walk=unsorted "$@" \
 		>reword-expected &&
 	test_cmp reword-expected reword-actual &&
-	git log --format="%an <%ae> %at%n%B" -n $# --first-parent --reverse \
+	shit log --format="%an <%ae> %at%n%B" -n $# --first-parent --reverse \
 		>reword-log &&
 	test_cmp reword-expected reword-log
 }
@@ -214,7 +214,7 @@ check_reworded_commits () {
 # usage: set_replace_editor <file>
 #
 # Replace the todo file with the exact contents of the given file.
-# N.B. sets GIT_SEQUENCE_EDITOR rather than EDITOR so it can be
+# N.B. sets shit_SEQUENCE_EDITOR rather than EDITOR so it can be
 # combined with set_fake_editor to reword commits and replace the
 # todo list
 set_replace_editor () {

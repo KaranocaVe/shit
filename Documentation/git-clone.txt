@@ -1,18 +1,18 @@
-git-clone(1)
+shit-clone(1)
 ============
 
 NAME
 ----
-git-clone - Clone a repository into a new directory
+shit-clone - Clone a repository into a new directory
 
 
 SYNOPSIS
 --------
 [verse]
-`git clone` [++--template=++__<template-directory>__]
+`shit clone` [++--template=++__<template-directory>__]
 	  [`-l`] [`-s`] [`--no-hardlinks`] [`-q`] [`-n`] [`--bare`] [`--mirror`]
 	  [`-o` _<name>_] [`-b` _<name>_] [`-u` _<upload-pack>_] [`--reference` _<repository>_]
-	  [`--dissociate`] [`--separate-git-dir` _<git-dir>_]
+	  [`--dissociate`] [`--separate-shit-dir` _<shit-dir>_]
 	  [`--depth` _<depth>_] [`--`[`no-`]`single-branch`] [`--no-tags`]
 	  [++--recurse-submodules++[++=++__<pathspec>__]] [`--`[`no-`]`shallow-submodules`]
 	  [`--`[`no-`]`remote-submodules`] [`--jobs` _<n>_] [`--sparse`] [`--`[`no-`]`reject-shallow`]
@@ -24,12 +24,12 @@ DESCRIPTION
 
 Clones a repository into a newly created directory, creates
 remote-tracking branches for each branch in the cloned repository
-(visible using `git branch --remotes`), and creates and checks out an
+(visible using `shit branch --remotes`), and creates and checks out an
 initial branch that is forked from the cloned repository's
 currently active branch.
 
-After the clone, a plain `git fetch` without arguments will update
-all the remote-tracking branches, and a `git pull` without
+After the clone, a plain `shit fetch` without arguments will update
+all the remote-tracking branches, and a `shit poop` without
 arguments will in addition merge the remote master branch into the
 current master branch, if any (this is untrue when `--single-branch`
 is given; see below).
@@ -45,10 +45,10 @@ OPTIONS
 `-l`::
 `--local`::
 	When the repository to clone from is on a local machine,
-	this flag bypasses the normal "Git aware" transport
+	this flag bypasses the normal "shit aware" transport
 	mechanism and clones the repository by making a copy of
 	`HEAD` and everything under objects and refs directories.
-	The files under `.git/objects/` directory are hardlinked
+	The files under `.shit/objects/` directory are hardlinked
 	to save space when possible.
 +
 If the repository is specified as a local path (e.g., `/path/to/repo`),
@@ -56,9 +56,9 @@ this is the default, and --local is essentially a no-op.  If the
 repository is specified as a URL, then this flag is ignored (and we
 never use the local optimizations).  Specifying `--no-local` will
 override the default when `/path/to/repo` is given, using the regular
-Git transport instead.
+shit transport instead.
 +
-If the repository's `$GIT_DIR/objects` has symbolic links or is a
+If the repository's `$shit_DIR/objects` has symbolic links or is a
 symbolic link, the clone will fail. This is a security measure to
 prevent the unintentional copying of files by dereferencing the symbolic
 links.
@@ -69,7 +69,7 @@ source repository, similar to running `cp -r src dst` while modifying
 
 `--no-hardlinks`::
 	Force the cloning process from a repository on a local
-	filesystem to copy the files under the `.git/objects`
+	filesystem to copy the files under the `.shit/objects`
 	directory instead of using hardlinks. This may be desirable
 	if you are trying to make a back-up of your repository.
 
@@ -77,33 +77,33 @@ source repository, similar to running `cp -r src dst` while modifying
 `--shared`::
 	When the repository to clone is on the local machine,
 	instead of using hard links, automatically setup
-	`.git/objects/info/alternates` to share the objects
+	`.shit/objects/info/alternates` to share the objects
 	with the source repository.  The resulting repository
 	starts out without any object of its own.
 +
 *NOTE*: this is a possibly dangerous operation; do *not* use
 it unless you understand what it does. If you clone your
 repository using this option and then delete branches (or use any
-other Git command that makes any existing commit unreferenced) in the
+other shit command that makes any existing commit unreferenced) in the
 source repository, some objects may become unreferenced (or dangling).
-These objects may be removed by normal Git operations (such as `git commit`)
-which automatically call `git maintenance run --auto`. (See
-linkgit:git-maintenance[1].) If these objects are removed and were referenced
+These objects may be removed by normal shit operations (such as `shit commit`)
+which automatically call `shit maintenance run --auto`. (See
+linkshit:shit-maintenance[1].) If these objects are removed and were referenced
 by the cloned repository, then the cloned repository will become corrupt.
 +
-Note that running `git repack` without the `--local` option in a repository
+Note that running `shit repack` without the `--local` option in a repository
 cloned with `--shared` will copy objects from the source repository into a pack
 in the cloned repository, removing the disk space savings of `clone --shared`.
-It is safe, however, to run `git gc`, which uses the `--local` option by
+It is safe, however, to run `shit gc`, which uses the `--local` option by
 default.
 +
 If you want to break the dependency of a repository cloned with `--shared` on
-its source repository, you can simply run `git repack -a` to copy all
+its source repository, you can simply run `shit repack -a` to copy all
 objects from the source repository into a pack in the cloned repository.
 
 `--reference`[`-if-able`] _<repository>_::
 	If the reference _<repository>_ is on the local machine,
-	automatically setup `.git/objects/info/alternates` to
+	automatically setup `.shit/objects/info/alternates` to
 	obtain objects from the reference _<repository>_.  Using
 	an already existing repository as an alternate will
 	require fewer objects to be copied from the repository
@@ -160,10 +160,10 @@ objects from the source repository into a pack in the cloned repository.
 	specify the default.
 
 `--bare`::
-	Make a 'bare' Git repository.  That is, instead of
+	Make a 'bare' shit repository.  That is, instead of
 	creating _<directory>_ and placing the administrative
-	files in _<directory>_`/.git`, make the _<directory>_
-	itself the `$GIT_DIR`. This obviously implies the `--no-checkout`
+	files in _<directory>_`/.shit`, make the _<directory>_
+	itself the `$shit_DIR`. This obviously implies the `--no-checkout`
 	because there is nowhere to check out the working tree.
 	Also the branch heads at the remote are copied directly
 	to corresponding local branch heads, without mapping
@@ -174,7 +174,7 @@ objects from the source repository into a pack in the cloned repository.
 `--sparse`::
 	Employ a sparse-checkout, with only files in the toplevel
 	directory initially being present.  The
-	linkgit:git-sparse-checkout[1] command can be used to grow the
+	linkshit:shit-sparse-checkout[1] command can be used to grow the
 	working directory as needed.
 
 ++--filter=++__<filter-spec>__::
@@ -182,10 +182,10 @@ objects from the source repository into a pack in the cloned repository.
 	a subset of reachable objects according to a given object filter.
 	When using `--filter`, the supplied _<filter-spec>_ is used for
 	the partial clone filter. For example, `--filter=blob:none` will
-	filter out all blobs (file contents) until needed by Git. Also,
+	filter out all blobs (file contents) until needed by shit. Also,
 	++--filter=blob:limit=++__<size>__ will filter out all blobs of size
 	at least _<size>_. For more details on filter specifications, see
-	the `--filter` option in linkgit:git-rev-list[1].
+	the `--filter` option in linkshit:shit-rev-list[1].
 
 `--also-filter-submodules`::
 	Also apply the partial clone filter to any submodules in the repository.
@@ -197,7 +197,7 @@ objects from the source repository into a pack in the cloned repository.
 	Compared to `--bare`, `--mirror` not only maps local branches of the
 	source to local branches of the target, it maps all refs (including
 	remote-tracking branches, notes etc.) and sets up a refspec configuration such
-	that all these refs are overwritten by a `git remote update` in the
+	that all these refs are overwritten by a `shit remote update` in the
 	target repository.
 
 `-o` _<name>_::
@@ -223,7 +223,7 @@ objects from the source repository into a pack in the cloned repository.
 
 ++--template=++__<template-directory>__::
 	Specify the directory from which templates will be used;
-	(See the "TEMPLATE DIRECTORY" section of linkgit:git-init[1].)
+	(See the "TEMPLATE DIRECTORY" section of linkshit:shit-init[1].)
 
 `-c` __<key>__++=++__<value>__::
 `--config` __<key>__++=++__<value>__::
@@ -231,7 +231,7 @@ objects from the source repository into a pack in the cloned repository.
 	this takes effect immediately after the repository is
 	initialized, but before the remote history is fetched or any
 	files checked out.  The _<key>_ is in the same format as expected by
-	linkgit:git-config[1] (e.g., `core.eol=true`). If multiple
+	linkshit:shit-config[1] (e.g., `core.eol=true`). If multiple
 	values are given for the same key, each value will be written to
 	the config file. This makes it safe, for example, to add
 	additional fetch refspecs to the origin remote.
@@ -270,9 +270,9 @@ corresponding `--mirror` and `--no-tags` options instead.
 `--no-tags`::
 	Don't clone any tags, and set
 	`remote.<remote>.tagOpt=--no-tags` in the config, ensuring
-	that future `git pull` and `git fetch` operations won't follow
+	that future `shit poop` and `shit fetch` operations won't follow
 	any tags. Subsequent explicit tag fetches will still work,
-	(see linkgit:git-fetch[1]).
+	(see linkshit:shit-fetch[1]).
 +
 Can be used in conjunction with `--single-branch` to clone and
 maintain a branch with no references other than a single cloned
@@ -290,7 +290,7 @@ branch of some repository for search indexing.
 +
 Submodules are initialized and cloned using their default settings. This is
 equivalent to running
-`git submodule update --init --recursive <pathspec>` immediately after
+`shit submodule update --init --recursive <pathspec>` immediately after
 the clone is finished. This option is ignored if the cloned repository does
 not have a worktree/checkout (i.e. if any of `--no-checkout`/`-n`, `--bare`,
 or `--mirror` is given)
@@ -302,13 +302,13 @@ or `--mirror` is given)
 	All submodules which are cloned will use the status of the submodule's
 	remote-tracking branch to update the submodule, rather than the
 	superproject's recorded SHA-1. Equivalent to passing `--remote` to
-	`git submodule update`.
+	`shit submodule update`.
 
-`--separate-git-dir=`{empty}__<git-dir>__::
+`--separate-shit-dir=`{empty}__<shit-dir>__::
 	Instead of placing the cloned repository where it is supposed
 	to be, place the cloned repository at the specified directory,
-	then make a filesystem-agnostic Git symbolic link to there.
-	The result is Git repository can be separated from working
+	then make a filesystem-agnostic shit symbolic link to there.
+	The result is shit repository can be separated from working
 	tree.
 
 `--ref-format=`{empty}__<ref-format>__::
@@ -324,14 +324,14 @@ include::ref-storage-format.txt[]
 
 _<repository>_::
 	The (possibly remote) _<repository>_ to clone from.  See the
-	<<URLS,GIT URLS>> section below for more information on specifying
+	<<URLS,shit URLS>> section below for more information on specifying
 	repositories.
 
 _<directory>_::
 	The name of a new directory to clone into.  The "humanish"
 	part of the source repository is used if no _<directory>_ is
-	explicitly given (`repo` for `/path/to/repo.git` and `foo`
-	for `host.xz:foo/.git`).  Cloning into an existing directory
+	explicitly given (`repo` for `/path/to/repo.shit` and `foo`
+	for `host.xz:foo/.shit`).  Cloning into an existing directory
 	is only allowed if the directory is empty.
 
 `--bundle-uri=`{empty}__<uri>__::
@@ -341,7 +341,7 @@ _<directory>_::
 	namespace. This option is incompatible with `--depth`,
 	`--shallow-since`, and `--shallow-exclude`.
 
-:git-clone: 1
+:shit-clone: 1
 include::urls.txt[]
 
 EXAMPLES
@@ -350,7 +350,7 @@ EXAMPLES
 * Clone from upstream:
 +
 ------------
-$ git clone git://git.kernel.org/pub/scm/.../linux.git my-linux
+$ shit clone shit://shit.kernel.org/pub/scm/.../linux.shit my-linux
 $ cd my-linux
 $ make
 ------------
@@ -359,17 +359,17 @@ $ make
 * Make a local clone that borrows from the current directory, without checking things out:
 +
 ------------
-$ git clone -l -s -n . ../copy
+$ shit clone -l -s -n . ../copy
 $ cd ../copy
-$ git show-branch
+$ shit show-branch
 ------------
 
 
 * Clone from upstream while borrowing from an existing local directory:
 +
 ------------
-$ git clone --reference /git/linux.git \
-	git://git.kernel.org/pub/scm/.../linux.git \
+$ shit clone --reference /shit/linux.shit \
+	shit://shit.kernel.org/pub/scm/.../linux.shit \
 	my-linux
 $ cd my-linux
 ------------
@@ -378,7 +378,7 @@ $ cd my-linux
 * Create a bare repository to publish your changes to the public:
 +
 ------------
-$ git clone --bare -l /home/proj/.git /pub/scm/proj.git
+$ shit clone --bare -l /home/proj/.shit /pub/scm/proj.shit
 ------------
 
 CONFIGURATION
@@ -391,6 +391,6 @@ include::config/init.txt[]
 include::config/clone.txt[]
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

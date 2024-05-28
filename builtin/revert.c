@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "builtin.h"
 #include "parse-options.h"
 #include "diff.h"
@@ -14,22 +14,22 @@
  *
  * Copyright (c) 2007 Johannes E. Schindelin
  *
- * Based on git-revert.sh, which is
+ * Based on shit-revert.sh, which is
  *
  * Copyright (c) 2005 Linus Torvalds
  * Copyright (c) 2005 Junio C Hamano
  */
 
 static const char * const revert_usage[] = {
-	N_("git revert [--[no-]edit] [-n] [-m <parent-number>] [-s] [-S[<keyid>]] <commit>..."),
-	N_("git revert (--continue | --skip | --abort | --quit)"),
+	N_("shit revert [--[no-]edit] [-n] [-m <parent-number>] [-s] [-S[<keyid>]] <commit>..."),
+	N_("shit revert (--continue | --skip | --abort | --quit)"),
 	NULL
 };
 
 static const char * const cherry_pick_usage[] = {
-	N_("git cherry-pick [--edit] [-n] [-m <parent-number>] [-s] [-x] [--ff]\n"
+	N_("shit cherry-pick [--edit] [-n] [-m <parent-number>] [-s] [-x] [--ff]\n"
 	   "                [-S[<keyid>]] <commit>..."),
-	N_("git cherry-pick (--continue | --skip | --abort | --quit)"),
+	N_("shit cherry-pick (--continue | --skip | --abort | --quit)"),
 	NULL
 };
 
@@ -242,8 +242,8 @@ static int run_sequencer(int argc, const char **argv, const char *prefix,
 	/* These option values will be free()d */
 	opts->gpg_sign = xstrdup_or_null(opts->gpg_sign);
 	opts->strategy = xstrdup_or_null(opts->strategy);
-	if (!opts->strategy && getenv("GIT_TEST_MERGE_ALGORITHM"))
-		opts->strategy = xstrdup(getenv("GIT_TEST_MERGE_ALGORITHM"));
+	if (!opts->strategy && getenv("shit_TEST_MERGE_ALGORITHM"))
+		opts->strategy = xstrdup(getenv("shit_TEST_MERGE_ALGORITHM"));
 	free(options);
 
 	if (cmd == 'q') {

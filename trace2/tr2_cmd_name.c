@@ -1,8 +1,8 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "strbuf.h"
 #include "trace2/tr2_cmd_name.h"
 
-#define TR2_ENVVAR_PARENT_NAME "GIT_TRACE2_PARENT_NAME"
+#define TR2_ENVVAR_PARENT_NAME "shit_TRACE2_PARENT_NAME"
 
 static struct strbuf tr2cmdname_hierarchy = STRBUF_INIT;
 

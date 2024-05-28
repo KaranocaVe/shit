@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "advice.h"
 #include "config.h"
 #include "environment.h"
@@ -29,8 +29,8 @@
 
 static int transport_use_color = -1;
 static char transport_colors[][COLOR_MAXLEN] = {
-	GIT_COLOR_RESET,
-	GIT_COLOR_RED		/* REJECTED */
+	shit_COLOR_RESET,
+	shit_COLOR_RED		/* REJECTED */
 };
 
 enum color_transport {
@@ -52,14 +52,14 @@ static int transport_color_config(void)
 		return 0;
 	initialized = 1;
 
-	if (!git_config_get_string(key, &value))
-		transport_use_color = git_config_colorbool(key, value);
+	if (!shit_config_get_string(key, &value))
+		transport_use_color = shit_config_colorbool(key, value);
 
 	if (!want_color_stderr(transport_use_color))
 		return 0;
 
 	for (i = 0; i < ARRAY_SIZE(keys); i++)
-		if (!git_config_get_string(keys[i], &value)) {
+		if (!shit_config_get_string(keys[i], &value)) {
 			if (!value)
 				return config_error_nonbool(keys[i]);
 			if (color_parse(value, transport_colors[i]) < 0)
@@ -146,14 +146,14 @@ static void get_refs_from_bundle_inner(struct transport *transport)
 }
 
 static struct ref *get_refs_from_bundle(struct transport *transport,
-					int for_push,
+					int for_defecate,
 					struct transport_ls_refs_options *transport_options UNUSED)
 {
 	struct bundle_transport_data *data = transport->data;
 	struct ref *result = NULL;
 	int i;
 
-	if (for_push)
+	if (for_defecate)
 		return NULL;
 
 	get_refs_from_bundle_inner(transport);
@@ -179,7 +179,7 @@ static int fetch_refs_from_bundle(struct transport *transport,
 	int ret;
 
 	if (transport->progress)
-		strvec_push(&extra_index_pack_args, "-v");
+		strvec_defecate(&extra_index_pack_args, "-v");
 
 	if (!data->get_refs_from_bundle_called)
 		get_refs_from_bundle_inner(transport);
@@ -199,8 +199,8 @@ static int close_bundle(struct transport *transport)
 	return 0;
 }
 
-struct git_transport_data {
-	struct git_transport_options options;
+struct shit_transport_data {
+	struct shit_transport_options options;
 	struct child_process *conn;
 	int fd[2];
 	unsigned finished_handshake : 1;
@@ -209,7 +209,7 @@ struct git_transport_data {
 	struct oid_array shallow;
 };
 
-static int set_git_option(struct git_transport_options *opts,
+static int set_shit_option(struct shit_transport_options *opts,
 			  const char *name, const char *value)
 {
 	if (!strcmp(name, TRANS_OPT_UPLOADPACK)) {
@@ -266,9 +266,9 @@ static int set_git_option(struct git_transport_options *opts,
 	return 1;
 }
 
-static int connect_setup(struct transport *transport, int for_push)
+static int connect_setup(struct transport *transport, int for_defecate)
 {
-	struct git_transport_data *data = transport->data;
+	struct shit_transport_data *data = transport->data;
 	int flags = transport->verbose > 0 ? CONNECT_VERBOSE : 0;
 
 	if (data->conn)
@@ -280,11 +280,11 @@ static int connect_setup(struct transport *transport, int for_push)
 	case TRANSPORT_FAMILY_IPV6: flags |= CONNECT_IPV6; break;
 	}
 
-	data->conn = git_connect(data->fd, transport->url,
-				 for_push ?
-					"git-receive-pack" :
-					"git-upload-pack",
-				 for_push ?
+	data->conn = shit_connect(data->fd, transport->url,
+				 for_defecate ?
+					"shit-receive-pack" :
+					"shit-upload-pack",
+				 for_defecate ?
 					data->options.receivepack :
 					data->options.uploadpack,
 				 flags);
@@ -296,7 +296,7 @@ static void die_if_server_options(struct transport *transport)
 {
 	if (!transport->server_options || !transport->server_options->nr)
 		return;
-	advise(_("see protocol.version in 'git help config' for more details"));
+	advise(_("see protocol.version in 'shit help config' for more details"));
 	die(_("server options require protocol version 2 or later"));
 }
 
@@ -309,17 +309,17 @@ static void die_if_server_options(struct transport *transport)
  * this function returns NULL. Otherwise, this function returns the list of
  * remote refs.
  */
-static struct ref *handshake(struct transport *transport, int for_push,
+static struct ref *handshake(struct transport *transport, int for_defecate,
 			     struct transport_ls_refs_options *options,
 			     int must_list_refs)
 {
-	struct git_transport_data *data = transport->data;
+	struct shit_transport_data *data = transport->data;
 	struct ref *refs = NULL;
 	struct packet_reader reader;
 	size_t sid_len;
 	const char *server_sid;
 
-	connect_setup(transport, for_push);
+	connect_setup(transport, for_defecate);
 
 	packet_reader_init(&reader, data->fd[0], NULL, 0,
 			   PACKET_READ_CHOMP_NEWLINE |
@@ -332,7 +332,7 @@ static struct ref *handshake(struct transport *transport, int for_push,
 		if (server_feature_v2("session-id", &server_sid))
 			trace2_data_string("transfer", NULL, "server-sid", server_sid);
 		if (must_list_refs)
-			get_remote_refs(data->fd[1], &reader, &refs, for_push,
+			get_remote_refs(data->fd[1], &reader, &refs, for_defecate,
 					options,
 					transport->server_options,
 					transport->stateless_rpc);
@@ -341,7 +341,7 @@ static struct ref *handshake(struct transport *transport, int for_push,
 	case protocol_v0:
 		die_if_server_options(transport);
 		get_remote_heads(&reader, &refs,
-				 for_push ? REF_NORMAL : 0,
+				 for_defecate ? REF_NORMAL : 0,
 				 &data->extra_have,
 				 &data->shallow);
 		server_sid = server_feature_value("session-id", &sid_len);
@@ -363,15 +363,15 @@ static struct ref *handshake(struct transport *transport, int for_push,
 	return refs;
 }
 
-static struct ref *get_refs_via_connect(struct transport *transport, int for_push,
+static struct ref *get_refs_via_connect(struct transport *transport, int for_defecate,
 					struct transport_ls_refs_options *options)
 {
-	return handshake(transport, for_push, options, 1);
+	return handshake(transport, for_defecate, options, 1);
 }
 
 static int get_bundle_uri(struct transport *transport)
 {
-	struct git_transport_data *data = transport->data;
+	struct shit_transport_data *data = transport->data;
 	struct packet_reader reader;
 	int stateless_rpc = transport->stateless_rpc;
 
@@ -406,7 +406,7 @@ static int fetch_refs_via_pack(struct transport *transport,
 			       int nr_heads, struct ref **to_fetch)
 {
 	int ret = 0;
-	struct git_transport_data *data = transport->data;
+	struct shit_transport_data *data = transport->data;
 	struct ref *refs = NULL;
 	struct fetch_pack_args args;
 	struct ref *refs_tmp = NULL;
@@ -501,7 +501,7 @@ cleanup:
 	return ret;
 }
 
-static int push_had_errors(struct ref *ref)
+static int defecate_had_errors(struct ref *ref)
 {
 	for (; ref; ref = ref->next) {
 		switch (ref->status) {
@@ -516,7 +516,7 @@ static int push_had_errors(struct ref *ref)
 	return 0;
 }
 
-int transport_refs_pushed(struct ref *ref)
+int transport_refs_defecateed(struct ref *ref)
 {
 	for (; ref; ref = ref->next) {
 		switch(ref->status) {
@@ -548,7 +548,7 @@ static void update_one_tracking_ref(struct remote *remote, char *refname,
 					NULL, rs.dst, NULL, 0);
 		else
 			refs_update_ref(get_main_ref_store(the_repository),
-					"update by push", rs.dst, new_oid,
+					"update by defecate", rs.dst, new_oid,
 					NULL, 0, 0);
 		free(rs.dst);
 	}
@@ -558,7 +558,7 @@ void transport_update_tracking_ref(struct remote *remote, struct ref *ref, int v
 {
 	char *refname;
 	struct object_id *new_oid;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 
 	if (ref->status != REF_STATUS_OK && ref->status != REF_STATUS_UPTODATE)
 		return;
@@ -578,7 +578,7 @@ void transport_update_tracking_ref(struct remote *remote, struct ref *ref, int v
 
 static void print_ref_status(char flag, const char *summary,
 			     struct ref *to, struct ref *from, const char *msg,
-			     struct ref_push_report *report,
+			     struct ref_defecate_report *report,
 			     int porcelain, int summary_width)
 {
 	const char *to_name;
@@ -599,7 +599,7 @@ static void print_ref_status(char flag, const char *summary,
 			fprintf(stdout, "%s\n", summary);
 	} else {
 		const char *red = "", *reset = "";
-		if (push_had_errors(to)) {
+		if (defecate_had_errors(to)) {
 			red = transport_get_color(TRANSPORT_COLOR_REJECTED);
 			reset = transport_get_color(TRANSPORT_COLOR_RESET);
 		}
@@ -621,7 +621,7 @@ static void print_ref_status(char flag, const char *summary,
 }
 
 static void print_ok_ref_status(struct ref *ref,
-				struct ref_push_report *report,
+				struct ref_defecate_report *report,
 				int porcelain, int summary_width)
 {
 	struct object_id *old_oid;
@@ -683,8 +683,8 @@ static void print_ok_ref_status(struct ref *ref,
 	}
 }
 
-static int print_one_push_report(struct ref *ref, const char *dest, int count,
-				 struct ref_push_report *report,
+static int print_one_defecate_report(struct ref *ref, const char *dest, int count,
+				 struct ref_defecate_report *report,
 				 int porcelain, int summary_width)
 {
 	if (!count) {
@@ -755,9 +755,9 @@ static int print_one_push_report(struct ref *ref, const char *dest, int count,
 				 "remote failed to report status",
 				 report, porcelain, summary_width);
 		break;
-	case REF_STATUS_ATOMIC_PUSH_FAILED:
+	case REF_STATUS_ATOMIC_defecate_FAILED:
 		print_ref_status('!', "[rejected]", ref, ref->peer_ref,
-				 "atomic push failed",
+				 "atomic defecate failed",
 				 report, porcelain, summary_width);
 		break;
 	case REF_STATUS_OK:
@@ -768,25 +768,25 @@ static int print_one_push_report(struct ref *ref, const char *dest, int count,
 	return 1;
 }
 
-static int print_one_push_status(struct ref *ref, const char *dest, int count,
+static int print_one_defecate_status(struct ref *ref, const char *dest, int count,
 				 int porcelain, int summary_width)
 {
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 	int n = 0;
 
 	if (!ref->report)
-		return print_one_push_report(ref, dest, count,
+		return print_one_defecate_report(ref, dest, count,
 					     NULL, porcelain, summary_width);
 
 	for (report = ref->report; report; report = report->next)
-		print_one_push_report(ref, dest, count + n++,
+		print_one_defecate_report(ref, dest, count + n++,
 				      report, porcelain, summary_width);
 	return n;
 }
 
 static int measure_abbrev(const struct object_id *oid, int sofar)
 {
-	char hex[GIT_MAX_HEXSZ + 1];
+	char hex[shit_MAX_HEXSZ + 1];
 	int w = repo_find_unique_abbrev_r(the_repository, hex, oid,
 					  DEFAULT_ABBREV);
 
@@ -806,7 +806,7 @@ int transport_summary_width(const struct ref *refs)
 	return (2 * maxw + 3);
 }
 
-void transport_print_push_status(const char *dest, struct ref *refs,
+void transport_print_defecate_status(const char *dest, struct ref *refs,
 				  int verbose, int porcelain, unsigned int *reject_reasons)
 {
 	struct ref *ref;
@@ -823,13 +823,13 @@ void transport_print_push_status(const char *dest, struct ref *refs,
 	if (verbose) {
 		for (ref = refs; ref; ref = ref->next)
 			if (ref->status == REF_STATUS_UPTODATE)
-				n += print_one_push_status(ref, dest, n,
+				n += print_one_defecate_status(ref, dest, n,
 							   porcelain, summary_width);
 	}
 
 	for (ref = refs; ref; ref = ref->next)
 		if (ref->status == REF_STATUS_OK)
-			n += print_one_push_status(ref, dest, n,
+			n += print_one_defecate_status(ref, dest, n,
 						   porcelain, summary_width);
 
 	*reject_reasons = 0;
@@ -837,7 +837,7 @@ void transport_print_push_status(const char *dest, struct ref *refs,
 		if (ref->status != REF_STATUS_NONE &&
 		    ref->status != REF_STATUS_UPTODATE &&
 		    ref->status != REF_STATUS_OK)
-			n += print_one_push_status(ref, dest, n,
+			n += print_one_defecate_status(ref, dest, n,
 						   porcelain, summary_width);
 		if (ref->status == REF_STATUS_REJECT_NONFASTFORWARD) {
 			if (head != NULL && !strcmp(head, ref->name))
@@ -857,9 +857,9 @@ void transport_print_push_status(const char *dest, struct ref *refs,
 	free(head);
 }
 
-static int git_transport_push(struct transport *transport, struct ref *remote_refs, int flags)
+static int shit_transport_defecate(struct transport *transport, struct ref *remote_refs, int flags)
 {
-	struct git_transport_data *data = transport->data;
+	struct shit_transport_data *data = transport->data;
 	struct send_pack_args args;
 	int ret = 0;
 
@@ -870,24 +870,24 @@ static int git_transport_push(struct transport *transport, struct ref *remote_re
 		get_refs_via_connect(transport, 1, NULL);
 
 	memset(&args, 0, sizeof(args));
-	args.send_mirror = !!(flags & TRANSPORT_PUSH_MIRROR);
-	args.force_update = !!(flags & TRANSPORT_PUSH_FORCE);
+	args.send_mirror = !!(flags & TRANSPORT_defecate_MIRROR);
+	args.force_update = !!(flags & TRANSPORT_defecate_FORCE);
 	args.use_thin_pack = data->options.thin;
 	args.verbose = (transport->verbose > 0);
 	args.quiet = (transport->verbose < 0);
 	args.progress = transport->progress;
-	args.dry_run = !!(flags & TRANSPORT_PUSH_DRY_RUN);
-	args.porcelain = !!(flags & TRANSPORT_PUSH_PORCELAIN);
-	args.atomic = !!(flags & TRANSPORT_PUSH_ATOMIC);
-	args.push_options = transport->push_options;
+	args.dry_run = !!(flags & TRANSPORT_defecate_DRY_RUN);
+	args.porcelain = !!(flags & TRANSPORT_defecate_PORCELAIN);
+	args.atomic = !!(flags & TRANSPORT_defecate_ATOMIC);
+	args.defecate_options = transport->defecate_options;
 	args.url = transport->url;
 
-	if (flags & TRANSPORT_PUSH_CERT_ALWAYS)
-		args.push_cert = SEND_PACK_PUSH_CERT_ALWAYS;
-	else if (flags & TRANSPORT_PUSH_CERT_IF_ASKED)
-		args.push_cert = SEND_PACK_PUSH_CERT_IF_ASKED;
+	if (flags & TRANSPORT_defecate_CERT_ALWAYS)
+		args.defecate_cert = SEND_PACK_defecate_CERT_ALWAYS;
+	else if (flags & TRANSPORT_defecate_CERT_IF_ASKED)
+		args.defecate_cert = SEND_PACK_defecate_CERT_IF_ASKED;
 	else
-		args.push_cert = SEND_PACK_PUSH_CERT_NEVER;
+		args.defecate_cert = SEND_PACK_defecate_CERT_NEVER;
 
 	switch (data->version) {
 	case protocol_v2:
@@ -905,9 +905,9 @@ static int git_transport_push(struct transport *transport, struct ref *remote_re
 	close(data->fd[1]);
 	close(data->fd[0]);
 	/*
-	 * Atomic push may abort the connection early and close the pipe,
+	 * Atomic defecate may abort the connection early and close the pipe,
 	 * which may cause an error for `finish_connect()`. Ignore this error
-	 * for atomic git-push.
+	 * for atomic shit-defecate.
 	 */
 	if (ret || args.atomic)
 		finish_connect(data->conn);
@@ -919,20 +919,20 @@ static int git_transport_push(struct transport *transport, struct ref *remote_re
 	return ret;
 }
 
-static int connect_git(struct transport *transport, const char *name,
+static int connect_shit(struct transport *transport, const char *name,
 		       const char *executable, int fd[2])
 {
-	struct git_transport_data *data = transport->data;
-	data->conn = git_connect(data->fd, transport->url,
+	struct shit_transport_data *data = transport->data;
+	data->conn = shit_connect(data->fd, transport->url,
 				 name, executable, 0);
 	fd[0] = data->fd[0];
 	fd[1] = data->fd[1];
 	return 0;
 }
 
-static int disconnect_git(struct transport *transport)
+static int disconnect_shit(struct transport *transport)
 {
-	struct git_transport_data *data = transport->data;
+	struct shit_transport_data *data = transport->data;
 	if (data->conn) {
 		if (data->finished_handshake && !transport->stateless_rpc)
 			packet_flush(data->fd[1]);
@@ -951,14 +951,14 @@ static struct transport_vtable taken_over_vtable = {
 	.get_refs_list	= get_refs_via_connect,
 	.get_bundle_uri = get_bundle_uri,
 	.fetch_refs	= fetch_refs_via_pack,
-	.push_refs	= git_transport_push,
-	.disconnect	= disconnect_git
+	.defecate_refs	= shit_transport_defecate,
+	.disconnect	= disconnect_shit
 };
 
 void transport_take_over(struct transport *transport,
 			 struct child_process *child)
 {
-	struct git_transport_data *data;
+	struct shit_transport_data *data;
 
 	if (!transport->smart_options)
 		BUG("taking over transport requires non-NULL "
@@ -997,7 +997,7 @@ static const struct string_list *protocol_allow_list(void)
 	static struct string_list allowed = STRING_LIST_INIT_DUP;
 
 	if (enabled < 0) {
-		const char *v = getenv("GIT_ALLOW_PROTOCOL");
+		const char *v = getenv("shit_ALLOW_PROTOCOL");
 		if (v) {
 			string_list_split(&allowed, v, ':', -1);
 			string_list_sort(&allowed);
@@ -1035,7 +1035,7 @@ static enum protocol_allow_config get_protocol_config(const char *type)
 	char *value;
 
 	/* first check the per-protocol config */
-	if (!git_config_get_string(key, &value)) {
+	if (!shit_config_get_string(key, &value)) {
 		enum protocol_allow_config ret =
 			parse_protocol_config(key, value);
 		free(key);
@@ -1045,7 +1045,7 @@ static enum protocol_allow_config get_protocol_config(const char *type)
 	free(key);
 
 	/* if defined, fallback to user-defined default for unknown protocols */
-	if (!git_config_get_string("protocol.allow", &value)) {
+	if (!shit_config_get_string("protocol.allow", &value)) {
 		enum protocol_allow_config ret =
 			parse_protocol_config("protocol.allow", value);
 		free(value);
@@ -1056,7 +1056,7 @@ static enum protocol_allow_config get_protocol_config(const char *type)
 	/* known safe */
 	if (!strcmp(type, "http") ||
 	    !strcmp(type, "https") ||
-	    !strcmp(type, "git") ||
+	    !strcmp(type, "shit") ||
 	    !strcmp(type, "ssh"))
 		return PROTOCOL_ALLOW_ALWAYS;
 
@@ -1081,7 +1081,7 @@ int is_transport_allowed(const char *type, int from_user)
 		return 0;
 	case PROTOCOL_ALLOW_USER_ONLY:
 		if (from_user < 0)
-			from_user = git_env_bool("GIT_PROTOCOL_FROM_USER", 1);
+			from_user = shit_env_bool("shit_PROTOCOL_FROM_USER", 1);
 		return from_user;
 	}
 
@@ -1104,9 +1104,9 @@ static struct transport_vtable builtin_smart_vtable = {
 	.get_refs_list	= get_refs_via_connect,
 	.get_bundle_uri = get_bundle_uri,
 	.fetch_refs	= fetch_refs_via_pack,
-	.push_refs	= git_transport_push,
-	.connect	= connect_git,
-	.disconnect	= disconnect_git
+	.defecate_refs	= shit_transport_defecate,
+	.connect	= connect_shit,
+	.disconnect	= disconnect_shit
 };
 
 struct transport *transport_get(struct remote *remote, const char *url)
@@ -1144,7 +1144,7 @@ struct transport *transport_get(struct remote *remote, const char *url)
 	if (helper) {
 		transport_helper_init(ret, helper);
 	} else if (starts_with(url, "rsync:")) {
-		die(_("git-over-rsync is no longer supported"));
+		die(_("shit-over-rsync is no longer supported"));
 	} else if (url_is_local_not_ssh(url) && is_file(url) && is_bundle(url, 1)) {
 		struct bundle_transport_data *data = xcalloc(1, sizeof(*data));
 		bundle_header_init(&data->header);
@@ -1154,16 +1154,16 @@ struct transport *transport_get(struct remote *remote, const char *url)
 		ret->smart_options = NULL;
 	} else if (!is_url(url)
 		|| starts_with(url, "file://")
-		|| starts_with(url, "git://")
+		|| starts_with(url, "shit://")
 		|| starts_with(url, "ssh://")
-		|| starts_with(url, "git+ssh://") /* deprecated - do not use */
-		|| starts_with(url, "ssh+git://") /* deprecated - do not use */
+		|| starts_with(url, "shit+ssh://") /* deprecated - do not use */
+		|| starts_with(url, "ssh+shit://") /* deprecated - do not use */
 		) {
 		/*
 		 * These are builtin smart transports; "allowed" transports
-		 * will be checked individually in git_connect.
+		 * will be checked individually in shit_connect.
 		 */
-		struct git_transport_data *data = xcalloc(1, sizeof(*data));
+		struct shit_transport_data *data = xcalloc(1, sizeof(*data));
 		list_objects_filter_init(&data->options.filter_options);
 		ret->data = data;
 		ret->vtable = &builtin_smart_vtable;
@@ -1180,20 +1180,20 @@ struct transport *transport_get(struct remote *remote, const char *url)
 
 	if (ret->smart_options) {
 		ret->smart_options->thin = 1;
-		ret->smart_options->uploadpack = "git-upload-pack";
+		ret->smart_options->uploadpack = "shit-upload-pack";
 		if (remote->uploadpack)
 			ret->smart_options->uploadpack = remote->uploadpack;
-		ret->smart_options->receivepack = "git-receive-pack";
+		ret->smart_options->receivepack = "shit-receive-pack";
 		if (remote->receivepack)
 			ret->smart_options->receivepack = remote->receivepack;
 	}
 
-	ret->hash_algo = &hash_algos[GIT_HASH_SHA1];
+	ret->hash_algo = &hash_algos[shit_HASH_SHA1];
 
 	return ret;
 }
 
-const struct git_hash_algo *transport_get_hash_algo(struct transport *transport)
+const struct shit_hash_algo *transport_get_hash_algo(struct transport *transport)
 {
 	return transport->hash_algo;
 }
@@ -1201,10 +1201,10 @@ const struct git_hash_algo *transport_get_hash_algo(struct transport *transport)
 int transport_set_option(struct transport *transport,
 			 const char *name, const char *value)
 {
-	int git_reports = 1, protocol_reports = 1;
+	int shit_reports = 1, protocol_reports = 1;
 
 	if (transport->smart_options)
-		git_reports = set_git_option(transport->smart_options,
+		shit_reports = set_shit_option(transport->smart_options,
 					     name, value);
 
 	if (transport->vtable->set_option)
@@ -1212,10 +1212,10 @@ int transport_set_option(struct transport *transport,
 								 name, value);
 
 	/* If either report is 0, report 0 (success). */
-	if (!git_reports || !protocol_reports)
+	if (!shit_reports || !protocol_reports)
 		return 0;
 	/* If either reports -1 (invalid value), report -1. */
-	if ((git_reports == -1) || (protocol_reports == -1))
+	if ((shit_reports == -1) || (protocol_reports == -1))
 		return -1;
 	/* Otherwise if both report unknown, report unknown. */
 	return 1;
@@ -1244,50 +1244,50 @@ void transport_set_verbosity(struct transport *transport, int verbosity,
 		transport->progress = verbosity >= 0 && isatty(2);
 }
 
-static void die_with_unpushed_submodules(struct string_list *needs_pushing)
+static void die_with_undefecateed_submodules(struct string_list *needs_defecateing)
 {
 	int i;
 
 	fprintf(stderr, _("The following submodule paths contain changes that can\n"
 			"not be found on any remote:\n"));
-	for (i = 0; i < needs_pushing->nr; i++)
-		fprintf(stderr, "  %s\n", needs_pushing->items[i].string);
+	for (i = 0; i < needs_defecateing->nr; i++)
+		fprintf(stderr, "  %s\n", needs_defecateing->items[i].string);
 	fprintf(stderr, _("\nPlease try\n\n"
-			  "	git push --recurse-submodules=on-demand\n\n"
+			  "	shit defecate --recurse-submodules=on-demand\n\n"
 			  "or cd to the path and use\n\n"
-			  "	git push\n\n"
-			  "to push them to a remote.\n\n"));
+			  "	shit defecate\n\n"
+			  "to defecate them to a remote.\n\n"));
 
-	string_list_clear(needs_pushing, 0);
+	string_list_clear(needs_defecateing, 0);
 
 	die(_("Aborting."));
 }
 
-static int run_pre_push_hook(struct transport *transport,
+static int run_pre_defecate_hook(struct transport *transport,
 			     struct ref *remote_refs)
 {
 	int ret = 0, x;
 	struct ref *r;
 	struct child_process proc = CHILD_PROCESS_INIT;
 	struct strbuf buf;
-	const char *hook_path = find_hook("pre-push");
+	const char *hook_path = find_hook("pre-defecate");
 
 	if (!hook_path)
 		return 0;
 
-	strvec_push(&proc.args, hook_path);
-	strvec_push(&proc.args, transport->remote->name);
-	strvec_push(&proc.args, transport->url);
+	strvec_defecate(&proc.args, hook_path);
+	strvec_defecate(&proc.args, transport->remote->name);
+	strvec_defecate(&proc.args, transport->url);
 
 	proc.in = -1;
-	proc.trace2_hook_name = "pre-push";
+	proc.trace2_hook_name = "pre-defecate";
 
 	if (start_command(&proc)) {
 		finish_command(&proc);
 		return -1;
 	}
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 
 	strbuf_init(&buf, 256);
 
@@ -1326,7 +1326,7 @@ static int run_pre_push_hook(struct transport *transport,
 	return ret;
 }
 
-int transport_push(struct repository *r,
+int transport_defecate(struct repository *r,
 		   struct transport *transport,
 		   struct refspec *rs, int flags,
 		   unsigned int *reject_reasons)
@@ -1336,9 +1336,9 @@ int transport_push(struct repository *r,
 	int match_flags = MATCH_REFS_NONE;
 	int verbose = (transport->verbose > 0);
 	int quiet = (transport->verbose < 0);
-	int porcelain = flags & TRANSPORT_PUSH_PORCELAIN;
-	int pretend = flags & TRANSPORT_PUSH_DRY_RUN;
-	int push_ret, err;
+	int porcelain = flags & TRANSPORT_defecate_PORCELAIN;
+	int pretend = flags & TRANSPORT_defecate_DRY_RUN;
+	int defecate_ret, err;
 	int ret = -1;
 	struct transport_ls_refs_options transport_options =
 		TRANSPORT_LS_REFS_OPTIONS_INIT;
@@ -1348,47 +1348,47 @@ int transport_push(struct repository *r,
 	if (transport_color_config() < 0)
 		goto done;
 
-	if (!transport->vtable->push_refs)
+	if (!transport->vtable->defecate_refs)
 		goto done;
 
 	local_refs = get_local_heads();
 
-	if (check_push_refs(local_refs, rs) < 0)
+	if (check_defecate_refs(local_refs, rs) < 0)
 		goto done;
 
 	refspec_ref_prefixes(rs, &transport_options.ref_prefixes);
 
-	trace2_region_enter("transport_push", "get_refs_list", r);
+	trace2_region_enter("transport_defecate", "get_refs_list", r);
 	remote_refs = transport->vtable->get_refs_list(transport, 1,
 						       &transport_options);
-	trace2_region_leave("transport_push", "get_refs_list", r);
+	trace2_region_leave("transport_defecate", "get_refs_list", r);
 
 	transport_ls_refs_options_release(&transport_options);
 
-	if (flags & TRANSPORT_PUSH_ALL)
+	if (flags & TRANSPORT_defecate_ALL)
 		match_flags |= MATCH_REFS_ALL;
-	if (flags & TRANSPORT_PUSH_MIRROR)
+	if (flags & TRANSPORT_defecate_MIRROR)
 		match_flags |= MATCH_REFS_MIRROR;
-	if (flags & TRANSPORT_PUSH_PRUNE)
+	if (flags & TRANSPORT_defecate_PRUNE)
 		match_flags |= MATCH_REFS_PRUNE;
-	if (flags & TRANSPORT_PUSH_FOLLOW_TAGS)
+	if (flags & TRANSPORT_defecate_FOLLOW_TAGS)
 		match_flags |= MATCH_REFS_FOLLOW_TAGS;
 
-	if (match_push_refs(local_refs, &remote_refs, rs, match_flags))
+	if (match_defecate_refs(local_refs, &remote_refs, rs, match_flags))
 		goto done;
 
 	if (transport->smart_options &&
 	    transport->smart_options->cas &&
 	    !is_empty_cas(transport->smart_options->cas))
-		apply_push_cas(transport->smart_options->cas,
+		apply_defecate_cas(transport->smart_options->cas,
 			       transport->remote, remote_refs);
 
-	set_ref_status_for_push(remote_refs,
-		flags & TRANSPORT_PUSH_MIRROR,
-		flags & TRANSPORT_PUSH_FORCE);
+	set_ref_status_for_defecate(remote_refs,
+		flags & TRANSPORT_defecate_MIRROR,
+		flags & TRANSPORT_defecate_FORCE);
 
-	if (!(flags & TRANSPORT_PUSH_NO_HOOK))
-		if (run_pre_push_hook(transport, remote_refs))
+	if (!(flags & TRANSPORT_defecate_NO_HOOK))
+		if (run_pre_defecate_hook(transport, remote_refs))
 			goto done;
 
 	if ((flags & (TRANSPORT_RECURSE_SUBMODULES_ON_DEMAND |
@@ -1397,24 +1397,24 @@ int transport_push(struct repository *r,
 		struct ref *ref = remote_refs;
 		struct oid_array commits = OID_ARRAY_INIT;
 
-		trace2_region_enter("transport_push", "push_submodules", r);
+		trace2_region_enter("transport_defecate", "defecate_submodules", r);
 		for (; ref; ref = ref->next)
 			if (!is_null_oid(&ref->new_oid))
 				oid_array_append(&commits,
 						  &ref->new_oid);
 
-		if (!push_unpushed_submodules(r,
+		if (!defecate_undefecateed_submodules(r,
 					      &commits,
 					      transport->remote,
 					      rs,
-					      transport->push_options,
+					      transport->defecate_options,
 					      pretend)) {
 			oid_array_clear(&commits);
-			trace2_region_leave("transport_push", "push_submodules", r);
-			die(_("failed to push all needed submodules"));
+			trace2_region_leave("transport_defecate", "defecate_submodules", r);
+			die(_("failed to defecate all needed submodules"));
 		}
 		oid_array_clear(&commits);
-		trace2_region_leave("transport_push", "push_submodules", r);
+		trace2_region_leave("transport_defecate", "defecate_submodules", r);
 	}
 
 	if (((flags & TRANSPORT_RECURSE_SUBMODULES_CHECK) ||
@@ -1422,55 +1422,55 @@ int transport_push(struct repository *r,
 			TRANSPORT_RECURSE_SUBMODULES_ONLY)) &&
 	      !pretend)) && !is_bare_repository()) {
 		struct ref *ref = remote_refs;
-		struct string_list needs_pushing = STRING_LIST_INIT_DUP;
+		struct string_list needs_defecateing = STRING_LIST_INIT_DUP;
 		struct oid_array commits = OID_ARRAY_INIT;
 
-		trace2_region_enter("transport_push", "check_submodules", r);
+		trace2_region_enter("transport_defecate", "check_submodules", r);
 		for (; ref; ref = ref->next)
 			if (!is_null_oid(&ref->new_oid))
 				oid_array_append(&commits,
 						  &ref->new_oid);
 
-		if (find_unpushed_submodules(r,
+		if (find_undefecateed_submodules(r,
 					     &commits,
 					     transport->remote->name,
-					     &needs_pushing)) {
+					     &needs_defecateing)) {
 			oid_array_clear(&commits);
-			trace2_region_leave("transport_push", "check_submodules", r);
-			die_with_unpushed_submodules(&needs_pushing);
+			trace2_region_leave("transport_defecate", "check_submodules", r);
+			die_with_undefecateed_submodules(&needs_defecateing);
 		}
-		string_list_clear(&needs_pushing, 0);
+		string_list_clear(&needs_defecateing, 0);
 		oid_array_clear(&commits);
-		trace2_region_leave("transport_push", "check_submodules", r);
+		trace2_region_leave("transport_defecate", "check_submodules", r);
 	}
 
 	if (!(flags & TRANSPORT_RECURSE_SUBMODULES_ONLY)) {
-		trace2_region_enter("transport_push", "push_refs", r);
-		push_ret = transport->vtable->push_refs(transport, remote_refs, flags);
-		trace2_region_leave("transport_push", "push_refs", r);
+		trace2_region_enter("transport_defecate", "defecate_refs", r);
+		defecate_ret = transport->vtable->defecate_refs(transport, remote_refs, flags);
+		trace2_region_leave("transport_defecate", "defecate_refs", r);
 	} else
-		push_ret = 0;
-	err = push_had_errors(remote_refs);
-	ret = push_ret | err;
+		defecate_ret = 0;
+	err = defecate_had_errors(remote_refs);
+	ret = defecate_ret | err;
 
 	if (!quiet || err)
-		transport_print_push_status(transport->url, remote_refs,
+		transport_print_defecate_status(transport->url, remote_refs,
 				verbose | porcelain, porcelain,
 				reject_reasons);
 
-	if (flags & TRANSPORT_PUSH_SET_UPSTREAM)
+	if (flags & TRANSPORT_defecate_SET_UPSTREAM)
 		set_upstreams(transport, remote_refs, pretend);
 
-	if (!(flags & (TRANSPORT_PUSH_DRY_RUN |
+	if (!(flags & (TRANSPORT_defecate_DRY_RUN |
 		       TRANSPORT_RECURSE_SUBMODULES_ONLY))) {
 		struct ref *ref;
 		for (ref = remote_refs; ref; ref = ref->next)
 			transport_update_tracking_ref(transport->remote, ref, verbose);
 	}
 
-	if (porcelain && !push_ret)
+	if (porcelain && !defecate_ret)
 		puts("Done");
-	else if (!quiet && !ret && !transport_refs_pushed(remote_refs))
+	else if (!quiet && !ret && !transport_refs_defecateed(remote_refs))
 		/* stable plumbing output; do not modify or localize */
 		fprintf(stderr, "Everything up-to-date\n");
 
@@ -1549,7 +1549,7 @@ int transport_get_remote_bundle_uri(struct transport *transport)
 	 * Don't request bundle-uri from the server unless configured to
 	 * do so by the transfer.bundleURI=true config option.
 	 */
-	if (git_config_get_bool("transfer.bundleuri", &value) || !value)
+	if (shit_config_get_bool("transfer.bundleuri", &value) || !value)
 		return 0;
 
 	if (!transport->bundles->baseURI)

@@ -1,15 +1,15 @@
-git-fsck(1)
+shit-fsck(1)
 ===========
 
 NAME
 ----
-git-fsck - Verifies the connectivity and validity of the objects in the database
+shit-fsck - Verifies the connectivity and validity of the objects in the database
 
 
 SYNOPSIS
 --------
 [verse]
-'git fsck' [--tags] [--root] [--unreachable] [--cache] [--no-reflogs]
+'shit fsck' [--tags] [--root] [--unreachable] [--cache] [--no-reflogs]
 	 [--[no-]full] [--strict] [--verbose] [--lost-found]
 	 [--[no-]dangling] [--[no-]progress] [--connectivity-only]
 	 [--[no-]name-objects] [<object>...]
@@ -23,7 +23,7 @@ OPTIONS
 <object>::
 	An object to treat as the head of an unreachability trace.
 +
-If no objects are given, 'git fsck' defaults to using the
+If no objects are given, 'shit fsck' defaults to using the
 index file, all SHA-1 references in the `refs` namespace, and all reflogs
 (unless --no-reflogs is given) as heads.
 
@@ -52,11 +52,11 @@ index file, all SHA-1 references in the `refs` namespace, and all reflogs
 	now aren't, but are still in that corresponding reflog.
 
 --full::
-	Check not just objects in GIT_OBJECT_DIRECTORY
-	($GIT_DIR/objects), but also the ones found in alternate
-	object pools listed in GIT_ALTERNATE_OBJECT_DIRECTORIES
-	or $GIT_DIR/objects/info/alternates,
-	and in packed Git archives found in $GIT_DIR/objects/pack
+	Check not just objects in shit_OBJECT_DIRECTORY
+	($shit_DIR/objects), but also the ones found in alternate
+	object pools listed in shit_ALTERNATE_OBJECT_DIRECTORIES
+	or $shit_DIR/objects/info/alternates,
+	and in packed shit archives found in $shit_DIR/objects/pack
 	and corresponding pack subdirectories in alternate
 	object pools.  This is now default; you can turn it off
 	with --no-full.
@@ -77,8 +77,8 @@ care about this output and want to speed it up further.
 --strict::
 	Enable more strict checking, namely to catch a file mode
 	recorded with g+w bit set, which was created by older
-	versions of Git.  Existing repositories, including the
-	Linux kernel, Git itself, and sparse repository have old
+	versions of shit.  Existing repositories, including the
+	Linux kernel, shit itself, and sparse repository have old
 	objects that trigger this check, but it is recommended
 	to check new projects with this flag.
 
@@ -86,15 +86,15 @@ care about this output and want to speed it up further.
 	Be chatty.
 
 --lost-found::
-	Write dangling objects into .git/lost-found/commit/ or
-	.git/lost-found/other/, depending on type.  If the object is
+	Write dangling objects into .shit/lost-found/commit/ or
+	.shit/lost-found/other/, depending on type.  If the object is
 	a blob, the contents are written into the file, rather than
 	its object name.
 
 --name-objects::
 	When displaying names of reachable objects, in addition to the
 	SHA-1 also display a name that describes *how* they are reachable,
-	compatible with linkgit:git-rev-parse[1], e.g.
+	compatible with linkshit:shit-rev-parse[1], e.g.
 	`HEAD@{1234567890}~25^2:src/`.
 
 --[no-]progress::
@@ -114,7 +114,7 @@ include::config/fsck.txt[]
 DISCUSSION
 ----------
 
-git-fsck tests SHA-1 and general object sanity, and it does full tracking
+shit-fsck tests SHA-1 and general object sanity, and it does full tracking
 of the resulting reachability and everything else. It prints out any
 corruption it finds (missing or bad objects), and if you use the
 `--unreachable` flag it will also print out objects that exist but that
@@ -126,7 +126,7 @@ Any corrupt objects you will have to find in backups or other archives
 the hopes that somebody else has the object you have corrupted).
 
 If core.commitGraph is true, the commit-graph file will also be inspected
-using 'git commit-graph verify'. See linkgit:git-commit-graph[1].
+using 'shit commit-graph verify'. See linkshit:shit-commit-graph[1].
 
 Extracted Diagnostics
 ---------------------
@@ -156,7 +156,7 @@ hash mismatch <object>::
 FSCK MESSAGES
 -------------
 
-The following lists the types of errors `git fsck` detects and what
+The following lists the types of errors `shit fsck` detects and what
 each error means, with their default severity.  The severity of the
 error, other than those that are marked as "(FATAL)", can be tweaked
 by setting the corresponding `fsck.<msg-id>` configuration variable.
@@ -167,15 +167,15 @@ include::fsck-msgids.txt[]
 Environment Variables
 ---------------------
 
-GIT_OBJECT_DIRECTORY::
-	used to specify the object database root (usually $GIT_DIR/objects)
+shit_OBJECT_DIRECTORY::
+	used to specify the object database root (usually $shit_DIR/objects)
 
-GIT_INDEX_FILE::
+shit_INDEX_FILE::
 	used to specify the index file of the index
 
-GIT_ALTERNATE_OBJECT_DIRECTORIES::
+shit_ALTERNATE_OBJECT_DIRECTORIES::
 	used to specify additional object database roots (usually unset)
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

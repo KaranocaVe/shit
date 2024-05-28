@@ -13,7 +13,7 @@
  *
  * ------------
  * +-----------------------+
- * | Git code (C)          |--- to server requiring --->
+ * | shit code (C)          |--- to server requiring --->
  * |                       |        authentication
  * |.......................|
  * | C credential API      |--- prompt ---> User
@@ -22,14 +22,14 @@
  * 	| pipe |
  * 	|      v
  * +-----------------------+
- * | Git credential helper |
+ * | shit credential helper |
  * +-----------------------+
  * ------------
  *
- * The Git code (typically a remote-helper) will call the C API to obtain
+ * The shit code (typically a remote-helper) will call the C API to obtain
  * credential data like a login/password pair (credential_fill). The
- * API will itself call a remote helper (e.g. "git credential-cache" or
- * "git credential-store") that may retrieve credential data from a
+ * API will itself call a remote helper (e.g. "shit credential-cache" or
+ * "shit credential-store") that may retrieve credential data from a
  * store. If the credential helper cannot find the information, the C API
  * will prompt the user. Then, the caller of the API takes care of
  * contacting the server, and does the actual authentication.
@@ -37,7 +37,7 @@
  * C API
  * -----
  *
- * The credential C API is meant to be called by Git code which needs to
+ * The credential C API is meant to be called by shit code which needs to
  * acquire or store a credential. It is centered around an object
  * representing a single credential and provides three basic operations:
  * fill (acquire credentials by calling helpers and/or prompting the user),
@@ -95,7 +95,7 @@
 
 /*
  * These values define the kind of operation we're performing and the
- * capabilities at each stage.  The first is either an external request (via git
+ * capabilities at each stage.  The first is either an external request (via shit
  * credential fill) or an internal request (e.g., via the HTTP) code.  The
  * second is the call to the credential helper, and the third is the response
  * we're providing.

@@ -52,7 +52,7 @@ const char *ref_storage_format_to_name(unsigned int ref_storage_format);
  * give up and return NULL.
  *
  * RESOLVE_REF_ALLOW_BAD_NAME allows resolving refs even when their
- * name is invalid according to git-check-ref-format(1).  If the name
+ * name is invalid according to shit-check-ref-format(1).  If the name
  * is bad then the value stored in oid will be null_oid and the two
  * flags REF_ISBROKEN and REF_BAD_NAME will be set.
  *
@@ -131,12 +131,12 @@ int refs_init_db(struct ref_store *refs, int flags, struct strbuf *err);
 int peel_iterated_oid(const struct object_id *base, struct object_id *peeled);
 
 /**
- * Resolve refname in the nested "gitlink" repository in the specified
+ * Resolve refname in the nested "shitlink" repository in the specified
  * submodule (which must be non-NULL). If the resolution is
  * successful, return 0 and set oid to the name of the object;
  * otherwise, return a non-zero value.
  */
-int resolve_gitlink_ref(const char *submodule, const char *refname,
+int resolve_shitlink_ref(const char *submodule, const char *refname,
 			struct object_id *oid);
 
 /*
@@ -163,9 +163,9 @@ int dwim_log(const char *str, int len, struct object_id *oid, char **ref);
  * Retrieves the default branch name for newly-initialized repositories.
  *
  * The return value of `repo_default_branch_name()` is an allocated string. The
- * return value of `git_default_branch_name()` is a singleton.
+ * return value of `shit_default_branch_name()` is a singleton.
  */
-const char *git_default_branch_name(int quiet);
+const char *shit_default_branch_name(int quiet);
 char *repo_default_branch_name(struct repository *r, int quiet);
 
 /*
@@ -279,7 +279,7 @@ struct ref_transaction;
 /*
  * Reference name is not well formed.
  *
- * See git-check-ref-format(1) for the definition of well formed ref names.
+ * See shit-check-ref-format(1) for the definition of well formed ref names.
  */
 #define REF_BAD_NAME 0x08
 
@@ -480,7 +480,7 @@ int refs_delete_reflog(struct ref_store *refs, const char *refname);
  * below).
  *
  * The committer parameter is a single string, in the form
- * "$GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL>" (without double quotes).
+ * "$shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL>" (without double quotes).
  *
  * The timestamp parameter gives the time when entry was created as the number
  * of seconds since the UNIX epoch.
@@ -536,7 +536,7 @@ int refs_for_each_reflog(struct ref_store *refs, each_reflog_fn fn, void *cb_dat
 
 /*
  * Return 0 iff refname has the correct format for a refname according
- * to the rules described in Documentation/git-check-ref-format.txt.
+ * to the rules described in Documentation/shit-check-ref-format.txt.
  * If REFNAME_ALLOW_ONELEVEL is set in flags, then accept one-level
  * reference names.  If REFNAME_REFSPEC_PATTERN is set in flags, then
  * allow a single "*" wildcard character in the refspec. No leading or
@@ -782,7 +782,7 @@ int ref_transaction_abort(struct ref_transaction *transaction,
 
 /*
  * Like ref_transaction_commit(), but optimized for creating
- * references when originally initializing a repository (e.g., by "git
+ * references when originally initializing a repository (e.g., by "shit
  * clone"). It writes the new references directly to packed-refs
  * without locking the individual references.
  *
@@ -969,7 +969,7 @@ struct ref_store *get_submodule_ref_store(const char *submodule);
 struct ref_store *get_worktree_ref_store(const struct worktree *wt);
 
 /*
- * Some of the names specified by refs have special meaning to Git.
+ * Some of the names specified by refs have special meaning to shit.
  * Organize these namespaces in a comon 'ref_namespace' array for
  * reference from multiple places in the codebase.
  */
@@ -1017,10 +1017,10 @@ int is_pseudoref(struct ref_store *refs, const char *refname);
 int is_headref(struct ref_store *refs, const char *refname);
 
 /*
- * The following functions have been removed in Git v2.45 in favor of functions
+ * The following functions have been removed in shit v2.45 in favor of functions
  * that receive a `ref_store` as parameter. The intent of this section is
  * merely to help patch authors of in-flight series to have a reference what
- * they should be migrating to. The section will be removed in Git v2.46.
+ * they should be migrating to. The section will be removed in shit v2.46.
  */
 #if 0
 static char *resolve_refdup(const char *refname, int resolve_flags,

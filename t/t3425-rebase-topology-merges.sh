@@ -9,7 +9,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_revision_subjects () {
 	expected="$1"
 	shift
-	set -- $(git log --format=%s --no-walk=unsorted "$@")
+	set -- $(shit log --format=%s --no-walk=unsorted "$@")
 	test "$expected" = "$*"
 }
 
@@ -24,25 +24,25 @@ test_expect_success 'setup of non-linear-history' '
 	test_commit a &&
 	test_commit b &&
 	test_commit c &&
-	git checkout b &&
+	shit checkout b &&
 	test_commit d &&
 	test_commit e &&
 
-	git checkout c &&
+	shit checkout c &&
 	test_commit g &&
 	revert h g &&
-	git checkout d &&
+	shit checkout d &&
 	cherry_pick gp g &&
 	test_commit i &&
-	git checkout b &&
+	shit checkout b &&
 	test_commit f &&
 
-	git checkout d &&
+	shit checkout d &&
 	test_commit n &&
 	test_commit o &&
 	test_merge w e &&
 	test_merge v c &&
-	git checkout o &&
+	shit checkout o &&
 	test_commit z
 '
 
@@ -51,7 +51,7 @@ test_run_rebase () {
 	shift
 	test_expect_$result "rebase $* after merge from upstream" "
 		reset_rebase &&
-		git rebase $* e w &&
+		shit rebase $* e w &&
 		test_cmp_rev e HEAD~2 &&
 		test_linear_range 'n o' e..
 	"
@@ -67,7 +67,7 @@ test_run_rebase () {
 	shift
 	test_expect_$result "rebase $* of non-linear history is linearized in place" "
 		reset_rebase &&
-		git rebase $* d w &&
+		shit rebase $* d w &&
 		test_cmp_rev d HEAD~3 &&
 		test_linear_range "\'"$expected"\'" d..
 	"
@@ -83,7 +83,7 @@ test_run_rebase () {
 	shift
 	test_expect_$result "rebase $* of non-linear history is linearized upstream" "
 		reset_rebase &&
-		git rebase $* c w &&
+		shit rebase $* c w &&
 		test_cmp_rev c HEAD~4 &&
 		test_linear_range "\'"$expected"\'" c..
 	"
@@ -99,7 +99,7 @@ test_run_rebase () {
 	shift
 	test_expect_$result "rebase $* of non-linear history with merges after upstream merge is linearized" "
 		reset_rebase &&
-		git rebase $* c v &&
+		shit rebase $* c v &&
 		test_cmp_rev c HEAD~4 &&
 		test_linear_range "\'"$expected"\'" c..
 	"

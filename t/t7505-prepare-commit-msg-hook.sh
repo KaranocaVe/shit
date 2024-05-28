@@ -2,8 +2,8 @@
 
 test_description='prepare-commit-msg hook'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -11,39 +11,39 @@ test_expect_success 'set up commits for rebasing' '
 	test_commit root &&
 	test_commit a a a &&
 	test_commit b b b &&
-	git checkout -b rebase-me root &&
+	shit checkout -b rebase-me root &&
 	test_commit rebase-a a aa &&
 	test_commit rebase-b b bb &&
 	for i in $(test_seq 1 13)
 	do
 		test_commit rebase-$i c $i || return 1
 	done &&
-	git checkout main &&
+	shit checkout main &&
 
 	cat >rebase-todo <<-EOF
-	pick $(git rev-parse rebase-a)
-	pick $(git rev-parse rebase-b)
-	fixup $(git rev-parse rebase-1)
-	fixup $(git rev-parse rebase-2)
-	pick $(git rev-parse rebase-3)
-	fixup $(git rev-parse rebase-4)
-	squash $(git rev-parse rebase-5)
-	reword $(git rev-parse rebase-6)
-	squash $(git rev-parse rebase-7)
-	fixup $(git rev-parse rebase-8)
-	fixup $(git rev-parse rebase-9)
-	edit $(git rev-parse rebase-10)
-	squash $(git rev-parse rebase-11)
-	squash $(git rev-parse rebase-12)
-	edit $(git rev-parse rebase-13)
+	pick $(shit rev-parse rebase-a)
+	pick $(shit rev-parse rebase-b)
+	fixup $(shit rev-parse rebase-1)
+	fixup $(shit rev-parse rebase-2)
+	pick $(shit rev-parse rebase-3)
+	fixup $(shit rev-parse rebase-4)
+	squash $(shit rev-parse rebase-5)
+	reword $(shit rev-parse rebase-6)
+	squash $(shit rev-parse rebase-7)
+	fixup $(shit rev-parse rebase-8)
+	fixup $(shit rev-parse rebase-9)
+	edit $(shit rev-parse rebase-10)
+	squash $(shit rev-parse rebase-11)
+	squash $(shit rev-parse rebase-12)
+	edit $(shit rev-parse rebase-13)
 	EOF
 '
 
 test_expect_success 'with no hook' '
 
 	echo "foo" > file &&
-	git add file &&
-	git commit -m "first"
+	shit add file &&
+	shit commit -m "first"
 
 '
 
@@ -60,8 +60,8 @@ test_expect_success 'setup fake editor for interactive editing' '
 
 test_expect_success 'setup prepare-commit-msg hook' '
 	test_hook --setup prepare-commit-msg <<\EOF
-GIT_DIR=$(git rev-parse --git-dir)
-if test -d "$GIT_DIR/rebase-merge"
+shit_DIR=$(shit rev-parse --shit-dir)
+if test -d "$shit_DIR/rebase-merge"
 then
 	rebasing=1
 else
@@ -69,9 +69,9 @@ else
 fi
 
 get_last_cmd () {
-	tail -n1 "$GIT_DIR/rebase-merge/done" | {
+	tail -n1 "$shit_DIR/rebase-merge/done" | {
 		read cmd id _
-		git log --pretty="[$cmd %s]" -n1 $id
+		shit log --pretty="[$cmd %s]" -n1 $id
 	}
 }
 
@@ -81,12 +81,12 @@ then
 	then
 		source="$3"
 	else
-		source=$(git rev-parse "$3")
+		source=$(shit rev-parse "$3")
 	fi
 else
 	source=${2-default}
 fi
-test "$GIT_EDITOR" = : && source="$source (no editor)"
+test "$shit_EDITOR" = : && source="$source (no editor)"
 
 if test $rebasing = 1
 then
@@ -99,114 +99,114 @@ exit 0
 EOF
 '
 
-echo dummy template > "$(git rev-parse --git-dir)/template"
+echo dummy template > "$(shit rev-parse --shit-dir)/template"
 
 test_expect_success 'with hook (-m)' '
 
 	echo "more" >> file &&
-	git add file &&
-	git commit -m "more" &&
-	test "$(git log -1 --pretty=format:%s)" = "message (no editor)"
+	shit add file &&
+	shit commit -m "more" &&
+	test "$(shit log -1 --pretty=format:%s)" = "message (no editor)"
 
 '
 
 test_expect_success 'with hook (-m editor)' '
 
 	echo "more" >> file &&
-	git add file &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit -e -m "more more" &&
-	test "$(git log -1 --pretty=format:%s)" = message
+	shit add file &&
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit -e -m "more more" &&
+	test "$(shit log -1 --pretty=format:%s)" = message
 
 '
 
 test_expect_success 'with hook (-t)' '
 
 	echo "more" >> file &&
-	git add file &&
-	git commit -t "$(git rev-parse --git-dir)/template" &&
-	test "$(git log -1 --pretty=format:%s)" = template
+	shit add file &&
+	shit commit -t "$(shit rev-parse --shit-dir)/template" &&
+	test "$(shit log -1 --pretty=format:%s)" = template
 
 '
 
 test_expect_success 'with hook (-F)' '
 
 	echo "more" >> file &&
-	git add file &&
-	(echo more | git commit -F -) &&
-	test "$(git log -1 --pretty=format:%s)" = "message (no editor)"
+	shit add file &&
+	(echo more | shit commit -F -) &&
+	test "$(shit log -1 --pretty=format:%s)" = "message (no editor)"
 
 '
 
 test_expect_success 'with hook (-F editor)' '
 
 	echo "more" >> file &&
-	git add file &&
-	(echo more more | GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit -e -F -) &&
-	test "$(git log -1 --pretty=format:%s)" = message
+	shit add file &&
+	(echo more more | shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit -e -F -) &&
+	test "$(shit log -1 --pretty=format:%s)" = message
 
 '
 
 test_expect_success 'with hook (-C)' '
 
-	head=$(git rev-parse HEAD) &&
+	head=$(shit rev-parse HEAD) &&
 	echo "more" >> file &&
-	git add file &&
-	git commit -C $head &&
-	test "$(git log -1 --pretty=format:%s)" = "$head (no editor)"
+	shit add file &&
+	shit commit -C $head &&
+	test "$(shit log -1 --pretty=format:%s)" = "$head (no editor)"
 
 '
 
 test_expect_success 'with hook (editor)' '
 
 	echo "more more" >> file &&
-	git add file &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit &&
-	test "$(git log -1 --pretty=format:%s)" = default
+	shit add file &&
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit &&
+	test "$(shit log -1 --pretty=format:%s)" = default
 
 '
 
 test_expect_success 'with hook (--amend)' '
 
-	head=$(git rev-parse HEAD) &&
+	head=$(shit rev-parse HEAD) &&
 	echo "more" >> file &&
-	git add file &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit --amend &&
-	test "$(git log -1 --pretty=format:%s)" = "$head"
+	shit add file &&
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit --amend &&
+	test "$(shit log -1 --pretty=format:%s)" = "$head"
 
 '
 
 test_expect_success 'with hook (-c)' '
 
-	head=$(git rev-parse HEAD) &&
+	head=$(shit rev-parse HEAD) &&
 	echo "more" >> file &&
-	git add file &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit -c $head &&
-	test "$(git log -1 --pretty=format:%s)" = "$head"
+	shit add file &&
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit -c $head &&
+	test "$(shit log -1 --pretty=format:%s)" = "$head"
 
 '
 
 test_expect_success 'with hook (merge)' '
 
-	test_when_finished "git checkout -f main" &&
-	git checkout -B other HEAD@{1} &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout -B other HEAD@{1} &&
 	echo "more" >>file &&
-	git add file &&
-	git commit -m other &&
-	git checkout - &&
-	git merge --no-ff other &&
-	test "$(git log -1 --pretty=format:%s)" = "merge (no editor)"
+	shit add file &&
+	shit commit -m other &&
+	shit checkout - &&
+	shit merge --no-ff other &&
+	test "$(shit log -1 --pretty=format:%s)" = "merge (no editor)"
 '
 
 test_expect_success 'with hook and editor (merge)' '
 
-	test_when_finished "git checkout -f main" &&
-	git checkout -B other HEAD@{1} &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout -B other HEAD@{1} &&
 	echo "more" >>file &&
-	git add file &&
-	git commit -m other &&
-	git checkout - &&
-	env GIT_EDITOR="\"\$FAKE_EDITOR\"" git merge --no-ff -e other &&
-	test "$(git log -1 --pretty=format:%s)" = "merge"
+	shit add file &&
+	shit commit -m other &&
+	shit checkout - &&
+	env shit_EDITOR="\"\$FAKE_EDITOR\"" shit merge --no-ff -e other &&
+	test "$(shit log -1 --pretty=format:%s)" = "merge"
 '
 
 test_rebase () {
@@ -214,31 +214,31 @@ test_rebase () {
 	mode=$2 &&
 	test_expect_$expect "with hook (rebase ${mode:--i})" '
 		test_when_finished "\
-			git rebase --abort
-			git checkout -f main
-			git branch -D tmp" &&
-		git checkout -b tmp rebase-me &&
-		GIT_SEQUENCE_EDITOR="cp rebase-todo" &&
-		GIT_EDITOR="\"$FAKE_EDITOR\"" &&
+			shit rebase --abort
+			shit checkout -f main
+			shit branch -D tmp" &&
+		shit checkout -b tmp rebase-me &&
+		shit_SEQUENCE_EDITOR="cp rebase-todo" &&
+		shit_EDITOR="\"$FAKE_EDITOR\"" &&
 		(
-			export GIT_SEQUENCE_EDITOR GIT_EDITOR &&
-			test_must_fail git rebase -i $mode b &&
+			export shit_SEQUENCE_EDITOR shit_EDITOR &&
+			test_must_fail shit rebase -i $mode b &&
 			echo x >a &&
-			git add a &&
-			test_must_fail git rebase --continue &&
+			shit add a &&
+			test_must_fail shit rebase --continue &&
 			echo x >b &&
-			git add b &&
-			git commit &&
-			git rebase --continue &&
+			shit add b &&
+			shit commit &&
+			shit rebase --continue &&
 			echo y >a &&
-			git add a &&
-			git commit &&
-			git rebase --continue &&
+			shit add a &&
+			shit commit &&
+			shit rebase --continue &&
 			echo y >b &&
-			git add b &&
-			git rebase --continue
+			shit add b &&
+			shit rebase --continue
 		) &&
-		git log --pretty=%s -g -n18 HEAD@{1} >actual &&
+		shit log --pretty=%s -g -n18 HEAD@{1} >actual &&
 		test_cmp "$TEST_DIRECTORY/t7505/expected-rebase${mode:--i}" actual
 	'
 }
@@ -246,17 +246,17 @@ test_rebase () {
 test_rebase success
 
 test_expect_success 'with hook (cherry-pick)' '
-	test_when_finished "git checkout -f main" &&
-	git checkout -B other b &&
-	git cherry-pick rebase-1 &&
-	test "$(git log -1 --pretty=format:%s)" = "message (no editor)"
+	test_when_finished "shit checkout -f main" &&
+	shit checkout -B other b &&
+	shit cherry-pick rebase-1 &&
+	test "$(shit log -1 --pretty=format:%s)" = "message (no editor)"
 '
 
 test_expect_success 'with hook and editor (cherry-pick)' '
-	test_when_finished "git checkout -f main" &&
-	git checkout -B other b &&
-	git cherry-pick -e rebase-1 &&
-	test "$(git log -1 --pretty=format:%s)" = merge
+	test_when_finished "shit checkout -f main" &&
+	shit checkout -B other b &&
+	shit cherry-pick -e rebase-1 &&
+	test "$(shit log -1 --pretty=format:%s)" = merge
 '
 
 test_expect_success 'setup: commit-msg hook that always fails' '
@@ -267,44 +267,44 @@ test_expect_success 'setup: commit-msg hook that always fails' '
 
 test_expect_success 'with failing hook' '
 
-	test_when_finished "git checkout -f main" &&
-	head=$(git rev-parse HEAD) &&
+	test_when_finished "shit checkout -f main" &&
+	head=$(shit rev-parse HEAD) &&
 	echo "more" >> file &&
-	git add file &&
-	test_must_fail env GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit -c $head
+	shit add file &&
+	test_must_fail env shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit -c $head
 
 '
 
 test_expect_success 'with failing hook (--no-verify)' '
 
-	test_when_finished "git checkout -f main" &&
-	head=$(git rev-parse HEAD) &&
+	test_when_finished "shit checkout -f main" &&
+	head=$(shit rev-parse HEAD) &&
 	echo "more" >> file &&
-	git add file &&
-	test_must_fail env GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit --no-verify -c $head
+	shit add file &&
+	test_must_fail env shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit --no-verify -c $head
 
 '
 
 test_expect_success 'with failing hook (merge)' '
 
-	test_when_finished "git checkout -f main" &&
-	git checkout -B other HEAD@{1} &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout -B other HEAD@{1} &&
 	echo "more" >> file &&
-	git add file &&
+	shit add file &&
 	test_hook --remove prepare-commit-msg &&
-	git commit -m other &&
+	shit commit -m other &&
 	test_hook --setup prepare-commit-msg <<-\EOF &&
 	exit 1
 	EOF
-	git checkout - &&
-	test_must_fail git merge --no-ff other
+	shit checkout - &&
+	test_must_fail shit merge --no-ff other
 
 '
 
 test_expect_success 'with failing hook (cherry-pick)' '
-	test_when_finished "git checkout -f main" &&
-	git checkout -B other b &&
-	test_must_fail git cherry-pick rebase-1 2>actual &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout -B other b &&
+	test_must_fail shit cherry-pick rebase-1 2>actual &&
 	test $(grep -c prepare-commit-msg actual) = 1
 '
 

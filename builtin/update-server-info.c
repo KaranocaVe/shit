@@ -5,7 +5,7 @@
 #include "server-info.h"
 
 static const char * const update_server_info_usage[] = {
-	"git update-server-info [-f | --force]",
+	"shit update-server-info [-f | --force]",
 	NULL
 };
 
@@ -17,7 +17,7 @@ int cmd_update_server_info(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 	argc = parse_options(argc, argv, prefix, options,
 			     update_server_info_usage, 0);
 	if (argc > 0)

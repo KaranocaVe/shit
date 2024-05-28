@@ -2,8 +2,8 @@
 
 test_description='recursive merge diff3 style conflict markers'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -19,14 +19,14 @@ export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
 #
 
 test_expect_success 'setup no merge base' '
-	git init no_merge_base &&
+	shit init no_merge_base &&
 	(
 		cd no_merge_base &&
 
-		git checkout -b L &&
+		shit checkout -b L &&
 		test_commit A content A &&
 
-		git checkout --orphan R &&
+		shit checkout --orphan R &&
 		test_commit B content B
 	)
 '
@@ -35,9 +35,9 @@ test_expect_success 'check no merge base' '
 	(
 		cd no_merge_base &&
 
-		git checkout L^0 &&
+		shit checkout L^0 &&
 
-		test_must_fail git -c merge.conflictstyle=diff3 merge --allow-unrelated-histories -s recursive R^0 &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge --allow-unrelated-histories -s recursive R^0 &&
 
 		grep "|||||| empty tree" content
 	)
@@ -55,7 +55,7 @@ test_expect_success 'check no merge base' '
 #
 
 test_expect_success 'setup unique merge base' '
-	git init unique_merge_base &&
+	shit init unique_merge_base &&
 	(
 		cd unique_merge_base &&
 
@@ -66,10 +66,10 @@ test_expect_success 'setup unique merge base' '
 5
 " &&
 
-		git branch L &&
-		git branch R &&
+		shit branch L &&
+		shit branch R &&
 
-		git checkout L &&
+		shit checkout L &&
 		test_commit L content "1
 2
 3
@@ -77,8 +77,8 @@ test_expect_success 'setup unique merge base' '
 5
 7" &&
 
-		git checkout R &&
-		git rm content &&
+		shit checkout R &&
+		shit rm content &&
 		test_commit R renamed "1
 2
 3
@@ -92,10 +92,10 @@ test_expect_success 'check unique merge base' '
 	(
 		cd unique_merge_base &&
 
-		git checkout L^0 &&
-		MAIN=$(git rev-parse --short main) &&
+		shit checkout L^0 &&
+		MAIN=$(shit rev-parse --short main) &&
 
-		test_must_fail git -c merge.conflictstyle=diff3 merge -s recursive R^0 &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge -s recursive R^0 &&
 
 		grep "|||||| $MAIN:content" renamed
 	)
@@ -116,7 +116,7 @@ test_expect_success 'check unique merge base' '
 #
 
 test_expect_success 'setup multiple merge bases' '
-	git init multiple_merge_bases &&
+	shit init multiple_merge_bases &&
 	(
 		cd multiple_merge_bases &&
 
@@ -126,11 +126,11 @@ test_expect_success 'setup multiple merge bases' '
 4
 5" &&
 
-		git branch L &&
-		git branch R &&
+		shit branch L &&
+		shit branch R &&
 
 		# Create L1
-		git checkout L &&
+		shit checkout L &&
 		test_commit L1 content "0
 1
 2
@@ -139,7 +139,7 @@ test_expect_success 'setup multiple merge bases' '
 5" &&
 
 		# Create R1
-		git checkout R &&
+		shit checkout R &&
 		test_commit R1 content "1
 2
 3
@@ -148,15 +148,15 @@ test_expect_success 'setup multiple merge bases' '
 6" &&
 
 		# Create L2
-		git checkout L &&
-		git merge R1 &&
+		shit checkout L &&
+		shit merge R1 &&
 
 		# Create R2
-		git checkout R &&
-		git merge L1 &&
+		shit checkout R &&
+		shit merge L1 &&
 
 		# Create L3
-		git checkout L &&
+		shit checkout L &&
 		test_commit L3 content "0
 1
 2
@@ -166,8 +166,8 @@ test_expect_success 'setup multiple merge bases' '
 A" &&
 
 		# Create R3
-		git checkout R &&
-		git rm content &&
+		shit checkout R &&
+		shit rm content &&
 		test_commit R3 renamed "0
 2
 3
@@ -181,23 +181,23 @@ test_expect_success 'check multiple merge bases' '
 	(
 		cd multiple_merge_bases &&
 
-		git checkout L^0 &&
+		shit checkout L^0 &&
 
-		test_must_fail git -c merge.conflictstyle=diff3 merge -s recursive R^0 &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge -s recursive R^0 &&
 
 		grep "|||||| merged common ancestors:content" renamed
 	)
 '
 
 test_expect_success 'rebase --merge describes parent of commit being picked' '
-	git init rebase &&
+	shit init rebase &&
 	(
 		cd rebase &&
 		test_commit base file &&
 		test_commit main file &&
-		git checkout -b side HEAD^ &&
+		shit checkout -b side HEAD^ &&
 		test_commit side file &&
-		test_must_fail git -c merge.conflictstyle=diff3 rebase --merge main &&
+		test_must_fail shit -c merge.conflictstyle=diff3 rebase --merge main &&
 		grep "||||||| parent of" file
 	)
 '
@@ -205,14 +205,14 @@ test_expect_success 'rebase --merge describes parent of commit being picked' '
 test_expect_success 'rebase --apply describes fake ancestor base' '
 	(
 		cd rebase &&
-		git rebase --abort &&
-		test_must_fail git -c merge.conflictstyle=diff3 rebase --apply main &&
+		shit rebase --abort &&
+		test_must_fail shit -c merge.conflictstyle=diff3 rebase --apply main &&
 		grep "||||||| constructed merge base" file
 	)
 '
 
 test_setup_zdiff3 () {
-	git init zdiff3 &&
+	shit init zdiff3 &&
 	(
 		cd zdiff3 &&
 
@@ -221,27 +221,27 @@ test_setup_zdiff3 () {
 		test_write_lines 1 2 3 4 5 6 7 8 9 >interesting &&
 		test_write_lines 1 2 3 4 5 6 7 8 9 >evil &&
 
-		git add basic middle-common interesting evil &&
-		git commit -m base &&
+		shit add basic middle-common interesting evil &&
+		shit commit -m base &&
 
-		git branch left &&
-		git branch right &&
+		shit branch left &&
+		shit branch right &&
 
-		git checkout left &&
+		shit checkout left &&
 		test_write_lines 1 2 3 4 A B C D E 7 8 9 >basic &&
 		test_write_lines 1 2 3 CC 4 5 DD 6 7 8 >middle-common &&
 		test_write_lines 1 2 3 4 A B C D E F G H I J 7 8 9 >interesting &&
 		test_write_lines 1 2 3 4 X A B C 7 8 9 >evil &&
-		git add -u &&
-		git commit -m letters &&
+		shit add -u &&
+		shit commit -m letters &&
 
-		git checkout right &&
+		shit checkout right &&
 		test_write_lines 1 2 3 4 A X C Y E 7 8 9 >basic &&
 		test_write_lines 1 2 3 EE 4 5 FF 6 7 8 >middle-common &&
 		test_write_lines 1 2 3 4 A B C 5 6 G H I J 7 8 9 >interesting &&
 		test_write_lines 1 2 3 4 Y A B C B C 7 8 9 >evil &&
-		git add -u &&
-		git commit -m permuted
+		shit add -u &&
+		shit commit -m permuted
 	)
 }
 
@@ -250,10 +250,10 @@ test_expect_success 'check zdiff3 markers' '
 	(
 		cd zdiff3 &&
 
-		git checkout left^0 &&
+		shit checkout left^0 &&
 
-		base=$(git rev-parse --short HEAD^1) &&
-		test_must_fail git -c merge.conflictstyle=zdiff3 merge -s recursive right^0 &&
+		base=$(shit rev-parse --short HEAD^1) &&
+		test_must_fail shit -c merge.conflictstyle=zdiff3 merge -s recursive right^0 &&
 
 		test_write_lines 1 2 3 4 A \
 				 "<<<<<<< HEAD" B C D \

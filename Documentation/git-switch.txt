@@ -1,17 +1,17 @@
-git-switch(1)
+shit-switch(1)
 =============
 
 NAME
 ----
-git-switch - Switch branches
+shit-switch - Switch branches
 
 SYNOPSIS
 --------
 [verse]
-'git switch' [<options>] [--no-guess] <branch>
-'git switch' [<options>] --detach [<start-point>]
-'git switch' [<options>] (-c|-C) <new-branch> [<start-point>]
-'git switch' [<options>] --orphan <new-branch>
+'shit switch' [<options>] [--no-guess] <branch>
+'shit switch' [<options>] --detach [<start-point>]
+'shit switch' [<options>] (-c|-C) <new-branch> [<start-point>]
+'shit switch' [<options>] --orphan <new-branch>
 
 DESCRIPTION
 -----------
@@ -47,7 +47,7 @@ OPTIONS
 	from some other point.)
 +
 You can use the `@{-N}` syntax to refer to the N-th last
-branch/commit switched to using "git switch" or "git checkout"
+branch/commit switched to using "shit switch" or "shit checkout"
 operation. You may also specify `-` which is synonymous to `@{-1}`.
 This is often used to switch quickly between two branches, or to undo
 a branch switch by mistake.
@@ -63,11 +63,11 @@ out at most one of `A` and `B`, in which case it defaults to `HEAD`.
 	transactional equivalent of
 +
 ------------
-$ git branch <new-branch>
-$ git switch <new-branch>
+$ shit branch <new-branch>
+$ shit switch <new-branch>
 ------------
 +
-that is to say, the branch is not reset/created unless "git switch" is
+that is to say, the branch is not reset/created unless "shit switch" is
 successful (e.g., when the branch is in use in another worktree, not
 just the current branch stays the same, but the branch is not reset to
 the start-point, either).
@@ -79,15 +79,15 @@ the start-point, either).
 	convenient shortcut for:
 +
 ------------
-$ git branch -f <new-branch>
-$ git switch <new-branch>
+$ shit branch -f <new-branch>
+$ shit switch <new-branch>
 ------------
 
 -d::
 --detach::
 	Switch to a commit for inspection and discardable
 	experiments. See the "DETACHED HEAD" section in
-	linkgit:git-checkout[1] for details.
+	linkshit:shit-checkout[1] for details.
 
 --guess::
 --no-guess::
@@ -96,7 +96,7 @@ $ git switch <new-branch>
 	matching name, treat as equivalent to
 +
 ------------
-$ git switch -c <branch> --track <remote>/<branch>
+$ shit switch -c <branch> --track <remote>/<branch>
 ------------
 +
 If the branch exists in multiple remotes and one of them is named by
@@ -105,7 +105,7 @@ one for the purposes of disambiguation, even if the `<branch>` isn't
 unique across all remotes. Set it to e.g. `checkout.defaultRemote=origin`
 to always checkout remote branches from there if `<branch>` is
 ambiguous but exists on the 'origin' remote. See also
-`checkout.defaultRemote` in linkgit:git-config[1].
+`checkout.defaultRemote` in linkshit:shit-config[1].
 +
 `--guess` is the default behavior. Use `--no-guess` to disable it.
 +
@@ -135,7 +135,7 @@ variable.
 +
 When a merge conflict happens, the index entries for conflicting
 paths are left unmerged, and you need to resolve the conflicts
-and mark the resolved paths with `git add` (or `git rm` if the merge
+and mark the resolved paths with `shit add` (or `shit rm` if the merge
 should result in deletion of the path).
 
 --conflict=<style>::
@@ -158,7 +158,7 @@ should result in deletion of the path).
 -t::
 --track [direct|inherit]::
 	When creating a new branch, set up "upstream" configuration.
-	`-c` is implied. See `--track` in linkgit:git-branch[1] for
+	`-c` is implied. See `--track` in linkshit:shit-branch[1] for
 	details.
 +
 If no `-c` option is given, the name of the new branch will be derived
@@ -180,7 +180,7 @@ name, the guessing is aborted.  You can explicitly give a name with
 	tracked files are removed.
 
 --ignore-other-worktrees::
-	`git switch` refuses when the wanted ref is already
+	`shit switch` refuses when the wanted ref is already
 	checked out by another worktree. This option makes it check
 	the ref out anyway. In other words, the ref can be held by
 	more than one worktree.
@@ -191,7 +191,7 @@ name, the guessing is aborted.  You can explicitly give a name with
 	active submodules according to the commit recorded in the
 	superproject. If nothing (or `--no-recurse-submodules`) is
 	used, submodules working trees will not be updated. Just
-	like linkgit:git-submodule[1], this will detach `HEAD` of the
+	like linkshit:shit-submodule[1], this will detach `HEAD` of the
 	submodules.
 
 EXAMPLES
@@ -200,14 +200,14 @@ EXAMPLES
 The following command switches to the "master" branch:
 
 ------------
-$ git switch master
+$ shit switch master
 ------------
 
 After working in the wrong branch, switching to the correct branch
 would be done using:
 
 ------------
-$ git switch mytopic
+$ shit switch mytopic
 ------------
 
 However, your "wrong" branch and correct "mytopic" branch may differ
@@ -215,7 +215,7 @@ in files that you have modified locally, in which case the above
 switch would fail like this:
 
 ------------
-$ git switch mytopic
+$ shit switch mytopic
 error: You have local changes to 'frotz'; not switching branches.
 ------------
 
@@ -223,26 +223,26 @@ You can give the `-m` flag to the command, which would try a three-way
 merge:
 
 ------------
-$ git switch -m mytopic
+$ shit switch -m mytopic
 Auto-merging frotz
 ------------
 
 After this three-way merge, the local modifications are _not_
-registered in your index file, so `git diff` would show you what
+registered in your index file, so `shit diff` would show you what
 changes you made since the tip of the new branch.
 
 To switch back to the previous branch before we switched to mytopic
 (i.e. "master" branch):
 
 ------------
-$ git switch -
+$ shit switch -
 ------------
 
 You can grow a new branch from any commit. For example, switch to
 "HEAD~3" and create branch "fixup":
 
 ------------
-$ git switch -c fixup HEAD~3
+$ shit switch -c fixup HEAD~3
 Switched to a new branch 'fixup'
 ------------
 
@@ -250,7 +250,7 @@ If you want to start a new branch from a remote branch of the same
 name:
 
 ------------
-$ git switch new-topic
+$ shit switch new-topic
 Branch 'new-topic' set up to track remote branch 'new-topic' from 'origin'
 Switched to a new branch 'new-topic'
 ------------
@@ -259,7 +259,7 @@ To check out commit `HEAD~3` for temporary inspection or experiment
 without creating a new branch:
 
 ------------
-$ git switch --detach HEAD~3
+$ shit switch --detach HEAD~3
 HEAD is now at 9fc9555312 Merge branch 'cc/shared-index-permbits'
 ------------
 
@@ -267,7 +267,7 @@ If it turns out whatever you have done is worth keeping, you can
 always create a new name for it (without switching away):
 
 ------------
-$ git switch -c good-surprises
+$ shit switch -c good-surprises
 ------------
 
 CONFIGURATION
@@ -279,9 +279,9 @@ include::config/checkout.txt[]
 
 SEE ALSO
 --------
-linkgit:git-checkout[1],
-linkgit:git-branch[1]
+linkshit:shit-checkout[1],
+linkshit:shit-branch[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

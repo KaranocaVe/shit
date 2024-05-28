@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "commit.h"
 #include "config.h"
 #include "date.h"
@@ -13,7 +13,7 @@
 #include "tempfile.h"
 #include "alias.h"
 
-static int git_gpg_config(const char *, const char *,
+static int shit_gpg_config(const char *, const char *,
 			  const struct config_context *, void *);
 
 static void gpg_interface_lazy_init(void)
@@ -23,7 +23,7 @@ static void gpg_interface_lazy_init(void)
 	if (done)
 		return;
 	done = 1;
-	git_config(git_gpg_config, NULL);
+	shit_config(shit_gpg_config, NULL);
 }
 
 static char *configured_signing_key;
@@ -343,7 +343,7 @@ static int verify_gpg_signed_buffer(struct signature_check *sigc,
 	struct strbuf gpg_stdout = STRBUF_INIT;
 	struct strbuf gpg_stderr = STRBUF_INIT;
 
-	temp = mks_tempfile_t(".git_vtag_tmpXXXXXX");
+	temp = mks_tempfile_t(".shit_vtag_tmpXXXXXX");
 	if (!temp)
 		return error_errno(_("could not create temporary file"));
 	if (write_in_full(temp->fd, signature, signature_size) < 0 ||
@@ -354,14 +354,14 @@ static int verify_gpg_signed_buffer(struct signature_check *sigc,
 		return -1;
 	}
 
-	strvec_push(&gpg.args, fmt->program);
-	strvec_pushv(&gpg.args, fmt->verify_args);
-	strvec_pushl(&gpg.args,
+	strvec_defecate(&gpg.args, fmt->program);
+	strvec_defecatev(&gpg.args, fmt->verify_args);
+	strvec_defecatel(&gpg.args,
 		     "--status-fd=1",
 		     "--verify", temp->filename.buf, "-",
 		     NULL);
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	ret = pipe_command(&gpg, sigc->payload, sigc->payload_len, &gpg_stdout, 0,
 			   &gpg_stderr, 0);
 	sigchain_pop(SIGPIPE);
@@ -388,10 +388,10 @@ static void parse_ssh_output(struct signature_check *sigc)
 
 	/*
 	 * ssh-keygen output should be:
-	 * Good "git" signature for PRINCIPAL with RSA key SHA256:FINGERPRINT
+	 * Good "shit" signature for PRINCIPAL with RSA key SHA256:FINGERPRINT
 	 *
 	 * or for valid but unknown keys:
-	 * Good "git" signature with RSA key SHA256:FINGERPRINT
+	 * Good "shit" signature with RSA key SHA256:FINGERPRINT
 	 *
 	 * Note that "PRINCIPAL" can contain whitespace, "RSA" and
 	 * "SHA256" part could be a different token that names of
@@ -404,7 +404,7 @@ static void parse_ssh_output(struct signature_check *sigc)
 
 	line = to_free = xmemdupz(sigc->output, strcspn(sigc->output, "\n"));
 
-	if (skip_prefix(line, "Good \"git\" signature for ", &line)) {
+	if (skip_prefix(line, "Good \"shit\" signature for ", &line)) {
 		/* Search for the last "with" to get the full principal */
 		principal = line;
 		do {
@@ -419,7 +419,7 @@ static void parse_ssh_output(struct signature_check *sigc)
 		sigc->result = 'G';
 		sigc->trust_level = TRUST_FULLY;
 		sigc->signer = xmemdupz(principal, line - principal - 1);
-	} else if (skip_prefix(line, "Good \"git\" signature with ", &line)) {
+	} else if (skip_prefix(line, "Good \"shit\" signature with ", &line)) {
 		/* Valid signature, but key unknown */
 		sigc->result = 'G';
 		sigc->trust_level = TRUST_UNDEFINED;
@@ -470,7 +470,7 @@ static int verify_ssh_signed_buffer(struct signature_check *sigc,
 		return -1;
 	}
 
-	buffer_file = mks_tempfile_t(".git_vtag_tmpXXXXXX");
+	buffer_file = mks_tempfile_t(".shit_vtag_tmpXXXXXX");
 	if (!buffer_file)
 		return error_errno(_("could not create temporary file"));
 	if (write_in_full(buffer_file->fd, signature, signature_size) < 0 ||
@@ -486,7 +486,7 @@ static int verify_ssh_signed_buffer(struct signature_check *sigc,
 			show_date(sigc->payload_timestamp, 0, verify_date_mode));
 
 	/* Find the principal from the signers */
-	strvec_pushl(&ssh_keygen.args, fmt->program,
+	strvec_defecatel(&ssh_keygen.args, fmt->program,
 		     "-Y", "find-principals",
 		     "-f", ssh_allowed_signers,
 		     "-s", buffer_file->filename.buf,
@@ -504,9 +504,9 @@ static int verify_ssh_signed_buffer(struct signature_check *sigc,
 		 * Check without validation
 		 */
 		child_process_init(&ssh_keygen);
-		strvec_pushl(&ssh_keygen.args, fmt->program,
+		strvec_defecatel(&ssh_keygen.args, fmt->program,
 			     "-Y", "check-novalidate",
-			     "-n", "git",
+			     "-n", "shit",
 			     "-s", buffer_file->filename.buf,
 			     verify_time.buf,
 			     NULL);
@@ -548,13 +548,13 @@ static int verify_ssh_signed_buffer(struct signature_check *sigc,
 			child_process_init(&ssh_keygen);
 			strbuf_release(&ssh_keygen_out);
 			strbuf_release(&ssh_keygen_err);
-			strvec_push(&ssh_keygen.args, fmt->program);
+			strvec_defecate(&ssh_keygen.args, fmt->program);
 			/*
 			 * We found principals
 			 * Try with each until we find a match
 			 */
-			strvec_pushl(&ssh_keygen.args, "-Y", "verify",
-				     "-n", "git",
+			strvec_defecatel(&ssh_keygen.args, "-Y", "verify",
+				     "-n", "shit",
 				     "-f", ssh_allowed_signers,
 				     "-I", principal,
 				     "-s", buffer_file->filename.buf,
@@ -563,7 +563,7 @@ static int verify_ssh_signed_buffer(struct signature_check *sigc,
 
 			if (ssh_revocation_file) {
 				if (file_exists(ssh_revocation_file)) {
-					strvec_pushl(&ssh_keygen.args, "-r",
+					strvec_defecatel(&ssh_keygen.args, "-r",
 						     ssh_revocation_file, NULL);
 				} else {
 					warning(_("ssh signing revocation file configured but not found: %s"),
@@ -571,7 +571,7 @@ static int verify_ssh_signed_buffer(struct signature_check *sigc,
 				}
 			}
 
-			sigchain_push(SIGPIPE, SIG_IGN);
+			sigchain_defecate(SIGPIPE, SIG_IGN);
 			ret = pipe_command(&ssh_keygen, sigc->payload, sigc->payload_len,
 					   &ssh_keygen_out, 0, &ssh_keygen_err, 0);
 			sigchain_pop(SIGPIPE);
@@ -623,7 +623,7 @@ static int parse_payload_metadata(struct signature_check *sigc)
 		signer_header = "tagger";
 		break;
 	case SIGNATURE_PAYLOAD_UNDEFINED:
-	case SIGNATURE_PAYLOAD_PUSH_CERT:
+	case SIGNATURE_PAYLOAD_defecate_CERT:
 		/* Ignore payloads we don't want to parse */
 		return 0;
 	default:
@@ -720,7 +720,7 @@ void set_signing_key(const char *key)
 	configured_signing_key = xstrdup(key);
 }
 
-static int git_gpg_config(const char *var, const char *value,
+static int shit_gpg_config(const char *var, const char *value,
 			  const struct config_context *ctx UNUSED,
 			  void *cb UNUSED)
 {
@@ -762,13 +762,13 @@ static int git_gpg_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, "gpg.ssh.defaultkeycommand"))
-		return git_config_string(&ssh_default_key_command, var, value);
+		return shit_config_string(&ssh_default_key_command, var, value);
 
 	if (!strcmp(var, "gpg.ssh.allowedsignersfile"))
-		return git_config_pathname(&ssh_allowed_signers, var, value);
+		return shit_config_pathname(&ssh_allowed_signers, var, value);
 
 	if (!strcmp(var, "gpg.ssh.revocationfile"))
-		return git_config_pathname(&ssh_revocation_file, var, value);
+		return shit_config_pathname(&ssh_revocation_file, var, value);
 
 	if (!strcmp(var, "gpg.program") || !strcmp(var, "gpg.openpgp.program"))
 		fmtname = "openpgp";
@@ -781,7 +781,7 @@ static int git_gpg_config(const char *var, const char *value,
 
 	if (fmtname) {
 		fmt = get_format_by_name(fmtname);
-		return git_config_string(&fmt->program, var, value);
+		return shit_config_string(&fmt->program, var, value);
 	}
 
 	return 0;
@@ -816,12 +816,12 @@ static char *get_ssh_key_fingerprint(const char *signing_key)
 	 * For textual representation we usually want a fingerprint
 	 */
 	if (is_literal_ssh_key(signing_key, &literal_key)) {
-		strvec_pushl(&ssh_keygen.args, "ssh-keygen", "-lf", "-", NULL);
+		strvec_defecatel(&ssh_keygen.args, "ssh-keygen", "-lf", "-", NULL);
 		ret = pipe_command(&ssh_keygen, literal_key,
 				   strlen(literal_key), &fingerprint_stdout, 0,
 				   NULL, 0);
 	} else {
-		strvec_pushl(&ssh_keygen.args, "ssh-keygen", "-lf",
+		strvec_defecatel(&ssh_keygen.args, "ssh-keygen", "-lf",
 			     configured_signing_key, NULL);
 		ret = pipe_command(&ssh_keygen, NULL, 0, &fingerprint_stdout, 0,
 				   NULL, 0);
@@ -865,7 +865,7 @@ static const char *get_default_ssh_signing_key(void)
 		die("malformed build-time gpg.ssh.defaultKeyCommand: %s",
 		    split_cmdline_strerror(n));
 
-	strvec_pushv(&ssh_default_key.args, argv);
+	strvec_defecatev(&ssh_default_key.args, argv);
 	ret = pipe_command(&ssh_default_key, NULL, 0, &key_stdout, 0,
 			   &key_stderr, 0);
 
@@ -922,7 +922,7 @@ const char *get_signing_key(void)
 		return use_format->get_default_key();
 	}
 
-	return git_committer_info(IDENT_STRICT | IDENT_NO_DATE);
+	return shit_committer_info(IDENT_STRICT | IDENT_NO_DATE);
 }
 
 const char *gpg_trust_level_to_str(enum signature_trust_level level)
@@ -973,7 +973,7 @@ static int sign_buffer_gpg(struct strbuf *buffer, struct strbuf *signature,
 	const char *cp;
 	struct strbuf gpg_status = STRBUF_INIT;
 
-	strvec_pushl(&gpg.args,
+	strvec_defecatel(&gpg.args,
 		     use_format->program,
 		     "--status-fd=2",
 		     "-bsau", signing_key,
@@ -985,7 +985,7 @@ static int sign_buffer_gpg(struct strbuf *buffer, struct strbuf *signature,
 	 * When the username signingkey is bad, program could be terminated
 	 * because gpg exits without reading and then write gets SIGPIPE.
 	 */
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	ret = pipe_command(&gpg, buffer->buf, buffer->len,
 			   signature, 1024, &gpg_status, 0);
 	sigchain_pop(SIGPIPE);
@@ -1031,7 +1031,7 @@ static int sign_buffer_ssh(struct strbuf *buffer, struct strbuf *signature,
 	if (is_literal_ssh_key(signing_key, &literal_key)) {
 		/* A literal ssh key */
 		literal_ssh_key = 1;
-		key_file = mks_tempfile_t(".git_signing_key_tmpXXXXXX");
+		key_file = mks_tempfile_t(".shit_signing_key_tmpXXXXXX");
 		if (!key_file)
 			return error_errno(
 				_("could not create temporary file"));
@@ -1048,7 +1048,7 @@ static int sign_buffer_ssh(struct strbuf *buffer, struct strbuf *signature,
 		ssh_signing_key_file = interpolate_path(signing_key, 1);
 	}
 
-	buffer_file = mks_tempfile_t(".git_signing_buffer_tmpXXXXXX");
+	buffer_file = mks_tempfile_t(".shit_signing_buffer_tmpXXXXXX");
 	if (!buffer_file) {
 		error_errno(_("could not create temporary file"));
 		goto out;
@@ -1061,16 +1061,16 @@ static int sign_buffer_ssh(struct strbuf *buffer, struct strbuf *signature,
 		goto out;
 	}
 
-	strvec_pushl(&signer.args, use_format->program,
+	strvec_defecatel(&signer.args, use_format->program,
 		     "-Y", "sign",
-		     "-n", "git",
+		     "-n", "shit",
 		     "-f", ssh_signing_key_file,
 		     NULL);
 	if (literal_ssh_key)
-		strvec_push(&signer.args, "-U");
-	strvec_push(&signer.args, buffer_file->filename.buf);
+		strvec_defecate(&signer.args, "-U");
+	strvec_defecate(&signer.args, buffer_file->filename.buf);
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	ret = pipe_command(&signer, NULL, 0, NULL, 0, &signer_stderr, 0);
 	sigchain_pop(SIGPIPE);
 

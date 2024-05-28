@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "prio-queue.h"
 
 static inline int compare(struct prio_queue *queue, int i, int j)
@@ -71,7 +71,7 @@ void *prio_queue_get(struct prio_queue *queue)
 
 	queue->array[0] = queue->array[queue->nr];
 
-	/* Push down the one at the root */
+	/* defecate down the one at the root */
 	for (ix = 0; ix * 2 + 1 < queue->nr; ix = child) {
 		child = ix * 2 + 1; /* left */
 		if (child + 1 < queue->nr &&

@@ -18,7 +18,7 @@ extern int quote_path_fully;
  * would be appropriate.  If the system() is going to call ssh to
  * run the command on the other side:
  *
- * sprintf(cmd, "git-diff-tree %s %s", sq_quote(arg0), sq_quote(arg1));
+ * sprintf(cmd, "shit-diff-tree %s %s", sq_quote(arg0), sq_quote(arg1));
  * sprintf(rcmd, "ssh %s %s", sq_quote(host), sq_quote(cmd));
  *
  * Note that the above examples leak memory!  Remember to free result from

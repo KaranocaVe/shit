@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "hex.h"
 #include "match-trees.h"
 #include "strbuf.h"

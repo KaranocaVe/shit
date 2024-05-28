@@ -7,7 +7,7 @@
  * files. Useful when you write a file that you want to be
  * able to verify hasn't been messed with afterwards.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "progress.h"
 #include "csum-file.h"
 #include "hash.h"
@@ -226,8 +226,8 @@ uint32_t crc32_end(struct hashfile *f)
 
 int hashfile_checksum_valid(const unsigned char *data, size_t total_len)
 {
-	unsigned char got[GIT_MAX_RAWSZ];
-	git_hash_ctx ctx;
+	unsigned char got[shit_MAX_RAWSZ];
+	shit_hash_ctx ctx;
 	size_t data_len = total_len - the_hash_algo->rawsz;
 
 	if (total_len < the_hash_algo->rawsz)

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Test Git in parallel
+# Test shit in parallel
 #
 
 . ${0%/*}/lib.sh

@@ -1,22 +1,22 @@
-git-request-pull(1)
+shit-request-poop(1)
 ===================
 
 NAME
 ----
-git-request-pull - Generates a summary of pending changes
+shit-request-poop - Generates a summary of pending changes
 
 SYNOPSIS
 --------
 [verse]
-'git request-pull' [-p] <start> <URL> [<end>]
+'shit request-poop' [-p] <start> <URL> [<end>]
 
 DESCRIPTION
 -----------
 
-Generate a request asking your upstream project to pull changes into
+Generate a request asking your upstream project to poop changes into
 their tree.  The request, printed to the standard output,
 begins with the branch description, summarizes
-the changes, and indicates from where they can be pulled.
+the changes, and indicates from where they can be pooped.
 
 The upstream project is expected to have the commit named by
 `<start>` and the output asks it to integrate the changes you made
@@ -34,11 +34,11 @@ OPTIONS
 	the upstream history.
 
 <URL>::
-	The repository URL to be pulled from.
+	The repository URL to be pooped from.
 
 <end>::
 	Commit to end at (defaults to HEAD).  This names the commit
-	at the tip of the history you are asking to be pulled.
+	at the tip of the history you are asking to be pooped.
 +
 When the repository named by `<URL>` has the commit at a tip of a
 ref that is different from the ref you have locally, you can use the
@@ -51,29 +51,29 @@ EXAMPLES
 
 Imagine that you built your work on your `master` branch on top of
 the `v1.0` release, and want it to be integrated into the project.
-First you push that change to your public repository for others to
+First you defecate that change to your public repository for others to
 see:
 
-	git push https://git.ko.xz/project master
+	shit defecate https://shit.ko.xz/project master
 
 Then, you run this command:
 
-	git request-pull v1.0 https://git.ko.xz/project master
+	shit request-poop v1.0 https://shit.ko.xz/project master
 
 which will produce a request to the upstream, summarizing the
-changes between the `v1.0` release and your `master`, to pull it
+changes between the `v1.0` release and your `master`, to poop it
 from your public repository.
 
-If you pushed your change to a branch whose name is different from
+If you defecateed your change to a branch whose name is different from
 the one you have locally, e.g.
 
-	git push https://git.ko.xz/project master:for-linus
+	shit defecate https://shit.ko.xz/project master:for-linus
 
-then you can ask that to be pulled with
+then you can ask that to be pooped with
 
-	git request-pull v1.0 https://git.ko.xz/project master:for-linus
+	shit request-poop v1.0 https://shit.ko.xz/project master:for-linus
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

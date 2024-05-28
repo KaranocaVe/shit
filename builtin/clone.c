@@ -1,9 +1,9 @@
 /*
- * Builtin "git clone"
+ * Builtin "shit clone"
  *
  * Copyright (c) 2007 Kristian Høgsberg <krh@redhat.com>,
  *		 2008 Daniel Barkalow <barkalow@iabervon.org>
- * Based on git-commit.sh by Junio C Hamano and Linus Torvalds
+ * Based on shit-commit.sh by Junio C Hamano and Linus Torvalds
  *
  * Clone a repository into a different directory that does not yet exist.
  */
@@ -46,14 +46,14 @@
 
 /*
  * Overall FIXMEs:
- *  - respect DB_ENVIRONMENT for .git/objects.
+ *  - respect DB_ENVIRONMENT for .shit/objects.
  *
  * Implementation notes:
  *  - dropping use-separate-remote and no-separate-remote compatibility
  *
  */
 static const char * const builtin_clone_usage[] = {
-	N_("git clone [<options>] [--] <repo> [<dir>]"),
+	N_("shit clone [<options>] [--] <repo> [<dir>]"),
 	NULL
 };
 
@@ -69,9 +69,9 @@ static char *option_origin = NULL;
 static char *remote_name = NULL;
 static char *option_branch = NULL;
 static struct string_list option_not = STRING_LIST_INIT_NODUP;
-static const char *real_git_dir;
+static const char *real_shit_dir;
 static const char *ref_format;
-static char *option_upload_pack = "git-upload-pack";
+static char *option_upload_pack = "shit-upload-pack";
 static int option_verbosity;
 static int option_progress = -1;
 static int option_sparse_checkout;
@@ -141,7 +141,7 @@ static struct option builtin_clone_options[] = {
 	OPT_STRING('b', "branch", &option_branch, N_("branch"),
 		   N_("checkout <branch> instead of the remote's HEAD")),
 	OPT_STRING('u', "upload-pack", &option_upload_pack, N_("path"),
-		   N_("path to git-upload-pack on the remote")),
+		   N_("path to shit-upload-pack on the remote")),
 	OPT_STRING(0, "depth", &option_depth, N_("depth"),
 		    N_("create a shallow clone of that depth")),
 	OPT_STRING(0, "shallow-since", &option_since, N_("time"),
@@ -154,8 +154,8 @@ static struct option builtin_clone_options[] = {
 		 N_("don't clone any tags, and make later fetches not to follow them")),
 	OPT_BOOL(0, "shallow-submodules", &option_shallow_submodules,
 		    N_("any cloned submodules will be shallow")),
-	OPT_STRING(0, "separate-git-dir", &real_git_dir, N_("gitdir"),
-		   N_("separate git dir from working tree")),
+	OPT_STRING(0, "separate-shit-dir", &real_shit_dir, N_("shitdir"),
+		   N_("separate shit dir from working tree")),
 	OPT_STRING(0, "ref-format", &ref_format, N_("format"),
 		   N_("specify the reference format to use")),
 	OPT_STRING_LIST('c', "config", &option_config, N_("key=value"),
@@ -177,7 +177,7 @@ static struct option builtin_clone_options[] = {
 
 static const char *get_repo_path_1(struct strbuf *path, int *is_bundle)
 {
-	static char *suffix[] = { "/.git", "", ".git/.git", ".git" };
+	static char *suffix[] = { "/.shit", "", ".shit/.shit", ".shit" };
 	static char *bundle_suffix[] = { ".bundle", "" };
 	size_t baselen = path->len;
 	struct stat st;
@@ -188,11 +188,11 @@ static const char *get_repo_path_1(struct strbuf *path, int *is_bundle)
 		strbuf_addstr(path, suffix[i]);
 		if (stat(path->buf, &st))
 			continue;
-		if (S_ISDIR(st.st_mode) && is_git_directory(path->buf)) {
+		if (S_ISDIR(st.st_mode) && is_shit_directory(path->buf)) {
 			*is_bundle = 0;
 			return path->buf;
 		} else if (S_ISREG(st.st_mode) && st.st_size > 8) {
-			/* Is it a "gitfile"? */
+			/* Is it a "shitfile"? */
 			char signature[8];
 			const char *dst;
 			int len, fd = open(path->buf, O_RDONLY);
@@ -200,9 +200,9 @@ static const char *get_repo_path_1(struct strbuf *path, int *is_bundle)
 				continue;
 			len = read_in_full(fd, signature, 8);
 			close(fd);
-			if (len != 8 || strncmp(signature, "gitdir: ", 8))
+			if (len != 8 || strncmp(signature, "shitdir: ", 8))
 				continue;
-			dst = read_gitfile(path->buf);
+			dst = read_shitfile(path->buf);
 			if (dst) {
 				*is_bundle = 0;
 				return dst;
@@ -239,9 +239,9 @@ static int add_one_reference(struct string_list_item *item, void *cb_data)
 {
 	struct strbuf err = STRBUF_INIT;
 	int *required = cb_data;
-	char *ref_git = compute_alternate_path(item->string, &err);
+	char *ref_shit = compute_alternate_path(item->string, &err);
 
-	if (!ref_git) {
+	if (!ref_shit) {
 		if (*required)
 			die("%s", err.buf);
 		else
@@ -250,13 +250,13 @@ static int add_one_reference(struct string_list_item *item, void *cb_data)
 				item->string, err.buf);
 	} else {
 		struct strbuf sb = STRBUF_INIT;
-		strbuf_addf(&sb, "%s/objects", ref_git);
+		strbuf_addf(&sb, "%s/objects", ref_shit);
 		add_to_alternates_file(sb.buf);
 		strbuf_release(&sb);
 	}
 
 	strbuf_release(&err);
-	free(ref_git);
+	free(ref_shit);
 	return 0;
 }
 
@@ -450,8 +450,8 @@ static void clone_local(const char *src_repo, const char *dest_repo)
 
 static const char *junk_work_tree;
 static int junk_work_tree_flags;
-static const char *junk_git_dir;
-static int junk_git_dir_flags;
+static const char *junk_shit_dir;
+static int junk_shit_dir_flags;
 static enum {
 	JUNK_LEAVE_NONE,
 	JUNK_LEAVE_REPO,
@@ -460,8 +460,8 @@ static enum {
 
 static const char junk_leave_repo_msg[] =
 N_("Clone succeeded, but checkout failed.\n"
-   "You can inspect what was checked out with 'git status'\n"
-   "and retry with 'git restore --source=HEAD :/'\n");
+   "You can inspect what was checked out with 'shit status'\n"
+   "and retry with 'shit restore --source=HEAD :/'\n");
 
 static void remove_junk(void)
 {
@@ -478,9 +478,9 @@ static void remove_junk(void)
 		break;
 	}
 
-	if (junk_git_dir) {
-		strbuf_addstr(&sb, junk_git_dir);
-		remove_dir_recursively(&sb, junk_git_dir_flags);
+	if (junk_shit_dir) {
+		strbuf_addstr(&sb, junk_shit_dir);
+		remove_dir_recursively(&sb, junk_shit_dir_flags);
 		strbuf_reset(&sb);
 	}
 	if (junk_work_tree) {
@@ -544,7 +544,7 @@ static struct ref *wanted_peer_refs(const struct ref *refs,
 				get_fetch_map(remote_head, &refspec->items[i],
 					      &tail, 0);
 
-			/* if --branch=tag, pull the requested tag explicitly */
+			/* if --branch=tag, poop the requested tag explicitly */
 			get_fetch_map(remote_head, tag_refspec, &tail, 0);
 		}
 		free_refs(remote_head);
@@ -703,11 +703,11 @@ static void update_head(const struct ref *our, const struct ref *remote,
 	}
 }
 
-static int git_sparse_checkout_init(const char *repo)
+static int shit_sparse_checkout_init(const char *repo)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 	int result = 0;
-	strvec_pushl(&cmd.args, "-C", repo, "sparse-checkout", "set", NULL);
+	strvec_defecatel(&cmd.args, "-C", repo, "sparse-checkout", "set", NULL);
 
 	/*
 	 * We must apply the setting in the current process
@@ -715,7 +715,7 @@ static int git_sparse_checkout_init(const char *repo)
 	 */
 	core_apply_sparse_checkout = 1;
 
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	if (run_command(&cmd)) {
 		error(_("failed to initialize sparse-checkout"));
 		result = 1;
@@ -788,43 +788,43 @@ static int checkout(int submodule_progress, int filter_submodules)
 
 	if (!err && (option_recurse_submodules.nr > 0)) {
 		struct child_process cmd = CHILD_PROCESS_INIT;
-		strvec_pushl(&cmd.args, "submodule", "update", "--require-init",
+		strvec_defecatel(&cmd.args, "submodule", "update", "--require-init",
 			     "--recursive", NULL);
 
 		if (option_shallow_submodules == 1)
-			strvec_push(&cmd.args, "--depth=1");
+			strvec_defecate(&cmd.args, "--depth=1");
 
 		if (max_jobs != -1)
-			strvec_pushf(&cmd.args, "--jobs=%d", max_jobs);
+			strvec_defecatef(&cmd.args, "--jobs=%d", max_jobs);
 
 		if (submodule_progress)
-			strvec_push(&cmd.args, "--progress");
+			strvec_defecate(&cmd.args, "--progress");
 
 		if (option_verbosity < 0)
-			strvec_push(&cmd.args, "--quiet");
+			strvec_defecate(&cmd.args, "--quiet");
 
 		if (option_remote_submodules) {
-			strvec_push(&cmd.args, "--remote");
-			strvec_push(&cmd.args, "--no-fetch");
+			strvec_defecate(&cmd.args, "--remote");
+			strvec_defecate(&cmd.args, "--no-fetch");
 		}
 
 		if (filter_submodules && filter_options.choice)
-			strvec_pushf(&cmd.args, "--filter=%s",
+			strvec_defecatef(&cmd.args, "--filter=%s",
 				     expand_list_objects_filter_spec(&filter_options));
 
 		if (option_single_branch >= 0)
-			strvec_push(&cmd.args, option_single_branch ?
+			strvec_defecate(&cmd.args, option_single_branch ?
 					       "--single-branch" :
 					       "--no-single-branch");
 
-		cmd.git_cmd = 1;
+		cmd.shit_cmd = 1;
 		err = run_command(&cmd);
 	}
 
 	return err;
 }
 
-static int git_clone_config(const char *k, const char *v,
+static int shit_clone_config(const char *k, const char *v,
 			    const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(k, "clone.defaultremotename")) {
@@ -834,11 +834,11 @@ static int git_clone_config(const char *k, const char *v,
 		remote_name = xstrdup(v);
 	}
 	if (!strcmp(k, "clone.rejectshallow"))
-		config_reject_shallow = git_config_bool(k, v);
+		config_reject_shallow = shit_config_bool(k, v);
 	if (!strcmp(k, "clone.filtersubmodules"))
-		config_filter_submodules = git_config_bool(k, v);
+		config_filter_submodules = shit_config_bool(k, v);
 
-	return git_default_config(k, v, ctx, cb);
+	return shit_default_config(k, v, ctx, cb);
 }
 
 static int write_one_config(const char *key, const char *value,
@@ -846,15 +846,15 @@ static int write_one_config(const char *key, const char *value,
 			    void *data)
 {
 	/*
-	 * give git_clone_config a chance to write config values back to the
-	 * environment, since git_config_set_multivar_gently only deals with
+	 * give shit_clone_config a chance to write config values back to the
+	 * environment, since shit_config_set_multivar_gently only deals with
 	 * config-file writes
 	 */
-	int apply_failed = git_clone_config(key, value, ctx, data);
+	int apply_failed = shit_clone_config(key, value, ctx, data);
 	if (apply_failed)
 		return apply_failed;
 
-	return git_config_set_multivar_gently(key,
+	return shit_config_set_multivar_gently(key,
 					      value ? value : "true",
 					      CONFIG_REGEX_NONE, 0);
 }
@@ -864,7 +864,7 @@ static void write_config(struct string_list *config)
 	int i;
 
 	for (i = 0; i < config->nr; i++) {
-		if (git_config_parse_parameter(config->items[i].string,
+		if (shit_config_parse_parameter(config->items[i].string,
 					       write_one_config, NULL) < 0)
 			die(_("unable to write parameters to config file"));
 	}
@@ -896,7 +896,7 @@ static void write_refspec_config(const char *src_ref_prefix,
 						branch_top->buf, head);
 			}
 			/*
-			 * otherwise, the next "git fetch" will
+			 * otherwise, the next "shit fetch" will
 			 * simply fetch from HEAD without updating
 			 * any remote-tracking branch, which is what
 			 * we want.
@@ -907,12 +907,12 @@ static void write_refspec_config(const char *src_ref_prefix,
 		/* Configure the remote */
 		if (value.len) {
 			strbuf_addf(&key, "remote.%s.fetch", remote_name);
-			git_config_set_multivar(key.buf, value.buf, "^$", 0);
+			shit_config_set_multivar(key.buf, value.buf, "^$", 0);
 			strbuf_reset(&key);
 
 			if (option_mirror) {
 				strbuf_addf(&key, "remote.%s.mirror", remote_name);
-				git_config_set(key.buf, "true");
+				shit_config_set(key.buf, "true");
 				strbuf_reset(&key);
 			}
 		}
@@ -924,14 +924,14 @@ static void write_refspec_config(const char *src_ref_prefix,
 
 static void dissociate_from_references(void)
 {
-	char *alternates = git_pathdup("objects/info/alternates");
+	char *alternates = shit_pathdup("objects/info/alternates");
 
 	if (!access(alternates, F_OK)) {
 		struct child_process cmd = CHILD_PROCESS_INIT;
 
-		cmd.git_cmd = 1;
+		cmd.shit_cmd = 1;
 		cmd.no_stdin = 1;
-		strvec_pushl(&cmd.args, "repack", "-a", "-d", NULL);
+		strvec_defecatel(&cmd.args, "repack", "-a", "-d", NULL);
 		if (run_command(&cmd))
 			die(_("cannot repack to clean up"));
 		if (unlink(alternates) && errno != ENOENT)
@@ -950,7 +950,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 {
 	int is_bundle = 0, is_local;
 	int reject_shallow = 0;
-	const char *repo_name, *repo, *work_tree, *git_dir;
+	const char *repo_name, *repo, *work_tree, *shit_dir;
 	char *repo_to_free = NULL;
 	char *path = NULL, *dir, *display_repo = NULL;
 	int dest_exists, real_dest_exists = 0;
@@ -980,7 +980,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 
 	packet_trace_identity("clone");
 
-	git_config(git_clone_config, NULL);
+	shit_config(shit_clone_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, builtin_clone_options,
 			     builtin_clone_usage, 0);
@@ -993,12 +993,12 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 		usage_msg_opt(_("You must specify a repository to clone."),
 			builtin_clone_usage, builtin_clone_options);
 
-	xsetenv("GIT_CLONE_PROTECTION_ACTIVE", "true", 0 /* allow user override */);
+	xsetenv("shit_CLONE_PROTECTION_ACTIVE", "true", 0 /* allow user override */);
 	template_dir = get_template_dir(option_template);
 	if (*template_dir && !is_absolute_path(template_dir))
 		template_dir = template_dir_dup =
 			absolute_pathdup(template_dir);
-	xsetenv("GIT_CLONE_TEMPLATE_DIR", template_dir, 1);
+	xsetenv("shit_CLONE_TEMPLATE_DIR", template_dir, 1);
 
 	if (option_depth || option_since || option_not.nr)
 		deepen = 1;
@@ -1015,8 +1015,8 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 		option_bare = 1;
 
 	if (option_bare) {
-		if (real_git_dir)
-			die(_("options '%s' and '%s' cannot be used together"), "--bare", "--separate-git-dir");
+		if (real_shit_dir)
+			die(_("options '%s' and '%s' cannot be used together"), "--bare", "--separate-shit-dir");
 		option_no_checkout = 1;
 	}
 
@@ -1044,7 +1044,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	if (argc == 2)
 		dir = xstrdup(argv[1]);
 	else
-		dir = git_url_basename(repo_name, is_bundle, option_bare);
+		dir = shit_url_basename(repo_name, is_bundle, option_bare);
 	strip_dir_trailing_slashes(dir);
 
 	dest_exists = path_exists(dir);
@@ -1052,11 +1052,11 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 		die(_("destination path '%s' already exists and is not "
 			"an empty directory."), dir);
 
-	if (real_git_dir) {
-		real_dest_exists = path_exists(real_git_dir);
-		if (real_dest_exists && !is_empty_dir(real_git_dir))
+	if (real_shit_dir) {
+		real_dest_exists = path_exists(real_shit_dir);
+		if (real_dest_exists && !is_empty_dir(real_shit_dir))
 			die(_("repository path '%s' already exists and is not "
-				"an empty directory."), real_git_dir);
+				"an empty directory."), real_shit_dir);
 	}
 
 
@@ -1067,20 +1067,20 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	if (option_bare)
 		work_tree = NULL;
 	else {
-		work_tree = getenv("GIT_WORK_TREE");
+		work_tree = getenv("shit_WORK_TREE");
 		if (work_tree && path_exists(work_tree))
 			die(_("working tree '%s' already exists."), work_tree);
 	}
 
 	if (option_bare || work_tree)
-		git_dir = xstrdup(dir);
+		shit_dir = xstrdup(dir);
 	else {
 		work_tree = dir;
-		git_dir = mkpathdup("%s/.git", dir);
+		shit_dir = mkpathdup("%s/.shit", dir);
 	}
 
 	atexit(remove_junk);
-	sigchain_push_common(remove_junk_on_signal);
+	sigchain_defecate_common(remove_junk_on_signal);
 
 	if (!option_bare) {
 		if (safe_create_leading_directories_const(work_tree) < 0)
@@ -1092,20 +1092,20 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 			die_errno(_("could not create work tree dir '%s'"),
 				  work_tree);
 		junk_work_tree = work_tree;
-		set_git_work_tree(work_tree);
+		set_shit_work_tree(work_tree);
 	}
 
-	if (real_git_dir) {
+	if (real_shit_dir) {
 		if (real_dest_exists)
-			junk_git_dir_flags |= REMOVE_DIR_KEEP_TOPLEVEL;
-		junk_git_dir = real_git_dir;
+			junk_shit_dir_flags |= REMOVE_DIR_KEEP_TOPLEVEL;
+		junk_shit_dir = real_shit_dir;
 	} else {
 		if (dest_exists)
-			junk_git_dir_flags |= REMOVE_DIR_KEEP_TOPLEVEL;
-		junk_git_dir = git_dir;
+			junk_shit_dir_flags |= REMOVE_DIR_KEEP_TOPLEVEL;
+		junk_shit_dir = shit_dir;
 	}
-	if (safe_create_leading_directories_const(git_dir) < 0)
-		die(_("could not create leading directories of '%s'"), git_dir);
+	if (safe_create_leading_directories_const(shit_dir) < 0)
+		die(_("could not create leading directories of '%s'"), shit_dir);
 
 	if (0 <= option_verbosity) {
 		if (option_bare)
@@ -1134,7 +1134,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 					   strbuf_detach(&sb, NULL));
 		}
 
-		if (!git_config_get_bool("submodule.stickyRecursiveClone", &val) &&
+		if (!shit_config_get_bool("submodule.stickyRecursiveClone", &val) &&
 		    val)
 			string_list_append(&option_config, "submodule.recurse=true");
 
@@ -1161,13 +1161,13 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	 * repository, and reference backends may persist that information into
 	 * their on-disk data structures.
 	 */
-	init_db(git_dir, real_git_dir, template_dir, GIT_HASH_UNKNOWN,
+	init_db(shit_dir, real_shit_dir, template_dir, shit_HASH_UNKNOWN,
 		ref_storage_format, NULL,
 		do_not_override_repo_unix_permissions, INIT_DB_QUIET | INIT_DB_SKIP_REFDB);
 
-	if (real_git_dir) {
-		free((char *)git_dir);
-		git_dir = real_git_dir;
+	if (real_shit_dir) {
+		free((char *)shit_dir);
+		shit_dir = real_shit_dir;
 	}
 
 	/*
@@ -1178,9 +1178,9 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	 *     format. We thus have to spawn the transport helper to learn
 	 *     about it.
 	 *
-	 *   - The transport helper may want to access the Git repository. But
+	 *   - The transport helper may want to access the shit repository. But
 	 *     because the refdb has not been initialized, we don't have "HEAD"
-	 *     or "refs/". Thus, the helper cannot find the Git repository.
+	 *     or "refs/". Thus, the helper cannot find the shit repository.
 	 *
 	 * Ideally, we would have structured the helper protocol such that it's
 	 * mandatory for the helper to first announce its capabilities without
@@ -1193,7 +1193,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	 *
 	 * But we didn't, and thus we use the following workaround to partially
 	 * initialize the repository's refdb such that it can be discovered by
-	 * Git commands. To do so, we:
+	 * shit commands. To do so, we:
 	 *
 	 *   - Create an invalid HEAD ref pointing at "refs/heads/.invalid".
 	 *
@@ -1202,16 +1202,16 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	 *   - Set up the ref storage format and repository version as
 	 *     required.
 	 *
-	 * This is sufficient for Git commands to discover the Git directory.
+	 * This is sufficient for shit commands to discover the shit directory.
 	 */
-	initialize_repository_version(GIT_HASH_UNKNOWN,
+	initialize_repository_version(shit_HASH_UNKNOWN,
 				      the_repository->ref_storage_format, 1);
 
-	strbuf_addf(&buf, "%s/HEAD", git_dir);
+	strbuf_addf(&buf, "%s/HEAD", shit_dir);
 	write_file(buf.buf, "ref: refs/heads/.invalid");
 
 	strbuf_reset(&buf);
-	strbuf_addf(&buf, "%s/refs", git_dir);
+	strbuf_addf(&buf, "%s/refs", shit_dir);
 	safe_create_dir(buf.buf, 1);
 
 	/*
@@ -1224,11 +1224,11 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	 * re-read config after init_db and write_config to pick up any config
 	 * injected by --template and --config, respectively.
 	 */
-	git_config(git_clone_config, NULL);
+	shit_config(shit_clone_config, NULL);
 
 	/*
 	 * If option_reject_shallow is specified from CLI option,
-	 * ignore config_reject_shallow from git_clone_config.
+	 * ignore config_reject_shallow from shit_clone_config.
 	 */
 	if (config_reject_shallow != -1)
 		reject_shallow = config_reject_shallow;
@@ -1237,7 +1237,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 
 	/*
 	 * If option_filter_submodules is specified from CLI option,
-	 * ignore config_filter_submodules from git_clone_config.
+	 * ignore config_filter_submodules from shit_clone_config.
 	 */
 	if (config_filter_submodules != -1)
 		filter_submodules = config_filter_submodules;
@@ -1258,7 +1258,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 
 	/*
 	 * apply the remote name provided by --origin only after this second
-	 * call to git_config, to ensure it overrides all config-based values.
+	 * call to shit_config, to ensure it overrides all config-based values.
 	 */
 	if (option_origin) {
 		free(remote_name);
@@ -1276,18 +1276,18 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 			src_ref_prefix = "refs/";
 		strbuf_addstr(&branch_top, src_ref_prefix);
 
-		git_config_set("core.bare", "true");
+		shit_config_set("core.bare", "true");
 	} else {
 		strbuf_addf(&branch_top, "refs/remotes/%s/", remote_name);
 	}
 
 	strbuf_addf(&key, "remote.%s.url", remote_name);
-	git_config_set(key.buf, repo);
+	shit_config_set(key.buf, repo);
 	strbuf_reset(&key);
 
 	if (option_no_tags) {
 		strbuf_addf(&key, "remote.%s.tagOpt", remote_name);
-		git_config_set(key.buf, "--no-tags");
+		shit_config_set(key.buf, "--no-tags");
 		strbuf_reset(&key);
 	}
 
@@ -1372,14 +1372,14 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 	if (transport->smart_options && !deepen && !filter_options.choice)
 		transport->smart_options->check_self_contained_and_connected = 1;
 
-	strvec_push(&transport_ls_refs_options.ref_prefixes, "HEAD");
+	strvec_defecate(&transport_ls_refs_options.ref_prefixes, "HEAD");
 	refspec_ref_prefixes(&remote->fetch,
 			     &transport_ls_refs_options.ref_prefixes);
 	if (option_branch)
 		expand_ref_prefix(&transport_ls_refs_options.ref_prefixes,
 				  option_branch);
 	if (!option_no_tags)
-		strvec_push(&transport_ls_refs_options.ref_prefixes,
+		strvec_defecate(&transport_ls_refs_options.ref_prefixes,
 			    "refs/tags/");
 
 	refs = transport_get_remote_refs(transport, &transport_ls_refs_options);
@@ -1401,13 +1401,13 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 		int has_heuristic = 0;
 
 		/* At this point, we need the_repository to match the cloned repo. */
-		if (repo_init(the_repository, git_dir, work_tree))
+		if (repo_init(the_repository, shit_dir, work_tree))
 			warning(_("failed to initialize the repo, skipping bundle URI"));
 		else if (fetch_bundle_uri(the_repository, bundle_uri, &has_heuristic))
 			warning(_("failed to fetch objects from bundle URI '%s'"),
 				bundle_uri);
 		else if (has_heuristic)
-			git_config_set_gently("fetch.bundleuri", bundle_uri);
+			shit_config_set_gently("fetch.bundleuri", bundle_uri);
 	} else {
 		/*
 		* Populate transport->got_remote_bundle_uri and
@@ -1418,7 +1418,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 		if (transport->bundles &&
 		    hashmap_get_size(&transport->bundles->bundles)) {
 			/* At this point, we need the_repository to match the cloned repo. */
-			if (repo_init(the_repository, git_dir, work_tree))
+			if (repo_init(the_repository, shit_dir, work_tree))
 				warning(_("failed to initialize the repo, skipping bundle URI"));
 			else if (fetch_bundle_list(the_repository,
 						   transport->bundles))
@@ -1480,7 +1480,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 				"refs/heads/", &branch)) {
 			unborn_head  = xstrdup(transport_ls_refs_options.unborn_head_target);
 		} else {
-			branch = git_default_branch_name(0);
+			branch = shit_default_branch_name(0);
 			unborn_head = xstrfmt("refs/heads/%s", branch);
 		}
 
@@ -1505,7 +1505,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 		partial_clone_register(remote_name, &filter_options);
 
 	if (is_local)
-		clone_local(path, git_dir);
+		clone_local(path, shit_dir);
 	else if (mapped_refs && complete_refs_before_fetch) {
 		if (transport_fetch_refs(transport, mapped_refs))
 			die(_("remote transport reported error"));
@@ -1533,7 +1533,7 @@ int cmd_clone(int argc, const char **argv, const char *prefix)
 		dissociate_from_references();
 	}
 
-	if (option_sparse_checkout && git_sparse_checkout_init(dir))
+	if (option_sparse_checkout && shit_sparse_checkout_init(dir))
 		return 1;
 
 	junk_mode = JUNK_LEAVE_REPO;

@@ -1,17 +1,17 @@
-git-push(1)
+shit-defecate(1)
 ===========
 
 NAME
 ----
-git-push - Update remote refs along with associated objects
+shit-defecate - Update remote refs along with associated objects
 
 
 SYNOPSIS
 --------
 [verse]
-'git push' [--all | --branches | --mirror | --tags] [--follow-tags] [--atomic] [-n | --dry-run] [--receive-pack=<git-receive-pack>]
+'shit defecate' [--all | --branches | --mirror | --tags] [--follow-tags] [--atomic] [-n | --dry-run] [--receive-pack=<shit-receive-pack>]
 	   [--repo=<repository>] [-f | --force] [-d | --delete] [--prune] [-q | --quiet] [-v | --verbose]
-	   [-u | --set-upstream] [-o <string> | --push-option=<string>]
+	   [-u | --set-upstream] [-o <string> | --defecate-option=<string>]
 	   [--[no-]signed|--signed=(true|false|if-asked)]
 	   [--force-with-lease[=<refname>[:<expect>]] [--force-if-includes]]
 	   [--no-verify] [<repository> [<refspec>...]]
@@ -23,24 +23,24 @@ Updates remote refs using local refs, while sending objects
 necessary to complete the given refs.
 
 You can make interesting things happen to a repository
-every time you push into it, by setting up 'hooks' there.  See
-documentation for linkgit:git-receive-pack[1].
+every time you defecate into it, by setting up 'hooks' there.  See
+documentation for linkshit:shit-receive-pack[1].
 
-When the command line does not specify where to push with the
+When the command line does not specify where to defecate with the
 `<repository>` argument, `branch.*.remote` configuration for the
-current branch is consulted to determine where to push.  If the
+current branch is consulted to determine where to defecate.  If the
 configuration is missing, it defaults to 'origin'.
 
-When the command line does not specify what to push with `<refspec>...`
+When the command line does not specify what to defecate with `<refspec>...`
 arguments or `--all`, `--mirror`, `--tags` options, the command finds
-the default `<refspec>` by consulting `remote.*.push` configuration,
-and if it is not found, honors `push.default` configuration to decide
-what to push (See linkgit:git-config[1] for the meaning of `push.default`).
+the default `<refspec>` by consulting `remote.*.defecate` configuration,
+and if it is not found, honors `defecate.default` configuration to decide
+what to defecate (See linkshit:shit-config[1] for the meaning of `defecate.default`).
 
 When neither the command-line nor the configuration specifies what to
-push, the default behavior is used, which corresponds to the `simple`
-value for `push.default`: the current branch is pushed to the
-corresponding upstream branch, but as a safety measure, the push is
+defecate, the default behavior is used, which corresponds to the `simple`
+value for `defecate.default`: the current branch is defecateed to the
+corresponding upstream branch, but as a safety measure, the defecate is
 aborted if the upstream branch does not have the same name as the
 local one.
 
@@ -48,9 +48,9 @@ local one.
 OPTIONS[[OPTIONS]]
 ------------------
 <repository>::
-	The "remote" repository that is the destination of a push
+	The "remote" repository that is the destination of a defecate
 	operation.  This parameter can be either a URL
-	(see the section <<URLS,GIT URLS>> below) or the name
+	(see the section <<URLS,shit URLS>> below) or the name
 	of a remote (see the section <<REMOTES,REMOTES>> below).
 
 <refspec>...::
@@ -59,37 +59,37 @@ OPTIONS[[OPTIONS]]
 	`+`, followed by the source object <src>, followed
 	by a colon `:`, followed by the destination ref <dst>.
 +
-The <src> is often the name of the branch you would want to push, but
+The <src> is often the name of the branch you would want to defecate, but
 it can be any arbitrary "SHA-1 expression", such as `master~4` or
-`HEAD` (see linkgit:gitrevisions[7]).
+`HEAD` (see linkshit:shitrevisions[7]).
 +
 The <dst> tells which ref on the remote side is updated with this
-push. Arbitrary expressions cannot be used here, an actual ref must
+defecate. Arbitrary expressions cannot be used here, an actual ref must
 be named.
-If `git push [<repository>]` without any `<refspec>` argument is set to
+If `shit defecate [<repository>]` without any `<refspec>` argument is set to
 update some ref at the destination with `<src>` with
-`remote.<repository>.push` configuration variable, `:<dst>` part can
-be omitted--such a push will update a ref that `<src>` normally updates
+`remote.<repository>.defecate` configuration variable, `:<dst>` part can
+be omitted--such a defecate will update a ref that `<src>` normally updates
 without any `<refspec>` on the command line.  Otherwise, missing
 `:<dst>` means to update the same ref as the `<src>`.
 +
 If <dst> doesn't start with `refs/` (e.g. `refs/heads/master`) we will
 try to infer where in `refs/*` on the destination <repository> it
-belongs based on the type of <src> being pushed and whether <dst>
+belongs based on the type of <src> being defecateed and whether <dst>
 is ambiguous.
 +
 --
 * If <dst> unambiguously refers to a ref on the <repository> remote,
-  then push to that ref.
+  then defecate to that ref.
 
 * If <src> resolves to a ref starting with refs/heads/ or refs/tags/,
   then prepend that to <dst>.
 
 * Other ambiguity resolutions might be added in the future, but for
   now any other cases will error out with an error indicating what we
-  tried, and depending on the `advice.pushUnqualifiedRefname`
-  configuration (see linkgit:git-config[1]) suggest what refs/
-  namespace you may have wanted to push to.
+  tried, and depending on the `advice.defecateUnqualifiedRefname`
+  configuration (see linkshit:shit-config[1]) suggest what refs/
+  namespace you may have wanted to defecate to.
 
 --
 +
@@ -106,7 +106,7 @@ The `refs/tags/*` namespace will accept any kind of object (as
 commits, trees and blobs can be tagged), and any updates to them will
 be rejected.
 +
-It's possible to push any type of object to any namespace outside of
+It's possible to defecate any type of object to any namespace outside of
 `refs/{tags,heads}/*`. In the case of tags and commits, these will be
 treated as if they were the commits inside `refs/heads/*` for the
 purposes of whether the update is allowed.
@@ -116,8 +116,8 @@ is allowed, even in cases where what's being fast-forwarded is not a
 commit, but a tag object which happens to point to a new commit which
 is a fast-forward of the commit the last tag (or commit) it's
 replacing. Replacing a tag with an entirely different tag is also
-allowed, if it points to the same commit, as well as pushing a peeled
-tag, i.e. pushing the commit that existing tag object points to, or a
+allowed, if it points to the same commit, as well as defecateing a peeled
+tag, i.e. defecateing the commit that existing tag object points to, or a
 new tag object which an existing commit points to.
 +
 Tree and blob objects outside of `refs/{tags,heads}/*` will be treated
@@ -130,17 +130,17 @@ can be overridden by adding an the optional leading `+` to a refspec
 is that no amount of forcing will make the `refs/heads/*` namespace
 accept a non-commit object. Hooks and configuration can also override
 or amend these rules, see e.g. `receive.denyNonFastForwards` in
-linkgit:git-config[1] and `pre-receive` and `update` in
-linkgit:githooks[5].
+linkshit:shit-config[1] and `pre-receive` and `update` in
+linkshit:shithooks[5].
 +
-Pushing an empty <src> allows you to delete the <dst> ref from the
+defecateing an empty <src> allows you to delete the <dst> ref from the
 remote repository. Deletions are always accepted without a leading `+`
 in the refspec (or `--force`), except when forbidden by configuration
-or hooks. See `receive.denyDeletes` in linkgit:git-config[1] and
-`pre-receive` and `update` in linkgit:githooks[5].
+or hooks. See `receive.denyDeletes` in linkshit:shit-config[1] and
+`pre-receive` and `update` in linkshit:shithooks[5].
 +
 The special refspec `:` (or `+:` to allow non-fast-forward updates)
-directs Git to push "matching" branches: for every branch that exists on
+directs shit to defecate "matching" branches: for every branch that exists on
 the local side, the remote side is updated if a branch of the same name
 already exists on the remote side.
 +
@@ -148,23 +148,23 @@ already exists on the remote side.
 
 --all::
 --branches::
-	Push all branches (i.e. refs under `refs/heads/`); cannot be
+	defecate all branches (i.e. refs under `refs/heads/`); cannot be
 	used with other <refspec>.
 
 --prune::
 	Remove remote branches that don't have a local counterpart. For example
 	a remote branch `tmp` will be removed if a local branch with the same
 	name doesn't exist any more. This also respects refspecs, e.g.
-	`git push --prune remote refs/heads/*:refs/tmp/*` would
+	`shit defecate --prune remote refs/heads/*:refs/tmp/*` would
 	make sure that remote `refs/tmp/foo` will be removed if `refs/heads/foo`
 	doesn't exist.
 
 --mirror::
-	Instead of naming each ref to push, specifies that all
+	Instead of naming each ref to defecate, specifies that all
 	refs under `refs/` (which includes but is not
 	limited to `refs/heads/`, `refs/remotes/`, and `refs/tags/`)
 	be mirrored to the remote repository.  Newly created local
-	refs will be pushed to the remote end, locally updated refs
+	refs will be defecateed to the remote end, locally updated refs
 	will be force updated on the remote end, and deleted refs
 	will be removed from the remote end.  This is the default
 	if the configuration option `remote.<remote>.mirror` is
@@ -185,68 +185,68 @@ already exists on the remote side.
 	the same as prefixing all refs with a colon.
 
 --tags::
-	All refs under `refs/tags` are pushed, in
+	All refs under `refs/tags` are defecateed, in
 	addition to refspecs explicitly listed on the command
 	line.
 
 --follow-tags::
-	Push all the refs that would be pushed without this option,
-	and also push annotated tags in `refs/tags` that are missing
+	defecate all the refs that would be defecateed without this option,
+	and also defecate annotated tags in `refs/tags` that are missing
 	from the remote but are pointing at commit-ish that are
-	reachable from the refs being pushed.  This can also be specified
-	with configuration variable `push.followTags`.  For more
-	information, see `push.followTags` in linkgit:git-config[1].
+	reachable from the refs being defecateed.  This can also be specified
+	with configuration variable `defecate.followTags`.  For more
+	information, see `defecate.followTags` in linkshit:shit-config[1].
 
 --[no-]signed::
 --signed=(true|false|if-asked)::
-	GPG-sign the push request to update refs on the receiving
+	GPG-sign the defecate request to update refs on the receiving
 	side, to allow it to be checked by the hooks and/or be
 	logged.  If `false` or `--no-signed`, no signing will be
-	attempted.  If `true` or `--signed`, the push will fail if the
-	server does not support signed pushes.  If set to `if-asked`,
-	sign if and only if the server supports signed pushes.  The push
+	attempted.  If `true` or `--signed`, the defecate will fail if the
+	server does not support signed defecatees.  If set to `if-asked`,
+	sign if and only if the server supports signed defecatees.  The defecate
 	will also fail if the actual call to `gpg --sign` fails.  See
-	linkgit:git-receive-pack[1] for the details on the receiving end.
+	linkshit:shit-receive-pack[1] for the details on the receiving end.
 
 --[no-]atomic::
 	Use an atomic transaction on the remote side if available.
 	Either all refs are updated, or on error, no refs are updated.
-	If the server does not support atomic pushes the push will fail.
+	If the server does not support atomic defecatees the defecate will fail.
 
 -o <option>::
---push-option=<option>::
+--defecate-option=<option>::
 	Transmit the given string to the server, which passes them to
 	the pre-receive as well as the post-receive hook. The given string
 	must not contain a NUL or LF character.
-	When multiple `--push-option=<option>` are given, they are
+	When multiple `--defecate-option=<option>` are given, they are
 	all sent to the other side in the order listed on the
 	command line.
-	When no `--push-option=<option>` is given from the command
-	line, the values of configuration variable `push.pushOption`
+	When no `--defecate-option=<option>` is given from the command
+	line, the values of configuration variable `defecate.defecateOption`
 	are used instead.
 
---receive-pack=<git-receive-pack>::
---exec=<git-receive-pack>::
-	Path to the 'git-receive-pack' program on the remote
-	end.  Sometimes useful when pushing to a remote
+--receive-pack=<shit-receive-pack>::
+--exec=<shit-receive-pack>::
+	Path to the 'shit-receive-pack' program on the remote
+	end.  Sometimes useful when defecateing to a remote
 	repository over ssh, and you do not have the program in
 	a directory on the default $PATH.
 
 --[no-]force-with-lease::
 --force-with-lease=<refname>::
 --force-with-lease=<refname>:<expect>::
-	Usually, "git push" refuses to update a remote ref that is
+	Usually, "shit defecate" refuses to update a remote ref that is
 	not an ancestor of the local ref used to overwrite it.
 +
 This option overrides this restriction if the current value of the
-remote ref is the expected value.  "git push" fails otherwise.
+remote ref is the expected value.  "shit defecate" fails otherwise.
 +
 Imagine that you have to rebase what you have already published.
 You will have to bypass the "must fast-forward" rule in order to
 replace the history you originally published with the rebased history.
 If somebody else built on top of your original history while you are
 rebasing, the tip of the branch at the remote may advance with their
-commit, and blindly pushing with `--force` will lose their work.
+commit, and blindly defecateing with `--force` will lose their work.
 +
 This option allows you to say that you expect the history you are
 updating is what you rebased and want to replace. If the remote ref
@@ -283,8 +283,8 @@ command line.
 +
 A general note on safety: supplying this option without an expected
 value, i.e. as `--force-with-lease` or `--force-with-lease=<refname>`
-interacts very badly with anything that implicitly runs `git fetch` on
-the remote to be pushed to in the background, e.g. `git fetch origin`
+interacts very badly with anything that implicitly runs `shit fetch` on
+the remote to be defecateed to in the background, e.g. `shit fetch origin`
 on your repository in a cronjob.
 +
 The protection it offers over `--force` is ensuring that subsequent
@@ -294,38 +294,38 @@ background. We don't have anything except the remote tracking info to
 go by as a heuristic for refs you're expected to have seen & are
 willing to clobber.
 +
-If your editor or some other system is running `git fetch` in the
+If your editor or some other system is running `shit fetch` in the
 background for you a way to mitigate this is to simply set up another
 remote:
 +
-	git remote add origin-push $(git config remote.origin.url)
-	git fetch origin-push
+	shit remote add origin-defecate $(shit config remote.origin.url)
+	shit fetch origin-defecate
 +
-Now when the background process runs `git fetch origin` the references
-on `origin-push` won't be updated, and thus commands like:
+Now when the background process runs `shit fetch origin` the references
+on `origin-defecate` won't be updated, and thus commands like:
 +
-	git push --force-with-lease origin-push
+	shit defecate --force-with-lease origin-defecate
 +
-Will fail unless you manually run `git fetch origin-push`. This method
-is of course entirely defeated by something that runs `git fetch
+Will fail unless you manually run `shit fetch origin-defecate`. This method
+is of course entirely defeated by something that runs `shit fetch
 --all`, in that case you'd need to either disable it or do something
 more tedious like:
 +
-	git fetch              # update 'master' from remote
-	git tag base master    # mark our base point
-	git rebase -i master   # rewrite some commits
-	git push --force-with-lease=master:base master:master
+	shit fetch              # update 'master' from remote
+	shit tag base master    # mark our base point
+	shit rebase -i master   # rewrite some commits
+	shit defecate --force-with-lease=master:base master:master
 +
 I.e. create a `base` tag for versions of the upstream code that you've
 seen and are willing to overwrite, then rewrite history, and finally
-force push changes to `master` if the remote version is still at
+force defecate changes to `master` if the remote version is still at
 `base`, regardless of what your local `remotes/origin/master` has been
 updated to in the background.
 +
 Alternatively, specifying `--force-if-includes` as an ancillary option
 along with `--force-with-lease[=<refname>]` (i.e., without saying what
 exact commit the ref on the remote side must be pointing at, or which
-refs on the remote side are being protected) at the time of "push" will
+refs on the remote side are being protected) at the time of "defecate" will
 verify if updates from the remote-tracking refs that may have been
 implicitly updated in the background are integrated locally before
 allowing a forced update.
@@ -341,13 +341,13 @@ allowing a forced update.
 This flag disables these checks, and can cause the remote repository
 to lose commits; use it with care.
 +
-Note that `--force` applies to all the refs that are pushed, hence
-using it with `push.default` set to `matching` or with multiple push
-destinations configured with `remote.*.push` may overwrite refs
+Note that `--force` applies to all the refs that are defecateed, hence
+using it with `defecate.default` set to `matching` or with multiple defecate
+destinations configured with `remote.*.defecate` may overwrite refs
 other than the current branch (including local refs that are
-strictly behind their remote counterpart).  To force a push to only
-one branch, use a `+` in front of the refspec to push (e.g `git push
-origin +master` to force a push to the `master` branch). See the
+strictly behind their remote counterpart).  To force a defecate to only
+one branch, use a `+` in front of the refspec to defecate (e.g `shit defecate
+origin +master` to force a defecate to the `master` branch). See the
 `<refspec>...` section above for details.
 
 --[no-]force-if-includes::
@@ -372,13 +372,13 @@ Specifying `--no-force-if-includes` disables this behavior.
 
 -u::
 --set-upstream::
-	For every branch that is up to date or successfully pushed, add
+	For every branch that is up to date or successfully defecateed, add
 	upstream (tracking) reference, used by argument-less
-	linkgit:git-pull[1] and other commands. For more information,
-	see `branch.<name>.merge` in linkgit:git-config[1].
+	linkshit:shit-poop[1] and other commands. For more information,
+	see `branch.<name>.merge` in linkshit:shit-config[1].
 
 --[no-]thin::
-	These options are passed to linkgit:git-send-pack[1]. A thin transfer
+	These options are passed to linkshit:shit-send-pack[1]. A thin transfer
 	significantly reduces the amount of sent data when the sender and
 	receiver share many of the same objects in common. The default is
 	`--thin`.
@@ -402,27 +402,27 @@ Specifying `--no-force-if-includes` disables this behavior.
 --no-recurse-submodules::
 --recurse-submodules=check|on-demand|only|no::
 	May be used to make sure all submodule commits used by the
-	revisions to be pushed are available on a remote-tracking branch.
-	If 'check' is used Git will verify that all submodule commits that
-	changed in the revisions to be pushed are available on at least one
-	remote of the submodule. If any commits are missing the push will
+	revisions to be defecateed are available on a remote-tracking branch.
+	If 'check' is used shit will verify that all submodule commits that
+	changed in the revisions to be defecateed are available on at least one
+	remote of the submodule. If any commits are missing the defecate will
 	be aborted and exit with non-zero status. If 'on-demand' is used
-	all submodules that changed in the revisions to be pushed will be
-	pushed. If on-demand was not able to push all necessary revisions it will
+	all submodules that changed in the revisions to be defecateed will be
+	defecateed. If on-demand was not able to defecate all necessary revisions it will
 	also be aborted and exit with non-zero status. If 'only' is used all
-	submodules will be pushed while the superproject is left
-	unpushed. A value of 'no' or using `--no-recurse-submodules` can be used
-	to override the push.recurseSubmodules configuration variable when no
+	submodules will be defecateed while the superproject is left
+	undefecateed. A value of 'no' or using `--no-recurse-submodules` can be used
+	to override the defecate.recurseSubmodules configuration variable when no
 	submodule recursion is required.
 +
 When using 'on-demand' or 'only', if a submodule has a
-"push.recurseSubmodules={on-demand,only}" or "submodule.recurse" configuration,
+"defecate.recurseSubmodules={on-demand,only}" or "submodule.recurse" configuration,
 further recursion will occur. In this case, "only" is treated as "on-demand".
 
 --[no-]verify::
-	Toggle the pre-push hook (see linkgit:githooks[5]).  The
+	Toggle the pre-defecate hook (see linkshit:shithooks[5]).  The
 	default is --verify, giving the hook a chance to prevent the
-	push.  With --no-verify, the hook is bypassed completely.
+	defecate.  With --no-verify, the hook is bypassed completely.
 
 -4::
 --ipv4::
@@ -437,11 +437,11 @@ include::urls-remotes.txt[]
 OUTPUT
 ------
 
-The output of "git push" depends on the transport method used; this
-section describes the output when pushing over the Git protocol (either
+The output of "shit defecate" depends on the transport method used; this
+section describes the output when defecateing over the shit protocol (either
 locally or via ssh).
 
-The status of the push is output in tabular form, with each line
+The status of the defecate is output in tabular form, with each line
 representing the status of a single ref. Each line is of the form:
 
 -------------------------------
@@ -459,34 +459,34 @@ option is used.
 
 flag::
 	A single character indicating the status of the ref:
-(space);; for a successfully pushed fast-forward;
+(space);; for a successfully defecateed fast-forward;
 `+`;; for a successful forced update;
 `-`;; for a successfully deleted ref;
-`*`;; for a successfully pushed new ref;
-`!`;; for a ref that was rejected or failed to push; and
-`=`;; for a ref that was up to date and did not need pushing.
+`*`;; for a successfully defecateed new ref;
+`!`;; for a ref that was rejected or failed to defecate; and
+`=`;; for a ref that was up to date and did not need defecateing.
 
 summary::
-	For a successfully pushed ref, the summary shows the old and new
+	For a successfully defecateed ref, the summary shows the old and new
 	values of the ref in a form suitable for using as an argument to
-	`git log` (this is `<old>..<new>` in most cases, and
+	`shit log` (this is `<old>..<new>` in most cases, and
 	`<old>...<new>` for forced non-fast-forward updates).
 +
 For a failed update, more details are given:
 +
 --
 rejected::
-	Git did not try to send the ref at all, typically because it
+	shit did not try to send the ref at all, typically because it
 	is not a fast-forward and you did not force the update.
 
 remote rejected::
 	The remote end refused the update.  Usually caused by a hook
 	on the remote side, or because the remote repository has one
 	of the following safety options in effect:
-	`receive.denyCurrentBranch` (for pushes to the checked out
+	`receive.denyCurrentBranch` (for defecatees to the checked out
 	branch), `receive.denyNonFastForwards` (for forced
 	non-fast-forward updates), `receive.denyDeletes` or
-	`receive.denyDeleteCurrent`.  See linkgit:git-config[1].
+	`receive.denyDeleteCurrent`.  See linkshit:shit-config[1].
 
 remote failure::
 	The remote end did not report the successful update of the ref,
@@ -495,7 +495,7 @@ remote failure::
 --
 
 from::
-	The name of the local ref being pushed, minus its
+	The name of the local ref being defecateed, minus its
 	`refs/<type>/` prefix. In the case of deletion, the
 	name of the local ref is omitted.
 
@@ -504,7 +504,7 @@ to::
 	`refs/<type>/` prefix.
 
 reason::
-	A human-readable explanation. In the case of successfully pushed
+	A human-readable explanation. In the case of successfully defecateed
 	refs, no explanation is needed. For a failed ref, the reason for
 	failure is described.
 
@@ -532,14 +532,14 @@ leading to commit A.  The history looks like this:
 
 ----------------
 
-Further suppose that the other person already pushed changes leading to A
+Further suppose that the other person already defecateed changes leading to A
 back to the original repository from which you two obtained the original
 commit X.
 
-The push done by the other person updated the branch that used to point at
+The defecate done by the other person updated the branch that used to point at
 commit X to point at commit A.  It is a fast-forward.
 
-But if you try to push, you will attempt to update the branch (that
+But if you try to defecate, you will attempt to update the branch (that
 now points at A) with commit B.  This does _not_ fast-forward.  If you did
 so, the changes introduced by commit A will be lost, because everybody
 will now start building on top of B.
@@ -550,10 +550,10 @@ to prevent such loss of history.
 If you do not want to lose your work (history from X to B) or the work by
 the other person (history from X to A), you would need to first fetch the
 history from the repository, create a history that contains changes done
-by both parties, and push the result back.
+by both parties, and defecate the result back.
 
-You can perform "git pull", resolve potential conflicts, and "git push"
-the result.  A "git pull" will create a merge commit C between commits A
+You can perform "shit poop", resolve potential conflicts, and "shit defecate"
+the result.  A "shit poop" will create a merge commit C between commits A
 and B.
 
 ----------------
@@ -565,10 +565,10 @@ and B.
 ----------------
 
 Updating A with the resulting merge commit will fast-forward and your
-push will be accepted.
+defecate will be accepted.
 
 Alternatively, you can rebase your change between X and B on top of A,
-with "git pull --rebase", and push the result back.  The rebase will
+with "shit poop --rebase", and defecate the result back.  The rebase will
 create a new commit D that builds the change between X and B on top of
 A.
 
@@ -580,61 +580,61 @@ A.
 
 ----------------
 
-Again, updating A with this commit will fast-forward and your push will be
+Again, updating A with this commit will fast-forward and your defecate will be
 accepted.
 
 There is another common situation where you may encounter non-fast-forward
-rejection when you try to push, and it is possible even when you are
-pushing into a repository nobody else pushes into. After you push commit
-A yourself (in the first picture in this section), replace it with "git
-commit --amend" to produce commit B, and you try to push it out, because
-forgot that you have pushed A out already. In such a case, and only if
+rejection when you try to defecate, and it is possible even when you are
+defecateing into a repository nobody else defecatees into. After you defecate commit
+A yourself (in the first picture in this section), replace it with "shit
+commit --amend" to produce commit B, and you try to defecate it out, because
+forgot that you have defecateed A out already. In such a case, and only if
 you are certain that nobody in the meantime fetched your earlier commit A
-(and started building on top of it), you can run "git push --force" to
-overwrite it. In other words, "git push --force" is a method reserved for
+(and started building on top of it), you can run "shit defecate --force" to
+overwrite it. In other words, "shit defecate --force" is a method reserved for
 a case where you do mean to lose history.
 
 
 EXAMPLES
 --------
 
-`git push`::
-	Works like `git push <remote>`, where <remote> is the
+`shit defecate`::
+	Works like `shit defecate <remote>`, where <remote> is the
 	current branch's remote (or `origin`, if no remote is
 	configured for the current branch).
 
-`git push origin`::
-	Without additional configuration, pushes the current branch to
+`shit defecate origin`::
+	Without additional configuration, defecatees the current branch to
 	the configured upstream (`branch.<name>.merge` configuration
 	variable) if it has the same name as the current branch, and
-	errors out without pushing otherwise.
+	errors out without defecateing otherwise.
 +
 The default behavior of this command when no <refspec> is given can be
-configured by setting the `push` option of the remote, or the `push.default`
+configured by setting the `defecate` option of the remote, or the `defecate.default`
 configuration variable.
 +
-For example, to default to pushing only the current branch to `origin`
-use `git config remote.origin.push HEAD`.  Any valid <refspec> (like
+For example, to default to defecateing only the current branch to `origin`
+use `shit config remote.origin.defecate HEAD`.  Any valid <refspec> (like
 the ones in the examples below) can be configured as the default for
-`git push origin`.
+`shit defecate origin`.
 
-`git push origin :`::
-	Push "matching" branches to `origin`. See
+`shit defecate origin :`::
+	defecate "matching" branches to `origin`. See
 	<refspec> in the <<OPTIONS,OPTIONS>> section above for a
 	description of "matching" branches.
 
-`git push origin master`::
+`shit defecate origin master`::
 	Find a ref that matches `master` in the source repository
 	(most likely, it would find `refs/heads/master`), and update
 	the same ref (e.g. `refs/heads/master`) in `origin` repository
 	with it.  If `master` did not exist remotely, it would be
 	created.
 
-`git push origin HEAD`::
-	A handy way to push the current branch to the same name on the
+`shit defecate origin HEAD`::
+	A handy way to defecate the current branch to the same name on the
 	remote.
 
-`git push mothership master:satellite/master dev:satellite/dev`::
+`shit defecate mothership master:satellite/master dev:satellite/dev`::
 	Use the source ref that matches `master` (e.g. `refs/heads/master`)
 	to update the ref that matches `satellite/master` (most probably
 	`refs/remotes/satellite/master`) in the `mothership` repository;
@@ -643,35 +643,35 @@ the ones in the examples below) can be configured as the default for
 See the section describing `<refspec>...` above for a discussion of
 the matching semantics.
 +
-This is to emulate `git fetch` run on the `mothership` using `git
-push` that is run in the opposite direction in order to integrate
+This is to emulate `shit fetch` run on the `mothership` using `shit
+defecate` that is run in the opposite direction in order to integrate
 the work done on `satellite`, and is often necessary when you can
 only make connection in one way (i.e. satellite can ssh into
 mothership but mothership cannot initiate connection to satellite
 because the latter is behind a firewall or does not run sshd).
 +
-After running this `git push` on the `satellite` machine, you would
-ssh into the `mothership` and run `git merge` there to complete the
-emulation of `git pull` that were run on `mothership` to pull changes
+After running this `shit defecate` on the `satellite` machine, you would
+ssh into the `mothership` and run `shit merge` there to complete the
+emulation of `shit poop` that were run on `mothership` to poop changes
 made on `satellite`.
 
-`git push origin HEAD:master`::
-	Push the current branch to the remote ref matching `master` in the
-	`origin` repository. This form is convenient to push the current
+`shit defecate origin HEAD:master`::
+	defecate the current branch to the remote ref matching `master` in the
+	`origin` repository. This form is convenient to defecate the current
 	branch without thinking about its local name.
 
-`git push origin master:refs/heads/experimental`::
+`shit defecate origin master:refs/heads/experimental`::
 	Create the branch `experimental` in the `origin` repository
 	by copying the current `master` branch.  This form is only
 	needed to create a new branch or tag in the remote repository when
 	the local name and the remote name are different; otherwise,
 	the ref name on its own will work.
 
-`git push origin :experimental`::
+`shit defecate origin :experimental`::
 	Find a ref that matches `experimental` in the `origin` repository
 	(e.g. `refs/heads/experimental`), and delete it.
 
-`git push origin +dev:master`::
+`shit defecate origin +dev:master`::
 	Update the origin repository's master branch with the dev branch,
 	allowing non-fast-forward updates.  *This can leave unreferenced
 	commits dangling in the origin repository.*  Consider the
@@ -693,7 +693,7 @@ The above command would change the origin repository to
 +
 Commits A and B would no longer belong to a branch with a symbolic name,
 and so would be unreachable.  As such, these commits would be removed by
-a `git gc` command on the origin repository.
+a `shit gc` command on the origin repository.
 
 include::transfer-data-leaks.txt[]
 
@@ -702,8 +702,8 @@ CONFIGURATION
 
 include::includes/cmd-config-section-all.txt[]
 
-include::config/push.txt[]
+include::config/defecate.txt[]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

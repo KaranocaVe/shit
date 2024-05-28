@@ -1,7 +1,7 @@
 Multi-Pack-Index (MIDX) Design Notes
 ====================================
 
-The Git object directory contains a 'pack' directory containing
+The shit object directory contains a 'pack' directory containing
 packfiles (with suffix ".pack") and pack-indexes (with suffix
 ".idx"). The pack-indexes provide a way to lookup objects and
 navigate to their offset within the pack, but these must come
@@ -33,13 +33,13 @@ Design Details
 --------------
 
 - The MIDX is stored in a file named 'multi-pack-index' in the
-  .git/objects/pack directory. This could be stored in the pack
+  .shit/objects/pack directory. This could be stored in the pack
   directory of an alternate. It refers only to packfiles in that
   same directory.
 
 - The core.multiPackIndex config setting must be on (which is the
   default) to consume MIDX files.  Setting it to `false` prevents
-  Git from reading a MIDX file, even if one exists.
+  shit from reading a MIDX file, even if one exists.
 
 - The file format includes parameters for the object ID hash
   function, so a future change of hash algorithm does not require
@@ -51,8 +51,8 @@ Design Details
   modified packfile.
 
 - If there exist packfiles in the pack directory not registered in
-  the MIDX, then those packfiles are loaded into the `packed_git`
-  list and `packed_git_mru` cache.
+  the MIDX, then those packfiles are loaded into the `packed_shit`
+  list and `packed_shit_mru` cache.
 
 - The pack-indexes (.idx files) remain in the pack directory so we
   can delete the MIDX file, set core.midx to false, or downgrade
@@ -90,11 +90,11 @@ Future Work
 
 Related Links
 -------------
-[0] https://bugs.chromium.org/p/git/issues/detail?id=6
+[0] https://bugs.chromium.org/p/shit/issues/detail?id=6
     Chromium work item for: Multi-Pack Index (MIDX)
 
-[1] https://lore.kernel.org/git/20180107181459.222909-1-dstolee@microsoft.com/
+[1] https://lore.kernel.org/shit/20180107181459.222909-1-dstolee@microsoft.com/
     An earlier RFC for the multi-pack-index feature
 
-[2] https://lore.kernel.org/git/alpine.DEB.2.20.1803091557510.23109@alexmv-linux/
-    Git Merge 2018 Contributor's summit notes (includes discussion of MIDX)
+[2] https://lore.kernel.org/shit/alpine.DEB.2.20.1803091557510.23109@alexmv-linux/
+    shit Merge 2018 Contributor's summit notes (includes discussion of MIDX)

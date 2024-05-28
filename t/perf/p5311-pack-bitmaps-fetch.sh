@@ -5,15 +5,15 @@ test_description='performance of fetches from bitmapped packs'
 
 test_fetch_bitmaps () {
 	test_expect_success 'setup test directory' '
-		rm -fr * .git
+		rm -fr * .shit
 	'
 
 	test_perf_default_repo
 
 	test_expect_success 'create bitmapped server repo' '
-		git config pack.writebitmaps true &&
-		git config pack.writeBitmapLookupTable '"$1"' &&
-		git repack -ad
+		shit config pack.writebitmaps true &&
+		shit config pack.writeBitmapLookupTable '"$1"' &&
+		shit repack -ad
 	'
 
 	# simulate a fetch from a repository that last fetched N days ago, for
@@ -23,9 +23,9 @@ test_fetch_bitmaps () {
 	for days in 1 2 4 8 16 32 64 128; do
 		title=$(printf '%10s' "($days days)")
 		test_expect_success "setup revs from $days days ago" '
-			now=$(git log -1 --format=%ct HEAD) &&
+			now=$(shit log -1 --format=%ct HEAD) &&
 			then=$(($now - ($days * 86400))) &&
-			tip=$(git rev-list -1 --first-parent --until=$then HEAD) &&
+			tip=$(shit rev-list -1 --first-parent --until=$then HEAD) &&
 			{
 				echo HEAD &&
 				echo ^$tip
@@ -33,7 +33,7 @@ test_fetch_bitmaps () {
 		'
 
 		test_perf "server $title (lookup=$1)" '
-			git pack-objects --stdout --revs \
+			shit pack-objects --stdout --revs \
 					--thin --delta-base-offset \
 					<revs >tmp.pack
 		'
@@ -43,7 +43,7 @@ test_fetch_bitmaps () {
 		'
 
 		test_perf "client $title (lookup=$1)" '
-			git index-pack --stdin --fix-thin <tmp.pack
+			shit index-pack --stdin --fix-thin <tmp.pack
 		'
 	done
 }

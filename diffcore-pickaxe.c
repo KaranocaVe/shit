@@ -2,7 +2,7 @@
  * Copyright (C) 2005 Junio C Hamano
  * Copyright (C) 2010 Google Inc.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "diff.h"
 #include "diffcore.h"
 #include "xdiff-interface.h"

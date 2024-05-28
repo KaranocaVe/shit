@@ -90,8 +90,8 @@ static int is_rev_argument(const char *arg)
 	};
 	const char **p = rev_args;
 
-	/* accept -<digit>, like traditional "head" */
-	if ((*arg == '-') && isdigit(arg[1]))
+	/* accept -<dishit>, like traditional "head" */
+	if ((*arg == '-') && isdishit(arg[1]))
 		return 1;
 
 	for (;;) {
@@ -425,7 +425,7 @@ static int cmd_parseopt(int argc, const char **argv, const char *prefix)
 {
 	static int keep_dashdash = 0, stop_at_non_option = 0;
 	static char const * const parseopt_usage[] = {
-		N_("git rev-parse --parseopt [<options>] -- [<args>...]"),
+		N_("shit rev-parse --parseopt [<options>] -- [<args>...]"),
 		NULL
 	};
 	static struct option parseopt_opts[] = {
@@ -572,11 +572,11 @@ static void die_no_single_rev(int quiet)
 }
 
 static const char builtin_rev_parse_usage[] =
-N_("git rev-parse --parseopt [<options>] -- [<args>...]\n"
-   "   or: git rev-parse --sq-quote [<arg>...]\n"
-   "   or: git rev-parse [<options>] [<arg>...]\n"
+N_("shit rev-parse --parseopt [<options>] -- [<args>...]\n"
+   "   or: shit rev-parse --sq-quote [<arg>...]\n"
+   "   or: shit rev-parse [<options>] [<arg>...]\n"
    "\n"
-   "Run \"git rev-parse --parseopt -h\" for more information on the first usage.");
+   "Run \"shit rev-parse --parseopt -h\" for more information on the first usage.");
 
 /*
  * Parse "opt" or "opt=<value>", setting value respectively to either
@@ -681,8 +681,8 @@ static void print_path(const char *path, const char *prefix, enum format_type fo
 int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 {
 	int i, as_is = 0, verify = 0, quiet = 0, revs_count = 0, type = 0;
-	const struct git_hash_algo *output_algo = NULL;
-	const struct git_hash_algo *compat = NULL;
+	const struct shit_hash_algo *output_algo = NULL;
+	const struct shit_hash_algo *compat = NULL;
 	int did_repo_setup = 0;
 	int has_dashdash = 0;
 	int output_prefix = 0;
@@ -711,10 +711,10 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 		}
 	}
 
-	/* No options; just report on whether we're in a git repo or not. */
+	/* No options; just report on whether we're in a shit repo or not. */
 	if (argc == 1) {
-		setup_git_directory();
-		git_config(git_default_config, NULL);
+		setup_shit_directory();
+		shit_config(shit_default_config, NULL);
 		return 0;
 	}
 
@@ -734,22 +734,22 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 					printf("%s\n", local_repo_env[i]);
 				continue;
 			}
-			if (!strcmp(arg, "--resolve-git-dir")) {
-				const char *gitdir = argv[++i];
-				if (!gitdir)
-					die(_("--resolve-git-dir requires an argument"));
-				gitdir = resolve_gitdir(gitdir);
-				if (!gitdir)
-					die(_("not a gitdir '%s'"), argv[i]);
-				puts(gitdir);
+			if (!strcmp(arg, "--resolve-shit-dir")) {
+				const char *shitdir = argv[++i];
+				if (!shitdir)
+					die(_("--resolve-shit-dir requires an argument"));
+				shitdir = resolve_shitdir(shitdir);
+				if (!shitdir)
+					die(_("not a shitdir '%s'"), argv[i]);
+				puts(shitdir);
 				continue;
 			}
 		}
 
-		/* The rest of the options require a git repository. */
+		/* The rest of the options require a shit repository. */
 		if (!did_repo_setup) {
-			prefix = setup_git_directory();
-			git_config(git_default_config, NULL);
+			prefix = setup_shit_directory();
+			shit_config(shit_default_config, NULL);
 			did_repo_setup = 1;
 
 			prepare_repo_settings(the_repository);
@@ -766,11 +766,11 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 		}
 
 		if (!seen_end_of_options && *arg == '-') {
-			if (!strcmp(arg, "--git-path")) {
+			if (!strcmp(arg, "--shit-path")) {
 				if (!argv[i + 1])
-					die(_("--git-path requires an argument"));
+					die(_("--shit-path requires an argument"));
 				strbuf_reset(&buf);
-				print_path(git_path("%s", argv[i + 1]), prefix,
+				print_path(shit_path("%s", argv[i + 1]), prefix,
 						format,
 						DEFAULT_RELATIVE_IF_SHARED);
 				i++;
@@ -957,7 +957,7 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 				continue;
 			}
 			if (!strcmp(arg, "--show-toplevel")) {
-				const char *work_tree = get_git_work_tree();
+				const char *work_tree = get_shit_work_tree();
 				if (work_tree)
 					print_path(work_tree, prefix, format, DEFAULT_UNMODIFIED);
 				else
@@ -982,7 +982,7 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 				const char *pfx = prefix;
 				if (!is_inside_work_tree()) {
 					const char *work_tree =
-						get_git_work_tree();
+						get_shit_work_tree();
 					if (work_tree)
 						printf("%s\n", work_tree);
 					continue;
@@ -997,28 +997,28 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 				putchar('\n');
 				continue;
 			}
-			if (!strcmp(arg, "--git-dir") ||
-			    !strcmp(arg, "--absolute-git-dir")) {
-				const char *gitdir = getenv(GIT_DIR_ENVIRONMENT);
+			if (!strcmp(arg, "--shit-dir") ||
+			    !strcmp(arg, "--absolute-shit-dir")) {
+				const char *shitdir = getenv(shit_DIR_ENVIRONMENT);
 				char *cwd;
 				int len;
 				enum format_type wanted = format;
-				if (arg[2] == 'g') {	/* --git-dir */
-					if (gitdir) {
-						print_path(gitdir, prefix, format, DEFAULT_UNMODIFIED);
+				if (arg[2] == 'g') {	/* --shit-dir */
+					if (shitdir) {
+						print_path(shitdir, prefix, format, DEFAULT_UNMODIFIED);
 						continue;
 					}
 					if (!prefix) {
-						print_path(".git", prefix, format, DEFAULT_UNMODIFIED);
+						print_path(".shit", prefix, format, DEFAULT_UNMODIFIED);
 						continue;
 					}
-				} else {		/* --absolute-git-dir */
+				} else {		/* --absolute-shit-dir */
 					wanted = FORMAT_CANONICAL;
-					if (!gitdir && !prefix)
-						gitdir = ".git";
-					if (gitdir) {
+					if (!shitdir && !prefix)
+						shitdir = ".shit";
+					if (shitdir) {
 						struct strbuf realpath = STRBUF_INIT;
-						strbuf_realpath(&realpath, gitdir, 1);
+						strbuf_realpath(&realpath, shitdir, 1);
 						puts(realpath.buf);
 						strbuf_release(&realpath);
 						continue;
@@ -1027,17 +1027,17 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 				cwd = xgetcwd();
 				len = strlen(cwd);
 				strbuf_reset(&buf);
-				strbuf_addf(&buf, "%s%s.git", cwd, len && cwd[len-1] != '/' ? "/" : "");
+				strbuf_addf(&buf, "%s%s.shit", cwd, len && cwd[len-1] != '/' ? "/" : "");
 				free(cwd);
 				print_path(buf.buf, prefix, wanted, DEFAULT_CANONICAL);
 				continue;
 			}
-			if (!strcmp(arg, "--git-common-dir")) {
-				print_path(get_git_common_dir(), prefix, format, DEFAULT_RELATIVE_IF_SHARED);
+			if (!strcmp(arg, "--shit-common-dir")) {
+				print_path(get_shit_common_dir(), prefix, format, DEFAULT_RELATIVE_IF_SHARED);
 				continue;
 			}
-			if (!strcmp(arg, "--is-inside-git-dir")) {
-				printf("%s\n", is_inside_git_dir() ? "true"
+			if (!strcmp(arg, "--is-inside-shit-dir")) {
+				printf("%s\n", is_inside_shit_dir() ? "true"
 						: "false");
 				continue;
 			}
@@ -1062,7 +1062,7 @@ int cmd_rev_parse(int argc, const char **argv, const char *prefix)
 					die(_("Could not read the index"));
 				if (the_repository->index->split_index) {
 					const struct object_id *oid = &the_repository->index->split_index->base_oid;
-					const char *path = git_path("sharedindex.%s", oid_to_hex(oid));
+					const char *path = shit_path("sharedindex.%s", oid_to_hex(oid));
 					print_path(path, prefix, format, DEFAULT_RELATIVE);
 				}
 				continue;

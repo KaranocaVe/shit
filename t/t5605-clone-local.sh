@@ -1,8 +1,8 @@
 #!/bin/sh
 
 test_description='test local clone'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -12,157 +12,157 @@ repo_is_hardlinked() {
 }
 
 test_expect_success 'preparing origin repository' '
-	: >file && git add . && git commit -m1 &&
-	git clone --bare . a.git &&
-	git clone --bare . x &&
+	: >file && shit add . && shit commit -m1 &&
+	shit clone --bare . a.shit &&
+	shit clone --bare . x &&
 	echo true >expect &&
-	git -C a.git config --bool core.bare >actual &&
+	shit -C a.shit config --bool core.bare >actual &&
 	test_cmp expect actual &&
 	echo true >expect &&
-	git -C x config --bool core.bare >actual &&
+	shit -C x config --bool core.bare >actual &&
 	test_cmp expect actual &&
-	git bundle create b1.bundle --all &&
-	git bundle create b2.bundle main &&
+	shit bundle create b1.bundle --all &&
+	shit bundle create b2.bundle main &&
 	mkdir dir &&
 	cp b1.bundle dir/b3 &&
 	cp b1.bundle b4 &&
-	git branch not-main main &&
-	git bundle create b5.bundle not-main
+	shit branch not-main main &&
+	shit bundle create b5.bundle not-main
 '
 
-test_expect_success 'local clone without .git suffix' '
-	git clone -l -s a b &&
+test_expect_success 'local clone without .shit suffix' '
+	shit clone -l -s a b &&
 	(cd b &&
 	echo false >expect &&
-	git config --bool core.bare >actual &&
+	shit config --bool core.bare >actual &&
 	test_cmp expect actual &&
-	git fetch)
+	shit fetch)
 '
 
-test_expect_success 'local clone with .git suffix' '
-	git clone -l -s a.git c &&
-	(cd c && git fetch)
+test_expect_success 'local clone with .shit suffix' '
+	shit clone -l -s a.shit c &&
+	(cd c && shit fetch)
 '
 
 test_expect_success 'local clone from x' '
-	git clone -l -s x y &&
-	(cd y && git fetch)
+	shit clone -l -s x y &&
+	(cd y && shit fetch)
 '
 
-test_expect_success 'local clone from x.git that does not exist' '
-	test_must_fail git clone -l -s x.git z
+test_expect_success 'local clone from x.shit that does not exist' '
+	test_must_fail shit clone -l -s x.shit z
 '
 
 test_expect_success 'With -no-hardlinks, local will make a copy' '
-	git clone --bare --no-hardlinks x w &&
+	shit clone --bare --no-hardlinks x w &&
 	! repo_is_hardlinked w
 '
 
 test_expect_success 'Even without -l, local will make a hardlink' '
 	rm -fr w &&
-	git clone -l --bare x w &&
+	shit clone -l --bare x w &&
 	repo_is_hardlinked w
 '
 
 test_expect_success 'local clone of repo with nonexistent ref in HEAD' '
-	git -C a.git symbolic-ref HEAD refs/heads/nonexistent &&
-	git clone a d &&
+	shit -C a.shit symbolic-ref HEAD refs/heads/nonexistent &&
+	shit clone a d &&
 	(cd d &&
-	git fetch &&
+	shit fetch &&
 	test_ref_missing refs/remotes/origin/HEAD)
 '
 
 test_expect_success 'bundle clone without .bundle suffix' '
-	git clone dir/b3 &&
-	(cd b3 && git fetch)
+	shit clone dir/b3 &&
+	(cd b3 && shit fetch)
 '
 
 test_expect_success 'bundle clone with .bundle suffix' '
-	git clone b1.bundle &&
-	(cd b1 && git fetch)
+	shit clone b1.bundle &&
+	(cd b1 && shit fetch)
 '
 
 test_expect_success 'bundle clone from b4' '
-	git clone b4 bdl &&
-	(cd bdl && git fetch)
+	shit clone b4 bdl &&
+	(cd bdl && shit fetch)
 '
 
 test_expect_success 'bundle clone from b4.bundle that does not exist' '
-	test_must_fail git clone b4.bundle bb
+	test_must_fail shit clone b4.bundle bb
 '
 
 test_expect_success 'bundle clone with nonexistent HEAD (match default)' '
-	git clone b2.bundle b2 &&
+	shit clone b2.bundle b2 &&
 	(cd b2 &&
-	git fetch &&
-	git rev-parse --verify refs/heads/main)
+	shit fetch &&
+	shit rev-parse --verify refs/heads/main)
 '
 
 test_expect_success 'bundle clone with nonexistent HEAD (no match default)' '
-	git clone b5.bundle b5 &&
+	shit clone b5.bundle b5 &&
 	(cd b5 &&
-	git fetch &&
-	test_must_fail git rev-parse --verify refs/heads/main &&
-	test_must_fail git rev-parse --verify refs/heads/not-main)
+	shit fetch &&
+	test_must_fail shit rev-parse --verify refs/heads/main &&
+	test_must_fail shit rev-parse --verify refs/heads/not-main)
 '
 
 test_expect_success 'clone empty repository' '
 	mkdir empty &&
 	(cd empty &&
-	 git init &&
-	 git config receive.denyCurrentBranch warn) &&
-	git clone empty empty-clone &&
+	 shit init &&
+	 shit config receive.denyCurrentBranch warn) &&
+	shit clone empty empty-clone &&
 	test_tick &&
 	(cd empty-clone &&
 	 echo "content" >> foo &&
-	 git add foo &&
-	 git commit -m "Initial commit" &&
-	 git push origin main &&
-	 expected=$(git rev-parse main) &&
-	 actual=$(git --git-dir=../empty/.git rev-parse main) &&
+	 shit add foo &&
+	 shit commit -m "Initial commit" &&
+	 shit defecate origin main &&
+	 expected=$(shit rev-parse main) &&
+	 actual=$(shit --shit-dir=../empty/.shit rev-parse main) &&
 	 test $actual = $expected)
 '
 
-test_expect_success 'clone empty repository, and then push should not segfault.' '
+test_expect_success 'clone empty repository, and then defecate should not segfault.' '
 	rm -fr empty/ empty-clone/ &&
 	mkdir empty &&
-	(cd empty && git init) &&
-	git clone empty empty-clone &&
+	(cd empty && shit init) &&
+	shit clone empty empty-clone &&
 	(cd empty-clone &&
-	test_must_fail git push)
+	test_must_fail shit defecate)
 '
 
 test_expect_success 'cloning non-existent directory fails' '
 	rm -rf does-not-exist &&
-	test_must_fail git clone does-not-exist
+	test_must_fail shit clone does-not-exist
 '
 
-test_expect_success 'cloning non-git directory fails' '
-	rm -rf not-a-git-repo not-a-git-repo-clone &&
-	mkdir not-a-git-repo &&
-	test_must_fail git clone not-a-git-repo not-a-git-repo-clone
+test_expect_success 'cloning non-shit directory fails' '
+	rm -rf not-a-shit-repo not-a-shit-repo-clone &&
+	mkdir not-a-shit-repo &&
+	test_must_fail shit clone not-a-shit-repo not-a-shit-repo-clone
 '
 
 test_expect_success 'cloning file:// does not hardlink' '
-	git clone --bare file://"$(pwd)"/a non-local &&
+	shit clone --bare file://"$(pwd)"/a non-local &&
 	! repo_is_hardlinked non-local
 '
 
 test_expect_success 'cloning a local path with --no-local does not hardlink' '
-	git clone --bare --no-local a force-nonlocal &&
+	shit clone --bare --no-local a force-nonlocal &&
 	! repo_is_hardlinked force-nonlocal
 '
 
 test_expect_success 'cloning locally respects "-u" for fetching refs' '
-	test_must_fail git clone --bare -u false a should_not_work.git
+	test_must_fail shit clone --bare -u false a should_not_work.shit
 '
 
 test_expect_success REFFILES 'local clone from repo with corrupt refs fails gracefully' '
-	git init corrupt &&
+	shit init corrupt &&
 	test_commit -C corrupt one &&
-	echo a >corrupt/.git/refs/heads/topic &&
+	echo a >corrupt/.shit/refs/heads/topic &&
 
-	test_must_fail git clone corrupt working 2>err &&
+	test_must_fail shit clone corrupt working 2>err &&
 	grep "has a null OID" err
 '
 

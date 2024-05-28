@@ -3,22 +3,22 @@
 # Copyright (c) 2010 Nazri Ramliy
 #
 
-test_description='test "git log --decorate" colors'
+test_description='test "shit log --decorate" colors'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success setup '
-	git config diff.color.commit yellow &&
-	git config color.decorate.branch green &&
-	git config color.decorate.remoteBranch red &&
-	git config color.decorate.tag "reverse bold yellow" &&
-	git config color.decorate.stash magenta &&
-	git config color.decorate.grafted black &&
-	git config color.decorate.HEAD cyan &&
+	shit config diff.color.commit yellow &&
+	shit config color.decorate.branch green &&
+	shit config color.decorate.remoteBranch red &&
+	shit config color.decorate.tag "reverse bold yellow" &&
+	shit config color.decorate.stash magenta &&
+	shit config color.decorate.grafted black &&
+	shit config color.decorate.HEAD cyan &&
 
 	c_reset="<RESET>" &&
 
@@ -31,17 +31,17 @@ test_expect_success setup '
 	c_grafted="<BLACK>" &&
 
 	test_commit A &&
-	git clone . other &&
+	shit clone . other &&
 	(
 		cd other &&
 		test_commit A1
 	) &&
 
-	git remote add -f other ./other &&
+	shit remote add -f other ./other &&
 	test_commit B &&
-	git tag v1.0 &&
+	shit tag v1.0 &&
 	echo >>A.t &&
-	git stash save Changes to A.t
+	shit stash save Changes to A.t
 '
 
 cmp_filtered_decorations () {
@@ -66,13 +66,13 @@ ${c_stash}refs/stash${c_reset}${c_commit})${c_reset} On main: Changes to A.t
 ${c_tag}tag: ${c_reset}${c_tag}A${c_reset}${c_commit})${c_reset} A
 	EOF
 
-	git log --first-parent --no-abbrev --decorate --oneline --color=always --all >actual &&
+	shit log --first-parent --no-abbrev --decorate --oneline --color=always --all >actual &&
 	cmp_filtered_decorations
 '
 
 remove_replace_refs () {
-	git for-each-ref 'refs/replace*/**' --format='delete %(refname)' >in &&
-	git update-ref --stdin <in &&
+	shit for-each-ref 'refs/replace*/**' --format='delete %(refname)' >in &&
+	shit update-ref --stdin <in &&
 	rm in
 }
 
@@ -81,7 +81,7 @@ test_expect_success 'test coloring with replace-objects' '
 	test_commit C &&
 	test_commit D &&
 
-	git replace HEAD~1 HEAD~2 &&
+	shit replace HEAD~1 HEAD~2 &&
 
 	cat >expect <<-EOF &&
 	${c_commit}COMMIT_ID${c_reset}${c_commit} (${c_reset}${c_HEAD}HEAD${c_reset}\
@@ -94,12 +94,12 @@ ${c_reset}${c_grafted}replaced${c_reset}${c_commit})${c_reset} B
 ${c_tag}tag: ${c_reset}${c_tag}A${c_reset}${c_commit})${c_reset} A
 EOF
 
-	git log --first-parent --no-abbrev --decorate --oneline --color=always HEAD >actual &&
+	shit log --first-parent --no-abbrev --decorate --oneline --color=always HEAD >actual &&
 	cmp_filtered_decorations &&
-	git replace -d HEAD~1 &&
+	shit replace -d HEAD~1 &&
 
-	GIT_REPLACE_REF_BASE=refs/replace2/ git replace HEAD~1 HEAD~2 &&
-	GIT_REPLACE_REF_BASE=refs/replace2/ git log --first-parent \
+	shit_REPLACE_REF_BASE=refs/replace2/ shit replace HEAD~1 HEAD~2 &&
+	shit_REPLACE_REF_BASE=refs/replace2/ shit log --first-parent \
 		--no-abbrev --decorate --oneline --color=always HEAD >actual &&
 	cmp_filtered_decorations
 '
@@ -107,7 +107,7 @@ EOF
 test_expect_success 'test coloring with grafted commit' '
 	test_when_finished remove_replace_refs &&
 
-	git replace --graft HEAD HEAD~2 &&
+	shit replace --graft HEAD HEAD~2 &&
 
 	cat >expect <<-EOF &&
 	${c_commit}COMMIT_ID${c_reset}${c_commit} (${c_reset}${c_HEAD}HEAD${c_reset}\
@@ -121,12 +121,12 @@ ${c_reset}${c_tag}tag: ${c_reset}${c_tag}B${c_reset}${c_commit})${c_reset} B
 ${c_tag}tag: ${c_reset}${c_tag}A${c_reset}${c_commit})${c_reset} A
 	EOF
 
-	git log --first-parent --no-abbrev --decorate --oneline --color=always HEAD >actual &&
+	shit log --first-parent --no-abbrev --decorate --oneline --color=always HEAD >actual &&
 	cmp_filtered_decorations &&
-	git replace -d HEAD &&
+	shit replace -d HEAD &&
 
-	GIT_REPLACE_REF_BASE=refs/replace2/ git replace --graft HEAD HEAD~2 &&
-	GIT_REPLACE_REF_BASE=refs/replace2/ git log --first-parent \
+	shit_REPLACE_REF_BASE=refs/replace2/ shit replace --graft HEAD HEAD~2 &&
+	shit_REPLACE_REF_BASE=refs/replace2/ shit log --first-parent \
 		--no-abbrev --decorate --oneline --color=always HEAD >actual &&
 	cmp_filtered_decorations
 '

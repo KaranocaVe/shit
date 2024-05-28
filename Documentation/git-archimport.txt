@@ -1,16 +1,16 @@
-git-archimport(1)
+shit-archimport(1)
 =================
 
 NAME
 ----
-git-archimport - Import a GNU Arch repository into Git
+shit-archimport - Import a GNU Arch repository into shit
 
 
 SYNOPSIS
 --------
 [verse]
-'git archimport' [-h] [-v] [-o] [-a] [-f] [-T] [-D <depth>] [-t <tempdir>]
-	       <archive>/<branch>[:<git-branch>]...
+'shit archimport' [-h] [-v] [-o] [-a] [-f] [-T] [-D <depth>] [-t <tempdir>]
+	       <archive>/<branch>[:<shit-branch>]...
 
 DESCRIPTION
 -----------
@@ -30,24 +30,24 @@ branches that have different roots, it will refuse to run. In that case,
 edit your <archive>/<branch> parameters to define clearly the scope of the
 import.
 
-'git archimport' uses `tla` extensively in the background to access the
+'shit archimport' uses `tla` extensively in the background to access the
 Arch repository.
 Make sure you have a recent version of `tla` available in the path. `tla` must
-know about the repositories you pass to 'git archimport'.
+know about the repositories you pass to 'shit archimport'.
 
-For the initial import, 'git archimport' expects to find itself in an empty
+For the initial import, 'shit archimport' expects to find itself in an empty
 directory. To follow the development of a project that uses Arch, rerun
-'git archimport' with the same parameters as the initial import to perform
+'shit archimport' with the same parameters as the initial import to perform
 incremental imports.
 
-While 'git archimport' will try to create sensible branch names for the
-archives that it imports, it is also possible to specify Git branch names
-manually.  To do so, write a Git branch name after each <archive>/<branch>
+While 'shit archimport' will try to create sensible branch names for the
+archives that it imports, it is also possible to specify shit branch names
+manually.  To do so, write a shit branch name after each <archive>/<branch>
 parameter, separated by a colon.  This way, you can shorten the Arch
-branch names and convert Arch jargon to Git jargon, for example mapping a
+branch names and convert Arch jargon to shit jargon, for example mapping a
 "PROJECT{litdd}devo{litdd}VERSION" branch to "master".
 
-Associating multiple Arch branches to one Git branch is possible; the
+Associating multiple Arch branches to one shit branch is possible; the
 result will make the most sense only if no commits are made to the first
 branch, after the second branch is created.  Still, this is useful to
 convert Arch repositories that had been rotated periodically.
@@ -55,14 +55,14 @@ convert Arch repositories that had been rotated periodically.
 
 MERGES
 ------
-Patch merge data from Arch is used to mark merges in Git as well. Git
+Patch merge data from Arch is used to mark merges in shit as well. shit
 does not care much about tracking patches, and only considers a merge when a
 branch incorporates all the commits since the point they forked. The end result
-is that Git will have a good idea of how far branches have diverged. So the
+is that shit will have a good idea of how far branches have diverged. So the
 import process does lose some patch-trading metadata.
 
 Fortunately, when you try and merge branches imported from Arch,
-Git will find a good merge base, and it has a good chance of identifying
+shit will find a good merge base, and it has a good chance of identifying
 patches that have been traded out-of-sequence between the branches.
 
 OPTIONS
@@ -85,7 +85,7 @@ OPTIONS
 
 -o::
 	Use this for compatibility with old-style branch names used by
-	earlier versions of 'git archimport'.  Old-style branch names
+	earlier versions of 'shit archimport'.  Old-style branch names
 	were category{litdd}branch, whereas new-style branch names are
 	archive,category{litdd}branch{litdd}version.  In both cases, names given
 	on the command-line will override the automatically-generated
@@ -108,6 +108,6 @@ OPTIONS
 	<archive>/<branch> identifier in a format that `tla log` understands.
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

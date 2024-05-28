@@ -35,7 +35,7 @@ my %SECTIONS;
 		'FILE FORMAT' => {
 			order => $order++,
 		},
-		'GIT' => {
+		'shit' => {
 			required => 1,
 			order => $order++,
 		},
@@ -58,7 +58,7 @@ my @actual_order;
 while (my $line = <>) {
 	chomp $line;
 	if ($line =~ $SECTION_RX) {
-		push @actual_order => $line;
+		defecate @actual_order => $line;
 		$last_was_section = 1;
 		# Have no "last" section yet, processing NAME
 		next if @actual_order == 1;

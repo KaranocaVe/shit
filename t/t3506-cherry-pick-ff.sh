@@ -2,25 +2,25 @@
 
 test_description='test cherry-picking with --ff option'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success setup '
 	echo first > file1 &&
-	git add file1 &&
+	shit add file1 &&
 	test_tick &&
-	git commit -m "first" &&
-	git tag first &&
+	shit commit -m "first" &&
+	shit tag first &&
 
-	git checkout -b other &&
+	shit checkout -b other &&
 	echo second >> file1 &&
-	git add file1 &&
+	shit add file1 &&
 	test_tick &&
-	git commit -m "second" &&
-	git tag second &&
+	shit commit -m "second" &&
+	shit tag second &&
 	test_oid_cache <<-EOF
 	cp_ff sha1:1df192cd8bc58a2b275d842cede4d221ad9000d1
 	cp_ff sha256:e70d6b7fc064bddb516b8d512c9057094b96ce6ff08e12080acc4fe7f1d60a1d
@@ -28,19 +28,19 @@ test_expect_success setup '
 '
 
 test_expect_success 'cherry-pick using --ff fast forwards' '
-	git checkout main &&
-	git reset --hard first &&
+	shit checkout main &&
+	shit reset --hard first &&
 	test_tick &&
-	git cherry-pick --ff second &&
-	test "$(git rev-parse --verify HEAD)" = "$(git rev-parse --verify second)"
+	shit cherry-pick --ff second &&
+	test "$(shit rev-parse --verify HEAD)" = "$(shit rev-parse --verify second)"
 '
 
 test_expect_success 'cherry-pick not using --ff does not fast forwards' '
-	git checkout main &&
-	git reset --hard first &&
+	shit checkout main &&
+	shit reset --hard first &&
 	test_tick &&
-	git cherry-pick second &&
-	test "$(git rev-parse --verify HEAD)" != "$(git rev-parse --verify second)"
+	shit cherry-pick second &&
+	test "$(shit rev-parse --verify HEAD)" != "$(shit rev-parse --verify second)"
 '
 
 #
@@ -53,71 +53,71 @@ test_expect_success 'cherry-pick not using --ff does not fast forwards' '
 # (This has been taken from t3502-cherry-pick-merge.sh)
 #
 test_expect_success 'merge setup' '
-	git checkout main &&
-	git reset --hard first &&
+	shit checkout main &&
+	shit reset --hard first &&
 	echo new line >A &&
-	git add A &&
+	shit add A &&
 	test_tick &&
-	git commit -m "add line to A" A &&
-	git tag A &&
-	git checkout -b side first &&
+	shit commit -m "add line to A" A &&
+	shit tag A &&
+	shit checkout -b side first &&
 	echo new line >B &&
-	git add B &&
+	shit add B &&
 	test_tick &&
-	git commit -m "add line to B" B &&
-	git tag B &&
-	git checkout main &&
-	git merge side &&
-	git tag C &&
-	git checkout -b new A
+	shit commit -m "add line to B" B &&
+	shit tag B &&
+	shit checkout main &&
+	shit merge side &&
+	shit tag C &&
+	shit checkout -b new A
 '
 
 test_expect_success 'cherry-pick explicit first parent of a non-merge with --ff' '
-	git reset --hard A -- &&
-	git cherry-pick --ff -m 1 B &&
-	git diff --exit-code C --
+	shit reset --hard A -- &&
+	shit cherry-pick --ff -m 1 B &&
+	shit diff --exit-code C --
 '
 
 test_expect_success 'cherry pick a merge with --ff but without -m should fail' '
-	git reset --hard A -- &&
-	test_must_fail git cherry-pick --ff C &&
-	git diff --exit-code A --
+	shit reset --hard A -- &&
+	test_must_fail shit cherry-pick --ff C &&
+	shit diff --exit-code A --
 '
 
 test_expect_success 'cherry pick with --ff a merge (1)' '
-	git reset --hard A -- &&
-	git cherry-pick --ff -m 1 C &&
-	git diff --exit-code C &&
-	test "$(git rev-parse --verify HEAD)" = "$(git rev-parse --verify C)"
+	shit reset --hard A -- &&
+	shit cherry-pick --ff -m 1 C &&
+	shit diff --exit-code C &&
+	test "$(shit rev-parse --verify HEAD)" = "$(shit rev-parse --verify C)"
 '
 
 test_expect_success 'cherry pick with --ff a merge (2)' '
-	git reset --hard B -- &&
-	git cherry-pick --ff -m 2 C &&
-	git diff --exit-code C &&
-	test "$(git rev-parse --verify HEAD)" = "$(git rev-parse --verify C)"
+	shit reset --hard B -- &&
+	shit cherry-pick --ff -m 2 C &&
+	shit diff --exit-code C &&
+	test "$(shit rev-parse --verify HEAD)" = "$(shit rev-parse --verify C)"
 '
 
 test_expect_success 'cherry pick a merge relative to nonexistent parent with --ff should fail' '
-	git reset --hard B -- &&
-	test_must_fail git cherry-pick --ff -m 3 C
+	shit reset --hard B -- &&
+	test_must_fail shit cherry-pick --ff -m 3 C
 '
 
 test_expect_success 'cherry pick a root commit with --ff' '
-	git reset --hard first -- &&
-	git rm file1 &&
+	shit reset --hard first -- &&
+	shit rm file1 &&
 	echo first >file2 &&
-	git add file2 &&
-	git commit --amend -m "file2" &&
-	git cherry-pick --ff first &&
-	test "$(git rev-parse --verify HEAD)" = "$(test_oid cp_ff)"
+	shit add file2 &&
+	shit commit --amend -m "file2" &&
+	shit cherry-pick --ff first &&
+	test "$(shit rev-parse --verify HEAD)" = "$(test_oid cp_ff)"
 '
 
 test_expect_success 'cherry-pick --ff on unborn branch' '
-	git checkout --orphan unborn &&
-	git rm --cached -r . &&
+	shit checkout --orphan unborn &&
+	shit rm --cached -r . &&
 	rm -rf * &&
-	git cherry-pick --ff first &&
+	shit cherry-pick --ff first &&
 	test_cmp_rev first HEAD
 '
 

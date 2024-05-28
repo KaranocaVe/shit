@@ -1,15 +1,15 @@
 help.browser::
 	Specify the browser that will be used to display help in the
-	'web' format. See linkgit:git-help[1].
+	'web' format. See linkshit:shit-help[1].
 
 help.format::
-	Override the default help format used by linkgit:git-help[1].
+	Override the default help format used by linkshit:shit-help[1].
 	Values 'man', 'info', 'web' and 'html' are supported. 'man' is
 	the default. 'web' and 'html' are the same.
 
 help.autoCorrect::
-	If git detects typos and can identify exactly one valid command similar
-	to the error, git will try to suggest the correct command or even
+	If shit detects typos and can identify exactly one valid command similar
+	to the error, shit will try to suggest the correct command or even
 	run the suggestion automatically. Possible config values are:
 	 - 0 (default): show the suggested command.
 	 - positive number: run the suggested command after specified
@@ -23,4 +23,4 @@ help.htmlPath::
 	Specify the path where the HTML documentation resides. File system paths
 	and URLs are supported. HTML pages will be prefixed with this path when
 	help is displayed in the 'web' format. This defaults to the documentation
-	path of your Git installation.
+	path of your shit installation.

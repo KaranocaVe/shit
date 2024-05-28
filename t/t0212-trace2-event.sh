@@ -6,33 +6,33 @@ TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 # Turn off any inherited trace2 settings for this test.
-sane_unset GIT_TRACE2 GIT_TRACE2_PERF GIT_TRACE2_EVENT
-sane_unset GIT_TRACE2_BARE
-sane_unset GIT_TRACE2_CONFIG_PARAMS
+sane_unset shit_TRACE2 shit_TRACE2_PERF shit_TRACE2_EVENT
+sane_unset shit_TRACE2_BARE
+sane_unset shit_TRACE2_CONFIG_PARAMS
 
 perl -MJSON::PP -e 0 >/dev/null 2>&1 && test_set_prereq JSON_PP
 
 # Add t/helper directory to PATH so that we can use a relative
 # path to run nested instances of test-tool.exe (see 004child).
 # This helps with HEREDOC comparisons later.
-TTDIR="$GIT_BUILD_DIR/t/helper/" && export TTDIR
+TTDIR="$shit_BUILD_DIR/t/helper/" && export TTDIR
 PATH="$TTDIR:$PATH" && export PATH
 
-# Warning: use of 'test_cmp' may run test-tool.exe and/or git.exe
+# Warning: use of 'test_cmp' may run test-tool.exe and/or shit.exe
 # Warning: to do the actual diff/comparison, so the HEREDOCs here
-# Warning: only cover our actual calls to test-tool and/or git.
+# Warning: only cover our actual calls to test-tool and/or shit.
 # Warning: So you may see extra lines in artifact files when
 # Warning: interactively debugging.
 
-V=$(git version | sed -e 's/^git version //') && export V
+V=$(shit version | sed -e 's/^shit version //') && export V
 
 # There are multiple trace2 targets: normal, perf, and event.
 # Trace2 events will/can be written to each active target (subject
 # to whatever filtering that target decides to do).
 # Test each target independently.
 #
-# Defer setting GIT_TRACE2_PERF until the actual command we want to
-# test because hidden git and test-tool commands in the test
+# Defer setting shit_TRACE2_PERF until the actual command we want to
+# test because hidden shit and test-tool commands in the test
 # harness can contaminate our output.
 
 # We don't bother repeating the 001return and 002exit tests, since they
@@ -44,7 +44,7 @@ V=$(git version | sed -e 's/^git version //') && export V
 
 test_expect_success JSON_PP 'event stream, error event' '
 	test_when_finished "rm trace.event actual expect" &&
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" test-tool trace2 003error "hello world" "this is a test" &&
+	shit_TRACE2_EVENT="$(pwd)/trace.event" test-tool trace2 003error "hello world" "this is a test" &&
 	perl "$TEST_DIRECTORY/t0212/parse_events.perl" <trace.event >actual &&
 	sed -e "s/^|//" >expect <<-EOF &&
 	|VAR1 = {
@@ -81,7 +81,7 @@ test_expect_success JSON_PP 'event stream, error event' '
 
 test_expect_success JSON_PP 'event stream, return code 0' '
 	test_when_finished "rm trace.event actual expect" &&
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" test-tool trace2 004child test-tool trace2 004child test-tool trace2 001return 0 &&
+	shit_TRACE2_EVENT="$(pwd)/trace.event" test-tool trace2 004child test-tool trace2 004child test-tool trace2 001return 0 &&
 	perl "$TEST_DIRECTORY/t0212/parse_events.perl" <trace.event >actual &&
 	sed -e "s/^|//" >expect <<-EOF &&
 	|VAR1 = {
@@ -168,9 +168,9 @@ test_expect_success JSON_PP 'event stream, return code 0' '
 
 test_expect_success JSON_PP 'event stream, list config' '
 	test_when_finished "rm trace.event actual expect" &&
-	git config --local t0212.abc 1 &&
-	git config --local t0212.def "hello world" &&
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" GIT_TRACE2_CONFIG_PARAMS="t0212.*" test-tool trace2 001return 0 &&
+	shit config --local t0212.abc 1 &&
+	shit config --local t0212.def "hello world" &&
+	shit_TRACE2_EVENT="$(pwd)/trace.event" shit_TRACE2_CONFIG_PARAMS="t0212.*" test-tool trace2 001return 0 &&
 	perl "$TEST_DIRECTORY/t0212/parse_events.perl" <trace.event >actual &&
 	sed -e "s/^|//" >expect <<-EOF &&
 	|VAR1 = {
@@ -205,8 +205,8 @@ test_expect_success JSON_PP 'event stream, list config' '
 
 test_expect_success JSON_PP 'event stream, list env vars' '
 	test_when_finished "rm trace.event actual expect" &&
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" \
-		GIT_TRACE2_ENV_VARS="A_VAR,OTHER_VAR,MISSING" \
+	shit_TRACE2_EVENT="$(pwd)/trace.event" \
+		shit_TRACE2_ENV_VARS="A_VAR,OTHER_VAR,MISSING" \
 		A_VAR=1 OTHER_VAR="hello world" test-tool trace2 001return 0 &&
 	perl "$TEST_DIRECTORY/t0212/parse_events.perl" <trace.event >actual &&
 	sed -e "s/^|//" >expect <<-EOF &&
@@ -240,7 +240,7 @@ test_expect_success JSON_PP 'event stream, list env vars' '
 
 test_expect_success JSON_PP 'basic trace2_data' '
 	test_when_finished "rm trace.event actual expect" &&
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" test-tool trace2 006data test_category k1 v1 test_category k2 v2 &&
+	shit_TRACE2_EVENT="$(pwd)/trace.event" test-tool trace2 006data test_category k1 v1 test_category k2 v2 &&
 	perl "$TEST_DIRECTORY/t0212/parse_events.perl" <trace.event >actual &&
 	sed -e "s/^|//" >expect <<-EOF &&
 	|VAR1 = {
@@ -308,22 +308,22 @@ test_expect_success 'discard traces when there are too many files' '
 	mkdir trace_target_dir &&
 	test_when_finished "rm -r trace_target_dir" &&
 	(
-		GIT_TRACE2_MAX_FILES=5 &&
-		export GIT_TRACE2_MAX_FILES &&
+		shit_TRACE2_MAX_FILES=5 &&
+		export shit_TRACE2_MAX_FILES &&
 		cd trace_target_dir &&
-		test_seq $GIT_TRACE2_MAX_FILES >../expected_filenames.txt &&
+		test_seq $shit_TRACE2_MAX_FILES >../expected_filenames.txt &&
 		xargs touch <../expected_filenames.txt &&
 		cd .. &&
-		GIT_TRACE2_EVENT="$(pwd)/trace_target_dir" test-tool trace2 001return 0
+		shit_TRACE2_EVENT="$(pwd)/trace_target_dir" test-tool trace2 001return 0
 	) &&
-	echo git-trace2-discard >>expected_filenames.txt &&
+	echo shit-trace2-discard >>expected_filenames.txt &&
 	ls trace_target_dir >ls_output.txt &&
 	test_cmp expected_filenames.txt ls_output.txt &&
-	head -n1 trace_target_dir/git-trace2-discard | grep \"event\":\"version\" &&
-	head -n2 trace_target_dir/git-trace2-discard | tail -n1 | grep \"event\":\"too_many_files\"
+	head -n1 trace_target_dir/shit-trace2-discard | grep \"event\":\"version\" &&
+	head -n2 trace_target_dir/shit-trace2-discard | tail -n1 | grep \"event\":\"too_many_files\"
 '
 
-# In the following "...redact..." tests, skip testing the GIT_TRACE2_REDACT=0
+# In the following "...redact..." tests, skip testing the shit_TRACE2_REDACT=0
 # case because we would need to exactly model the full JSON event stream like
 # we did in the basic tests above and I do not think it is worth it.
 
@@ -331,8 +331,8 @@ test_expect_success 'unsafe URLs are redacted by default in cmd_start events' '
 	test_when_finished \
 		"rm -r trace.event" &&
 
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" \
-		test-tool trace2 300redact_start git clone https://user:pwd@example.com/ clone2 &&
+	shit_TRACE2_EVENT="$(pwd)/trace.event" \
+		test-tool trace2 300redact_start shit clone https://user:pwd@example.com/ clone2 &&
 	! grep user:pwd trace.event
 '
 
@@ -340,8 +340,8 @@ test_expect_success 'unsafe URLs are redacted by default in child_start events' 
 	test_when_finished \
 		"rm -r trace.event" &&
 
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" \
-		test-tool trace2 301redact_child_start git clone https://user:pwd@example.com/ clone2 &&
+	shit_TRACE2_EVENT="$(pwd)/trace.event" \
+		test-tool trace2 301redact_child_start shit clone https://user:pwd@example.com/ clone2 &&
 	! grep user:pwd trace.event
 '
 
@@ -349,8 +349,8 @@ test_expect_success 'unsafe URLs are redacted by default in exec events' '
 	test_when_finished \
 		"rm -r trace.event" &&
 
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" \
-		test-tool trace2 302redact_exec git clone https://user:pwd@example.com/ clone2 &&
+	shit_TRACE2_EVENT="$(pwd)/trace.event" \
+		test-tool trace2 302redact_exec shit clone https://user:pwd@example.com/ clone2 &&
 	! grep user:pwd trace.event
 '
 
@@ -358,7 +358,7 @@ test_expect_success 'unsafe URLs are redacted by default in def_param events' '
 	test_when_finished \
 		"rm -r trace.event" &&
 
-	GIT_TRACE2_EVENT="$(pwd)/trace.event" \
+	shit_TRACE2_EVENT="$(pwd)/trace.event" \
 		test-tool trace2 303redact_def_param url https://user:pwd@example.com/ &&
 	! grep user:pwd trace.event
 '

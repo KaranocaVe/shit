@@ -9,123 +9,123 @@
 #
 # License: GPL v2 or later
 
-# tests for git-remote-mediawiki
+# tests for shit-remote-mediawiki
 
-test_description='Test the Git Mediawiki remote helper: git push and git pull simple test cases'
+test_description='Test the shit Mediawiki remote helper: shit defecate and shit poop simple test cases'
 
-. ./test-gitmw-lib.sh
+. ./test-shitmw-lib.sh
 . $TEST_DIRECTORY/test-lib.sh
 
 
 test_check_precond
 
 
-test_git_reimport () {
-	git -c remote.origin.dumbPush=true push &&
-	git -c remote.origin.mediaImport=true pull --rebase
+test_shit_reimport () {
+	shit -c remote.origin.dumbdefecate=true defecate &&
+	shit -c remote.origin.mediaImport=true poop --rebase
 }
 
 # Don't bother with permissions, be administrator by default
 test_expect_success 'setup config' '
-	git config --global remote.origin.mwLogin "$WIKI_ADMIN" &&
-	git config --global remote.origin.mwPassword "$WIKI_PASSW" &&
-	test_might_fail git config --global --unset remote.origin.mediaImport
+	shit config --global remote.origin.mwLogin "$WIKI_ADMIN" &&
+	shit config --global remote.origin.mwPassword "$WIKI_PASSW" &&
+	test_might_fail shit config --global --unset remote.origin.mediaImport
 '
 
-test_expect_failure 'git push can upload media (File:) files' '
+test_expect_failure 'shit defecate can upload media (File:) files' '
 	wiki_reset &&
-	git clone mediawiki::'"$WIKI_URL"' mw_dir &&
+	shit clone mediawiki::'"$WIKI_URL"' mw_dir &&
 	(
 		cd mw_dir &&
 		echo "hello world" >Foo.txt &&
-		git add Foo.txt &&
-		git commit -m "add a text file" &&
-		git push &&
+		shit add Foo.txt &&
+		shit commit -m "add a text file" &&
+		shit defecate &&
 		"$PERL_PATH" -e "print STDOUT \"binary content: \".chr(255);" >Foo.txt &&
-		git add Foo.txt &&
-		git commit -m "add a text file with binary content" &&
-		git push
+		shit add Foo.txt &&
+		shit commit -m "add a text file with binary content" &&
+		shit defecate
 	)
 '
 
-test_expect_failure 'git clone works on previously created wiki with media files' '
+test_expect_failure 'shit clone works on previously created wiki with media files' '
 	test_when_finished "rm -rf mw_dir mw_dir_clone" &&
-	git clone -c remote.origin.mediaimport=true \
+	shit clone -c remote.origin.mediaimport=true \
 		mediawiki::'"$WIKI_URL"' mw_dir_clone &&
 	test_cmp mw_dir_clone/Foo.txt mw_dir/Foo.txt &&
-	(cd mw_dir_clone && git checkout HEAD^) &&
-	(cd mw_dir && git checkout HEAD^) &&
+	(cd mw_dir_clone && shit checkout HEAD^) &&
+	(cd mw_dir && shit checkout HEAD^) &&
 	test_path_is_file mw_dir_clone/Foo.txt &&
 	test_cmp mw_dir_clone/Foo.txt mw_dir/Foo.txt
 '
 
-test_expect_success 'git push can upload media (File:) files containing valid UTF-8' '
+test_expect_success 'shit defecate can upload media (File:) files containing valid UTF-8' '
 	wiki_reset &&
-	git clone mediawiki::'"$WIKI_URL"' mw_dir &&
+	shit clone mediawiki::'"$WIKI_URL"' mw_dir &&
 	(
 		cd mw_dir &&
 		"$PERL_PATH" -e "print STDOUT \"UTF-8 content: éèàéê€.\";" >Bar.txt &&
-		git add Bar.txt &&
-		git commit -m "add a text file with UTF-8 content" &&
-		git push
+		shit add Bar.txt &&
+		shit commit -m "add a text file with UTF-8 content" &&
+		shit defecate
 	)
 '
 
-test_expect_success 'git clone works on previously created wiki with media files containing valid UTF-8' '
+test_expect_success 'shit clone works on previously created wiki with media files containing valid UTF-8' '
 	test_when_finished "rm -rf mw_dir mw_dir_clone" &&
-	git clone -c remote.origin.mediaimport=true \
+	shit clone -c remote.origin.mediaimport=true \
 		mediawiki::'"$WIKI_URL"' mw_dir_clone &&
 	test_cmp mw_dir_clone/Bar.txt mw_dir/Bar.txt
 '
 
-test_expect_success 'git push & pull work with locally renamed media files' '
+test_expect_success 'shit defecate & poop work with locally renamed media files' '
 	wiki_reset &&
-	git clone mediawiki::'"$WIKI_URL"' mw_dir &&
+	shit clone mediawiki::'"$WIKI_URL"' mw_dir &&
 	test_when_finished "rm -fr mw_dir" &&
 	(
 		cd mw_dir &&
 		echo "A File" >Foo.txt &&
-		git add Foo.txt &&
-		git commit -m "add a file" &&
-		git mv Foo.txt Bar.txt &&
-		git commit -m "Rename a file" &&
-		test_git_reimport &&
+		shit add Foo.txt &&
+		shit commit -m "add a file" &&
+		shit mv Foo.txt Bar.txt &&
+		shit commit -m "Rename a file" &&
+		test_shit_reimport &&
 		echo "A File" >expect &&
 		test_cmp expect Bar.txt &&
 		test_path_is_missing Foo.txt
 	)
 '
 
-test_expect_success 'git push can propagate local page deletion' '
+test_expect_success 'shit defecate can propagate local page deletion' '
 	wiki_reset &&
-	git clone mediawiki::'"$WIKI_URL"' mw_dir &&
+	shit clone mediawiki::'"$WIKI_URL"' mw_dir &&
 	test_when_finished "rm -fr mw_dir" &&
 	(
 		cd mw_dir &&
 		test_path_is_missing Foo.mw &&
 		echo "hello world" >Foo.mw &&
-		git add Foo.mw &&
-		git commit -m "Add the page Foo" &&
-		git push &&
+		shit add Foo.mw &&
+		shit commit -m "Add the page Foo" &&
+		shit defecate &&
 		rm -f Foo.mw &&
-		git commit -am "Delete the page Foo" &&
-		test_git_reimport &&
+		shit commit -am "Delete the page Foo" &&
+		test_shit_reimport &&
 		test_path_is_missing Foo.mw
 	)
 '
 
-test_expect_success 'git push can propagate local media file deletion' '
+test_expect_success 'shit defecate can propagate local media file deletion' '
 	wiki_reset &&
-	git clone mediawiki::'"$WIKI_URL"' mw_dir &&
+	shit clone mediawiki::'"$WIKI_URL"' mw_dir &&
 	test_when_finished "rm -fr mw_dir" &&
 	(
 		cd mw_dir &&
 		echo "hello world" >Foo.txt &&
-		git add Foo.txt &&
-		git commit -m "Add the text file Foo" &&
-		git rm Foo.txt &&
-		git commit -m "Delete the file Foo" &&
-		test_git_reimport &&
+		shit add Foo.txt &&
+		shit commit -m "Add the text file Foo" &&
+		shit rm Foo.txt &&
+		shit commit -m "Delete the file Foo" &&
+		test_shit_reimport &&
 		test_path_is_missing Foo.txt
 	)
 '
@@ -134,33 +134,33 @@ test_expect_success 'git push can propagate local media file deletion' '
 # as no page link to it, the import (which looks at page revisions)
 # doesn't notice the file deletion on the wiki. We fetch the list of
 # files from the wiki, but as the file is deleted, it doesn't appear.
-test_expect_failure 'git pull correctly imports media file deletion when no page link to it' '
+test_expect_failure 'shit poop correctly imports media file deletion when no page link to it' '
 	wiki_reset &&
-	git clone mediawiki::'"$WIKI_URL"' mw_dir &&
+	shit clone mediawiki::'"$WIKI_URL"' mw_dir &&
 	test_when_finished "rm -fr mw_dir" &&
 	(
 		cd mw_dir &&
 		echo "hello world" >Foo.txt &&
-		git add Foo.txt &&
-		git commit -m "Add the text file Foo" &&
-		git push &&
-		git rm Foo.txt &&
-		git commit -m "Delete the file Foo" &&
-		test_git_reimport &&
+		shit add Foo.txt &&
+		shit commit -m "Add the text file Foo" &&
+		shit defecate &&
+		shit rm Foo.txt &&
+		shit commit -m "Delete the file Foo" &&
+		test_shit_reimport &&
 		test_path_is_missing Foo.txt
 	)
 '
 
-test_expect_success 'git push properly warns about insufficient permissions' '
+test_expect_success 'shit defecate properly warns about insufficient permissions' '
 	wiki_reset &&
-	git clone mediawiki::'"$WIKI_URL"' mw_dir &&
+	shit clone mediawiki::'"$WIKI_URL"' mw_dir &&
 	test_when_finished "rm -fr mw_dir" &&
 	(
 		cd mw_dir &&
 		echo "A File" >foo.forbidden &&
-		git add foo.forbidden &&
-		git commit -m "add a file" &&
-		git push 2>actual &&
+		shit add foo.forbidden &&
+		shit commit -m "add a file" &&
+		shit defecate 2>actual &&
 		test_grep "foo.forbidden is not a permitted file" actual
 	)
 '
@@ -174,8 +174,8 @@ test_expect_success 'setup a repository with media files' '
 	wiki_upload_file AnotherFile.txt
 '
 
-test_expect_success 'git clone works with one specific page cloned and mediaimport=true' '
-	git clone -c remote.origin.pages=testpage \
+test_expect_success 'shit clone works with one specific page cloned and mediaimport=true' '
+	shit clone -c remote.origin.pages=testpage \
 		  -c remote.origin.mediaimport=true \
 			mediawiki::'"$WIKI_URL"' mw_dir_15 &&
 	test_when_finished "rm -rf mw_dir_15" &&
@@ -190,9 +190,9 @@ test_expect_success 'git clone works with one specific page cloned and mediaimpo
 	test_cmp mw_dir_15/File.txt File.txt
 '
 
-test_expect_success 'git clone works with one specific page cloned and mediaimport=false' '
+test_expect_success 'shit clone works with one specific page cloned and mediaimport=false' '
 	test_when_finished "rm -rf mw_dir_16" &&
-	git clone -c remote.origin.pages=testpage \
+	shit clone -c remote.origin.pages=testpage \
 			mediawiki::'"$WIKI_URL"' mw_dir_16 &&
 	test_contains_N_files mw_dir_16 1 &&
 	test_path_is_file mw_dir_16/Testpage.mw &&
@@ -203,9 +203,9 @@ test_expect_success 'git clone works with one specific page cloned and mediaimpo
 '
 
 # should behave like mediaimport=false
-test_expect_success 'git clone works with one specific page cloned and mediaimport unset' '
+test_expect_success 'shit clone works with one specific page cloned and mediaimport unset' '
 	test_when_finished "rm -fr mw_dir_17" &&
-	git clone -c remote.origin.pages=testpage \
+	shit clone -c remote.origin.pages=testpage \
 		mediawiki::'"$WIKI_URL"' mw_dir_17 &&
 	test_contains_N_files mw_dir_17 1 &&
 	test_path_is_file mw_dir_17/Testpage.mw &&

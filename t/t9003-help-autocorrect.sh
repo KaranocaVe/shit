@@ -7,65 +7,65 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success 'setup' '
 	# An alias
-	git config alias.lgf "log --format=%s --first-parent" &&
+	shit config alias.lgf "log --format=%s --first-parent" &&
 
 	# A random user-defined command
-	write_script git-distimdistim <<-EOF &&
+	write_script shit-distimdistim <<-EOF &&
 		echo distimdistim was called
 	EOF
 
 	PATH="$PATH:." &&
 	export PATH &&
 
-	git commit --allow-empty -m "a single log entry" &&
+	shit commit --allow-empty -m "a single log entry" &&
 
 	# Sanity check
-	git lgf >actual &&
+	shit lgf >actual &&
 	echo "a single log entry" >expect &&
 	test_cmp expect actual &&
 
-	git distimdistim >actual &&
+	shit distimdistim >actual &&
 	echo "distimdistim was called" >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'autocorrect showing candidates' '
-	git config help.autocorrect 0 &&
+	shit config help.autocorrect 0 &&
 
-	test_must_fail git lfg 2>actual &&
+	test_must_fail shit lfg 2>actual &&
 	grep "^	lgf" actual &&
 
-	test_must_fail git distimdist 2>actual &&
+	test_must_fail shit distimdist 2>actual &&
 	grep "^	distimdistim" actual
 '
 
 for immediate in -1 immediate
 do
 	test_expect_success 'autocorrect running commands' '
-		git config help.autocorrect $immediate &&
+		shit config help.autocorrect $immediate &&
 
-		git lfg >actual &&
+		shit lfg >actual &&
 		echo "a single log entry" >expect &&
 		test_cmp expect actual &&
 
-		git distimdist >actual &&
+		shit distimdist >actual &&
 		echo "distimdistim was called" >expect &&
 		test_cmp expect actual
 	'
 done
 
 test_expect_success 'autocorrect can be declined altogether' '
-	git config help.autocorrect never &&
+	shit config help.autocorrect never &&
 
-	test_must_fail git lfg 2>actual &&
-	grep "is not a git command" actual &&
+	test_must_fail shit lfg 2>actual &&
+	grep "is not a shit command" actual &&
 	test_line_count = 1 actual
 '
 
 test_expect_success 'autocorrect works in work tree created from bare repo' '
-	git clone --bare . bare.git &&
-	git -C bare.git worktree add ../worktree &&
-	git -C worktree -c help.autocorrect=immediate stauts
+	shit clone --bare . bare.shit &&
+	shit -C bare.shit worktree add ../worktree &&
+	shit -C worktree -c help.autocorrect=immediate stauts
 '
 
 test_done

@@ -100,7 +100,7 @@ static void write_table(char ***names, struct strbuf *buf, int N,
 		int off = i * opts.block_size;
 		if (off == 0) {
 			off = header_size(
-				(hash_id == GIT_SHA256_FORMAT_ID) ? 2 : 1);
+				(hash_id == shit_SHA256_FORMAT_ID) ? 2 : 1);
 		}
 		EXPECT(buf->buf[off] == 'r');
 	}
@@ -134,9 +134,9 @@ static void test_log_buffer_size(void)
 	/* This tests buffer extension for log compression. Must use a random
 	   hash, to ensure that the compressed part is larger than the original.
 	*/
-	for (i = 0; i < GIT_SHA1_RAWSZ; i++) {
-		log.value.update.old_hash[i] = (uint8_t)(git_rand() % 256);
-		log.value.update.new_hash[i] = (uint8_t)(git_rand() % 256);
+	for (i = 0; i < shit_SHA1_RAWSZ; i++) {
+		log.value.update.old_hash[i] = (uint8_t)(shit_rand() % 256);
+		log.value.update.new_hash[i] = (uint8_t)(shit_rand() % 256);
 	}
 	reftable_writer_set_limits(w, update_index, update_index);
 	err = reftable_writer_add_log(w, &log);
@@ -307,7 +307,7 @@ static void test_log_zlib_corruption(void)
 	};
 
 	for (i = 0; i < sizeof(message) - 1; i++)
-		message[i] = (uint8_t)(git_rand() % 64 + ' ');
+		message[i] = (uint8_t)(shit_rand() % 64 + ' ');
 
 	reftable_writer_set_limits(w, 1, 1);
 
@@ -351,7 +351,7 @@ static void test_table_read_write_sequential(void)
 	int err = 0;
 	int j = 0;
 
-	write_table(&names, &buf, N, 256, GIT_SHA1_FORMAT_ID);
+	write_table(&names, &buf, N, 256, shit_SHA1_FORMAT_ID);
 
 	block_source_from_strbuf(&source, &buf);
 
@@ -387,7 +387,7 @@ static void test_table_write_small_table(void)
 	char **names;
 	struct strbuf buf = STRBUF_INIT;
 	int N = 1;
-	write_table(&names, &buf, N, 4096, GIT_SHA1_FORMAT_ID);
+	write_table(&names, &buf, N, 4096, shit_SHA1_FORMAT_ID);
 	EXPECT(buf.len < 200);
 	strbuf_release(&buf);
 	free_names(names);
@@ -405,7 +405,7 @@ static void test_table_read_api(void)
 	struct reftable_log_record log = { NULL };
 	struct reftable_iterator it = { NULL };
 
-	write_table(&names, &buf, N, 256, GIT_SHA1_FORMAT_ID);
+	write_table(&names, &buf, N, 256, shit_SHA1_FORMAT_ID);
 
 	block_source_from_strbuf(&source, &buf);
 
@@ -494,17 +494,17 @@ static void test_table_read_write_seek(int index, int hash_id)
 
 static void test_table_read_write_seek_linear(void)
 {
-	test_table_read_write_seek(0, GIT_SHA1_FORMAT_ID);
+	test_table_read_write_seek(0, shit_SHA1_FORMAT_ID);
 }
 
 static void test_table_read_write_seek_linear_sha256(void)
 {
-	test_table_read_write_seek(0, GIT_SHA256_FORMAT_ID);
+	test_table_read_write_seek(0, shit_SHA256_FORMAT_ID);
 }
 
 static void test_table_read_write_seek_index(void)
 {
-	test_table_read_write_seek(1, GIT_SHA1_FORMAT_ID);
+	test_table_read_write_seek(1, shit_SHA1_FORMAT_ID);
 }
 
 static void test_table_refs_for(int indexed)
@@ -512,7 +512,7 @@ static void test_table_refs_for(int indexed)
 	int N = 50;
 	char **want_names = reftable_calloc(N + 1, sizeof(*want_names));
 	int want_names_len = 0;
-	uint8_t want_hash[GIT_SHA1_RAWSZ];
+	uint8_t want_hash[shit_SHA1_RAWSZ];
 
 	struct reftable_write_options opts = {
 		.block_size = 256,
@@ -534,7 +534,7 @@ static void test_table_refs_for(int indexed)
 	set_test_hash(want_hash, 4);
 
 	for (i = 0; i < N; i++) {
-		uint8_t hash[GIT_SHA1_RAWSZ];
+		uint8_t hash[shit_SHA1_RAWSZ];
 		char fill[51] = { 0 };
 		char name[100];
 		struct reftable_ref_record ref = { NULL };
@@ -556,8 +556,8 @@ static void test_table_refs_for(int indexed)
 		n = reftable_writer_add_ref(w, &ref);
 		EXPECT(n == 0);
 
-		if (!memcmp(ref.value.val2.value, want_hash, GIT_SHA1_RAWSZ) ||
-		    !memcmp(ref.value.val2.target_value, want_hash, GIT_SHA1_RAWSZ)) {
+		if (!memcmp(ref.value.val2.value, want_hash, shit_SHA1_RAWSZ) ||
+		    !memcmp(ref.value.val2.target_value, want_hash, shit_SHA1_RAWSZ)) {
 			want_names[want_names_len++] = xstrdup(name);
 		}
 	}

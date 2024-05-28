@@ -1,1 +1,1 @@
-/* Intentionally empty file to support building git with MSVC */
+/* Intentionally empty file to support building shit with MSVC */

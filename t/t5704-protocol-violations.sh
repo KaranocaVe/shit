@@ -16,8 +16,8 @@ test_expect_success 'extra delim packet in v2 ls-refs args' '
 		# protocol expects 0000 flush here
 		printf 0001
 	} >input &&
-	test_must_fail env GIT_PROTOCOL=version=2 \
-		git upload-pack . <input 2>err &&
+	test_must_fail env shit_PROTOCOL=version=2 \
+		shit upload-pack . <input 2>err &&
 	test_grep "expected flush after ls-refs arguments" err
 '
 
@@ -29,22 +29,22 @@ test_expect_success 'extra delim packet in v2 fetch args' '
 		# protocol expects 0000 flush here
 		printf 0001
 	} >input &&
-	test_must_fail env GIT_PROTOCOL=version=2 \
-		git upload-pack . <input 2>err &&
+	test_must_fail env shit_PROTOCOL=version=2 \
+		shit upload-pack . <input 2>err &&
 	test_grep "expected flush after fetch arguments" err
 '
 
 test_expect_success 'bogus symref in v0 capabilities' '
 	test_commit foo &&
-	oid=$(git rev-parse HEAD) &&
+	oid=$(shit rev-parse HEAD) &&
 	dst=refs/heads/foo &&
 	{
 		printf "%s HEAD\0symref object-format=%s symref=HEAD:%s\n" \
-			"$oid" "$GIT_DEFAULT_HASH" "$dst" |
+			"$oid" "$shit_DEFAULT_HASH" "$dst" |
 			test-tool pkt-line pack-raw-stdin &&
 		printf "0000"
 	} >input &&
-	git ls-remote --symref --upload-pack="cat input; read junk;:" . >actual &&
+	shit ls-remote --symref --upload-pack="cat input; read junk;:" . >actual &&
 	printf "ref: %s\tHEAD\n%s\tHEAD\n" "$dst" "$oid" >expect &&
 	test_cmp expect actual
 '

@@ -2,18 +2,18 @@
 
 test_description='merge simplification'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 note () {
-	git tag "$1"
+	shit tag "$1"
 }
 
 unnote () {
 	test_when_finished "rm -f tmp" &&
-	git name-rev --tags --annotate-stdin >tmp &&
+	shit name-rev --tags --annotate-stdin >tmp &&
 	sed -e "s|$OID_REGEX (tags/\([^)]*\)) |\1 |g" <tmp
 }
 
@@ -35,69 +35,69 @@ unnote () {
 test_expect_success setup '
 	echo "Hi there" >file &&
 	echo "initial" >lost &&
-	git add file lost &&
-	test_tick && git commit -m "Initial file and lost" &&
+	shit add file lost &&
+	test_tick && shit commit -m "Initial file and lost" &&
 	note A &&
 
-	git branch other-branch &&
+	shit branch other-branch &&
 
-	git symbolic-ref HEAD refs/heads/unrelated &&
-	git rm -f "*" &&
+	shit symbolic-ref HEAD refs/heads/unrelated &&
+	shit rm -f "*" &&
 	echo "Unrelated branch" >side &&
-	git add side &&
-	test_tick && git commit -m "Side root" &&
+	shit add side &&
+	test_tick && shit commit -m "Side root" &&
 	note J &&
-	git checkout main &&
+	shit checkout main &&
 
 	echo "Hello" >file &&
 	echo "second" >lost &&
-	git add file lost &&
-	test_tick && GIT_AUTHOR_DATE=$(($test_tick + 120)) git commit -m "Modified file and lost" &&
+	shit add file lost &&
+	test_tick && shit_AUTHOR_DATE=$(($test_tick + 120)) shit commit -m "Modified file and lost" &&
 	note B &&
 
-	git checkout other-branch &&
+	shit checkout other-branch &&
 
 	echo "Hello" >file &&
 	>lost &&
-	git add file lost &&
-	test_tick && git commit -m "Modified the file identically" &&
+	shit add file lost &&
+	test_tick && shit commit -m "Modified the file identically" &&
 	note C &&
 
 	echo "This is a stupid example" >another-file &&
-	git add another-file &&
-	test_tick && git commit -m "Add another file" &&
+	shit add another-file &&
+	test_tick && shit commit -m "Add another file" &&
 	note D &&
 
 	test_tick &&
-	test_must_fail git merge -m "merge" main &&
-	>lost && git commit -a -m "merge" &&
+	test_must_fail shit merge -m "merge" main &&
+	>lost && shit commit -a -m "merge" &&
 	note E &&
 
 	echo "Yet another" >elif &&
-	git add elif &&
-	test_tick && git commit -m "Irrelevant change" &&
+	shit add elif &&
+	test_tick && shit commit -m "Irrelevant change" &&
 	note F &&
 
-	git checkout main &&
+	shit checkout main &&
 	echo "Yet another" >elif &&
-	git add elif &&
-	test_tick && git commit -m "Another irrelevant change" &&
+	shit add elif &&
+	test_tick && shit commit -m "Another irrelevant change" &&
 	note G &&
 
-	test_tick && git merge -m "merge" other-branch &&
+	test_tick && shit merge -m "merge" other-branch &&
 	note H &&
 
 	echo "Final change" >file &&
-	test_tick && git commit -a -m "Final change" &&
+	test_tick && shit commit -a -m "Final change" &&
 	note I &&
 
-	git checkout main &&
-	test_tick && git merge --allow-unrelated-histories -m "Coolest" unrelated &&
+	shit checkout main &&
+	test_tick && shit merge --allow-unrelated-histories -m "Coolest" unrelated &&
 	note K &&
 
 	echo "Immaterial" >elif &&
-	git add elif &&
-	test_tick && git commit -m "Last" &&
+	shit add elif &&
+	test_tick && shit commit -m "Last" &&
 	note L
 '
 
@@ -113,7 +113,7 @@ check_outcome () {
 	shift &&
 	param="$*" &&
 	test_expect_$outcome "log $param" '
-		git log --pretty="$FMT" --parents $param >out &&
+		shit log --pretty="$FMT" --parents $param >out &&
 		unnote >actual <out &&
 		sed -e "s/^.*	\([^ ]*\) .*/\1/" >check <actual &&
 		test_cmp expect check
@@ -153,20 +153,20 @@ check_result 'L K I H G B' --exclude-first-parent-only --first-parent L ^F
 check_result 'E C B A' --full-history E -- lost
 test_expect_success 'full history simplification without parent' '
 	printf "%s\n" E C B A >expect &&
-	git log --pretty="$FMT" --full-history E -- lost >out &&
+	shit log --pretty="$FMT" --full-history E -- lost >out &&
 	unnote >actual <out &&
 	sed -e "s/^.*	\([^ ]*\) .*/\1/" >check <actual &&
 	test_cmp expect check
 '
 
 test_expect_success '--full-diff is not affected by --parents' '
-	git log -p --pretty="%H" --full-diff -- file >expected &&
-	git log -p --pretty="%H" --full-diff --parents -- file >actual &&
+	shit log -p --pretty="%H" --full-diff -- file >expected &&
+	shit log -p --pretty="%H" --full-diff --parents -- file >actual &&
 	test_cmp expected actual
 '
 
 #
-# Create a new history to demonstrate the value of --show-pulls
+# Create a new history to demonstrate the value of --show-poops
 # with respect to the subtleties of simplified history, --full-history,
 # and --simplify-merges.
 #
@@ -180,80 +180,80 @@ test_expect_success '--full-diff is not affected by --parents' '
 # This example is explained in Documentation/rev-list-options.txt
 
 test_expect_success 'setup rebuild repo' '
-	rm -rf .git * &&
-	git init &&
-	git switch -c topic &&
+	rm -rf .shit * &&
+	shit init &&
+	shit switch -c topic &&
 
 	echo base >file &&
-	git add file &&
+	shit add file &&
 	test_commit I &&
 
 	echo A >file &&
-	git add file &&
+	shit add file &&
 	test_commit A &&
 
-	git switch -c branchB I &&
+	shit switch -c branchB I &&
 	echo B >file &&
-	git add file &&
+	shit add file &&
 	test_commit B &&
 
-	git switch topic &&
-	test_must_fail git merge -m "M" B &&
+	shit switch topic &&
+	test_must_fail shit merge -m "M" B &&
 	echo A >file &&
 	echo B >>file &&
-	git add file &&
-	git merge --continue &&
+	shit add file &&
+	shit merge --continue &&
 	note M &&
 
 	echo C >other &&
-	git add other &&
+	shit add other &&
 	test_commit C &&
 
-	git switch -c branchX I &&
+	shit switch -c branchX I &&
 	echo X >file &&
-	git add file &&
+	shit add file &&
 	test_commit X &&
 
-	git switch -c branchR M &&
-	git merge -m R -Xtheirs X &&
+	shit switch -c branchR M &&
+	shit merge -m R -Xtheirs X &&
 	note R &&
 
-	git switch topic &&
-	git merge -m N R &&
+	shit switch topic &&
+	shit merge -m N R &&
 	note N &&
 
-	git switch -c branchY M &&
+	shit switch -c branchY M &&
 	echo Y >y &&
-	git add y &&
+	shit add y &&
 	test_commit Y &&
 
-	git switch -c branchZ C &&
+	shit switch -c branchZ C &&
 	echo Z >z &&
-	git add z &&
+	shit add z &&
 	test_commit Z &&
 
-	git switch topic &&
-	git merge -m O Z &&
+	shit switch topic &&
+	shit merge -m O Z &&
 	note O &&
 
-	git merge -m P Y &&
+	shit merge -m P Y &&
 	note P
 '
 
 check_result 'X I' -- file
-check_result 'N R X I' --show-pulls -- file
+check_result 'N R X I' --show-poops -- file
 
 check_result 'P O N R X M B A I' --full-history --topo-order -- file
-check_result 'N R X M B A I' --simplify-merges --topo-order --show-pulls -- file
+check_result 'N R X M B A I' --simplify-merges --topo-order --show-poops -- file
 check_result 'R X M B A I' --simplify-merges --topo-order -- file
 check_result 'N M A I' --first-parent -- file
-check_result 'N M A I' --first-parent --show-pulls -- file
+check_result 'N M A I' --first-parent --show-poops -- file
 
 # --ancestry-path implies --full-history
 check_result 'P O N R M' --topo-order \
 	--ancestry-path A..HEAD -- file
 check_result 'P O N R M' --topo-order \
-	--show-pulls \
+	--show-poops \
 	--ancestry-path A..HEAD -- file
 check_result 'P O N R M' --topo-order \
 	--full-history \
@@ -262,10 +262,10 @@ check_result 'R M' --topo-order \
 	--simplify-merges \
 	--ancestry-path A..HEAD -- file
 check_result 'N R M' --topo-order \
-	--simplify-merges --show-pulls \
+	--simplify-merges --show-poops \
 	--ancestry-path A..HEAD -- file
 
-test_expect_success 'log --graph --simplify-merges --show-pulls' '
+test_expect_success 'log --graph --simplify-merges --show-poops' '
 	cat >expect <<-\EOF &&
 	* N
 	*   R
@@ -279,8 +279,8 @@ test_expect_success 'log --graph --simplify-merges --show-pulls' '
 	|/  
 	* I
 	EOF
-	git log --graph --pretty="%s" \
-		--simplify-merges --show-pulls \
+	shit log --graph --pretty="%s" \
+		--simplify-merges --show-poops \
 		-- file >actual &&
 	test_cmp expect actual
 '

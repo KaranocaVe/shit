@@ -11,7 +11,7 @@ EOF
 sed -n \
 	-e '/^~~~~*$/ {x; s/^.*$/	"&",/; p;}' \
 	-e 'x' \
-	<Documentation/githooks.txt |
+	<Documentation/shithooks.txt |
 	LC_ALL=C sort
 
 cat <<EOF

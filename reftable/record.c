@@ -259,7 +259,7 @@ static void reftable_ref_record_copy_from(void *rec, const void *src_rec,
 	}
 }
 
-static char hexdigit(int c)
+static char hexdishit(int c)
 {
 	if (c <= 9)
 		return '0' + c;
@@ -272,8 +272,8 @@ static void hex_format(char *dest, const unsigned char *src, int hash_size)
 	if (src) {
 		int i = 0;
 		for (i = 0; i < hash_size; i++) {
-			dest[2 * i] = hexdigit(src[i] >> 4);
-			dest[2 * i + 1] = hexdigit(src[i] & 0xf);
+			dest[2 * i] = hexdishit(src[i] >> 4);
+			dest[2 * i + 1] = hexdishit(src[i] & 0xf);
 		}
 		dest[2 * hash_size] = 0;
 	}
@@ -282,7 +282,7 @@ static void hex_format(char *dest, const unsigned char *src, int hash_size)
 static void reftable_ref_record_print_sz(const struct reftable_ref_record *ref,
 					 int hash_size)
 {
-	char hex[GIT_MAX_HEXSZ + 1] = { 0 }; /* BUG */
+	char hex[shit_MAX_HEXSZ + 1] = { 0 }; /* BUG */
 	printf("ref{%s(%" PRIu64 ") ", ref->refname, ref->update_index);
 	switch (ref->value_type) {
 	case REFTABLE_REF_SYMREF:
@@ -519,7 +519,7 @@ static void reftable_obj_record_release(void *rec)
 static void reftable_obj_record_print(const void *rec, int hash_size)
 {
 	const struct reftable_obj_record *obj = rec;
-	char hex[GIT_MAX_HEXSZ + 1] = { 0 };
+	char hex[shit_MAX_HEXSZ + 1] = { 0 };
 	struct strbuf offset_str = STRBUF_INIT;
 	int i;
 
@@ -707,7 +707,7 @@ static struct reftable_record_vtable reftable_obj_record_vtable = {
 static void reftable_log_record_print_sz(struct reftable_log_record *log,
 					 int hash_size)
 {
-	char hex[GIT_MAX_HEXSZ + 1] = { 0 };
+	char hex[shit_MAX_HEXSZ + 1] = { 0 };
 
 	switch (log->value_type) {
 	case REFTABLE_LOG_DELETION:

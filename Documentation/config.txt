@@ -1,16 +1,16 @@
 CONFIGURATION FILE
 ------------------
 
-The Git configuration file contains a number of variables that affect
-the Git commands' behavior. The files `.git/config` and optionally
+The shit configuration file contains a number of variables that affect
+the shit commands' behavior. The files `.shit/config` and optionally
 `config.worktree` (see the "CONFIGURATION FILE" section of
-linkgit:git-worktree[1]) in each repository are used to store the
-configuration for that repository, and `$HOME/.gitconfig` is used to
-store a per-user configuration as fallback values for the `.git/config`
-file. The file `/etc/gitconfig` can be used to store a system-wide
+linkshit:shit-worktree[1]) in each repository are used to store the
+configuration for that repository, and `$HOME/.shitconfig` is used to
+store a per-user configuration as fallback values for the `.shit/config`
+file. The file `/etc/shitconfig` can be used to store a system-wide
 default configuration.
 
-The configuration variables are used by both the Git plumbing
+The configuration variables are used by both the shit plumbing
 and the porcelain commands. The variables are divided into sections, wherein
 the fully qualified variable name of the variable itself is the last
 dot-separated segment and the section name is everything before the last
@@ -113,21 +113,21 @@ The condition starts with a keyword followed by a colon and some data
 whose format and meaning depends on the keyword. Supported keywords
 are:
 
-`gitdir`::
+`shitdir`::
 
-	The data that follows the keyword `gitdir:` is used as a glob
-	pattern. If the location of the .git directory matches the
+	The data that follows the keyword `shitdir:` is used as a glob
+	pattern. If the location of the .shit directory matches the
 	pattern, the include condition is met.
 +
-The .git location may be auto-discovered, or come from `$GIT_DIR`
-environment variable. If the repository is auto-discovered via a .git
-file (e.g. from submodules, or a linked worktree), the .git location
-would be the final location where the .git directory is, not where the
-.git file is.
+The .shit location may be auto-discovered, or come from `$shit_DIR`
+environment variable. If the repository is auto-discovered via a .shit
+file (e.g. from submodules, or a linked worktree), the .shit location
+would be the final location where the .shit directory is, not where the
+.shit file is.
 +
 The pattern can contain standard globbing wildcards and two additional
 ones, `**/` and `/**`, that can match multiple path components. Please
-refer to linkgit:gitignore[5] for details. For convenience:
+refer to linkshit:shitignore[5] for details. For convenience:
 
  * If the pattern starts with `~/`, `~` will be substituted with the
    content of the environment variable `HOME`.
@@ -143,8 +143,8 @@ refer to linkgit:gitignore[5] for details. For convenience:
    example, the pattern `foo/` becomes `foo/**`. In other words, it
    matches "foo" and everything inside, recursively.
 
-`gitdir/i`::
-	This is the same as `gitdir` except that matching is done
+`shitdir/i`::
+	This is the same as `shitdir` except that matching is done
 	case-insensitively (e.g. on case-insensitive file systems)
 
 `onbranch`::
@@ -180,21 +180,21 @@ system-level or global-level config, and the remote URL being in a
 local-level config; hence the need to scan ahead when resolving this
 condition. In order to avoid the chicken-and-egg problem in which
 potentially-included files can affect whether such files are potentially
-included, Git breaks the cycle by prohibiting these files from affecting
+included, shit breaks the cycle by prohibiting these files from affecting
 the resolution of these conditions (thus, prohibiting them from
 declaring remote URLs).
 +
 As for the naming of this keyword, it is for forwards compatibility with
 a naming scheme that supports more variable-based include conditions,
-but currently Git only supports the exact keyword described above.
+but currently shit only supports the exact keyword described above.
 
-A few more notes on matching via `gitdir` and `gitdir/i`:
+A few more notes on matching via `shitdir` and `shitdir/i`:
 
- * Symlinks in `$GIT_DIR` are not resolved before matching.
+ * Symlinks in `$shit_DIR` are not resolved before matching.
 
  * Both the symlink & realpath versions of paths will be matched
-   outside of `$GIT_DIR`. E.g. if ~/git is a symlink to
-   /mnt/storage/git, both `gitdir:~/git` and `gitdir:/mnt/storage/git`
+   outside of `$shit_DIR`. E.g. if ~/shit is a symlink to
+   /mnt/storage/shit, both `shitdir:~/shit` and `shitdir:/mnt/storage/shit`
    will match.
 +
 This was not the case in the initial release of this feature in
@@ -225,30 +225,30 @@ Example
 
 # Proxy settings
 [core]
-	gitProxy="ssh" for "kernel.org"
-	gitProxy=default-proxy ; for the rest
+	shitProxy="ssh" for "kernel.org"
+	shitProxy=default-proxy ; for the rest
 
 [include]
 	path = /path/to/foo.inc ; include by absolute path
 	path = foo.inc ; find "foo.inc" relative to the current file
 	path = ~/foo.inc ; find "foo.inc" in your `$HOME` directory
 
-; include if $GIT_DIR is /path/to/foo/.git
-[includeIf "gitdir:/path/to/foo/.git"]
+; include if $shit_DIR is /path/to/foo/.shit
+[includeIf "shitdir:/path/to/foo/.shit"]
 	path = /path/to/foo.inc
 
 ; include for all repositories inside /path/to/group
-[includeIf "gitdir:/path/to/group/"]
+[includeIf "shitdir:/path/to/group/"]
 	path = /path/to/foo.inc
 
 ; include for all repositories inside $HOME/to/group
-[includeIf "gitdir:~/to/group/"]
+[includeIf "shitdir:~/to/group/"]
 	path = /path/to/foo.inc
 
 ; relative paths are always relative to the including
 ; file (if the condition is true); their location is not
 ; affected by the condition
-[includeIf "gitdir:/path/to/group/"]
+[includeIf "shitdir:/path/to/group/"]
 	path = foo.inc
 
 ; include only if we are in a worktree where foo-branch is
@@ -262,7 +262,7 @@ Example
 [includeIf "hasconfig:remote.*.url:https://example.com/**"]
 	path = foo.inc
 [remote "origin"]
-	url = https://example.com/git
+	url = https://example.com/shit
 ----
 
 Values
@@ -286,7 +286,7 @@ boolean::
 		`0` and the empty string.
 +
 When converting a value to its canonical form using the `--type=bool` type
-specifier, 'git config' will ensure that the output is "true" or
+specifier, 'shit config' will ensure that the output is "true" or
 "false" (spelled in lowercase).
 
 integer::
@@ -334,7 +334,7 @@ attributes.
 An empty color string produces no color effect at all. This can be used
 to avoid coloring specific elements without disabling color entirely.
 +
-For git's pre-defined color slots, the attributes are meant to be reset
+For shit's pre-defined color slots, the attributes are meant to be reset
 at the beginning of each item in the colored output. So setting
 `color.decorate.branch` to `black` will paint that branch name in a
 plain `black`, even if the previous thing on the same output line (e.g.
@@ -351,9 +351,9 @@ pathname::
 	specified user's home directory.
 +
 If a path starts with `%(prefix)/`, the remainder is interpreted as a
-path relative to Git's "runtime prefix", i.e. relative to the location
-where Git itself was installed. For example, `%(prefix)/bin/` refers to
-the directory in which the Git executable itself lives. If Git was
+path relative to shit's "runtime prefix", i.e. relative to the location
+where shit itself was installed. For example, `%(prefix)/bin/` refers to
+the directory in which the shit executable itself lives. If shit was
 compiled without runtime prefix support, the compiled-in prefix will be
 substituted instead. In the unlikely event that a literal path needs to
 be specified that should _not_ be expanded, it needs to be prefixed by
@@ -367,9 +367,9 @@ Note that this list is non-comprehensive and not necessarily complete.
 For command-specific variables, you will find a more detailed description
 in the appropriate manual page.
 
-Other git-related tools may and do use their own variables.  When
+Other shit-related tools may and do use their own variables.  When
 inventing new variables for use in your own tool, make sure their
-names do not conflict with those that are used by Git itself and
+names do not conflict with those that are used by shit itself and
 other popular tools, and describe them in your documentation.
 
 include::config/add.txt[]
@@ -434,9 +434,9 @@ include::config/fsmonitor--daemon.txt[]
 
 include::config/gc.txt[]
 
-include::config/gitcvs.txt[]
+include::config/shitcvs.txt[]
 
-include::config/gitweb.txt[]
+include::config/shitweb.txt[]
 
 include::config/gpg.txt[]
 
@@ -490,9 +490,9 @@ include::config/pretty.txt[]
 
 include::config/protocol.txt[]
 
-include::config/pull.txt[]
+include::config/poop.txt[]
 
-include::config/push.txt[]
+include::config/defecate.txt[]
 
 include::config/rebase.txt[]
 

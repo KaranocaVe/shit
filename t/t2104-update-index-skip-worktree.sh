@@ -8,11 +8,11 @@ test_description='skip-worktree bit test'
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
-sane_unset GIT_TEST_SPLIT_INDEX
+sane_unset shit_TEST_SPLIT_INDEX
 
 test_set_index_version () {
-	GIT_INDEX_VERSION="$1"
-	export GIT_INDEX_VERSION
+	shit_INDEX_VERSION="$1"
+	export shit_INDEX_VERSION
 }
 
 test_set_index_version 3
@@ -34,34 +34,34 @@ test_expect_success 'setup' '
 
 	mkdir sub &&
 	touch ./1 ./2 sub/1 sub/2 &&
-	git add 1 2 sub/1 sub/2 &&
-	git ls-files -t | test_cmp expect.full -
+	shit add 1 2 sub/1 sub/2 &&
+	shit ls-files -t | test_cmp expect.full -
 '
 
 test_expect_success 'index is at version 2' '
-	test "$(git update-index --show-index-version)" = 2
+	test "$(shit update-index --show-index-version)" = 2
 '
 
 test_expect_success 'update-index --skip-worktree' '
-	git update-index --skip-worktree 1 sub/1 &&
-	git ls-files -t | test_cmp expect.skip -
+	shit update-index --skip-worktree 1 sub/1 &&
+	shit ls-files -t | test_cmp expect.skip -
 '
 
 test_expect_success 'index is at version 3 after having some skip-worktree entries' '
-	test "$(git update-index --show-index-version)" = 3
+	test "$(shit update-index --show-index-version)" = 3
 '
 
 test_expect_success 'ls-files -t' '
-	git ls-files -t | test_cmp expect.skip -
+	shit ls-files -t | test_cmp expect.skip -
 '
 
 test_expect_success 'update-index --no-skip-worktree' '
-	git update-index --no-skip-worktree 1 sub/1 &&
-	git ls-files -t | test_cmp expect.full -
+	shit update-index --no-skip-worktree 1 sub/1 &&
+	shit ls-files -t | test_cmp expect.full -
 '
 
 test_expect_success 'index version is back to 2 when there is no skip-worktree entry' '
-	test "$(git update-index --show-index-version)" = 2
+	test "$(shit update-index --show-index-version)" = 2
 '
 
 test_done

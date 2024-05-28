@@ -1,20 +1,20 @@
-git-diff(1)
+shit-diff(1)
 ===========
 
 NAME
 ----
-git-diff - Show changes between commits, commit and working tree, etc
+shit-diff - Show changes between commits, commit and working tree, etc
 
 
 SYNOPSIS
 --------
 [verse]
-'git diff' [<options>] [<commit>] [--] [<path>...]
-'git diff' [<options>] --cached [--merge-base] [<commit>] [--] [<path>...]
-'git diff' [<options>] [--merge-base] <commit> [<commit>...] <commit> [--] [<path>...]
-'git diff' [<options>] <commit>...<commit> [--] [<path>...]
-'git diff' [<options>] <blob> <blob>
-'git diff' [<options>] --no-index [--] <path> <path>
+'shit diff' [<options>] [<commit>] [--] [<path>...]
+'shit diff' [<options>] --cached [--merge-base] [<commit>] [--] [<path>...]
+'shit diff' [<options>] [--merge-base] <commit> [<commit>...] <commit> [--] [<path>...]
+'shit diff' [<options>] <commit>...<commit> [--] [<path>...]
+'shit diff' [<options>] <blob> <blob>
+'shit diff' [<options>] --no-index [--] <path> <path>
 
 DESCRIPTION
 -----------
@@ -23,24 +23,24 @@ between the index and a tree, changes between two trees, changes resulting
 from a merge, changes between two blob objects, or changes between two
 files on disk.
 
-'git diff' [<options>] [--] [<path>...]::
+'shit diff' [<options>] [--] [<path>...]::
 
 	This form is to view the changes you made relative to
 	the index (staging area for the next commit).  In other
-	words, the differences are what you _could_ tell Git to
+	words, the differences are what you _could_ tell shit to
 	further add to the index but you still haven't.  You can
-	stage these changes by using linkgit:git-add[1].
+	stage these changes by using linkshit:shit-add[1].
 
-'git diff' [<options>] --no-index [--] <path> <path>::
+'shit diff' [<options>] --no-index [--] <path> <path>::
 
 	This form is to compare the given two paths on the
 	filesystem.  You can omit the `--no-index` option when
-	running the command in a working tree controlled by Git and
+	running the command in a working tree controlled by shit and
 	at least one of the paths points outside the working tree,
 	or when running the command outside a working tree
-	controlled by Git. This form implies `--exit-code`.
+	controlled by shit. This form implies `--exit-code`.
 
-'git diff' [<options>] --cached [--merge-base] [<commit>] [--] [<path>...]::
+'shit diff' [<options>] --cached [--merge-base] [<commit>] [--] [<path>...]::
 
 	This form is to view the changes you staged for the next
 	commit relative to the named <commit>.  Typically you
@@ -51,10 +51,10 @@ files on disk.
 	--staged is a synonym of --cached.
 +
 If --merge-base is given, instead of using <commit>, use the merge base
-of <commit> and HEAD.  `git diff --cached --merge-base A` is equivalent to
-`git diff --cached $(git merge-base A HEAD)`.
+of <commit> and HEAD.  `shit diff --cached --merge-base A` is equivalent to
+`shit diff --cached $(shit merge-base A HEAD)`.
 
-'git diff' [<options>] [--merge-base] <commit> [--] [<path>...]::
+'shit diff' [<options>] [--merge-base] <commit> [--] [<path>...]::
 
 	This form is to view the changes you have in your
 	working tree relative to the named <commit>.  You can
@@ -63,40 +63,40 @@ of <commit> and HEAD.  `git diff --cached --merge-base A` is equivalent to
 	branch.
 +
 If --merge-base is given, instead of using <commit>, use the merge base
-of <commit> and HEAD.  `git diff --merge-base A` is equivalent to
-`git diff $(git merge-base A HEAD)`.
+of <commit> and HEAD.  `shit diff --merge-base A` is equivalent to
+`shit diff $(shit merge-base A HEAD)`.
 
-'git diff' [<options>] [--merge-base] <commit> <commit> [--] [<path>...]::
+'shit diff' [<options>] [--merge-base] <commit> <commit> [--] [<path>...]::
 
 	This is to view the changes between two arbitrary
 	<commit>.
 +
 If --merge-base is given, use the merge base of the two commits for the
-"before" side.  `git diff --merge-base A B` is equivalent to
-`git diff $(git merge-base A B) B`.
+"before" side.  `shit diff --merge-base A B` is equivalent to
+`shit diff $(shit merge-base A B) B`.
 
-'git diff' [<options>] <commit> <commit>... <commit> [--] [<path>...]::
+'shit diff' [<options>] <commit> <commit>... <commit> [--] [<path>...]::
 
 	This form is to view the results of a merge commit.  The first
 	listed <commit> must be the merge itself; the remaining two or
 	more commits should be its parents.  Convenient ways to produce
 	the desired set of revisions are to use the suffixes `^@` and
-	`^!`.  If A is a merge commit, then `git diff A A^@`,
-	`git diff A^!` and `git show A` all give the same combined diff.
+	`^!`.  If A is a merge commit, then `shit diff A A^@`,
+	`shit diff A^!` and `shit show A` all give the same combined diff.
 
-'git diff' [<options>] <commit>..<commit> [--] [<path>...]::
+'shit diff' [<options>] <commit>..<commit> [--] [<path>...]::
 
 	This is synonymous to the earlier form (without the `..`) for
 	viewing the changes between two arbitrary <commit>.  If <commit> on
 	one side is omitted, it will have the same effect as
 	using HEAD instead.
 
-'git diff' [<options>] <commit>\...<commit> [--] [<path>...]::
+'shit diff' [<options>] <commit>\...<commit> [--] [<path>...]::
 
 	This form is to view the changes on the branch containing
 	and up to the second <commit>, starting at a common ancestor
-	of both <commit>.  `git diff A...B` is equivalent to
-	`git diff $(git merge-base A B) B`.  You can omit any one
+	of both <commit>.  `shit diff A...B` is equivalent to
+	`shit diff $(shit merge-base A B) B`.  You can omit any one
 	of <commit>, which has the same effect as using HEAD instead.
 
 Just in case you are doing something exotic, it should be
@@ -104,25 +104,25 @@ noted that all of the <commit> in the above description, except
 in the `--merge-base` case and in the last two forms that use `..`
 notations, can be any <tree>. A tree of interest is the one pointed to
 by the ref named `AUTO_MERGE`, which is written by the 'ort' merge
-strategy upon hitting merge conflicts (see linkgit:git-merge[1]).
+strategy upon hitting merge conflicts (see linkshit:shit-merge[1]).
 Comparing the working tree with `AUTO_MERGE` shows changes you've made
 so far to resolve textual conflicts (see the examples below).
 
 For a more complete list of ways to spell <commit>, see
-"SPECIFYING REVISIONS" section in linkgit:gitrevisions[7].
+"SPECIFYING REVISIONS" section in linkshit:shitrevisions[7].
 However, "diff" is about comparing two _endpoints_, not ranges,
 and the range notations (`<commit>..<commit>` and
 `<commit>...<commit>`) do not mean a range as defined in the
-"SPECIFYING RANGES" section in linkgit:gitrevisions[7].
+"SPECIFYING RANGES" section in linkshit:shitrevisions[7].
 
-'git diff' [<options>] <blob> <blob>::
+'shit diff' [<options>] <blob> <blob>::
 
 	This form is to view the differences between the raw
 	contents of two blob objects.
 
 OPTIONS
 -------
-:git-diff: 1
+:shit-diff: 1
 include::diff-options.txt[]
 
 -1 --base::
@@ -131,7 +131,7 @@ include::diff-options.txt[]
 	Compare the working tree with the "base" version (stage #1),
 	"our branch" (stage #2) or "their branch" (stage #3).  The
 	index contains these stages only for unmerged entries i.e.
-	while resolving conflicts.  See linkgit:git-read-tree[1]
+	while resolving conflicts.  See linkshit:shit-read-tree[1]
 	section "3-Way Merge" for detailed information.
 
 -0::
@@ -153,26 +153,26 @@ EXAMPLES
 Various ways to check your working tree::
 +
 ------------
-$ git diff            <1>
-$ git diff --cached   <2>
-$ git diff HEAD       <3>
-$ git diff AUTO_MERGE <4>
+$ shit diff            <1>
+$ shit diff --cached   <2>
+$ shit diff HEAD       <3>
+$ shit diff AUTO_MERGE <4>
 ------------
 +
 <1> Changes in the working tree not yet staged for the next commit.
 <2> Changes between the index and your last commit; what you
-    would be committing if you run `git commit` without `-a` option.
+    would be committing if you run `shit commit` without `-a` option.
 <3> Changes in the working tree since your last commit; what you
-    would be committing if you run `git commit -a`
+    would be committing if you run `shit commit -a`
 <4> Changes in the working tree you've made to resolve textual
     conflicts so far.
 
 Comparing with arbitrary commits::
 +
 ------------
-$ git diff test            <1>
-$ git diff HEAD -- ./test  <2>
-$ git diff HEAD^ HEAD      <3>
+$ shit diff test            <1>
+$ shit diff HEAD -- ./test  <2>
+$ shit diff HEAD^ HEAD      <3>
 ------------
 +
 <1> Instead of using the tip of the current branch, compare with the
@@ -185,9 +185,9 @@ $ git diff HEAD^ HEAD      <3>
 Comparing branches::
 +
 ------------
-$ git diff topic master    <1>
-$ git diff topic..master   <2>
-$ git diff topic...master  <3>
+$ shit diff topic master    <1>
+$ shit diff topic..master   <2>
+$ shit diff topic...master  <3>
 ------------
 +
 <1> Changes between the tips of the topic and the master branches.
@@ -198,9 +198,9 @@ $ git diff topic...master  <3>
 Limiting the diff output::
 +
 ------------
-$ git diff --diff-filter=MRC            <1>
-$ git diff --name-status                <2>
-$ git diff arch/i386 include/asm-i386   <3>
+$ shit diff --diff-filter=MRC            <1>
+$ shit diff --name-status                <2>
+$ shit diff arch/i386 include/asm-i386   <3>
 ------------
 +
 <1> Show only modification, rename, and copy, but not addition
@@ -212,8 +212,8 @@ $ git diff arch/i386 include/asm-i386   <3>
 Munging the diff output::
 +
 ------------
-$ git diff --find-copies-harder -B -C  <1>
-$ git diff -R                          <2>
+$ shit diff --find-copies-harder -B -C  <1>
+$ shit diff -R                          <2>
 ------------
 +
 <1> Spend extra cycles to find renames, copies and complete
@@ -230,13 +230,13 @@ include::config/diff.txt[]
 SEE ALSO
 --------
 diff(1),
-linkgit:git-difftool[1],
-linkgit:git-log[1],
-linkgit:gitdiffcore[7],
-linkgit:git-format-patch[1],
-linkgit:git-apply[1],
-linkgit:git-show[1]
+linkshit:shit-difftool[1],
+linkshit:shit-log[1],
+linkshit:shitdiffcore[7],
+linkshit:shit-format-patch[1],
+linkshit:shit-apply[1],
+linkshit:shit-show[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "hex.h"
 #include "refs-internal.h"
 #include "string-list.h"
@@ -13,7 +13,7 @@ struct debug_ref_store {
 
 extern struct ref_storage_be refs_be_debug;
 
-struct ref_store *maybe_debug_wrap_ref_store(const char *gitdir, struct ref_store *store)
+struct ref_store *maybe_debug_wrap_ref_store(const char *shitdir, struct ref_store *store)
 {
 	struct debug_ref_store *res;
 	struct ref_storage_be *be_copy;
@@ -26,9 +26,9 @@ struct ref_store *maybe_debug_wrap_ref_store(const char *gitdir, struct ref_stor
 	*be_copy = refs_be_debug;
 	/* we never deallocate backends, so safe to copy the pointer. */
 	be_copy->name = store->be->name;
-	trace_printf_key(&trace_refs, "ref_store for %s\n", gitdir);
+	trace_printf_key(&trace_refs, "ref_store for %s\n", shitdir);
 	res->refs = store;
-	base_ref_store_init((struct ref_store *)res, store->repo, gitdir,
+	base_ref_store_init((struct ref_store *)res, store->repo, shitdir,
 			    be_copy);
 	return (struct ref_store *)res;
 }
@@ -60,8 +60,8 @@ static void print_update(int i, const char *refname,
 			 const struct object_id *new_oid, unsigned int flags,
 			 unsigned int type, const char *msg)
 {
-	char o[GIT_MAX_HEXSZ + 1] = "null";
-	char n[GIT_MAX_HEXSZ + 1] = "null";
+	char o[shit_MAX_HEXSZ + 1] = "null";
+	char n[shit_MAX_HEXSZ + 1] = "null";
 	if (old_oid)
 		oid_to_hex_r(o, old_oid);
 	if (new_oid)
@@ -279,8 +279,8 @@ static int debug_print_reflog_ent(struct object_id *old_oid,
 {
 	struct debug_reflog *dbg = (struct debug_reflog *)cb_data;
 	int ret;
-	char o[GIT_MAX_HEXSZ + 1] = "null";
-	char n[GIT_MAX_HEXSZ + 1] = "null";
+	char o[shit_MAX_HEXSZ + 1] = "null";
+	char n[shit_MAX_HEXSZ + 1] = "null";
 	char *msgend = strchrnul(msg, '\n');
 	if (old_oid)
 		oid_to_hex_r(o, old_oid);
@@ -421,7 +421,7 @@ struct ref_storage_be refs_be_debug = {
 	 * None of these should be NULL. If the "files" backend (in
 	 * "struct ref_storage_be refs_be_files" in files-backend.c)
 	 * has a function we should also have a wrapper for it here.
-	 * Test the output with "GIT_TRACE_REFS=1".
+	 * Test the output with "shit_TRACE_REFS=1".
 	 */
 	.transaction_prepare = debug_transaction_prepare,
 	.transaction_finish = debug_transaction_finish,

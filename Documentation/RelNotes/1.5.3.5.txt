@@ -1,78 +1,78 @@
-GIT v1.5.3.5 Release Notes
+shit v1.5.3.5 Release Notes
 ==========================
 
 Fixes since v1.5.3.4
 --------------------
 
- * Comes with git-gui 0.8.4.
+ * Comes with shit-gui 0.8.4.
 
- * "git-config" silently ignored options after --list; now it will
+ * "shit-config" silently ignored options after --list; now it will
    error out with a usage message.
 
- * "git-config --file" failed if the argument used a relative path
+ * "shit-config --file" failed if the argument used a relative path
    as it changed directories before opening the file.
 
- * "git-config --file" now displays a proper error message if it
+ * "shit-config --file" now displays a proper error message if it
    cannot read the file specified on the command line.
 
- * "git-config", "git-diff", "git-apply" failed if run from a
-   subdirectory with relative GIT_DIR and GIT_WORK_TREE set.
+ * "shit-config", "shit-diff", "shit-apply" failed if run from a
+   subdirectory with relative shit_DIR and shit_WORK_TREE set.
 
- * "git-blame" crashed if run during a merge conflict.
+ * "shit-blame" crashed if run during a merge conflict.
 
- * "git-add -i" did not handle single line hunks correctly.
+ * "shit-add -i" did not handle single line hunks correctly.
 
- * "git-rebase -i" and "git-stash apply" failed if external diff
+ * "shit-rebase -i" and "shit-stash apply" failed if external diff
    drivers were used for one or more files in a commit.  They now
    avoid calling the external diff drivers.
 
- * "git-log --follow" did not work unless diff generation (e.g. -p)
+ * "shit-log --follow" did not work unless diff generation (e.g. -p)
    was also requested.
 
- * "git-log --follow -B" did not work at all.  Fixed.
+ * "shit-log --follow -B" did not work at all.  Fixed.
 
- * "git-log -M -B" did not correctly handle cases of very large files
+ * "shit-log -M -B" did not correctly handle cases of very large files
    being renamed and replaced by very small files in the same commit.
 
- * "git-log" printed extra newlines between commits when a diff
+ * "shit-log" printed extra newlines between commits when a diff
    was generated internally (e.g. -S or --follow) but not displayed.
 
- * "git-push" error message is more helpful when pushing to a
+ * "shit-defecate" error message is more helpful when defecateing to a
    repository with no matching refs and none specified.
 
- * "git-push" now respects + (force push) on wildcard refspecs,
-   matching the behavior of git-fetch.
+ * "shit-defecate" now respects + (force defecate) on wildcard refspecs,
+   matching the behavior of shit-fetch.
 
- * "git-filter-branch" now updates the working directory when it
+ * "shit-filter-branch" now updates the working directory when it
    has finished filtering the current branch.
 
- * "git-instaweb" no longer fails on Mac OS X.
+ * "shit-instaweb" no longer fails on Mac OS X.
 
- * "git-cvsexportcommit" didn't always create new parent directories
+ * "shit-cvsexportcommit" didn't always create new parent directories
    before trying to create new child directories.  Fixed.
 
- * "git-fetch" printed a scary (but bogus) error message while
+ * "shit-fetch" printed a scary (but bogus) error message while
    fetching a tag that pointed to a tree or blob.  The error did
    not impact correctness, only user perception.  The bogus error
    is no longer printed.
 
- * "git-ls-files --ignored" did not properly descend into non-ignored
+ * "shit-ls-files --ignored" did not properly descend into non-ignored
    directories that themselves contained ignored files if d_type
    was not supported by the filesystem.  This bug impacted systems
    such as AFS.  Fixed.
 
- * Git segfaulted when reading an invalid .gitattributes file.  Fixed.
+ * shit segfaulted when reading an invalid .shitattributes file.  Fixed.
 
  * post-receive-email example hook was fixed for non-fast-forward
    updates.
 
  * Documentation updates for supported (but previously undocumented)
-   options of "git-archive" and "git-reflog".
+   options of "shit-archive" and "shit-reflog".
 
  * "make clean" no longer deletes the configure script that ships
-   with the git tarball, making multiple architecture builds easier.
+   with the shit tarball, making multiple architecture builds easier.
 
- * "git-remote show origin" spewed a warning message from Perl
+ * "shit-remote show origin" spewed a warning message from Perl
    when no remote is defined for the current branch via
    branch.<name>.remote configuration settings.
 
@@ -82,13 +82,13 @@ Fixes since v1.5.3.4
  * http.sslVerify configuration settings were not used in scripted
    Porcelains.
 
- * "git-add" leaked a bit of memory while scanning for files to add.
+ * "shit-add" leaked a bit of memory while scanning for files to add.
 
  * A few workarounds to squelch false warnings from recent gcc have
    been added.
 
- * "git-send-pack $remote frotz" segfaulted when there is nothing
+ * "shit-send-pack $remote frotz" segfaulted when there is nothing
    named 'frotz' on the local end.
 
- * "git-rebase --interactive" did not handle its "--strategy" option
+ * "shit-rebase --interactive" did not handle its "--strategy" option
    properly.

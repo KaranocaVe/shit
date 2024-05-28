@@ -130,7 +130,7 @@ identifier ACT = active_cache_tree;
   (
 + &the_index,
   ...
-+ , get_git_dir()
++ , get_shit_dir()
   )
 
 @@

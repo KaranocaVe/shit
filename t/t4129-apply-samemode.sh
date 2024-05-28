@@ -8,77 +8,77 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success setup '
 	echo original >file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial &&
-	git tag initial &&
+	shit commit -m initial &&
+	shit tag initial &&
 	echo modified >file &&
-	git diff --stat -p >patch-0.txt &&
+	shit diff --stat -p >patch-0.txt &&
 	chmod +x file &&
-	git diff --stat -p >patch-1.txt &&
+	shit diff --stat -p >patch-1.txt &&
 	sed "s/^\(new mode \).*/\1/" <patch-1.txt >patch-empty-mode.txt &&
 	sed "s/^\(new mode \).*/\1garbage/" <patch-1.txt >patch-bogus-mode.txt
 '
 
 test_expect_success FILEMODE 'same mode (no index)' '
-	git reset --hard &&
+	shit reset --hard &&
 	chmod +x file &&
-	git apply patch-0.txt &&
+	shit apply patch-0.txt &&
 	test -x file
 '
 
 test_expect_success FILEMODE 'same mode (with index)' '
-	git reset --hard &&
+	shit reset --hard &&
 	chmod +x file &&
-	git add file &&
-	git apply --index patch-0.txt &&
+	shit add file &&
+	shit apply --index patch-0.txt &&
 	test -x file &&
-	git diff --exit-code
+	shit diff --exit-code
 '
 
 test_expect_success FILEMODE 'same mode (index only)' '
-	git reset --hard &&
+	shit reset --hard &&
 	chmod +x file &&
-	git add file &&
-	git apply --cached patch-0.txt &&
-	git ls-files -s file >ls-files-output &&
+	shit add file &&
+	shit apply --cached patch-0.txt &&
+	shit ls-files -s file >ls-files-output &&
 	test_grep "^100755" ls-files-output
 '
 
 test_expect_success FILEMODE 'mode update (no index)' '
-	git reset --hard &&
-	git apply patch-1.txt &&
+	shit reset --hard &&
+	shit apply patch-1.txt &&
 	test -x file
 '
 
 test_expect_success FILEMODE 'mode update (with index)' '
-	git reset --hard &&
-	git apply --index patch-1.txt &&
+	shit reset --hard &&
+	shit apply --index patch-1.txt &&
 	test -x file &&
-	git diff --exit-code
+	shit diff --exit-code
 '
 
 test_expect_success FILEMODE 'mode update (index only)' '
-	git reset --hard &&
-	git apply --cached patch-1.txt &&
-	git ls-files -s file >ls-files-output &&
+	shit reset --hard &&
+	shit apply --cached patch-1.txt &&
+	shit ls-files -s file >ls-files-output &&
 	test_grep "^100755" ls-files-output
 '
 
 test_expect_success FILEMODE 'empty mode is rejected' '
-	git reset --hard &&
-	test_must_fail git apply patch-empty-mode.txt 2>err &&
+	shit reset --hard &&
+	test_must_fail shit apply patch-empty-mode.txt 2>err &&
 	test_grep "invalid mode" err
 '
 
 test_expect_success FILEMODE 'bogus mode is rejected' '
-	git reset --hard &&
-	test_must_fail git apply patch-bogus-mode.txt 2>err &&
+	shit reset --hard &&
+	test_must_fail shit apply patch-bogus-mode.txt 2>err &&
 	test_grep "invalid mode" err
 '
 
 test_expect_success POSIXPERM 'do not use core.sharedRepository for working tree files' '
-	git reset --hard &&
+	shit reset --hard &&
 	test_config core.sharedRepository 0666 &&
 	(
 		# Remove a default ACL if possible.
@@ -88,11 +88,11 @@ test_expect_success POSIXPERM 'do not use core.sharedRepository for working tree
 		# Test both files (f1) and leading dirs (d)
 		mkdir d &&
 		touch f1 d/f2 &&
-		git add f1 d/f2 &&
-		git diff --staged >patch-f1-and-f2.txt &&
+		shit add f1 d/f2 &&
+		shit diff --staged >patch-f1-and-f2.txt &&
 
 		rm -rf d f1 &&
-		git apply patch-f1-and-f2.txt &&
+		shit apply patch-f1-and-f2.txt &&
 
 		echo "-rw-------" >f1_mode.expected &&
 		echo "drwx------" >d_mode.expected &&
@@ -103,30 +103,30 @@ test_expect_success POSIXPERM 'do not use core.sharedRepository for working tree
 	)
 '
 
-test_expect_success 'git apply respects core.fileMode' '
+test_expect_success 'shit apply respects core.fileMode' '
 	test_config core.fileMode false &&
 	echo true >script.sh &&
-	git add --chmod=+x script.sh &&
-	git ls-files -s script.sh >ls-files-output &&
+	shit add --chmod=+x script.sh &&
+	shit ls-files -s script.sh >ls-files-output &&
 	test_grep "^100755" ls-files-output &&
-	test_tick && git commit -m "Add script" &&
-	git ls-tree -r HEAD script.sh >ls-tree-output &&
+	test_tick && shit commit -m "Add script" &&
+	shit ls-tree -r HEAD script.sh >ls-tree-output &&
 	test_grep "^100755" ls-tree-output &&
 
 	echo true >>script.sh &&
-	test_tick && git commit -m "Modify script" script.sh &&
-	git format-patch -1 --stdout >patch &&
+	test_tick && shit commit -m "Modify script" script.sh &&
+	shit format-patch -1 --stdout >patch &&
 	test_grep "^index.*100755$" patch &&
 
-	git switch -c branch HEAD^ &&
-	git apply --index patch 2>err &&
+	shit switch -c branch HEAD^ &&
+	shit apply --index patch 2>err &&
 	test_grep ! "has type 100644, expected 100755" err &&
-	git reset --hard &&
+	shit reset --hard &&
 
-	git apply patch 2>err &&
+	shit apply patch 2>err &&
 	test_grep ! "has type 100644, expected 100755" err &&
 
-	git apply --cached patch 2>err &&
+	shit apply --cached patch 2>err &&
 	test_grep ! "has type 100644, expected 100755" err
 '
 

@@ -4,7 +4,7 @@
 #include "apply.h"
 
 static const char * const apply_usage[] = {
-	N_("git apply [<options>] [<patch>...]"),
+	N_("shit apply [<options>] [<patch>...]"),
 	NULL
 };
 

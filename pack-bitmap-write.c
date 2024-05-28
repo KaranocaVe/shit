@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "gettext.h"
 #include "hex.h"
@@ -41,7 +41,7 @@ struct bitmap_writer {
 
 	struct progress *progress;
 	int show_progress;
-	unsigned char pack_checksum[GIT_MAX_RAWSZ];
+	unsigned char pack_checksum[shit_MAX_RAWSZ];
 };
 
 static struct bitmap_writer writer;
@@ -115,7 +115,7 @@ void bitmap_writer_build_type_index(struct packing_data *to_pack,
  * Compute the actual bitmaps
  */
 
-static inline void push_bitmapped_commit(struct commit *commit)
+static inline void defecate_bitmapped_commit(struct commit *commit)
 {
 	if (writer.selected_nr >= writer.selected_alloc) {
 		writer.selected_alloc = (writer.selected_alloc + 32) * 2;
@@ -386,7 +386,7 @@ static int fill_bitmap_tree(struct bitmap *bitmap,
 			bitmap_set(bitmap, pos);
 			break;
 		default:
-			/* Gitlink, etc; not reachable */
+			/* shitlink, etc; not reachable */
 			break;
 		}
 	}
@@ -496,7 +496,7 @@ int bitmap_writer_build(struct packing_data *to_pack)
 	trace2_region_enter("pack-bitmap-write", "building_bitmaps_total",
 			    the_repository);
 
-	old_bitmap = prepare_bitmap_git(to_pack->repo);
+	old_bitmap = prepare_bitmap_shit(to_pack->repo);
 	if (old_bitmap)
 		mapping = create_bitmap_mapping(old_bitmap, to_pack);
 	else
@@ -600,7 +600,7 @@ void bitmap_writer_select_commits(struct commit **indexed_commits,
 
 	if (indexed_commits_nr < 100) {
 		for (i = 0; i < indexed_commits_nr; ++i)
-			push_bitmapped_commit(indexed_commits[i]);
+			defecate_bitmapped_commit(indexed_commits[i]);
 		return;
 	}
 
@@ -638,7 +638,7 @@ void bitmap_writer_select_commits(struct commit **indexed_commits,
 			}
 		}
 
-		push_bitmapped_commit(chosen);
+		defecate_bitmapped_commit(chosen);
 
 		i += next + 1;
 		display_progress(writer.progress, i);
@@ -805,7 +805,7 @@ void bitmap_writer_finish(struct pack_idx_entry **index,
 	header.entry_count = htonl(writer.selected_nr);
 	hashcpy(header.checksum, writer.pack_checksum);
 
-	hashwrite(f, &header, sizeof(header) - GIT_MAX_RAWSZ + the_hash_algo->rawsz);
+	hashwrite(f, &header, sizeof(header) - shit_MAX_RAWSZ + the_hash_algo->rawsz);
 	dump_bitmap(f, writer.commits);
 	dump_bitmap(f, writer.trees);
 	dump_bitmap(f, writer.blobs);

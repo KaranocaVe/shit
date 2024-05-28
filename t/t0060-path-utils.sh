@@ -34,9 +34,9 @@ test_submodule_relative_url() {
 	"
 }
 
-test_git_path() {
-	test_expect_success "git-path $1 $2 => $3" "
-		$1 git rev-parse --git-path $2 >actual &&
+test_shit_path() {
+	test_expect_success "shit-path $1 $2 => $3" "
+		$1 shit rev-parse --shit-path $2 >actual &&
 		echo $3 >expect &&
 		test_cmp expect actual
 	"
@@ -175,9 +175,9 @@ ancestor D:/Users/me C:/ -1 MINGW
 ancestor //server/share/my-directory //server/share/ 14 MINGW
 
 test_expect_success 'strip_path_suffix' '
-	echo c:/msysgit >expect &&
+	echo c:/msysshit >expect &&
 	test-tool path-utils strip_path_suffix \
-		c:/msysgit/libexec//git-core libexec/git-core >actual &&
+		c:/msysshit/libexec//shit-core libexec/shit-core >actual &&
 	test_cmp expect actual
 '
 
@@ -258,12 +258,12 @@ test_expect_success 'real path removes other extra slashes' '
 
 test_expect_success SYMLINKS 'real path works on symlinks' '
 	mkdir first &&
-	ln -s ../.git first/.git &&
+	ln -s ../.shit first/.shit &&
 	mkdir second &&
 	ln -s ../first second/other &&
 	mkdir third &&
-	dir="$(cd .git && pwd -P)" &&
-	dir2=third/../second/other/.git &&
+	dir="$(cd .shit && pwd -P)" &&
+	dir2=third/../second/other/.shit &&
 	echo "$dir" >expect &&
 	test-tool path-utils real_path $dir2 >actual &&
 	test_cmp expect actual &&
@@ -273,9 +273,9 @@ test_expect_success SYMLINKS 'real path works on symlinks' '
 	test_cmp expect actual &&
 	basename=blub &&
 	echo "$dir/$basename" >expect &&
-	test-tool -C .git path-utils real_path "$basename" >actual &&
+	test-tool -C .shit path-utils real_path "$basename" >actual &&
 	test_cmp expect actual &&
-	ln -s ../first/file .git/syml &&
+	ln -s ../first/file .shit/syml &&
 	sym="$(cd first && pwd -P)"/file &&
 	echo "$sym" >expect &&
 	test-tool path-utils real_path "$dir2/syml" >actual &&
@@ -300,7 +300,7 @@ test_expect_success 'prefix_path rejects absolute path to dir with same beginnin
 '
 
 test_expect_success SYMLINKS 'prefix_path works with absolute path to a symlink to work tree having  same beginning as work tree' '
-	git init repo &&
+	shit init repo &&
 	ln -s repo repolink &&
 	echo "a" >expect &&
 	repo_path="$(cd repo && pwd)" &&
@@ -341,45 +341,45 @@ relative_path "<null>"		"<empty>"	./
 relative_path "<null>"		"<null>"	./
 relative_path "<null>"		/foo/a/b	./
 
-test_git_path A=B                info/grafts .git/info/grafts
-test_git_path GIT_GRAFT_FILE=foo info/grafts foo
-test_git_path GIT_GRAFT_FILE=foo info/////grafts foo
-test_git_path GIT_INDEX_FILE=foo index foo
-test_git_path GIT_INDEX_FILE=foo index/foo .git/index/foo
-test_git_path GIT_INDEX_FILE=foo index2 .git/index2
+test_shit_path A=B                info/grafts .shit/info/grafts
+test_shit_path shit_GRAFT_FILE=foo info/grafts foo
+test_shit_path shit_GRAFT_FILE=foo info/////grafts foo
+test_shit_path shit_INDEX_FILE=foo index foo
+test_shit_path shit_INDEX_FILE=foo index/foo .shit/index/foo
+test_shit_path shit_INDEX_FILE=foo index2 .shit/index2
 test_expect_success 'setup fake objects directory foo' 'mkdir foo'
-test_git_path GIT_OBJECT_DIRECTORY=foo objects foo
-test_git_path GIT_OBJECT_DIRECTORY=foo objects/foo foo/foo
-test_git_path GIT_OBJECT_DIRECTORY=foo objects2 .git/objects2
-test_expect_success 'setup common repository' 'git --git-dir=bar init'
-test_git_path GIT_COMMON_DIR=bar index                    .git/index
-test_git_path GIT_COMMON_DIR=bar index.lock               .git/index.lock
-test_git_path GIT_COMMON_DIR=bar HEAD                     .git/HEAD
-test_git_path GIT_COMMON_DIR=bar logs/HEAD                .git/logs/HEAD
-test_git_path GIT_COMMON_DIR=bar logs/HEAD.lock           .git/logs/HEAD.lock
-test_git_path GIT_COMMON_DIR=bar logs/refs/bisect/foo     .git/logs/refs/bisect/foo
-test_git_path GIT_COMMON_DIR=bar logs/refs                bar/logs/refs
-test_git_path GIT_COMMON_DIR=bar logs/refs/               bar/logs/refs/
-test_git_path GIT_COMMON_DIR=bar logs/refs/bisec/foo      bar/logs/refs/bisec/foo
-test_git_path GIT_COMMON_DIR=bar logs/refs/bisec          bar/logs/refs/bisec
-test_git_path GIT_COMMON_DIR=bar logs/refs/bisectfoo      bar/logs/refs/bisectfoo
-test_git_path GIT_COMMON_DIR=bar objects                  bar/objects
-test_git_path GIT_COMMON_DIR=bar objects/bar              bar/objects/bar
-test_git_path GIT_COMMON_DIR=bar info/exclude             bar/info/exclude
-test_git_path GIT_COMMON_DIR=bar info/grafts              bar/info/grafts
-test_git_path GIT_COMMON_DIR=bar info/sparse-checkout     .git/info/sparse-checkout
-test_git_path GIT_COMMON_DIR=bar info//sparse-checkout    .git/info//sparse-checkout
-test_git_path GIT_COMMON_DIR=bar remotes/bar              bar/remotes/bar
-test_git_path GIT_COMMON_DIR=bar branches/bar             bar/branches/bar
-test_git_path GIT_COMMON_DIR=bar logs/refs/heads/main     bar/logs/refs/heads/main
-test_git_path GIT_COMMON_DIR=bar refs/heads/main          bar/refs/heads/main
-test_git_path GIT_COMMON_DIR=bar refs/bisect/foo          .git/refs/bisect/foo
-test_git_path GIT_COMMON_DIR=bar hooks/me                 bar/hooks/me
-test_git_path GIT_COMMON_DIR=bar config                   bar/config
-test_git_path GIT_COMMON_DIR=bar packed-refs              bar/packed-refs
-test_git_path GIT_COMMON_DIR=bar shallow                  bar/shallow
-test_git_path GIT_COMMON_DIR=bar common                   bar/common
-test_git_path GIT_COMMON_DIR=bar common/file              bar/common/file
+test_shit_path shit_OBJECT_DIRECTORY=foo objects foo
+test_shit_path shit_OBJECT_DIRECTORY=foo objects/foo foo/foo
+test_shit_path shit_OBJECT_DIRECTORY=foo objects2 .shit/objects2
+test_expect_success 'setup common repository' 'shit --shit-dir=bar init'
+test_shit_path shit_COMMON_DIR=bar index                    .shit/index
+test_shit_path shit_COMMON_DIR=bar index.lock               .shit/index.lock
+test_shit_path shit_COMMON_DIR=bar HEAD                     .shit/HEAD
+test_shit_path shit_COMMON_DIR=bar logs/HEAD                .shit/logs/HEAD
+test_shit_path shit_COMMON_DIR=bar logs/HEAD.lock           .shit/logs/HEAD.lock
+test_shit_path shit_COMMON_DIR=bar logs/refs/bisect/foo     .shit/logs/refs/bisect/foo
+test_shit_path shit_COMMON_DIR=bar logs/refs                bar/logs/refs
+test_shit_path shit_COMMON_DIR=bar logs/refs/               bar/logs/refs/
+test_shit_path shit_COMMON_DIR=bar logs/refs/bisec/foo      bar/logs/refs/bisec/foo
+test_shit_path shit_COMMON_DIR=bar logs/refs/bisec          bar/logs/refs/bisec
+test_shit_path shit_COMMON_DIR=bar logs/refs/bisectfoo      bar/logs/refs/bisectfoo
+test_shit_path shit_COMMON_DIR=bar objects                  bar/objects
+test_shit_path shit_COMMON_DIR=bar objects/bar              bar/objects/bar
+test_shit_path shit_COMMON_DIR=bar info/exclude             bar/info/exclude
+test_shit_path shit_COMMON_DIR=bar info/grafts              bar/info/grafts
+test_shit_path shit_COMMON_DIR=bar info/sparse-checkout     .shit/info/sparse-checkout
+test_shit_path shit_COMMON_DIR=bar info//sparse-checkout    .shit/info//sparse-checkout
+test_shit_path shit_COMMON_DIR=bar remotes/bar              bar/remotes/bar
+test_shit_path shit_COMMON_DIR=bar branches/bar             bar/branches/bar
+test_shit_path shit_COMMON_DIR=bar logs/refs/heads/main     bar/logs/refs/heads/main
+test_shit_path shit_COMMON_DIR=bar refs/heads/main          bar/refs/heads/main
+test_shit_path shit_COMMON_DIR=bar refs/bisect/foo          .shit/refs/bisect/foo
+test_shit_path shit_COMMON_DIR=bar hooks/me                 bar/hooks/me
+test_shit_path shit_COMMON_DIR=bar config                   bar/config
+test_shit_path shit_COMMON_DIR=bar packed-refs              bar/packed-refs
+test_shit_path shit_COMMON_DIR=bar shallow                  bar/shallow
+test_shit_path shit_COMMON_DIR=bar common                   bar/common
+test_shit_path shit_COMMON_DIR=bar common/file              bar/common/file
 
 # In the tests below, $(pwd) must be used because it is a native path on
 # Windows and avoids MSYS's path mangling (which simplifies "foo/../bar" and
@@ -436,51 +436,51 @@ test_submodule_relative_url "(null)" "user@host:path/to/repo" "../subrepo" "user
 test_submodule_relative_url "(null)" "user@host:repo" "../subrepo" "user@host:subrepo"
 test_submodule_relative_url "(null)" "user@host:repo" "../../subrepo" ".:subrepo"
 
-test_expect_success 'match .gitmodules' '
-	test-tool path-utils is_dotgitmodules \
-		.gitmodules \
+test_expect_success 'match .shitmodules' '
+	test-tool path-utils is_dotshitmodules \
+		.shitmodules \
 		\
-		.git${u200c}modules \
+		.shit${u200c}modules \
 		\
-		.Gitmodules \
-		.gitmoduleS \
+		.shitmodules \
+		.shitmoduleS \
 		\
-		".gitmodules " \
-		".gitmodules." \
-		".gitmodules  " \
-		".gitmodules. " \
-		".gitmodules ." \
-		".gitmodules.." \
-		".gitmodules   " \
-		".gitmodules.  " \
-		".gitmodules . " \
-		".gitmodules  ." \
+		".shitmodules " \
+		".shitmodules." \
+		".shitmodules  " \
+		".shitmodules. " \
+		".shitmodules ." \
+		".shitmodules.." \
+		".shitmodules   " \
+		".shitmodules.  " \
+		".shitmodules . " \
+		".shitmodules  ." \
 		\
-		".Gitmodules " \
-		".Gitmodules." \
-		".Gitmodules  " \
-		".Gitmodules. " \
-		".Gitmodules ." \
-		".Gitmodules.." \
-		".Gitmodules   " \
-		".Gitmodules.  " \
-		".Gitmodules . " \
-		".Gitmodules  ." \
+		".shitmodules " \
+		".shitmodules." \
+		".shitmodules  " \
+		".shitmodules. " \
+		".shitmodules ." \
+		".shitmodules.." \
+		".shitmodules   " \
+		".shitmodules.  " \
+		".shitmodules . " \
+		".shitmodules  ." \
 		\
-		GITMOD~1 \
-		gitmod~1 \
-		GITMOD~2 \
-		gitmod~3 \
-		GITMOD~4 \
+		shitMOD~1 \
+		shitmod~1 \
+		shitMOD~2 \
+		shitmod~3 \
+		shitMOD~4 \
 		\
-		"GITMOD~1 " \
-		"gitmod~2." \
-		"GITMOD~3  " \
-		"gitmod~4. " \
-		"GITMOD~1 ." \
-		"gitmod~2   " \
-		"GITMOD~3.  " \
-		"gitmod~4 . " \
+		"shitMOD~1 " \
+		"shitmod~2." \
+		"shitMOD~3  " \
+		"shitmod~4. " \
+		"shitMOD~1 ." \
+		"shitmod~2   " \
+		"shitMOD~3.  " \
+		"shitmod~4 . " \
 		\
 		GI7EBA~1 \
 		gi7eba~9 \
@@ -495,23 +495,23 @@ test_expect_success 'match .gitmodules' '
 		~1000000 \
 		~9999999 \
 		\
-		.gitmodules:\$DATA \
-		"gitmod~4 . :\$DATA" \
+		.shitmodules:\$DATA \
+		"shitmod~4 . :\$DATA" \
 		\
 		--not \
-		".gitmodules x"  \
-		".gitmodules .x" \
+		".shitmodules x"  \
+		".shitmodules .x" \
 		\
-		" .gitmodules" \
+		" .shitmodules" \
 		\
-		..gitmodules \
+		..shitmodules \
 		\
-		gitmodules \
+		shitmodules \
 		\
-		.gitmodule \
+		.shitmodule \
 		\
-		".gitmodules x " \
-		".gitmodules .x" \
+		".shitmodules x " \
+		".shitmodules .x" \
 		\
 		GI7EBA~ \
 		GI7EBA~0 \
@@ -524,26 +524,26 @@ test_expect_success 'match .gitmodules' '
 		GI7EB~01 \
 		GI7EB~1X \
 		\
-		.gitmodules,:\$DATA
+		.shitmodules,:\$DATA
 '
 
-test_expect_success 'match .gitattributes' '
-	test-tool path-utils is_dotgitattributes \
-		.gitattributes \
-		.git${u200c}attributes \
-		.Gitattributes \
-		.gitattributeS \
-		GITATT~1 \
+test_expect_success 'match .shitattributes' '
+	test-tool path-utils is_dotshitattributes \
+		.shitattributes \
+		.shit${u200c}attributes \
+		.shitattributes \
+		.shitattributeS \
+		shitATT~1 \
 		GI7D29~1
 '
 
-test_expect_success 'match .gitignore' '
-	test-tool path-utils is_dotgitignore \
-		.gitignore \
-		.git${u200c}ignore \
-		.Gitignore \
-		.gitignorE \
-		GITIGN~1 \
+test_expect_success 'match .shitignore' '
+	test-tool path-utils is_dotshitignore \
+		.shitignore \
+		.shit${u200c}ignore \
+		.shitignore \
+		.shitignorE \
+		shitIGN~1 \
 		GI250A~1
 '
 
@@ -562,7 +562,7 @@ test_expect_success MINGW 'is_valid_path() on Windows' '
 		win32 \
 		"win32 x" \
 		../hello.txt \
-		C:\\git \
+		C:\\shit \
 		comm \
 		conout.c \
 		com0.c \
@@ -589,23 +589,23 @@ test_lazy_prereq RUNTIME_PREFIX '
 '
 
 test_lazy_prereq CAN_EXEC_IN_PWD '
-	cp "$GIT_EXEC_PATH"/git$X ./ &&
-	./git rev-parse
+	cp "$shit_EXEC_PATH"/shit$X ./ &&
+	./shit rev-parse
 '
 
 test_expect_success !VALGRIND,RUNTIME_PREFIX,CAN_EXEC_IN_PWD 'RUNTIME_PREFIX works' '
-	mkdir -p pretend/bin pretend/libexec/git-core &&
-	echo "echo HERE" | write_script pretend/libexec/git-core/git-here &&
-	cp "$GIT_EXEC_PATH"/git$X pretend/bin/ &&
-	GIT_EXEC_PATH= ./pretend/bin/git here >actual &&
+	mkdir -p pretend/bin pretend/libexec/shit-core &&
+	echo "echo HERE" | write_script pretend/libexec/shit-core/shit-here &&
+	cp "$shit_EXEC_PATH"/shit$X pretend/bin/ &&
+	shit_EXEC_PATH= ./pretend/bin/shit here >actual &&
 	echo HERE >expect &&
 	test_cmp expect actual'
 
 test_expect_success !VALGRIND,RUNTIME_PREFIX,CAN_EXEC_IN_PWD '%(prefix)/ works' '
 	mkdir -p pretend/bin &&
-	cp "$GIT_EXEC_PATH"/git$X pretend/bin/ &&
-	git config yes.path "%(prefix)/yes" &&
-	GIT_EXEC_PATH= ./pretend/bin/git config --path yes.path >actual &&
+	cp "$shit_EXEC_PATH"/shit$X pretend/bin/ &&
+	shit config yes.path "%(prefix)/yes" &&
+	shit_EXEC_PATH= ./pretend/bin/shit config --path yes.path >actual &&
 	echo "$(pwd)/pretend/yes" >expect &&
 	test_cmp expect actual
 '
@@ -628,7 +628,7 @@ test_expect_success 'do_files_match()' '
 	assert_fails 0-8.txt 1-9.txt &&
 	assert_fails -1-10.txt 0-10.txt &&
 	assert_fails 1-10.txt 1-9.txt &&
-	assert_fails 1-10.txt .git &&
+	assert_fails 1-10.txt .shit &&
 	assert_fails does-not-exist 1-10.txt &&
 
 	if test_have_prereq FILEMODE

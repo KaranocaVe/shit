@@ -1,5 +1,5 @@
 /*
- * Implementation of git-merge-ours.sh as builtin
+ * Implementation of shit-merge-ours.sh as builtin
  *
  * Copyright (c) 2007 Thomas Harning Jr
  * Original:
@@ -7,13 +7,13 @@
  *
  * Pretend we resolved the heads, but declare our tree trumps everybody else.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "builtin.h"
 #include "diff.h"
 #include "repository.h"
 
 static const char builtin_merge_ours_usage[] =
-	"git merge-ours <base>... -- HEAD <remote>...";
+	"shit merge-ours <base>... -- HEAD <remote>...";
 
 int cmd_merge_ours(int argc, const char **argv, const char *prefix UNUSED)
 {

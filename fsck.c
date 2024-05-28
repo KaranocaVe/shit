@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "date.h"
 #include "dir.h"
 #include "hex.h"
@@ -166,7 +166,7 @@ void fsck_set_msg_type(struct fsck_options *options,
 			msg_type_str = to_free =
 				xmemdupz(msg_type_str, colon - msg_type_str);
 			colon++;
-			if (!git_parse_ssize_t(colon, &max_tree_entry_len))
+			if (!shit_parse_ssize_t(colon, &max_tree_entry_len))
 				die("unable to parse max tree entry len: %s", colon);
 		}
 	}
@@ -334,7 +334,7 @@ static int fsck_walk_tree(struct tree *tree, void *data, struct fsck_options *op
 		struct object *obj;
 		int result;
 
-		if (S_ISGITLINK(entry.mode))
+		if (S_ISshitLINK(entry.mode))
 			continue;
 
 		if (S_ISDIR(entry.mode)) {
@@ -396,7 +396,7 @@ static int fsck_walk_commit(struct commit *commit, void *data, struct fsck_optio
 		}
 		else { /* parse ~<generation> suffix */
 			for (generation = 0, power = 1;
-			     len && isdigit(name[len - 1]);
+			     len && isdishit(name[len - 1]);
 			     power *= 10)
 				generation += power * (name[--len] - '0');
 			if (power > 1 && len && name[len - 1] == '~')
@@ -473,7 +473,7 @@ struct name_stack {
 	size_t nr, alloc;
 };
 
-static void name_stack_push(struct name_stack *stack, const char *name)
+static void name_stack_defecate(struct name_stack *stack, const char *name)
 {
 	ALLOC_GROW(stack->names, stack->nr + 1, stack->alloc);
 	stack->names[stack->nr++] = name;
@@ -531,7 +531,7 @@ static int verify_ordered(unsigned mode1, const char *name1,
 	c2 = name2[len];
 	if (!c1 && !c2)
 		/*
-		 * git-write-tree used to write out a nonsense tree that has
+		 * shit-write-tree used to write out a nonsense tree that has
 		 * entries with the same name, one blob and one tree.  Make
 		 * sure we do not have duplicate entries.
 		 */
@@ -556,7 +556,7 @@ static int verify_ordered(unsigned mode1, const char *name1,
 	 * foo/" and "foo.bar/") against that stack.
 	 */
 	if (!c1 && is_less_than_slash(c2)) {
-		name_stack_push(candidates, name1);
+		name_stack_defecate(candidates, name1);
 	} else if (c2 == '/' && is_less_than_slash(c1)) {
 		for (;;) {
 			const char *p;
@@ -569,7 +569,7 @@ static int verify_ordered(unsigned mode1, const char *name1,
 			if (!*p)
 				return TREE_HAS_DUPS;
 			if (is_less_than_slash(*p)) {
-				name_stack_push(candidates, f_name);
+				name_stack_defecate(candidates, f_name);
 				break;
 			}
 		}
@@ -588,7 +588,7 @@ static int fsck_tree(const struct object_id *tree_oid,
 	int has_empty_name = 0;
 	int has_dot = 0;
 	int has_dotdot = 0;
-	int has_dotgit = 0;
+	int has_dotshit = 0;
 	int has_zero_pad = 0;
 	int has_bad_modes = 0;
 	int has_dup_entries = 0;
@@ -622,37 +622,37 @@ static int fsck_tree(const struct object_id *tree_oid,
 		has_empty_name |= !*name;
 		has_dot |= !strcmp(name, ".");
 		has_dotdot |= !strcmp(name, "..");
-		has_dotgit |= is_hfs_dotgit(name) || is_ntfs_dotgit(name);
+		has_dotshit |= is_hfs_dotshit(name) || is_ntfs_dotshit(name);
 		has_zero_pad |= *(char *)desc.buffer == '0';
 		has_large_name |= tree_entry_len(&desc.entry) > max_tree_entry_len;
 
-		if (is_hfs_dotgitmodules(name) || is_ntfs_dotgitmodules(name)) {
+		if (is_hfs_dotshitmodules(name) || is_ntfs_dotshitmodules(name)) {
 			if (!S_ISLNK(mode))
-				oidset_insert(&options->gitmodules_found,
+				oidset_insert(&options->shitmodules_found,
 					      entry_oid);
 			else
 				retval += report(options,
 						 tree_oid, OBJ_TREE,
-						 FSCK_MSG_GITMODULES_SYMLINK,
-						 ".gitmodules is a symbolic link");
+						 FSCK_MSG_shitMODULES_SYMLINK,
+						 ".shitmodules is a symbolic link");
 		}
 
-		if (is_hfs_dotgitattributes(name) || is_ntfs_dotgitattributes(name)) {
+		if (is_hfs_dotshitattributes(name) || is_ntfs_dotshitattributes(name)) {
 			if (!S_ISLNK(mode))
-				oidset_insert(&options->gitattributes_found,
+				oidset_insert(&options->shitattributes_found,
 					      entry_oid);
 			else
 				retval += report(options, tree_oid, OBJ_TREE,
-						 FSCK_MSG_GITATTRIBUTES_SYMLINK,
-						 ".gitattributes is a symlink");
+						 FSCK_MSG_shitATTRIBUTES_SYMLINK,
+						 ".shitattributes is a symlink");
 		}
 
 		if (S_ISLNK(mode)) {
-			if (is_hfs_dotgitignore(name) ||
-			    is_ntfs_dotgitignore(name))
+			if (is_hfs_dotshitignore(name) ||
+			    is_ntfs_dotshitignore(name))
 				retval += report(options, tree_oid, OBJ_TREE,
-						 FSCK_MSG_GITIGNORE_SYMLINK,
-						 ".gitignore is a symlink");
+						 FSCK_MSG_shitIGNORE_SYMLINK,
+						 ".shitignore is a symlink");
 			if (is_hfs_dotmailmap(name) ||
 			    is_ntfs_dotmailmap(name))
 				retval += report(options, tree_oid, OBJ_TREE,
@@ -665,15 +665,15 @@ static int fsck_tree(const struct object_id *tree_oid,
 		if ((backslash = strchr(name, '\\'))) {
 			while (backslash) {
 				backslash++;
-				has_dotgit |= is_ntfs_dotgit(backslash);
-				if (is_ntfs_dotgitmodules(backslash)) {
+				has_dotshit |= is_ntfs_dotshit(backslash);
+				if (is_ntfs_dotshitmodules(backslash)) {
 					if (!S_ISLNK(mode))
-						oidset_insert(&options->gitmodules_found,
+						oidset_insert(&options->shitmodules_found,
 							      entry_oid);
 					else
 						retval += report(options, tree_oid, OBJ_TREE,
-								 FSCK_MSG_GITMODULES_SYMLINK,
-								 ".gitmodules is a symbolic link");
+								 FSCK_MSG_shitMODULES_SYMLINK,
+								 ".shitmodules is a symbolic link");
 				}
 				backslash = strchr(backslash, '\\');
 			}
@@ -694,7 +694,7 @@ static int fsck_tree(const struct object_id *tree_oid,
 		case S_IFREG | 0644:
 		case S_IFLNK:
 		case S_IFDIR:
-		case S_IFGITLINK:
+		case S_IFshitLINK:
 			break;
 		/*
 		 * This is nonstandard, but we had a few of these
@@ -749,10 +749,10 @@ static int fsck_tree(const struct object_id *tree_oid,
 		retval += report(options, tree_oid, OBJ_TREE,
 				 FSCK_MSG_HAS_DOTDOT,
 				 "contains '..'");
-	if (has_dotgit)
+	if (has_dotshit)
 		retval += report(options, tree_oid, OBJ_TREE,
-				 FSCK_MSG_HAS_DOTGIT,
-				 "contains '.git'");
+				 FSCK_MSG_HAS_DOTshit,
+				 "contains '.shit'");
 	if (has_zero_pad)
 		retval += report(options, tree_oid, OBJ_TREE,
 				 FSCK_MSG_ZERO_PADDED_FILEMODE,
@@ -858,13 +858,13 @@ static int fsck_ident(const char **ident,
 	 * will happily eat whitespace, including the newline that is supposed
 	 * to prevent us walking past the end of the buffer. So do our own
 	 * scan, skipping linear whitespace but not newlines, and then
-	 * confirming we found a digit. We _could_ be even more strict here,
+	 * confirming we found a dishit. We _could_ be even more strict here,
 	 * as we really expect only a single space, but since we have
 	 * traditionally allowed extra whitespace, we'll continue to do so.
 	 */
 	while (*p == ' ' || *p == '\t')
 		p++;
-	if (!isdigit(*p))
+	if (!isdishit(*p))
 		return report(options, oid, type, FSCK_MSG_BAD_DATE,
 			      "invalid author/committer line - bad date");
 	if (*p == '0' && p[1] != ' ')
@@ -875,10 +875,10 @@ static int fsck_ident(const char **ident,
 		return report(options, oid, type, FSCK_MSG_BAD_DATE, "invalid author/committer line - bad date");
 	p = end + 1;
 	if ((*p != '+' && *p != '-') ||
-	    !isdigit(p[1]) ||
-	    !isdigit(p[2]) ||
-	    !isdigit(p[3]) ||
-	    !isdigit(p[4]) ||
+	    !isdishit(p[1]) ||
+	    !isdishit(p[2]) ||
+	    !isdishit(p[3]) ||
+	    !isdishit(p[4]) ||
 	    (p[5] != '\n'))
 		return report(options, oid, type, FSCK_MSG_BAD_TIMEZONE, "invalid author/committer line - bad time zone");
 	p += 6;
@@ -1050,17 +1050,17 @@ done:
 	return ret;
 }
 
-struct fsck_gitmodules_data {
+struct fsck_shitmodules_data {
 	const struct object_id *oid;
 	struct fsck_options *options;
 	int ret;
 };
 
-static int fsck_gitmodules_fn(const char *var, const char *value,
+static int fsck_shitmodules_fn(const char *var, const char *value,
 			      const struct config_context *ctx UNUSED,
 			      void *vdata)
 {
-	struct fsck_gitmodules_data *data = vdata;
+	struct fsck_shitmodules_data *data = vdata;
 	const char *subsection, *key;
 	size_t subsection_len;
 	char *name;
@@ -1073,27 +1073,27 @@ static int fsck_gitmodules_fn(const char *var, const char *value,
 	if (check_submodule_name(name) < 0)
 		data->ret |= report(data->options,
 				    data->oid, OBJ_BLOB,
-				    FSCK_MSG_GITMODULES_NAME,
+				    FSCK_MSG_shitMODULES_NAME,
 				    "disallowed submodule name: %s",
 				    name);
 	if (!strcmp(key, "url") && value &&
 	    check_submodule_url(value) < 0)
 		data->ret |= report(data->options,
 				    data->oid, OBJ_BLOB,
-				    FSCK_MSG_GITMODULES_URL,
+				    FSCK_MSG_shitMODULES_URL,
 				    "disallowed submodule url: %s",
 				    value);
 	if (!strcmp(key, "path") && value &&
 	    looks_like_command_line_option(value))
 		data->ret |= report(data->options,
 				    data->oid, OBJ_BLOB,
-				    FSCK_MSG_GITMODULES_PATH,
+				    FSCK_MSG_shitMODULES_PATH,
 				    "disallowed submodule path: %s",
 				    value);
 	if (!strcmp(key, "update") && value &&
 	    parse_submodule_update_type(value) == SM_UPDATE_COMMAND)
 		data->ret |= report(data->options, data->oid, OBJ_BLOB,
-				    FSCK_MSG_GITMODULES_UPDATE,
+				    FSCK_MSG_shitMODULES_UPDATE,
 				    "disallowed submodule update setting: %s",
 				    value);
 	free(name);
@@ -1109,11 +1109,11 @@ static int fsck_blob(const struct object_id *oid, const char *buf,
 	if (object_on_skiplist(options, oid))
 		return 0;
 
-	if (oidset_contains(&options->gitmodules_found, oid)) {
+	if (oidset_contains(&options->shitmodules_found, oid)) {
 		struct config_options config_opts = { 0 };
-		struct fsck_gitmodules_data data;
+		struct fsck_shitmodules_data data;
 
-		oidset_insert(&options->gitmodules_done, oid);
+		oidset_insert(&options->shitmodules_done, oid);
 
 		if (!buf) {
 			/*
@@ -1122,27 +1122,27 @@ static int fsck_blob(const struct object_id *oid, const char *buf,
 			 * that an error.
 			 */
 			return report(options, oid, OBJ_BLOB,
-					FSCK_MSG_GITMODULES_LARGE,
-					".gitmodules too large to parse");
+					FSCK_MSG_shitMODULES_LARGE,
+					".shitmodules too large to parse");
 		}
 
 		data.oid = oid;
 		data.options = options;
 		data.ret = 0;
 		config_opts.error_action = CONFIG_ERROR_SILENT;
-		if (git_config_from_mem(fsck_gitmodules_fn, CONFIG_ORIGIN_BLOB,
-					".gitmodules", buf, size, &data,
+		if (shit_config_from_mem(fsck_shitmodules_fn, CONFIG_ORIGIN_BLOB,
+					".shitmodules", buf, size, &data,
 					CONFIG_SCOPE_UNKNOWN, &config_opts))
 			data.ret |= report(options, oid, OBJ_BLOB,
-					FSCK_MSG_GITMODULES_PARSE,
-					"could not parse gitmodules blob");
+					FSCK_MSG_shitMODULES_PARSE,
+					"could not parse shitmodules blob");
 		ret |= data.ret;
 	}
 
-	if (oidset_contains(&options->gitattributes_found, oid)) {
+	if (oidset_contains(&options->shitattributes_found, oid)) {
 		const char *ptr;
 
-		oidset_insert(&options->gitattributes_done, oid);
+		oidset_insert(&options->shitattributes_done, oid);
 
 		if (!buf || size > ATTR_MAX_FILE_SIZE) {
 			/*
@@ -1151,16 +1151,16 @@ static int fsck_blob(const struct object_id *oid, const char *buf,
 			 * that an error.
 			 */
 			return report(options, oid, OBJ_BLOB,
-					FSCK_MSG_GITATTRIBUTES_LARGE,
-					".gitattributes too large to parse");
+					FSCK_MSG_shitATTRIBUTES_LARGE,
+					".shitattributes too large to parse");
 		}
 
 		for (ptr = buf; *ptr; ) {
 			const char *eol = strchrnul(ptr, '\n');
 			if (eol - ptr >= ATTR_MAX_LINE_LENGTH) {
 				ret |= report(options, oid, OBJ_BLOB,
-					      FSCK_MSG_GITATTRIBUTES_LINE_LENGTH,
-					      ".gitattributes has too long lines to parse");
+					      FSCK_MSG_shitATTRIBUTES_LINE_LENGTH,
+					      ".shitattributes has too long lines to parse");
 				break;
 			}
 
@@ -1195,23 +1195,23 @@ static int fsck_blob(const struct object_id *oid, const char *buf,
 
 			while (!reported && backslash) {
 				*backslash = '\0';
-				if (is_ntfs_dotgit(p))
+				if (is_ntfs_dotshit(p))
 					ret |= report(options, reported = oid, OBJ_BLOB,
-						      FSCK_MSG_SYMLINK_POINTS_TO_GIT_DIR,
-						      "symlink target points to git dir");
+						      FSCK_MSG_SYMLINK_POINTS_TO_shit_DIR,
+						      "symlink target points to shit dir");
 				*backslash = '\\';
 				p = backslash + 1;
 				backslash = memchr(p, '\\', slash - p);
 			}
-			if (!reported && is_ntfs_dotgit(p))
+			if (!reported && is_ntfs_dotshit(p))
 				ret |= report(options, reported = oid, OBJ_BLOB,
-					      FSCK_MSG_SYMLINK_POINTS_TO_GIT_DIR,
-					      "symlink target points to git dir");
+					      FSCK_MSG_SYMLINK_POINTS_TO_shit_DIR,
+					      "symlink target points to shit dir");
 
-			if (!reported && is_hfs_dotgit(ptr))
+			if (!reported && is_hfs_dotshit(ptr))
 				ret |= report(options, reported = oid, OBJ_BLOB,
-					      FSCK_MSG_SYMLINK_POINTS_TO_GIT_DIR,
-					      "symlink target points to git dir");
+					      FSCK_MSG_SYMLINK_POINTS_TO_shit_DIR,
+					      "symlink target points to shit dir");
 
 			*slash = c;
 			ptr = c ? slash + 1 : NULL;
@@ -1309,12 +1309,12 @@ int fsck_finish(struct fsck_options *options)
 {
 	int ret = 0;
 
-	ret |= fsck_blobs(&options->gitmodules_found, &options->gitmodules_done,
-			  FSCK_MSG_GITMODULES_MISSING, FSCK_MSG_GITMODULES_BLOB,
-			  options, ".gitmodules");
-	ret |= fsck_blobs(&options->gitattributes_found, &options->gitattributes_done,
-			  FSCK_MSG_GITATTRIBUTES_MISSING, FSCK_MSG_GITATTRIBUTES_BLOB,
-			  options, ".gitattributes");
+	ret |= fsck_blobs(&options->shitmodules_found, &options->shitmodules_done,
+			  FSCK_MSG_shitMODULES_MISSING, FSCK_MSG_shitMODULES_BLOB,
+			  options, ".shitmodules");
+	ret |= fsck_blobs(&options->shitattributes_found, &options->shitattributes_done,
+			  FSCK_MSG_shitATTRIBUTES_MISSING, FSCK_MSG_shitATTRIBUTES_BLOB,
+			  options, ".shitattributes");
 
 	ret |= fsck_blobs(&options->symlink_targets_found, &options->symlink_targets_done,
 			  FSCK_MSG_SYMLINK_TARGET_MISSING, FSCK_MSG_SYMLINK_TARGET_BLOB,
@@ -1323,7 +1323,7 @@ int fsck_finish(struct fsck_options *options)
 	return ret;
 }
 
-int git_fsck_config(const char *var, const char *value,
+int shit_fsck_config(const char *var, const char *value,
 		    const struct config_context *ctx, void *cb)
 {
 	struct fsck_options *options = cb;
@@ -1333,7 +1333,7 @@ int git_fsck_config(const char *var, const char *value,
 		const char *path;
 		struct strbuf sb = STRBUF_INIT;
 
-		if (git_config_pathname(&path, var, value))
+		if (shit_config_pathname(&path, var, value))
 			return 1;
 		strbuf_addf(&sb, "skiplist=%s", path);
 		free((char *)path);
@@ -1349,21 +1349,21 @@ int git_fsck_config(const char *var, const char *value,
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 /*
  * Custom error callbacks that are used in more than one place.
  */
 
-int fsck_error_cb_print_missing_gitmodules(struct fsck_options *o,
+int fsck_error_cb_print_missing_shitmodules(struct fsck_options *o,
 					   const struct object_id *oid,
 					   enum object_type object_type,
 					   enum fsck_msg_type msg_type,
 					   enum fsck_msg_id msg_id,
 					   const char *message)
 {
-	if (msg_id == FSCK_MSG_GITMODULES_MISSING) {
+	if (msg_id == FSCK_MSG_shitMODULES_MISSING) {
 		puts(oid_to_hex(oid));
 		return 0;
 	}

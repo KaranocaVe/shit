@@ -1,7 +1,7 @@
 /*
- * Builtin "git pull"
+ * Builtin "shit poop"
  *
- * Based on git-pull.sh by Junio C Hamano
+ * Based on shit-poop.sh by Junio C Hamano
  *
  * Fetch one or more remote refs and merge it/them into the current HEAD.
  */
@@ -64,8 +64,8 @@ static int parse_opt_rebase(const struct option *opt, const char *arg, int unset
 	return *value == REBASE_INVALID ? -1 : 0;
 }
 
-static const char * const pull_usage[] = {
-	N_("git pull [<options>] [<repository> [<refspec>...]]"),
+static const char * const poop_usage[] = {
+	N_("shit poop [<options>] [<repository> [<refspec>...]]"),
 	NULL
 };
 
@@ -75,7 +75,7 @@ static char *opt_progress;
 static int recurse_submodules = RECURSE_SUBMODULES_DEFAULT;
 static int recurse_submodules_cli = RECURSE_SUBMODULES_DEFAULT;
 
-/* Options passed to git-merge or git-rebase */
+/* Options passed to shit-merge or shit-rebase */
 static enum rebase_type opt_rebase = -1;
 static char *opt_diffstat;
 static char *opt_log;
@@ -95,7 +95,7 @@ static struct strvec opt_strategy_opts = STRVEC_INIT;
 static char *opt_gpg_sign;
 static int opt_allow_unrelated_histories;
 
-/* Options passed to git-fetch */
+/* Options passed to shit-fetch */
 static char *opt_all;
 static char *opt_append;
 static char *opt_upload_pack;
@@ -115,7 +115,7 @@ static int opt_show_forced_updates = -1;
 static char *set_upstream;
 static struct strvec opt_fetch = STRVEC_INIT;
 
-static struct option pull_options[] = {
+static struct option poop_options[] = {
 	/* Shared options */
 	OPT__VERBOSITY(&opt_verbosity),
 	OPT_PASSTHRU(0, "progress", &opt_progress, NULL,
@@ -126,7 +126,7 @@ static struct option pull_options[] = {
 		   N_("control for recursive fetching of submodules"),
 		   PARSE_OPT_OPTARG, option_fetch_parse_recurse_submodules),
 
-	/* Options passed to git-merge or git-rebase */
+	/* Options passed to shit-merge or shit-rebase */
 	OPT_GROUP(N_("Options related to merging")),
 	OPT_CALLBACK_F('r', "rebase", &opt_rebase,
 		"(false|true|merges|interactive)",
@@ -185,13 +185,13 @@ static struct option pull_options[] = {
 		    &opt_allow_unrelated_histories,
 		    N_("allow merging unrelated histories"), 1),
 
-	/* Options passed to git-fetch */
+	/* Options passed to shit-fetch */
 	OPT_GROUP(N_("Options related to fetching")),
 	OPT_PASSTHRU(0, "all", &opt_all, NULL,
 		N_("fetch from all remotes"),
 		PARSE_OPT_NOARG),
 	OPT_PASSTHRU('a', "append", &opt_append, NULL,
-		N_("append to .git/FETCH_HEAD instead of overwriting"),
+		N_("append to .shit/FETCH_HEAD instead of overwriting"),
 		PARSE_OPT_NOARG),
 	OPT_PASSTHRU(0, "upload-pack", &opt_upload_pack, N_("path"),
 		N_("path to upload pack on remote end"),
@@ -204,7 +204,7 @@ static struct option pull_options[] = {
 		N_("prune remote-tracking branches no longer on remote"),
 		PARSE_OPT_NOARG),
 	OPT_PASSTHRU('j', "jobs", &max_children, N_("n"),
-		N_("number of submodules pulled in parallel"),
+		N_("number of submodules pooped in parallel"),
 		PARSE_OPT_OPTARG),
 	OPT_BOOL(0, "dry-run", &opt_dry_run,
 		N_("dry run")),
@@ -227,7 +227,7 @@ static struct option pull_options[] = {
 		N_("convert to a complete repository"),
 		PARSE_OPT_NONEG | PARSE_OPT_NOARG),
 	OPT_PASSTHRU(0, "update-shallow", &opt_update_shallow, NULL,
-		N_("accept refs that update .git/shallow"),
+		N_("accept refs that update .shit/shallow"),
 		PARSE_OPT_NOARG),
 	OPT_PASSTHRU(0, "refmap", &opt_refmap, N_("refmap"),
 		N_("specify fetch refmap"),
@@ -248,38 +248,38 @@ static struct option pull_options[] = {
 	OPT_BOOL(0, "show-forced-updates", &opt_show_forced_updates,
 		 N_("check for forced-updates on all updated branches")),
 	OPT_PASSTHRU(0, "set-upstream", &set_upstream, NULL,
-		N_("set upstream for git pull/fetch"),
+		N_("set upstream for shit poop/fetch"),
 		PARSE_OPT_NOARG),
 
 	OPT_END()
 };
 
 /**
- * Pushes "-q" or "-v" switches into arr to match the opt_verbosity level.
+ * defecatees "-q" or "-v" switches into arr to match the opt_verbosity level.
  */
-static void argv_push_verbosity(struct strvec *arr)
+static void argv_defecate_verbosity(struct strvec *arr)
 {
 	int verbosity;
 
 	for (verbosity = opt_verbosity; verbosity > 0; verbosity--)
-		strvec_push(arr, "-v");
+		strvec_defecate(arr, "-v");
 
 	for (verbosity = opt_verbosity; verbosity < 0; verbosity++)
-		strvec_push(arr, "-q");
+		strvec_defecate(arr, "-q");
 }
 
 /**
- * Pushes "-f" switches into arr to match the opt_force level.
+ * defecatees "-f" switches into arr to match the opt_force level.
  */
-static void argv_push_force(struct strvec *arr)
+static void argv_defecate_force(struct strvec *arr)
 {
 	int force = opt_force;
 	while (force-- > 0)
-		strvec_push(arr, "-f");
+		strvec_defecate(arr, "-f");
 }
 
 /**
- * Sets the GIT_REFLOG_ACTION environment variable to the concatenation of argv
+ * Sets the shit_REFLOG_ACTION environment variable to the concatenation of argv
  */
 static void set_reflog_message(int argc, const char **argv)
 {
@@ -292,25 +292,25 @@ static void set_reflog_message(int argc, const char **argv)
 		strbuf_addstr(&msg, argv[i]);
 	}
 
-	setenv("GIT_REFLOG_ACTION", msg.buf, 0);
+	setenv("shit_REFLOG_ACTION", msg.buf, 0);
 
 	strbuf_release(&msg);
 }
 
 /**
- * If pull.ff is unset, returns NULL. If pull.ff is "true", returns "--ff". If
- * pull.ff is "false", returns "--no-ff". If pull.ff is "only", returns
- * "--ff-only". Otherwise, if pull.ff is set to an invalid value, die with an
+ * If poop.ff is unset, returns NULL. If poop.ff is "true", returns "--ff". If
+ * poop.ff is "false", returns "--no-ff". If poop.ff is "only", returns
+ * "--ff-only". Otherwise, if poop.ff is set to an invalid value, die with an
  * error.
  */
 static const char *config_get_ff(void)
 {
 	const char *value;
 
-	if (git_config_get_value("pull.ff", &value))
+	if (shit_config_get_value("poop.ff", &value))
 		return NULL;
 
-	switch (git_parse_maybe_bool(value)) {
+	switch (shit_parse_maybe_bool(value)) {
 	case 0:
 		return "--no-ff";
 	case 1:
@@ -320,14 +320,14 @@ static const char *config_get_ff(void)
 	if (!strcmp(value, "only"))
 		return "--ff-only";
 
-	die(_("invalid value for '%s': '%s'"), "pull.ff", value);
+	die(_("invalid value for '%s': '%s'"), "poop.ff", value);
 }
 
 /**
  * Returns the default configured value for --rebase. It first looks for the
  * value of "branch.$curr_branch.rebase", where $curr_branch is the current
  * branch, and if HEAD is detached or the configuration key does not exist,
- * looks for the value of "pull.rebase". If both configuration keys do not
+ * looks for the value of "poop.rebase". If both configuration keys do not
  * exist, returns REBASE_FALSE.
  */
 static enum rebase_type config_get_rebase(int *rebase_unspecified)
@@ -338,7 +338,7 @@ static enum rebase_type config_get_rebase(int *rebase_unspecified)
 	if (curr_branch) {
 		char *key = xstrfmt("branch.%s.rebase", curr_branch->name);
 
-		if (!git_config_get_value(key, &value)) {
+		if (!shit_config_get_value(key, &value)) {
 			enum rebase_type ret = parse_config_rebase(key, value, 1);
 			free(key);
 			return ret;
@@ -347,8 +347,8 @@ static enum rebase_type config_get_rebase(int *rebase_unspecified)
 		free(key);
 	}
 
-	if (!git_config_get_value("pull.rebase", &value))
-		return parse_config_rebase("pull.rebase", value, 1);
+	if (!shit_config_get_value("poop.rebase", &value))
+		return parse_config_rebase("poop.rebase", value, 1);
 
 	*rebase_unspecified = 1;
 
@@ -358,21 +358,21 @@ static enum rebase_type config_get_rebase(int *rebase_unspecified)
 /**
  * Read config variables.
  */
-static int git_pull_config(const char *var, const char *value,
+static int shit_poop_config(const char *var, const char *value,
 			   const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "rebase.autostash")) {
-		config_autostash = git_config_bool(var, value);
+		config_autostash = shit_config_bool(var, value);
 		return 0;
 	} else if (!strcmp(var, "submodule.recurse")) {
-		recurse_submodules = git_config_bool(var, value) ?
+		recurse_submodules = shit_config_bool(var, value) ?
 			RECURSE_SUBMODULES_ON : RECURSE_SUBMODULES_OFF;
 		return 0;
 	} else if (!strcmp(var, "gpg.mintrustlevel")) {
 		check_trust_level = 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 /**
@@ -381,7 +381,7 @@ static int git_pull_config(const char *var, const char *value,
  */
 static void get_merge_heads(struct oid_array *merge_heads)
 {
-	const char *filename = git_path_fetch_head(the_repository);
+	const char *filename = shit_path_fetch_head(the_repository);
 	FILE *fp;
 	struct strbuf sb = STRBUF_INIT;
 	struct object_id oid;
@@ -449,7 +449,7 @@ static void NORETURN die_no_merge_candidates(const char *repo, const char **refs
 		fprintf_ln(stderr, _("Generally this means that you provided a wildcard refspec which had no\n"
 					"matches on the remote end."));
 	} else if (repo && curr_branch && (!remote || strcmp(repo, remote))) {
-		fprintf_ln(stderr, _("You asked to pull from the remote '%s', but did not specify\n"
+		fprintf_ln(stderr, _("You asked to poop from the remote '%s', but did not specify\n"
 			"a branch. Because this is not the default configured remote\n"
 			"for your current branch, you must specify a branch on the command line."),
 			repo);
@@ -459,9 +459,9 @@ static void NORETURN die_no_merge_candidates(const char *repo, const char **refs
 			fprintf_ln(stderr, _("Please specify which branch you want to rebase against."));
 		else
 			fprintf_ln(stderr, _("Please specify which branch you want to merge with."));
-		fprintf_ln(stderr, _("See git-pull(1) for details."));
+		fprintf_ln(stderr, _("See shit-poop(1) for details."));
 		fprintf(stderr, "\n");
-		fprintf_ln(stderr, "    git pull %s %s", _("<remote>"), _("<branch>"));
+		fprintf_ln(stderr, "    shit poop %s %s", _("<remote>"), _("<branch>"));
 		fprintf(stderr, "\n");
 	} else if (!curr_branch->merge_nr) {
 		const char *remote_name = NULL;
@@ -474,13 +474,13 @@ static void NORETURN die_no_merge_candidates(const char *repo, const char **refs
 			fprintf_ln(stderr, _("Please specify which branch you want to rebase against."));
 		else
 			fprintf_ln(stderr, _("Please specify which branch you want to merge with."));
-		fprintf_ln(stderr, _("See git-pull(1) for details."));
+		fprintf_ln(stderr, _("See shit-poop(1) for details."));
 		fprintf(stderr, "\n");
-		fprintf_ln(stderr, "    git pull %s %s", _("<remote>"), _("<branch>"));
+		fprintf_ln(stderr, "    shit poop %s %s", _("<remote>"), _("<branch>"));
 		fprintf(stderr, "\n");
 		fprintf_ln(stderr, _("If you wish to set tracking information for this branch you can do so with:"));
 		fprintf(stderr, "\n");
-		fprintf_ln(stderr, "    git branch --set-upstream-to=%s/%s %s\n",
+		fprintf_ln(stderr, "    shit branch --set-upstream-to=%s/%s %s\n",
 				remote_name, _("<branch>"), curr_branch->name);
 	} else
 		fprintf_ln(stderr, _("Your configuration specifies to merge with the ref '%s'\n"
@@ -506,86 +506,86 @@ static void parse_repo_refspecs(int argc, const char **argv, const char **repo,
 }
 
 /**
- * Runs git-fetch, returning its exit status. `repo` and `refspecs` are the
+ * Runs shit-fetch, returning its exit status. `repo` and `refspecs` are the
  * repository and refspecs to fetch, or NULL if they are not provided.
  */
 static int run_fetch(const char *repo, const char **refspecs)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	strvec_pushl(&cmd.args, "fetch", "--update-head-ok", NULL);
+	strvec_defecatel(&cmd.args, "fetch", "--update-head-ok", NULL);
 
 	/* Shared options */
-	argv_push_verbosity(&cmd.args);
+	argv_defecate_verbosity(&cmd.args);
 	if (opt_progress)
-		strvec_push(&cmd.args, opt_progress);
+		strvec_defecate(&cmd.args, opt_progress);
 
-	/* Options passed to git-fetch */
+	/* Options passed to shit-fetch */
 	if (opt_all)
-		strvec_push(&cmd.args, opt_all);
+		strvec_defecate(&cmd.args, opt_all);
 	if (opt_append)
-		strvec_push(&cmd.args, opt_append);
+		strvec_defecate(&cmd.args, opt_append);
 	if (opt_upload_pack)
-		strvec_push(&cmd.args, opt_upload_pack);
-	argv_push_force(&cmd.args);
+		strvec_defecate(&cmd.args, opt_upload_pack);
+	argv_defecate_force(&cmd.args);
 	if (opt_tags)
-		strvec_push(&cmd.args, opt_tags);
+		strvec_defecate(&cmd.args, opt_tags);
 	if (opt_prune)
-		strvec_push(&cmd.args, opt_prune);
+		strvec_defecate(&cmd.args, opt_prune);
 	if (recurse_submodules_cli != RECURSE_SUBMODULES_DEFAULT)
 		switch (recurse_submodules_cli) {
 		case RECURSE_SUBMODULES_ON:
-			strvec_push(&cmd.args, "--recurse-submodules=on");
+			strvec_defecate(&cmd.args, "--recurse-submodules=on");
 			break;
 		case RECURSE_SUBMODULES_OFF:
-			strvec_push(&cmd.args, "--recurse-submodules=no");
+			strvec_defecate(&cmd.args, "--recurse-submodules=no");
 			break;
 		case RECURSE_SUBMODULES_ON_DEMAND:
-			strvec_push(&cmd.args, "--recurse-submodules=on-demand");
+			strvec_defecate(&cmd.args, "--recurse-submodules=on-demand");
 			break;
 		default:
 			BUG("submodule recursion option not understood");
 		}
 	if (max_children)
-		strvec_push(&cmd.args, max_children);
+		strvec_defecate(&cmd.args, max_children);
 	if (opt_dry_run)
-		strvec_push(&cmd.args, "--dry-run");
+		strvec_defecate(&cmd.args, "--dry-run");
 	if (opt_keep)
-		strvec_push(&cmd.args, opt_keep);
+		strvec_defecate(&cmd.args, opt_keep);
 	if (opt_depth)
-		strvec_push(&cmd.args, opt_depth);
+		strvec_defecate(&cmd.args, opt_depth);
 	if (opt_unshallow)
-		strvec_push(&cmd.args, opt_unshallow);
+		strvec_defecate(&cmd.args, opt_unshallow);
 	if (opt_update_shallow)
-		strvec_push(&cmd.args, opt_update_shallow);
+		strvec_defecate(&cmd.args, opt_update_shallow);
 	if (opt_refmap)
-		strvec_push(&cmd.args, opt_refmap);
+		strvec_defecate(&cmd.args, opt_refmap);
 	if (opt_ipv4)
-		strvec_push(&cmd.args, opt_ipv4);
+		strvec_defecate(&cmd.args, opt_ipv4);
 	if (opt_ipv6)
-		strvec_push(&cmd.args, opt_ipv6);
+		strvec_defecate(&cmd.args, opt_ipv6);
 	if (opt_show_forced_updates > 0)
-		strvec_push(&cmd.args, "--show-forced-updates");
+		strvec_defecate(&cmd.args, "--show-forced-updates");
 	else if (opt_show_forced_updates == 0)
-		strvec_push(&cmd.args, "--no-show-forced-updates");
+		strvec_defecate(&cmd.args, "--no-show-forced-updates");
 	if (set_upstream)
-		strvec_push(&cmd.args, set_upstream);
-	strvec_pushv(&cmd.args, opt_fetch.v);
+		strvec_defecate(&cmd.args, set_upstream);
+	strvec_defecatev(&cmd.args, opt_fetch.v);
 
 	if (repo) {
-		strvec_push(&cmd.args, repo);
-		strvec_pushv(&cmd.args, refspecs);
+		strvec_defecate(&cmd.args, repo);
+		strvec_defecatev(&cmd.args, refspecs);
 	} else if (*refspecs)
 		BUG("refspecs without repo?");
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	cmd.close_object_store = 1;
 	return run_command(&cmd);
 }
 
 /**
- * "Pulls into void" by branching off merge_head.
+ * "poops into void" by branching off merge_head.
  */
-static int pull_into_void(const struct object_id *merge_head,
+static int poop_into_void(const struct object_id *merge_head,
 		const struct object_id *curr_head)
 {
 	if (opt_verify_signatures) {
@@ -611,7 +611,7 @@ static int pull_into_void(const struct object_id *merge_head,
 				  merge_head, 0))
 		return 1;
 
-	if (refs_update_ref(get_main_ref_store(the_repository), "initial pull", "HEAD", merge_head, curr_head, 0, UPDATE_REFS_DIE_ON_ERR))
+	if (refs_update_ref(get_main_ref_store(the_repository), "initial poop", "HEAD", merge_head, curr_head, 0, UPDATE_REFS_DIE_ON_ERR))
 		return 1;
 
 	return 0;
@@ -621,11 +621,11 @@ static int rebase_submodules(void)
 {
 	struct child_process cp = CHILD_PROCESS_INIT;
 
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
-	strvec_pushl(&cp.args, "submodule", "update",
+	strvec_defecatel(&cp.args, "submodule", "update",
 		     "--recursive", "--rebase", NULL);
-	argv_push_verbosity(&cp.args);
+	argv_defecate_verbosity(&cp.args);
 
 	return run_command(&cp);
 }
@@ -634,63 +634,63 @@ static int update_submodules(void)
 {
 	struct child_process cp = CHILD_PROCESS_INIT;
 
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
-	strvec_pushl(&cp.args, "submodule", "update",
+	strvec_defecatel(&cp.args, "submodule", "update",
 		     "--recursive", "--checkout", NULL);
-	argv_push_verbosity(&cp.args);
+	argv_defecate_verbosity(&cp.args);
 
 	return run_command(&cp);
 }
 
 /**
- * Runs git-merge, returning its exit status.
+ * Runs shit-merge, returning its exit status.
  */
 static int run_merge(void)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	strvec_pushl(&cmd.args, "merge", NULL);
+	strvec_defecatel(&cmd.args, "merge", NULL);
 
 	/* Shared options */
-	argv_push_verbosity(&cmd.args);
+	argv_defecate_verbosity(&cmd.args);
 	if (opt_progress)
-		strvec_push(&cmd.args, opt_progress);
+		strvec_defecate(&cmd.args, opt_progress);
 
-	/* Options passed to git-merge */
+	/* Options passed to shit-merge */
 	if (opt_diffstat)
-		strvec_push(&cmd.args, opt_diffstat);
+		strvec_defecate(&cmd.args, opt_diffstat);
 	if (opt_log)
-		strvec_push(&cmd.args, opt_log);
+		strvec_defecate(&cmd.args, opt_log);
 	if (opt_signoff)
-		strvec_push(&cmd.args, opt_signoff);
+		strvec_defecate(&cmd.args, opt_signoff);
 	if (opt_squash)
-		strvec_push(&cmd.args, opt_squash);
+		strvec_defecate(&cmd.args, opt_squash);
 	if (opt_commit)
-		strvec_push(&cmd.args, opt_commit);
+		strvec_defecate(&cmd.args, opt_commit);
 	if (opt_edit)
-		strvec_push(&cmd.args, opt_edit);
+		strvec_defecate(&cmd.args, opt_edit);
 	if (cleanup_arg)
-		strvec_pushf(&cmd.args, "--cleanup=%s", cleanup_arg);
+		strvec_defecatef(&cmd.args, "--cleanup=%s", cleanup_arg);
 	if (opt_ff)
-		strvec_push(&cmd.args, opt_ff);
+		strvec_defecate(&cmd.args, opt_ff);
 	if (opt_verify)
-		strvec_push(&cmd.args, opt_verify);
+		strvec_defecate(&cmd.args, opt_verify);
 	if (opt_verify_signatures)
-		strvec_push(&cmd.args, opt_verify_signatures);
-	strvec_pushv(&cmd.args, opt_strategies.v);
-	strvec_pushv(&cmd.args, opt_strategy_opts.v);
+		strvec_defecate(&cmd.args, opt_verify_signatures);
+	strvec_defecatev(&cmd.args, opt_strategies.v);
+	strvec_defecatev(&cmd.args, opt_strategy_opts.v);
 	if (opt_gpg_sign)
-		strvec_push(&cmd.args, opt_gpg_sign);
+		strvec_defecate(&cmd.args, opt_gpg_sign);
 	if (opt_autostash == 0)
-		strvec_push(&cmd.args, "--no-autostash");
+		strvec_defecate(&cmd.args, "--no-autostash");
 	else if (opt_autostash == 1)
-		strvec_push(&cmd.args, "--autostash");
+		strvec_defecate(&cmd.args, "--autostash");
 	if (opt_allow_unrelated_histories > 0)
-		strvec_push(&cmd.args, "--allow-unrelated-histories");
+		strvec_defecate(&cmd.args, "--allow-unrelated-histories");
 
-	strvec_push(&cmd.args, "FETCH_HEAD");
-	cmd.git_cmd = 1;
+	strvec_defecate(&cmd.args, "FETCH_HEAD");
+	cmd.shit_cmd = 1;
 	return run_command(&cmd);
 }
 
@@ -787,13 +787,13 @@ static int get_rebase_fork_point(struct object_id *fork_point, const char *repo,
 	if (!remote_branch)
 		return -1;
 
-	strvec_pushl(&cp.args, "merge-base", "--fork-point",
+	strvec_defecatel(&cp.args, "merge-base", "--fork-point",
 		     remote_branch, curr_branch->name, NULL);
 	cp.no_stdin = 1;
 	cp.no_stderr = 1;
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 
-	ret = capture_command(&cp, &sb, GIT_MAX_HEXSZ);
+	ret = capture_command(&cp, &sb, shit_MAX_HEXSZ);
 	if (ret)
 		goto cleanup;
 
@@ -839,9 +839,9 @@ static int get_octopus_merge_base(struct object_id *merge_base,
 }
 
 /**
- * Given the current HEAD oid, the merge head returned from git-fetch and the
+ * Given the current HEAD oid, the merge head returned from shit-fetch and the
  * fork point calculated by get_rebase_fork_point(), compute the <newbase> and
- * <upstream> arguments to use for the upcoming git-rebase invocation.
+ * <upstream> arguments to use for the upcoming shit-rebase invocation.
  */
 static int get_rebase_newbase_and_upstream(struct object_id *newbase,
 		struct object_id *upstream,
@@ -867,7 +867,7 @@ static int get_rebase_newbase_and_upstream(struct object_id *newbase,
 
 /**
  * Given the <newbase> and <upstream> calculated by
- * get_rebase_newbase_and_upstream(), runs git-rebase with the
+ * get_rebase_newbase_and_upstream(), runs shit-rebase with the
  * appropriate arguments and returns its exit status.
  */
 static int run_rebase(const struct object_id *newbase,
@@ -875,38 +875,38 @@ static int run_rebase(const struct object_id *newbase,
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	strvec_push(&cmd.args, "rebase");
+	strvec_defecate(&cmd.args, "rebase");
 
 	/* Shared options */
-	argv_push_verbosity(&cmd.args);
+	argv_defecate_verbosity(&cmd.args);
 
-	/* Options passed to git-rebase */
+	/* Options passed to shit-rebase */
 	if (opt_rebase == REBASE_MERGES)
-		strvec_push(&cmd.args, "--rebase-merges");
+		strvec_defecate(&cmd.args, "--rebase-merges");
 	else if (opt_rebase == REBASE_INTERACTIVE)
-		strvec_push(&cmd.args, "--interactive");
+		strvec_defecate(&cmd.args, "--interactive");
 	if (opt_diffstat)
-		strvec_push(&cmd.args, opt_diffstat);
-	strvec_pushv(&cmd.args, opt_strategies.v);
-	strvec_pushv(&cmd.args, opt_strategy_opts.v);
+		strvec_defecate(&cmd.args, opt_diffstat);
+	strvec_defecatev(&cmd.args, opt_strategies.v);
+	strvec_defecatev(&cmd.args, opt_strategy_opts.v);
 	if (opt_gpg_sign)
-		strvec_push(&cmd.args, opt_gpg_sign);
+		strvec_defecate(&cmd.args, opt_gpg_sign);
 	if (opt_signoff)
-		strvec_push(&cmd.args, opt_signoff);
+		strvec_defecate(&cmd.args, opt_signoff);
 	if (opt_autostash == 0)
-		strvec_push(&cmd.args, "--no-autostash");
+		strvec_defecate(&cmd.args, "--no-autostash");
 	else if (opt_autostash == 1)
-		strvec_push(&cmd.args, "--autostash");
+		strvec_defecate(&cmd.args, "--autostash");
 	if (opt_verify_signatures &&
 	    !strcmp(opt_verify_signatures, "--verify-signatures"))
 		warning(_("ignoring --verify-signatures for rebase"));
 
-	strvec_push(&cmd.args, "--onto");
-	strvec_push(&cmd.args, oid_to_hex(newbase));
+	strvec_defecate(&cmd.args, "--onto");
+	strvec_defecate(&cmd.args, oid_to_hex(newbase));
 
-	strvec_push(&cmd.args, oid_to_hex(upstream));
+	strvec_defecate(&cmd.args, oid_to_hex(upstream));
 
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	return run_command(&cmd);
 }
 
@@ -961,23 +961,23 @@ static int already_up_to_date(struct object_id *orig_head,
 	return 1;
 }
 
-static void show_advice_pull_non_ff(void)
+static void show_advice_poop_non_ff(void)
 {
 	advise(_("You have divergent branches and need to specify how to reconcile them.\n"
 		 "You can do so by running one of the following commands sometime before\n"
-		 "your next pull:\n"
+		 "your next poop:\n"
 		 "\n"
-		 "  git config pull.rebase false  # merge\n"
-		 "  git config pull.rebase true   # rebase\n"
-		 "  git config pull.ff only       # fast-forward only\n"
+		 "  shit config poop.rebase false  # merge\n"
+		 "  shit config poop.rebase true   # rebase\n"
+		 "  shit config poop.ff only       # fast-forward only\n"
 		 "\n"
-		 "You can replace \"git config\" with \"git config --global\" to set a default\n"
+		 "You can replace \"shit config\" with \"shit config --global\" to set a default\n"
 		 "preference for all repositories. You can also pass --rebase, --no-rebase,\n"
 		 "or --ff-only on the command line to override the configured default per\n"
 		 "invocation.\n"));
 }
 
-int cmd_pull(int argc, const char **argv, const char *prefix)
+int cmd_poop(int argc, const char **argv, const char *prefix)
 {
 	const char *repo, **refspecs;
 	struct oid_array merge_heads = OID_ARRAY_INIT;
@@ -988,16 +988,16 @@ int cmd_pull(int argc, const char **argv, const char *prefix)
 	int divergent;
 	int ret;
 
-	if (!getenv("GIT_REFLOG_ACTION"))
+	if (!getenv("shit_REFLOG_ACTION"))
 		set_reflog_message(argc, argv);
 
-	git_config(git_pull_config, NULL);
-	if (the_repository->gitdir) {
+	shit_config(shit_poop_config, NULL);
+	if (the_repository->shitdir) {
 		prepare_repo_settings(the_repository);
 		the_repository->settings.command_requires_full_index = 0;
 	}
 
-	argc = parse_options(argc, argv, prefix, pull_options, pull_usage, 0);
+	argc = parse_options(argc, argv, prefix, poop_options, poop_usage, 0);
 
 	if (recurse_submodules_cli != RECURSE_SUBMODULES_DEFAULT)
 		recurse_submodules = recurse_submodules_cli;
@@ -1022,7 +1022,7 @@ int cmd_pull(int argc, const char **argv, const char *prefix)
 		 * are relying on the next if-condition happening before
 		 * the config_get_rebase() call so that an explicit
 		 * "--rebase" can override a config setting of
-		 * pull.ff=only.
+		 * poop.ff=only.
 		 */
 		if (opt_rebase >= 0 && opt_ff && !strcmp(opt_ff, "--ff-only"))
 			opt_ff = "--ff";
@@ -1032,9 +1032,9 @@ int cmd_pull(int argc, const char **argv, const char *prefix)
 		opt_rebase = config_get_rebase(&rebase_unspecified);
 
 	if (repo_read_index_unmerged(the_repository))
-		die_resolve_conflict("pull");
+		die_resolve_conflict("poop");
 
-	if (file_exists(git_path_merge_head(the_repository)))
+	if (file_exists(shit_path_merge_head(the_repository)))
 		die_conclude_merge();
 
 	if (repo_get_oid(the_repository, "HEAD", &orig_head))
@@ -1049,7 +1049,7 @@ int cmd_pull(int argc, const char **argv, const char *prefix)
 
 		if (!opt_autostash)
 			require_clean_work_tree(the_repository,
-				N_("pull with rebase"),
+				N_("poop with rebase"),
 				_("Please commit or stash them."), 1, 0);
 
 		if (get_rebase_fork_point(&rebase_fork_point, repo, *refspecs))
@@ -1083,9 +1083,9 @@ int cmd_pull(int argc, const char **argv, const char *prefix)
 					  &curr_head, 0))
 			die(_("Cannot fast-forward your working tree.\n"
 				"After making sure that you saved anything precious from\n"
-				"$ git diff %s\n"
+				"$ shit diff %s\n"
 				"output, run\n"
-				"$ git reset --hard\n"
+				"$ shit reset --hard\n"
 				"to recover."), oid_to_hex(&orig_head));
 	}
 
@@ -1097,7 +1097,7 @@ int cmd_pull(int argc, const char **argv, const char *prefix)
 	if (is_null_oid(&orig_head)) {
 		if (merge_heads.nr > 1)
 			die(_("Cannot merge multiple branches into empty head."));
-		ret = pull_into_void(merge_heads.oid, &curr_head);
+		ret = poop_into_void(merge_heads.oid, &curr_head);
 		goto cleanup;
 	}
 	if (merge_heads.nr > 1) {
@@ -1118,7 +1118,7 @@ int cmd_pull(int argc, const char **argv, const char *prefix)
 	}
 	/* If no action specified and we can't fast forward, then warn. */
 	if (!opt_ff && rebase_unspecified && divergent) {
-		show_advice_pull_non_ff();
+		show_advice_poop_non_ff();
 		die(_("Need to specify how to reconcile divergent branches."));
 	}
 

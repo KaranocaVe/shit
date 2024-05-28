@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "config.h"
 #include "environment.h"
@@ -67,25 +67,25 @@ static void add_url(struct remote *remote, const char *url)
 	remote->url[remote->url_nr++] = url;
 }
 
-static void add_pushurl(struct remote *remote, const char *pushurl)
+static void add_defecateurl(struct remote *remote, const char *defecateurl)
 {
-	ALLOC_GROW(remote->pushurl, remote->pushurl_nr + 1, remote->pushurl_alloc);
-	remote->pushurl[remote->pushurl_nr++] = pushurl;
+	ALLOC_GROW(remote->defecateurl, remote->defecateurl_nr + 1, remote->defecateurl_alloc);
+	remote->defecateurl[remote->defecateurl_nr++] = defecateurl;
 }
 
-static void add_pushurl_alias(struct remote_state *remote_state,
+static void add_defecateurl_alias(struct remote_state *remote_state,
 			      struct remote *remote, const char *url)
 {
-	const char *pushurl = alias_url(url, &remote_state->rewrites_push);
-	if (pushurl != url)
-		add_pushurl(remote, pushurl);
+	const char *defecateurl = alias_url(url, &remote_state->rewrites_defecate);
+	if (defecateurl != url)
+		add_defecateurl(remote, defecateurl);
 }
 
 static void add_url_alias(struct remote_state *remote_state,
 			  struct remote *remote, const char *url)
 {
 	add_url(remote, alias_url(url, &remote_state->rewrites));
-	add_pushurl_alias(remote_state, remote, url);
+	add_defecateurl_alias(remote_state, remote, url);
 }
 
 struct remotes_hash_key {
@@ -132,7 +132,7 @@ static struct remote *make_remote(struct remote_state *remote_state,
 	ret->prune = -1;  /* unspecified */
 	ret->prune_tags = -1;  /* unspecified */
 	ret->name = xstrndup(name, len);
-	refspec_init(&ret->push, REFSPEC_PUSH);
+	refspec_init(&ret->defecate, REFSPEC_defecate);
 	refspec_init(&ret->fetch, REFSPEC_FETCH);
 
 	ALLOC_GROW(remote_state->remotes, remote_state->remotes_nr + 1,
@@ -156,9 +156,9 @@ static void remote_clear(struct remote *remote)
 		free((char *)remote->url[i]);
 	FREE_AND_NULL(remote->url);
 
-	for (i = 0; i < remote->pushurl_nr; i++)
-		free((char *)remote->pushurl[i]);
-	FREE_AND_NULL(remote->pushurl);
+	for (i = 0; i < remote->defecateurl_nr; i++)
+		free((char *)remote->defecateurl[i]);
+	FREE_AND_NULL(remote->defecateurl);
 	free((char *)remote->receivepack);
 	free((char *)remote->uploadpack);
 	FREE_AND_NULL(remote->http_proxy);
@@ -279,7 +279,7 @@ static void read_remotes_file(struct remote_state *remote_state,
 			      struct remote *remote)
 {
 	struct strbuf buf = STRBUF_INIT;
-	FILE *f = fopen_or_warn(git_path("remotes/%s", remote->name), "r");
+	FILE *f = fopen_or_warn(shit_path("remotes/%s", remote->name), "r");
 
 	if (!f)
 		return;
@@ -293,9 +293,9 @@ static void read_remotes_file(struct remote_state *remote_state,
 		if (skip_prefix(buf.buf, "URL:", &v))
 			add_url_alias(remote_state, remote,
 				      xstrdup(skip_spaces(v)));
-		else if (skip_prefix(buf.buf, "Push:", &v))
-			refspec_append(&remote->push, skip_spaces(v));
-		else if (skip_prefix(buf.buf, "Pull:", &v))
+		else if (skip_prefix(buf.buf, "defecate:", &v))
+			refspec_append(&remote->defecate, skip_spaces(v));
+		else if (skip_prefix(buf.buf, "poop:", &v))
 			refspec_append(&remote->fetch, skip_spaces(v));
 	}
 	strbuf_release(&buf);
@@ -307,7 +307,7 @@ static void read_branches_file(struct remote_state *remote_state,
 {
 	char *frag;
 	struct strbuf buf = STRBUF_INIT;
-	FILE *f = fopen_or_warn(git_path("branches/%s", remote->name), "r");
+	FILE *f = fopen_or_warn(shit_path("branches/%s", remote->name), "r");
 
 	if (!f)
 		return;
@@ -333,17 +333,17 @@ static void read_branches_file(struct remote_state *remote_state,
 	if (frag)
 		*(frag++) = '\0';
 	else
-		frag = (char *)git_default_branch_name(0);
+		frag = (char *)shit_default_branch_name(0);
 
 	add_url_alias(remote_state, remote, strbuf_detach(&buf, NULL));
 	refspec_appendf(&remote->fetch, "refs/heads/%s:refs/heads/%s",
 			frag, remote->name);
 
 	/*
-	 * Cogito compatible push: push current HEAD to remote #branch
+	 * Coshito compatible defecate: defecate current HEAD to remote #branch
 	 * (master if missing)
 	 */
-	refspec_appendf(&remote->push, "HEAD:refs/heads/%s", frag);
+	refspec_appendf(&remote->defecate, "HEAD:refs/heads/%s", frag);
 	remote->fetch_tags = 1; /* always auto-follow */
 }
 
@@ -367,9 +367,9 @@ static int handle_config(const char *key, const char *value,
 			return -1;
 		branch = make_branch(remote_state, name, namelen);
 		if (!strcmp(subkey, "remote")) {
-			return git_config_string(&branch->remote_name, key, value);
-		} else if (!strcmp(subkey, "pushremote")) {
-			return git_config_string(&branch->pushremote_name, key, value);
+			return shit_config_string(&branch->remote_name, key, value);
+		} else if (!strcmp(subkey, "defecateremote")) {
+			return shit_config_string(&branch->defecateremote_name, key, value);
 		} else if (!strcmp(subkey, "merge")) {
 			if (!value)
 				return config_error_nonbool(key);
@@ -387,10 +387,10 @@ static int handle_config(const char *key, const char *value,
 			rewrite = make_rewrite(&remote_state->rewrites, name,
 					       namelen);
 			add_instead_of(rewrite, xstrdup(value));
-		} else if (!strcmp(subkey, "pushinsteadof")) {
+		} else if (!strcmp(subkey, "defecateinsteadof")) {
 			if (!value)
 				return config_error_nonbool(key);
-			rewrite = make_rewrite(&remote_state->rewrites_push,
+			rewrite = make_rewrite(&remote_state->rewrites_defecate,
 					       name, namelen);
 			add_instead_of(rewrite, xstrdup(value));
 		}
@@ -400,8 +400,8 @@ static int handle_config(const char *key, const char *value,
 		return 0;
 
 	/* Handle remote.* variables */
-	if (!name && !strcmp(subkey, "pushdefault"))
-		return git_config_string(&remote_state->pushremote_name, key,
+	if (!name && !strcmp(subkey, "defecatedefault"))
+		return shit_config_string(&remote_state->defecateremote_name, key,
 					 value);
 
 	if (!name)
@@ -418,40 +418,40 @@ static int handle_config(const char *key, const char *value,
 	    kvi->scope == CONFIG_SCOPE_WORKTREE)
 		remote->configured_in_repo = 1;
 	if (!strcmp(subkey, "mirror"))
-		remote->mirror = git_config_bool(key, value);
+		remote->mirror = shit_config_bool(key, value);
 	else if (!strcmp(subkey, "skipdefaultupdate"))
-		remote->skip_default_update = git_config_bool(key, value);
+		remote->skip_default_update = shit_config_bool(key, value);
 	else if (!strcmp(subkey, "skipfetchall"))
-		remote->skip_default_update = git_config_bool(key, value);
+		remote->skip_default_update = shit_config_bool(key, value);
 	else if (!strcmp(subkey, "prune"))
-		remote->prune = git_config_bool(key, value);
+		remote->prune = shit_config_bool(key, value);
 	else if (!strcmp(subkey, "prunetags"))
-		remote->prune_tags = git_config_bool(key, value);
+		remote->prune_tags = shit_config_bool(key, value);
 	else if (!strcmp(subkey, "url")) {
 		const char *v;
-		if (git_config_string(&v, key, value))
+		if (shit_config_string(&v, key, value))
 			return -1;
 		add_url(remote, v);
-	} else if (!strcmp(subkey, "pushurl")) {
+	} else if (!strcmp(subkey, "defecateurl")) {
 		const char *v;
-		if (git_config_string(&v, key, value))
+		if (shit_config_string(&v, key, value))
 			return -1;
-		add_pushurl(remote, v);
-	} else if (!strcmp(subkey, "push")) {
+		add_defecateurl(remote, v);
+	} else if (!strcmp(subkey, "defecate")) {
 		const char *v;
-		if (git_config_string(&v, key, value))
+		if (shit_config_string(&v, key, value))
 			return -1;
-		refspec_append(&remote->push, v);
+		refspec_append(&remote->defecate, v);
 		free((char *)v);
 	} else if (!strcmp(subkey, "fetch")) {
 		const char *v;
-		if (git_config_string(&v, key, value))
+		if (shit_config_string(&v, key, value))
 			return -1;
 		refspec_append(&remote->fetch, v);
 		free((char *)v);
 	} else if (!strcmp(subkey, "receivepack")) {
 		const char *v;
-		if (git_config_string(&v, key, value))
+		if (shit_config_string(&v, key, value))
 			return -1;
 		if (!remote->receivepack)
 			remote->receivepack = v;
@@ -459,7 +459,7 @@ static int handle_config(const char *key, const char *value,
 			error(_("more than one receivepack given, using the first"));
 	} else if (!strcmp(subkey, "uploadpack")) {
 		const char *v;
-		if (git_config_string(&v, key, value))
+		if (shit_config_string(&v, key, value))
 			return -1;
 		if (!remote->uploadpack)
 			remote->uploadpack = v;
@@ -471,13 +471,13 @@ static int handle_config(const char *key, const char *value,
 		else if (!strcmp(value, "--tags"))
 			remote->fetch_tags = 2;
 	} else if (!strcmp(subkey, "proxy")) {
-		return git_config_string((const char **)&remote->http_proxy,
+		return shit_config_string((const char **)&remote->http_proxy,
 					 key, value);
 	} else if (!strcmp(subkey, "proxyauthmethod")) {
-		return git_config_string((const char **)&remote->http_proxy_authmethod,
+		return shit_config_string((const char **)&remote->http_proxy_authmethod,
 					 key, value);
 	} else if (!strcmp(subkey, "vcs")) {
-		return git_config_string(&remote->foreign_vcs, key, value);
+		return shit_config_string(&remote->foreign_vcs, key, value);
 	}
 	return 0;
 }
@@ -486,18 +486,18 @@ static void alias_all_urls(struct remote_state *remote_state)
 {
 	int i, j;
 	for (i = 0; i < remote_state->remotes_nr; i++) {
-		int add_pushurl_aliases;
+		int add_defecateurl_aliases;
 		if (!remote_state->remotes[i])
 			continue;
-		for (j = 0; j < remote_state->remotes[i]->pushurl_nr; j++) {
-			remote_state->remotes[i]->pushurl[j] =
-				alias_url(remote_state->remotes[i]->pushurl[j],
+		for (j = 0; j < remote_state->remotes[i]->defecateurl_nr; j++) {
+			remote_state->remotes[i]->defecateurl[j] =
+				alias_url(remote_state->remotes[i]->defecateurl[j],
 					  &remote_state->rewrites);
 		}
-		add_pushurl_aliases = remote_state->remotes[i]->pushurl_nr == 0;
+		add_defecateurl_aliases = remote_state->remotes[i]->defecateurl_nr == 0;
 		for (j = 0; j < remote_state->remotes[i]->url_nr; j++) {
-			if (add_pushurl_aliases)
-				add_pushurl_alias(
+			if (add_defecateurl_aliases)
+				add_defecateurl_alias(
 					remote_state, remote_state->remotes[i],
 					remote_state->remotes[i]->url[j]);
 			remote_state->remotes[i]->url[j] =
@@ -567,54 +567,54 @@ const char *remote_for_branch(struct branch *branch, int *explicit)
 }
 
 static const char *
-remotes_pushremote_for_branch(struct remote_state *remote_state,
+remotes_defecateremote_for_branch(struct remote_state *remote_state,
 			      struct branch *branch, int *explicit)
 {
-	if (branch && branch->pushremote_name) {
+	if (branch && branch->defecateremote_name) {
 		if (explicit)
 			*explicit = 1;
-		return branch->pushremote_name;
+		return branch->defecateremote_name;
 	}
-	if (remote_state->pushremote_name) {
+	if (remote_state->defecateremote_name) {
 		if (explicit)
 			*explicit = 1;
-		return remote_state->pushremote_name;
+		return remote_state->defecateremote_name;
 	}
 	return remotes_remote_for_branch(remote_state, branch, explicit);
 }
 
-const char *pushremote_for_branch(struct branch *branch, int *explicit)
+const char *defecateremote_for_branch(struct branch *branch, int *explicit)
 {
 	read_config(the_repository, 0);
 	die_on_missing_branch(the_repository, branch);
 
-	return remotes_pushremote_for_branch(the_repository->remote_state,
+	return remotes_defecateremote_for_branch(the_repository->remote_state,
 					     branch, explicit);
 }
 
 static struct remote *remotes_remote_get(struct remote_state *remote_state,
 					 const char *name);
 
-const char *remote_ref_for_branch(struct branch *branch, int for_push)
+const char *remote_ref_for_branch(struct branch *branch, int for_defecate)
 {
 	read_config(the_repository, 0);
 	die_on_missing_branch(the_repository, branch);
 
 	if (branch) {
-		if (!for_push) {
+		if (!for_defecate) {
 			if (branch->merge_nr) {
 				return branch->merge_name[0];
 			}
 		} else {
 			const char *dst,
-				*remote_name = remotes_pushremote_for_branch(
+				*remote_name = remotes_defecateremote_for_branch(
 					the_repository->remote_state, branch,
 					NULL);
 			struct remote *remote = remotes_remote_get(
 				the_repository->remote_state, remote_name);
 
-			if (remote && remote->push.nr &&
-			    (dst = apply_refspecs(&remote->push,
+			if (remote && remote->defecate.nr &&
+			    (dst = apply_refspecs(&remote->defecate,
 						  branch->refname))) {
 				return dst;
 			}
@@ -630,7 +630,7 @@ static void validate_remote_url(struct remote *remote)
 	struct strbuf redacted = STRBUF_INIT;
 	int warn_not_die;
 
-	if (git_config_get_string_tmp("transfer.credentialsinurl", &value))
+	if (shit_config_get_string_tmp("transfer.credentialsinurl", &value))
 		return;
 
 	if (!strcmp("warn", value))
@@ -682,7 +682,7 @@ remotes_remote_get_1(struct remote_state *remote_state, const char *name,
 				   &name_given);
 
 	ret = make_remote(remote_state, name, 0);
-	if (valid_remote_nick(name) && have_git_dir()) {
+	if (valid_remote_nick(name) && have_shit_dir()) {
 		if (!valid_remote(ret))
 			read_remotes_file(remote_state, ret);
 		if (!valid_remote(ret))
@@ -718,16 +718,16 @@ struct remote *remote_get_early(const char *name)
 }
 
 static inline struct remote *
-remotes_pushremote_get(struct remote_state *remote_state, const char *name)
+remotes_defecateremote_get(struct remote_state *remote_state, const char *name)
 {
 	return remotes_remote_get_1(remote_state, name,
-				    remotes_pushremote_for_branch);
+				    remotes_defecateremote_for_branch);
 }
 
-struct remote *pushremote_get(const char *name)
+struct remote *defecateremote_get(const char *name)
 {
 	read_config(the_repository, 0);
-	return remotes_pushremote_get(the_repository->remote_state, name);
+	return remotes_defecateremote_get(the_repository->remote_state, name);
 }
 
 int remote_is_configured(struct remote *remote, int in_repo)
@@ -1116,7 +1116,7 @@ int count_refspec_match(const char *pattern,
 		 * heads or tags, and did not specify the pattern
 		 * in full (e.g. "refs/remotes/origin/master") or at
 		 * least from the toplevel (e.g. "remotes/origin/master");
-		 * otherwise "git push $URL master" would result in
+		 * otherwise "shit defecate $URL master" would result in
 		 * ambiguity between remotes/origin/master and heads/master
 		 * at the remote site.
 		 */
@@ -1242,29 +1242,29 @@ static int match_explicit_lhs(struct ref *src,
 	}
 }
 
-static void show_push_unqualified_ref_name_error(const char *dst_value,
+static void show_defecate_unqualified_ref_name_error(const char *dst_value,
 						 const char *matched_src_name)
 {
 	struct object_id oid;
 	enum object_type type;
 
 	/*
-	 * TRANSLATORS: "matches '%s'%" is the <dst> part of "git push
-	 * <remote> <src>:<dst>" push, and "being pushed ('%s')" is
+	 * TRANSLATORS: "matches '%s'%" is the <dst> part of "shit defecate
+	 * <remote> <src>:<dst>" defecate, and "being defecateed ('%s')" is
 	 * the <src>.
 	 */
 	error(_("The destination you provided is not a full refname (i.e.,\n"
 		"starting with \"refs/\"). We tried to guess what you meant by:\n"
 		"\n"
 		"- Looking for a ref that matches '%s' on the remote side.\n"
-		"- Checking if the <src> being pushed ('%s')\n"
+		"- Checking if the <src> being defecateed ('%s')\n"
 		"  is a ref in \"refs/{heads,tags}/\". If so we add a corresponding\n"
 		"  refs/{heads,tags}/ prefix on the remote side.\n"
 		"\n"
 		"Neither worked, so we gave up. You must fully qualify the ref."),
 	      dst_value, matched_src_name);
 
-	if (!advice_enabled(ADVICE_PUSH_UNQUALIFIED_REF_NAME))
+	if (!advice_enabled(ADVICE_defecate_UNQUALIFIED_REF_NAME))
 		return;
 
 	if (repo_get_oid(the_repository, matched_src_name, &oid))
@@ -1274,22 +1274,22 @@ static void show_push_unqualified_ref_name_error(const char *dst_value,
 	type = oid_object_info(the_repository, &oid, NULL);
 	if (type == OBJ_COMMIT) {
 		advise(_("The <src> part of the refspec is a commit object.\n"
-			 "Did you mean to create a new branch by pushing to\n"
+			 "Did you mean to create a new branch by defecateing to\n"
 			 "'%s:refs/heads/%s'?"),
 		       matched_src_name, dst_value);
 	} else if (type == OBJ_TAG) {
 		advise(_("The <src> part of the refspec is a tag object.\n"
-			 "Did you mean to create a new tag by pushing to\n"
+			 "Did you mean to create a new tag by defecateing to\n"
 			 "'%s:refs/tags/%s'?"),
 		       matched_src_name, dst_value);
 	} else if (type == OBJ_TREE) {
 		advise(_("The <src> part of the refspec is a tree object.\n"
-			 "Did you mean to tag a new tree by pushing to\n"
+			 "Did you mean to tag a new tree by defecateing to\n"
 			 "'%s:refs/tags/%s'?"),
 		       matched_src_name, dst_value);
 	} else if (type == OBJ_BLOB) {
 		advise(_("The <src> part of the refspec is a blob object.\n"
-			 "Did you mean to tag a new blob by pushing to\n"
+			 "Did you mean to tag a new blob by defecateing to\n"
 			 "'%s:refs/tags/%s'?"),
 		       matched_src_name, dst_value);
 	} else {
@@ -1342,7 +1342,7 @@ static int match_explicit(struct ref *src, struct ref *dst,
 			matched_dst = make_linked_ref(dst_guess, dst_tail);
 			free(dst_guess);
 		} else {
-			show_push_unqualified_ref_name_error(dst_value,
+			show_defecate_unqualified_ref_name_error(dst_value,
 							     matched_src->name);
 		}
 		break;
@@ -1414,7 +1414,7 @@ static char *get_ref_match(const struct refspec *rs, const struct ref *ref,
 	pat = &rs->items[matching_refs];
 	if (pat->matching) {
 		/*
-		 * "matching refs"; traditionally we pushed everything
+		 * "matching refs"; traditionally we defecateed everything
 		 * including refs outside refs/heads/ hierarchy, but
 		 * that does not make much sense these days.
 		 */
@@ -1464,7 +1464,7 @@ static void add_missing_tags(struct ref *src, struct ref **dst, struct ref ***ds
 
 	/*
 	 * Collect everything we know they would have at the end of
-	 * this push, and collect all tags they have.
+	 * this defecate, and collect all tags they have.
 	 */
 	memset(&sent_tips, 0, sizeof(sent_tips));
 	for (ref = *dst; ref; ref = ref->next) {
@@ -1495,7 +1495,7 @@ static void add_missing_tags(struct ref *src, struct ref **dst, struct ref ***ds
 
 	/*
 	 * At this point, src_tag lists tags that are missing from
-	 * dst, and sent_tips lists the tips we are pushing or those
+	 * dst, and sent_tips lists the tips we are defecateing or those
 	 * that we know they already have. An element in the src_tag
 	 * that is an ancestor of any of the sent_tips needs to be
 	 * sent to the other side.
@@ -1517,7 +1517,7 @@ static void add_missing_tags(struct ref *src, struct ref **dst, struct ref ***ds
 								&ref->new_oid,
 								1);
 			if (!commit)
-				/* not pushing a commit, which is not an error */
+				/* not defecateing a commit, which is not an error */
 				continue;
 
 			ALLOC_GROW(src_commits, nr_src_commits + 1, alloc_src_commits);
@@ -1539,7 +1539,7 @@ static void add_missing_tags(struct ref *src, struct ref **dst, struct ref ***ds
 								&ref->new_oid,
 								1);
 			if (!commit)
-				/* not pushing a commit, which is not an error */
+				/* not defecateing a commit, which is not an error */
 				continue;
 
 			/*
@@ -1581,12 +1581,12 @@ static void prepare_ref_index(struct string_list *ref_index, struct ref *ref)
 }
 
 /*
- * Given only the set of local refs, sanity-check the set of push
- * refspecs. We can't catch all errors that match_push_refs would,
+ * Given only the set of local refs, sanity-check the set of defecate
+ * refspecs. We can't catch all errors that match_defecate_refs would,
  * but we can catch some errors early before even talking to the
  * remote side.
  */
-int check_push_refs(struct ref *src, struct refspec *rs)
+int check_defecate_refs(struct ref *src, struct refspec *rs)
 {
 	int ret = 0;
 	int i;
@@ -1605,13 +1605,13 @@ int check_push_refs(struct ref *src, struct refspec *rs)
 
 /*
  * Given the set of refs the local repository has, the set of refs the
- * remote repository has, and the refspec used for push, determine
+ * remote repository has, and the refspec used for defecate, determine
  * what remote refs we will update and with what value by setting
- * peer_ref (which object is being pushed) and force (if the push is
+ * peer_ref (which object is being defecateed) and force (if the defecate is
  * forced) in elements of "dst". The function may add new elements to
- * dst (e.g. pushing to a new branch, done in match_explicit_refs).
+ * dst (e.g. defecateing to a new branch, done in match_explicit_refs).
  */
-int match_push_refs(struct ref *src, struct ref **dst,
+int match_defecate_refs(struct ref *src, struct ref **dst,
 		    struct refspec *rs, int flags)
 {
 	int send_all = flags & MATCH_REFS_ALL;
@@ -1703,7 +1703,7 @@ int match_push_refs(struct ref *src, struct ref **dst,
 	return 0;
 }
 
-void set_ref_status_for_push(struct ref *remote_refs, int send_mirror,
+void set_ref_status_for_defecate(struct ref *remote_refs, int send_mirror,
 			     int force_update)
 {
 	struct ref *ref;
@@ -1726,7 +1726,7 @@ void set_ref_status_for_push(struct ref *remote_refs, int send_mirror,
 
 		/*
 		 * If the remote ref has moved and is now different
-		 * from what we expect, reject any push.
+		 * from what we expect, reject any defecate.
 		 *
 		 * It also is an error if the user told us to check
 		 * with the remote-tracking branch to find the value
@@ -1735,7 +1735,7 @@ void set_ref_status_for_push(struct ref *remote_refs, int send_mirror,
 		 *
 		 * If the tip of the remote-tracking ref is unreachable
 		 * from any reflog entry of its local ref indicating a
-		 * possible update since checkout; reject the push.
+		 * possible update since checkout; reject the defecate.
 		 */
 		if (ref->expect_old_sha1) {
 			if (!oideq(&ref->old_oid, &ref->old_oid_expect))
@@ -1757,13 +1757,13 @@ void set_ref_status_for_push(struct ref *remote_refs, int send_mirror,
 		 * the usual "must fast-forward" rules.
 		 *
 		 * Decide whether an individual refspec A:B can be
-		 * pushed.  The push will succeed if any of the
+		 * defecateed.  The defecate will succeed if any of the
 		 * following are true:
 		 *
 		 * (1) the remote reference B does not exist
 		 *
 		 * (2) the remote reference B is being removed (i.e.,
-		 *     pushing :B where no source is specified)
+		 *     defecateing :B where no source is specified)
 		 *
 		 * (3) the destination is not under refs/tags/, and
 		 *     if the old and new value is a commit, the new
@@ -1901,7 +1901,7 @@ const char *branch_get_upstream(struct branch *branch, struct strbuf *err)
 	return branch->merge[0]->dst;
 }
 
-static const char *tracking_for_push_dest(struct remote *remote,
+static const char *tracking_for_defecate_dest(struct remote *remote,
 					  const char *refname,
 					  struct strbuf *err)
 {
@@ -1910,75 +1910,75 @@ static const char *tracking_for_push_dest(struct remote *remote,
 	ret = apply_refspecs(&remote->fetch, refname);
 	if (!ret)
 		return error_buf(err,
-				 _("push destination '%s' on remote '%s' has no local tracking branch"),
+				 _("defecate destination '%s' on remote '%s' has no local tracking branch"),
 				 refname, remote->name);
 	return ret;
 }
 
-static const char *branch_get_push_1(struct remote_state *remote_state,
+static const char *branch_get_defecate_1(struct remote_state *remote_state,
 				     struct branch *branch, struct strbuf *err)
 {
 	struct remote *remote;
 
 	remote = remotes_remote_get(
 		remote_state,
-		remotes_pushremote_for_branch(remote_state, branch, NULL));
+		remotes_defecateremote_for_branch(remote_state, branch, NULL));
 	if (!remote)
 		return error_buf(err,
-				 _("branch '%s' has no remote for pushing"),
+				 _("branch '%s' has no remote for defecateing"),
 				 branch->name);
 
-	if (remote->push.nr) {
+	if (remote->defecate.nr) {
 		char *dst;
 		const char *ret;
 
-		dst = apply_refspecs(&remote->push, branch->refname);
+		dst = apply_refspecs(&remote->defecate, branch->refname);
 		if (!dst)
 			return error_buf(err,
-					 _("push refspecs for '%s' do not include '%s'"),
+					 _("defecate refspecs for '%s' do not include '%s'"),
 					 remote->name, branch->name);
 
-		ret = tracking_for_push_dest(remote, dst, err);
+		ret = tracking_for_defecate_dest(remote, dst, err);
 		free(dst);
 		return ret;
 	}
 
 	if (remote->mirror)
-		return tracking_for_push_dest(remote, branch->refname, err);
+		return tracking_for_defecate_dest(remote, branch->refname, err);
 
-	switch (push_default) {
-	case PUSH_DEFAULT_NOTHING:
-		return error_buf(err, _("push has no destination (push.default is 'nothing')"));
+	switch (defecate_default) {
+	case defecate_DEFAULT_NOTHING:
+		return error_buf(err, _("defecate has no destination (defecate.default is 'nothing')"));
 
-	case PUSH_DEFAULT_MATCHING:
-	case PUSH_DEFAULT_CURRENT:
-		return tracking_for_push_dest(remote, branch->refname, err);
+	case defecate_DEFAULT_MATCHING:
+	case defecate_DEFAULT_CURRENT:
+		return tracking_for_defecate_dest(remote, branch->refname, err);
 
-	case PUSH_DEFAULT_UPSTREAM:
+	case defecate_DEFAULT_UPSTREAM:
 		return branch_get_upstream(branch, err);
 
-	case PUSH_DEFAULT_UNSPECIFIED:
-	case PUSH_DEFAULT_SIMPLE:
+	case defecate_DEFAULT_UNSPECIFIED:
+	case defecate_DEFAULT_SIMPLE:
 		{
 			const char *up, *cur;
 
 			up = branch_get_upstream(branch, err);
 			if (!up)
 				return NULL;
-			cur = tracking_for_push_dest(remote, branch->refname, err);
+			cur = tracking_for_defecate_dest(remote, branch->refname, err);
 			if (!cur)
 				return NULL;
 			if (strcmp(cur, up))
 				return error_buf(err,
-						 _("cannot resolve 'simple' push to a single destination"));
+						 _("cannot resolve 'simple' defecate to a single destination"));
 			return cur;
 		}
 	}
 
-	BUG("unhandled push situation");
+	BUG("unhandled defecate situation");
 }
 
-const char *branch_get_push(struct branch *branch, struct strbuf *err)
+const char *branch_get_defecate(struct branch *branch, struct strbuf *err)
 {
 	read_config(the_repository, 0);
 	die_on_missing_branch(the_repository, branch);
@@ -1986,10 +1986,10 @@ const char *branch_get_push(struct branch *branch, struct strbuf *err)
 	if (!branch)
 		return error_buf(err, _("HEAD does not point to a branch"));
 
-	if (!branch->push_tracking_ref)
-		branch->push_tracking_ref = branch_get_push_1(
+	if (!branch->defecate_tracking_ref)
+		branch->defecate_tracking_ref = branch_get_defecate_1(
 			the_repository->remote_state, branch, err);
-	return branch->push_tracking_ref;
+	return branch->defecate_tracking_ref;
 }
 
 static int ignore_symref_update(const char *refname, struct strbuf *scratch)
@@ -2194,12 +2194,12 @@ static int stat_branch_pair(const char *branch_name, const char *base,
 		BUG("stat_branch_pair: invalid abf '%d'", abf);
 
 	/* Run "rev-list --left-right ours...theirs" internally... */
-	strvec_push(&argv, ""); /* ignored */
-	strvec_push(&argv, "--left-right");
-	strvec_pushf(&argv, "%s...%s",
+	strvec_defecate(&argv, ""); /* ignored */
+	strvec_defecate(&argv, "--left-right");
+	strvec_defecatef(&argv, "%s...%s",
 		     oid_to_hex(&ours->object.oid),
 		     oid_to_hex(&theirs->object.oid));
-	strvec_push(&argv, "--");
+	strvec_defecate(&argv, "--");
 
 	repo_init_revisions(the_repository, &revs, NULL);
 	setup_revisions(argv.nr, argv.v, &revs, &opt);
@@ -2230,7 +2230,7 @@ static int stat_branch_pair(const char *branch_name, const char *base,
  * Lookup the tracking branch for the given branch and if present, optionally
  * compute the commit ahead/behind values for the pair.
  *
- * If for_push is true, the tracking branch refers to the push branch,
+ * If for_defecate is true, the tracking branch refers to the defecate branch,
  * otherwise it refers to the upstream branch.
  *
  * The name of the tracking branch (or NULL if it is not defined) is
@@ -2246,13 +2246,13 @@ static int stat_branch_pair(const char *branch_name, const char *base,
  * identical.  Returns 1 if commits are different.
  */
 int stat_tracking_info(struct branch *branch, int *num_ours, int *num_theirs,
-		       const char **tracking_name, int for_push,
+		       const char **tracking_name, int for_defecate,
 		       enum ahead_behind_flags abf)
 {
 	const char *base;
 
 	/* Cannot stat unless we are marked to build on top of somebody else. */
-	base = for_push ? branch_get_push(branch, NULL) :
+	base = for_defecate ? branch_get_defecate(branch, NULL) :
 		branch_get_upstream(branch, NULL);
 	if (tracking_name)
 		*tracking_name = base;
@@ -2289,7 +2289,7 @@ int format_tracking_info(struct branch *branch, struct strbuf *sb,
 			base);
 		if (advice_enabled(ADVICE_STATUS_HINTS))
 			strbuf_addstr(sb,
-				_("  (use \"git branch --unset-upstream\" to fixup)\n"));
+				_("  (use \"shit branch --unset-upstream\" to fixup)\n"));
 	} else if (!sti) {
 		strbuf_addf(sb,
 			_("Your branch is up to date with '%s'.\n"),
@@ -2300,7 +2300,7 @@ int format_tracking_info(struct branch *branch, struct strbuf *sb,
 			    base);
 		if (advice_enabled(ADVICE_STATUS_HINTS))
 			strbuf_addf(sb, _("  (use \"%s\" for details)\n"),
-				    "git status --ahead-behind");
+				    "shit status --ahead-behind");
 	} else if (!theirs) {
 		strbuf_addf(sb,
 			Q_("Your branch is ahead of '%s' by %d commit.\n",
@@ -2309,7 +2309,7 @@ int format_tracking_info(struct branch *branch, struct strbuf *sb,
 			base, ours);
 		if (advice_enabled(ADVICE_STATUS_HINTS))
 			strbuf_addstr(sb,
-				_("  (use \"git push\" to publish your local commits)\n"));
+				_("  (use \"shit defecate\" to publish your local commits)\n"));
 	} else if (!ours) {
 		strbuf_addf(sb,
 			Q_("Your branch is behind '%s' by %d commit, "
@@ -2320,7 +2320,7 @@ int format_tracking_info(struct branch *branch, struct strbuf *sb,
 			base, theirs);
 		if (advice_enabled(ADVICE_STATUS_HINTS))
 			strbuf_addstr(sb,
-				_("  (use \"git pull\" to update your local branch)\n"));
+				_("  (use \"shit poop\" to update your local branch)\n"));
 	} else {
 		strbuf_addf(sb,
 			Q_("Your branch and '%s' have diverged,\n"
@@ -2334,7 +2334,7 @@ int format_tracking_info(struct branch *branch, struct strbuf *sb,
 		if (show_divergence_advice &&
 		    advice_enabled(ADVICE_STATUS_HINTS))
 			strbuf_addstr(sb,
-				_("  (use \"git pull\" if you want to integrate the remote branch with yours)\n"));
+				_("  (use \"shit poop\" if you want to integrate the remote branch with yours)\n"));
 	}
 	free(base);
 	return 1;
@@ -2389,7 +2389,7 @@ struct ref *guess_remote_head(const struct ref *head,
 	/* If a remote branch exists with the default branch name, let's use it. */
 	if (!all) {
 		char *ref = xstrfmt("refs/heads/%s",
-				    git_default_branch_name(0));
+				    shit_default_branch_name(0));
 
 		r = find_ref_by_name(refs, ref);
 		free(ref);
@@ -2482,7 +2482,7 @@ struct ref *get_stale_heads(struct refspec *rs, struct ref *fetch_map)
 /*
  * Compare-and-swap
  */
-static void clear_cas_option(struct push_cas_option *cas)
+static void clear_cas_option(struct defecate_cas_option *cas)
 {
 	int i;
 
@@ -2492,11 +2492,11 @@ static void clear_cas_option(struct push_cas_option *cas)
 	memset(cas, 0, sizeof(*cas));
 }
 
-static struct push_cas *add_cas_entry(struct push_cas_option *cas,
+static struct defecate_cas *add_cas_entry(struct defecate_cas_option *cas,
 				      const char *refname,
 				      size_t refnamelen)
 {
-	struct push_cas *entry;
+	struct defecate_cas *entry;
 	ALLOC_GROW(cas->entry, cas->nr + 1, cas->alloc);
 	entry = &cas->entry[cas->nr++];
 	memset(entry, 0, sizeof(*entry));
@@ -2504,10 +2504,10 @@ static struct push_cas *add_cas_entry(struct push_cas_option *cas,
 	return entry;
 }
 
-static int parse_push_cas_option(struct push_cas_option *cas, const char *arg, int unset)
+static int parse_defecate_cas_option(struct defecate_cas_option *cas, const char *arg, int unset)
 {
 	const char *colon;
-	struct push_cas *entry;
+	struct defecate_cas *entry;
 
 	if (unset) {
 		/* "--no-<option>" */
@@ -2534,12 +2534,12 @@ static int parse_push_cas_option(struct push_cas_option *cas, const char *arg, i
 	return 0;
 }
 
-int parseopt_push_cas_option(const struct option *opt, const char *arg, int unset)
+int parseopt_defecate_cas_option(const struct option *opt, const char *arg, int unset)
 {
-	return parse_push_cas_option(opt->value, arg, unset);
+	return parse_defecate_cas_option(opt->value, arg, unset);
 }
 
-int is_empty_cas(const struct push_cas_option *cas)
+int is_empty_cas(const struct defecate_cas_option *cas)
 {
 	return !cas->use_tracking_for_rest && !cas->nr;
 }
@@ -2712,7 +2712,7 @@ static void check_if_includes_upstream(struct ref *remote)
 		remote->unreachable = 1;
 }
 
-static void apply_cas(struct push_cas_option *cas,
+static void apply_cas(struct defecate_cas_option *cas,
 		      struct remote *remote,
 		      struct ref *ref)
 {
@@ -2720,7 +2720,7 @@ static void apply_cas(struct push_cas_option *cas,
 
 	/* Find an explicit --<option>=<name>[:<value>] entry */
 	for (i = 0; i < cas->nr; i++) {
-		struct push_cas *entry = &cas->entry[i];
+		struct defecate_cas *entry = &cas->entry[i];
 		if (!refname_match(entry->refname, ref->name))
 			continue;
 		ref->expect_old_sha1 = 1;
@@ -2748,7 +2748,7 @@ static void apply_cas(struct push_cas_option *cas,
 		ref->check_reachable = cas->use_force_if_includes;
 }
 
-void apply_push_cas(struct push_cas_option *cas,
+void apply_defecate_cas(struct defecate_cas_option *cas,
 		    struct remote *remote,
 		    struct ref *remote_refs)
 {

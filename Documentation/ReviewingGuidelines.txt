@@ -1,16 +1,16 @@
-Reviewing Patches in the Git Project
+Reviewing Patches in the shit Project
 ====================================
 
 Introduction
 ------------
-The Git development community is a widely distributed, diverse, ever-changing
-group of individuals. Asynchronous communication via the Git mailing list poses
+The shit development community is a widely distributed, diverse, ever-changing
+group of individuals. Asynchronous communication via the shit mailing list poses
 unique challenges when reviewing or discussing patches. This document contains
 some guiding principles and helpful tools you can use to make your reviews both
 more efficient for yourself and more effective for other contributors.
 
 Note that none of the recommendations here are binding or in any way a
-requirement of participation in the Git community. They are provided as a
+requirement of participation in the shit community. They are provided as a
 resource to supplement your skills as a contributor.
 
 Principles
@@ -19,12 +19,12 @@ Principles
 Selecting patch(es) to review
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If you are looking for a patch series in need of review, start by checking
-the latest "What's cooking in git.git" email
-(https://lore.kernel.org/git/xmqqilm1yp3m.fsf@gitster.g/[example]). The "What's
+the latest "What's cooking in shit.shit" email
+(https://lore.kernel.org/shit/xmqqilm1yp3m.fsf@shitster.g/[example]). The "What's
 cooking" emails & replies can be found using the query `s:"What's cooking"` on
-the https://lore.kernel.org/git/[`lore.kernel.org` mailing list archive];
+the https://lore.kernel.org/shit/[`lore.kernel.org` mailing list archive];
 alternatively, you can find the contents of the "What's cooking" email tracked
-in `whats-cooking.txt` on the `todo` branch of Git. Topics tagged with "Needs
+in `whats-cooking.txt` on the `todo` branch of shit. Topics tagged with "Needs
 review" and those in the "[New Topics]" section are typically those that would
 benefit the most from additional review.
 
@@ -32,7 +32,7 @@ Patches can also be searched manually in the mailing list archive using a query
 like `s:"PATCH" -s:"Re:"`. You can browse these results for topics relevant to
 your expertise or interest.
 
-If you've already contributed to Git, you may also be CC'd in another
+If you've already contributed to shit, you may also be CC'd in another
 contributor's patch series. These are topics where the author feels that your
 attention is warranted. This may be because their patch changes something you
 wrote previously (making you a good judge of whether the new approach does or
@@ -77,7 +77,7 @@ guidance, and concrete tips for interacting with patches on the mailing list.
   a patch, ask a question about something that confused you, point out something
   you found exceptionally well-written, etc. In particular, uplifting feedback
   goes a long way towards encouraging contributors to participate more actively
-  in the Git community.
+  in the shit community.
 
 ==== Performing your review
 - Provide your review comments per-patch in a plaintext "Reply-All" email to the
@@ -86,8 +86,8 @@ guidance, and concrete tips for interacting with patches on the mailing list.
 
 - You may find that the limited context provided in the patch diff is sometimes
   insufficient for a thorough review. In such cases, you can review patches in
-  your local tree by either applying patches with linkgit:git-am[1] or checking
-  out the associated branch from https://github.com/gitster/git once the series
+  your local tree by either applying patches with linkshit:shit-am[1] or checking
+  out the associated branch from https://shithub.com/shitster/shit once the series
   is tracked there.
 
 - Large, complicated patch diffs are sometimes unavoidable, such as when they
@@ -145,7 +145,7 @@ s/<before>/<after>/::
 cover letter::
 	The "Patch 0" of a multi-patch series. This email describes the
 	high-level intent and structure of the patch series to readers on the
-	Git mailing list. It is also where the changelog notes and range-diff of
+	shit mailing list. It is also where the changelog notes and range-diff of
 	subsequent versions are provided by the author.
 +
 On single-patch submissions, cover letter content is typically not sent as a

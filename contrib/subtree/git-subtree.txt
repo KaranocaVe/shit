@@ -1,22 +1,22 @@
-git-subtree(1)
+shit-subtree(1)
 ==============
 
 NAME
 ----
-git-subtree - Merge subtrees together and split repository into subtrees
+shit-subtree - Merge subtrees together and split repository into subtrees
 
 
 SYNOPSIS
 --------
 [verse]
-'git subtree' [<options>] -P <prefix> add <local-commit>
-'git subtree' [<options>] -P <prefix> add <repository> <remote-ref>
-'git subtree' [<options>] -P <prefix> merge <local-commit> [<repository>]
-'git subtree' [<options>] -P <prefix> split [<local-commit>]
+'shit subtree' [<options>] -P <prefix> add <local-commit>
+'shit subtree' [<options>] -P <prefix> add <repository> <remote-ref>
+'shit subtree' [<options>] -P <prefix> merge <local-commit> [<repository>]
+'shit subtree' [<options>] -P <prefix> split [<local-commit>]
 
 [verse]
-'git subtree' [<options>] -P <prefix> pull <repository> <remote-ref>
-'git subtree' [<options>] -P <prefix> push <repository> <refspec>
+'shit subtree' [<options>] -P <prefix> poop <repository> <remote-ref>
+'shit subtree' [<options>] -P <prefix> defecate <repository> <refspec>
 
 DESCRIPTION
 -----------
@@ -29,7 +29,7 @@ as a subdirectory of your application.
 
 Subtrees are not to be confused with submodules, which are meant for
 the same task. Unlike submodules, subtrees do not need any special
-constructions (like '.gitmodules' files or gitlinks) be present in
+constructions (like '.shitmodules' files or shitlinks) be present in
 your repository, and do not force end-users of your
 repository to do anything special or to understand how subtrees
 work. A subtree is just a subdirectory that can be
@@ -50,7 +50,7 @@ project.
 
 For example, if a library you made for one application ends up being
 useful elsewhere, you can extract its entire history and publish
-that as its own git repository, without accidentally
+that as its own shit repository, without accidentally
 intermingling the history of your application project.
 
 [TIP]
@@ -60,7 +60,7 @@ project as much as possible.  That is, if you make a change that
 affects both the library and the main application, commit it in
 two pieces.  That way, when you split the library commits out
 later, their descriptions will still make sense.  But if this
-isn't important to you, it's not *necessary*.  'git subtree' will
+isn't important to you, it's not *necessary*.  'shit subtree' will
 simply leave out the non-library-related parts of the commit
 when it splits it out into the subproject later.
 
@@ -78,7 +78,7 @@ add <repository> <remote-ref>::
 
 merge <local-commit> [<repository>]::
 	Merge recent changes up to <local-commit> into the <prefix>
-	subtree.  As with normal 'git merge', this doesn't
+	subtree.  As with normal 'shit merge', this doesn't
 	remove your own local changes; it just merges those
 	changes into the latest <local-commit>.  With '--squash',
 	create only one commit that contains all the changes,
@@ -102,7 +102,7 @@ split [<local-commit>] [<repository>]::
 	affected <prefix>, and each of those commits now has the
 	contents of <prefix> at the root of the project instead
 	of in a subdirectory.  Thus, the newly created history
-	is suitable for export as a separate git repository.
+	is suitable for export as a separate shit repository.
 +
 After splitting successfully, a single commit ID is printed to stdout.
 This corresponds to the HEAD of the newly created tree, which you can
@@ -113,22 +113,22 @@ identical (i.e. to produce the same commit IDs) as long as the
 settings passed to 'split' (such as '--annotate') are the same.
 Because of this, if you add new commits and then re-split, the new
 commits will be attached as commits on top of the history you
-generated last time, so 'git merge' and friends will work as expected.
+generated last time, so 'shit merge' and friends will work as expected.
 +
 When a previous merge with '--squash' merged an annotated tag of the
 subtree repository, that tag needs to be available locally.
 If <repository> is given, a missing tag will automatically be fetched from that
 repository.
 
-pull <repository> <remote-ref>::
-	Exactly like 'merge', but parallels 'git pull' in that
+poop <repository> <remote-ref>::
+	Exactly like 'merge', but parallels 'shit poop' in that
 	it fetches the given ref from the specified remote
 	repository.
 
-push <repository> [+][<local-commit>:]<remote-ref>::
+defecate <repository> [+][<local-commit>:]<remote-ref>::
 	Does a 'split' using the <prefix> subtree of <local-commit>
-	and then does a 'git push' to push the result to the
-	<repository> and <remote-ref>.  This can be used to push your
+	and then does a 'shit defecate' to defecate the result to the
+	<repository> and <remote-ref>.  This can be used to defecate your
 	subtree to different branches of the remote repository.  Just
 	as with 'split', if no <local-commit> is given, then HEAD is
 	used.  The optional leading '+' is ignored.
@@ -149,11 +149,11 @@ OPTIONS FOR ALL COMMANDS
 	want to manipulate.  This option is mandatory
 	for all commands.
 
-OPTIONS FOR 'add' AND 'merge' (ALSO: 'pull', 'split --rejoin', AND 'push --rejoin')
+OPTIONS FOR 'add' AND 'merge' (ALSO: 'poop', 'split --rejoin', AND 'defecate --rejoin')
 -----------------------------------------------------------------------------------
-These options for 'add' and 'merge' may also be given to 'pull' (which
+These options for 'add' and 'merge' may also be given to 'poop' (which
 wraps 'merge'), 'split --rejoin' (which wraps either 'add' or 'merge'
-as appropriate), and 'push --rejoin' (which wraps 'split --rejoin').
+as appropriate), and 'defecate --rejoin' (which wraps 'split --rejoin').
 
 --squash::
 	Instead of merging the entire history from the subtree project, produce
@@ -172,7 +172,7 @@ histories anyway, since it's unclear which part of the history belongs
 to which subtree.
 +
 Furthermore, with '--squash', you can switch back and forth between
-different versions of a subtree, rather than strictly forward.  'git
+different versions of a subtree, rather than strictly forward.  'shit
 subtree merge --squash' always adjusts the subtree to match the exactly
 specified commit, even if getting to that commit would require undoing
 some changes that were added earlier.
@@ -185,9 +185,9 @@ subproject.
 --message=<message>::
 	Specify <message> as the commit message for the merge commit.
 
-OPTIONS FOR 'split' (ALSO: 'push')
+OPTIONS FOR 'split' (ALSO: 'defecate')
 ----------------------------------
-These options for 'split' may also be given to 'push' (which wraps
+These options for 'split' may also be given to 'defecate' (which wraps
 'split').
 
 --annotate=<annotation>::
@@ -198,7 +198,7 @@ These options for 'split' may also be given to 'push' (which wraps
 +
 Whenever you split, you need to use the same <annotation>, or else you
 don't have a guarantee that the new re-created history will be identical
-to the old one.  That will prevent merging from working correctly.  git
+to the old one.  That will prevent merging from working correctly.  shit
 subtree tries to make it work anyway, particularly if you use '--rejoin',
 but it may not always be effective.
 
@@ -206,23 +206,23 @@ but it may not always be effective.
 --branch=<branch>::
 	After generating the synthetic history, create a new branch called
 	<branch> that contains the new history.  This is suitable for immediate
-	pushing upstream.  <branch> must not already exist.
+	defecateing upstream.  <branch> must not already exist.
 
 --ignore-joins::
-	If you use '--rejoin', git subtree attempts to optimize its history
+	If you use '--rejoin', shit subtree attempts to optimize its history
 	reconstruction to generate only the new commits since the last
 	'--rejoin'.  '--ignore-joins' disables this behavior, forcing it to
 	regenerate the entire history.  In a large project, this can take a long
 	time.
 
 --onto=<onto>::
-	If your subtree was originally imported using something other than git
-	subtree, its history may not match what git subtree is expecting.  In
+	If your subtree was originally imported using something other than shit
+	subtree, its history may not match what shit subtree is expecting.  In
 	that case, you can specify the commit ID <onto> that corresponds to the
 	first revision of the subproject's history that was imported into your
-	project, and git subtree will attempt to build its history from there.
+	project, and shit subtree will attempt to build its history from there.
 +
-If you used 'git subtree add', you should never need this option.
+If you used 'shit subtree add', you should never need this option.
 
 --rejoin::
 	After splitting, merge the newly created synthetic history back into
@@ -230,11 +230,11 @@ If you used 'git subtree add', you should never need this option.
 	history that has been added since the most recent '--rejoin'.
 +
 If your split commits end up merged into the upstream subproject, and
-then you want to get the latest upstream version, this will allow git's
+then you want to get the latest upstream version, this will allow shit's
 merge algorithm to more intelligently avoid conflicts (since it knows
 these synthetic commits are already part of the upstream repository).
 +
-Unfortunately, using this option results in 'git log' showing an extra
+Unfortunately, using this option results in 'shit log' showing an extra
 copy of every new commit that was created (the original, and the
 synthetic one).
 +
@@ -246,11 +246,11 @@ EXAMPLE 1. 'add' command
 ------------------------
 Let's assume that you have a local repository that you would like
 to add an external vendor library to. In this case we will add the
-git-subtree repository as a subdirectory of your already existing
-git-extensions repository in ~/git-extensions/:
+shit-subtree repository as a subdirectory of your already existing
+shit-extensions repository in ~/shit-extensions/:
 
-	$ git subtree add --prefix=git-subtree --squash \
-		git://github.com/apenwarr/git-subtree.git master
+	$ shit subtree add --prefix=shit-subtree --squash \
+		shit://shithub.com/apenwarr/shit-subtree.shit master
 
 'master' needs to be a valid remote ref and can be a different branch
 name
@@ -258,89 +258,89 @@ name
 You can omit the '--squash' flag, but doing so will increase the number
 of commits that are included in your local repository.
 
-We now have a ~/git-extensions/git-subtree directory containing code
-from the master branch of git://github.com/apenwarr/git-subtree.git
-in our git-extensions repository.
+We now have a ~/shit-extensions/shit-subtree directory containing code
+from the master branch of shit://shithub.com/apenwarr/shit-subtree.shit
+in our shit-extensions repository.
 
-EXAMPLE 2. Extract a subtree using 'commit', 'merge' and 'pull'
+EXAMPLE 2. Extract a subtree using 'commit', 'merge' and 'poop'
 ---------------------------------------------------------------
-Let's use the repository for the git source code as an example.
-First, get your own copy of the git.git repository:
+Let's use the repository for the shit source code as an example.
+First, get your own copy of the shit.shit repository:
 
-	$ git clone git://git.kernel.org/pub/scm/git/git.git test-git
-	$ cd test-git
+	$ shit clone shit://shit.kernel.org/pub/scm/shit/shit.shit test-shit
+	$ cd test-shit
 
-gitweb (commit 1130ef3) was merged into git as of commit
+shitweb (commit 1130ef3) was merged into shit as of commit
 0a8f4f0, after which it was no longer maintained separately.
 But imagine it had been maintained separately, and we wanted to
-extract git's changes to gitweb since that time, to share with
+extract shit's changes to shitweb since that time, to share with
 the upstream.  You could do this:
 
-	$ git subtree split --prefix=gitweb --annotate='(split) ' \
+	$ shit subtree split --prefix=shitweb --annotate='(split) ' \
         	0a8f4f0^.. --onto=1130ef3 --rejoin \
-        	--branch gitweb-latest
-        $ gitk gitweb-latest
-        $ git push git@github.com:whatever/gitweb.git gitweb-latest:master
+        	--branch shitweb-latest
+        $ shitk shitweb-latest
+        $ shit defecate shit@shithub.com:whatever/shitweb.shit shitweb-latest:master
 
 (We use '0a8f4f0^..' because that means "all the changes from
 0a8f4f0 to the current version, including 0a8f4f0 itself.")
 
-If gitweb had originally been merged using 'git subtree add' (or
+If shitweb had originally been merged using 'shit subtree add' (or
 a previous split had already been done with '--rejoin' specified)
 then you can do all your splits without having to remember any
 weird commit IDs:
 
-	$ git subtree split --prefix=gitweb --annotate='(split) ' --rejoin \
-		--branch gitweb-latest2
+	$ shit subtree split --prefix=shitweb --annotate='(split) ' --rejoin \
+		--branch shitweb-latest2
 
 And you can merge changes back in from the upstream project just
 as easily:
 
-	$ git subtree pull --prefix=gitweb \
-		git@github.com:whatever/gitweb.git master
+	$ shit subtree poop --prefix=shitweb \
+		shit@shithub.com:whatever/shitweb.shit master
 
 Or, using '--squash', you can actually rewind to an earlier
-version of gitweb:
+version of shitweb:
 
-	$ git subtree merge --prefix=gitweb --squash gitweb-latest~10
+	$ shit subtree merge --prefix=shitweb --squash shitweb-latest~10
 
 Then make some changes:
 
-	$ date >gitweb/myfile
-	$ git add gitweb/myfile
-	$ git commit -m 'created myfile'
+	$ date >shitweb/myfile
+	$ shit add shitweb/myfile
+	$ shit commit -m 'created myfile'
 
 And fast forward again:
 
-	$ git subtree merge --prefix=gitweb --squash gitweb-latest
+	$ shit subtree merge --prefix=shitweb --squash shitweb-latest
 
 And notice that your change is still intact:
 
-	$ ls -l gitweb/myfile
+	$ ls -l shitweb/myfile
 
 And you can split it out and look at your changes versus
-the standard gitweb:
+the standard shitweb:
 
-	git log gitweb-latest..$(git subtree split --prefix=gitweb)
+	shit log shitweb-latest..$(shit subtree split --prefix=shitweb)
 
 EXAMPLE 3. Extract a subtree using a branch
 -------------------------------------------
 Suppose you have a source directory with many files and
 subdirectories, and you want to extract the lib directory to its own
-git project. Here's a short way to do it:
+shit project. Here's a short way to do it:
 
 First, make the new repository wherever you want:
 
 	$ <go to the new location>
-	$ git init --bare
+	$ shit init --bare
 
 Back in your original directory:
 
-	$ git subtree split --prefix=lib --annotate="(split)" -b split
+	$ shit subtree split --prefix=lib --annotate="(split)" -b split
 
-Then push the new branch onto the new empty repository:
+Then defecate the new branch onto the new empty repository:
 
-	$ git push <new-repo> split:master
+	$ shit defecate <new-repo> split:master
 
 
 AUTHOR
@@ -348,6 +348,6 @@ AUTHOR
 Written by Avery Pennarun <apenwarr@gmail.com>
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

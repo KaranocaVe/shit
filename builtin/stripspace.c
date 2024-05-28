@@ -18,8 +18,8 @@ static void comment_lines(struct strbuf *buf)
 }
 
 static const char * const stripspace_usage[] = {
-	"git stripspace [-s | --strip-comments]",
-	"git stripspace [-c | --comment-lines]",
+	"shit stripspace [-s | --strip-comments]",
+	"shit stripspace [-c | --comment-lines]",
 	NULL
 };
 
@@ -33,7 +33,7 @@ int cmd_stripspace(int argc, const char **argv, const char *prefix)
 {
 	struct strbuf buf = STRBUF_INIT;
 	enum stripspace_mode mode = STRIP_DEFAULT;
-	int nongit;
+	int nonshit;
 
 	const struct option options[] = {
 		OPT_CMDMODE('s', "strip-comments", &mode,
@@ -50,8 +50,8 @@ int cmd_stripspace(int argc, const char **argv, const char *prefix)
 		usage_with_options(stripspace_usage, options);
 
 	if (mode == STRIP_COMMENTS || mode == COMMENT_LINES) {
-		setup_git_directory_gently(&nongit);
-		git_config(git_default_config, NULL);
+		setup_shit_directory_gently(&nonshit);
+		shit_config(shit_default_config, NULL);
 	}
 
 	if (strbuf_read(&buf, 0, 1024) < 0)

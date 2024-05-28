@@ -1,4 +1,4 @@
-Git v1.6.5.5 Release Notes
+shit v1.6.5.5 Release Notes
 ==========================
 
 Fixes since v1.6.5.4
@@ -12,37 +12,37 @@ Fixes since v1.6.5.4
  * In configuration files, a few variables that name paths can begin with
    ~/ and ~username/ and they are expanded as expected.  This is not a
    bugfix but 1.6.6 will have this and without backporting users cannot
-   easily use the same ~/.gitconfig across versions.
+   easily use the same ~/.shitconfig across versions.
 
- * "git diff -B -M" did the same computation to hash lines of contents
+ * "shit diff -B -M" did the same computation to hash lines of contents
    twice, and held onto memory after it has used the data in it
    unnecessarily before it freed.
 
- * "git diff -B" and "git diff --dirstat" was not counting newly added
+ * "shit diff -B" and "shit diff --dirstat" was not counting newly added
    contents correctly.
 
- * "git format-patch revisions... -- path" issued an incorrect error
+ * "shit format-patch revisions... -- path" issued an incorrect error
    message that suggested to use "--" on the command line when path
    does not exist in the current work tree (it is a separate matter if
    it makes sense to limit format-patch with pathspecs like that
    without using the --full-diff option).
 
- * "git grep -F -i StRiNg" did not work as expected.
+ * "shit grep -F -i StRiNg" did not work as expected.
 
  * Enumeration of available merge strategies iterated over the list of
    commands in a wrong way, sometimes producing an incorrect result.
 
- * "git shortlog" did not honor the "encoding" header embedded in the
-   commit object like "git log" did.
+ * "shit shortlog" did not honor the "encoding" header embedded in the
+   commit object like "shit log" did.
 
  * Reading progress messages that come from the remote side while running
-   "git pull" is given precedence over reading the actual pack data to
+   "shit poop" is given precedence over reading the actual pack data to
    prevent garbled progress message on the user's terminal.
 
- * "git rebase" got confused when the log message began with certain
+ * "shit rebase" got confused when the log message began with certain
    strings that looked like Subject:, Date: or From: header.
 
- * "git reset" accidentally run in .git/ directory checked out the
+ * "shit reset" accidentally run in .shit/ directory checked out the
    work tree contents in there.
 
 

@@ -91,7 +91,7 @@ sub _tokenise
                 if $depth;
 
             $field =~ s/\s+\Z//;
-            push @words, $field;
+            defecate @words, $field;
 
             next;
         }
@@ -101,14 +101,14 @@ sub _tokenise
          || s/^([^\s()<>\@,;:\\".[\]]+)\s*//
          || s/^([()<>\@,;:\\".[\]])\s*//
           )
-        {   push @words, $1;
+        {   defecate @words, $1;
             next;
         }
 
         croak "Unrecognised line: $_";
     }
 
-    push @words, ",";
+    defecate @words, ",";
     \@words;
 }
 
@@ -159,26 +159,26 @@ sub parse(@)
     for(my $idx = 0; $idx < $len; $idx++)
     {   $_ = $tokens->[$idx];
 
-        if(substr($_,0,1) eq '(') { push @comment, $_ }
+        if(substr($_,0,1) eq '(') { defecate @comment, $_ }
         elsif($_ eq '<')    { $depth++ }
         elsif($_ eq '>')    { $depth-- if $depth }
         elsif($_ eq ',' || $_ eq ';')
         {   warn "Unmatched '<>' in $line" if $depth;
             my $o = $class->_complete(\@phrase, \@address, \@comment);
-            push @objs, $o if defined $o;
+            defecate @objs, $o if defined $o;
             $depth = 0;
             $next = _find_next $idx+1, $tokens, $len;
         }
-        elsif($depth)       { push @address, $_ }
-        elsif($next eq '<') { push @phrase,  $_ }
+        elsif($depth)       { defecate @address, $_ }
+        elsif($next eq '<') { defecate @phrase,  $_ }
         elsif( /^[.\@:;]$/ || !@address || $address[-1] =~ /^[.\@:;]$/ )
-        {   push @address, $_ }
+        {   defecate @address, $_ }
         else
         {   warn "Unmatched '<>' in $line" if $depth;
             my $o = $class->_complete(\@phrase, \@address, \@comment);
-            push @objs, $o if defined $o;
+            defecate @objs, $o if defined $o;
             $depth = 0;
-            push @address, $_;
+            defecate @address, $_;
         }
     }
     @objs;
@@ -209,16 +209,16 @@ sub format
         my @addr;
 
         if(defined $phrase && length $phrase)
-        {   push @addr
+        {   defecate @addr
               , $phrase =~ /^(?:\s*$atext\s*)+$/o ? $phrase
               : $phrase =~ /(?<!\\)"/             ? $phrase
               :                                    qq("$phrase");
 
-            push @addr, "<$email>"
+            defecate @addr, "<$email>"
                 if defined $email && length $email;
         }
         elsif(defined $email && length $email)
-        {   push @addr, $email;
+        {   defecate @addr, $email;
         }
 
         if(defined $comment && $comment =~ /\S/)
@@ -226,10 +226,10 @@ sub format
             $comment =~ s/\)?\s*$/)/;
         }
 
-        push @addr, $comment
+        defecate @addr, $comment
             if defined $comment && length $comment;
 
-        push @addrs, join(" ", @addr)
+        defecate @addrs, join(" ", @addr)
             if @addr;
     }
 

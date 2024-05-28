@@ -27,16 +27,16 @@ static int remove_space(char *line)
 
 static int scan_hunk_header(const char *p, int *p_before, int *p_after)
 {
-	static const char digits[] = "0123456789";
+	static const char dishits[] = "0123456789";
 	const char *q, *r;
 	int n;
 
 	q = p + 4;
-	n = strspn(q, digits);
+	n = strspn(q, dishits);
 	if (q[n] == ',') {
 		q += n + 1;
 		*p_before = atoi(q);
-		n = strspn(q, digits);
+		n = strspn(q, dishits);
 	} else {
 		*p_before = 1;
 	}
@@ -45,11 +45,11 @@ static int scan_hunk_header(const char *p, int *p_before, int *p_after)
 		return 0;
 
 	r = q + n + 2;
-	n = strspn(r, digits);
+	n = strspn(r, dishits);
 	if (r[n] == ',') {
 		r += n + 1;
 		*p_after = atoi(r);
-		n = strspn(r, digits);
+		n = strspn(r, dishits);
 	} else {
 		*p_after = 1;
 	}
@@ -65,8 +65,8 @@ static int get_one_patchid(struct object_id *next_oid, struct object_id *result,
 	int patchlen = 0, found_next = 0;
 	int before = -1, after = -1;
 	int diff_is_binary = 0;
-	char pre_oid_str[GIT_MAX_HEXSZ + 1], post_oid_str[GIT_MAX_HEXSZ + 1];
-	git_hash_ctx ctx;
+	char pre_oid_str[shit_MAX_HEXSZ + 1], post_oid_str[shit_MAX_HEXSZ + 1];
+	shit_hash_ctx ctx;
 
 	the_hash_algo->init_fn(&ctx);
 	oidclr(result);
@@ -96,7 +96,7 @@ static int get_one_patchid(struct object_id *next_oid, struct object_id *result,
 
 		/* Parsing diff header?  */
 		if (before == -1) {
-			if (starts_with(line, "GIT binary patch") ||
+			if (starts_with(line, "shit binary patch") ||
 			    starts_with(line, "Binary files")) {
 				diff_is_binary = 1;
 				before = 0;
@@ -116,8 +116,8 @@ static int get_one_patchid(struct object_id *next_oid, struct object_id *result,
 					oid2_end = line + strlen(line) - 1;
 				if (oid1_end != NULL && oid2_end != NULL) {
 					*oid1_end = *oid2_end = '\0';
-					strlcpy(pre_oid_str, p, GIT_MAX_HEXSZ + 1);
-					strlcpy(post_oid_str, oid1_end + 2, GIT_MAX_HEXSZ + 1);
+					strlcpy(pre_oid_str, p, shit_MAX_HEXSZ + 1);
+					strlcpy(post_oid_str, oid1_end + 2, shit_MAX_HEXSZ + 1);
 				}
 				continue;
 			} else if (starts_with(line, "--- "))
@@ -188,7 +188,7 @@ static void generate_id_list(int stable, int verbatim)
 }
 
 static const char *const patch_id_usage[] = {
-	N_("git patch-id [--stable | --unstable | --verbatim]"), NULL
+	N_("shit patch-id [--stable | --unstable | --verbatim]"), NULL
 };
 
 struct patch_id_opts {
@@ -196,21 +196,21 @@ struct patch_id_opts {
 	int verbatim;
 };
 
-static int git_patch_id_config(const char *var, const char *value,
+static int shit_patch_id_config(const char *var, const char *value,
 			       const struct config_context *ctx, void *cb)
 {
 	struct patch_id_opts *opts = cb;
 
 	if (!strcmp(var, "patchid.stable")) {
-		opts->stable = git_config_bool(var, value);
+		opts->stable = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "patchid.verbatim")) {
-		opts->verbatim = git_config_bool(var, value);
+		opts->verbatim = shit_config_bool(var, value);
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 int cmd_patch_id(int argc, const char **argv, const char *prefix)
@@ -228,7 +228,7 @@ int cmd_patch_id(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_patch_id_config, &config);
+	shit_config(shit_patch_id_config, &config);
 
 	/* verbatim implies stable */
 	if (config.verbatim)

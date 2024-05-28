@@ -52,8 +52,8 @@ void apply_mailmap_to_header(struct strbuf *, const char **, struct string_list 
  */
 int ident_cmp(const struct ident_split *, const struct ident_split *);
 
-const char *git_author_info(int);
-const char *git_committer_info(int);
+const char *shit_author_info(int);
+const char *shit_committer_info(int);
 const char *fmt_ident(const char *name, const char *email,
 		      enum want_ident whose_ident,
 		      const char *date_str, int);
@@ -63,7 +63,7 @@ int committer_ident_sufficiently_given(void);
 int author_ident_sufficiently_given(void);
 
 struct config_context;
-int git_ident_config(const char *, const char *, const struct config_context *,
+int shit_ident_config(const char *, const char *, const struct config_context *,
 		     void *);
 
 #endif

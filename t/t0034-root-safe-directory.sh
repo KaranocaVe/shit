@@ -5,9 +5,9 @@ test_description='verify safe.directory checks while running as root'
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-sudo.sh
 
-if [ "$GIT_TEST_ALLOW_SUDO" != "YES" ]
+if [ "$shit_TEST_ALLOW_SUDO" != "YES" ]
 then
-	skip_all="You must set env var GIT_TEST_ALLOW_SUDO=YES in order to run this test"
+	skip_all="You must set env var shit_TEST_ALLOW_SUDO=YES in order to run this test"
 	test_done
 fi
 
@@ -21,8 +21,8 @@ test_lazy_prereq SUDO '
 	sudo -n id -u >u &&
 	id -u root >r &&
 	test_cmp u r &&
-	command -v git >u &&
-	sudo command -v git >r &&
+	command -v shit >u &&
+	sudo command -v shit >r &&
 	test_cmp u r
 '
 
@@ -37,41 +37,41 @@ test_expect_success SUDO 'setup' '
 	mkdir -p root/r &&
 	(
 		cd root/r &&
-		git init
+		shit init
 	)
 '
 
-test_expect_success SUDO 'sudo git status as original owner' '
+test_expect_success SUDO 'sudo shit status as original owner' '
 	(
 		cd root/r &&
-		git status &&
-		sudo git status
+		shit status &&
+		sudo shit status
 	)
 '
 
 test_expect_success SUDO 'setup root owned repository' '
 	sudo mkdir -p root/p &&
-	sudo git init root/p
+	sudo shit init root/p
 '
 
 test_expect_success 'cannot access if owned by root' '
 	(
 		cd root/p &&
-		test_must_fail git status
+		test_must_fail shit status
 	)
 '
 
 test_expect_success 'can access if addressed explicitly' '
 	(
 		cd root/p &&
-		GIT_DIR=.git GIT_WORK_TREE=. git status
+		shit_DIR=.shit shit_WORK_TREE=. shit status
 	)
 '
 
 test_expect_success SUDO 'can access with sudo if root' '
 	(
 		cd root/p &&
-		sudo git status
+		sudo shit status
 	)
 '
 
@@ -80,7 +80,7 @@ test_expect_success SUDO 'can access with sudo if root by removing SUDO_UID' '
 		cd root/p &&
 		run_with_sudo <<-END
 			unset SUDO_UID &&
-			git status
+			shit status
 		END
 	)
 '

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "strbuf.h"
 #include "utf8.h"
 
@@ -21,7 +21,7 @@ size_t display_mode_esc_sequence_len(const char *s)
 		return 0;
 	if (*p++ != '[')
 		return 0;
-	while (isdigit(*p) || *p == ';')
+	while (isdishit(*p) || *p == ';')
 		p++;
 	if (*p++ != 'm')
 		return 0;
@@ -81,7 +81,7 @@ static int bisearch(ucs_char_t ucs, const struct interval *table, int max)
  * in ISO 10646.
  */
 
-static int git_wcwidth(ucs_char_t ch)
+static int shit_wcwidth(ucs_char_t ch)
 {
 	/*
 	 * Sorted list of non-overlapping intervals of non-spacing characters,
@@ -198,7 +198,7 @@ int utf8_width(const char **start, size_t *remainder_p)
 	ucs_char_t ch = pick_one_utf8_char(start, remainder_p);
 	if (!*start)
 		return 0;
-	return git_wcwidth(ch);
+	return shit_wcwidth(ch);
 }
 
 /*
@@ -683,7 +683,7 @@ int mbs_chrlen(const char **text, size_t *remainder_p, const char *encoding)
 /*
  * Pick the next char from the stream, ignoring codepoints an HFS+ would.
  * Note that this is _not_ complete by any means. It's just enough
- * to make is_hfs_dotgit() work, and should not be used otherwise.
+ * to make is_hfs_dotshit() work, and should not be used otherwise.
  */
 static ucs_char_t next_hfs_char(const char **in)
 {
@@ -692,8 +692,8 @@ static ucs_char_t next_hfs_char(const char **in)
 		/*
 		 * check for malformed utf8. Technically this
 		 * gets converted to a percent-sequence, but
-		 * returning 0 is good enough for is_hfs_dotgit
-		 * to realize it cannot be .git
+		 * returning 0 is good enough for is_hfs_dotshit
+		 * to realize it cannot be .shit
 		 */
 		if (!*in)
 			return 0;
@@ -713,8 +713,8 @@ static ucs_char_t next_hfs_char(const char **in)
 		case 0x206b: /* ACTIVATE SYMMETRIC SWAPPING */
 		case 0x206c: /* INHIBIT ARABIC FORM SHAPING */
 		case 0x206d: /* ACTIVATE ARABIC FORM SHAPING */
-		case 0x206e: /* NATIONAL DIGIT SHAPES */
-		case 0x206f: /* NOMINAL DIGIT SHAPES */
+		case 0x206e: /* NATIONAL DIshit SHAPES */
+		case 0x206f: /* NOMINAL DIshit SHAPES */
 		case 0xfeff: /* ZERO WIDTH NO-BREAK SPACE */
 			continue;
 		}
@@ -766,24 +766,24 @@ static inline int is_hfs_dot_str(const char *path, const char *needle)
 	return is_hfs_dot_generic(path, needle, strlen(needle));
 }
 
-int is_hfs_dotgit(const char *path)
+int is_hfs_dotshit(const char *path)
 {
-	return is_hfs_dot_str(path, "git");
+	return is_hfs_dot_str(path, "shit");
 }
 
-int is_hfs_dotgitmodules(const char *path)
+int is_hfs_dotshitmodules(const char *path)
 {
-	return is_hfs_dot_str(path, "gitmodules");
+	return is_hfs_dot_str(path, "shitmodules");
 }
 
-int is_hfs_dotgitignore(const char *path)
+int is_hfs_dotshitignore(const char *path)
 {
-	return is_hfs_dot_str(path, "gitignore");
+	return is_hfs_dot_str(path, "shitignore");
 }
 
-int is_hfs_dotgitattributes(const char *path)
+int is_hfs_dotshitattributes(const char *path)
 {
-	return is_hfs_dot_str(path, "gitattributes");
+	return is_hfs_dot_str(path, "shitattributes");
 }
 
 int is_hfs_dotmailmap(const char *path)

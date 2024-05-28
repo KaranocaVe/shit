@@ -66,24 +66,24 @@ static unsigned int arg_flags(const char *arg, const char *name,
 
 static const char **get_store(const char **argv, struct ref_store **refs)
 {
-	const char *gitdir;
+	const char *shitdir;
 
 	if (!argv[0]) {
 		die("ref store required");
 	} else if (!strcmp(argv[0], "main")) {
 		*refs = get_main_ref_store(the_repository);
-	} else if (skip_prefix(argv[0], "submodule:", &gitdir)) {
+	} else if (skip_prefix(argv[0], "submodule:", &shitdir)) {
 		struct strbuf sb = STRBUF_INIT;
 		int ret;
 
-		ret = strbuf_git_path_submodule(&sb, gitdir, "objects/");
+		ret = strbuf_shit_path_submodule(&sb, shitdir, "objects/");
 		if (ret)
-			die("strbuf_git_path_submodule failed: %d", ret);
+			die("strbuf_shit_path_submodule failed: %d", ret);
 		add_to_alternates_memory(sb.buf);
 		strbuf_release(&sb);
 
-		*refs = get_submodule_ref_store(gitdir);
-	} else if (skip_prefix(argv[0], "worktree:", &gitdir)) {
+		*refs = get_submodule_ref_store(shitdir);
+	} else if (skip_prefix(argv[0], "worktree:", &shitdir)) {
 		struct worktree **p, **worktrees = get_worktrees();
 
 		for (p = worktrees; *p; p++) {
@@ -91,13 +91,13 @@ static const char **get_store(const char **argv, struct ref_store **refs)
 
 			if (!wt->id) {
 				/* special case for main worktree */
-				if (!strcmp(gitdir, "main"))
+				if (!strcmp(shitdir, "main"))
 					break;
-			} else if (!strcmp(gitdir, wt->id))
+			} else if (!strcmp(shitdir, wt->id))
 				break;
 		}
 		if (!*p)
-			die("no such worktree: %s", gitdir);
+			die("no such worktree: %s", shitdir);
 
 		*refs = get_worktree_ref_store(*p);
 		free_worktrees(worktrees);
@@ -334,7 +334,7 @@ int cmd__ref_store(int argc UNUSED, const char **argv)
 	const char *func;
 	struct command *cmd;
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	argv = get_store(argv + 1, &refs);
 

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "advice.h"
 #include "config.h"
@@ -22,9 +22,9 @@ int is_terminal_dumb(void)
 	return !terminal || !strcmp(terminal, "dumb");
 }
 
-const char *git_editor(void)
+const char *shit_editor(void)
 {
-	const char *editor = getenv("GIT_EDITOR");
+	const char *editor = getenv("shit_EDITOR");
 	int terminal_is_dumb = is_terminal_dumb();
 
 	if (!editor && editor_program)
@@ -43,14 +43,14 @@ const char *git_editor(void)
 	return editor;
 }
 
-const char *git_sequence_editor(void)
+const char *shit_sequence_editor(void)
 {
-	const char *editor = getenv("GIT_SEQUENCE_EDITOR");
+	const char *editor = getenv("shit_SEQUENCE_EDITOR");
 
 	if (!editor)
-		git_config_get_string_tmp("sequence.editor", &editor);
+		shit_config_get_string_tmp("sequence.editor", &editor);
 	if (!editor)
-		editor = git_editor();
+		editor = shit_editor();
 
 	return editor;
 }
@@ -85,9 +85,9 @@ static int launch_specified_editor(const char *editor, const char *path,
 
 		strbuf_realpath(&realpath, path, 1);
 
-		strvec_pushl(&p.args, editor, realpath.buf, NULL);
+		strvec_defecatel(&p.args, editor, realpath.buf, NULL);
 		if (env)
-			strvec_pushv(&p.env, (const char **)env);
+			strvec_defecatev(&p.env, (const char **)env);
 		p.use_shell = 1;
 		p.trace2_child_class = "editor";
 		if (start_command(&p) < 0) {
@@ -95,8 +95,8 @@ static int launch_specified_editor(const char *editor, const char *path,
 			return error("unable to start editor '%s'", editor);
 		}
 
-		sigchain_push(SIGINT, SIG_IGN);
-		sigchain_push(SIGQUIT, SIG_IGN);
+		sigchain_defecate(SIGINT, SIG_IGN);
+		sigchain_defecate(SIGQUIT, SIG_IGN);
 		ret = finish_command(&p);
 		strbuf_release(&realpath);
 		sig = ret - 128;
@@ -124,13 +124,13 @@ static int launch_specified_editor(const char *editor, const char *path,
 
 int launch_editor(const char *path, struct strbuf *buffer, const char *const *env)
 {
-	return launch_specified_editor(git_editor(), path, buffer, env);
+	return launch_specified_editor(shit_editor(), path, buffer, env);
 }
 
 int launch_sequence_editor(const char *path, struct strbuf *buffer,
 			   const char *const *env)
 {
-	return launch_specified_editor(git_sequence_editor(), path, buffer, env);
+	return launch_specified_editor(shit_sequence_editor(), path, buffer, env);
 }
 
 int strbuf_edit_interactively(struct strbuf *buffer, const char *path,
@@ -140,7 +140,7 @@ int strbuf_edit_interactively(struct strbuf *buffer, const char *path,
 	int fd, res = 0;
 
 	if (!is_absolute_path(path))
-		path = path2 = xstrdup(git_path("%s", path));
+		path = path2 = xstrdup(shit_path("%s", path));
 
 	fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd < 0)

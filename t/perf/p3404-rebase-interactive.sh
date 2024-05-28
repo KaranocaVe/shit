@@ -10,7 +10,7 @@ test_perf_default_repo
 branch_merge=ba5312da19c6fdb6c6747d479f58932aae6e900c^{commit}
 export branch_merge
 
-git rev-parse --verify $branch_merge >/dev/null 2>&1 || {
+shit rev-parse --verify $branch_merge >/dev/null 2>&1 || {
 	skip_all='skipping because $branch_merge was not found'
 	test_done
 }
@@ -25,12 +25,12 @@ esac
 EOF
 
 test_expect_success 'setup' '
-	git config core.editor "\"$PWD"/swap-first-two.sh\" &&
-	git checkout -f $branch_merge^2
+	shit config core.editor "\"$PWD"/swap-first-two.sh\" &&
+	shit checkout -f $branch_merge^2
 '
 
 test_perf 'rebase -i' '
-	git rebase -i $branch_merge^
+	shit rebase -i $branch_merge^
 '
 
 test_done

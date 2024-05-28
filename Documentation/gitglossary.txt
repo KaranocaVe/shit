@@ -1,9 +1,9 @@
-gitglossary(7)
+shitglossary(7)
 ==============
 
 NAME
 ----
-gitglossary - A Git Glossary
+shitglossary - A shit Glossary
 
 SYNOPSIS
 --------
@@ -16,12 +16,12 @@ include::glossary-content.txt[]
 
 SEE ALSO
 --------
-linkgit:gittutorial[7],
-linkgit:gittutorial-2[7],
-linkgit:gitcvs-migration[7],
-linkgit:giteveryday[7],
-link:user-manual.html[The Git User's Manual]
+linkshit:shittutorial[7],
+linkshit:shittutorial-2[7],
+linkshit:shitcvs-migration[7],
+linkshit:shiteveryday[7],
+link:user-manual.html[The shit User's Manual]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,8 +1,8 @@
 # Refs of upstream : main(A)  
 # Refs of workbench: main(A)  tags/v123
-# git-push         : main(B)             next(A)
-test_expect_success "git-push ($PROTOCOL)" '
-	git -C workbench push origin \
+# shit-defecate         : main(B)             next(A)
+test_expect_success "shit-defecate ($PROTOCOL)" '
+	shit -C workbench defecate origin \
 		$B:refs/heads/main \
 		HEAD:refs/heads/next \
 		>out 2>&1 &&
@@ -14,7 +14,7 @@ test_expect_success "git-push ($PROTOCOL)" '
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <COMMIT-A> <COMMIT-B> refs/heads/main        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>    <COMMIT-A>..<COMMIT-B>  <COMMIT-B> -> main
 	>  * [new branch]      HEAD -> next
 	EOF
@@ -28,9 +28,9 @@ test_expect_success "git-push ($PROTOCOL)" '
 
 # Refs of upstream : main(B)  next(A)
 # Refs of workbench: main(A)           tags/v123
-# git-push --atomic: main(A)  next(B)
-test_expect_success "git-push --atomic ($PROTOCOL)" '
-	test_must_fail git -C workbench push --atomic origin \
+# shit-defecate --atomic: main(A)  next(B)
+test_expect_success "shit-defecate --atomic ($PROTOCOL)" '
+	test_must_fail shit -C workbench defecate --atomic origin \
 		main \
 		$B:refs/heads/next \
 		>out-$test_count 2>&1 &&
@@ -39,9 +39,9 @@ test_expect_success "git-push --atomic ($PROTOCOL)" '
 		-e "/^ ! / { p; }" \
 		<out-$test_count >actual &&
 	format_and_save_expect <<-EOF &&
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  ! [rejected]        main -> main (non-fast-forward)
-	>  ! [rejected]        <COMMIT-B> -> next (atomic push failed)
+	>  ! [rejected]        <COMMIT-B> -> next (atomic defecate failed)
 	EOF
 	test_cmp expect actual &&
 
@@ -53,12 +53,12 @@ test_expect_success "git-push --atomic ($PROTOCOL)" '
 
 # Refs of upstream : main(B)  next(A)
 # Refs of workbench: main(A)           tags/v123
-# git-push         : main(A)  next(B)
-test_expect_success "non-fast-forward git-push ($PROTOCOL)" '
-	test_must_fail git \
+# shit-defecate         : main(A)  next(B)
+test_expect_success "non-fast-forward shit-defecate ($PROTOCOL)" '
+	test_must_fail shit \
 		-C workbench \
-		-c advice.pushUpdateRejected=false \
-		push origin \
+		-c advice.defecateUpdateRejected=false \
+		defecate origin \
 		main \
 		$B:refs/heads/next \
 		>out-$test_count 2>&1 &&
@@ -68,7 +68,7 @@ test_expect_success "non-fast-forward git-push ($PROTOCOL)" '
 	> remote: pre-receive< <COMMIT-A> <COMMIT-B> refs/heads/next        Z
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <COMMIT-A> <COMMIT-B> refs/heads/next        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>    <COMMIT-A>..<COMMIT-B>  <COMMIT-B> -> next
 	>  ! [rejected]        main -> main (non-fast-forward)
 	EOF
@@ -82,9 +82,9 @@ test_expect_success "non-fast-forward git-push ($PROTOCOL)" '
 
 # Refs of upstream : main(B)  next(B)
 # Refs of workbench: main(A)           tags/v123
-# git-push -f      : main(A)  NULL     tags/v123  refs/review/main/topic(A)  a/b/c(A)
-test_expect_success "git-push -f ($PROTOCOL)" '
-	git -C workbench push -f origin \
+# shit-defecate -f      : main(A)  NULL     tags/v123  refs/review/main/topic(A)  a/b/c(A)
+test_expect_success "shit-defecate -f ($PROTOCOL)" '
+	shit -C workbench defecate -f origin \
 		refs/tags/v123 \
 		:refs/heads/next \
 		main \
@@ -105,7 +105,7 @@ test_expect_success "git-push -f ($PROTOCOL)" '
 	> remote: post-receive< <ZERO-OID> <TAG-v123> refs/tags/v123        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/review/main/topic        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/a/b/c        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  + <COMMIT-B>...<COMMIT-A> main -> main (forced update)
 	>  - [deleted]         next
 	>  * [new tag]         v123 -> v123
@@ -127,8 +127,8 @@ test_expect_success "git-push -f ($PROTOCOL)" '
 test_expect_success "cleanup ($PROTOCOL)" '
 	(
 		cd "$upstream" &&
-		git update-ref -d refs/review/main/topic &&
-		git update-ref -d refs/tags/v123 &&
-		git update-ref -d refs/heads/a/b/c
+		shit update-ref -d refs/review/main/topic &&
+		shit update-ref -d refs/tags/v123 &&
+		shit update-ref -d refs/heads/a/b/c
 	)
 '

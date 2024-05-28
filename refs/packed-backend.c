@@ -1,4 +1,4 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 #include "../config.h"
 #include "../gettext.h"
 #include "../hash.h"
@@ -201,17 +201,17 @@ static int release_snapshot(struct snapshot *snapshot)
 }
 
 struct ref_store *packed_ref_store_create(struct repository *repo,
-					  const char *gitdir,
+					  const char *shitdir,
 					  unsigned int store_flags)
 {
 	struct packed_ref_store *refs = xcalloc(1, sizeof(*refs));
 	struct ref_store *ref_store = (struct ref_store *)refs;
 	struct strbuf sb = STRBUF_INIT;
 
-	base_ref_store_init(ref_store, repo, gitdir, &refs_be_packed);
+	base_ref_store_init(ref_store, repo, shitdir, &refs_be_packed);
 	refs->store_flags = store_flags;
 
-	strbuf_addf(&sb, "%s/packed-refs", gitdir);
+	strbuf_addf(&sb, "%s/packed-refs", shitdir);
 	refs->path = strbuf_detach(&sb, NULL);
 	chdir_notify_reparent("packed-refs", &refs->path);
 	return ref_store;
@@ -441,19 +441,19 @@ static const char *find_end_of_record(const char *p, const char *end)
 /*
  * We want to be able to compare mmapped reference records quickly,
  * without totally parsing them. We can do so because the records are
- * LF-terminated, and the refname should start exactly (GIT_SHA1_HEXSZ
+ * LF-terminated, and the refname should start exactly (shit_SHA1_HEXSZ
  * + 1) bytes past the beginning of the record.
  *
  * But what if the `packed-refs` file contains garbage? We're willing
  * to tolerate not detecting the problem, as long as we don't produce
  * totally garbled output (we can't afford to check the integrity of
- * the whole file during every Git invocation). But we do want to be
+ * the whole file during every shit invocation). But we do want to be
  * sure that we never read past the end of the buffer in memory and
  * perform an illegal memory access.
  *
  * Guarantee that minimum level of safety by verifying that the last
  * record in the file is LF-terminated, and that it has at least
- * (GIT_SHA1_HEXSZ + 1) characters before the LF. Die if either of
+ * (shit_SHA1_HEXSZ + 1) characters before the LF. Die if either of
  * these checks fails.
  */
 static void verify_buffer_safe(struct snapshot *snapshot)
@@ -1161,7 +1161,7 @@ int packed_refs_lock(struct ref_store *ref_store, int flags, struct strbuf *err)
 	static int timeout_value = 1000;
 
 	if (!timeout_configured) {
-		git_config_get_int("core.packedrefstimeout", &timeout_value);
+		shit_config_get_int("core.packedrefstimeout", &timeout_value);
 		timeout_configured = 1;
 	}
 
@@ -1237,7 +1237,7 @@ int packed_refs_is_locked(struct ref_store *ref_store)
  * The packed-refs header line that we write out. Perhaps other traits
  * will be added later.
  *
- * Note that earlier versions of Git used to parse these traits by
+ * Note that earlier versions of shit used to parse these traits by
  * looking for " trait " in the line. For this reason, the space after
  * the colon and the trailing space are required.
  */

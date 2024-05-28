@@ -5,118 +5,118 @@
 
 test_description='Various diff formatting options'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=master
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=master
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-diff.sh
 
 test_expect_success setup '
 
-	GIT_AUTHOR_DATE="2006-06-26 00:00:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:00:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
+	shit_AUTHOR_DATE="2006-06-26 00:00:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:00:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
 
 	mkdir dir &&
 	mkdir dir2 &&
 	test_write_lines 1 2 3 >file0 &&
 	test_write_lines A B >dir/sub &&
 	cat file0 >file2 &&
-	git add file0 file2 dir/sub &&
-	git commit -m Initial &&
+	shit add file0 file2 dir/sub &&
+	shit commit -m Initial &&
 
-	git branch initial &&
-	git branch side &&
+	shit branch initial &&
+	shit branch side &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:01:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:01:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
+	shit_AUTHOR_DATE="2006-06-26 00:01:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:01:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
 
 	test_write_lines 4 5 6 >>file0 &&
 	test_write_lines C D >>dir/sub &&
 	rm -f file2 &&
-	git update-index --remove file0 file2 dir/sub &&
-	git commit -m "Second${LF}${LF}This is the second commit." &&
+	shit update-index --remove file0 file2 dir/sub &&
+	shit commit -m "Second${LF}${LF}This is the second commit." &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:02:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:02:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
+	shit_AUTHOR_DATE="2006-06-26 00:02:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:02:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
 
 	test_write_lines A B C >file1 &&
-	git add file1 &&
+	shit add file1 &&
 	test_write_lines E F >>dir/sub &&
-	git update-index dir/sub &&
-	git commit -m Third &&
+	shit update-index dir/sub &&
+	shit commit -m Third &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:03:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:03:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
+	shit_AUTHOR_DATE="2006-06-26 00:03:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:03:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
 
-	git checkout side &&
+	shit checkout side &&
 	test_write_lines A B C >>file0 &&
 	test_write_lines 1 2 >>dir/sub &&
 	cat dir/sub >file3 &&
-	git add file3 &&
-	git update-index file0 dir/sub &&
-	git commit -m Side &&
+	shit add file3 &&
+	shit update-index file0 dir/sub &&
+	shit commit -m Side &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:04:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:04:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
+	shit_AUTHOR_DATE="2006-06-26 00:04:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:04:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
 
-	git checkout master &&
-	git pull -s ours --no-rebase . side &&
+	shit checkout master &&
+	shit poop -s ours --no-rebase . side &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:05:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:05:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
+	shit_AUTHOR_DATE="2006-06-26 00:05:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:05:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
 
 	test_write_lines A B C >>file0 &&
 	test_write_lines 1 2 >>dir/sub &&
-	git update-index file0 dir/sub &&
+	shit update-index file0 dir/sub &&
 
 	mkdir dir3 &&
 	cp dir/sub dir3/sub &&
 	test-tool chmtime +1 dir3/sub &&
 
-	git config log.showroot false &&
-	git commit --amend &&
+	shit config log.showroot false &&
+	shit commit --amend &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:06:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:06:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
-	git checkout -b rearrange initial &&
+	shit_AUTHOR_DATE="2006-06-26 00:06:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:06:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
+	shit checkout -b rearrange initial &&
 	test_write_lines B A >dir/sub &&
-	git add dir/sub &&
-	git commit -m "Rearranged lines in dir/sub" &&
-	git checkout master &&
+	shit add dir/sub &&
+	shit commit -m "Rearranged lines in dir/sub" &&
+	shit checkout master &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:06:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:06:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
-	git checkout -b mode initial &&
-	git update-index --chmod=+x file0 &&
-	git commit -m "update mode" &&
-	git checkout -f master &&
+	shit_AUTHOR_DATE="2006-06-26 00:06:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:06:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
+	shit checkout -b mode initial &&
+	shit update-index --chmod=+x file0 &&
+	shit commit -m "update mode" &&
+	shit checkout -f master &&
 
-	GIT_AUTHOR_DATE="2006-06-26 00:06:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:06:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
-	git checkout -b note initial &&
-	git update-index --chmod=+x file2 &&
-	git commit -m "update mode (file2)" &&
-	git notes add -m "note" &&
-	git checkout -f master &&
+	shit_AUTHOR_DATE="2006-06-26 00:06:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:06:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
+	shit checkout -b note initial &&
+	shit update-index --chmod=+x file2 &&
+	shit commit -m "update mode (file2)" &&
+	shit notes add -m "note" &&
+	shit checkout -f master &&
 
 	# Same merge as master, but with parents reversed. Hide it in a
 	# pseudo-ref to avoid impacting tests with --all.
 	commit=$(echo reverse |
-		 git commit-tree -p master^2 -p master^1 master^{tree}) &&
-	git update-ref REVERSE $commit &&
+		 shit commit-tree -p master^2 -p master^1 master^{tree}) &&
+	shit update-ref REVERSE $commit &&
 
-	git config diff.renames false &&
+	shit config diff.renames false &&
 
-	git show-branch
+	shit show-branch
 '
 
 : <<\EOF
@@ -175,7 +175,7 @@ process_diffs () {
 	' "$ZERO_OID" <"$1"
 }
 
-V=$(git version | sed -e 's/^git version //' -e 's/\./\\./g')
+V=$(shit version | sed -e 's/^shit version //' -e 's/\./\\./g')
 while read magic cmd
 do
 	case "$magic" in
@@ -200,14 +200,14 @@ do
 	expect="$TEST_DIRECTORY/t4013/diff.$test"
 	actual="$pfx-diff.$test"
 
-	test_expect_success "git $cmd # magic is ${magic:-(not used)}" '
+	test_expect_success "shit $cmd # magic is ${magic:-(not used)}" '
 		{
-			echo "$ git $cmd"
+			echo "$ shit $cmd"
 			case "$magic" in
 			"")
-				GIT_PRINT_SHA1_ELLIPSIS=yes git $cmd ;;
+				shit_PRINT_SHA1_ELLIPSIS=yes shit $cmd ;;
 			noellipses)
-				git $cmd ;;
+				shit $cmd ;;
 			esac |
 			sed -e "s/^\\(-*\\)$V\\(-*\\)\$/\\1g-i-t--v-e-r-s-i-o-n\2/" \
 			    -e "s/^\\(.*mixed; boundary=\"-*\\)$V\\(-*\\)\"\$/\\1g-i-t--v-e-r-s-i-o-n\2\"/"
@@ -455,85 +455,85 @@ diff-tree -R --stat --compact-summary initial mode
 EOF
 
 test_expect_success 'log -m matches pure log' '
-	git log master >result &&
+	shit log master >result &&
 	process_diffs result >expected &&
-	git log -m >result &&
+	shit log -m >result &&
 	process_diffs result >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'log --diff-merges=on matches --diff-merges=separate' '
-	git log -p --diff-merges=separate master >result &&
+	shit log -p --diff-merges=separate master >result &&
 	process_diffs result >expected &&
-	git log -p --diff-merges=on master >result &&
+	shit log -p --diff-merges=on master >result &&
 	process_diffs result >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'log --dd matches --diff-merges=1 -p' '
-	git log --diff-merges=1 -p master >result &&
+	shit log --diff-merges=1 -p master >result &&
 	process_diffs result >expected &&
-	git log --dd master >result &&
+	shit log --dd master >result &&
 	process_diffs result >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'deny wrong log.diffMerges config' '
 	test_config log.diffMerges wrong-value &&
-	test_expect_code 128 git log
+	test_expect_code 128 shit log
 '
 
-test_expect_success 'git config log.diffMerges first-parent' '
-	git log -p --diff-merges=first-parent master >result &&
+test_expect_success 'shit config log.diffMerges first-parent' '
+	shit log -p --diff-merges=first-parent master >result &&
 	process_diffs result >expected &&
 	test_config log.diffMerges first-parent &&
-	git log -p --diff-merges=on master >result &&
+	shit log -p --diff-merges=on master >result &&
 	process_diffs result >actual &&
 	test_cmp expected actual
 '
 
-test_expect_success 'git config log.diffMerges first-parent vs -m' '
-	git log -p --diff-merges=first-parent master >result &&
+test_expect_success 'shit config log.diffMerges first-parent vs -m' '
+	shit log -p --diff-merges=first-parent master >result &&
 	process_diffs result >expected &&
 	test_config log.diffMerges first-parent &&
-	git log -p -m master >result &&
+	shit log -p -m master >result &&
 	process_diffs result >actual &&
 	test_cmp expected actual
 '
 
-# -m in "git diff-index" means "match missing", that differs
-# from its meaning in "git diff". Let's check it in diff-index.
+# -m in "shit diff-index" means "match missing", that differs
+# from its meaning in "shit diff". Let's check it in diff-index.
 # The line in the output for removed file should disappear when
 # we provide -m in diff-index.
-test_expect_success 'git diff-index -m' '
+test_expect_success 'shit diff-index -m' '
 	rm -f file1 &&
-	git diff-index HEAD >without-m &&
+	shit diff-index HEAD >without-m &&
 	lines_count=$(wc -l <without-m) &&
-	git diff-index -m HEAD >with-m &&
-	git restore file1 &&
+	shit diff-index -m HEAD >with-m &&
+	shit restore file1 &&
 	test_line_count = $((lines_count - 1)) with-m
 '
 
 test_expect_success 'log -S requires an argument' '
-	test_must_fail git log -S
+	test_must_fail shit log -S
 '
 
 test_expect_success 'diff --cached on unborn branch' '
-	git symbolic-ref HEAD refs/heads/unborn &&
-	git diff --cached >result &&
+	shit symbolic-ref HEAD refs/heads/unborn &&
+	shit diff --cached >result &&
 	process_diffs result >actual &&
 	process_diffs "$TEST_DIRECTORY/t4013/diff.diff_--cached" >expected &&
 	test_cmp expected actual
 '
 
 test_expect_success 'diff --cached -- file on unborn branch' '
-	git diff --cached -- file0 >result &&
+	shit diff --cached -- file0 >result &&
 	process_diffs result >actual &&
 	process_diffs "$TEST_DIRECTORY/t4013/diff.diff_--cached_--_file0" >expected &&
 	test_cmp expected actual
 '
 test_expect_success 'diff --line-prefix with spaces' '
-	git diff --line-prefix="| | | " --cached -- file0 >result &&
+	shit diff --line-prefix="| | | " --cached -- file0 >result &&
 	process_diffs result >actual &&
 	process_diffs "$TEST_DIRECTORY/t4013/diff.diff_--line-prefix_--cached_--_file0" >expected &&
 	test_cmp expected actual
@@ -545,7 +545,7 @@ test_expect_success 'diff-tree --stdin with log formatting' '
 	Third
 	Second
 	EOF
-	git rev-list master | git diff-tree --stdin --format=%s -s >actual &&
+	shit rev-list master | shit diff-tree --stdin --format=%s -s >actual &&
 	test_cmp expect actual
 '
 
@@ -558,8 +558,8 @@ test_expect_success 'diff-tree --stdin with pathspec' '
 
 	dir/sub
 	EOF
-	git rev-list master^ |
-	git diff-tree -r --stdin --name-only --format=%s dir >actual &&
+	shit rev-list master^ |
+	shit diff-tree -r --stdin --name-only --format=%s dir >actual &&
 	test_cmp expect actual
 '
 
@@ -567,7 +567,7 @@ test_expect_success 'show A B ... -- <pathspec>' '
 	# side touches dir/sub, file0, and file3
 	# master^ touches dir/sub, and file1
 	# master^^ touches dir/sub, file0, and file2
-	git show --name-only --format="<%s>" side master^ master^^ -- dir >actual &&
+	shit show --name-only --format="<%s>" side master^ master^^ -- dir >actual &&
 	cat >expect <<-\EOF &&
 	<Side>
 
@@ -583,16 +583,16 @@ test_expect_success 'show A B ... -- <pathspec>' '
 '
 
 test_expect_success 'diff -I<regex>: setup' '
-	git checkout master &&
+	shit checkout master &&
 	test_seq 50 >file0 &&
-	git commit -m "Set up -I<regex> test file" file0 &&
+	shit commit -m "Set up -I<regex> test file" file0 &&
 	test_seq 50 | sed -e "s/13/ten and three/" -e "/7\$/d" >file0 &&
 	echo >>file0
 '
 test_expect_success 'diff -I<regex>' '
-	git diff --ignore-blank-lines -I"ten.*e" -I"^[124-9]" >actual &&
+	shit diff --ignore-blank-lines -I"ten.*e" -I"^[124-9]" >actual &&
 	cat >expect <<-\EOF &&
-	diff --git a/file0 b/file0
+	diff --shit a/file0 b/file0
 	--- a/file0
 	+++ b/file0
 	@@ -34,7 +31,6 @@
@@ -608,7 +608,7 @@ test_expect_success 'diff -I<regex>' '
 '
 
 test_expect_success 'diff -I<regex> --stat' '
-	git diff --stat --ignore-blank-lines -I"ten.*e" -I"^[124-9]" >actual &&
+	shit diff --stat --ignore-blank-lines -I"ten.*e" -I"^[124-9]" >actual &&
 	cat >expect <<-\EOF &&
 	 file0 | 1 -
 	 1 file changed, 1 deletion(-)
@@ -617,7 +617,7 @@ test_expect_success 'diff -I<regex> --stat' '
 '
 
 test_expect_success 'diff -I<regex>: detect malformed regex' '
-	test_expect_code 129 git diff --ignore-matching-lines="^[124-9" 2>error &&
+	test_expect_code 129 shit diff --ignore-matching-lines="^[124-9" 2>error &&
 	test_grep "invalid regex given to -I: " error
 '
 
@@ -626,7 +626,7 @@ test_expect_success 'diff -I<regex>: detect malformed regex' '
 check_prefix () {
 	grep -E '^(diff|---|\+\+\+) ' "$1" >actual.paths &&
 	cat >expect <<-EOF &&
-	diff --git $2 $3
+	diff --shit $2 $3
 	--- $2
 	+++ $3
 	EOF
@@ -634,72 +634,72 @@ check_prefix () {
 }
 
 test_expect_success 'diff-files does not respect diff.noPrefix' '
-	git -c diff.noPrefix diff-files -p >actual &&
+	shit -c diff.noPrefix diff-files -p >actual &&
 	check_prefix actual a/file0 b/file0
 '
 
 test_expect_success 'diff-files respects --no-prefix' '
-	git diff-files -p --no-prefix >actual &&
+	shit diff-files -p --no-prefix >actual &&
 	check_prefix actual file0 file0
 '
 
 test_expect_success 'diff respects diff.noPrefix' '
-	git -c diff.noPrefix diff >actual &&
+	shit -c diff.noPrefix diff >actual &&
 	check_prefix actual file0 file0
 '
 
 test_expect_success 'diff --default-prefix overrides diff.noPrefix' '
-	git -c diff.noPrefix diff --default-prefix >actual &&
+	shit -c diff.noPrefix diff --default-prefix >actual &&
 	check_prefix actual a/file0 b/file0
 '
 
 test_expect_success 'diff respects diff.mnemonicPrefix' '
-	git -c diff.mnemonicPrefix diff >actual &&
+	shit -c diff.mnemonicPrefix diff >actual &&
 	check_prefix actual i/file0 w/file0
 '
 
 test_expect_success 'diff --default-prefix overrides diff.mnemonicPrefix' '
-	git -c diff.mnemonicPrefix diff --default-prefix >actual &&
+	shit -c diff.mnemonicPrefix diff --default-prefix >actual &&
 	check_prefix actual a/file0 b/file0
 '
 
 test_expect_success 'diff respects diff.srcPrefix' '
-	git -c diff.srcPrefix=x/ diff >actual &&
+	shit -c diff.srcPrefix=x/ diff >actual &&
 	check_prefix actual x/file0 b/file0
 '
 
 test_expect_success 'diff respects diff.dstPrefix' '
-	git -c diff.dstPrefix=y/ diff >actual &&
+	shit -c diff.dstPrefix=y/ diff >actual &&
 	check_prefix actual a/file0 y/file0
 '
 
 test_expect_success 'diff --src-prefix overrides diff.srcPrefix' '
-	git -c diff.srcPrefix=y/ diff --src-prefix=z/ >actual &&
+	shit -c diff.srcPrefix=y/ diff --src-prefix=z/ >actual &&
 	check_prefix actual z/file0 b/file0
 '
 
 test_expect_success 'diff --dst-prefix overrides diff.dstPrefix' '
-	git -c diff.dstPrefix=y/ diff --dst-prefix=z/ >actual &&
+	shit -c diff.dstPrefix=y/ diff --dst-prefix=z/ >actual &&
 	check_prefix actual a/file0 z/file0
 '
 
 test_expect_success 'diff.{src,dst}Prefix ignored with diff.noPrefix' '
-	git -c diff.dstPrefix=y/ -c diff.srcPrefix=x/ -c diff.noPrefix diff >actual &&
+	shit -c diff.dstPrefix=y/ -c diff.srcPrefix=x/ -c diff.noPrefix diff >actual &&
 	check_prefix actual file0 file0
 '
 
 test_expect_success 'diff.{src,dst}Prefix ignored with diff.mnemonicPrefix' '
-	git -c diff.dstPrefix=x/ -c diff.srcPrefix=y/ -c diff.mnemonicPrefix diff >actual &&
+	shit -c diff.dstPrefix=x/ -c diff.srcPrefix=y/ -c diff.mnemonicPrefix diff >actual &&
 	check_prefix actual i/file0 w/file0
 '
 
 test_expect_success 'diff.{src,dst}Prefix ignored with --default-prefix' '
-	git -c diff.dstPrefix=x/ -c diff.srcPrefix=y/ diff --default-prefix >actual &&
+	shit -c diff.dstPrefix=x/ -c diff.srcPrefix=y/ diff --default-prefix >actual &&
 	check_prefix actual a/file0 b/file0
 '
 
 test_expect_success 'diff --no-renames cannot be abbreviated' '
-	test_expect_code 129 git diff --no-rename >actual 2>error &&
+	test_expect_code 129 shit diff --no-rename >actual 2>error &&
 	test_must_be_empty actual &&
 	grep "invalid option: --no-rename" error
 '

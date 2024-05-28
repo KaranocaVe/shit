@@ -1,15 +1,15 @@
-git-ls-files(1)
+shit-ls-files(1)
 ===============
 
 NAME
 ----
-git-ls-files - Show information about files in the index and the working tree
+shit-ls-files - Show information about files in the index and the working tree
 
 
 SYNOPSIS
 --------
 [verse]
-'git ls-files' [-z] [-t] [-v] [-f]
+'shit ls-files' [-z] [-t] [-v] [-f]
 		[-c|--cached] [-d|--deleted] [-o|--others] [-i|--ignored]
 		[-s|--stage] [-u|--unmerged] [-k|--killed] [-m|--modified]
 		[--resolve-undo]
@@ -37,7 +37,7 @@ OPTIONS
 -------
 -c::
 --cached::
-	Show all files cached in Git's index, i.e. all tracked files.
+	Show all files cached in shit's index, i.e. all tracked files.
 	(This is the default if no -c/-s/-d/-o/-u/-k/-m/--resolve-undo
 	options are specified.)
 
@@ -92,7 +92,7 @@ OPTIONS
 --resolve-undo::
 	Show files having resolve-undo information in the index
 	together with their resolve-undo information.  (resolve-undo
-	information is what is used to implement "git checkout -m
+	information is what is used to implement "shit checkout -m
 	$PATH", i.e. to recreate merge conflicts that were
 	accidentally resolved)
 
@@ -125,7 +125,7 @@ OPTIONS
 	thorough.
 
 --exclude-standard::
-	Add the standard Git exclusions: .git/info/exclude, .gitignore
+	Add the standard shit exclusions: .shit/info/exclude, .shitignore
 	in each directory, and the user's global exclusion file.
 
 --error-unmatch::
@@ -141,10 +141,10 @@ OPTIONS
 
 -t::
 	Show status tags together with filenames.  Note that for
-	scripting purposes, linkgit:git-status[1] `--porcelain` and
-	linkgit:git-diff-files[1] `--name-status` are almost always
+	scripting purposes, linkshit:shit-status[1] `--porcelain` and
+	linkshit:shit-diff-files[1] `--name-status` are almost always
 	superior alternatives; users should look at
-	linkgit:git-status[1] `--short` or linkgit:git-diff[1]
+	linkshit:shit-status[1] `--short` or linkshit:shit-diff[1]
 	`--name-status` for more user-friendly alternatives.
 +
 --
@@ -166,12 +166,12 @@ The status tags are all single characters from the following list:
 -v::
 	Similar to `-t`, but use lowercase letters for files
 	that are marked as 'assume unchanged' (see
-	linkgit:git-update-index[1]).
+	linkshit:shit-update-index[1]).
 
 -f::
 	Similar to `-t`, but use lowercase letters for files
 	that are marked as 'fsmonitor valid' (see
-	linkgit:git-update-index[1]).
+	linkshit:shit-update-index[1]).
 
 --full-name::
 	When run from a subdirectory, the command usually
@@ -186,8 +186,8 @@ The status tags are all single characters from the following list:
 --abbrev[=<n>]::
 	Instead of showing the full 40-byte hexadecimal object
 	lines, show the shortest prefix that is at least '<n>'
-	hexdigits long that uniquely refers the object.
-	Non default number of digits can be specified with --abbrev=<n>.
+	hexdishits long that uniquely refers the object.
+	Non default number of dishits can be specified with --abbrev=<n>.
 
 --debug::
 	After each line that describes a file, add more data about its
@@ -197,7 +197,7 @@ The status tags are all single characters from the following list:
 
 --eol::
 	Show <eolinfo> and <eolattr> of files.
-	<eolinfo> is the file content identification used by Git when
+	<eolinfo> is the file content identification used by shit when
 	the "text" attribute is "auto" (or not set and core.autocrlf is not false).
 	<eolinfo> is either "-text", "none", "lf", "crlf", "mixed" or "".
 +
@@ -206,7 +206,7 @@ not accessible in the working tree.
 +
 <eolattr> is the attribute that is used when checking out or committing,
 it is either "", "-text", "text", "text=auto", "text eol=lf", "text eol=crlf".
-Since Git 2.10 "text=auto eol=lf" and "text=auto eol=crlf" are supported.
+Since shit 2.10 "text=auto eol=lf" and "text=auto eol=crlf" are supported.
 +
 Both the <eolinfo> in the index ("i/<eolinfo>")
 and in the working tree ("w/<eolinfo>") are shown for regular files,
@@ -219,7 +219,7 @@ followed by the  ("attr/<eolattr>").
 
 --format=<format>::
 	A string that interpolates `%(fieldname)` from the result being shown.
-	It also interpolates `%%` to `%`, and `%xx` where `xx` are hex digits
+	It also interpolates `%%` to `%`, and `%xx` where `xx` are hex dishits
 	interpolates to character with hex code `xx`; for example `%00`
 	interpolates to `\0` (NUL), `%09` to `\t` (TAB) and %0a to `\n` (LF).
 	--format cannot be combined with `-s`, `-o`, `-k`, `-t`, `--resolve-undo`
@@ -233,26 +233,26 @@ followed by the  ("attr/<eolattr>").
 
 OUTPUT
 ------
-'git ls-files' just outputs the filenames unless `--stage` is specified in
+'shit ls-files' just outputs the filenames unless `--stage` is specified in
 which case it outputs:
 
         [<tag> ]<mode> <object> <stage> <file>
 
-'git ls-files --eol' will show
+'shit ls-files --eol' will show
 	i/<eolinfo><SPACES>w/<eolinfo><SPACES>attr/<eolattr><SPACE*><TAB><file>
 
-'git ls-files --unmerged' and 'git ls-files --stage' can be used to examine
+'shit ls-files --unmerged' and 'shit ls-files --stage' can be used to examine
 detailed information on unmerged paths.
 
 For an unmerged path, instead of recording a single mode/SHA-1 pair,
 the index records up to three such pairs; one from tree O in stage
 1, A in stage 2, and B in stage 3.  This information can be used by
 the user (or the porcelain) to see what should eventually be recorded at the
-path. (see linkgit:git-read-tree[1] for more information on state)
+path. (see linkshit:shit-read-tree[1] for more information on state)
 
 Without the `-z` option, pathnames with "unusual" characters are
 quoted as explained for the configuration variable `core.quotePath`
-(see linkgit:git-config[1]).  Using `-z` the filename is output
+(see linkshit:shit-config[1]).  Using `-z` the filename is output
 verbatim and the line is terminated by a NUL byte.
 
 It is possible to print in a custom format by using the `--format`
@@ -261,7 +261,7 @@ a `%(fieldname)` notation. For example, if you only care about the
 "objectname" and "path" fields, you can execute with a specific
 "--format" like
 
-	git ls-files --format='%(objectname) %(path)'
+	shit ls-files --format='%(objectname) %(path)'
 
 FIELD NAMES
 -----------
@@ -295,9 +295,9 @@ path::
 EXCLUDE PATTERNS
 ----------------
 
-'git ls-files' can use a list of "exclude patterns" when
+'shit ls-files' can use a list of "exclude patterns" when
 traversing the directory tree and finding files to show when the
-flags --others or --ignored are specified.  linkgit:gitignore[5]
+flags --others or --ignored are specified.  linkshit:shitignore[5]
 specifies the format of exclude patterns.
 
 These exclude patterns can be specified from the following places,
@@ -312,8 +312,8 @@ in order:
      in the same order they appear in the file.
 
   3. The command-line flag --exclude-per-directory=<name> specifies
-     a name of the file in each directory 'git ls-files'
-     examines, normally `.gitignore`.  Files in deeper
+     a name of the file in each directory 'shit ls-files'
+     examines, normally `.shitignore`.  Files in deeper
      directories take precedence.  Patterns are ordered in the
      same order they appear in the files.
 
@@ -326,19 +326,19 @@ pattern file appears in.
 Generally, you should be able to use `--exclude-standard` when you
 want the exclude rules applied the same way as what Porcelain
 commands do.  To emulate what `--exclude-standard` specifies, you
-can give `--exclude-per-directory=.gitignore`, and then specify:
+can give `--exclude-per-directory=.shitignore`, and then specify:
 
   1. The file specified by the `core.excludesfile` configuration
-     variable, if exists, or the `$XDG_CONFIG_HOME/git/ignore` file.
+     variable, if exists, or the `$XDG_CONFIG_HOME/shit/ignore` file.
 
-  2. The `$GIT_DIR/info/exclude` file.
+  2. The `$shit_DIR/info/exclude` file.
 
 via the `--exclude-from=` option.
 
 SEE ALSO
 --------
-linkgit:git-read-tree[1], linkgit:gitignore[5]
+linkshit:shit-read-tree[1], linkshit:shitignore[5]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

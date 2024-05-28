@@ -4,8 +4,8 @@
 #
 
 test_description='prune'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -13,341 +13,341 @@ day=$((60*60*24))
 week=$(($day*7))
 
 add_blob() {
-	before=$(git count-objects | sed "s/ .*//") &&
-	BLOB=$(echo aleph_0 | git hash-object -w --stdin) &&
-	BLOB_FILE=.git/objects/$(echo $BLOB | sed "s/^../&\//") &&
-	test $((1 + $before)) = $(git count-objects | sed "s/ .*//") &&
+	before=$(shit count-objects | sed "s/ .*//") &&
+	BLOB=$(echo aleph_0 | shit hash-object -w --stdin) &&
+	BLOB_FILE=.shit/objects/$(echo $BLOB | sed "s/^../&\//") &&
+	test $((1 + $before)) = $(shit count-objects | sed "s/ .*//") &&
 	test_path_is_file $BLOB_FILE &&
 	test-tool chmtime =+0 $BLOB_FILE
 }
 
 test_expect_success setup '
 	>file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial &&
-	git gc
+	shit commit -m initial &&
+	shit gc
 '
 
-test_expect_success 'bare repo prune is quiet without $GIT_DIR/objects/pack' '
-	git clone -q --shared --template= --bare . bare.git &&
-	rmdir bare.git/objects/pack &&
-	git --git-dir=bare.git prune --no-progress 2>prune.err &&
+test_expect_success 'bare repo prune is quiet without $shit_DIR/objects/pack' '
+	shit clone -q --shared --template= --bare . bare.shit &&
+	rmdir bare.shit/objects/pack &&
+	shit --shit-dir=bare.shit prune --no-progress 2>prune.err &&
 	test_must_be_empty prune.err &&
-	rm -r bare.git prune.err
+	rm -r bare.shit prune.err
 '
 
 test_expect_success 'prune stale packs' '
-	orig_pack=$(echo .git/objects/pack/*.pack) &&
-	>.git/objects/tmp_1.pack &&
-	>.git/objects/tmp_2.pack &&
-	test-tool chmtime =-86501 .git/objects/tmp_1.pack &&
-	git prune --expire 1.day &&
+	orig_pack=$(echo .shit/objects/pack/*.pack) &&
+	>.shit/objects/tmp_1.pack &&
+	>.shit/objects/tmp_2.pack &&
+	test-tool chmtime =-86501 .shit/objects/tmp_1.pack &&
+	shit prune --expire 1.day &&
 	test_path_is_file $orig_pack &&
-	test_path_is_file .git/objects/tmp_2.pack &&
-	test_path_is_missing .git/objects/tmp_1.pack
+	test_path_is_file .shit/objects/tmp_2.pack &&
+	test_path_is_missing .shit/objects/tmp_1.pack
 '
 
 test_expect_success 'prune --expire' '
 	add_blob &&
-	git prune --expire=1.hour.ago &&
-	test $((1 + $before)) = $(git count-objects | sed "s/ .*//") &&
+	shit prune --expire=1.hour.ago &&
+	test $((1 + $before)) = $(shit count-objects | sed "s/ .*//") &&
 	test_path_is_file $BLOB_FILE &&
 	test-tool chmtime =-86500 $BLOB_FILE &&
-	git prune --expire 1.day &&
-	test $before = $(git count-objects | sed "s/ .*//") &&
+	shit prune --expire 1.day &&
+	test $before = $(shit count-objects | sed "s/ .*//") &&
 	test_path_is_missing $BLOB_FILE
 '
 
 test_expect_success 'gc: implicit prune --expire' '
 	add_blob &&
 	test-tool chmtime =-$((2*$week-30)) $BLOB_FILE &&
-	git gc --no-cruft &&
-	test $((1 + $before)) = $(git count-objects | sed "s/ .*//") &&
+	shit gc --no-cruft &&
+	test $((1 + $before)) = $(shit count-objects | sed "s/ .*//") &&
 	test_path_is_file $BLOB_FILE &&
 	test-tool chmtime =-$((2*$week+1)) $BLOB_FILE &&
-	git gc --no-cruft &&
-	test $before = $(git count-objects | sed "s/ .*//") &&
+	shit gc --no-cruft &&
+	test $before = $(shit count-objects | sed "s/ .*//") &&
 	test_path_is_missing $BLOB_FILE
 '
 
 test_expect_success 'gc: refuse to start with invalid gc.pruneExpire' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
-	>repo/.git/config &&
-	git -C repo config gc.pruneExpire invalid &&
+	shit init repo &&
+	>repo/.shit/config &&
+	shit -C repo config gc.pruneExpire invalid &&
 	cat >expect <<-\EOF &&
 	error: Invalid gc.pruneexpire: '\''invalid'\''
-	fatal: bad config variable '\''gc.pruneexpire'\'' in file '\''.git/config'\'' at line 2
+	fatal: bad config variable '\''gc.pruneexpire'\'' in file '\''.shit/config'\'' at line 2
 	EOF
-	test_must_fail git -C repo gc 2>actual &&
+	test_must_fail shit -C repo gc 2>actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'gc: start with ok gc.pruneExpire' '
-	git config gc.pruneExpire 2.days.ago &&
-	git gc --no-cruft
+	shit config gc.pruneExpire 2.days.ago &&
+	shit gc --no-cruft
 '
 
 test_expect_success 'prune: prune nonsense parameters' '
-	test_must_fail git prune garbage &&
-	test_must_fail git prune --- &&
-	test_must_fail git prune --no-such-option
+	test_must_fail shit prune garbage &&
+	test_must_fail shit prune --- &&
+	test_must_fail shit prune --no-such-option
 '
 
 test_expect_success 'prune: prune unreachable heads' '
-	git config core.logAllRefUpdates false &&
+	shit config core.logAllRefUpdates false &&
 	>file2 &&
-	git add file2 &&
-	git commit -m temporary &&
-	tmp_head=$(git rev-list -1 HEAD) &&
-	git reset HEAD^ &&
-	git reflog expire --all &&
-	git prune &&
-	test_must_fail git reset $tmp_head --
+	shit add file2 &&
+	shit commit -m temporary &&
+	tmp_head=$(shit rev-list -1 HEAD) &&
+	shit reset HEAD^ &&
+	shit reflog expire --all &&
+	shit prune &&
+	test_must_fail shit reset $tmp_head --
 '
 
 test_expect_success 'prune: do not prune detached HEAD with no reflog' '
-	git checkout --detach --quiet &&
-	git commit --allow-empty -m "detached commit" &&
-	git reflog expire --all &&
-	git prune -n >prune_actual &&
+	shit checkout --detach --quiet &&
+	shit commit --allow-empty -m "detached commit" &&
+	shit reflog expire --all &&
+	shit prune -n >prune_actual &&
 	test_must_be_empty prune_actual
 '
 
 test_expect_success 'prune: prune former HEAD after checking out branch' '
-	head_oid=$(git rev-parse HEAD) &&
-	git checkout --quiet main &&
-	git reflog expire --all &&
-	git prune -v >prune_actual &&
+	head_oid=$(shit rev-parse HEAD) &&
+	shit checkout --quiet main &&
+	shit reflog expire --all &&
+	shit prune -v >prune_actual &&
 	grep "$head_oid" prune_actual
 '
 
 test_expect_success 'prune: do not prune heads listed as an argument' '
 	>file2 &&
-	git add file2 &&
-	git commit -m temporary &&
-	tmp_head=$(git rev-list -1 HEAD) &&
-	git reset HEAD^ &&
-	git prune -- $tmp_head &&
-	git reset $tmp_head --
+	shit add file2 &&
+	shit commit -m temporary &&
+	tmp_head=$(shit rev-list -1 HEAD) &&
+	shit reset HEAD^ &&
+	shit prune -- $tmp_head &&
+	shit reset $tmp_head --
 '
 
 test_expect_success 'gc --no-prune' '
 	add_blob &&
 	test-tool chmtime =-$((5001*$day)) $BLOB_FILE &&
-	git config gc.pruneExpire 2.days.ago &&
-	git gc --no-prune --no-cruft &&
-	test 1 = $(git count-objects | sed "s/ .*//") &&
+	shit config gc.pruneExpire 2.days.ago &&
+	shit gc --no-prune --no-cruft &&
+	test 1 = $(shit count-objects | sed "s/ .*//") &&
 	test_path_is_file $BLOB_FILE
 '
 
 test_expect_success 'gc respects gc.pruneExpire' '
-	git config gc.pruneExpire 5002.days.ago &&
-	git gc --no-cruft &&
+	shit config gc.pruneExpire 5002.days.ago &&
+	shit gc --no-cruft &&
 	test_path_is_file $BLOB_FILE &&
-	git config gc.pruneExpire 5000.days.ago &&
-	git gc --no-cruft &&
+	shit config gc.pruneExpire 5000.days.ago &&
+	shit gc --no-cruft &&
 	test_path_is_missing $BLOB_FILE
 '
 
 test_expect_success 'gc --prune=<date>' '
 	add_blob &&
 	test-tool chmtime =-$((5001*$day)) $BLOB_FILE &&
-	git gc --prune=5002.days.ago --no-cruft &&
+	shit gc --prune=5002.days.ago --no-cruft &&
 	test_path_is_file $BLOB_FILE &&
-	git gc --prune=5000.days.ago --no-cruft &&
+	shit gc --prune=5000.days.ago --no-cruft &&
 	test_path_is_missing $BLOB_FILE
 '
 
 test_expect_success 'gc --prune=never' '
 	add_blob &&
-	git gc --prune=never --no-cruft &&
+	shit gc --prune=never --no-cruft &&
 	test_path_is_file $BLOB_FILE &&
-	git gc --prune=now --no-cruft &&
+	shit gc --prune=now --no-cruft &&
 	test_path_is_missing $BLOB_FILE
 '
 
 test_expect_success 'gc respects gc.pruneExpire=never' '
-	git config gc.pruneExpire never &&
+	shit config gc.pruneExpire never &&
 	add_blob &&
-	git gc --no-cruft &&
+	shit gc --no-cruft &&
 	test_path_is_file $BLOB_FILE &&
-	git config gc.pruneExpire now &&
-	git gc --no-cruft &&
+	shit config gc.pruneExpire now &&
+	shit gc --no-cruft &&
 	test_path_is_missing $BLOB_FILE
 '
 
 test_expect_success 'prune --expire=never' '
 	add_blob &&
-	git prune --expire=never &&
+	shit prune --expire=never &&
 	test_path_is_file $BLOB_FILE &&
-	git prune &&
+	shit prune &&
 	test_path_is_missing $BLOB_FILE
 '
 
 test_expect_success 'gc: prune old objects after local clone' '
 	add_blob &&
 	test-tool chmtime =-$((2*$week+1)) $BLOB_FILE &&
-	git clone --no-hardlinks . aclone &&
+	shit clone --no-hardlinks . aclone &&
 	(
 		cd aclone &&
-		test 1 = $(git count-objects | sed "s/ .*//") &&
+		test 1 = $(shit count-objects | sed "s/ .*//") &&
 		test_path_is_file $BLOB_FILE &&
-		git gc --prune --no-cruft &&
-		test 0 = $(git count-objects | sed "s/ .*//") &&
+		shit gc --prune --no-cruft &&
+		test 0 = $(shit count-objects | sed "s/ .*//") &&
 		test_path_is_missing $BLOB_FILE
 	)
 '
 
 test_expect_success 'garbage report in count-objects -v' '
-	test_when_finished "rm -f .git/objects/pack/fake*" &&
-	test_when_finished "rm -f .git/objects/pack/foo*" &&
-	>.git/objects/pack/foo &&
-	>.git/objects/pack/foo.bar &&
-	>.git/objects/pack/foo.keep &&
-	>.git/objects/pack/foo.pack &&
-	>.git/objects/pack/fake.bar &&
-	>.git/objects/pack/fake.keep &&
-	>.git/objects/pack/fake.pack &&
-	>.git/objects/pack/fake.idx &&
-	>.git/objects/pack/fake2.keep &&
-	>.git/objects/pack/fake3.idx &&
-	git count-objects -v 2>stderr &&
-	grep "index file .git/objects/pack/fake.idx is too small" stderr &&
+	test_when_finished "rm -f .shit/objects/pack/fake*" &&
+	test_when_finished "rm -f .shit/objects/pack/foo*" &&
+	>.shit/objects/pack/foo &&
+	>.shit/objects/pack/foo.bar &&
+	>.shit/objects/pack/foo.keep &&
+	>.shit/objects/pack/foo.pack &&
+	>.shit/objects/pack/fake.bar &&
+	>.shit/objects/pack/fake.keep &&
+	>.shit/objects/pack/fake.pack &&
+	>.shit/objects/pack/fake.idx &&
+	>.shit/objects/pack/fake2.keep &&
+	>.shit/objects/pack/fake3.idx &&
+	shit count-objects -v 2>stderr &&
+	grep "index file .shit/objects/pack/fake.idx is too small" stderr &&
 	grep "^warning:" stderr | sort >actual &&
 	cat >expected <<\EOF &&
-warning: garbage found: .git/objects/pack/fake.bar
-warning: garbage found: .git/objects/pack/foo
-warning: garbage found: .git/objects/pack/foo.bar
-warning: no corresponding .idx or .pack: .git/objects/pack/fake2.keep
-warning: no corresponding .idx: .git/objects/pack/foo.keep
-warning: no corresponding .idx: .git/objects/pack/foo.pack
-warning: no corresponding .pack: .git/objects/pack/fake3.idx
+warning: garbage found: .shit/objects/pack/fake.bar
+warning: garbage found: .shit/objects/pack/foo
+warning: garbage found: .shit/objects/pack/foo.bar
+warning: no corresponding .idx or .pack: .shit/objects/pack/fake2.keep
+warning: no corresponding .idx: .shit/objects/pack/foo.keep
+warning: no corresponding .idx: .shit/objects/pack/foo.pack
+warning: no corresponding .pack: .shit/objects/pack/fake3.idx
 EOF
 	test_cmp expected actual
 '
 
 test_expect_success 'clean pack garbage with gc' '
-	test_when_finished "rm -f .git/objects/pack/fake*" &&
-	test_when_finished "rm -f .git/objects/pack/foo*" &&
-	>.git/objects/pack/foo.keep &&
-	>.git/objects/pack/foo.pack &&
-	>.git/objects/pack/fake.idx &&
-	>.git/objects/pack/fake2.keep &&
-	>.git/objects/pack/fake2.idx &&
-	>.git/objects/pack/fake3.keep &&
-	git gc --no-cruft &&
-	git count-objects -v 2>stderr &&
+	test_when_finished "rm -f .shit/objects/pack/fake*" &&
+	test_when_finished "rm -f .shit/objects/pack/foo*" &&
+	>.shit/objects/pack/foo.keep &&
+	>.shit/objects/pack/foo.pack &&
+	>.shit/objects/pack/fake.idx &&
+	>.shit/objects/pack/fake2.keep &&
+	>.shit/objects/pack/fake2.idx &&
+	>.shit/objects/pack/fake3.keep &&
+	shit gc --no-cruft &&
+	shit count-objects -v 2>stderr &&
 	grep "^warning:" stderr | sort >actual &&
 	cat >expected <<\EOF &&
-warning: no corresponding .idx or .pack: .git/objects/pack/fake3.keep
-warning: no corresponding .idx: .git/objects/pack/foo.keep
-warning: no corresponding .idx: .git/objects/pack/foo.pack
+warning: no corresponding .idx or .pack: .shit/objects/pack/fake3.keep
+warning: no corresponding .idx: .shit/objects/pack/foo.keep
+warning: no corresponding .idx: .shit/objects/pack/foo.pack
 EOF
 	test_cmp expected actual
 '
 
-test_expect_success 'prune .git/shallow' '
-	oid=$(echo hi|git commit-tree HEAD^{tree}) &&
-	echo $oid >.git/shallow &&
-	git prune --dry-run >out &&
-	grep $oid .git/shallow &&
+test_expect_success 'prune .shit/shallow' '
+	oid=$(echo hi|shit commit-tree HEAD^{tree}) &&
+	echo $oid >.shit/shallow &&
+	shit prune --dry-run >out &&
+	grep $oid .shit/shallow &&
 	grep $oid out &&
-	git prune &&
-	test_path_is_missing .git/shallow
+	shit prune &&
+	test_path_is_missing .shit/shallow
 '
 
-test_expect_success 'prune .git/shallow when there are no loose objects' '
-	oid=$(echo hi|git commit-tree HEAD^{tree}) &&
-	echo $oid >.git/shallow &&
-	git update-ref refs/heads/shallow-tip $oid &&
-	git repack -ad &&
+test_expect_success 'prune .shit/shallow when there are no loose objects' '
+	oid=$(echo hi|shit commit-tree HEAD^{tree}) &&
+	echo $oid >.shit/shallow &&
+	shit update-ref refs/heads/shallow-tip $oid &&
+	shit repack -ad &&
 	# verify assumption that all loose objects are gone
-	git count-objects | grep ^0 &&
-	git prune &&
+	shit count-objects | grep ^0 &&
+	shit prune &&
 	echo $oid >expect &&
-	test_cmp expect .git/shallow
+	test_cmp expect .shit/shallow
 '
 
 test_expect_success 'prune: handle alternate object database' '
 	test_create_repo A &&
-	git -C A commit --allow-empty -m "initial commit" &&
-	git clone --shared A B &&
-	git -C B commit --allow-empty -m "next commit" &&
-	git -C B prune
+	shit -C A commit --allow-empty -m "initial commit" &&
+	shit clone --shared A B &&
+	shit -C B commit --allow-empty -m "next commit" &&
+	shit -C B prune
 '
 
 test_expect_success 'prune: handle index in multiple worktrees' '
-	git worktree add second-worktree &&
+	shit worktree add second-worktree &&
 	echo "new blob for second-worktree" >second-worktree/blob &&
-	git -C second-worktree add blob &&
-	git prune --expire=now &&
-	git -C second-worktree show :blob >actual &&
+	shit -C second-worktree add blob &&
+	shit prune --expire=now &&
+	shit -C second-worktree show :blob >actual &&
 	test_cmp second-worktree/blob actual
 '
 
 test_expect_success 'prune: handle HEAD in multiple worktrees' '
-	git worktree add --detach third-worktree &&
+	shit worktree add --detach third-worktree &&
 	echo "new blob for third-worktree" >third-worktree/blob &&
-	git -C third-worktree add blob &&
-	git -C third-worktree commit -m "third" &&
-	rm .git/worktrees/third-worktree/index &&
-	test_must_fail git -C third-worktree show :blob &&
-	git prune --expire=now &&
-	git -C third-worktree show HEAD:blob >actual &&
+	shit -C third-worktree add blob &&
+	shit -C third-worktree commit -m "third" &&
+	rm .shit/worktrees/third-worktree/index &&
+	test_must_fail shit -C third-worktree show :blob &&
+	shit prune --expire=now &&
+	shit -C third-worktree show HEAD:blob >actual &&
 	test_cmp third-worktree/blob actual
 '
 
 test_expect_success 'prune: handle HEAD reflog in multiple worktrees' '
-	git config core.logAllRefUpdates true &&
+	shit config core.logAllRefUpdates true &&
 	echo "lost blob for third-worktree" >expected &&
 	(
 		cd third-worktree &&
 		cat ../expected >blob &&
-		git add blob &&
-		git commit -m "second commit in third" &&
-		git clean -f && # Remove untracked left behind by deleting index
-		git reset --hard HEAD^
+		shit add blob &&
+		shit commit -m "second commit in third" &&
+		shit clean -f && # Remove untracked left behind by deleting index
+		shit reset --hard HEAD^
 	) &&
-	git prune --expire=now &&
-	oid=`git hash-object expected` &&
-	git -C third-worktree show "$oid" >actual &&
+	shit prune --expire=now &&
+	oid=`shit hash-object expected` &&
+	shit -C third-worktree show "$oid" >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'prune: handle expire option correctly' '
-	test_must_fail git prune --expire 2>error &&
+	test_must_fail shit prune --expire 2>error &&
 	test_grep "requires a value" error &&
 
-	test_must_fail git prune --expire=nyah 2>error &&
+	test_must_fail shit prune --expire=nyah 2>error &&
 	test_grep "malformed expiration" error &&
 
-	git prune --no-expire
+	shit prune --no-expire
 '
 
 test_expect_success 'trivial prune with bitmaps enabled' '
-	git repack -adb &&
-	blob=$(echo bitmap-unreachable-blob | git hash-object -w --stdin) &&
-	git prune --expire=now &&
-	git cat-file -e HEAD &&
-	test_must_fail git cat-file -e $blob
+	shit repack -adb &&
+	blob=$(echo bitmap-unreachable-blob | shit hash-object -w --stdin) &&
+	shit prune --expire=now &&
+	shit cat-file -e HEAD &&
+	test_must_fail shit cat-file -e $blob
 '
 
 test_expect_success 'old reachable-from-recent retained with bitmaps' '
-	git repack -adb &&
-	to_drop=$(echo bitmap-from-recent-1 | git hash-object -w --stdin) &&
-	test-tool chmtime -86400 .git/objects/$(test_oid_to_path $to_drop) &&
-	to_save=$(echo bitmap-from-recent-2 | git hash-object -w --stdin) &&
-	test-tool chmtime -86400 .git/objects/$(test_oid_to_path $to_save) &&
-	tree=$(printf "100644 blob $to_save\tfile\n" | git mktree) &&
-	test-tool chmtime -86400 .git/objects/$(test_oid_to_path $tree) &&
-	commit=$(echo foo | git commit-tree $tree) &&
-	git prune --expire=12.hours.ago &&
-	git cat-file -e $commit &&
-	git cat-file -e $tree &&
-	git cat-file -e $to_save &&
-	test_must_fail git cat-file -e $to_drop
+	shit repack -adb &&
+	to_drop=$(echo bitmap-from-recent-1 | shit hash-object -w --stdin) &&
+	test-tool chmtime -86400 .shit/objects/$(test_oid_to_path $to_drop) &&
+	to_save=$(echo bitmap-from-recent-2 | shit hash-object -w --stdin) &&
+	test-tool chmtime -86400 .shit/objects/$(test_oid_to_path $to_save) &&
+	tree=$(printf "100644 blob $to_save\tfile\n" | shit mktree) &&
+	test-tool chmtime -86400 .shit/objects/$(test_oid_to_path $tree) &&
+	commit=$(echo foo | shit commit-tree $tree) &&
+	shit prune --expire=12.hours.ago &&
+	shit cat-file -e $commit &&
+	shit cat-file -e $tree &&
+	shit cat-file -e $to_save &&
+	test_must_fail shit cat-file -e $to_drop
 '
 
 test_expect_success 'gc.recentObjectsHook' '
@@ -359,9 +359,9 @@ test_expect_success 'gc.recentObjectsHook' '
 	EOF
 	test_config gc.recentObjectsHook ./precious-objects &&
 
-	git prune --expire=now &&
+	shit prune --expire=now &&
 
-	git cat-file -p $BLOB
+	shit cat-file -p $BLOB
 '
 
 test_done

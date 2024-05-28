@@ -1,21 +1,21 @@
-git-verify-pack(1)
+shit-verify-pack(1)
 ==================
 
 NAME
 ----
-git-verify-pack - Validate packed Git archive files
+shit-verify-pack - Validate packed shit archive files
 
 
 SYNOPSIS
 --------
 [verse]
-'git verify-pack' [-v | --verbose] [-s | --stat-only] [--] <pack>.idx...
+'shit verify-pack' [-v | --verbose] [-s | --stat-only] [--] <pack>.idx...
 
 
 DESCRIPTION
 -----------
-Reads given idx file for packed Git archive created with the
-'git pack-objects' command and verifies the idx file and the
+Reads given idx file for packed shit archive created with the
+'shit pack-objects' command and verifies the idx file and the
 corresponding pack file.
 
 OPTIONS
@@ -48,6 +48,6 @@ for objects that are not deltified in the pack, and
 
 for objects that are deltified.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

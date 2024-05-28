@@ -1,32 +1,32 @@
-git-rev-list(1)
+shit-rev-list(1)
 ===============
 
 NAME
 ----
-git-rev-list - Lists commit objects in reverse chronological order
+shit-rev-list - Lists commit objects in reverse chronological order
 
 
 SYNOPSIS
 --------
 [verse]
-'git rev-list' [<options>] <commit>... [--] [<path>...]
+'shit rev-list' [<options>] <commit>... [--] [<path>...]
 
 DESCRIPTION
 -----------
 
-:git-rev-list: 1
+:shit-rev-list: 1
 include::rev-list-description.txt[]
 
-'rev-list' is an essential Git command, since it
+'rev-list' is an essential shit command, since it
 provides the ability to build and traverse commit ancestry graphs. For
 this reason, it has a lot of different options that enable it to be
-used by commands as different as 'git bisect' and
-'git repack'.
+used by commands as different as 'shit bisect' and
+'shit repack'.
 
 OPTIONS
 -------
 
-:git-rev-list: 1
+:shit-rev-list: 1
 include::rev-list-options.txt[]
 
 include::pretty-formats.txt[]
@@ -37,67 +37,67 @@ EXAMPLES
 * Print the list of commits reachable from the current branch.
 +
 ----------
-git rev-list HEAD
+shit rev-list HEAD
 ----------
 
 * Print the list of commits on this branch, but not present in the
   upstream branch.
 +
 ----------
-git rev-list @{upstream}..HEAD
+shit rev-list @{upstream}..HEAD
 ----------
 
 * Format commits with their author and commit message (see also the
-  porcelain linkgit:git-log[1]).
+  porcelain linkshit:shit-log[1]).
 +
 ----------
-git rev-list --format=medium HEAD
+shit rev-list --format=medium HEAD
 ----------
 
 * Format commits along with their diffs (see also the porcelain
-  linkgit:git-log[1], which can do this in a single process).
+  linkshit:shit-log[1], which can do this in a single process).
 +
 ----------
-git rev-list HEAD |
-git diff-tree --stdin --format=medium -p
+shit rev-list HEAD |
+shit diff-tree --stdin --format=medium -p
 ----------
 
 * Print the list of commits on the current branch that touched any
   file in the `Documentation` directory.
 +
 ----------
-git rev-list HEAD -- Documentation/
+shit rev-list HEAD -- Documentation/
 ----------
 
 * Print the list of commits authored by you in the past year, on
   any branch, tag, or other ref.
 +
 ----------
-git rev-list --author=you@example.com --since=1.year.ago --all
+shit rev-list --author=you@example.com --since=1.year.ago --all
 ----------
 
 * Print the list of objects reachable from the current branch (i.e., all
   commits and the blobs and trees they contain).
 +
 ----------
-git rev-list --objects HEAD
+shit rev-list --objects HEAD
 ----------
 
 * Compare the disk size of all reachable objects, versus those
   reachable from reflogs, versus the total packed size. This can tell
-  you whether running `git repack -ad` might reduce the repository size
+  you whether running `shit repack -ad` might reduce the repository size
   (by dropping unreachable objects), and whether expiring reflogs might
   help.
 +
 ----------
 # reachable objects
-git rev-list --disk-usage --objects --all
+shit rev-list --disk-usage --objects --all
 # plus reflogs
-git rev-list --disk-usage --objects --all --reflog
+shit rev-list --disk-usage --objects --all --reflog
 # total disk size used
-du -c .git/objects/pack/*.pack .git/objects/??/*
+du -c .shit/objects/pack/*.pack .shit/objects/??/*
 # alternative to du: add up "size" and "size-pack" fields
-git count-objects -v
+shit count-objects -v
 ----------
 
 * Report the disk size of each branch, not including objects used by the
@@ -106,10 +106,10 @@ git count-objects -v
   large build artifacts).
 +
 ----------
-git for-each-ref --format='%(refname)' |
+shit for-each-ref --format='%(refname)' |
 while read branch
 do
-	size=$(git rev-list --disk-usage --objects HEAD..$branch)
+	size=$(shit rev-list --disk-usage --objects HEAD..$branch)
 	echo "$size $branch"
 done |
 sort -n
@@ -121,9 +121,9 @@ sort -n
   repository size (taking the size of `origin` as a baseline).
 +
 ----------
-git rev-list --disk-usage --objects --remotes=$suspect --not --remotes=origin
+shit rev-list --disk-usage --objects --remotes=$suspect --not --remotes=origin
 ----------
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,0 +1,1369 @@
+# Translation of shitk
+# Copyright (C) 2005-2016 Paul Mackerras
+# This file is distributed under the same license as the shitk package.
+# Alex Henrie <alexhenrie24@gmail.com>, 2015.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: shitk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-17 14:32+1000\n"
+"PO-Revision-Date: 2015-10-05 22:23-0600\n"
+"Last-Translator: Alex Henrie <alexhenrie24@gmail.com>\n"
+"Language-Team: Catalan\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.5\n"
+
+#: shitk:140
+msgid "Couldn't get list of unmerged files:"
+msgstr "No s'ha pogut obtenir la llista de fitxers no fusionats:"
+
+#: shitk:212 shitk:2381
+msgid "Color words"
+msgstr "Colora les paraules"
+
+#: shitk:217 shitk:2381 shitk:8220 shitk:8253
+msgid "Markup words"
+msgstr "Marca les paraules"
+
+#: shitk:324
+msgid "Error parsing revisions:"
+msgstr "Error en analitzar les revisions:"
+
+#: shitk:380
+msgid "Error executing --argscmd command:"
+msgstr "Error en executar l'ordre --argscmd:"
+
+#: shitk:393
+msgid "No files selected: --merge specified but no files are unmerged."
+msgstr ""
+"No hi ha fitxers seleccionats: s'ha especificat --merge però cap fitxer està "
+"sense fusionar."
+
+#: shitk:396
+msgid ""
+"No files selected: --merge specified but no unmerged files are within file "
+"limit."
+msgstr ""
+"No hi ha fitxers seleccionats: s'ha especificat --merge però cap fitxer "
+"sense fusionar està dins del límit de fitxers."
+
+#: shitk:418 shitk:566
+msgid "Error executing shit log:"
+msgstr "Error en executar shit log:"
+
+#: shitk:436 shitk:582
+msgid "Reading"
+msgstr "Llegint"
+
+#: shitk:496 shitk:4525
+msgid "Reading commits..."
+msgstr "Llegint les revisions..."
+
+#: shitk:499 shitk:1637 shitk:4528
+msgid "No commits selected"
+msgstr "Cap comissió seleccionada"
+
+#: shitk:1445 shitk:4045 shitk:12432
+msgid "Command line"
+msgstr "Línia d'ordres"
+
+#: shitk:1511
+msgid "Can't parse shit log output:"
+msgstr "No es pot analitzar la sortida del shit log:"
+
+#: shitk:1740
+msgid "No commit information available"
+msgstr "Cap informació de comissió disponible"
+
+#: shitk:1903 shitk:1932 shitk:4315 shitk:9669 shitk:11241 shitk:11521
+msgid "OK"
+msgstr "D'acord"
+
+#: shitk:1934 shitk:4317 shitk:9196 shitk:9275 shitk:9391 shitk:9440 shitk:9671
+#: shitk:11242 shitk:11522
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#: shitk:2069
+msgid "&Update"
+msgstr "Actualitza"
+
+#: shitk:2070
+msgid "&Reload"
+msgstr "Recarrega"
+
+#: shitk:2071
+msgid "Reread re&ferences"
+msgstr "Rellegeix les referències"
+
+#: shitk:2072
+msgid "&List references"
+msgstr "Llista les referències"
+
+#: shitk:2074
+msgid "Start shit &gui"
+msgstr "Inicia el shit gui"
+
+#: shitk:2076
+msgid "&Quit"
+msgstr "Surt"
+
+#: shitk:2068
+msgid "&File"
+msgstr "Fitxer"
+
+#: shitk:2080
+msgid "&Preferences"
+msgstr "Preferències"
+
+#: shitk:2079
+msgid "&Edit"
+msgstr "Edita"
+
+#: shitk:2084
+msgid "&New view..."
+msgstr "Vista nova..."
+
+#: shitk:2085
+msgid "&Edit view..."
+msgstr "Edita la vista..."
+
+#: shitk:2086
+msgid "&Delete view"
+msgstr "Suprimeix la vista"
+
+#: shitk:2088 shitk:4043
+msgid "&All files"
+msgstr "Tots els fitxers"
+
+#: shitk:2083 shitk:4067
+msgid "&View"
+msgstr "Vista"
+
+#: shitk:2093 shitk:2103 shitk:3012
+msgid "&About shitk"
+msgstr "Quant al shitk"
+
+#: shitk:2094 shitk:2108
+msgid "&Key bindings"
+msgstr "Associacions de tecles"
+
+#: shitk:2092 shitk:2107
+msgid "&Help"
+msgstr "Ajuda"
+
+#: shitk:2185 shitk:8652
+msgid "SHA1 ID:"
+msgstr "ID SHA1:"
+
+#: shitk:2229
+msgid "Row"
+msgstr "Fila"
+
+#: shitk:2267
+msgid "Find"
+msgstr "Cerca"
+
+#: shitk:2295
+msgid "commit"
+msgstr "comissió"
+
+#: shitk:2299 shitk:2301 shitk:4687 shitk:4710 shitk:4734 shitk:6755 shitk:6827
+#: shitk:6912
+msgid "containing:"
+msgstr "que contingui:"
+
+#: shitk:2302 shitk:3526 shitk:3531 shitk:4763
+msgid "touching paths:"
+msgstr "que toqui els camins:"
+
+#: shitk:2303 shitk:4777
+msgid "adding/removing string:"
+msgstr "que afegeixi/elimini la cadena:"
+
+#: shitk:2304 shitk:4779
+msgid "changing lines matching:"
+msgstr "que tingui línies canviades coincidents amb:"
+
+#: shitk:2313 shitk:2315 shitk:4766
+msgid "Exact"
+msgstr "Exacte"
+
+#: shitk:2315 shitk:4854 shitk:6723
+msgid "IgnCase"
+msgstr "Ignora majúscula i minúscula"
+
+#: shitk:2315 shitk:4736 shitk:4852 shitk:6719
+msgid "Regexp"
+msgstr "Regexp"
+
+#: shitk:2317 shitk:2318 shitk:4874 shitk:4904 shitk:4911 shitk:6848 shitk:6916
+msgid "All fields"
+msgstr "Tots els camps"
+
+#: shitk:2318 shitk:4871 shitk:4904 shitk:6786
+msgid "Headline"
+msgstr "Titular"
+
+#: shitk:2319 shitk:4871 shitk:6786 shitk:6916 shitk:7389
+msgid "Comments"
+msgstr "Comentaris"
+
+#: shitk:2319 shitk:4871 shitk:4876 shitk:4911 shitk:6786 shitk:7324 shitk:8830
+#: shitk:8845
+msgid "Author"
+msgstr "Autor"
+
+#: shitk:2319 shitk:4871 shitk:6786 shitk:7326
+msgid "Committer"
+msgstr "Comitent"
+
+#: shitk:2350
+msgid "Search"
+msgstr "Cerca"
+
+#: shitk:2358
+msgid "Diff"
+msgstr "Diferència"
+
+#: shitk:2360
+msgid "Old version"
+msgstr "Versió antiga"
+
+#: shitk:2362
+msgid "New version"
+msgstr "Versió nova"
+
+#: shitk:2364
+msgid "Lines of context"
+msgstr "Línies de context"
+
+#: shitk:2374
+msgid "Ignore space change"
+msgstr "Ignora canvis d'espai"
+
+#: shitk:2378 shitk:2380 shitk:7959 shitk:8206
+msgid "Line diff"
+msgstr "Diferència de línies"
+
+#: shitk:2445
+msgid "Patch"
+msgstr "Pedaç"
+
+#: shitk:2447
+msgid "Tree"
+msgstr "Arbre"
+
+#: shitk:2617 shitk:2637
+msgid "Diff this -> selected"
+msgstr "Diferencia aquesta -> la seleccionada"
+
+#: shitk:2618 shitk:2638
+msgid "Diff selected -> this"
+msgstr "Diferencia la seleccionada -> aquesta"
+
+#: shitk:2619 shitk:2639
+msgid "Make patch"
+msgstr "Fes pedaç"
+
+#: shitk:2620 shitk:9254
+msgid "Create tag"
+msgstr "Crea etiqueta"
+
+#: shitk:2621 shitk:9371
+msgid "Write commit to file"
+msgstr "Escriu la comissió a un fitxer"
+
+#: shitk:2622 shitk:9428
+msgid "Create new branch"
+msgstr "Crea una branca nova"
+
+#: shitk:2623
+msgid "Cherry-pick this commit"
+msgstr "Recull aquesta comissió com a cirera"
+
+#: shitk:2624
+msgid "Reset HEAD branch to here"
+msgstr "Restableix la branca HEAD aquí"
+
+#: shitk:2625
+msgid "Mark this commit"
+msgstr "Marca aquesta comissió"
+
+#: shitk:2626
+msgid "Return to mark"
+msgstr "Torna a la marca"
+
+#: shitk:2627
+msgid "Find descendant of this and mark"
+msgstr "Troba la descendent d'aquesta i marca-la"
+
+#: shitk:2628
+msgid "Compare with marked commit"
+msgstr "Compara amb la comissió marcada"
+
+#: shitk:2629 shitk:2640
+msgid "Diff this -> marked commit"
+msgstr "Diferencia aquesta -> la comissió marcada"
+
+#: shitk:2630 shitk:2641
+msgid "Diff marked commit -> this"
+msgstr "Diferencia la comissió seleccionada -> aquesta"
+
+#: shitk:2631
+msgid "Revert this commit"
+msgstr "Reverteix aquesta comissió"
+
+#: shitk:2647
+msgid "Check out this branch"
+msgstr "Agafa aquesta branca"
+
+#: shitk:2648
+msgid "Remove this branch"
+msgstr "Elimina aquesta branca"
+
+#: shitk:2649
+msgid "Copy branch name"
+msgstr "Copia el nom de branca"
+
+#: shitk:2656
+msgid "Highlight this too"
+msgstr "Ressalta aquest també"
+
+#: shitk:2657
+msgid "Highlight this only"
+msgstr "Ressalta només aquest"
+
+#: shitk:2658
+msgid "External diff"
+msgstr "Diferència externa"
+
+#: shitk:2659
+msgid "Blame parent commit"
+msgstr "Culpabilitat de la comissió mare"
+
+#: shitk:2660
+msgid "Copy path"
+msgstr "Copia el camí"
+
+#: shitk:2667
+msgid "Show origin of this line"
+msgstr "Mostra l'origen d'aquesta línia"
+
+#: shitk:2668
+msgid "Run shit gui blame on this line"
+msgstr "Executa shit gui blame en aquesta línia"
+
+#: shitk:3014
+msgid ""
+"\n"
+"shitk - a commit viewer for shit\n"
+"\n"
+"Copyright © 2005-2016 Paul Mackerras\n"
+"\n"
+"Use and redistribute under the terms of the GNU General Public License"
+msgstr ""
+"\n"
+"shitk - visualitzador de comissions per al shit\n"
+"\n"
+"Copyright © 2005-2016 Paul Mackerras\n"
+"\n"
+"Useu-lo i redistribuïu-lo sota els termes de la Llicència Pública General GNU"
+
+#: shitk:3022 shitk:3089 shitk:9857
+msgid "Close"
+msgstr "Tanca"
+
+#: shitk:3043
+msgid "shitk key bindings"
+msgstr "Associacions de tecles del shitk"
+
+#: shitk:3046
+msgid "shitk key bindings:"
+msgstr "Associacions de tecles del shitk:"
+
+#: shitk:3048
+#, tcl-format
+msgid "<%s-Q>\t\tQuit"
+msgstr "<%s-Q>\t\tSurt"
+
+#: shitk:3049
+#, tcl-format
+msgid "<%s-W>\t\tClose window"
+msgstr "<%s-W>\t\tTanca la finestra"
+
+#: shitk:3050
+msgid "<Home>\t\tMove to first commit"
+msgstr "<Inici>\t\tVés a la primera comissió"
+
+#: shitk:3051
+msgid "<End>\t\tMove to last commit"
+msgstr "<Fi>\t\tVés a l'última comissió"
+
+#: shitk:3052
+msgid "<Up>, p, k\tMove up one commit"
+msgstr "<Amunt>, p, k\tMou-te cap amunt per una comissió"
+
+#: shitk:3053
+msgid "<Down>, n, j\tMove down one commit"
+msgstr "<Avall>, n, j\tMou-te cap avall per una comissió"
+
+#: shitk:3054
+msgid "<Left>, z, h\tGo back in history list"
+msgstr "<Esquerra>, z, h\tRetrocedeix en la llista d'història"
+
+#: shitk:3055
+msgid "<Right>, x, l\tGo forward in history list"
+msgstr "<Dreta>, x, l\tAvança en la llista d'història"
+
+#: shitk:3056
+#, tcl-format
+msgid "<%s-n>\tGo to n-th parent of current commit in history list"
+msgstr ""
+"<%s-n>\tVés a l'enèsima mare de la comissió actual en la llista d'història"
+
+#: shitk:3057
+msgid "<PageUp>\tMove up one page in commit list"
+msgstr "<RePàg>\tMou-te cap amunt per una pàgina en la llista de comissions"
+
+#: shitk:3058
+msgid "<PageDown>\tMove down one page in commit list"
+msgstr "<AvPàg>\tMou-te cap avall per una pàgina en la llista de comissions"
+
+#: shitk:3059
+#, tcl-format
+msgid "<%s-Home>\tScroll to top of commit list"
+msgstr "<%s-Inici>\tDesplaça't a la part superior de la llista de comissions"
+
+#: shitk:3060
+#, tcl-format
+msgid "<%s-End>\tScroll to bottom of commit list"
+msgstr "<%s-Fi>\tDesplaça't a la part inferior de la llista de comissions"
+
+#: shitk:3061
+#, tcl-format
+msgid "<%s-Up>\tScroll commit list up one line"
+msgstr "<%s-Amunt>\tDesplaça la llista de comissions cap amunt per una línia"
+
+#: shitk:3062
+#, tcl-format
+msgid "<%s-Down>\tScroll commit list down one line"
+msgstr "<%s-Avall>\tDesplaça la llista de comissions cap avall per una línia"
+
+#: shitk:3063
+#, tcl-format
+msgid "<%s-PageUp>\tScroll commit list up one page"
+msgstr "<%s-RePàg>\tDesplaça la llista de comissions cap amunt per una pàgina"
+
+#: shitk:3064
+#, tcl-format
+msgid "<%s-PageDown>\tScroll commit list down one page"
+msgstr "<%s-AvPàg>\tDesplaça la llista de comissions cap avall per una pàgina"
+
+#: shitk:3065
+msgid "<Shift-Up>\tFind backwards (upwards, later commits)"
+msgstr "<Maj-Amunt>\tCerca cap enrere (cap amunt, les comissions més noves)"
+
+#: shitk:3066
+msgid "<Shift-Down>\tFind forwards (downwards, earlier commits)"
+msgstr "<Maj-Avall>\tCerca cap endavant (cap avall, les comissions més velles)"
+
+#: shitk:3067
+msgid "<Delete>, b\tScroll diff view up one page"
+msgstr "<Supr>, b\tDesplaça la vista de diferència cap amunt per una pàgina"
+
+#: shitk:3068
+msgid "<Backspace>\tScroll diff view up one page"
+msgstr "<Retrocés>\tDesplaça la vista de diferència cap amunt per una pàgina"
+
+#: shitk:3069
+msgid "<Space>\t\tScroll diff view down one page"
+msgstr "<Espai>\t\tDesplaça la vista de diferència cap avall per una pàgina"
+
+#: shitk:3070
+msgid "u\t\tScroll diff view up 18 lines"
+msgstr "u\t\tDesplaça la vista de diferència cap amunt per 18 línies"
+
+#: shitk:3071
+msgid "d\t\tScroll diff view down 18 lines"
+msgstr "d\t\tDesplaça la vista de diferència cap avall per 18 línies"
+
+#: shitk:3072
+#, tcl-format
+msgid "<%s-F>\t\tFind"
+msgstr "<%s-F>\t\tCerca"
+
+#: shitk:3073
+#, tcl-format
+msgid "<%s-G>\t\tMove to next find hit"
+msgstr "<%s-G>\t\tMou-te a la propera coincidència de la cerca"
+
+#: shitk:3074
+msgid "<Return>\tMove to next find hit"
+msgstr "<Retorn>\tMou-te a la propera coincidència de la cerca"
+
+#: shitk:3075
+msgid "g\t\tGo to commit"
+msgstr "g\t\tVés a l'última comissió"
+
+#: shitk:3076
+msgid "/\t\tFocus the search box"
+msgstr "/\t\tPosa el focus a la caixa de cerca"
+
+#: shitk:3077
+msgid "?\t\tMove to previous find hit"
+msgstr "?\t\tMou a la coincidència prèvia de la cerca"
+
+#: shitk:3078
+msgid "f\t\tScroll diff view to next file"
+msgstr "f\t\tDesplaça la vista de diferència al proper fitxer"
+
+#: shitk:3079
+#, tcl-format
+msgid "<%s-S>\t\tSearch for next hit in diff view"
+msgstr "<%s-S>\t\tCerca la propera coincidència en la vista de diferència"
+
+#: shitk:3080
+#, tcl-format
+msgid "<%s-R>\t\tSearch for previous hit in diff view"
+msgstr "<%s-R>\t\tCerca la coincidència prèvia en la vista de diferència"
+
+#: shitk:3081
+#, tcl-format
+msgid "<%s-KP+>\tIncrease font size"
+msgstr "<%s-KP+>\tAugmenta la mida de lletra"
+
+#: shitk:3082
+#, tcl-format
+msgid "<%s-plus>\tIncrease font size"
+msgstr "<%s-més>\tAugmenta la mida de lletra"
+
+#: shitk:3083
+#, tcl-format
+msgid "<%s-KP->\tDecrease font size"
+msgstr "<%s-KP->\tDisminueix la mida de lletra"
+
+#: shitk:3084
+#, tcl-format
+msgid "<%s-minus>\tDecrease font size"
+msgstr "<%s-menys>\tDisminueix la mida de lletra"
+
+#: shitk:3085
+msgid "<F5>\t\tUpdate"
+msgstr "<F5>\t\tActualitza"
+
+#: shitk:3550 shitk:3559
+#, tcl-format
+msgid "Error creating temporary directory %s:"
+msgstr "Error en crear el directori temporal %s:"
+
+#: shitk:3572
+#, tcl-format
+msgid "Error getting \"%s\" from %s:"
+msgstr "Error en obtenir \"%s\" de %s:"
+
+#: shitk:3635
+msgid "command failed:"
+msgstr "l'ordre ha fallat:"
+
+#: shitk:3784
+msgid "No such commit"
+msgstr "Cap comissió així"
+
+#: shitk:3798
+msgid "shit gui blame: command failed:"
+msgstr "shit gui blame: l'ordre ha fallat:"
+
+#: shitk:3829
+#, tcl-format
+msgid "Couldn't read merge head: %s"
+msgstr "No s'ha pogut llegir el cap de fusió: %s"
+
+#: shitk:3837
+#, tcl-format
+msgid "Error reading index: %s"
+msgstr "Error en llegir l'índex: %s"
+
+#: shitk:3862
+#, tcl-format
+msgid "Couldn't start shit blame: %s"
+msgstr "No s'ha pogut iniciar el shit blame: %s"
+
+#: shitk:3865 shitk:6754
+msgid "Searching"
+msgstr "Cercant"
+
+#: shitk:3897
+#, tcl-format
+msgid "Error running shit blame: %s"
+msgstr "Error en executar el shit blame: %s"
+
+#: shitk:3925
+#, tcl-format
+msgid "That line comes from commit %s,  which is not in this view"
+msgstr ""
+"Aquella línia ve de la comissió %s, la qual no és en aquesta visualització"
+
+#: shitk:3939
+msgid "External diff viewer failed:"
+msgstr "El visualitzador de diferència extern ha fallat:"
+
+#: shitk:4070
+msgid "shitk view definition"
+msgstr "Definició de vista del shitk"
+
+#: shitk:4074
+msgid "Remember this view"
+msgstr "Recorda aquesta vista"
+
+#: shitk:4075
+msgid "References (space separated list):"
+msgstr "Referències (llista separada per espais)"
+
+#: shitk:4076
+msgid "Branches & tags:"
+msgstr "Branques i etiquetes:"
+
+#: shitk:4077
+msgid "All refs"
+msgstr "Totes les referències"
+
+#: shitk:4078
+msgid "All (local) branches"
+msgstr "Totes les branques (locals)"
+
+#: shitk:4079
+msgid "All tags"
+msgstr "Totes les etiquetes"
+
+#: shitk:4080
+msgid "All remote-tracking branches"
+msgstr "Totes les branques amb seguiment remot"
+
+#: shitk:4081
+msgid "Commit Info (regular expressions):"
+msgstr "Informació de comissió (expressions regulars):"
+
+#: shitk:4082
+msgid "Author:"
+msgstr "Autor:"
+
+#: shitk:4083
+msgid "Committer:"
+msgstr "Comitent:"
+
+#: shitk:4084
+msgid "Commit Message:"
+msgstr "Missatge de comissió:"
+
+#: shitk:4085
+msgid "Matches all Commit Info criteria"
+msgstr "Coincideix amb tots els criteris d'informació de comissió"
+
+#: shitk:4086
+msgid "Matches no Commit Info criteria"
+msgstr "No coincideix amb cap criteri d'informació de comissió"
+
+#: shitk:4087
+msgid "Changes to Files:"
+msgstr "Canvis als fitxers:"
+
+#: shitk:4088
+msgid "Fixed String"
+msgstr "Cadena fixa"
+
+#: shitk:4089
+msgid "Regular Expression"
+msgstr "Expressió regular"
+
+#: shitk:4090
+msgid "Search string:"
+msgstr "Cadena de cerca:"
+
+#: shitk:4091
+msgid ""
+"Commit Dates (\"2 weeks ago\", \"2009-03-17 15:27:38\", \"March 17, 2009 "
+"15:27:38\"):"
+msgstr ""
+"Dates de comissió (\"fa 2 setmanes\", \"2009-03-17 15:27:38\", \"17 abr 2009 "
+"15:27:38\"):"
+
+#: shitk:4092
+msgid "Since:"
+msgstr "Des de:"
+
+#: shitk:4093
+msgid "Until:"
+msgstr "Fins:"
+
+#: shitk:4094
+msgid "Limit and/or skip a number of revisions (positive integer):"
+msgstr "Limita o salta un nombre de revisions (nombre enter positiu)"
+
+#: shitk:4095
+msgid "Number to show:"
+msgstr "Nombre a mostrar:"
+
+#: shitk:4096
+msgid "Number to skip:"
+msgstr "Nombre a saltar:"
+
+#: shitk:4097
+msgid "Miscellaneous options:"
+msgstr "Opcions miscel·lànies:"
+
+#: shitk:4098
+msgid "Strictly sort by date"
+msgstr "Ordena estrictament per data"
+
+#: shitk:4099
+msgid "Mark branch sides"
+msgstr "Marca els costats de les branques"
+
+#: shitk:4100
+msgid "Limit to first parent"
+msgstr "Limita a la primera mare"
+
+#: shitk:4101
+msgid "Simple history"
+msgstr "Història senzilla"
+
+#: shitk:4102
+msgid "Additional arguments to shit log:"
+msgstr "Paràmetres addicionals al shit log:"
+
+#: shitk:4103
+msgid "Enter files and directories to include, one per line:"
+msgstr "Introduïu els fitxers i directoris a incloure, un per línia:"
+
+#: shitk:4104
+msgid "Command to generate more commits to include:"
+msgstr "Ordre per a generar més comissions a incloure:"
+
+#: shitk:4228
+msgid "shitk: edit view"
+msgstr "shitk: vista d'edició"
+
+#: shitk:4236
+msgid "-- criteria for selecting revisions"
+msgstr "-- criteris per a seleccionar les revisions"
+
+#: shitk:4241
+msgid "View Name"
+msgstr "Nom de vista"
+
+#: shitk:4316
+msgid "Apply (F5)"
+msgstr "Aplica (F5)"
+
+#: shitk:4354
+msgid "Error in commit selection arguments:"
+msgstr "Error en els paràmetres de selecció de comissions:"
+
+#: shitk:4409 shitk:4462 shitk:4924 shitk:4938 shitk:6208 shitk:12373 shitk:12374
+msgid "None"
+msgstr "Cap"
+
+#: shitk:5021 shitk:5026
+msgid "Descendant"
+msgstr "Descendent"
+
+#: shitk:5022
+msgid "Not descendant"
+msgstr "No descendent"
+
+#: shitk:5029 shitk:5034
+msgid "Ancestor"
+msgstr "Avantpassat"
+
+#: shitk:5030
+msgid "Not ancestor"
+msgstr "No avantpassat"
+
+#: shitk:5324
+msgid "Local changes checked in to index but not committed"
+msgstr "Canvis locals registrats en l'índex però no comesos"
+
+#: shitk:5360
+msgid "Local uncommitted changes, not checked in to index"
+msgstr "Canvis locals sense cometre, no registrats en l'índex"
+
+#: shitk:7134
+msgid "and many more"
+msgstr "i moltes més"
+
+#: shitk:7137
+msgid "many"
+msgstr "moltes"
+
+#: shitk:7328
+msgid "Tags:"
+msgstr "Etiquetes:"
+
+#: shitk:7345 shitk:7351 shitk:8825
+msgid "Parent"
+msgstr "Mare"
+
+#: shitk:7356
+msgid "Child"
+msgstr "Filla"
+
+#: shitk:7365
+msgid "Branch"
+msgstr "Branca"
+
+#: shitk:7368
+msgid "Follows"
+msgstr "Segueix"
+
+#: shitk:7371
+msgid "Precedes"
+msgstr "Precedeix"
+
+#: shitk:7966
+#, tcl-format
+msgid "Error getting diffs: %s"
+msgstr "Error en obtenir les diferències: %s"
+
+#: shitk:8650
+msgid "Goto:"
+msgstr "Vés a:"
+
+#: shitk:8671
+#, tcl-format
+msgid "Short SHA1 id %s is ambiguous"
+msgstr "L'id SHA1 curta %s és ambigua"
+
+#: shitk:8678
+#, tcl-format
+msgid "Revision %s is not known"
+msgstr "La revisió %s és desconeguda"
+
+#: shitk:8688
+#, tcl-format
+msgid "SHA1 id %s is not known"
+msgstr "L'id SHA1 %s és desconeguda"
+
+#: shitk:8690
+#, tcl-format
+msgid "Revision %s is not in the current view"
+msgstr "La revisió %s no és en la vista actual"
+
+#: shitk:8832 shitk:8847
+msgid "Date"
+msgstr "Data"
+
+#: shitk:8835
+msgid "Children"
+msgstr "Filles"
+
+#: shitk:8898
+#, tcl-format
+msgid "Reset %s branch to here"
+msgstr "Restableix la branca %s aquí"
+
+#: shitk:8900
+msgid "Detached head: can't reset"
+msgstr "Cap separat: no es pot restablir"
+
+#: shitk:9005 shitk:9011
+msgid "Skipping merge commit "
+msgstr "Saltant la comissió de fusió "
+
+#: shitk:9020 shitk:9025
+msgid "Error getting patch ID for "
+msgstr "Error en obtenir l'ID de pedaç de "
+
+#: shitk:9021 shitk:9026
+msgid " - stopping\n"
+msgstr " - aturant\n"
+
+#: shitk:9031 shitk:9034 shitk:9042 shitk:9056 shitk:9065
+msgid "Commit "
+msgstr "Comissió "
+
+#: shitk:9035
+msgid ""
+" is the same patch as\n"
+"       "
+msgstr ""
+" és el mateix pedaç que\n"
+"       "
+
+#: shitk:9043
+msgid ""
+" differs from\n"
+"       "
+msgstr ""
+" difereix de\n"
+"       "
+
+#: shitk:9045
+msgid ""
+"Diff of commits:\n"
+"\n"
+msgstr ""
+"Diferència entre comissions:\n"
+"\n"
+
+#: shitk:9057 shitk:9066
+#, tcl-format
+msgid " has %s children - stopping\n"
+msgstr " té %s filles - aturant\n"
+
+#: shitk:9085
+#, tcl-format
+msgid "Error writing commit to file: %s"
+msgstr "Error en escriure la comissió al fitxer: %s"
+
+#: shitk:9091
+#, tcl-format
+msgid "Error diffing commits: %s"
+msgstr "Error en diferenciar les comissions: %s"
+
+#: shitk:9137
+msgid "Top"
+msgstr "Part superior"
+
+#: shitk:9138
+msgid "From"
+msgstr "De"
+
+#: shitk:9143
+msgid "To"
+msgstr "A"
+
+#: shitk:9167
+msgid "Generate patch"
+msgstr "Genera pedaç"
+
+#: shitk:9169
+msgid "From:"
+msgstr "De:"
+
+#: shitk:9178
+msgid "To:"
+msgstr "A:"
+
+#: shitk:9187
+msgid "Reverse"
+msgstr "Inverteix"
+
+#: shitk:9189 shitk:9385
+msgid "Output file:"
+msgstr "Fitxer de sortida:"
+
+#: shitk:9195
+msgid "Generate"
+msgstr "Genera"
+
+#: shitk:9233
+msgid "Error creating patch:"
+msgstr "Error en crear el pedaç:"
+
+#: shitk:9256 shitk:9373 shitk:9430
+msgid "ID:"
+msgstr "ID:"
+
+#: shitk:9265
+msgid "Tag name:"
+msgstr "Nom d'etiqueta:"
+
+#: shitk:9268
+msgid "Tag message is optional"
+msgstr "El missatge d'etiqueta és opcional"
+
+#: shitk:9270
+msgid "Tag message:"
+msgstr "Missatge d'etiqueta:"
+
+#: shitk:9274 shitk:9439
+msgid "Create"
+msgstr "Crea"
+
+#: shitk:9292
+msgid "No tag name specified"
+msgstr "No s'ha especificat cap nom d'etiqueta"
+
+#: shitk:9296
+#, tcl-format
+msgid "Tag \"%s\" already exists"
+msgstr "L'etiqueta \"%s\" ja existeix"
+
+#: shitk:9306
+msgid "Error creating tag:"
+msgstr "Error en crear l'etiqueta:"
+
+#: shitk:9382
+msgid "Command:"
+msgstr "Ordre:"
+
+#: shitk:9390
+msgid "Write"
+msgstr "Escriu"
+
+#: shitk:9408
+msgid "Error writing commit:"
+msgstr "Error en escriure la comissió:"
+
+#: shitk:9435
+msgid "Name:"
+msgstr "Nom:"
+
+#: shitk:9458
+msgid "Please specify a name for the new branch"
+msgstr "Si us plau, especifiqueu un nom per a la branca nova"
+
+#: shitk:9463
+#, tcl-format
+msgid "Branch '%s' already exists. Overwrite?"
+msgstr "La branca '%s' ja existeix. Voleu sobreescriure?"
+
+#: shitk:9530
+#, tcl-format
+msgid "Commit %s is already included in branch %s -- really re-apply it?"
+msgstr ""
+"La comissió %s ja està inclosa en la branca %s -- realment voleu tornar a "
+"aplicar-la?"
+
+#: shitk:9535
+msgid "Cherry-picking"
+msgstr "Recollint cireres"
+
+#: shitk:9544
+#, tcl-format
+msgid ""
+"Cherry-pick failed because of local changes to file '%s'.\n"
+"Please commit, reset or stash your changes and try again."
+msgstr ""
+"El recull de cireres ha fallat a causa de canvis locals al fitxer '%s'.\n"
+"Si us plau, cometeu, restabliu o emmagatzemeu els vostres canvis i torneu a "
+"intentar."
+
+#: shitk:9550
+msgid ""
+"Cherry-pick failed because of merge conflict.\n"
+"Do you wish to run shit citool to resolve it?"
+msgstr ""
+"El recull de cireres ha fallat a causa d'un conflicte de fusió.\n"
+"Voleu executar el shit citool per a resoldre'l?"
+
+#: shitk:9566 shitk:9624
+msgid "No changes committed"
+msgstr "Cap canvi comès"
+
+#: shitk:9593
+#, tcl-format
+msgid "Commit %s is not included in branch %s -- really revert it?"
+msgstr ""
+"La comissió %s no s'inclou en la branca %s -- realment voleu revertir-la?"
+
+#: shitk:9598
+msgid "Reverting"
+msgstr "Revertint"
+
+#: shitk:9606
+#, tcl-format
+msgid ""
+"Revert failed because of local changes to the following files:%s Please "
+"commit, reset or stash  your changes and try again."
+msgstr ""
+"La reversió ha fallat a causa de canvis locals als fitxers següents:%s Si us "
+"plau, cometeu, restabliu o emmagatzemeu els vostres canvis i torneu-ho a "
+"intentar."
+
+#: shitk:9610
+msgid ""
+"Revert failed because of merge conflict.\n"
+" Do you wish to run shit citool to resolve it?"
+msgstr ""
+"La reversió ha fallat a causa d'un conflicte de fusió.\n"
+" Voleu executar el shit citool per a resoldre'l?"
+
+#: shitk:9653
+msgid "Confirm reset"
+msgstr "Confirma el restabliment"
+
+#: shitk:9655
+#, tcl-format
+msgid "Reset branch %s to %s?"
+msgstr "Voleu restablir la branca %s a %s?"
+
+#: shitk:9657
+msgid "Reset type:"
+msgstr "Tipus de restabliment:"
+
+#: shitk:9660
+msgid "Soft: Leave working tree and index untouched"
+msgstr "Suau: Deixa l'arbre de treball i l'índex sense tocar"
+
+#: shitk:9663
+msgid "Mixed: Leave working tree untouched, reset index"
+msgstr "Mixt: Deixa l'arbre de treball sense tocar, restableix l'índex"
+
+#: shitk:9666
+msgid ""
+"Hard: Reset working tree and index\n"
+"(discard ALL local changes)"
+msgstr ""
+"Dur: Restableix l'arbre de treball i l'índex\n"
+"(descarta TOTS els canvis locals)"
+
+#: shitk:9683
+msgid "Resetting"
+msgstr "Restablint"
+
+#: shitk:9743
+msgid "Checking out"
+msgstr "Agafant"
+
+#: shitk:9796
+msgid "Cannot delete the currently checked-out branch"
+msgstr "No es pot suprimir la branca actualment agafada"
+
+#: shitk:9802
+#, tcl-format
+msgid ""
+"The commits on branch %s aren't on any other branch.\n"
+"Really delete branch %s?"
+msgstr ""
+"Les comissions en la branca %s no són en cap altra branca.\n"
+"Realment voleu suprimir la branca %s?"
+
+#: shitk:9833
+#, tcl-format
+msgid "Tags and heads: %s"
+msgstr "Etiquetes i caps: %s"
+
+#: shitk:9850
+msgid "Filter"
+msgstr "Filtre"
+
+#: shitk:10146
+msgid ""
+"Error reading commit topology information; branch and preceding/following "
+"tag information will be incomplete."
+msgstr ""
+"Error en llegir la informació de topologia de comissió; la informació sobre "
+"branques i etiquetes precedents/següents serà incompleta."
+
+#: shitk:11123
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: shitk:11127
+msgid "Id"
+msgstr "Id"
+
+#: shitk:11210
+msgid "shitk font chooser"
+msgstr "Selector de tipus de lletra del shitk"
+
+#: shitk:11227
+msgid "B"
+msgstr "B"
+
+#: shitk:11230
+msgid "I"
+msgstr "I"
+
+#: shitk:11348
+msgid "Commit list display options"
+msgstr "Opcions de visualització de la llista de comissions"
+
+#: shitk:11351
+msgid "Maximum graph width (lines)"
+msgstr "Amplada màxima del gràfic (línies)"
+
+#: shitk:11355
+#, no-tcl-format
+msgid "Maximum graph width (% of pane)"
+msgstr "Amplada màxima del gràfic (% del panell)"
+
+#: shitk:11358
+msgid "Show local changes"
+msgstr "Mostra els canvis locals"
+
+#: shitk:11361
+msgid "Auto-select SHA1 (length)"
+msgstr "Selecciona automàticament l'SHA1 (lonshitud)"
+
+#: shitk:11365
+msgid "Hide remote refs"
+msgstr "Amaga les referències remotes"
+
+#: shitk:11369
+msgid "Diff display options"
+msgstr "Opcions de visualització de diferència"
+
+#: shitk:11371
+msgid "Tab spacing"
+msgstr "Espaiat de tabulació"
+
+#: shitk:11374
+msgid "Display nearby tags/heads"
+msgstr "Mostra etiquetes/caps propers"
+
+#: shitk:11377
+msgid "Maximum # tags/heads to show"
+msgstr "Nombre màxim d'etiquetes/caps a mostrar"
+
+#: shitk:11380
+msgid "Limit diffs to listed paths"
+msgstr "Limita les diferències als camins llistats"
+
+#: shitk:11383
+msgid "Support per-file encodings"
+msgstr "Admet codificacions específiques per a cada fitxer"
+
+#: shitk:11389 shitk:11536
+msgid "External diff tool"
+msgstr "Eina de diferència externa"
+
+#: shitk:11390
+msgid "Choose..."
+msgstr "Trieu..."
+
+#: shitk:11395
+msgid "General options"
+msgstr "Opcions generals"
+
+#: shitk:11398
+msgid "Use themed widgets"
+msgstr "Usa els ginys tematitzats"
+
+#: shitk:11400
+msgid "(change requires restart)"
+msgstr "(el canvi requereix reiniciar)"
+
+#: shitk:11402
+msgid "(currently unavailable)"
+msgstr "(actualment no disponible)"
+
+#: shitk:11413
+msgid "Colors: press to choose"
+msgstr "Colors: pressiona per a triar"
+
+#: shitk:11416
+msgid "Interface"
+msgstr "Interfície"
+
+#: shitk:11417
+msgid "interface"
+msgstr "interfície"
+
+#: shitk:11420
+msgid "Background"
+msgstr "Fons"
+
+#: shitk:11421 shitk:11451
+msgid "background"
+msgstr "fons"
+
+#: shitk:11424
+msgid "Foreground"
+msgstr "Primer pla"
+
+#: shitk:11425
+msgid "foreground"
+msgstr "primer pla"
+
+#: shitk:11428
+msgid "Diff: old lines"
+msgstr "Diferència: línies velles"
+
+#: shitk:11429
+msgid "diff old lines"
+msgstr "diferencia les línies velles"
+
+#: shitk:11433
+msgid "Diff: new lines"
+msgstr "Diferència: línies noves"
+
+#: shitk:11434
+msgid "diff new lines"
+msgstr "diferencia les línies noves"
+
+#: shitk:11438
+msgid "Diff: hunk header"
+msgstr "Diferència: capçalera de tros"
+
+#: shitk:11440
+msgid "diff hunk header"
+msgstr "diferencia la capçalera de tros"
+
+#: shitk:11444
+msgid "Marked line bg"
+msgstr "Fons de la línia marcada"
+
+#: shitk:11446
+msgid "marked line background"
+msgstr "fons de la línia marcada"
+
+#: shitk:11450
+msgid "Select bg"
+msgstr "Fons de la selecció"
+
+#: shitk:11459
+msgid "Fonts: press to choose"
+msgstr "Tipus de lletra: pressiona per a triar"
+
+#: shitk:11461
+msgid "Main font"
+msgstr "Tipus de lletra principal"
+
+#: shitk:11462
+msgid "Diff display font"
+msgstr "Tipus de lletra de visualització de diferència"
+
+#: shitk:11463
+msgid "User interface font"
+msgstr "Tipus de lletra de la interfície d'usuari"
+
+#: shitk:11485
+msgid "shitk preferences"
+msgstr "Preferències del shitk"
+
+#: shitk:11494
+msgid "General"
+msgstr "General"
+
+#: shitk:11495
+msgid "Colors"
+msgstr "Colors"
+
+#: shitk:11496
+msgid "Fonts"
+msgstr "Tipus de lletra"
+
+#: shitk:11546
+#, tcl-format
+msgid "shitk: choose color for %s"
+msgstr "shitk: tria el color per a %s"
+
+#: shitk:12059
+msgid ""
+"Sorry, shitk cannot run with this version of Tcl/Tk.\n"
+" shitk requires at least Tcl/Tk 8.4."
+msgstr ""
+"Perdó, el shitk no pot executar-se amb aquesta versió de Tcl/Tk.\n"
+" El shitk requereix com a mínim el Tcl/Tk 8.4."
+
+#: shitk:12269
+msgid "Cannot find a shit repository here."
+msgstr "No es pot trobar cap dipòsit de shit aquí."
+
+#: shitk:12316
+#, tcl-format
+msgid "Ambiguous argument '%s': both revision and filename"
+msgstr "Paràmetre ambigu '%s': és tant revisió com nom de fitxer"
+
+#: shitk:12328
+msgid "Bad arguments to shitk:"
+msgstr "Paràmetres dolents al shitk:"

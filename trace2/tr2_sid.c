@@ -1,13 +1,13 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "hex.h"
 #include "strbuf.h"
 #include "trace2/tr2_tbuf.h"
 #include "trace2/tr2_sid.h"
 
-#define TR2_ENVVAR_PARENT_SID "GIT_TRACE2_PARENT_SID"
+#define TR2_ENVVAR_PARENT_SID "shit_TRACE2_PARENT_SID"
 
 static struct strbuf tr2sid_buf = STRBUF_INIT;
-static int tr2sid_nr_git_parents;
+static int tr2sid_nr_shit_parents;
 
 /*
  * Compute the final component of the SID representing the current process.
@@ -30,12 +30,12 @@ static int tr2sid_nr_git_parents;
  */
 static void tr2_sid_append_my_sid_component(void)
 {
-	const struct git_hash_algo *algo = &hash_algos[GIT_HASH_SHA1];
+	const struct shit_hash_algo *algo = &hash_algos[shit_HASH_SHA1];
 	struct tr2_tbuf tb_now;
-	git_hash_ctx ctx;
+	shit_hash_ctx ctx;
 	pid_t pid = getpid();
-	unsigned char hash[GIT_MAX_RAWSZ + 1];
-	char hex[GIT_MAX_HEXSZ + 1];
+	unsigned char hash[shit_MAX_RAWSZ + 1];
+	char hex[shit_MAX_HEXSZ + 1];
 	char hostname[HOST_NAME_MAX + 1];
 
 	tr2_tbuf_utc_datetime(&tb_now);
@@ -62,11 +62,11 @@ static void tr2_sid_append_my_sid_component(void)
  *
  * Export this into our environment so that all child processes inherit it.
  *
- * If we were started by another git instance, use our parent's SID as a
+ * If we were started by another shit instance, use our parent's SID as a
  * prefix.  (This lets us track parent/child relationships even if there
  * is an intermediate shell process.)
  *
- * Additionally, count the number of nested git processes.
+ * Additionally, count the number of nested shit processes.
  */
 static void tr2_sid_compute(void)
 {
@@ -80,11 +80,11 @@ static void tr2_sid_compute(void)
 		const char *p;
 		for (p = parent_sid; *p; p++)
 			if (*p == '/')
-				tr2sid_nr_git_parents++;
+				tr2sid_nr_shit_parents++;
 
 		strbuf_addstr(&tr2sid_buf, parent_sid);
 		strbuf_addch(&tr2sid_buf, '/');
-		tr2sid_nr_git_parents++;
+		tr2sid_nr_shit_parents++;
 	}
 
 	tr2_sid_append_my_sid_component();
@@ -105,7 +105,7 @@ int tr2_sid_depth(void)
 	if (!tr2sid_buf.len)
 		tr2_sid_compute();
 
-	return tr2sid_nr_git_parents;
+	return tr2sid_nr_shit_parents;
 }
 
 void tr2_sid_release(void)

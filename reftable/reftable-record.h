@@ -40,10 +40,10 @@ struct reftable_ref_record {
 #define REFTABLE_NR_REF_VALUETYPES 4
 	} value_type;
 	union {
-		unsigned char val1[GIT_MAX_RAWSZ];
+		unsigned char val1[shit_MAX_RAWSZ];
 		struct {
-			unsigned char value[GIT_MAX_RAWSZ]; /* first hash  */
-			unsigned char target_value[GIT_MAX_RAWSZ]; /* second hash */
+			unsigned char value[shit_MAX_RAWSZ]; /* first hash  */
+			unsigned char target_value[shit_MAX_RAWSZ]; /* second hash */
 		} val2;
 		char *symref; /* referent, malloced 0-terminated string */
 	} value;
@@ -89,8 +89,8 @@ struct reftable_log_record {
 
 	union {
 		struct {
-			unsigned char new_hash[GIT_MAX_RAWSZ];
-			unsigned char old_hash[GIT_MAX_RAWSZ];
+			unsigned char new_hash[shit_MAX_RAWSZ];
+			unsigned char old_hash[shit_MAX_RAWSZ];
 			char *name;
 			char *email;
 			uint64_t time;

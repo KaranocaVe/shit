@@ -20,14 +20,14 @@ test_expect_success "setup" '
 test_perf "update-ref" '
 	for i in $(test_seq 1000)
 	do
-		git update-ref refs/heads/branch PRE &&
-		git update-ref refs/heads/branch POST PRE &&
-		git update-ref -d refs/heads/branch || return 1
+		shit update-ref refs/heads/branch PRE &&
+		shit update-ref refs/heads/branch POST PRE &&
+		shit update-ref -d refs/heads/branch || return 1
 	done
 '
 
 test_perf "update-ref --stdin" '
-	git update-ref --stdin <instructions >/dev/null
+	shit update-ref --stdin <instructions >/dev/null
 '
 
 test_done

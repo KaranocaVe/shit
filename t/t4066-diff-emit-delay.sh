@@ -1,8 +1,8 @@
 #!/bin/sh
 
 test_description='test combined/stat/moved interaction'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -15,9 +15,9 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success 'set up history with a merge' '
 	test_commit A &&
 	test_commit B &&
-	git checkout -b side HEAD^ &&
+	shit checkout -b side HEAD^ &&
 	test_commit C &&
-	git merge -m M main &&
+	shit merge -m M main &&
 	test_commit D
 '
 
@@ -28,9 +28,9 @@ test_expect_success 'log --cc -p --stat --color-moved' '
 	 D.t | 1 +
 	 1 file changed, 1 insertion(+)
 
-	diff --git a/D.t b/D.t
+	diff --shit a/D.t b/D.t
 	new file mode 100644
-	index 0000000..$(git rev-parse --short D:D.t)
+	index 0000000..$(shit rev-parse --short D:D.t)
 	--- /dev/null
 	+++ b/D.t
 	@@ -0,0 +1 @@
@@ -44,9 +44,9 @@ test_expect_success 'log --cc -p --stat --color-moved' '
 	 C.t | 1 +
 	 1 file changed, 1 insertion(+)
 
-	diff --git a/C.t b/C.t
+	diff --shit a/C.t b/C.t
 	new file mode 100644
-	index 0000000..$(git rev-parse --short C:C.t)
+	index 0000000..$(shit rev-parse --short C:C.t)
 	--- /dev/null
 	+++ b/C.t
 	@@ -0,0 +1 @@
@@ -56,9 +56,9 @@ test_expect_success 'log --cc -p --stat --color-moved' '
 	 B.t | 1 +
 	 1 file changed, 1 insertion(+)
 
-	diff --git a/B.t b/B.t
+	diff --shit a/B.t b/B.t
 	new file mode 100644
-	index 0000000..$(git rev-parse --short B:B.t)
+	index 0000000..$(shit rev-parse --short B:B.t)
 	--- /dev/null
 	+++ b/B.t
 	@@ -0,0 +1 @@
@@ -68,15 +68,15 @@ test_expect_success 'log --cc -p --stat --color-moved' '
 	 A.t | 1 +
 	 1 file changed, 1 insertion(+)
 
-	diff --git a/A.t b/A.t
+	diff --shit a/A.t b/A.t
 	new file mode 100644
-	index 0000000..$(git rev-parse --short A:A.t)
+	index 0000000..$(shit rev-parse --short A:A.t)
 	--- /dev/null
 	+++ b/A.t
 	@@ -0,0 +1 @@
 	+A
 	EOF
-	git log --format="commit %s" --cc -p --stat --color-moved >actual &&
+	shit log --format="commit %s" --cc -p --stat --color-moved >actual &&
 	test_cmp expect actual
 '
 

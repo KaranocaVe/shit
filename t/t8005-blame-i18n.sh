@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git blame encoding conversion'
+test_description='shit blame encoding conversion'
 . ./test-lib.sh
 
 . "$TEST_DIRECTORY"/t8005/utf8.txt
@@ -10,18 +10,18 @@ test_description='git blame encoding conversion'
 test_expect_success 'setup the repository' '
 	# Create the file
 	echo "UTF-8 LINE" > file &&
-	git add file &&
-	git commit --author "$UTF8_NAME <utf8@localhost>" -m "$UTF8_MSG" &&
+	shit add file &&
+	shit commit --author "$UTF8_NAME <utf8@localhost>" -m "$UTF8_MSG" &&
 
 	echo "EUC-JAPAN LINE" >> file &&
-	git add file &&
-	git config i18n.commitencoding eucJP &&
-	git commit --author "$EUC_JAPAN_NAME <euc-japan@localhost>" -m "$EUC_JAPAN_MSG" &&
+	shit add file &&
+	shit config i18n.commitencoding eucJP &&
+	shit commit --author "$EUC_JAPAN_NAME <euc-japan@localhost>" -m "$EUC_JAPAN_MSG" &&
 
 	echo "SJIS LINE" >> file &&
-	git add file &&
-	git config i18n.commitencoding SJIS &&
-	git commit --author "$SJIS_NAME <sjis@localhost>" -m "$SJIS_MSG"
+	shit add file &&
+	shit config i18n.commitencoding SJIS &&
+	shit commit --author "$SJIS_NAME <sjis@localhost>" -m "$SJIS_MSG"
 '
 
 cat >expected <<EOF
@@ -39,7 +39,7 @@ filter_author_summary () {
 
 test_expect_success !MINGW \
 	'blame respects i18n.commitencoding' '
-	git blame --incremental file >output &&
+	shit blame --incremental file >output &&
 	filter_author_summary output >actual &&
 	test_cmp expected actual
 '
@@ -55,8 +55,8 @@ EOF
 
 test_expect_success !MINGW \
 	'blame respects i18n.logoutputencoding' '
-	git config i18n.logoutputencoding eucJP &&
-	git blame --incremental file >output &&
+	shit config i18n.logoutputencoding eucJP &&
+	shit blame --incremental file >output &&
 	filter_author_summary output >actual &&
 	test_cmp expected actual
 '
@@ -72,7 +72,7 @@ EOF
 
 test_expect_success !MINGW \
 	'blame respects --encoding=UTF-8' '
-	git blame --incremental --encoding=UTF-8 file >output &&
+	shit blame --incremental --encoding=UTF-8 file >output &&
 	filter_author_summary output >actual &&
 	test_cmp expected actual
 '
@@ -88,7 +88,7 @@ EOF
 
 test_expect_success !MINGW \
 	'blame respects --encoding=none' '
-	git blame --incremental --encoding=none file >output &&
+	shit blame --incremental --encoding=none file >output &&
 	filter_author_summary output >actual &&
 	test_cmp expected actual
 '

@@ -2,26 +2,26 @@
 
 test_description='test exclude_patterns functionality in main ref store'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 if test_have_prereq !REFFILES
 then
-	skip_all='skipping `git for-each-ref --exclude` tests; need files backend'
+	skip_all='skipping `shit for-each-ref --exclude` tests; need files backend'
 	test_done
 fi
 
 for_each_ref__exclude () {
-	GIT_TRACE2_PERF=1 test-tool ref-store main \
+	shit_TRACE2_PERF=1 test-tool ref-store main \
 		for-each-ref--exclude "$@" >actual.raw
 	cut -d ' ' -f 2 actual.raw
 }
 
 for_each_ref () {
-	git for-each-ref --format='%(refname)' "$@"
+	shit for-each-ref --format='%(refname)' "$@"
 }
 
 assert_jumps () {
@@ -37,7 +37,7 @@ assert_no_jumps () {
 
 test_expect_success 'setup' '
 	test_commit --no-tag base &&
-	base="$(git rev-parse HEAD)" &&
+	base="$(shit rev-parse HEAD)" &&
 
 	for name in foo bar baz quux
 	do
@@ -48,8 +48,8 @@ test_expect_success 'setup' '
 	done >in &&
 	echo "delete refs/heads/main" >>in &&
 
-	git update-ref --stdin <in &&
-	git pack-refs --all
+	shit update-ref --stdin <in &&
+	shit pack-refs --all
 '
 
 test_expect_success 'excluded region in middle' '

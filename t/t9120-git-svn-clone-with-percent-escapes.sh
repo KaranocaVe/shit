@@ -3,8 +3,8 @@
 # Copyright (c) 2008 Kevin Ballard
 #
 
-test_description='git svn clone with percent escapes'
-. ./lib-git-svn.sh
+test_description='shit svn clone with percent escapes'
+. ./lib-shit-svn.sh
 
 test_expect_success 'setup svnrepo' '
 	mkdir project project/trunk project/branches project/tags &&
@@ -19,10 +19,10 @@ test_expect_success 'setup svnrepo' '
 '
 
 test_expect_success 'test clone with percent escapes' '
-	git svn clone "$svnrepo/pr%20ject" clone &&
+	shit svn clone "$svnrepo/pr%20ject" clone &&
 	(
 		cd clone &&
-		git rev-parse refs/remotes/git-svn
+		shit rev-parse refs/remotes/shit-svn
 	)
 '
 
@@ -39,38 +39,38 @@ test_expect_success 'svn checkout with space' '
 '
 
 test_expect_success 'test clone trunk with percent escapes and minimize-url' '
-	git svn clone --minimize-url "$svnrepo/pr%20ject/trunk" minimize &&
+	shit svn clone --minimize-url "$svnrepo/pr%20ject/trunk" minimize &&
 	(
 		cd minimize &&
-		git rev-parse refs/remotes/git-svn
+		shit rev-parse refs/remotes/shit-svn
 	)
 '
 
 test_expect_success 'test clone trunk with percent escapes' '
-	git svn clone "$svnrepo/pr%20ject/trunk" trunk &&
+	shit svn clone "$svnrepo/pr%20ject/trunk" trunk &&
 	(
 		cd trunk &&
-		git rev-parse refs/remotes/git-svn
+		shit rev-parse refs/remotes/shit-svn
 	)
 '
 
 test_expect_success 'test clone --stdlayout with percent escapes' '
-	git svn clone --stdlayout "$svnrepo/pr%20ject" percent &&
+	shit svn clone --stdlayout "$svnrepo/pr%20ject" percent &&
 	(
 		cd percent &&
-		git rev-parse refs/remotes/origin/trunk^0 &&
-		git rev-parse refs/remotes/origin/b^0 &&
-		git rev-parse refs/remotes/origin/tags/v1^0
+		shit rev-parse refs/remotes/origin/trunk^0 &&
+		shit rev-parse refs/remotes/origin/b^0 &&
+		shit rev-parse refs/remotes/origin/tags/v1^0
 	)
 '
 
 test_expect_success 'test clone -s with unescaped space' '
-	git svn clone -s "$svnrepo/pr ject" --prefix origin/ space &&
+	shit svn clone -s "$svnrepo/pr ject" --prefix origin/ space &&
 	(
 		cd space &&
-		git rev-parse refs/remotes/origin/trunk^0 &&
-		git rev-parse refs/remotes/origin/b^0 &&
-		git rev-parse refs/remotes/origin/tags/v1^0
+		shit rev-parse refs/remotes/origin/trunk^0 &&
+		shit rev-parse refs/remotes/origin/b^0 &&
+		shit rev-parse refs/remotes/origin/tags/v1^0
 	)
 '
 

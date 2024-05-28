@@ -1,12 +1,12 @@
 #!/usr/bin/perl
 
-## tar archive frontend for git-fast-import
+## tar archive frontend for shit-fast-import
 ##
 ## For example:
 ##
-##  mkdir project; cd project; git init
+##  mkdir project; cd project; shit init
 ##  perl import-tars.perl *.tar.bz2
-##  git whatchanged import-tars
+##  shit whatchanged import-tars
 ##
 ## Use --metainfo to specify the extension for a meta data file, where
 ## import-tars can read the commit message and optionally author and
@@ -25,15 +25,15 @@ die "usage: import-tars [--metainfo=extension] *.tar.{gz,bz2,lzma,xz,Z}\n"
 
 my $branch_name = 'import-tars';
 my $branch_ref = "refs/heads/$branch_name";
-my $author_name = $ENV{'GIT_AUTHOR_NAME'} || 'T Ar Creator';
-my $author_email = $ENV{'GIT_AUTHOR_EMAIL'} || 'tar@example.com';
-my $committer_name = $ENV{'GIT_COMMITTER_NAME'} || `git config --get user.name`;
-my $committer_email = $ENV{'GIT_COMMITTER_EMAIL'} || `git config --get user.email`;
+my $author_name = $ENV{'shit_AUTHOR_NAME'} || 'T Ar Creator';
+my $author_email = $ENV{'shit_AUTHOR_EMAIL'} || 'tar@example.com';
+my $committer_name = $ENV{'shit_COMMITTER_NAME'} || `shit config --get user.name`;
+my $committer_email = $ENV{'shit_COMMITTER_EMAIL'} || `shit config --get user.email`;
 
 chomp($committer_name, $committer_email);
 
-open(FI, '|-', 'git', 'fast-import', '--quiet')
-	or die "Unable to start git fast-import: $!\n";
+open(FI, '|-', 'shit', 'fast-import', '--quiet')
+	or die "Unable to start shit fast-import: $!\n";
 foreach my $tar_file (@ARGV)
 {
 	my $commit_time = time;

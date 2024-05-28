@@ -1,4 +1,4 @@
-GIT v1.5.4.2 Release Notes
+shit v1.5.4.2 Release Notes
 ==========================
 
 Fixes since v1.5.4
@@ -8,33 +8,33 @@ Fixes since v1.5.4
    valued variables misspelled as boolean and segfaulted.
 
  * Temporary files left behind due to interrupted object
-   transfers were not cleaned up with "git prune".
+   transfers were not cleaned up with "shit prune".
 
- * "git config --unset" was confused when the unset variables
+ * "shit config --unset" was confused when the unset variables
    were spelled with continuation lines in the config file.
 
- * The merge message detection in "git cvsimport" did not catch
+ * The merge message detection in "shit cvsimport" did not catch
    a message that began with "Merge...".
 
- * "git status" suggests "git rm --cached" for unstaging the
-   earlier "git add" before the initial commit.
+ * "shit status" suggests "shit rm --cached" for unstaging the
+   earlier "shit add" before the initial commit.
 
- * "git status" output was incorrect during a partial commit.
+ * "shit status" output was incorrect during a partial commit.
 
- * "git bisect" refused to start when the HEAD was detached.
+ * "shit bisect" refused to start when the HEAD was detached.
 
- * "git bisect" allowed a wildcard character in the commit
+ * "shit bisect" allowed a wildcard character in the commit
    message expanded while writing its log file.
 
  * Manual pages were not formatted correctly with docbook xsl
    1.72; added a workaround.
 
- * "git-commit -C $tag" used to work but rewrite in C done in
+ * "shit-commit -C $tag" used to work but rewrite in C done in
    1.5.4 broke it.  This was fixed in 1.5.4.1.
 
- * An entry in the .gitattributes file that names a pattern in a
+ * An entry in the .shitattributes file that names a pattern in a
    subdirectory of the directory it is in did not match
-   correctly (e.g. pattern "b/*.c" in "a/.gitattributes" should
+   correctly (e.g. pattern "b/*.c" in "a/.shitattributes" should
    match "a/b/foo.c" but it didn't).  This was fixed in 1.5.4.1.
 
  * Customized color specification was parsed incorrectly when

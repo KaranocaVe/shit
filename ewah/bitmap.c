@@ -1,5 +1,5 @@
 /**
- * Copyright 2013, GitHub, Inc
+ * Copyright 2013, shitHub, Inc
  * Copyright 2009-2013, Daniel Lemire, Cliff Moon,
  *	David McIntosh, Robert Becho, Google Inc. and Veronika Zenz
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "ewok.h"
 
 #define EWAH_MASK(x) ((eword_t)1 << (x % BITS_IN_EWORD))

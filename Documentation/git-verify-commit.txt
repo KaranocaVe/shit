@@ -1,18 +1,18 @@
-git-verify-commit(1)
+shit-verify-commit(1)
 ====================
 
 NAME
 ----
-git-verify-commit - Check the GPG signature of commits
+shit-verify-commit - Check the GPG signature of commits
 
 SYNOPSIS
 --------
 [verse]
-'git verify-commit' [-v | --verbose] [--raw] <commit>...
+'shit verify-commit' [-v | --verbose] [--raw] <commit>...
 
 DESCRIPTION
 -----------
-Validates the GPG signature created by 'git commit -S'.
+Validates the GPG signature created by 'shit commit -S'.
 
 OPTIONS
 -------
@@ -25,8 +25,8 @@ OPTIONS
 	Print the contents of the commit object before validating it.
 
 <commit>...::
-	SHA-1 identifiers of Git commit objects.
+	SHA-1 identifiers of shit commit objects.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -2,7 +2,7 @@
  * The Scalar command-line interface.
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "gettext.h"
 #include "parse-options.h"
@@ -28,7 +28,7 @@ static void setup_enlistment_directory(int argc, const char **argv,
 	size_t len;
 
 	if (startup_info->have_repository)
-		BUG("gitdir already set up?!?");
+		BUG("shitdir already set up?!?");
 
 	if (argc > 1)
 		usage_with_options(usagestr, options);
@@ -55,7 +55,7 @@ static void setup_enlistment_directory(int argc, const char **argv,
 	}
 	strbuf_setlen(&path, len);
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (!the_repository->worktree)
 		die(_("Scalar enlistments require a worktree"));
@@ -70,19 +70,19 @@ static void setup_enlistment_directory(int argc, const char **argv,
 	strbuf_release(&path);
 }
 
-static int run_git(const char *arg, ...)
+static int run_shit(const char *arg, ...)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 	va_list args;
 	const char *p;
 
 	va_start(args, arg);
-	strvec_push(&cmd.args, arg);
+	strvec_defecate(&cmd.args, arg);
 	while ((p = va_arg(args, const char *)))
-		strvec_push(&cmd.args, p);
+		strvec_defecate(&cmd.args, p);
 	va_end(args);
 
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	return run_command(&cmd);
 }
 
@@ -98,9 +98,9 @@ static int set_scalar_config(const struct scalar_config *config, int reconfigure
 	int res;
 
 	if ((reconfigure && config->overwrite_on_reconfigure) ||
-	    git_config_get_string(config->key, &value)) {
+	    shit_config_get_string(config->key, &value)) {
 		trace2_data_string("scalar", the_repository, config->key, "created");
-		res = git_config_set_gently(config->key, config->value);
+		res = shit_config_set_gently(config->key, config->value);
 	} else {
 		trace2_data_string("scalar", the_repository, config->key, "exists");
 		res = 0;
@@ -189,10 +189,10 @@ static int set_recommended_config(int reconfigure)
 	 * The `log.excludeDecoration` setting is special because it allows
 	 * for multiple values.
 	 */
-	if (git_config_get_string("log.excludeDecoration", &value)) {
+	if (shit_config_get_string("log.excludeDecoration", &value)) {
 		trace2_data_string("scalar", the_repository,
 				   "log.excludeDecoration", "created");
-		if (git_config_set_multivar_gently("log.excludeDecoration",
+		if (shit_config_set_multivar_gently("log.excludeDecoration",
 						   "refs/prefetch/*",
 						   CONFIG_REGEX_NONE, 0))
 			return error(_("could not configure "
@@ -208,7 +208,7 @@ static int set_recommended_config(int reconfigure)
 
 static int toggle_maintenance(int enable)
 {
-	return run_git("maintenance",
+	return run_shit("maintenance",
 		       enable ? "start" : "unregister",
 		       enable ? NULL : "--force",
 		       NULL);
@@ -221,7 +221,7 @@ static int add_or_remove_enlistment(int add)
 	if (!the_repository->worktree)
 		die(_("Scalar enlistments require a worktree"));
 
-	res = run_git("config", "--global", "--get", "--fixed-value",
+	res = run_shit("config", "--global", "--get", "--fixed-value",
 		      "scalar.repo", the_repository->worktree, NULL);
 
 	/*
@@ -231,7 +231,7 @@ static int add_or_remove_enlistment(int add)
 	if ((add && !res) || (!add && res))
 		return 0;
 
-	return run_git("config", "--global", add ? "--add" : "--unset",
+	return run_shit("config", "--global", add ? "--add" : "--unset",
 		       add ? "--no-fixed-value" : "--fixed-value",
 		       "scalar.repo", the_repository->worktree, NULL);
 }
@@ -241,7 +241,7 @@ static int start_fsmonitor_daemon(void)
 	assert(have_fsmonitor_support());
 
 	if (fsmonitor_ipc__get_state() != IPC_STATE__LISTENING)
-		return run_git("fsmonitor--daemon", "start", NULL);
+		return run_shit("fsmonitor--daemon", "start", NULL);
 
 	return 0;
 }
@@ -251,7 +251,7 @@ static int stop_fsmonitor_daemon(void)
 	assert(have_fsmonitor_support());
 
 	if (fsmonitor_ipc__get_state() == IPC_STATE__LISTENING)
-		return run_git("fsmonitor--daemon", "stop", NULL);
+		return run_shit("fsmonitor--daemon", "stop", NULL);
 
 	return 0;
 }
@@ -302,7 +302,7 @@ static int set_config(const char *fmt, ...)
 	value = strchr(buf.buf, '=');
 	if (value)
 		*(value++) = '\0';
-	res = git_config_set_gently(buf.buf, value);
+	res = shit_config_set_gently(buf.buf, value);
 	strbuf_release(&buf);
 
 	return res;
@@ -313,8 +313,8 @@ static char *remote_default_branch(const char *url)
 	struct child_process cp = CHILD_PROCESS_INIT;
 	struct strbuf out = STRBUF_INIT;
 
-	cp.git_cmd = 1;
-	strvec_pushl(&cp.args, "ls-remote", "--symref", url, "HEAD", NULL);
+	cp.shit_cmd = 1;
+	strvec_defecatel(&cp.args, "ls-remote", "--symref", url, "HEAD", NULL);
 	if (!pipe_command(&cp, NULL, 0, &out, 0, NULL, 0)) {
 		const char *line = out.buf;
 
@@ -347,8 +347,8 @@ static char *remote_default_branch(const char *url)
 	strbuf_reset(&out);
 
 	child_process_init(&cp);
-	cp.git_cmd = 1;
-	strvec_pushl(&cp.args, "symbolic-ref", "--short", "HEAD", NULL);
+	cp.shit_cmd = 1;
+	strvec_defecatel(&cp.args, "symbolic-ref", "--short", "HEAD", NULL);
 	if (!pipe_command(&cp, NULL, 0, &out, 0, NULL, 0)) {
 		strbuf_trim(&out);
 		return strbuf_detach(&out, NULL);
@@ -444,8 +444,8 @@ static int cmd_clone(int argc, const char **argv)
 		/* Strip trailing slashes, if any */
 		while (buf.len > 0 && is_dir_sep(buf.buf[buf.len - 1]))
 			strbuf_setlen(&buf, buf.len - 1);
-		/* Strip suffix `.git`, if any */
-		strbuf_strip_suffix(&buf, ".git");
+		/* Strip suffix `.shit`, if any */
+		strbuf_strip_suffix(&buf, ".shit");
 
 		enlistment = find_last_dir_sep(buf.buf);
 		if (!enlistment) {
@@ -474,7 +474,7 @@ static int cmd_clone(int argc, const char **argv)
 		free(b);
 	}
 
-	if ((res = run_git("-c", buf.buf, "init", "--", dir, NULL)))
+	if ((res = run_shit("-c", buf.buf, "init", "--", dir, NULL)))
 		goto cleanup;
 
 	if (chdir(dir) < 0) {
@@ -482,7 +482,7 @@ static int cmd_clone(int argc, const char **argv)
 		goto cleanup;
 	}
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	/* common-main already logs `argv` */
 	trace2_def_repo(the_repository);
@@ -504,13 +504,13 @@ static int cmd_clone(int argc, const char **argv)
 	}
 
 	if (!full_clone &&
-	    (res = run_git("sparse-checkout", "init", "--cone", NULL)))
+	    (res = run_shit("sparse-checkout", "init", "--cone", NULL)))
 		goto cleanup;
 
 	if (set_recommended_config(0))
 		return error(_("could not configure '%s'"), dir);
 
-	if ((res = run_git("fetch", "--quiet",
+	if ((res = run_shit("fetch", "--quiet",
 				show_progress ? "--progress" : "--no-progress",
 				"origin", NULL))) {
 		warning(_("partial clone failed; attempting full clone"));
@@ -521,7 +521,7 @@ static int cmd_clone(int argc, const char **argv)
 			goto cleanup;
 		}
 
-		if ((res = run_git("fetch", "--quiet",
+		if ((res = run_shit("fetch", "--quiet",
 					show_progress ? "--progress" : "--no-progress",
 					"origin", NULL)))
 			goto cleanup;
@@ -535,7 +535,7 @@ static int cmd_clone(int argc, const char **argv)
 
 	strbuf_reset(&buf);
 	strbuf_addf(&buf, "origin/%s", branch);
-	res = run_git("checkout", "-f", "-t", buf.buf, NULL);
+	res = run_shit("checkout", "-f", "-t", buf.buf, NULL);
 	if (res)
 		goto cleanup;
 
@@ -566,7 +566,7 @@ static int cmd_diagnose(int argc, const char **argv)
 	setup_enlistment_directory(argc, argv, usage, options, &diagnostics_root);
 	strbuf_addstr(&diagnostics_root, "/.scalarDiagnostics");
 
-	res = run_git("diagnose", "--mode=all", "-s", "%Y%m%d_%H%M%S",
+	res = run_shit("diagnose", "--mode=all", "-s", "%Y%m%d_%H%M%S",
 		      "-o", diagnostics_root.buf, NULL);
 
 	strbuf_release(&diagnostics_root);
@@ -578,7 +578,7 @@ static int cmd_list(int argc, const char **argv UNUSED)
 	if (argc != 1)
 		die(_("`scalar list` does not take arguments"));
 
-	if (run_git("config", "--global", "--get-all", "scalar.repo", NULL) < 0)
+	if (run_shit("config", "--global", "--get-all", "scalar.repo", NULL) < 0)
 		return -1;
 	return 0;
 }
@@ -618,12 +618,12 @@ static int remove_deleted_enlistment(struct strbuf *path)
 	int res = 0;
 	strbuf_realpath_forgiving(path, path->buf, 1);
 
-	if (run_git("config", "--global",
+	if (run_shit("config", "--global",
 		    "--unset", "--fixed-value",
 		    "scalar.repo", path->buf, NULL) < 0)
 		res = -1;
 
-	if (run_git("config", "--global",
+	if (run_shit("config", "--global",
 		    "--unset", "--fixed-value",
 		    "maintenance.repo", path->buf, NULL) < 0)
 		res = -1;
@@ -645,7 +645,7 @@ static int cmd_reconfigure(int argc, const char **argv)
 	};
 	struct string_list scalar_repos = STRING_LIST_INIT_DUP;
 	int i, res = 0;
-	struct strbuf commondir = STRBUF_INIT, gitdir = STRBUF_INIT;
+	struct strbuf commondir = STRBUF_INIT, shitdir = STRBUF_INIT;
 
 	argc = parse_options(argc, argv, NULL, options,
 			     usage, 0);
@@ -660,7 +660,7 @@ static int cmd_reconfigure(int argc, const char **argv)
 		usage_msg_opt(_("--all or <enlistment>, but not both"),
 			      usage, options);
 
-	git_config(get_scalar_repos, &scalar_repos);
+	shit_config(get_scalar_repos, &scalar_repos);
 
 	for (i = 0; i < scalar_repos.nr; i++) {
 		int succeeded = 0;
@@ -668,7 +668,7 @@ static int cmd_reconfigure(int argc, const char **argv)
 		const char *dir = scalar_repos.items[i].string;
 
 		strbuf_reset(&commondir);
-		strbuf_reset(&gitdir);
+		strbuf_reset(&shitdir);
 
 		if (chdir(dir) < 0) {
 			struct strbuf buf = STRBUF_INIT;
@@ -691,17 +691,17 @@ static int cmd_reconfigure(int argc, const char **argv)
 			goto loop_end;
 		}
 
-		switch (discover_git_directory_reason(&commondir, &gitdir)) {
-		case GIT_DIR_INVALID_OWNERSHIP:
+		switch (discover_shit_directory_reason(&commondir, &shitdir)) {
+		case shit_DIR_INVALID_OWNERSHIP:
 			warning(_("repository at '%s' has different owner"), dir);
 			goto loop_end;
 
-		case GIT_DIR_INVALID_GITFILE:
-		case GIT_DIR_INVALID_FORMAT:
+		case shit_DIR_INVALID_shitFILE:
+		case shit_DIR_INVALID_FORMAT:
 			warning(_("repository at '%s' has a format issue"), dir);
 			goto loop_end;
 
-		case GIT_DIR_DISCOVERED:
+		case shit_DIR_DISCOVERED:
 			succeeded = 1;
 			break;
 
@@ -710,9 +710,9 @@ static int cmd_reconfigure(int argc, const char **argv)
 			break;
 		}
 
-		git_config_clear();
+		shit_config_clear();
 
-		if (repo_init(&r, gitdir.buf, commondir.buf))
+		if (repo_init(&r, shitdir.buf, commondir.buf))
 			goto loop_end;
 
 		old_repo = the_repository;
@@ -727,14 +727,14 @@ loop_end:
 		if (!succeeded) {
 			res = -1;
 			warning(_("to unregister this repository from Scalar, run\n"
-				  "\tgit config --global --unset --fixed-value scalar.repo \"%s\""),
+				  "\tshit config --global --unset --fixed-value scalar.repo \"%s\""),
 				dir);
 		}
 	}
 
 	string_list_clear(&scalar_repos, 1);
 	strbuf_release(&commondir);
-	strbuf_release(&gitdir);
+	strbuf_release(&shitdir);
 
 	return res;
 }
@@ -790,13 +790,13 @@ static int cmd_run(int argc, const char **argv)
 		return register_dir();
 
 	if (i > 0)
-		return run_git("maintenance", "run",
+		return run_shit("maintenance", "run",
 			       "--task", tasks[i].task, NULL);
 
 	if (register_dir())
 		return -1;
 	for (i = 1; tasks[i].arg; i++)
-		if (run_git("maintenance", "run",
+		if (run_shit("maintenance", "run",
 			    "--task", tasks[i].task, NULL))
 			return -1;
 	return 0;
@@ -823,16 +823,16 @@ static int cmd_unregister(int argc, const char **argv)
 	if (argc == 1) {
 		struct strbuf src_path = STRBUF_INIT, workdir_path = STRBUF_INIT;
 
-		strbuf_addf(&src_path, "%s/src/.git", argv[0]);
-		strbuf_addf(&workdir_path, "%s/.git", argv[0]);
+		strbuf_addf(&src_path, "%s/src/.shit", argv[0]);
+		strbuf_addf(&workdir_path, "%s/.shit", argv[0]);
 		if (!is_directory(src_path.buf) && !is_directory(workdir_path.buf)) {
 			/* remove possible matching registrations */
 			int res = -1;
 
-			strbuf_strip_suffix(&src_path, "/.git");
+			strbuf_strip_suffix(&src_path, "/.shit");
 			res = remove_deleted_enlistment(&src_path) && res;
 
-			strbuf_strip_suffix(&workdir_path, "/.git");
+			strbuf_strip_suffix(&workdir_path, "/.shit");
 			res = remove_deleted_enlistment(&workdir_path) && res;
 
 			strbuf_release(&src_path);
@@ -897,16 +897,16 @@ static int cmd_help(int argc, const char **argv)
 	if (argc != 0)
 		usage_with_options(usage, options);
 
-	return run_git("help", "scalar", NULL);
+	return run_shit("help", "scalar", NULL);
 }
 
 static int cmd_version(int argc, const char **argv)
 {
 	int verbose = 0, build_options = 0;
 	struct option options[] = {
-		OPT__VERBOSE(&verbose, N_("include Git version")),
+		OPT__VERBOSE(&verbose, N_("include shit version")),
 		OPT_BOOL(0, "build-options", &build_options,
-			 N_("include Git's build options")),
+			 N_("include shit's build options")),
 		OPT_END(),
 	};
 	const char * const usage[] = {
@@ -962,7 +962,7 @@ int cmd_main(int argc, const char **argv)
 		} else if (!strcmp(argv[1], "-c")) {
 			if (argc < 3)
 				die(_("-c requires a <key>=<value> argument"));
-			git_config_push_parameter(argv[2]);
+			shit_config_defecate_parameter(argv[2]);
 			argc -= 2;
 			argv += 2;
 		} else

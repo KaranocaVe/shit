@@ -11,13 +11,13 @@ then
 fi
 
 test_lazy_prereq UNTRACKED_CACHE '
-	{ git update-index --test-untracked-cache; ret=$?; } &&
+	{ shit update-index --test-untracked-cache; ret=$?; } &&
 	test $ret -ne 1
 '
 
 # Lie to perf-lib and ask for a new empty repo and avoid
-# the complaints about GIT_PERF_REPO not being big enough
-# the perf hit when GIT_PERF_LARGE_REPO is copied into
+# the complaints about shit_PERF_REPO not being big enough
+# the perf hit when shit_PERF_LARGE_REPO is copied into
 # the trash directory.
 #
 # NEEDSWORK: It would be nice if perf-lib had an option to
@@ -43,7 +43,7 @@ export BALLAST_BR
 TMP_BR=tmp_br
 export TMP_BR
 
-REPO=../repos/gen-many-files-"$PARAMS".git
+REPO=../repos/gen-many-files-"$PARAMS".shit
 export REPO
 
 if ! test -d $REPO
@@ -53,30 +53,30 @@ fi
 
 
 enable_uc () {
-	git -C $REPO config core.untrackedcache true
-	git -C $REPO update-index --untracked-cache
-	git -C $REPO status >/dev/null 2>&1
+	shit -C $REPO config core.untrackedcache true
+	shit -C $REPO update-index --untracked-cache
+	shit -C $REPO status >/dev/null 2>&1
 }
 
 disable_uc () {
-	git -C $REPO config core.untrackedcache false
-	git -C $REPO update-index --no-untracked-cache
-	git -C $REPO status >/dev/null 2>&1
+	shit -C $REPO config core.untrackedcache false
+	shit -C $REPO update-index --no-untracked-cache
+	shit -C $REPO status >/dev/null 2>&1
 }
 
 start_fsm () {
-	git -C $REPO fsmonitor--daemon start
-	git -C $REPO fsmonitor--daemon status
-	git -C $REPO config core.fsmonitor true
-	git -C $REPO update-index --fsmonitor
-	git -C $REPO status >/dev/null 2>&1
+	shit -C $REPO fsmonitor--daemon start
+	shit -C $REPO fsmonitor--daemon status
+	shit -C $REPO config core.fsmonitor true
+	shit -C $REPO update-index --fsmonitor
+	shit -C $REPO status >/dev/null 2>&1
 }
 
 stop_fsm () {
-	git -C $REPO config --unset core.fsmonitor
-	git -C $REPO update-index --no-fsmonitor
-	test_might_fail git -C $REPO fsmonitor--daemon stop 2>/dev/null
-	git -C $REPO status >/dev/null 2>&1
+	shit -C $REPO config --unset core.fsmonitor
+	shit -C $REPO update-index --no-fsmonitor
+	test_might_fail shit -C $REPO fsmonitor--daemon stop 2>/dev/null
+	shit -C $REPO status >/dev/null 2>&1
 }
 
 
@@ -89,7 +89,7 @@ test_expect_success "Setup borrowed repo (fsm+uc)" "
 
 # Also ensure that it starts in a known state.
 #
-# Because we assume that $GIT_PERF_REPEAT_COUNT > 1, we are not going to time
+# Because we assume that $shit_PERF_REPEAT_COUNT > 1, we are not going to time
 # the ballast checkout, since only the first invocation does any work and the
 # subsequent ones just print "already on branch" and quit, so the reported
 # time is not useful.
@@ -98,18 +98,18 @@ test_expect_success "Setup borrowed repo (fsm+uc)" "
 # accidentially alter the real ballast branch.
 #
 test_expect_success "Setup borrowed repo (temp ballast branch)" "
-	test_might_fail git -C $REPO checkout $BALLAST_BR &&
-	test_might_fail git -C $REPO reset --hard &&
-	git -C $REPO clean -d -f &&
-	test_might_fail git -C $REPO branch -D $TMP_BR &&
-	git -C $REPO branch $TMP_BR $BALLAST_BR &&
-	git -C $REPO checkout $TMP_BR
+	test_might_fail shit -C $REPO checkout $BALLAST_BR &&
+	test_might_fail shit -C $REPO reset --hard &&
+	shit -C $REPO clean -d -f &&
+	test_might_fail shit -C $REPO branch -D $TMP_BR &&
+	shit -C $REPO branch $TMP_BR $BALLAST_BR &&
+	shit -C $REPO checkout $TMP_BR
 "
 
 
 echo Data >data.txt
 
-# NEEDSWORK: We assume that $GIT_PERF_REPEAT_COUNT > 1.  With
+# NEEDSWORK: We assume that $shit_PERF_REPEAT_COUNT > 1.  With
 # FSMonitor enabled, we can get a skewed view of status times, since
 # the index MAY (or may not) be updated after the first invocation
 # which will update the FSMonitor Token, so the subsequent invocations
@@ -119,7 +119,7 @@ do_status () {
 	msg=$1
 
 	test_perf "$msg" "
-		git -C $REPO status >/dev/null 2>&1
+		shit -C $REPO status >/dev/null 2>&1
 	"
 }
 
@@ -131,11 +131,11 @@ do_matrix () {
 	MATRIX_BR="$TMP_BR-$uc-$fsm"
 
 	test_expect_success "$t Setup matrix branch" "
-		git -C $REPO clean -d -f &&
-		git -C $REPO checkout $TMP_BR &&
-		test_might_fail git -C $REPO branch -D $MATRIX_BR &&
-		git -C $REPO branch $MATRIX_BR $TMP_BR &&
-		git -C $REPO checkout $MATRIX_BR
+		shit -C $REPO clean -d -f &&
+		shit -C $REPO checkout $TMP_BR &&
+		test_might_fail shit -C $REPO branch -D $MATRIX_BR &&
+		shit -C $REPO branch $MATRIX_BR $TMP_BR &&
+		shit -C $REPO checkout $MATRIX_BR
 	"
 
 	if test $uc = true
@@ -169,25 +169,25 @@ do_matrix () {
 	# issue described above.
 	#
 	test_expect_success "$t add all" "
-		git -C $REPO add -A
+		shit -C $REPO add -A
 	"
 
 	do_status "$t status after add all"
 
 	test_expect_success "$t add dot" "
-		git -C $REPO add .
+		shit -C $REPO add .
 	"
 
 	do_status "$t status after add dot"
 
 	test_expect_success "$t commit staged" "
-		git -C $REPO commit -a -m data
+		shit -C $REPO commit -a -m data
 	"
 
 	do_status "$t status after commit"
 
 	test_expect_success "$t reset HEAD~1 hard" "
-		git -C $REPO reset --hard HEAD~1 >/dev/null 2>&1
+		shit -C $REPO reset --hard HEAD~1 >/dev/null 2>&1
 	"
 
 	do_status "$t status after reset hard"
@@ -203,7 +203,7 @@ do_matrix () {
 	# Remove the new untracked files.
 	#
 	test_expect_success "$t clean -df" "
-		git -C $REPO clean -d -f
+		shit -C $REPO clean -d -f
 	"
 
 	do_status "$t status after clean"
@@ -235,16 +235,16 @@ cleanup () {
 
 	MATRIX_BR="$TMP_BR-$uc-$fsm"
 
-	test_might_fail git -C $REPO branch -D $MATRIX_BR
+	test_might_fail shit -C $REPO branch -D $MATRIX_BR
 }
 
 
 # We're borrowing this repo.  We should leave it in a clean state.
 #
 test_expect_success "Cleanup temp and matrix branches" "
-	git -C $REPO clean -d -f &&
-	test_might_fail git -C $REPO checkout $BALLAST_BR &&
-	test_might_fail git -C $REPO branch -D $TMP_BR &&
+	shit -C $REPO clean -d -f &&
+	test_might_fail shit -C $REPO checkout $BALLAST_BR &&
+	test_might_fail shit -C $REPO branch -D $TMP_BR &&
 	for uc_val in $uc_values
 	do
 		for fsm_val in $fsm_values

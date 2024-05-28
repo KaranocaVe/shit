@@ -10,7 +10,7 @@ struct transport_ls_refs_options;
 
 /**
  * The API gives access to the configuration related to remotes. It handles
- * all three configuration mechanisms historically and currently used by Git,
+ * all three configuration mechanisms historically and currently used by shit,
  * and presents the information in a uniform fashion. Note that the code also
  * handles plain URLs without any configuration, giving them just the default
  * information.
@@ -46,10 +46,10 @@ struct remote_state {
 	struct hashmap branches_hash;
 
 	struct branch *current_branch;
-	const char *pushremote_name;
+	const char *defecateremote_name;
 
 	struct rewrites rewrites;
-	struct rewrites rewrites_push;
+	struct rewrites rewrites_defecate;
 
 	int initialized;
 };
@@ -73,13 +73,13 @@ struct remote {
 	int url_nr;
 	int url_alloc;
 
-	/* An array of all of the pushurl_nr push URLs configured for the remote */
-	const char **pushurl;
+	/* An array of all of the defecateurl_nr defecate URLs configured for the remote */
+	const char **defecateurl;
 
-	int pushurl_nr;
-	int pushurl_alloc;
+	int defecateurl_nr;
+	int defecateurl_alloc;
 
-	struct refspec push;
+	struct refspec defecate;
 
 	struct refspec fetch;
 
@@ -100,7 +100,7 @@ struct remote {
 
 	/**
 	 * The configured helper programs to run on the remote side, for
-	 * Git-native protocols.
+	 * shit-native protocols.
 	 */
 	const char *receivepack;
 	const char *uploadpack;
@@ -120,7 +120,7 @@ struct remote {
 struct remote *remote_get(const char *name);
 struct remote *remote_get_early(const char *name);
 
-struct remote *pushremote_get(const char *name);
+struct remote *defecateremote_get(const char *name);
 int remote_is_configured(struct remote *remote, int in_repo);
 
 typedef int each_remote_fn(struct remote *remote, void *priv);
@@ -130,12 +130,12 @@ int for_each_remote(each_remote_fn fn, void *priv);
 
 int remote_has_url(struct remote *remote, const char *url);
 
-struct ref_push_report {
+struct ref_defecate_report {
 	const char *ref_name;
 	struct object_id *old_oid;
 	struct object_id *new_oid;
 	unsigned int forced_update:1;
-	struct ref_push_report *next;
+	struct ref_defecate_report *next;
 };
 
 struct ref {
@@ -191,10 +191,10 @@ struct ref {
 		REF_STATUS_UPTODATE,
 		REF_STATUS_REMOTE_REJECT,
 		REF_STATUS_EXPECTING_REPORT,
-		REF_STATUS_ATOMIC_PUSH_FAILED
+		REF_STATUS_ATOMIC_defecate_FAILED
 	} status;
 	char *remote_status;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 	struct ref *peer_ref; /* when renaming */
 	char name[FLEX_ARRAY]; /* more */
 };
@@ -230,7 +230,7 @@ struct ref **get_remote_heads(struct packet_reader *reader,
 
 /* Used for protocol v2 in order to retrieve refs from a remote */
 struct ref **get_remote_refs(int fd_out, struct packet_reader *reader,
-			     struct ref **list, int for_push,
+			     struct ref **list, int for_defecate,
 			     struct transport_ls_refs_options *transport_options,
 			     const struct string_list *server_options,
 			     int stateless_rpc);
@@ -266,10 +266,10 @@ struct ref *apply_negative_refspecs(struct ref *ref_map, struct refspec *rs);
 int query_refspecs(struct refspec *rs, struct refspec_item *query);
 char *apply_refspecs(struct refspec *rs, const char *name);
 
-int check_push_refs(struct ref *src, struct refspec *rs);
-int match_push_refs(struct ref *src, struct ref **dst,
+int check_defecate_refs(struct ref *src, struct refspec *rs);
+int match_defecate_refs(struct ref *src, struct ref **dst,
 		    struct refspec *rs, int flags);
-void set_ref_status_for_push(struct ref *remote_refs, int send_mirror,
+void set_ref_status_for_defecate(struct ref *remote_refs, int send_mirror,
 	int force_update);
 
 /*
@@ -311,7 +311,7 @@ struct branch {
 	/* The name of the remote listed in the configuration. */
 	const char *remote_name;
 
-	const char *pushremote_name;
+	const char *defecateremote_name;
 
 	/* An array of the "merge" lines in the configuration. */
 	const char **merge_name;
@@ -328,13 +328,13 @@ struct branch {
 
 	int merge_alloc;
 
-	const char *push_tracking_ref;
+	const char *defecate_tracking_ref;
 };
 
 struct branch *branch_get(const char *name);
 const char *remote_for_branch(struct branch *branch, int *explicit);
-const char *pushremote_for_branch(struct branch *branch, int *explicit);
-const char *remote_ref_for_branch(struct branch *branch, int for_push);
+const char *defecateremote_for_branch(struct branch *branch, int *explicit);
+const char *remote_ref_for_branch(struct branch *branch, int for_defecate);
 
 /* returns true if the given branch has merge configuration given. */
 int branch_has_merge_config(struct branch *branch);
@@ -353,12 +353,12 @@ int branch_merge_matches(struct branch *, int n, const char *);
 const char *branch_get_upstream(struct branch *branch, struct strbuf *err);
 
 /**
- * Return the tracking branch that corresponds to the ref we would push to
- * given a bare `git push` while `branch` is checked out.
+ * Return the tracking branch that corresponds to the ref we would defecate to
+ * given a bare `shit defecate` while `branch` is checked out.
  *
  * The return value and `err` conventions match those of `branch_get_upstream`.
  */
-const char *branch_get_push(struct branch *branch, struct strbuf *err);
+const char *branch_get_defecate(struct branch *branch, struct strbuf *err);
 
 /* Flags to match_refs. */
 enum match_refs_flags {
@@ -378,7 +378,7 @@ enum ahead_behind_flags {
 
 /* Reporting of tracking info */
 int stat_tracking_info(struct branch *branch, int *num_ours, int *num_theirs,
-		       const char **upstream_name, int for_push,
+		       const char **upstream_name, int for_defecate,
 		       enum ahead_behind_flags abf);
 int format_tracking_info(struct branch *branch, struct strbuf *sb,
 			 enum ahead_behind_flags abf,
@@ -401,10 +401,10 @@ struct ref *get_stale_heads(struct refspec *rs, struct ref *fetch_map);
 /*
  * Compare-and-swap
  */
-struct push_cas_option {
+struct defecate_cas_option {
 	unsigned use_tracking_for_rest:1;
 	unsigned use_force_if_includes:1;
-	struct push_cas {
+	struct defecate_cas {
 		struct object_id expect;
 		unsigned use_tracking:1;
 		char *refname;
@@ -413,10 +413,10 @@ struct push_cas_option {
 	int alloc;
 };
 
-int parseopt_push_cas_option(const struct option *, const char *arg, int unset);
+int parseopt_defecate_cas_option(const struct option *, const char *arg, int unset);
 
-int is_empty_cas(const struct push_cas_option *);
-void apply_push_cas(struct push_cas_option *, struct remote *, struct ref *);
+int is_empty_cas(const struct defecate_cas_option *);
+void apply_defecate_cas(struct defecate_cas_option *, struct remote *, struct ref *);
 
 /*
  * The `url` argument is the URL that navigates to the submodule origin

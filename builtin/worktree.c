@@ -27,23 +27,23 @@
 #include "quote.h"
 
 #define BUILTIN_WORKTREE_ADD_USAGE \
-	N_("git worktree add [-f] [--detach] [--checkout] [--lock [--reason <string>]]\n" \
+	N_("shit worktree add [-f] [--detach] [--checkout] [--lock [--reason <string>]]\n" \
 	   "                 [--orphan] [(-b | -B) <new-branch>] <path> [<commit-ish>]")
 
 #define BUILTIN_WORKTREE_LIST_USAGE \
-	N_("git worktree list [-v | --porcelain [-z]]")
+	N_("shit worktree list [-v | --porcelain [-z]]")
 #define BUILTIN_WORKTREE_LOCK_USAGE \
-	N_("git worktree lock [--reason <string>] <worktree>")
+	N_("shit worktree lock [--reason <string>] <worktree>")
 #define BUILTIN_WORKTREE_MOVE_USAGE \
-	N_("git worktree move <worktree> <new-path>")
+	N_("shit worktree move <worktree> <new-path>")
 #define BUILTIN_WORKTREE_PRUNE_USAGE \
-	N_("git worktree prune [-n] [-v] [--expire <expire>]")
+	N_("shit worktree prune [-n] [-v] [--expire <expire>]")
 #define BUILTIN_WORKTREE_REMOVE_USAGE \
-	N_("git worktree remove [-f] <worktree>")
+	N_("shit worktree remove [-f] <worktree>")
 #define BUILTIN_WORKTREE_REPAIR_USAGE \
-	N_("git worktree repair [<path>...]")
+	N_("shit worktree repair [<path>...]")
 #define BUILTIN_WORKTREE_UNLOCK_USAGE \
-	N_("git worktree unlock <worktree>")
+	N_("shit worktree unlock <worktree>")
 
 #define WORKTREE_ADD_DWIM_ORPHAN_INFER_TEXT \
 	_("No possible source branch, inferring '--orphan'")
@@ -53,16 +53,16 @@
 	"(branch with no commits) for this repository, you can do so\n" \
 	"using the --orphan flag:\n" \
 	"\n" \
-	"    git worktree add --orphan -b %s %s\n")
+	"    shit worktree add --orphan -b %s %s\n")
 
 #define WORKTREE_ADD_ORPHAN_NO_DASH_B_HINT_TEXT \
 	_("If you meant to create a worktree containing a new unborn branch\n" \
 	"(branch with no commits) for this repository, you can do so\n" \
 	"using the --orphan flag:\n" \
 	"\n" \
-	"    git worktree add --orphan %s\n")
+	"    shit worktree add --orphan %s\n")
 
-static const char * const git_worktree_usage[] = {
+static const char * const shit_worktree_usage[] = {
 	BUILTIN_WORKTREE_ADD_USAGE,
 	BUILTIN_WORKTREE_LIST_USAGE,
 	BUILTIN_WORKTREE_LOCK_USAGE,
@@ -74,42 +74,42 @@ static const char * const git_worktree_usage[] = {
 	NULL
 };
 
-static const char * const git_worktree_add_usage[] = {
+static const char * const shit_worktree_add_usage[] = {
 	BUILTIN_WORKTREE_ADD_USAGE,
 	NULL,
 };
 
-static const char * const git_worktree_list_usage[] = {
+static const char * const shit_worktree_list_usage[] = {
 	BUILTIN_WORKTREE_LIST_USAGE,
 	NULL
 };
 
-static const char * const git_worktree_lock_usage[] = {
+static const char * const shit_worktree_lock_usage[] = {
 	BUILTIN_WORKTREE_LOCK_USAGE,
 	NULL
 };
 
-static const char * const git_worktree_move_usage[] = {
+static const char * const shit_worktree_move_usage[] = {
 	BUILTIN_WORKTREE_MOVE_USAGE,
 	NULL
 };
 
-static const char * const git_worktree_prune_usage[] = {
+static const char * const shit_worktree_prune_usage[] = {
 	BUILTIN_WORKTREE_PRUNE_USAGE,
 	NULL
 };
 
-static const char * const git_worktree_remove_usage[] = {
+static const char * const shit_worktree_remove_usage[] = {
 	BUILTIN_WORKTREE_REMOVE_USAGE,
 	NULL
 };
 
-static const char * const git_worktree_repair_usage[] = {
+static const char * const shit_worktree_repair_usage[] = {
 	BUILTIN_WORKTREE_REPAIR_USAGE,
 	NULL
 };
 
-static const char * const git_worktree_unlock_usage[] = {
+static const char * const shit_worktree_unlock_usage[] = {
 	BUILTIN_WORKTREE_UNLOCK_USAGE,
 	NULL
 };
@@ -128,23 +128,23 @@ static int verbose;
 static int guess_remote;
 static timestamp_t expire;
 
-static int git_worktree_config(const char *var, const char *value,
+static int shit_worktree_config(const char *var, const char *value,
 			       const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "worktree.guessremote")) {
-		guess_remote = git_config_bool(var, value);
+		guess_remote = shit_config_bool(var, value);
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
-static int delete_git_dir(const char *id)
+static int delete_shit_dir(const char *id)
 {
 	struct strbuf sb = STRBUF_INIT;
 	int ret;
 
-	strbuf_addstr(&sb, git_common_path("worktrees/%s", id));
+	strbuf_addstr(&sb, shit_common_path("worktrees/%s", id));
 	ret = remove_dir_recursively(&sb, 0);
 	if (ret < 0 && errno == ENOTDIR)
 		ret = unlink(sb.buf);
@@ -156,7 +156,7 @@ static int delete_git_dir(const char *id)
 
 static void delete_worktrees_dir_if_empty(void)
 {
-	rmdir(git_path("worktrees")); /* ignore failed removal */
+	rmdir(shit_path("worktrees")); /* ignore failed removal */
 }
 
 static void prune_worktree(const char *id, const char *reason)
@@ -164,7 +164,7 @@ static void prune_worktree(const char *id, const char *reason)
 	if (show_only || verbose)
 		fprintf_ln(stderr, _("Removing %s/%s: %s"), "worktrees", id, reason);
 	if (!show_only)
-		delete_git_dir(id);
+		delete_shit_dir(id);
 }
 
 static int prune_cmp(const void *a, const void *b)
@@ -185,7 +185,7 @@ static int prune_cmp(const void *a, const void *b)
 		return -1;
 	if (!y->util)
 		return 1;
-	/* paths same; sort by .git/worktrees/<id> */
+	/* paths same; sort by .shit/worktrees/<id> */
 	return strcmp(x->util, y->util);
 }
 
@@ -205,7 +205,7 @@ static void prune_worktrees(void)
 	struct strbuf reason = STRBUF_INIT;
 	struct strbuf main_path = STRBUF_INIT;
 	struct string_list kept = STRING_LIST_INIT_DUP;
-	DIR *dir = opendir(git_path("worktrees"));
+	DIR *dir = opendir(shit_path("worktrees"));
 	struct dirent *d;
 	if (!dir)
 		return;
@@ -219,8 +219,8 @@ static void prune_worktrees(void)
 	}
 	closedir(dir);
 
-	strbuf_add_absolute_path(&main_path, get_git_common_dir());
-	/* massage main worktree absolute path to match 'gitdir' content */
+	strbuf_add_absolute_path(&main_path, get_shit_common_dir());
+	/* massage main worktree absolute path to match 'shitdir' content */
 	strbuf_strip_suffix(&main_path, "/.");
 	string_list_append_nodup(&kept, strbuf_detach(&main_path, NULL));
 	prune_dups(&kept);
@@ -242,16 +242,16 @@ static int prune(int ac, const char **av, const char *prefix)
 	};
 
 	expire = TIME_MAX;
-	ac = parse_options(ac, av, prefix, options, git_worktree_prune_usage,
+	ac = parse_options(ac, av, prefix, options, shit_worktree_prune_usage,
 			   0);
 	if (ac)
-		usage_with_options(git_worktree_prune_usage, options);
+		usage_with_options(shit_worktree_prune_usage, options);
 	prune_worktrees();
 	return 0;
 }
 
 static char *junk_work_tree;
-static char *junk_git_dir;
+static char *junk_shit_dir;
 static int is_junk;
 static pid_t junk_pid;
 
@@ -260,8 +260,8 @@ static void remove_junk(void)
 	struct strbuf sb = STRBUF_INIT;
 	if (!is_junk || getpid() != junk_pid)
 		return;
-	if (junk_git_dir) {
-		strbuf_addstr(&sb, junk_git_dir);
+	if (junk_shit_dir) {
+		strbuf_addstr(&sb, junk_shit_dir);
 		remove_dir_recursively(&sb, 0);
 		strbuf_reset(&sb);
 	}
@@ -316,7 +316,7 @@ static void check_candidate_path(const char *path,
 
 	locked = !!worktree_lock_reason(wt);
 	if ((!locked && force) || (locked && force > 1)) {
-		if (delete_git_dir(wt->id))
+		if (delete_shit_dir(wt->id))
 		    die(_("unusable worktree destination '%s'"), path);
 		return;
 	}
@@ -327,10 +327,10 @@ static void check_candidate_path(const char *path,
 		die(_("'%s' is a missing but already registered worktree;\nuse '%s -f' to override, or 'prune' or 'remove' to clear"), path, cmd);
 }
 
-static void copy_sparse_checkout(const char *worktree_git_dir)
+static void copy_sparse_checkout(const char *worktree_shit_dir)
 {
-	char *from_file = git_pathdup("info/sparse-checkout");
-	char *to_file = xstrfmt("%s/info/sparse-checkout", worktree_git_dir);
+	char *from_file = shit_pathdup("info/sparse-checkout");
+	char *to_file = xstrfmt("%s/info/sparse-checkout", worktree_shit_dir);
 
 	if (file_exists(from_file)) {
 		if (safe_create_leading_directories(to_file) ||
@@ -343,10 +343,10 @@ static void copy_sparse_checkout(const char *worktree_git_dir)
 	free(to_file);
 }
 
-static void copy_filtered_worktree_config(const char *worktree_git_dir)
+static void copy_filtered_worktree_config(const char *worktree_shit_dir)
 {
-	char *from_file = git_pathdup("config.worktree");
-	char *to_file = xstrfmt("%s/config.worktree", worktree_git_dir);
+	char *from_file = shit_pathdup("config.worktree");
+	char *to_file = xstrfmt("%s/config.worktree", worktree_shit_dir);
 
 	if (file_exists(from_file)) {
 		struct config_set cs = { { 0 } };
@@ -359,22 +359,22 @@ static void copy_filtered_worktree_config(const char *worktree_git_dir)
 			goto worktree_copy_cleanup;
 		}
 
-		git_configset_init(&cs);
-		git_configset_add_file(&cs, from_file);
+		shit_configset_init(&cs);
+		shit_configset_add_file(&cs, from_file);
 
-		if (!git_configset_get_bool(&cs, "core.bare", &bare) &&
+		if (!shit_configset_get_bool(&cs, "core.bare", &bare) &&
 			bare &&
-			git_config_set_multivar_in_file_gently(
+			shit_config_set_multivar_in_file_gently(
 				to_file, "core.bare", NULL, "true", NULL, 0))
 			error(_("failed to unset '%s' in '%s'"),
 				"core.bare", to_file);
-		if (!git_configset_get(&cs, "core.worktree") &&
-			git_config_set_in_file_gently(to_file,
+		if (!shit_configset_get(&cs, "core.worktree") &&
+			shit_config_set_in_file_gently(to_file,
 							"core.worktree", NULL, NULL))
 			error(_("failed to unset '%s' in '%s'"),
 				"core.worktree", to_file);
 
-		git_configset_clear(&cs);
+		shit_configset_clear(&cs);
 	}
 
 worktree_copy_cleanup:
@@ -386,11 +386,11 @@ static int checkout_worktree(const struct add_opts *opts,
 			     struct strvec *child_env)
 {
 	struct child_process cp = CHILD_PROCESS_INIT;
-	cp.git_cmd = 1;
-	strvec_pushl(&cp.args, "reset", "--hard", "--no-recurse-submodules", NULL);
+	cp.shit_cmd = 1;
+	strvec_defecatel(&cp.args, "reset", "--hard", "--no-recurse-submodules", NULL);
 	if (opts->quiet)
-		strvec_push(&cp.args, "--quiet");
-	strvec_pushv(&cp.env, child_env->v);
+		strvec_defecate(&cp.args, "--quiet");
+	strvec_defecatev(&cp.env, child_env->v);
 	return run_command(&cp);
 }
 
@@ -401,19 +401,19 @@ static int make_worktree_orphan(const char * ref, const struct add_opts *opts,
 	struct child_process cp = CHILD_PROCESS_INIT;
 
 	validate_new_branchname(ref, &symref, 0);
-	strvec_pushl(&cp.args, "symbolic-ref", "HEAD", symref.buf, NULL);
+	strvec_defecatel(&cp.args, "symbolic-ref", "HEAD", symref.buf, NULL);
 	if (opts->quiet)
-		strvec_push(&cp.args, "--quiet");
-	strvec_pushv(&cp.env, child_env->v);
+		strvec_defecate(&cp.args, "--quiet");
+	strvec_defecatev(&cp.env, child_env->v);
 	strbuf_release(&symref);
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	return run_command(&cp);
 }
 
 static int add_worktree(const char *path, const char *refname,
 			const struct add_opts *opts)
 {
-	struct strbuf sb_git = STRBUF_INIT, sb_repo = STRBUF_INIT;
+	struct strbuf sb_shit = STRBUF_INIT, sb_repo = STRBUF_INIT;
 	struct strbuf sb = STRBUF_INIT, realpath = STRBUF_INIT;
 	const char *name;
 	struct strvec child_env = STRVEC_INIT;
@@ -449,7 +449,7 @@ static int add_worktree(const char *path, const char *refname,
 		BUG("How come '%s' becomes empty after sanitization?", sb.buf);
 	strbuf_reset(&sb);
 	name = sb_name.buf;
-	git_path_buf(&sb_repo, "worktrees/%s", name);
+	shit_path_buf(&sb_repo, "worktrees/%s", name);
 	len = sb_repo.len;
 	if (safe_create_leading_directories_const(sb_repo.buf))
 		die_errno(_("could not create leading directories of '%s'"),
@@ -467,9 +467,9 @@ static int add_worktree(const char *path, const char *refname,
 
 	junk_pid = getpid();
 	atexit(remove_junk);
-	sigchain_push_common(remove_junk_on_signal);
+	sigchain_defecate_common(remove_junk_on_signal);
 
-	junk_git_dir = xstrdup(sb_repo.buf);
+	junk_shit_dir = xstrdup(sb_repo.buf);
 	is_junk = 1;
 
 	/*
@@ -482,18 +482,18 @@ static int add_worktree(const char *path, const char *refname,
 	else
 		write_file(sb.buf, _("initializing"));
 
-	strbuf_addf(&sb_git, "%s/.git", path);
-	if (safe_create_leading_directories_const(sb_git.buf))
+	strbuf_addf(&sb_shit, "%s/.shit", path);
+	if (safe_create_leading_directories_const(sb_shit.buf))
 		die_errno(_("could not create leading directories of '%s'"),
-			  sb_git.buf);
+			  sb_shit.buf);
 	junk_work_tree = xstrdup(path);
 
 	strbuf_reset(&sb);
-	strbuf_addf(&sb, "%s/gitdir", sb_repo.buf);
-	strbuf_realpath(&realpath, sb_git.buf, 1);
+	strbuf_addf(&sb, "%s/shitdir", sb_repo.buf);
+	strbuf_realpath(&realpath, sb_shit.buf, 1);
 	write_file(sb.buf, "%s", realpath.buf);
-	strbuf_realpath(&realpath, get_git_common_dir(), 1);
-	write_file(sb_git.buf, "gitdir: %s/worktrees/%s",
+	strbuf_realpath(&realpath, get_shit_common_dir(), 1);
+	write_file(sb_shit.buf, "shitdir: %s/worktrees/%s",
 		   realpath.buf, name);
 	strbuf_reset(&sb);
 	strbuf_addf(&sb, "%s/commondir", sb_repo.buf);
@@ -536,8 +536,8 @@ static int add_worktree(const char *path, const char *refname,
 	if (the_repository->repository_format_worktree_config)
 		copy_filtered_worktree_config(sb_repo.buf);
 
-	strvec_pushf(&child_env, "%s=%s", GIT_DIR_ENVIRONMENT, sb_git.buf);
-	strvec_pushf(&child_env, "%s=%s", GIT_WORK_TREE_ENVIRONMENT, path);
+	strvec_defecatef(&child_env, "%s=%s", shit_DIR_ENVIRONMENT, sb_shit.buf);
+	strvec_defecatef(&child_env, "%s=%s", shit_WORK_TREE_ENVIRONMENT, path);
 
 	if (opts->orphan &&
 	    (ret = make_worktree_orphan(refname, opts, &child_env)))
@@ -549,7 +549,7 @@ static int add_worktree(const char *path, const char *refname,
 
 	is_junk = 0;
 	FREE_AND_NULL(junk_work_tree);
-	FREE_AND_NULL(junk_git_dir);
+	FREE_AND_NULL(junk_shit_dir);
 
 done:
 	if (ret || !opts->keep_locked) {
@@ -565,8 +565,8 @@ done:
 	if (!ret && opts->checkout && !opts->orphan) {
 		struct run_hooks_opt opt = RUN_HOOKS_OPT_INIT;
 
-		strvec_pushl(&opt.env, "GIT_DIR", "GIT_WORK_TREE", NULL);
-		strvec_pushl(&opt.args,
+		strvec_defecatel(&opt.env, "shit_DIR", "shit_WORK_TREE", NULL);
+		strvec_defecatel(&opt.args,
 			     oid_to_hex(null_oid()),
 			     oid_to_hex(&commit->object.oid),
 			     "1",
@@ -580,7 +580,7 @@ done:
 	strbuf_release(&sb);
 	strbuf_release(&symref);
 	strbuf_release(&sb_repo);
-	strbuf_release(&sb_git);
+	strbuf_release(&sb_shit);
 	strbuf_release(&sb_name);
 	strbuf_release(&realpath);
 	free_worktree(wt);
@@ -654,7 +654,7 @@ static int can_use_local_refs(const struct add_opts *opts)
 			struct strbuf path = STRBUF_INIT;
 			struct strbuf contents = STRBUF_INIT;
 
-			strbuf_add_real_path(&path, get_worktree_git_dir(NULL));
+			strbuf_add_real_path(&path, get_worktree_shit_dir(NULL));
 			strbuf_addstr(&path, "/HEAD");
 			strbuf_read_file(&contents, path.buf, 64);
 			strbuf_stripspace(&contents, NULL);
@@ -790,7 +790,7 @@ static int add(int ac, const char **av, const char *prefix)
 			   N_("reason for locking")),
 		OPT__QUIET(&opts.quiet, N_("suppress progress reporting")),
 		OPT_PASSTHRU(0, "track", &opt_track, NULL,
-			     N_("set up tracking mode (see git-branch(1))"),
+			     N_("set up tracking mode (see shit-branch(1))"),
 			     PARSE_OPT_NOARG | PARSE_OPT_OPTARG),
 		OPT_BOOL(0, "guess-remote", &guess_remote,
 			 N_("try to match the new branch name with a remote-tracking branch")),
@@ -800,7 +800,7 @@ static int add(int ac, const char **av, const char *prefix)
 
 	memset(&opts, 0, sizeof(opts));
 	opts.checkout = 1;
-	ac = parse_options(ac, av, prefix, options, git_worktree_add_usage, 0);
+	ac = parse_options(ac, av, prefix, options, shit_worktree_add_usage, 0);
 	if (!!opts.detach + !!new_branch + !!new_branch_force > 1)
 		die(_("options '%s', '%s', and '%s' cannot be used together"), "-b", "-B", "--detach");
 	if (opts.detach && opts.orphan)
@@ -823,7 +823,7 @@ static int add(int ac, const char **av, const char *prefix)
 		opts.keep_locked = _("added with --lock");
 
 	if (ac < 1 || ac > 2)
-		usage_with_options(git_worktree_add_usage, options);
+		usage_with_options(shit_worktree_add_usage, options);
 
 	path = prefix_filename(prefix, av[0]);
 	branch = ac < 2 ? "HEAD" : av[1];
@@ -904,16 +904,16 @@ static int add(int ac, const char **av, const char *prefix)
 		branch = new_branch;
 	} else if (new_branch) {
 		struct child_process cp = CHILD_PROCESS_INIT;
-		cp.git_cmd = 1;
-		strvec_push(&cp.args, "branch");
+		cp.shit_cmd = 1;
+		strvec_defecate(&cp.args, "branch");
 		if (new_branch_force)
-			strvec_push(&cp.args, "--force");
+			strvec_defecate(&cp.args, "--force");
 		if (opts.quiet)
-			strvec_push(&cp.args, "--quiet");
-		strvec_push(&cp.args, new_branch);
-		strvec_push(&cp.args, branch);
+			strvec_defecate(&cp.args, "--quiet");
+		strvec_defecate(&cp.args, new_branch);
+		strvec_defecate(&cp.args, branch);
 		if (opt_track)
-			strvec_push(&cp.args, opt_track);
+			strvec_defecate(&cp.args, opt_track);
 		if (run_command(&cp))
 			return -1;
 		branch = new_branch;
@@ -1049,9 +1049,9 @@ static int list(int ac, const char **av, const char *prefix)
 	};
 
 	expire = TIME_MAX;
-	ac = parse_options(ac, av, prefix, options, git_worktree_list_usage, 0);
+	ac = parse_options(ac, av, prefix, options, shit_worktree_list_usage, 0);
 	if (ac)
-		usage_with_options(git_worktree_list_usage, options);
+		usage_with_options(shit_worktree_list_usage, options);
 	else if (verbose && porcelain)
 		die(_("options '%s' and '%s' cannot be used together"), "--verbose", "--porcelain");
 	else if (!line_terminator && !porcelain)
@@ -1088,9 +1088,9 @@ static int lock_worktree(int ac, const char **av, const char *prefix)
 	};
 	struct worktree **worktrees, *wt;
 
-	ac = parse_options(ac, av, prefix, options, git_worktree_lock_usage, 0);
+	ac = parse_options(ac, av, prefix, options, shit_worktree_lock_usage, 0);
 	if (ac != 1)
-		usage_with_options(git_worktree_lock_usage, options);
+		usage_with_options(shit_worktree_lock_usage, options);
 
 	worktrees = get_worktrees();
 	wt = find_worktree(worktrees, prefix, av[0]);
@@ -1107,7 +1107,7 @@ static int lock_worktree(int ac, const char **av, const char *prefix)
 		die(_("'%s' is already locked"), av[0]);
 	}
 
-	write_file(git_common_path("worktrees/%s/locked", wt->id),
+	write_file(shit_common_path("worktrees/%s/locked", wt->id),
 		   "%s", reason);
 	free_worktrees(worktrees);
 	return 0;
@@ -1121,9 +1121,9 @@ static int unlock_worktree(int ac, const char **av, const char *prefix)
 	struct worktree **worktrees, *wt;
 	int ret;
 
-	ac = parse_options(ac, av, prefix, options, git_worktree_unlock_usage, 0);
+	ac = parse_options(ac, av, prefix, options, shit_worktree_unlock_usage, 0);
 	if (ac != 1)
-		usage_with_options(git_worktree_unlock_usage, options);
+		usage_with_options(shit_worktree_unlock_usage, options);
 
 	worktrees = get_worktrees();
 	wt = find_worktree(worktrees, prefix, av[0]);
@@ -1133,7 +1133,7 @@ static int unlock_worktree(int ac, const char **av, const char *prefix)
 		die(_("The main working tree cannot be locked or unlocked"));
 	if (!worktree_lock_reason(wt))
 		die(_("'%s' is not locked"), av[0]);
-	ret = unlink_or_warn(git_common_path("worktrees/%s/locked", wt->id));
+	ret = unlink_or_warn(shit_common_path("worktrees/%s/locked", wt->id));
 	free_worktrees(worktrees);
 	return ret;
 }
@@ -1144,20 +1144,20 @@ static void validate_no_submodules(const struct worktree *wt)
 	struct strbuf path = STRBUF_INIT;
 	int i, found_submodules = 0;
 
-	if (is_directory(worktree_git_path(wt, "modules"))) {
+	if (is_directory(worktree_shit_path(wt, "modules"))) {
 		/*
 		 * There could be false positives, e.g. the "modules"
 		 * directory exists but is empty. But it's a rare case and
 		 * this simpler check is probably good enough for now.
 		 */
 		found_submodules = 1;
-	} else if (read_index_from(&istate, worktree_git_path(wt, "index"),
-				   get_worktree_git_dir(wt)) > 0) {
+	} else if (read_index_from(&istate, worktree_shit_path(wt, "index"),
+				   get_worktree_shit_dir(wt)) > 0) {
 		for (i = 0; i < istate.cache_nr; i++) {
 			struct cache_entry *ce = istate.cache[i];
 			int err;
 
-			if (!S_ISGITLINK(ce->ce_mode))
+			if (!S_ISshitLINK(ce->ce_mode))
 				continue;
 
 			strbuf_reset(&path);
@@ -1191,10 +1191,10 @@ static int move_worktree(int ac, const char **av, const char *prefix)
 	const char *reason = NULL;
 	char *path;
 
-	ac = parse_options(ac, av, prefix, options, git_worktree_move_usage,
+	ac = parse_options(ac, av, prefix, options, shit_worktree_move_usage,
 			   0);
 	if (ac != 2)
-		usage_with_options(git_worktree_move_usage, options);
+		usage_with_options(shit_worktree_move_usage, options);
 
 	path = prefix_filename(prefix, av[1]);
 	strbuf_addstr(&dst, path);
@@ -1243,9 +1243,9 @@ static int move_worktree(int ac, const char **av, const char *prefix)
 }
 
 /*
- * Note, "git status --porcelain" is used to determine if it's safe to
- * delete a whole worktree. "git status" does not ignore user
- * configuration, so if a normal "git status" shows "clean" for the
+ * Note, "shit status --porcelain" is used to determine if it's safe to
+ * delete a whole worktree. "shit status" does not ignore user
+ * configuration, so if a normal "shit status" shows "clean" for the
  * user, then it's ok to remove it.
  *
  * This assumption may be a bad one. We may want to ignore
@@ -1267,19 +1267,19 @@ static void check_clean_worktree(struct worktree *wt,
 	validate_no_submodules(wt);
 
 	child_process_init(&cp);
-	strvec_pushf(&cp.env, "%s=%s/.git",
-		     GIT_DIR_ENVIRONMENT, wt->path);
-	strvec_pushf(&cp.env, "%s=%s",
-		     GIT_WORK_TREE_ENVIRONMENT, wt->path);
-	strvec_pushl(&cp.args, "status",
+	strvec_defecatef(&cp.env, "%s=%s/.shit",
+		     shit_DIR_ENVIRONMENT, wt->path);
+	strvec_defecatef(&cp.env, "%s=%s",
+		     shit_WORK_TREE_ENVIRONMENT, wt->path);
+	strvec_defecatel(&cp.args, "status",
 		     "--porcelain", "--ignore-submodules=none",
 		     NULL);
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.dir = wt->path;
 	cp.out = -1;
 	ret = start_command(&cp);
 	if (ret)
-		die_errno(_("failed to run 'git status' on '%s'"),
+		die_errno(_("failed to run 'shit status' on '%s'"),
 			  original_path);
 	ret = xread(cp.out, buf, sizeof(buf));
 	if (ret)
@@ -1288,11 +1288,11 @@ static void check_clean_worktree(struct worktree *wt,
 	close(cp.out);
 	ret = finish_command(&cp);
 	if (ret)
-		die_errno(_("failed to run 'git status' on '%s', code %d"),
+		die_errno(_("failed to run 'shit status' on '%s', code %d"),
 			  original_path, ret);
 }
 
-static int delete_git_work_tree(struct worktree *wt)
+static int delete_shit_work_tree(struct worktree *wt)
 {
 	struct strbuf sb = STRBUF_INIT;
 	int ret = 0;
@@ -1320,9 +1320,9 @@ static int remove_worktree(int ac, const char **av, const char *prefix)
 	const char *reason = NULL;
 	int ret = 0;
 
-	ac = parse_options(ac, av, prefix, options, git_worktree_remove_usage, 0);
+	ac = parse_options(ac, av, prefix, options, shit_worktree_remove_usage, 0);
 	if (ac != 1)
-		usage_with_options(git_worktree_remove_usage, options);
+		usage_with_options(shit_worktree_remove_usage, options);
 
 	worktrees = get_worktrees();
 	wt = find_worktree(worktrees, prefix, av[0]);
@@ -1347,13 +1347,13 @@ static int remove_worktree(int ac, const char **av, const char *prefix)
 		if (!force)
 			check_clean_worktree(wt, av[0]);
 
-		ret |= delete_git_work_tree(wt);
+		ret |= delete_shit_work_tree(wt);
 	}
 	/*
 	 * continue on even if ret is non-zero, there's no going back
 	 * from here.
 	 */
-	ret |= delete_git_dir(wt->id);
+	ret |= delete_shit_dir(wt->id);
 	delete_worktrees_dir_if_empty();
 
 	free_worktrees(worktrees);
@@ -1380,7 +1380,7 @@ static int repair(int ac, const char **av, const char *prefix)
 	};
 	int rc = 0;
 
-	ac = parse_options(ac, av, prefix, options, git_worktree_repair_usage, 0);
+	ac = parse_options(ac, av, prefix, options, shit_worktree_repair_usage, 0);
 	p = ac > 0 ? av : self;
 	for (; *p; p++)
 		repair_worktree_at_path(*p, report_repair, &rc);
@@ -1403,12 +1403,12 @@ int cmd_worktree(int ac, const char **av, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_worktree_config, NULL);
+	shit_config(shit_worktree_config, NULL);
 
 	if (!prefix)
 		prefix = "";
 
-	ac = parse_options(ac, av, prefix, options, git_worktree_usage, 0);
+	ac = parse_options(ac, av, prefix, options, shit_worktree_usage, 0);
 
 	prepare_repo_settings(the_repository);
 	the_repository->settings.command_requires_full_index = 0;

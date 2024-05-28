@@ -41,7 +41,7 @@
 #include "parse-options.h"
 
 static const char * const receive_pack_usage[] = {
-	N_("git receive-pack <git-dir>"),
+	N_("shit receive-pack <shit-dir>"),
 	NULL
 };
 
@@ -62,8 +62,8 @@ static int transfer_fsck_objects = -1;
 static struct strbuf fsck_msg_types = STRBUF_INIT;
 static int receive_unpack_limit = -1;
 static int transfer_unpack_limit = -1;
-static int advertise_atomic_push = 1;
-static int advertise_push_options;
+static int advertise_atomic_defecate = 1;
+static int advertise_defecate_options;
 static int advertise_sid;
 static int unpack_limit = 100;
 static off_t max_input_size;
@@ -71,7 +71,7 @@ static int report_status;
 static int report_status_v2;
 static int use_sideband;
 static int use_atomic;
-static int use_push_options;
+static int use_defecate_options;
 static int quiet;
 static int prefer_ofs_delta = 1;
 static int auto_update_server_info;
@@ -84,10 +84,10 @@ static void *head_name_to_free;
 static int sent_capabilities;
 static int shallow_update;
 static const char *alt_shallow_file;
-static struct strbuf push_cert = STRBUF_INIT;
-static struct object_id push_cert_oid;
+static struct strbuf defecate_cert = STRBUF_INIT;
+static struct object_id defecate_cert_oid;
 static struct signature_check sigcheck;
-static const char *push_cert_nonce;
+static const char *defecate_cert_nonce;
 static const char *cert_nonce_seed;
 static struct strvec hidden_refs = STRVEC_INIT;
 
@@ -133,7 +133,7 @@ static enum deny_action parse_deny_action(const char *var, const char *value)
 		if (!strcasecmp(value, "updateinstead"))
 			return DENY_UPDATE_INSTEAD;
 	}
-	if (git_config_bool(var, value))
+	if (shit_config_bool(var, value))
 		return DENY_REFUSE;
 	return DENY_IGNORE;
 }
@@ -148,29 +148,29 @@ static int receive_pack_config(const char *var, const char *value,
 		return status;
 
 	if (strcmp(var, "receive.denydeletes") == 0) {
-		deny_deletes = git_config_bool(var, value);
+		deny_deletes = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.denynonfastforwards") == 0) {
-		deny_non_fast_forwards = git_config_bool(var, value);
+		deny_non_fast_forwards = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.unpacklimit") == 0) {
-		receive_unpack_limit = git_config_int(var, value, ctx->kvi);
+		receive_unpack_limit = shit_config_int(var, value, ctx->kvi);
 		return 0;
 	}
 
 	if (strcmp(var, "transfer.unpacklimit") == 0) {
-		transfer_unpack_limit = git_config_int(var, value, ctx->kvi);
+		transfer_unpack_limit = shit_config_int(var, value, ctx->kvi);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.fsck.skiplist") == 0) {
 		const char *path;
 
-		if (git_config_pathname(&path, var, value))
+		if (shit_config_pathname(&path, var, value))
 			return 1;
 		strbuf_addf(&fsck_msg_types, "%cskiplist=%s",
 			fsck_msg_types.len ? ',' : '=', path);
@@ -190,12 +190,12 @@ static int receive_pack_config(const char *var, const char *value,
 	}
 
 	if (strcmp(var, "receive.fsckobjects") == 0) {
-		receive_fsck_objects = git_config_bool(var, value);
+		receive_fsck_objects = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "transfer.fsckobjects") == 0) {
-		transfer_fsck_objects = git_config_bool(var, value);
+		transfer_fsck_objects = shit_config_bool(var, value);
 		return 0;
 	}
 
@@ -210,50 +210,50 @@ static int receive_pack_config(const char *var, const char *value,
 	}
 
 	if (strcmp(var, "repack.usedeltabaseoffset") == 0) {
-		prefer_ofs_delta = git_config_bool(var, value);
+		prefer_ofs_delta = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.updateserverinfo") == 0) {
-		auto_update_server_info = git_config_bool(var, value);
+		auto_update_server_info = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.autogc") == 0) {
-		auto_gc = git_config_bool(var, value);
+		auto_gc = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.shallowupdate") == 0) {
-		shallow_update = git_config_bool(var, value);
+		shallow_update = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.certnonceseed") == 0)
-		return git_config_string(&cert_nonce_seed, var, value);
+		return shit_config_string(&cert_nonce_seed, var, value);
 
 	if (strcmp(var, "receive.certnonceslop") == 0) {
-		nonce_stamp_slop_limit = git_config_ulong(var, value, ctx->kvi);
+		nonce_stamp_slop_limit = shit_config_ulong(var, value, ctx->kvi);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.advertiseatomic") == 0) {
-		advertise_atomic_push = git_config_bool(var, value);
+		advertise_atomic_defecate = shit_config_bool(var, value);
 		return 0;
 	}
 
-	if (strcmp(var, "receive.advertisepushoptions") == 0) {
-		advertise_push_options = git_config_bool(var, value);
+	if (strcmp(var, "receive.advertisedefecateoptions") == 0) {
+		advertise_defecate_options = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.keepalive") == 0) {
-		keepalive_in_sec = git_config_int(var, value, ctx->kvi);
+		keepalive_in_sec = shit_config_int(var, value, ctx->kvi);
 		return 0;
 	}
 
 	if (strcmp(var, "receive.maxinputsize") == 0) {
-		max_input_size = git_config_int64(var, value, ctx->kvi);
+		max_input_size = shit_config_int64(var, value, ctx->kvi);
 		return 0;
 	}
 
@@ -265,11 +265,11 @@ static int receive_pack_config(const char *var, const char *value,
 	}
 
 	if (strcmp(var, "transfer.advertisesid") == 0) {
-		advertise_sid = git_config_bool(var, value);
+		advertise_sid = shit_config_bool(var, value);
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static void show_ref(const char *path, const struct object_id *oid)
@@ -281,18 +281,18 @@ static void show_ref(const char *path, const struct object_id *oid)
 
 		strbuf_addstr(&cap,
 			      "report-status report-status-v2 delete-refs side-band-64k quiet");
-		if (advertise_atomic_push)
+		if (advertise_atomic_defecate)
 			strbuf_addstr(&cap, " atomic");
 		if (prefer_ofs_delta)
 			strbuf_addstr(&cap, " ofs-delta");
-		if (push_cert_nonce)
-			strbuf_addf(&cap, " push-cert=%s", push_cert_nonce);
-		if (advertise_push_options)
-			strbuf_addstr(&cap, " push-options");
+		if (defecate_cert_nonce)
+			strbuf_addf(&cap, " defecate-cert=%s", defecate_cert_nonce);
+		if (advertise_defecate_options)
+			strbuf_addstr(&cap, " defecate-options");
 		if (advertise_sid)
 			strbuf_addf(&cap, " session-id=%s", trace2_session_id());
 		strbuf_addf(&cap, " object-format=%s", the_hash_algo->name);
-		strbuf_addf(&cap, " agent=%s", git_user_agent_sanitized());
+		strbuf_addf(&cap, " agent=%s", shit_user_agent_sanitized());
 		packet_write_fmt(1, "%s %s%c%s\n",
 			     oid_to_hex(oid), path, 0, cap.buf);
 		strbuf_release(&cap);
@@ -359,7 +359,7 @@ static void write_head_info(void)
 struct command {
 	struct command *next;
 	const char *error_string;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 	unsigned int skip_update:1,
 		     did_not_exist:1,
 		     run_proc_receive:2;
@@ -544,14 +544,14 @@ static void hmac_hash(unsigned char *out,
 		      const char *key_in, size_t key_len,
 		      const char *text, size_t text_len)
 {
-	unsigned char key[GIT_MAX_BLKSZ];
-	unsigned char k_ipad[GIT_MAX_BLKSZ];
-	unsigned char k_opad[GIT_MAX_BLKSZ];
+	unsigned char key[shit_MAX_BLKSZ];
+	unsigned char k_ipad[shit_MAX_BLKSZ];
+	unsigned char k_opad[shit_MAX_BLKSZ];
 	int i;
-	git_hash_ctx ctx;
+	shit_hash_ctx ctx;
 
 	/* RFC 2104 2. (1) */
-	memset(key, '\0', GIT_MAX_BLKSZ);
+	memset(key, '\0', shit_MAX_BLKSZ);
 	if (the_hash_algo->blksz < key_len) {
 		the_hash_algo->init_fn(&ctx);
 		the_hash_algo->update_fn(&ctx, key_in, key_len);
@@ -579,10 +579,10 @@ static void hmac_hash(unsigned char *out,
 	the_hash_algo->final_fn(out, &ctx);
 }
 
-static char *prepare_push_cert_nonce(const char *path, timestamp_t stamp)
+static char *prepare_defecate_cert_nonce(const char *path, timestamp_t stamp)
 {
 	struct strbuf buf = STRBUF_INIT;
-	unsigned char hash[GIT_MAX_RAWSZ];
+	unsigned char hash[shit_MAX_RAWSZ];
 
 	strbuf_addf(&buf, "%s:%"PRItime, path, stamp);
 	hmac_hash(hash, buf.buf, buf.len, cert_nonce_seed, strlen(cert_nonce_seed));
@@ -619,10 +619,10 @@ static const char *check_nonce(const char *buf)
 	if (!nonce) {
 		retval = NONCE_MISSING;
 		goto leave;
-	} else if (!push_cert_nonce) {
+	} else if (!defecate_cert_nonce) {
 		retval = NONCE_UNSOLICITED;
 		goto leave;
-	} else if (!strcmp(push_cert_nonce, nonce)) {
+	} else if (!strcmp(defecate_cert_nonce, nonce)) {
 		retval = NONCE_OK;
 		goto leave;
 	}
@@ -656,7 +656,7 @@ static const char *check_nonce(const char *buf)
 		goto leave;
 	}
 
-	expect = prepare_push_cert_nonce(service_dir, stamp);
+	expect = prepare_defecate_cert_nonce(service_dir, stamp);
 	if (noncelen != strlen(expect)) {
 		/* This is not even the right size. */
 		retval = NONCE_BAD;
@@ -673,7 +673,7 @@ static const char *check_nonce(const char *buf)
 	 * would mean it was issued by another server with its clock
 	 * skewed in the future.
 	 */
-	ostamp = parse_timestamp(push_cert_nonce, NULL, 10);
+	ostamp = parse_timestamp(defecate_cert_nonce, NULL, 10);
 	nonce_stamp_slop = (long)ostamp - (long)stamp;
 
 	if (nonce_stamp_slop_limit &&
@@ -683,8 +683,8 @@ static const char *check_nonce(const char *buf)
 		 * HMAC check, so it is not a forged by third-party)
 		 * is what we issued.
 		 */
-		free((void *)push_cert_nonce);
-		push_cert_nonce = xstrdup(nonce);
+		free((void *)defecate_cert_nonce);
+		defecate_cert_nonce = xstrdup(nonce);
 		retval = NONCE_OK;
 	} else {
 		retval = NONCE_SLOP;
@@ -697,12 +697,12 @@ leave:
 }
 
 /*
- * Return 1 if there is no push_cert or if the push options in push_cert are
+ * Return 1 if there is no defecate_cert or if the defecate options in defecate_cert are
  * the same as those in the argument; 0 otherwise.
  */
-static int check_cert_push_options(const struct string_list *push_options)
+static int check_cert_defecate_options(const struct string_list *defecate_options)
 {
-	const char *buf = push_cert.buf;
+	const char *buf = defecate_cert.buf;
 
 	const char *option;
 	size_t optionlen;
@@ -713,65 +713,65 @@ static int check_cert_push_options(const struct string_list *push_options)
 	if (!*buf)
 		return 1;
 
-	while ((option = find_commit_header(buf, "push-option", &optionlen))) {
+	while ((option = find_commit_header(buf, "defecate-option", &optionlen))) {
 		buf = option + optionlen + 1;
 		options_seen++;
-		if (options_seen > push_options->nr
-		    || xstrncmpz(push_options->items[options_seen - 1].string,
+		if (options_seen > defecate_options->nr
+		    || xstrncmpz(defecate_options->items[options_seen - 1].string,
 				 option, optionlen))
 			return 0;
 	}
 
-	if (options_seen != push_options->nr)
+	if (options_seen != defecate_options->nr)
 		retval = 0;
 
 	return retval;
 }
 
-static void prepare_push_cert_sha1(struct child_process *proc)
+static void prepare_defecate_cert_sha1(struct child_process *proc)
 {
 	static int already_done;
 
-	if (!push_cert.len)
+	if (!defecate_cert.len)
 		return;
 
 	if (!already_done) {
 		int bogs /* beginning_of_gpg_sig */;
 
 		already_done = 1;
-		if (write_object_file(push_cert.buf, push_cert.len, OBJ_BLOB,
-				      &push_cert_oid))
-			oidclr(&push_cert_oid);
+		if (write_object_file(defecate_cert.buf, defecate_cert.len, OBJ_BLOB,
+				      &defecate_cert_oid))
+			oidclr(&defecate_cert_oid);
 
 		memset(&sigcheck, '\0', sizeof(sigcheck));
 
-		bogs = parse_signed_buffer(push_cert.buf, push_cert.len);
-		sigcheck.payload = xmemdupz(push_cert.buf, bogs);
+		bogs = parse_signed_buffer(defecate_cert.buf, defecate_cert.len);
+		sigcheck.payload = xmemdupz(defecate_cert.buf, bogs);
 		sigcheck.payload_len = bogs;
-		check_signature(&sigcheck, push_cert.buf + bogs,
-				push_cert.len - bogs);
+		check_signature(&sigcheck, defecate_cert.buf + bogs,
+				defecate_cert.len - bogs);
 
 		nonce_status = check_nonce(sigcheck.payload);
 	}
-	if (!is_null_oid(&push_cert_oid)) {
-		strvec_pushf(&proc->env, "GIT_PUSH_CERT=%s",
-			     oid_to_hex(&push_cert_oid));
-		strvec_pushf(&proc->env, "GIT_PUSH_CERT_SIGNER=%s",
+	if (!is_null_oid(&defecate_cert_oid)) {
+		strvec_defecatef(&proc->env, "shit_defecate_CERT=%s",
+			     oid_to_hex(&defecate_cert_oid));
+		strvec_defecatef(&proc->env, "shit_defecate_CERT_SIGNER=%s",
 			     sigcheck.signer ? sigcheck.signer : "");
-		strvec_pushf(&proc->env, "GIT_PUSH_CERT_KEY=%s",
+		strvec_defecatef(&proc->env, "shit_defecate_CERT_KEY=%s",
 			     sigcheck.key ? sigcheck.key : "");
-		strvec_pushf(&proc->env, "GIT_PUSH_CERT_STATUS=%c",
+		strvec_defecatef(&proc->env, "shit_defecate_CERT_STATUS=%c",
 			     sigcheck.result);
-		if (push_cert_nonce) {
-			strvec_pushf(&proc->env,
-				     "GIT_PUSH_CERT_NONCE=%s",
-				     push_cert_nonce);
-			strvec_pushf(&proc->env,
-				     "GIT_PUSH_CERT_NONCE_STATUS=%s",
+		if (defecate_cert_nonce) {
+			strvec_defecatef(&proc->env,
+				     "shit_defecate_CERT_NONCE=%s",
+				     defecate_cert_nonce);
+			strvec_defecatef(&proc->env,
+				     "shit_defecate_CERT_NONCE_STATUS=%s",
 				     nonce_status);
 			if (nonce_status == NONCE_SLOP)
-				strvec_pushf(&proc->env,
-					     "GIT_PUSH_CERT_NONCE_SLOP=%ld",
+				strvec_defecatef(&proc->env,
+					     "shit_defecate_CERT_NONCE_SLOP=%ld",
 					     nonce_stamp_slop);
 		}
 	}
@@ -779,10 +779,10 @@ static void prepare_push_cert_sha1(struct child_process *proc)
 
 struct receive_hook_feed_state {
 	struct command *cmd;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 	int skip_broken;
 	struct strbuf buf;
-	const struct string_list *push_options;
+	const struct string_list *defecate_options;
 };
 
 typedef int (*feed_fn)(void *, const char **, size_t *);
@@ -797,25 +797,25 @@ static int run_and_feed_hook(const char *hook_name, feed_fn feed,
 	if (!hook_path)
 		return 0;
 
-	strvec_push(&proc.args, hook_path);
+	strvec_defecate(&proc.args, hook_path);
 	proc.in = -1;
 	proc.stdout_to_stderr = 1;
 	proc.trace2_hook_name = hook_name;
 
-	if (feed_state->push_options) {
+	if (feed_state->defecate_options) {
 		size_t i;
-		for (i = 0; i < feed_state->push_options->nr; i++)
-			strvec_pushf(&proc.env,
-				     "GIT_PUSH_OPTION_%"PRIuMAX"=%s",
+		for (i = 0; i < feed_state->defecate_options->nr; i++)
+			strvec_defecatef(&proc.env,
+				     "shit_defecate_OPTION_%"PRIuMAX"=%s",
 				     (uintmax_t)i,
-				     feed_state->push_options->items[i].string);
-		strvec_pushf(&proc.env, "GIT_PUSH_OPTION_COUNT=%"PRIuMAX"",
-			     (uintmax_t)feed_state->push_options->nr);
+				     feed_state->defecate_options->items[i].string);
+		strvec_defecatef(&proc.env, "shit_defecate_OPTION_COUNT=%"PRIuMAX"",
+			     (uintmax_t)feed_state->defecate_options->nr);
 	} else
-		strvec_pushf(&proc.env, "GIT_PUSH_OPTION_COUNT");
+		strvec_defecatef(&proc.env, "shit_defecate_OPTION_COUNT");
 
 	if (tmp_objdir)
-		strvec_pushv(&proc.env, tmp_objdir_env(tmp_objdir));
+		strvec_defecatev(&proc.env, tmp_objdir_env(tmp_objdir));
 
 	if (use_sideband) {
 		memset(&muxer, 0, sizeof(muxer));
@@ -827,7 +827,7 @@ static int run_and_feed_hook(const char *hook_name, feed_fn feed,
 		proc.err = muxer.in;
 	}
 
-	prepare_push_cert_sha1(&proc);
+	prepare_defecate_cert_sha1(&proc);
 
 	code = start_command(&proc);
 	if (code) {
@@ -836,7 +836,7 @@ static int run_and_feed_hook(const char *hook_name, feed_fn feed,
 		return code;
 	}
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 
 	while (1) {
 		const char *buf;
@@ -900,7 +900,7 @@ static int feed_receive_hook(void *state_, const char **bufp, size_t *sizep)
 static int run_receive_hook(struct command *commands,
 			    const char *hook_name,
 			    int skip_broken,
-			    const struct string_list *push_options)
+			    const struct string_list *defecate_options)
 {
 	struct receive_hook_feed_state state;
 	int status;
@@ -912,7 +912,7 @@ static int run_receive_hook(struct command *commands,
 	if (feed_receive_hook(&state, NULL, NULL))
 		return 0;
 	state.cmd = commands;
-	state.push_options = push_options;
+	state.defecate_options = defecate_options;
 	status = run_and_feed_hook(hook_name, feed_receive_hook, &state);
 	strbuf_release(&state.buf);
 	return status;
@@ -927,10 +927,10 @@ static int run_update_hook(struct command *cmd)
 	if (!hook_path)
 		return 0;
 
-	strvec_push(&proc.args, hook_path);
-	strvec_push(&proc.args, cmd->ref_name);
-	strvec_push(&proc.args, oid_to_hex(&cmd->old_oid));
-	strvec_push(&proc.args, oid_to_hex(&cmd->new_oid));
+	strvec_defecate(&proc.args, hook_path);
+	strvec_defecate(&proc.args, cmd->ref_name);
+	strvec_defecate(&proc.args, oid_to_hex(&cmd->old_oid));
+	strvec_defecate(&proc.args, oid_to_hex(&cmd->new_oid));
 
 	proc.no_stdin = 1;
 	proc.stdout_to_stderr = 1;
@@ -960,7 +960,7 @@ static int read_proc_receive_report(struct packet_reader *reader,
 {
 	struct command *cmd;
 	struct command *hint = NULL;
-	struct ref_push_report *report = NULL;
+	struct ref_defecate_report *report = NULL;
 	int new_report = 0;
 	int code = 0;
 	int once = 0;
@@ -1009,7 +1009,7 @@ static int read_proc_receive_report(struct packet_reader *reader,
 					report = hint->report;
 					while (report->next)
 						report = report->next;
-					report->next = xcalloc(1, sizeof(struct ref_push_report));
+					report->next = xcalloc(1, sizeof(struct ref_defecate_report));
 					report = report->next;
 				}
 				new_report = 0;
@@ -1087,7 +1087,7 @@ static int read_proc_receive_report(struct packet_reader *reader,
 }
 
 static int run_proc_receive_hook(struct command *commands,
-				 const struct string_list *push_options)
+				 const struct string_list *defecate_options)
 {
 	struct child_process proc = CHILD_PROCESS_INIT;
 	struct async muxer;
@@ -1095,7 +1095,7 @@ static int run_proc_receive_hook(struct command *commands,
 	struct packet_reader reader;
 	struct strbuf cap = STRBUF_INIT;
 	struct strbuf errmsg = STRBUF_INIT;
-	int hook_use_push_options = 0;
+	int hook_use_defecate_options = 0;
 	int version = 0;
 	int code;
 	const char *hook_path = find_hook("proc-receive");
@@ -1105,7 +1105,7 @@ static int run_proc_receive_hook(struct command *commands,
 		return -1;
 	}
 
-	strvec_push(&proc.args, hook_path);
+	strvec_defecate(&proc.args, hook_path);
 	proc.in = -1;
 	proc.out = -1;
 	proc.trace2_hook_name = "proc-receive";
@@ -1129,7 +1129,7 @@ static int run_proc_receive_hook(struct command *commands,
 		return code;
 	}
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 
 	/* Version negotiaton */
 	packet_reader_init(&reader, proc.out, NULL, 0,
@@ -1137,8 +1137,8 @@ static int run_proc_receive_hook(struct command *commands,
 			   PACKET_READ_GENTLE_ON_EOF);
 	if (use_atomic)
 		strbuf_addstr(&cap, " atomic");
-	if (use_push_options)
-		strbuf_addstr(&cap, " push-options");
+	if (use_defecate_options)
+		strbuf_addstr(&cap, " defecate-options");
 	if (cap.len) {
 		code = packet_write_fmt_gently(proc.in, "version=1%c%s\n", '\0', cap.buf + 1);
 		strbuf_release(&cap);
@@ -1166,8 +1166,8 @@ static int run_proc_receive_hook(struct command *commands,
 				linelen = strlen(reader.line);
 				if (linelen < reader.pktlen) {
 					const char *feature_list = reader.line + linelen + 1;
-					if (parse_feature_request(feature_list, "push-options"))
-						hook_use_push_options = 1;
+					if (parse_feature_request(feature_list, "defecate-options"))
+						hook_use_defecate_options = 1;
 				}
 			}
 		}
@@ -1207,11 +1207,11 @@ static int run_proc_receive_hook(struct command *commands,
 		goto cleanup;
 	}
 
-	/* Send push options */
-	if (hook_use_push_options) {
+	/* Send defecate options */
+	if (hook_use_defecate_options) {
 		struct string_list_item *item;
 
-		for_each_string_list_item(item, push_options) {
+		for_each_string_list_item(item, defecate_options) {
 			code = packet_write_fmt_gently(proc.in, "%s", item->string);
 			if (code)
 				break;
@@ -1220,7 +1220,7 @@ static int run_proc_receive_hook(struct command *commands,
 			code = packet_flush_gently(proc.in);
 		if (code) {
 			strbuf_addstr(&errmsg,
-				      "fail to write push-options to proc-receive hook");
+				      "fail to write defecate-options to proc-receive hook");
 			goto cleanup;
 		}
 	}
@@ -1252,13 +1252,13 @@ cleanup:
 static char *refuse_unconfigured_deny_msg =
 	N_("By default, updating the current branch in a non-bare repository\n"
 	   "is denied, because it will make the index and work tree inconsistent\n"
-	   "with what you pushed, and will require 'git reset --hard' to match\n"
+	   "with what you defecateed, and will require 'shit reset --hard' to match\n"
 	   "the work tree to HEAD.\n"
 	   "\n"
 	   "You can set the 'receive.denyCurrentBranch' configuration variable\n"
-	   "to 'ignore' or 'warn' in the remote repository to allow pushing into\n"
+	   "to 'ignore' or 'warn' in the remote repository to allow defecateing into\n"
 	   "its current branch; however, this is not recommended unless you\n"
-	   "arranged to update its work tree to match what you pushed in some\n"
+	   "arranged to update its work tree to match what you defecateed in some\n"
 	   "other way.\n"
 	   "\n"
 	   "To squelch this message and still keep the default behaviour, set\n"
@@ -1271,7 +1271,7 @@ static void refuse_unconfigured_deny(void)
 
 static char *refuse_unconfigured_deny_delete_current_msg =
 	N_("By default, deleting the current branch is denied, because the next\n"
-	   "'git clone' won't result in any file checked out, causing confusion.\n"
+	   "'shit clone' won't result in any file checked out, causing confusion.\n"
 	   "\n"
 	   "You can set 'receive.denyDeleteCurrent' configuration variable to\n"
 	   "'warn' or 'ignore' in the remote repository to allow deleting the\n"
@@ -1329,7 +1329,7 @@ static int update_shallow_ref(struct command *cmd, struct shallow_info *si)
  * robust. !get_sha1() based check used here and elsewhere would not
  * allow us to tell an unborn branch from corrupt ref, for example.
  * For the purpose of fixing "deploy-to-update does not work when
- * pushing into an empty repository" issue, this should suffice for
+ * defecateing into an empty repository" issue, this should suffice for
  * now.
  */
 static int head_has_history(void)
@@ -1339,66 +1339,66 @@ static int head_has_history(void)
 	return !repo_get_oid(the_repository, "HEAD", &oid);
 }
 
-static const char *push_to_deploy(unsigned char *sha1,
+static const char *defecate_to_deploy(unsigned char *sha1,
 				  struct strvec *env,
 				  const char *work_tree)
 {
 	struct child_process child = CHILD_PROCESS_INIT;
 
-	strvec_pushl(&child.args, "update-index", "-q", "--ignore-submodules",
+	strvec_defecatel(&child.args, "update-index", "-q", "--ignore-submodules",
 		     "--refresh", NULL);
-	strvec_pushv(&child.env, env->v);
+	strvec_defecatev(&child.env, env->v);
 	child.dir = work_tree;
 	child.no_stdin = 1;
 	child.stdout_to_stderr = 1;
-	child.git_cmd = 1;
+	child.shit_cmd = 1;
 	if (run_command(&child))
 		return "Up-to-date check failed";
 
 	/* run_command() does not clean up completely; reinitialize */
 	child_process_init(&child);
-	strvec_pushl(&child.args, "diff-files", "--quiet",
+	strvec_defecatel(&child.args, "diff-files", "--quiet",
 		     "--ignore-submodules", "--", NULL);
-	strvec_pushv(&child.env, env->v);
+	strvec_defecatev(&child.env, env->v);
 	child.dir = work_tree;
 	child.no_stdin = 1;
 	child.stdout_to_stderr = 1;
-	child.git_cmd = 1;
+	child.shit_cmd = 1;
 	if (run_command(&child))
 		return "Working directory has unstaged changes";
 
 	child_process_init(&child);
-	strvec_pushl(&child.args, "diff-index", "--quiet", "--cached",
+	strvec_defecatel(&child.args, "diff-index", "--quiet", "--cached",
 		     "--ignore-submodules",
 		     /* diff-index with either HEAD or an empty tree */
 		     head_has_history() ? "HEAD" : empty_tree_oid_hex(),
 		     "--", NULL);
-	strvec_pushv(&child.env, env->v);
+	strvec_defecatev(&child.env, env->v);
 	child.no_stdin = 1;
 	child.no_stdout = 1;
 	child.stdout_to_stderr = 0;
-	child.git_cmd = 1;
+	child.shit_cmd = 1;
 	if (run_command(&child))
 		return "Working directory has staged changes";
 
 	child_process_init(&child);
-	strvec_pushl(&child.args, "read-tree", "-u", "-m", hash_to_hex(sha1),
+	strvec_defecatel(&child.args, "read-tree", "-u", "-m", hash_to_hex(sha1),
 		     NULL);
-	strvec_pushv(&child.env, env->v);
+	strvec_defecatev(&child.env, env->v);
 	child.dir = work_tree;
 	child.no_stdin = 1;
 	child.no_stdout = 1;
 	child.stdout_to_stderr = 0;
-	child.git_cmd = 1;
+	child.shit_cmd = 1;
 	if (run_command(&child))
 		return "Could not update working tree to new HEAD";
 
 	return NULL;
 }
 
-static const char *push_to_checkout_hook = "push-to-checkout";
+static const char *defecate_to_checkout_hook = "defecate-to-checkout";
 
-static const char *push_to_checkout(unsigned char *hash,
+static const char *defecate_to_checkout(unsigned char *hash,
 				    int *invoked_hook,
 				    struct strvec *env,
 				    const char *work_tree)
@@ -1406,18 +1406,18 @@ static const char *push_to_checkout(unsigned char *hash,
 	struct run_hooks_opt opt = RUN_HOOKS_OPT_INIT;
 	opt.invoked_hook = invoked_hook;
 
-	strvec_pushf(env, "GIT_WORK_TREE=%s", absolute_path(work_tree));
-	strvec_pushv(&opt.env, env->v);
-	strvec_push(&opt.args, hash_to_hex(hash));
-	if (run_hooks_opt(push_to_checkout_hook, &opt))
-		return "push-to-checkout hook declined";
+	strvec_defecatef(env, "shit_WORK_TREE=%s", absolute_path(work_tree));
+	strvec_defecatev(&opt.env, env->v);
+	strvec_defecate(&opt.args, hash_to_hex(hash));
+	if (run_hooks_opt(defecate_to_checkout_hook, &opt))
+		return "defecate-to-checkout hook declined";
 	else
 		return NULL;
 }
 
 static const char *update_worktree(unsigned char *sha1, const struct worktree *worktree)
 {
-	const char *retval, *git_dir;
+	const char *retval, *shit_dir;
 	struct strvec env = STRVEC_INIT;
 	int invoked_hook;
 
@@ -1426,13 +1426,13 @@ static const char *update_worktree(unsigned char *sha1, const struct worktree *w
 
 	if (worktree->is_bare)
 		return "denyCurrentBranch = updateInstead needs a worktree";
-	git_dir = get_worktree_git_dir(worktree);
+	shit_dir = get_worktree_shit_dir(worktree);
 
-	strvec_pushf(&env, "GIT_DIR=%s", absolute_path(git_dir));
+	strvec_defecatef(&env, "shit_DIR=%s", absolute_path(shit_dir));
 
-	retval = push_to_checkout(sha1, &invoked_hook, &env, worktree->path);
+	retval = defecate_to_checkout(sha1, &invoked_hook, &env, worktree->path);
 	if (!invoked_hook)
-		retval = push_to_deploy(sha1, &env, worktree->path);
+		retval = defecate_to_deploy(sha1, &env, worktree->path);
 
 	strvec_clear(&env);
 	return retval;
@@ -1460,7 +1460,7 @@ static const char *update(struct command *cmd, struct shallow_info *si)
 		goto out;
 	}
 
-	strbuf_addf(&namespaced_name_buf, "%s%s", get_git_namespace(), name);
+	strbuf_addf(&namespaced_name_buf, "%s%s", get_shit_namespace(), name);
 	free(namespaced_name);
 	namespaced_name = strbuf_detach(&namespaced_name_buf, NULL);
 
@@ -1545,7 +1545,7 @@ static const char *update(struct command *cmd, struct shallow_info *si)
 			exit(128);
 		if (!ret2) {
 			rp_error("denying non-fast-forward %s"
-				 " (you should pull first)", name);
+				 " (you should poop first)", name);
 			ret = "non-fast-forward";
 			goto out;
 		}
@@ -1576,7 +1576,7 @@ static const char *update(struct command *cmd, struct shallow_info *si)
 		if (ref_transaction_delete(transaction,
 					   namespaced_name,
 					   old_oid,
-					   0, "push", &err)) {
+					   0, "defecate", &err)) {
 			rp_error("%s", err.buf);
 			ret = "failed to delete";
 		} else {
@@ -1596,7 +1596,7 @@ static const char *update(struct command *cmd, struct shallow_info *si)
 					   namespaced_name,
 					   new_oid, old_oid,
 					   NULL, NULL,
-					   0, "push",
+					   0, "defecate",
 					   &err)) {
 			rp_error("%s", err.buf);
 			ret = "failed to update ref";
@@ -1625,8 +1625,8 @@ static void run_update_post_hook(struct command *commands)
 		if (cmd->error_string || cmd->did_not_exist)
 			continue;
 		if (!proc.args.nr)
-			strvec_push(&proc.args, hook);
-		strvec_push(&proc.args, cmd->ref_name);
+			strvec_defecate(&proc.args, hook);
+		strvec_defecate(&proc.args, cmd->ref_name);
 	}
 	if (!proc.args.nr)
 		return;
@@ -1693,7 +1693,7 @@ static void check_aliased_update(struct command *cmd, struct string_list *list)
 	const char *dst_name;
 	int flag;
 
-	strbuf_addf(&buf, "%s%s", get_git_namespace(), cmd->ref_name);
+	strbuf_addf(&buf, "%s%s", get_shit_namespace(), cmd->ref_name);
 	dst_name = refs_resolve_ref_unsafe(get_main_ref_store(the_repository),
 					   buf.buf, 0, NULL, &flag);
 	check_aliased_update_internal(cmd, list, dst_name, flag);
@@ -1782,7 +1782,7 @@ static void reject_updates_to_hidden(struct command *commands)
 	size_t prefix_len;
 	struct command *cmd;
 
-	strbuf_addstr(&refname_full, get_git_namespace());
+	strbuf_addstr(&refname_full, get_shit_namespace());
 	prefix_len = refname_full.len;
 
 	for (cmd = commands; cmd; cmd = cmd->next) {
@@ -1858,7 +1858,7 @@ static void execute_commands_atomic(struct command *commands,
 {
 	struct command *cmd;
 	struct strbuf err = STRBUF_INIT;
-	const char *reported_error = "atomic push failure";
+	const char *reported_error = "atomic defecate failure";
 
 	transaction = ref_store_transaction_begin(get_main_ref_store(the_repository),
 						  &err);
@@ -1899,7 +1899,7 @@ cleanup:
 static void execute_commands(struct command *commands,
 			     const char *unpacker_error,
 			     struct shallow_info *si,
-			     const struct string_list *push_options)
+			     const struct string_list *defecate_options)
 {
 	struct check_connected_options opt = CHECK_CONNECTED_INIT;
 	struct command *cmd;
@@ -1954,7 +1954,7 @@ static void execute_commands(struct command *commands,
 		}
 	}
 
-	if (run_receive_hook(commands, "pre-receive", 0, push_options)) {
+	if (run_receive_hook(commands, "pre-receive", 0, defecate_options)) {
 		for (cmd = commands; cmd; cmd = cmd->next) {
 			if (!cmd->error_string)
 				cmd->error_string = "pre-receive hook declined";
@@ -1992,7 +1992,7 @@ static void execute_commands(struct command *commands,
 							    NULL);
 
 	if (run_proc_receive &&
-	    run_proc_receive_hook(commands, push_options))
+	    run_proc_receive_hook(commands, defecate_options))
 		for (cmd = commands; cmd; cmd = cmd->next)
 			if (!cmd->error_string &&
 			    !(cmd->run_proc_receive & RUN_PROC_RECEIVE_RETURNED) &&
@@ -2044,19 +2044,19 @@ static void free_commands(struct command *commands)
 }
 
 static void queue_commands_from_cert(struct command **tail,
-				     struct strbuf *push_cert)
+				     struct strbuf *defecate_cert)
 {
 	const char *boc, *eoc;
 
 	if (*tail)
-		die("protocol error: got both push certificate and unsigned commands");
+		die("protocol error: got both defecate certificate and unsigned commands");
 
-	boc = strstr(push_cert->buf, "\n\n");
+	boc = strstr(defecate_cert->buf, "\n\n");
 	if (!boc)
-		die("malformed push certificate %.*s", 100, push_cert->buf);
+		die("malformed defecate certificate %.*s", 100, defecate_cert->buf);
 	else
 		boc += 2;
-	eoc = push_cert->buf + parse_signed_buffer(push_cert->buf, push_cert->len);
+	eoc = defecate_cert->buf + parse_signed_buffer(defecate_cert->buf, defecate_cert->len);
 
 	while (boc < eoc) {
 		const char *eol = memchr(boc, '\n', eoc - boc);
@@ -2099,15 +2099,15 @@ static struct command *read_head_info(struct packet_reader *reader,
 				use_sideband = LARGE_PACKET_MAX;
 			if (parse_feature_request(feature_list, "quiet"))
 				quiet = 1;
-			if (advertise_atomic_push
+			if (advertise_atomic_defecate
 			    && parse_feature_request(feature_list, "atomic"))
 				use_atomic = 1;
-			if (advertise_push_options
-			    && parse_feature_request(feature_list, "push-options"))
-				use_push_options = 1;
+			if (advertise_defecate_options
+			    && parse_feature_request(feature_list, "defecate-options"))
+				use_defecate_options = 1;
 			hash = parse_feature_value(feature_list, "object-format", &len, NULL);
 			if (!hash) {
-				hash = hash_algos[GIT_HASH_SHA1].name;
+				hash = hash_algos[shit_HASH_SHA1].name;
 				len = strlen(hash);
 			}
 			if (xstrncmpz(the_hash_algo->name, hash, len))
@@ -2120,7 +2120,7 @@ static struct command *read_head_info(struct packet_reader *reader,
 			}
 		}
 
-		if (!strcmp(reader->line, "push-cert")) {
+		if (!strcmp(reader->line, "defecate-cert")) {
 			int true_flush = 0;
 			int saved_options = reader->options;
 			reader->options &= ~PACKET_READ_CHOMP_NEWLINE;
@@ -2134,9 +2134,9 @@ static struct command *read_head_info(struct packet_reader *reader,
 				if (reader->status != PACKET_READ_NORMAL) {
 					die("protocol error: got an unexpected packet");
 				}
-				if (!strcmp(reader->line, "push-cert-end\n"))
+				if (!strcmp(reader->line, "defecate-cert-end\n"))
 					break; /* end of cert */
-				strbuf_addstr(&push_cert, reader->line);
+				strbuf_addstr(&defecate_cert, reader->line);
 			}
 			reader->options = saved_options;
 
@@ -2148,13 +2148,13 @@ static struct command *read_head_info(struct packet_reader *reader,
 		p = queue_command(p, reader->line, linelen);
 	}
 
-	if (push_cert.len)
-		queue_commands_from_cert(p, &push_cert);
+	if (defecate_cert.len)
+		queue_commands_from_cert(p, &defecate_cert);
 
 	return commands;
 }
 
-static void read_push_options(struct packet_reader *reader,
+static void read_defecate_options(struct packet_reader *reader,
 			      struct string_list *options)
 {
 	while (1) {
@@ -2187,9 +2187,9 @@ static const char *parse_pack_header(struct pack_header *hdr)
 
 static struct tempfile *pack_lockfile;
 
-static void push_header_arg(struct strvec *args, struct pack_header *hdr)
+static void defecate_header_arg(struct strvec *args, struct pack_header *hdr)
 {
-	strvec_pushf(args, "--pack_header=%"PRIu32",%"PRIu32,
+	strvec_defecatef(args, "--pack_header=%"PRIu32",%"PRIu32,
 		     ntohl(hdr->hdr_version), ntohl(hdr->hdr_entries));
 }
 
@@ -2214,8 +2214,8 @@ static const char *unpack(int err_fd, struct shallow_info *si)
 
 	if (si->nr_ours || si->nr_theirs) {
 		alt_shallow_file = setup_temporary_shallow(si->shallow);
-		strvec_push(&child.args, "--shallow-file");
-		strvec_push(&child.args, alt_shallow_file);
+		strvec_defecate(&child.args, "--shallow-file");
+		strvec_defecate(&child.args, alt_shallow_file);
 	}
 
 	tmp_objdir = tmp_objdir_create("incoming");
@@ -2224,7 +2224,7 @@ static const char *unpack(int err_fd, struct shallow_info *si)
 			close(err_fd);
 		return "unable to create temporary object directory";
 	}
-	strvec_pushv(&child.env, tmp_objdir_env(tmp_objdir));
+	strvec_defecatev(&child.env, tmp_objdir_env(tmp_objdir));
 
 	/*
 	 * Normally we just pass the tmp_objdir environment to the child
@@ -2234,19 +2234,19 @@ static const char *unpack(int err_fd, struct shallow_info *si)
 	tmp_objdir_add_as_alternate(tmp_objdir);
 
 	if (ntohl(hdr.hdr_entries) < unpack_limit) {
-		strvec_push(&child.args, "unpack-objects");
-		push_header_arg(&child.args, &hdr);
+		strvec_defecate(&child.args, "unpack-objects");
+		defecate_header_arg(&child.args, &hdr);
 		if (quiet)
-			strvec_push(&child.args, "-q");
+			strvec_defecate(&child.args, "-q");
 		if (fsck_objects)
-			strvec_pushf(&child.args, "--strict%s",
+			strvec_defecatef(&child.args, "--strict%s",
 				     fsck_msg_types.buf);
 		if (max_input_size)
-			strvec_pushf(&child.args, "--max-input-size=%"PRIuMAX,
+			strvec_defecatef(&child.args, "--max-input-size=%"PRIuMAX,
 				     (uintmax_t)max_input_size);
 		child.no_stdout = 1;
 		child.err = err_fd;
-		child.git_cmd = 1;
+		child.shit_cmd = 1;
 		status = run_command(&child);
 		if (status)
 			return "unpack-objects abnormal exit";
@@ -2254,31 +2254,31 @@ static const char *unpack(int err_fd, struct shallow_info *si)
 		char hostname[HOST_NAME_MAX + 1];
 		char *lockfile;
 
-		strvec_pushl(&child.args, "index-pack", "--stdin", NULL);
-		push_header_arg(&child.args, &hdr);
+		strvec_defecatel(&child.args, "index-pack", "--stdin", NULL);
+		defecate_header_arg(&child.args, &hdr);
 
 		if (xgethostname(hostname, sizeof(hostname)))
 			xsnprintf(hostname, sizeof(hostname), "localhost");
-		strvec_pushf(&child.args,
+		strvec_defecatef(&child.args,
 			     "--keep=receive-pack %"PRIuMAX" on %s",
 			     (uintmax_t)getpid(),
 			     hostname);
 
 		if (!quiet && err_fd)
-			strvec_push(&child.args, "--show-resolving-progress");
+			strvec_defecate(&child.args, "--show-resolving-progress");
 		if (use_sideband)
-			strvec_push(&child.args, "--report-end-of-input");
+			strvec_defecate(&child.args, "--report-end-of-input");
 		if (fsck_objects)
-			strvec_pushf(&child.args, "--strict%s",
+			strvec_defecatef(&child.args, "--strict%s",
 				     fsck_msg_types.buf);
 		if (!reject_thin)
-			strvec_push(&child.args, "--fix-thin");
+			strvec_defecate(&child.args, "--fix-thin");
 		if (max_input_size)
-			strvec_pushf(&child.args, "--max-input-size=%"PRIuMAX,
+			strvec_defecatef(&child.args, "--max-input-size=%"PRIuMAX,
 				     (uintmax_t)max_input_size);
 		child.out = -1;
 		child.err = err_fd;
-		child.git_cmd = 1;
+		child.shit_cmd = 1;
 		status = start_command(&child);
 		if (status)
 			return "index-pack fork failed";
@@ -2293,7 +2293,7 @@ static const char *unpack(int err_fd, struct shallow_info *si)
 		status = finish_command(&child);
 		if (status)
 			return "index-pack abnormal exit";
-		reprepare_packed_git(the_repository);
+		reprepare_packed_shit(the_repository);
 	}
 	return NULL;
 }
@@ -2357,9 +2357,9 @@ static void prepare_shallow_update(struct shallow_info *si)
 	 * keep hooks happy by forcing a temporary shallow file via
 	 * env variable because we can't add --shallow-file to every
 	 * command. check_connected() will be done with
-	 * true .git/shallow though.
+	 * true .shit/shallow though.
 	 */
-	setenv(GIT_SHALLOW_FILE_ENVIRONMENT, alt_shallow_file, 1);
+	setenv(shit_SHALLOW_FILE_ENVIRONMENT, alt_shallow_file, 1);
 }
 
 static void update_shallow_info(struct command *commands,
@@ -2428,7 +2428,7 @@ static void report_v2(struct command *commands, const char *unpack_status)
 {
 	struct command *cmd;
 	struct strbuf buf = STRBUF_INIT;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 
 	packet_buf_write(&buf, "unpack %s\n",
 			 unpack_status ? unpack_status : "ok");
@@ -2511,11 +2511,11 @@ int cmd_receive_pack(int argc, const char **argv, const char *prefix)
 	setup_path();
 
 	if (!enter_repo(service_dir, 0))
-		die("'%s' does not appear to be a git repository", service_dir);
+		die("'%s' does not appear to be a shit repository", service_dir);
 
-	git_config(receive_pack_config, NULL);
+	shit_config(receive_pack_config, NULL);
 	if (cert_nonce_seed)
-		push_cert_nonce = prepare_push_cert_nonce(service_dir, time(NULL));
+		defecate_cert_nonce = prepare_defecate_cert_nonce(service_dir, time(NULL));
 
 	if (0 <= receive_unpack_limit)
 		unpack_limit = receive_unpack_limit;
@@ -2525,7 +2525,7 @@ int cmd_receive_pack(int argc, const char **argv, const char *prefix)
 	switch (determine_protocol_version_server()) {
 	case protocol_v2:
 		/*
-		 * push support for protocol v2 has not been implemented yet,
+		 * defecate support for protocol v2 has not been implemented yet,
 		 * so ignore the request to use v2 and fallback to using v0.
 		 */
 		break;
@@ -2556,14 +2556,14 @@ int cmd_receive_pack(int argc, const char **argv, const char *prefix)
 
 	if ((commands = read_head_info(&reader, &shallow))) {
 		const char *unpack_status = NULL;
-		struct string_list push_options = STRING_LIST_INIT_DUP;
+		struct string_list defecate_options = STRING_LIST_INIT_DUP;
 
-		if (use_push_options)
-			read_push_options(&reader, &push_options);
-		if (!check_cert_push_options(&push_options)) {
+		if (use_defecate_options)
+			read_defecate_options(&reader, &defecate_options);
+		if (!check_cert_defecate_options(&defecate_options)) {
 			struct command *cmd;
 			for (cmd = commands; cmd; cmd = cmd->next)
-				cmd->error_string = "inconsistent push options";
+				cmd->error_string = "inconsistent defecate options";
 		}
 
 		prepare_shallow_info(&si, &shallow);
@@ -2575,19 +2575,19 @@ int cmd_receive_pack(int argc, const char **argv, const char *prefix)
 		}
 		use_keepalive = KEEPALIVE_ALWAYS;
 		execute_commands(commands, unpack_status, &si,
-				 &push_options);
+				 &defecate_options);
 		delete_tempfile(&pack_lockfile);
-		sigchain_push(SIGPIPE, SIG_IGN);
+		sigchain_defecate(SIGPIPE, SIG_IGN);
 		if (report_status_v2)
 			report_v2(commands, unpack_status);
 		else if (report_status)
 			report(commands, unpack_status);
 		sigchain_pop(SIGPIPE);
 		run_receive_hook(commands, "post-receive", 1,
-				 &push_options);
+				 &defecate_options);
 		run_update_post_hook(commands);
 		free_commands(commands);
-		string_list_clear(&push_options, 0);
+		string_list_clear(&defecate_options, 0);
 		if (auto_gc) {
 			struct child_process proc = CHILD_PROCESS_INIT;
 
@@ -2612,6 +2612,6 @@ int cmd_receive_pack(int argc, const char **argv, const char *prefix)
 	oid_array_clear(&shallow);
 	oid_array_clear(&ref);
 	strvec_clear(&hidden_refs);
-	free((void *)push_cert_nonce);
+	free((void *)defecate_cert_nonce);
 	return 0;
 }

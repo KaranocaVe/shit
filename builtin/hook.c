@@ -6,7 +6,7 @@
 #include "strvec.h"
 
 #define BUILTIN_HOOK_RUN_USAGE \
-	N_("git hook run [--ignore-missing] [--to-stdin=<path>] <hook-name> [-- <hook-args>]")
+	N_("shit hook run [--ignore-missing] [--to-stdin=<path>] <hook-name> [-- <hook-args>]")
 
 static const char * const builtin_hook_usage[] = {
 	BUILTIN_HOOK_RUN_USAGE,
@@ -50,10 +50,10 @@ static int run(int argc, const char **argv, const char *prefix)
 
 	/* Add our arguments, start after -- */
 	for (i = 2 ; i < argc; i++)
-		strvec_push(&opt.args, argv[i]);
+		strvec_defecate(&opt.args, argv[i]);
 
 	/* Need to take into account core.hooksPath */
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	hook_name = argv[0];
 	if (!ignore_missing)

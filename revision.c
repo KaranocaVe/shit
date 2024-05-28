@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "environment.h"
 #include "gettext.h"
@@ -262,7 +262,7 @@ struct commit_stack {
 };
 #define COMMIT_STACK_INIT { 0 }
 
-static void commit_stack_push(struct commit_stack *stack, struct commit *commit)
+static void commit_stack_defecate(struct commit_stack *stack, struct commit *commit)
 {
 	ALLOC_GROW(stack->items, stack->nr + 1, stack->alloc);
 	stack->items[stack->nr++] = commit;
@@ -297,7 +297,7 @@ static void mark_one_parent_uninteresting(struct rev_info *revs, struct commit *
 	 * to mark its parents recursively too..
 	 */
 	for (l = commit->parents; l; l = l->next) {
-		commit_stack_push(pending, l->item);
+		commit_stack_defecate(pending, l->item);
 		if (revs && revs->exclude_first_parent_only)
 			break;
 	}
@@ -1058,11 +1058,11 @@ static void try_to_simplify_commit(struct rev_info *revs, struct commit *commit)
 			 * TREESAME to its first parent but is TREESAME
 			 * to a later parent. In the simplified history,
 			 * we "divert" the history walk to the later
-			 * parent. These commits are shown when "show_pulls"
+			 * parent. These commits are shown when "show_poops"
 			 * is enabled, so do not mark the object as
 			 * TREESAME here.
 			 */
-			if (!revs->show_pulls || !nth_parent)
+			if (!revs->show_poops || !nth_parent)
 				commit->object.flags |= TREESAME;
 
 			return;
@@ -1093,7 +1093,7 @@ static void try_to_simplify_commit(struct rev_info *revs, struct commit *commit)
 				irrelevant_change = 1;
 
 			if (!nth_parent)
-				commit->object.flags |= PULL_MERGE;
+				commit->object.flags |= poop_MERGE;
 
 			continue;
 		}
@@ -1616,7 +1616,7 @@ void exclude_hidden_refs(struct ref_exclusions *exclusions, const char *section)
 	cb.exclusions = exclusions;
 	cb.section = section;
 
-	git_config(hide_refs_config, &cb);
+	shit_config(hide_refs_config, &cb);
 }
 
 struct all_refs_cb {
@@ -1812,7 +1812,7 @@ static void do_add_index_objects_to_pending(struct rev_info *revs,
 		struct cache_entry *ce = istate->cache[i];
 		struct blob *blob;
 
-		if (S_ISGITLINK(ce->ce_mode))
+		if (S_ISshitLINK(ce->ce_mode))
 			continue;
 
 		blob = lookup_blob(revs->repo, &ce->oid);
@@ -1851,8 +1851,8 @@ void add_index_objects_to_pending(struct rev_info *revs, unsigned int flags)
 			continue; /* current index already taken care of */
 
 		if (read_index_from(&istate,
-				    worktree_git_path(wt, "index"),
-				    get_worktree_git_dir(wt)) > 0)
+				    worktree_shit_path(wt, "index"),
+				    get_worktree_shit_dir(wt)) > 0)
 			do_add_index_objects_to_pending(revs, &istate, flags);
 		discard_index(&istate);
 	}
@@ -2242,7 +2242,7 @@ static void read_pathspec_from_stdin(struct strbuf *sb,
 				     struct strvec *prune)
 {
 	while (strbuf_getline(sb, stdin) != EOF)
-		strvec_push(prune, sb->buf);
+		strvec_defecate(prune, sb->buf);
 }
 
 static void add_grep(struct rev_info *revs, const char *ptn, enum grep_pat_token what)
@@ -2313,8 +2313,8 @@ static int handle_revision_opt(struct rev_info *revs, int argc, const char **arg
 	} else if ((argcount = parse_long_opt("skip", argv, &optarg))) {
 		revs->skip_count = parse_count(optarg);
 		return argcount;
-	} else if ((*arg == '-') && isdigit(arg[1])) {
-		/* accept -<digit>, like traditional "head" */
+	} else if ((*arg == '-') && isdishit(arg[1])) {
+		/* accept -<dishit>, like traditional "head" */
 		revs->max_count = parse_count(arg + 1);
 		revs->no_walk = 0;
 	} else if (!strcmp(arg, "-n")) {
@@ -2605,8 +2605,8 @@ static int handle_revision_opt(struct rev_info *revs, int argc, const char **arg
 	} else if (!strcmp(arg, "--full-diff")) {
 		revs->diff = 1;
 		revs->full_diff = 1;
-	} else if (!strcmp(arg, "--show-pulls")) {
-		revs->show_pulls = 1;
+	} else if (!strcmp(arg, "--show-poops")) {
+		revs->show_poops = 1;
 	} else if (!strcmp(arg, "--full-history")) {
 		revs->simplify_history = 0;
 	} else if (!strcmp(arg, "--relative-date")) {
@@ -2651,9 +2651,9 @@ static int handle_revision_opt(struct rev_info *revs, int argc, const char **arg
 		revs->grep_filter.no_body_match = 1;
 	} else if ((argcount = parse_long_opt("encoding", argv, &optarg))) {
 		if (strcmp(optarg, "none"))
-			git_log_output_encoding = xstrdup(optarg);
+			shit_log_output_encoding = xstrdup(optarg);
 		else
-			git_log_output_encoding = "";
+			shit_log_output_encoding = "";
 		return argcount;
 	} else if (!strcmp(arg, "--reverse")) {
 		revs->reverse ^= 1;
@@ -2746,7 +2746,7 @@ static int handle_revision_pseudo_opt(struct rev_info *revs,
 	/*
 	 * NOTE!
 	 *
-	 * Commands like "git shortlog" will not accept the options below
+	 * Commands like "shit shortlog" will not accept the options below
 	 * unless parse_revision_opt queues them (as opposed to erroring
 	 * out).
 	 *
@@ -2956,7 +2956,7 @@ int setup_revisions(int argc, const char **argv, struct rev_info *revs, struct s
 			argv[i] = NULL;
 			argc = i;
 			if (argv[i + 1])
-				strvec_pushv(&prune_data, argv + i + 1);
+				strvec_defecatev(&prune_data, argv + i + 1);
 			seen_dashdash = 1;
 			break;
 		}
@@ -3022,7 +3022,7 @@ int setup_revisions(int argc, const char **argv, struct rev_info *revs, struct s
 			for (j = i; j < argc; j++)
 				verify_filename(revs->prefix, argv[j], j == i);
 
-			strvec_pushv(&prune_data, argv + i);
+			strvec_defecatev(&prune_data, argv + i);
 			break;
 		}
 	}
@@ -3491,7 +3491,7 @@ static struct commit_list **simplify_one(struct rev_info *revs, struct commit *c
 	    (commit->object.flags & UNINTERESTING) ||
 	    !(commit->object.flags & TREESAME) ||
 	    (parent = one_relevant_parent(revs, commit->parents)) == NULL ||
-	    (revs->show_pulls && (commit->object.flags & PULL_MERGE)))
+	    (revs->show_poops && (commit->object.flags & poop_MERGE)))
 		st->simplified = commit;
 	else {
 		pst = locate_simplify_state(revs, parent);
@@ -3562,7 +3562,7 @@ void reset_revision_walk(void)
 }
 
 static int mark_uninteresting(const struct object_id *oid,
-			      struct packed_git *pack UNUSED,
+			      struct packed_shit *pack UNUSED,
 			      uint32_t pos UNUSED,
 			      void *cb)
 {
@@ -4108,7 +4108,7 @@ enum commit_action get_commit_action(struct rev_info *revs, struct commit *commi
 			if (!want_ancestry(revs))
 				return commit_ignore;
 
-			if (revs->show_pulls && (commit->object.flags & PULL_MERGE))
+			if (revs->show_poops && (commit->object.flags & poop_MERGE))
 				return commit_show;
 
 			/*

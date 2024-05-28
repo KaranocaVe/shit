@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "strbuf.h"
 #include "string-list.h"
@@ -6,8 +6,8 @@
 
 /*
  * versioncmp(): copied from string/strverscmp.c in glibc commit
- * ee9247c38a8def24a59eb5cfb7196a98bef8cfdc, reformatted to Git coding
- * style. The implementation is under LGPL-2.1 and Git relicenses it
+ * ee9247c38a8def24a59eb5cfb7196a98bef8cfdc, reformatted to shit coding
+ * style. The implementation is under LGPL-2.1 and shit relicenses it
  * to GPLv2.
  */
 
@@ -148,8 +148,8 @@ int versioncmp(const char *s1, const char *s2)
 
 	c1 = *p1++;
 	c2 = *p2++;
-	/* Hint: '0' is a digit too.  */
-	state = S_N + ((c1 == '0') + (isdigit (c1) != 0));
+	/* Hint: '0' is a dishit too.  */
+	state = S_N + ((c1 == '0') + (isdishit (c1) != 0));
 
 	while ((diff = c1 - c2) == 0) {
 		if (c1 == '\0')
@@ -158,7 +158,7 @@ int versioncmp(const char *s1, const char *s2)
 		state = next_state[state];
 		c1 = *p1++;
 		c2 = *p2++;
-		state += (c1 == '0') + (isdigit (c1) != 0);
+		state += (c1 == '0') + (isdishit (c1) != 0);
 	}
 
 	if (!initialized) {
@@ -166,8 +166,8 @@ int versioncmp(const char *s1, const char *s2)
 		const char *const oldk = "versionsort.prereleasesuffix";
 		const struct string_list *newl;
 		const struct string_list *oldl;
-		int new = git_config_get_string_multi(newk, &newl);
-		int old = git_config_get_string_multi(oldk, &oldl);
+		int new = shit_config_get_string_multi(newk, &newl);
+		int old = shit_config_get_string_multi(oldk, &oldl);
 
 		if (!new && !old)
 			warning("ignoring %s because %s is set", oldk, newk);
@@ -182,18 +182,18 @@ int versioncmp(const char *s1, const char *s2)
 					    &diff))
 		return diff;
 
-	state = result_type[state * 3 + (((c2 == '0') + (isdigit (c2) != 0)))];
+	state = result_type[state * 3 + (((c2 == '0') + (isdishit (c2) != 0)))];
 
 	switch (state) {
 	case CMP:
 		return diff;
 
 	case LEN:
-		while (isdigit (*p1++))
-			if (!isdigit (*p2++))
+		while (isdishit (*p1++))
+			if (!isdishit (*p2++))
 				return 1;
 
-		return isdigit (*p2) ? -1 : diff;
+		return isdishit (*p2) ? -1 : diff;
 
 	default:
 		return state;

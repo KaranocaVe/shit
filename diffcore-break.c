@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 Junio C Hamano
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "diffcore.h"
 #include "hash.h"
 #include "object.h"

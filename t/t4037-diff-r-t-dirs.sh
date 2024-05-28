@@ -13,9 +13,9 @@ test_expect_success setup '
 	>fc &&
 	>fr &&
 	>ft &&
-	git add . &&
+	shit add . &&
 	test_tick &&
-	git commit -m initial &&
+	shit commit -m initial &&
 
 	rm -fr dt dr ft fr &&
 	mkdir da ft &&
@@ -23,10 +23,10 @@ test_expect_success setup '
 	do
 		echo hello >$p || exit
 	done &&
-	git add -u &&
-	git add . &&
+	shit add -u &&
+	shit add . &&
 	test_tick &&
-	git commit -m second
+	shit commit -m second
 '
 
 cat >expect <<\EOF
@@ -47,7 +47,7 @@ A	ft/5
 EOF
 
 test_expect_success verify '
-	git diff-tree -r -t --name-status HEAD^ HEAD >actual &&
+	shit diff-tree -r -t --name-status HEAD^ HEAD >actual &&
 	test_cmp expect actual
 '
 

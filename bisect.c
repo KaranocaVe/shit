@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "commit.h"
 #include "diff.h"
@@ -473,18 +473,18 @@ static int read_bisect_refs(void)
 				    "refs/bisect/", register_ref, NULL);
 }
 
-static GIT_PATH_FUNC(git_path_bisect_names, "BISECT_NAMES")
-static GIT_PATH_FUNC(git_path_bisect_ancestors_ok, "BISECT_ANCESTORS_OK")
-static GIT_PATH_FUNC(git_path_bisect_run, "BISECT_RUN")
-static GIT_PATH_FUNC(git_path_bisect_start, "BISECT_START")
-static GIT_PATH_FUNC(git_path_bisect_log, "BISECT_LOG")
-static GIT_PATH_FUNC(git_path_bisect_terms, "BISECT_TERMS")
-static GIT_PATH_FUNC(git_path_bisect_first_parent, "BISECT_FIRST_PARENT")
+static shit_PATH_FUNC(shit_path_bisect_names, "BISECT_NAMES")
+static shit_PATH_FUNC(shit_path_bisect_ancestors_ok, "BISECT_ANCESTORS_OK")
+static shit_PATH_FUNC(shit_path_bisect_run, "BISECT_RUN")
+static shit_PATH_FUNC(shit_path_bisect_start, "BISECT_START")
+static shit_PATH_FUNC(shit_path_bisect_log, "BISECT_LOG")
+static shit_PATH_FUNC(shit_path_bisect_terms, "BISECT_TERMS")
+static shit_PATH_FUNC(shit_path_bisect_first_parent, "BISECT_FIRST_PARENT")
 
 static void read_bisect_paths(struct strvec *array)
 {
 	struct strbuf str = STRBUF_INIT;
-	const char *filename = git_path_bisect_names();
+	const char *filename = shit_path_bisect_names();
 	FILE *fp = xfopen(filename, "r");
 
 	while (strbuf_getline_lf(&str, fp) != EOF) {
@@ -668,12 +668,12 @@ static void bisect_rev_setup(struct repository *r, struct rev_info *revs,
 	revs->commit_format = CMIT_FMT_UNSPECIFIED;
 
 	/* rev_argv.argv[0] will be ignored by setup_revisions */
-	strvec_push(rev_argv, "bisect_rev_setup");
-	strvec_pushf(rev_argv, bad_format, oid_to_hex(current_bad_oid));
+	strvec_defecate(rev_argv, "bisect_rev_setup");
+	strvec_defecatef(rev_argv, bad_format, oid_to_hex(current_bad_oid));
 	for (i = 0; i < good_revs.nr; i++)
-		strvec_pushf(rev_argv, good_format,
+		strvec_defecatef(rev_argv, good_format,
 			     oid_to_hex(good_revs.oid + i));
-	strvec_push(rev_argv, "--");
+	strvec_defecate(rev_argv, "--");
 	if (read_paths)
 		read_bisect_paths(rev_argv);
 
@@ -733,8 +733,8 @@ enum bisect_error bisect_checkout(const struct object_id *bisect_rev,
 	} else {
 		struct child_process cmd = CHILD_PROCESS_INIT;
 
-		cmd.git_cmd = 1;
-		strvec_pushl(&cmd.args, "checkout", "-q",
+		cmd.shit_cmd = 1;
+		strvec_defecatel(&cmd.args, "checkout", "-q",
 			     oid_to_hex(bisect_rev), "--", NULL);
 		if (run_command(&cmd))
 			/*
@@ -803,7 +803,7 @@ static enum bisect_error handle_bad_merge_base(void)
 	}
 
 	fprintf(stderr, _("Some %s revs are not ancestors of the %s rev.\n"
-		"git bisect cannot work properly in this case.\n"
+		"shit bisect cannot work properly in this case.\n"
 		"Maybe you mistook %s and %s revs?\n"),
 		term_good, term_bad, term_good, term_bad);
 	return BISECT_FAILED;
@@ -911,7 +911,7 @@ static enum bisect_error check_good_are_ancestors_of_bad(struct repository *r,
 	if (!current_bad_oid)
 		return error(_("a %s revision is needed"), term_bad);
 
-	filename = git_pathdup("BISECT_ANCESTORS_OK");
+	filename = shit_pathdup("BISECT_ANCESTORS_OK");
 
 	/* Check if file BISECT_ANCESTORS_OK exists. */
 	if (!stat(filename, &st) && S_ISREG(st.st_mode))
@@ -957,14 +957,14 @@ static void show_commit(struct commit *commit)
 	struct child_process show = CHILD_PROCESS_INIT;
 
 	/*
-	 * Call git show with --no-pager, as it would otherwise
-	 * paginate the "git show" output only, not the output
+	 * Call shit show with --no-pager, as it would otherwise
+	 * paginate the "shit show" output only, not the output
 	 * from bisect_next_all(); this can be fixed by moving
 	 * it into a --format parameter, but that would override
-	 * the user's default options for "git show", which we
+	 * the user's default options for "shit show", which we
 	 * are trying to honour.
 	 */
-	strvec_pushl(&show.args,
+	strvec_defecatel(&show.args,
 		     "--no-pager",
 		     "show",
 		     "--stat",
@@ -972,7 +972,7 @@ static void show_commit(struct commit *commit)
 		     "--no-abbrev-commit",
 		     "--diff-merges=first-parent",
 		     oid_to_hex(&commit->object.oid), NULL);
-	show.git_cmd = 1;
+	show.shit_cmd = 1;
 	if (run_command(&show))
 		die(_("unable to start 'show' for object '%s'"),
 		    oid_to_hex(&commit->object.oid));
@@ -986,7 +986,7 @@ static void show_commit(struct commit *commit)
 void read_bisect_terms(const char **read_bad, const char **read_good)
 {
 	struct strbuf str = STRBUF_INIT;
-	const char *filename = git_path_bisect_terms();
+	const char *filename = shit_path_bisect_terms();
 	FILE *fp = fopen(filename, "r");
 
 	if (!fp) {
@@ -1039,7 +1039,7 @@ enum bisect_error bisect_next_all(struct repository *r, const char *prefix)
 	if (read_bisect_refs())
 		die(_("reading bisect refs failed"));
 
-	if (file_exists(git_path_bisect_first_parent()))
+	if (file_exists(shit_path_bisect_first_parent()))
 		bisect_flags |= FIND_BISECTION_FIRST_PARENT_ONLY;
 
 	if (skipped_revs.nr)
@@ -1193,17 +1193,17 @@ int bisect_clean_state(void)
 				  REF_NO_DEREF);
 	refs_for_removal.strdup_strings = 1;
 	string_list_clear(&refs_for_removal, 0);
-	unlink_or_warn(git_path_bisect_ancestors_ok());
-	unlink_or_warn(git_path_bisect_log());
-	unlink_or_warn(git_path_bisect_names());
-	unlink_or_warn(git_path_bisect_run());
-	unlink_or_warn(git_path_bisect_terms());
-	unlink_or_warn(git_path_bisect_first_parent());
+	unlink_or_warn(shit_path_bisect_ancestors_ok());
+	unlink_or_warn(shit_path_bisect_log());
+	unlink_or_warn(shit_path_bisect_names());
+	unlink_or_warn(shit_path_bisect_run());
+	unlink_or_warn(shit_path_bisect_terms());
+	unlink_or_warn(shit_path_bisect_first_parent());
 	/*
 	 * Cleanup BISECT_START last to support the --no-checkout option
 	 * introduced in the commit 4796e823a.
 	 */
-	unlink_or_warn(git_path_bisect_start());
+	unlink_or_warn(shit_path_bisect_start());
 
 	return result;
 }

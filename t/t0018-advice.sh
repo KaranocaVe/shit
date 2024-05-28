@@ -2,8 +2,8 @@
 
 test_description='Test advise_if_enabled functionality'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=trunk
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=trunk
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,7 +11,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success 'advice should be printed when config variable is unset' '
 	cat >expect <<-\EOF &&
 	hint: This is a piece of advice
-	hint: Disable this message with "git config advice.nestedTag false"
+	hint: Disable this message with "shit config advice.nestedTag false"
 	EOF
 	test-tool advise "This is a piece of advice" 2>actual &&
 	test_cmp expect actual
@@ -45,16 +45,16 @@ test_expect_success 'advice should not be printed when --no-advice is used' '
 	EOF
 
 	test_when_finished "rm -fr advice-test" &&
-	git init advice-test &&
+	shit init advice-test &&
 	(
 		cd advice-test &&
 		>README &&
-		git --no-advice status
+		shit --no-advice status
 	) >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'advice should not be printed when GIT_ADVICE is set to false' '
+test_expect_success 'advice should not be printed when shit_ADVICE is set to false' '
 	q_to_tab >expect <<-\EOF &&
 	On branch trunk
 
@@ -67,34 +67,34 @@ test_expect_success 'advice should not be printed when GIT_ADVICE is set to fals
 	EOF
 
 	test_when_finished "rm -fr advice-test" &&
-	git init advice-test &&
+	shit init advice-test &&
 	(
 		cd advice-test &&
 		>README &&
-		GIT_ADVICE=false git status
+		shit_ADVICE=false shit status
 	) >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'advice should be printed when GIT_ADVICE is set to true' '
+test_expect_success 'advice should be printed when shit_ADVICE is set to true' '
 	q_to_tab >expect <<-\EOF &&
 	On branch trunk
 
 	No commits yet
 
 	Untracked files:
-	  (use "git add <file>..." to include in what will be committed)
+	  (use "shit add <file>..." to include in what will be committed)
 	QREADME
 
-	nothing added to commit but untracked files present (use "git add" to track)
+	nothing added to commit but untracked files present (use "shit add" to track)
 	EOF
 
 	test_when_finished "rm -fr advice-test" &&
-	git init advice-test &&
+	shit init advice-test &&
 	(
 		cd advice-test &&
 		>README &&
-		GIT_ADVICE=true git status
+		shit_ADVICE=true shit status
 	) >actual &&
 	cat actual > /tmp/actual &&
 	test_cmp expect actual

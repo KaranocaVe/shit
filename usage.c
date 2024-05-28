@@ -1,9 +1,9 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "trace2.h"
 

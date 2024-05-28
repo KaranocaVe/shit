@@ -1,0 +1,20 @@
+shit web interface (shitweb) - JavaScript
+=======================================
+
+This directory holds JavaScript code used by shitweb (shit web interface).
+Scripts from there would be concatenated together in the order specified
+by shitweb/Makefile into shitweb/static/shitweb.js, during building of
+shitweb/shitweb.cgi (during shitweb building).  The resulting file (or its
+minification) would then be installed / deployed together with shitweb.
+
+Scripts in 'lib/' subdirectory compose generic JavaScript library,
+providing features required by shitweb but in no way limited to shitweb
+only.  In the future those scripts could be replaced by some JavaScript
+library / framework, like e.g. jQuery, YUI, Prototype, MooTools, Dojo,
+ExtJS, Script.aculo.us or SproutCore.
+
+All scripts that manipulate shitweb output should be put outside 'lib/',
+directly in this directory ('shitweb/static/js/').  Those scripts would
+have to be rewritten if shitweb moves to using some JavaScript library.
+
+See also comments in shitweb/Makefile.

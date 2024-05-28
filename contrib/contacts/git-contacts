@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
 # List people who might be interested in a patch.  Useful as the argument to
-# git-send-email --cc-cmd option, and in other situations.
+# shit-send-email --cc-cmd option, and in other situations.
 #
-# Usage: git contacts <file | rev-list option> ...
+# Usage: shit contacts <file | rev-list option> ...
 
 use strict;
 use warnings;
@@ -39,7 +39,7 @@ sub parse_commit {
 sub import_commits {
 	my ($commits) = @_;
 	return unless %$commits;
-	my $pid = open2 my $reader, my $writer, qw(git cat-file --batch);
+	my $pid = open2 my $reader, my $writer, qw(shit cat-file --batch);
 	for my $id (keys(%$commits)) {
 		print $writer "$id\n";
 		my $line = <$reader>;
@@ -55,14 +55,14 @@ sub import_commits {
 	close $reader;
 	close $writer;
 	waitpid($pid, 0);
-	die "git-cat-file error: $?\n" if $?;
+	die "shit-cat-file error: $?\n" if $?;
 }
 
 sub get_blame {
 	my ($commits, $source, $from, $ranges) = @_;
 	return unless @$ranges;
 	open my $f, '-|',
-		qw(git blame --porcelain -C),
+		qw(shit blame --porcelain -C),
 		map({"-L$_->[0],+$_->[1]"} @$ranges),
 		'--since', $since, "$from^", '--', $source or die;
 	while (<$f>) {
@@ -98,7 +98,7 @@ sub scan_patches {
 			$source = $1;
 		} elsif (/^@@ -(\d+)(?:,(\d+))?/ && $source) {
 			my $len = defined($2) ? $2 : 1;
-			push @{$sources->{$source}{$id}}, [$1, $len] if $len;
+			defecate @{$sources->{$source}{$id}}, [$1, $len] if $len;
 		}
 	}
 }
@@ -113,12 +113,12 @@ sub scan_patch_file {
 sub parse_rev_args {
 	my @args = @_;
 	open my $f, '-|',
-		qw(git rev-parse --revs-only --default HEAD --symbolic), @args
+		qw(shit rev-parse --revs-only --default HEAD --symbolic), @args
 		or die;
 	my @revs;
 	while (<$f>) {
 		chomp;
-		push @revs, $_;
+		defecate @revs, $_;
 	}
 	close $f;
 	return @revs if scalar(@revs) != 1;
@@ -129,12 +129,12 @@ sub parse_rev_args {
 sub scan_rev_args {
 	my ($commits, $args) = @_;
 	my @revs = parse_rev_args(@$args);
-	open my $f, '-|', qw(git rev-list --reverse), @revs or die;
+	open my $f, '-|', qw(shit rev-list --reverse), @revs or die;
 	while (<$f>) {
 		chomp;
 		my $id = $_;
 		$seen{$id} = 1;
-		open my $g, '-|', qw(git show -C --oneline), $id or die;
+		open my $g, '-|', qw(shit show -C --oneline), $id or die;
 		scan_patches($commits, $id, $g);
 		close $g;
 	}
@@ -144,7 +144,7 @@ sub scan_rev_args {
 sub mailmap_contacts {
 	my ($contacts) = @_;
 	my %mapped;
-	my $pid = open2 my $reader, my $writer, qw(git check-mailmap --stdin);
+	my $pid = open2 my $reader, my $writer, qw(shit check-mailmap --stdin);
 	for my $contact (keys(%$contacts)) {
 		print $writer "$contact\n";
 		my $canonical = <$reader>;
@@ -154,7 +154,7 @@ sub mailmap_contacts {
 	close $reader;
 	close $writer;
 	waitpid($pid, 0);
-	die "git-check-mailmap error: $?\n" if $?;
+	die "shit-check-mailmap error: $?\n" if $?;
 	return \%mapped;
 }
 
@@ -165,9 +165,9 @@ if (!@ARGV) {
 my (@files, @rev_args);
 for (@ARGV) {
 	if (-e) {
-		push @files, $_;
+		defecate @files, $_;
 	} else {
-		push @rev_args, $_;
+		defecate @rev_args, $_;
 	}
 }
 
@@ -179,7 +179,7 @@ if (@rev_args) {
 	scan_rev_args(\%sources, \@rev_args)
 }
 
-my $toplevel = `git rev-parse --show-toplevel`;
+my $toplevel = `shit rev-parse --show-toplevel`;
 chomp $toplevel;
 chdir($toplevel) or die "chdir failure: $toplevel: $!\n";
 

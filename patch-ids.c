@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "diff.h"
 #include "commit.h"
 #include "hash.h"

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "advice.h"
 #include "commit.h"
 #include "gettext.h"
@@ -36,7 +36,7 @@ void init_notes_merge_options(struct repository *r,
 
 static int path_to_oid(const char *path, struct object_id *oid)
 {
-	char hex_oid[GIT_MAX_HEXSZ];
+	char hex_oid[shit_MAX_HEXSZ];
 	int i = 0;
 	while (*path && i < the_hash_algo->hexsz) {
 		if (*path != '/')
@@ -277,36 +277,36 @@ static void check_notes_merge_worktree(struct notes_merge_options *o)
 		 * Must establish NOTES_MERGE_WORKTREE.
 		 * Abort if NOTES_MERGE_WORKTREE already exists
 		 */
-		if (file_exists(git_path(NOTES_MERGE_WORKTREE)) &&
-		    !is_empty_dir(git_path(NOTES_MERGE_WORKTREE))) {
+		if (file_exists(shit_path(NOTES_MERGE_WORKTREE)) &&
+		    !is_empty_dir(shit_path(NOTES_MERGE_WORKTREE))) {
 			if (advice_enabled(ADVICE_RESOLVE_CONFLICT))
 				die(_("You have not concluded your previous "
 				    "notes merge (%s exists).\nPlease, use "
-				    "'git notes merge --commit' or 'git notes "
+				    "'shit notes merge --commit' or 'shit notes "
 				    "merge --abort' to commit/abort the "
 				    "previous merge before you start a new "
-				    "notes merge."), git_path("NOTES_MERGE_*"));
+				    "notes merge."), shit_path("NOTES_MERGE_*"));
 			else
 				die(_("You have not concluded your notes merge "
-				    "(%s exists)."), git_path("NOTES_MERGE_*"));
+				    "(%s exists)."), shit_path("NOTES_MERGE_*"));
 		}
 
-		if (safe_create_leading_directories_const(git_path(
+		if (safe_create_leading_directories_const(shit_path(
 				NOTES_MERGE_WORKTREE "/.test")))
 			die_errno("unable to create directory %s",
-				  git_path(NOTES_MERGE_WORKTREE));
+				  shit_path(NOTES_MERGE_WORKTREE));
 		o->has_worktree = 1;
-	} else if (!file_exists(git_path(NOTES_MERGE_WORKTREE)))
+	} else if (!file_exists(shit_path(NOTES_MERGE_WORKTREE)))
 		/* NOTES_MERGE_WORKTREE should already be established */
 		die("missing '%s'. This should not happen",
-		    git_path(NOTES_MERGE_WORKTREE));
+		    shit_path(NOTES_MERGE_WORKTREE));
 }
 
 static void write_buf_to_worktree(const struct object_id *obj,
 				  const char *buf, unsigned long size)
 {
 	int fd;
-	char *path = git_pathdup(NOTES_MERGE_WORKTREE "/%s", oid_to_hex(obj));
+	char *path = shit_pathdup(NOTES_MERGE_WORKTREE "/%s", oid_to_hex(obj));
 	if (safe_create_leading_directories_const(path))
 		die_errno("unable to create directory for '%s'", path);
 
@@ -677,7 +677,7 @@ int notes_merge_commit(struct notes_merge_options *o,
 		       struct object_id *result_oid)
 {
 	/*
-	 * Iterate through files in .git/NOTES_MERGE_WORKTREE and add all
+	 * Iterate through files in .shit/NOTES_MERGE_WORKTREE and add all
 	 * found notes to 'partial_tree'. Write the updated notes tree to
 	 * the DB, and commit the resulting tree object while reusing the
 	 * commit message and parents from 'partial_commit'.
@@ -691,7 +691,7 @@ int notes_merge_commit(struct notes_merge_options *o,
 	const char *msg = strstr(buffer, "\n\n");
 	int baselen;
 
-	git_path_buf(&path, NOTES_MERGE_WORKTREE);
+	shit_path_buf(&path, NOTES_MERGE_WORKTREE);
 	if (o->verbosity >= 3)
 		printf("Committing notes in notes merge worktree at %s\n",
 			path.buf);
@@ -746,14 +746,14 @@ int notes_merge_commit(struct notes_merge_options *o,
 int notes_merge_abort(struct notes_merge_options *o)
 {
 	/*
-	 * Remove all files within .git/NOTES_MERGE_WORKTREE. We do not remove
-	 * the .git/NOTES_MERGE_WORKTREE directory itself, since it might be
+	 * Remove all files within .shit/NOTES_MERGE_WORKTREE. We do not remove
+	 * the .shit/NOTES_MERGE_WORKTREE directory itself, since it might be
 	 * the current working directory of the user.
 	 */
 	struct strbuf buf = STRBUF_INIT;
 	int ret;
 
-	git_path_buf(&buf, NOTES_MERGE_WORKTREE);
+	shit_path_buf(&buf, NOTES_MERGE_WORKTREE);
 	if (o->verbosity >= 3)
 		printf("Removing notes merge worktree at %s/*\n", buf.buf);
 	ret = remove_dir_recursively(&buf, REMOVE_DIR_KEEP_TOPLEVEL);

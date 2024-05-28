@@ -6,4 +6,4 @@
 	resolution.  `--no-rerere-autoupdate` is a good way to
 	double-check what `rerere` did and catch potential
 	mismerges, before committing the result to the index with a
-	separate `git add`.
+	separate `shit add`.

@@ -4,24 +4,24 @@
 #include "object-store-ll.h"
 #include "oidset.h"
 
-#define GIT_TEST_COMMIT_GRAPH "GIT_TEST_COMMIT_GRAPH"
-#define GIT_TEST_COMMIT_GRAPH_DIE_ON_PARSE "GIT_TEST_COMMIT_GRAPH_DIE_ON_PARSE"
-#define GIT_TEST_COMMIT_GRAPH_CHANGED_PATHS "GIT_TEST_COMMIT_GRAPH_CHANGED_PATHS"
+#define shit_TEST_COMMIT_GRAPH "shit_TEST_COMMIT_GRAPH"
+#define shit_TEST_COMMIT_GRAPH_DIE_ON_PARSE "shit_TEST_COMMIT_GRAPH_DIE_ON_PARSE"
+#define shit_TEST_COMMIT_GRAPH_CHANGED_PATHS "shit_TEST_COMMIT_GRAPH_CHANGED_PATHS"
 
 /*
  * This environment variable controls whether commits looked up via the
  * commit graph will be double checked to exist in the object database.
  */
-#define GIT_COMMIT_GRAPH_PARANOIA "GIT_COMMIT_GRAPH_PARANOIA"
+#define shit_COMMIT_GRAPH_PARANOIA "shit_COMMIT_GRAPH_PARANOIA"
 
 /*
  * This method is only used to enhance coverage of the commit-graph
- * feature in the test suite with the GIT_TEST_COMMIT_GRAPH and
- * GIT_TEST_COMMIT_GRAPH_CHANGED_PATHS environment variables. Do not
+ * feature in the test suite with the shit_TEST_COMMIT_GRAPH and
+ * shit_TEST_COMMIT_GRAPH_CHANGED_PATHS environment variables. Do not
  * call this method oustide of a builtin, and only if you know what
  * you are doing!
  */
-void git_test_write_commit_graph_or_die(void);
+void shit_test_write_commit_graph_or_die(void);
 
 struct commit;
 struct bloom_filter_settings;

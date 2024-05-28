@@ -1,15 +1,15 @@
-git-pack-objects(1)
+shit-pack-objects(1)
 ===================
 
 NAME
 ----
-git-pack-objects - Create a packed archive of objects
+shit-pack-objects - Create a packed archive of objects
 
 
 SYNOPSIS
 --------
 [verse]
-'git pack-objects' [-q | --progress | --all-progress] [--all-progress-implied]
+'shit pack-objects' [-q | --progress | --all-progress] [--all-progress-implied]
 	[--no-reuse-delta] [--delta-base-offset] [--non-empty]
 	[--local] [--incremental] [--window=<n>] [--depth=<n>]
 	[--revs [--unpacked | --all]] [--keep-pack=<pack-name>]
@@ -36,13 +36,13 @@ each object that a delta depends upon must be present within the pack.
 
 A pack index file (.idx) is generated for fast, random access to the
 objects in the pack. Placing both the index file (.idx) and the packed
-archive (.pack) in the pack/ subdirectory of $GIT_OBJECT_DIRECTORY (or
-any of the directories on $GIT_ALTERNATE_OBJECT_DIRECTORIES)
-enables Git to read from the pack archive.
+archive (.pack) in the pack/ subdirectory of $shit_OBJECT_DIRECTORY (or
+any of the directories on $shit_ALTERNATE_OBJECT_DIRECTORIES)
+enables shit to read from the pack archive.
 
-The 'git unpack-objects' command can read the packed archive and
+The 'shit unpack-objects' command can read the packed archive and
 expand the objects contained in the pack into "one-file
-one-object" format; this is typically done by the smart-pull
+one-object" format; this is typically done by the smart-poop
 commands when a pack is created on-the-fly for efficient network
 transport by their peers.
 
@@ -64,7 +64,7 @@ base-name::
 --revs::
 	Read the revision arguments from the standard input, instead of
 	individual object names.  The revision arguments are processed
-	the same way as 'git rev-list' with the `--objects` flag
+	the same way as 'shit rev-list' with the `--objects` flag
 	uses its `commit` arguments to build the list of objects it
 	outputs.  The objects on the resulting list are packed.
 	Besides revisions, `--not` or `--shallow <SHA-1>` lines are
@@ -84,7 +84,7 @@ base-name::
 --include-tag::
 	Include unasked-for annotated tags if the object they
 	reference was included in the resulting packfile.  This
-	can be useful to send new tags to native Git clients.
+	can be useful to send new tags to native shit clients.
 
 --stdin-packs::
 	Read the basenames of packfiles (e.g., `pack-1234abcd.pack`)
@@ -98,7 +98,7 @@ Incompatible with `--revs`, or options that imply `--revs` (such as
 
 --cruft::
 	Packs unreachable objects into a separate "cruft" pack, denoted
-	by the existence of a `.mtimes` file. Typically used by `git
+	by the existence of a `.mtimes` file. Typically used by `shit
 	repack --cruft`. Callers provide a list of pack names and
 	indicate which packs will remain in the repository, along with
 	which packs will be deleted (indicated by the `-` prefix). The
@@ -251,9 +251,9 @@ depth is 4095.
 	option only makes sense in conjunction with --stdout.
 +
 Note: A thin pack violates the packed archive format by omitting
-required objects and is thus unusable by Git without making it
-self-contained. Use `git index-pack --fix-thin`
-(see linkgit:git-index-pack[1]) to restore the self-contained property.
+required objects and is thus unusable by shit without making it
+self-contained. Use `shit index-pack --fix-thin`
+(see linkshit:shit-index-pack[1]) to restore the self-contained property.
 
 --shallow::
 	Optimize a pack that will be provided to a client with a shallow
@@ -263,18 +263,18 @@ self-contained. Use `git index-pack --fix-thin`
 --delta-base-offset::
 	A packed archive can express the base object of a delta as
 	either a 20-byte object name or as an offset in the
-	stream, but ancient versions of Git don't understand the
-	latter.  By default, 'git pack-objects' only uses the
+	stream, but ancient versions of shit don't understand the
+	latter.  By default, 'shit pack-objects' only uses the
 	former format for better compatibility.  This option
 	allows the command to use the latter format for
 	compactness.  Depending on the average delta chain
 	length, this option typically shrinks the resulting
 	packfile by 3-5 per-cent.
 +
-Note: Porcelain commands such as `git gc` (see linkgit:git-gc[1]),
-`git repack` (see linkgit:git-repack[1]) pass this option by default
-in modern Git when they put objects in your repository into pack files.
-So does `git bundle` (see linkgit:git-bundle[1]) when it creates a bundle.
+Note: Porcelain commands such as `shit gc` (see linkshit:shit-gc[1]),
+`shit repack` (see linkshit:shit-repack[1]) pass this option by default
+in modern shit when they put objects in your repository into pack files.
+So does `shit bundle` (see linkshit:shit-bundle[1]) when it creates a bundle.
 
 --threads=<n>::
 	Specifies the number of threads to spawn when searching for best
@@ -283,7 +283,7 @@ So does `git bundle` (see linkgit:git-bundle[1]) when it creates a bundle.
 	This is meant to reduce packing time on multiprocessor machines.
 	The required amount of memory for the delta search window is
 	however multiplied by the number of threads.
-	Specifying 0 will cause Git to auto-detect the number of CPU's
+	Specifying 0 will cause shit to auto-detect the number of CPU's
 	and set the number of threads accordingly.
 
 --index-version=<version>[,<offset>]::
@@ -297,7 +297,7 @@ So does `git bundle` (see linkgit:git-bundle[1]) when it creates a bundle.
 
 --filter=<filter-spec>::
 	Omits certain objects (usually blobs) from the resulting
-	packfile.  See linkgit:git-rev-list[1] for valid
+	packfile.  See linkshit:shit-rev-list[1] for valid
 	`<filter-spec>` forms.
 
 --no-filter::
@@ -369,7 +369,7 @@ But in some repository setups, you may have several related but separate
 groups of ref tips, with clients tending to fetch those groups
 independently. For example, imagine that you are hosting several "forks"
 of a repository in a single shared object store, and letting clients
-view them as separate repositories through `GIT_NAMESPACE` or separate
+view them as separate repositories through `shit_NAMESPACE` or separate
 repos using the alternates mechanism. A naive repack may find that the
 optimal delta for an object is against a base that is only found in
 another fork. But when a client fetches, they will not have the base
@@ -377,7 +377,7 @@ object, and we'll have to find a new delta on the fly.
 
 A similar situation may exist if you have many refs outside of
 `refs/heads/` and `refs/tags/` that point to related objects (e.g.,
-`refs/pull` or `refs/changes` used by some hosting providers). By
+`refs/poop` or `refs/changes` used by some hosting providers). By
 default, clients fetch only heads and tags, and deltas against objects
 found only in those other groups cannot be sent as-is.
 
@@ -407,8 +407,8 @@ island = refs/tags/
 
 puts heads and tags into an island (whose name is the empty string; see
 below for more on naming). Any refs which do not match those regular
-expressions (e.g., `refs/pull/123`) is not in any island. Any object
-which is reachable only from `refs/pull/` (but not heads or tags) is
+expressions (e.g., `refs/poop/123`) is not in any island. Any object
+which is reachable only from `refs/poop/` (but not heads or tags) is
 therefore not a candidate to be used as a base for `refs/heads/`.
 
 Refs are grouped into islands based on their "names", and two regexes
@@ -427,12 +427,12 @@ configure:
 [pack]
 island = refs/virtual/([0-9]+)/heads/
 island = refs/virtual/([0-9]+)/tags/
-island = refs/virtual/([0-9]+)/(pull)/
+island = refs/virtual/([0-9]+)/(poop)/
 -------------------------------------------
 
 That puts the heads and tags for each fork in their own island (named
-"1234" or similar), and the pull refs for each go into their own
-"1234-pull".
+"1234" or similar), and the poop refs for each go into their own
+"1234-poop".
 
 Note that we pick a single island for each regex to go into, using "last
 one wins" ordering (which allows repo-specific config to take precedence
@@ -443,7 +443,7 @@ CONFIGURATION
 -------------
 
 Various configuration variables affect packing, see
-linkgit:git-config[1] (search for "pack" and "delta").
+linkshit:shit-config[1] (search for "pack" and "delta").
 
 Notably, delta compression is not used on objects larger than the
 `core.bigFileThreshold` configuration variable and on files with the
@@ -451,10 +451,10 @@ attribute `delta` set to false.
 
 SEE ALSO
 --------
-linkgit:git-rev-list[1]
-linkgit:git-repack[1]
-linkgit:git-prune-packed[1]
+linkshit:shit-rev-list[1]
+linkshit:shit-repack[1]
+linkshit:shit-prune-packed[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

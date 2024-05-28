@@ -1,14 +1,14 @@
-git-web{litdd}browse(1)
+shit-web{litdd}browse(1)
 =======================
 
 NAME
 ----
-git-web--browse - Git helper script to launch a web browser
+shit-web--browse - shit helper script to launch a web browser
 
 SYNOPSIS
 --------
 [verse]
-'git web{litdd}browse' [<options>] (<URL>|<file>)...
+'shit web{litdd}browse' [<options>] (<URL>|<file>)...
 
 DESCRIPTION
 -----------
@@ -52,7 +52,7 @@ OPTIONS
 
 -c <conf.var>::
 --config=<conf.var>::
-	CONF.VAR is looked up in the Git config files. If it's set,
+	CONF.VAR is looked up in the shit config files. If it's set,
 	then its value specifies the browser that should be used.
 
 CONFIGURATION VARIABLES
@@ -71,7 +71,7 @@ browser.<tool>.path
 You can explicitly provide a full path to your preferred browser by
 setting the configuration variable `browser.<tool>.path`. For example,
 you can configure the absolute path to firefox by setting
-'browser.firefox.path'. Otherwise, 'git web{litdd}browse' assumes the tool
+'browser.firefox.path'. Otherwise, 'shit web{litdd}browse' assumes the tool
 is available in PATH.
 
 browser.<tool>.cmd
@@ -80,7 +80,7 @@ browser.<tool>.cmd
 When the browser, specified by options or configuration variables, is
 not among the supported ones, then the corresponding
 `browser.<tool>.cmd` configuration variable will be looked up. If this
-variable exists then 'git web{litdd}browse' will treat the specified tool
+variable exists then 'shit web{litdd}browse' will treat the specified tool
 as a custom command and will use a shell eval to run the command with
 the URLs passed as arguments.
 
@@ -106,19 +106,19 @@ the following:
 		cmd = A_PATH_TO/konqueror
 ------------------------------------------------
 
-Note about git-config --global
+Note about shit-config --global
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Note that these configuration variables should probably be set using
 the `--global` flag, for example like this:
 
 ------------------------------------------------
-$ git config --global web.browser firefox
+$ shit config --global web.browser firefox
 ------------------------------------------------
 
 as they are probably more user specific than repository specific.
-See linkgit:git-config[1] for more information about this.
+See linkshit:shit-config[1] for more information about this.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,4 +1,4 @@
-GIT v1.5.2.3 Release Notes
+shit v1.5.2.3 Release Notes
 ==========================
 
 Fixes since v1.5.2.2
@@ -20,8 +20,8 @@ Fixes since v1.5.2.2
 
  * Documentation Fixes and Updates
 
-   - git-config --regexp was not documented properly.
+   - shit-config --regexp was not documented properly.
 
-   - git-repack -a was not documented properly.
+   - shit-repack -a was not documented properly.
 
-   - git-remote -n was not documented properly.
+   - shit-remote -n was not documented properly.

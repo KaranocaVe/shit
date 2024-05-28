@@ -3,7 +3,7 @@
 
 struct config_set;
 struct fsmonitor_settings;
-struct git_hash_algo;
+struct shit_hash_algo;
 struct index_state;
 struct lock_file;
 struct pathspec;
@@ -45,7 +45,7 @@ struct repo_settings {
 	/*
 	 * Does this repository have core.useReplaceRefs=true (on by
 	 * default)? This provides a repository-scoped version of this
-	 * config, though it could be disabled process-wide via some Git
+	 * config, though it could be disabled process-wide via some shit
 	 * builtins or the --no-replace-objects option. See
 	 * replace_refs_enabled() for more details.
 	 */
@@ -76,13 +76,13 @@ struct repo_path_cache {
 struct repository {
 	/* Environment */
 	/*
-	 * Path to the git directory.
+	 * Path to the shit directory.
 	 * Cannot be NULL after initialization.
 	 */
-	char *gitdir;
+	char *shitdir;
 
 	/*
-	 * Path to the common git directory.
+	 * Path to the common shit directory.
 	 * Cannot be NULL after initialization.
 	 */
 	char *commondir;
@@ -143,12 +143,12 @@ struct repository {
 	/* Subsystems */
 	/*
 	 * Repository's config which contains key-value pairs from the usual
-	 * set of config files (i.e. repo specific .git/config, user wide
-	 * ~/.gitconfig, XDG config file and the global /etc/gitconfig)
+	 * set of config files (i.e. repo specific .shit/config, user wide
+	 * ~/.shitconfig, XDG config file and the global /etc/shitconfig)
 	 */
 	struct config_set *config;
 
-	/* Repository's submodule config as defined by '.gitmodules' */
+	/* Repository's submodule config as defined by '.shitmodules' */
 	struct submodule_cache *submodule_cache;
 
 	/*
@@ -161,10 +161,10 @@ struct repository {
 	struct remote_state *remote_state;
 
 	/* Repository's current hash algorithm, as serialized on disk. */
-	const struct git_hash_algo *hash_algo;
+	const struct shit_hash_algo *hash_algo;
 
 	/* Repository's compatibility hash algorithm. */
-	const struct git_hash_algo *compat_hash_algo;
+	const struct shit_hash_algo *compat_hash_algo;
 
 	/* Repository's reference storage format, as serialized on disk. */
 	unsigned int ref_storage_format;
@@ -182,7 +182,7 @@ struct repository {
 	/* Configurations */
 	int repository_format_worktree_config;
 
-	/* Indicate if a repository has a different 'commondir' from 'gitdir' */
+	/* Indicate if a repository has a different 'commondir' from 'shitdir' */
 	unsigned different_commondir:1;
 };
 
@@ -192,7 +192,7 @@ extern struct repository *the_repository;
  * Define a custom repository layout. Any field can be NULL, which
  * will default back to the path according to the default layout.
  */
-struct set_gitdir_args {
+struct set_shitdir_args {
 	const char *commondir;
 	const char *object_dir;
 	const char *graft_file;
@@ -201,19 +201,19 @@ struct set_gitdir_args {
 	int disable_ref_updates;
 };
 
-void repo_set_gitdir(struct repository *repo, const char *root,
-		     const struct set_gitdir_args *extra_args);
+void repo_set_shitdir(struct repository *repo, const char *root,
+		     const struct set_shitdir_args *extra_args);
 void repo_set_worktree(struct repository *repo, const char *path);
 void repo_set_hash_algo(struct repository *repo, int algo);
 void repo_set_compat_hash_algo(struct repository *repo, int compat_algo);
 void repo_set_ref_storage_format(struct repository *repo, unsigned int format);
 void initialize_repository(struct repository *repo);
 RESULT_MUST_BE_USED
-int repo_init(struct repository *r, const char *gitdir, const char *worktree);
+int repo_init(struct repository *r, const char *shitdir, const char *worktree);
 
 /*
  * Initialize the repository 'subrepo' as the submodule at the given path. If
- * the submodule's gitdir cannot be found at <path>/.git, this function calls
+ * the submodule's shitdir cannot be found at <path>/.shit, this function calls
  * submodule_from_path() to try to find it. treeish_name is only used if
  * submodule_from_path() needs to be called; see its documentation for more
  * information.

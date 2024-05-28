@@ -3,107 +3,107 @@
 # Copyright (c) 2005 Amos Waterland
 #
 
-test_description='git rebase assorted tests
+test_description='shit rebase assorted tests
 
-This test runs git rebase and checks that the author information is not lost
+This test runs shit rebase and checks that the author information is not lost
 among other things.
 '
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
-GIT_AUTHOR_NAME=author@name
-GIT_AUTHOR_EMAIL=bogus@email@address
-export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL
+shit_AUTHOR_NAME=author@name
+shit_AUTHOR_EMAIL=bogus@email@address
+export shit_AUTHOR_NAME shit_AUTHOR_EMAIL
 
 test_expect_success 'prepare repository with topic branches' '
 	test_commit "Add A." A First First &&
-	git checkout -b force-3way &&
+	shit checkout -b force-3way &&
 	echo Dummy >Y &&
-	git update-index --add Y &&
-	git commit -m "Add Y." &&
-	git checkout -b filemove &&
-	git reset --soft main &&
+	shit update-index --add Y &&
+	shit commit -m "Add Y." &&
+	shit checkout -b filemove &&
+	shit reset --soft main &&
 	mkdir D &&
-	git mv A D/A &&
-	git commit -m "Move A." &&
-	git checkout -b my-topic-branch main &&
+	shit mv A D/A &&
+	shit commit -m "Move A." &&
+	shit checkout -b my-topic-branch main &&
 	test_commit "Add B." B Second Second &&
-	git checkout -f main &&
+	shit checkout -f main &&
 	echo Third >>A &&
-	git update-index A &&
-	git commit -m "Modify A." &&
-	git checkout -b side my-topic-branch &&
+	shit update-index A &&
+	shit commit -m "Modify A." &&
+	shit checkout -b side my-topic-branch &&
 	echo Side >>C &&
-	git add C &&
-	git commit -m "Add C" &&
-	git checkout -f my-topic-branch &&
-	git tag topic
+	shit add C &&
+	shit commit -m "Add C" &&
+	shit checkout -f my-topic-branch &&
+	shit tag topic
 '
 
 test_expect_success 'rebase on dirty worktree' '
 	echo dirty >>A &&
-	test_must_fail git rebase main
+	test_must_fail shit rebase main
 '
 
 test_expect_success 'rebase on dirty cache' '
-	git add A &&
-	test_must_fail git rebase main
+	shit add A &&
+	test_must_fail shit rebase main
 '
 
 test_expect_success 'rebase against main' '
-	git reset --hard HEAD &&
-	git rebase main
+	shit reset --hard HEAD &&
+	shit rebase main
 '
 
 test_expect_success 'rebase sets ORIG_HEAD to pre-rebase state' '
-	git checkout -b orig-head topic &&
-	pre="$(git rev-parse --verify HEAD)" &&
-	git rebase main &&
+	shit checkout -b orig-head topic &&
+	pre="$(shit rev-parse --verify HEAD)" &&
+	shit rebase main &&
 	test_cmp_rev "$pre" ORIG_HEAD &&
 	test_cmp_rev ! "$pre" HEAD
 '
 
 test_expect_success 'rebase, with <onto> and <upstream> specified as :/quuxery' '
-	test_when_finished "git branch -D torebase" &&
-	git checkout -b torebase my-topic-branch^ &&
-	upstream=$(git rev-parse ":/Add B") &&
-	onto=$(git rev-parse ":/Add A") &&
-	git rebase --onto $onto $upstream &&
-	git reset --hard my-topic-branch^ &&
-	git rebase --onto ":/Add A" ":/Add B" &&
-	git checkout my-topic-branch
+	test_when_finished "shit branch -D torebase" &&
+	shit checkout -b torebase my-topic-branch^ &&
+	upstream=$(shit rev-parse ":/Add B") &&
+	onto=$(shit rev-parse ":/Add A") &&
+	shit rebase --onto $onto $upstream &&
+	shit reset --hard my-topic-branch^ &&
+	shit rebase --onto ":/Add A" ":/Add B" &&
+	shit checkout my-topic-branch
 '
 
 test_expect_success 'the rebase operation should not have destroyed author information' '
-	! (git log | grep "Author:" | grep "<>")
+	! (shit log | grep "Author:" | grep "<>")
 '
 
 test_expect_success 'the rebase operation should not have destroyed author information (2)' "
-	git log -1 |
-	grep 'Author: $GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>'
+	shit log -1 |
+	grep 'Author: $shit_AUTHOR_NAME <$shit_AUTHOR_EMAIL>'
 "
 
 test_expect_success 'HEAD was detached during rebase' '
-	test $(git rev-parse HEAD@{1}) != $(git rev-parse my-topic-branch@{1})
+	test $(shit rev-parse HEAD@{1}) != $(shit rev-parse my-topic-branch@{1})
 '
 
 test_expect_success 'rebase from ambiguous branch name' '
-	git checkout -b topic side &&
-	git rebase main
+	shit checkout -b topic side &&
+	shit rebase main
 '
 
 test_expect_success 'rebase off of the previous branch using "-"' '
-	git checkout main &&
-	git checkout HEAD^ &&
-	git rebase @{-1} >expect.messages &&
-	git merge-base main HEAD >expect.forkpoint &&
+	shit checkout main &&
+	shit checkout HEAD^ &&
+	shit rebase @{-1} >expect.messages &&
+	shit merge-base main HEAD >expect.forkpoint &&
 
-	git checkout main &&
-	git checkout HEAD^ &&
-	git rebase - >actual.messages &&
-	git merge-base main HEAD >actual.forkpoint &&
+	shit checkout main &&
+	shit checkout HEAD^ &&
+	shit rebase - >actual.messages &&
+	shit merge-base main HEAD >actual.forkpoint &&
 
 	test_cmp expect.forkpoint actual.forkpoint &&
 	# the next one is dubious---we may want to say "-",
@@ -112,106 +112,106 @@ test_expect_success 'rebase off of the previous branch using "-"' '
 '
 
 test_expect_success 'rebase a single mode change' '
-	git checkout main &&
-	git branch -D topic &&
+	shit checkout main &&
+	shit branch -D topic &&
 	echo 1 >X &&
-	git add X &&
+	shit add X &&
 	test_tick &&
-	git commit -m prepare &&
-	git checkout -b modechange HEAD^ &&
+	shit commit -m prepare &&
+	shit checkout -b modechange HEAD^ &&
 	echo 1 >X &&
-	git add X &&
+	shit add X &&
 	test_chmod +x A &&
 	test_tick &&
-	git commit -m modechange &&
-	GIT_TRACE=1 git rebase main
+	shit commit -m modechange &&
+	shit_TRACE=1 shit rebase main
 '
 
 test_expect_success 'rebase is not broken by diff.renames' '
 	test_config diff.renames copies &&
-	git checkout filemove &&
-	GIT_TRACE=1 git rebase force-3way
+	shit checkout filemove &&
+	shit_TRACE=1 shit rebase force-3way
 '
 
 test_expect_success 'setup: recover' '
-	test_might_fail git rebase --abort &&
-	git reset --hard &&
-	git checkout modechange
+	test_might_fail shit rebase --abort &&
+	shit reset --hard &&
+	shit checkout modechange
 '
 
 test_expect_success 'Show verbose error when HEAD could not be detached' '
 	>B &&
 	test_when_finished "rm -f B" &&
-	test_must_fail git rebase topic 2>output.err >output.out &&
+	test_must_fail shit rebase topic 2>output.err >output.out &&
 	test_grep "The following untracked working tree files would be overwritten by checkout:" output.err &&
 	test_grep B output.err
 '
 
 test_expect_success 'fail when upstream arg is missing and not on branch' '
-	git checkout topic &&
-	test_must_fail git rebase
+	shit checkout topic &&
+	test_must_fail shit rebase
 '
 
 test_expect_success 'fail when upstream arg is missing and not configured' '
-	git checkout -b no-config topic &&
-	test_must_fail git rebase
+	shit checkout -b no-config topic &&
+	test_must_fail shit rebase
 '
 
 test_expect_success 'rebase works with format.useAutoBase' '
 	test_config format.useAutoBase true &&
-	git checkout topic &&
-	git rebase main
+	shit checkout topic &&
+	shit rebase main
 '
 
 test_expect_success 'default to common base in @{upstream}s reflog if no upstream arg (--merge)' '
-	git checkout -b default-base main &&
-	git checkout -b default topic &&
-	git config branch.default.remote . &&
-	git config branch.default.merge refs/heads/default-base &&
-	git rebase --merge &&
-	git rev-parse --verify default-base >expect &&
-	git rev-parse default~1 >actual &&
+	shit checkout -b default-base main &&
+	shit checkout -b default topic &&
+	shit config branch.default.remote . &&
+	shit config branch.default.merge refs/heads/default-base &&
+	shit rebase --merge &&
+	shit rev-parse --verify default-base >expect &&
+	shit rev-parse default~1 >actual &&
 	test_cmp expect actual &&
-	git checkout default-base &&
-	git reset --hard HEAD^ &&
-	git checkout default &&
-	git rebase --merge &&
-	git rev-parse --verify default-base >expect &&
-	git rev-parse default~1 >actual &&
+	shit checkout default-base &&
+	shit reset --hard HEAD^ &&
+	shit checkout default &&
+	shit rebase --merge &&
+	shit rev-parse --verify default-base >expect &&
+	shit rev-parse default~1 >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'default to common base in @{upstream}s reflog if no upstream arg (--apply)' '
-	git checkout -B default-base main &&
-	git checkout -B default topic &&
-	git config branch.default.remote . &&
-	git config branch.default.merge refs/heads/default-base &&
-	git rebase --apply &&
-	git rev-parse --verify default-base >expect &&
-	git rev-parse default~1 >actual &&
+	shit checkout -B default-base main &&
+	shit checkout -B default topic &&
+	shit config branch.default.remote . &&
+	shit config branch.default.merge refs/heads/default-base &&
+	shit rebase --apply &&
+	shit rev-parse --verify default-base >expect &&
+	shit rev-parse default~1 >actual &&
 	test_cmp expect actual &&
-	git checkout default-base &&
-	git reset --hard HEAD^ &&
-	git checkout default &&
-	git rebase --apply &&
-	git rev-parse --verify default-base >expect &&
-	git rev-parse default~1 >actual &&
+	shit checkout default-base &&
+	shit reset --hard HEAD^ &&
+	shit checkout default &&
+	shit rebase --apply &&
+	shit rev-parse --verify default-base >expect &&
+	shit rev-parse default~1 >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'cherry-picked commits and fork-point work together' '
-	git checkout default-base &&
+	shit checkout default-base &&
 	echo Amended >A &&
-	git commit -a --no-edit --amend &&
+	shit commit -a --no-edit --amend &&
 	test_commit B B &&
 	test_commit new_B B "New B" &&
 	test_commit C C &&
-	git checkout default &&
-	git reset --hard default-base@{4} &&
+	shit checkout default &&
+	shit reset --hard default-base@{4} &&
 	test_commit D D &&
-	git cherry-pick -2 default-base^ &&
+	shit cherry-pick -2 default-base^ &&
 	test_commit final_B B "Final B" &&
-	git rebase &&
+	shit rebase &&
 	echo Amended >expect &&
 	test_cmp expect A &&
 	echo "Final B" >expect &&
@@ -223,14 +223,14 @@ test_expect_success 'cherry-picked commits and fork-point work together' '
 '
 
 test_expect_success 'rebase --apply -q is quiet' '
-	git checkout -b quiet topic &&
-	git rebase --apply -q main >output.out 2>&1 &&
+	shit checkout -b quiet topic &&
+	shit rebase --apply -q main >output.out 2>&1 &&
 	test_must_be_empty output.out
 '
 
 test_expect_success 'rebase --merge -q is quiet' '
-	git checkout -B quiet topic &&
-	git rebase --merge -q main >output.out 2>&1 &&
+	shit checkout -B quiet topic &&
+	shit rebase --merge -q main >output.out 2>&1 &&
 	test_must_be_empty output.out
 '
 
@@ -242,57 +242,57 @@ test_expect_success 'Rebase a commit that sprinkles CRs in' '
 		echo "FQur" &&
 		echo "Five"
 	) | q_to_cr >CR &&
-	git add CR &&
+	shit add CR &&
 	test_tick &&
-	git commit -a -m "A file with a line with CR" &&
-	git tag file-with-cr &&
-	git checkout HEAD^0 &&
-	git rebase --onto HEAD^^ HEAD^ &&
-	git diff --exit-code file-with-cr:CR HEAD:CR
+	shit commit -a -m "A file with a line with CR" &&
+	shit tag file-with-cr &&
+	shit checkout HEAD^0 &&
+	shit rebase --onto HEAD^^ HEAD^ &&
+	shit diff --exit-code file-with-cr:CR HEAD:CR
 '
 
 test_expect_success 'rebase can copy notes' '
-	git config notes.rewrite.rebase true &&
-	git config notes.rewriteRef "refs/notes/*" &&
+	shit config notes.rewrite.rebase true &&
+	shit config notes.rewriteRef "refs/notes/*" &&
 	test_commit n1 &&
 	test_commit n2 &&
 	test_commit n3 &&
-	git notes add -m"a note" n3 &&
-	git rebase --onto n1 n2 &&
-	test "a note" = "$(git notes show HEAD)"
+	shit notes add -m"a note" n3 &&
+	shit rebase --onto n1 n2 &&
+	test "a note" = "$(shit notes show HEAD)"
 '
 
 test_expect_success 'rebase -m can copy notes' '
-	git reset --hard n3 &&
-	git rebase -m --onto n1 n2 &&
-	test "a note" = "$(git notes show HEAD)"
+	shit reset --hard n3 &&
+	shit rebase -m --onto n1 n2 &&
+	test "a note" = "$(shit notes show HEAD)"
 '
 
 test_expect_success 'rebase commit with an ancient timestamp' '
-	git reset --hard &&
+	shit reset --hard &&
 
-	>old.one && git add old.one && test_tick &&
-	git commit --date="@12345 +0400" -m "Old one" &&
-	>old.two && git add old.two && test_tick &&
-	git commit --date="@23456 +0500" -m "Old two" &&
-	>old.three && git add old.three && test_tick &&
-	git commit --date="@34567 +0600" -m "Old three" &&
+	>old.one && shit add old.one && test_tick &&
+	shit commit --date="@12345 +0400" -m "Old one" &&
+	>old.two && shit add old.two && test_tick &&
+	shit commit --date="@23456 +0500" -m "Old two" &&
+	>old.three && shit add old.three && test_tick &&
+	shit commit --date="@34567 +0600" -m "Old three" &&
 
-	git cat-file commit HEAD^^ >actual &&
+	shit cat-file commit HEAD^^ >actual &&
 	grep "author .* 12345 +0400$" actual &&
-	git cat-file commit HEAD^ >actual &&
+	shit cat-file commit HEAD^ >actual &&
 	grep "author .* 23456 +0500$" actual &&
-	git cat-file commit HEAD >actual &&
+	shit cat-file commit HEAD >actual &&
 	grep "author .* 34567 +0600$" actual &&
 
-	git rebase --onto HEAD^^ HEAD^ &&
+	shit rebase --onto HEAD^^ HEAD^ &&
 
-	git cat-file commit HEAD >actual &&
+	shit cat-file commit HEAD >actual &&
 	grep "author .* 34567 +0600$" actual
 '
 
 test_expect_success 'rebase with "From " line in commit message' '
-	git checkout -b preserve-from main~1 &&
+	shit checkout -b preserve-from main~1 &&
 	cat >From_.msg <<EOF &&
 Somebody embedded an mbox in a commit message
 
@@ -306,10 +306,10 @@ Subject: not this message
 something
 EOF
 	>From_ &&
-	git add From_ &&
-	git commit -F From_.msg &&
-	git rebase main &&
-	git log -1 --pretty=format:%B >out &&
+	shit add From_ &&
+	shit commit -F From_.msg &&
+	shit rebase main &&
+	shit log -1 --pretty=format:%B >out &&
 	test_cmp From_.msg out
 '
 
@@ -319,48 +319,48 @@ test_expect_success 'rebase --apply and --show-current-patch' '
 		cd conflict-apply &&
 		test_commit init &&
 		echo one >>init.t &&
-		git commit -a -m one &&
+		shit commit -a -m one &&
 		echo two >>init.t &&
-		git commit -a -m two &&
-		git tag two &&
-		test_must_fail git rebase --apply -f --onto init HEAD^ &&
-		GIT_TRACE=1 git rebase --show-current-patch >/dev/null 2>stderr &&
-		grep "show.*$(git rev-parse two)" stderr
+		shit commit -a -m two &&
+		shit tag two &&
+		test_must_fail shit rebase --apply -f --onto init HEAD^ &&
+		shit_TRACE=1 shit rebase --show-current-patch >/dev/null 2>stderr &&
+		grep "show.*$(shit rev-parse two)" stderr
 	)
 '
 
-test_expect_success 'rebase --apply and .gitattributes' '
+test_expect_success 'rebase --apply and .shitattributes' '
 	test_create_repo attributes &&
 	(
 		cd attributes &&
 		test_commit init &&
-		git config filter.test.clean "sed -e '\''s/smudged/clean/g'\''" &&
-		git config filter.test.smudge "sed -e '\''s/clean/smudged/g'\''" &&
+		shit config filter.test.clean "sed -e '\''s/smudged/clean/g'\''" &&
+		shit config filter.test.smudge "sed -e '\''s/clean/smudged/g'\''" &&
 
 		test_commit second &&
-		git checkout -b test HEAD^ &&
+		shit checkout -b test HEAD^ &&
 
-		echo "*.txt filter=test" >.gitattributes &&
-		git add .gitattributes &&
+		echo "*.txt filter=test" >.shitattributes &&
+		shit add .shitattributes &&
 		test_commit third &&
 
 		echo "This text is smudged." >a.txt &&
-		git add a.txt &&
+		shit add a.txt &&
 		test_commit fourth &&
 
-		git checkout -b removal HEAD^ &&
-		git rm .gitattributes &&
-		git add -u &&
+		shit checkout -b removal HEAD^ &&
+		shit rm .shitattributes &&
+		shit add -u &&
 		test_commit fifth &&
-		git cherry-pick test &&
+		shit cherry-pick test &&
 
-		git checkout test &&
-		git rebase main &&
+		shit checkout test &&
+		shit rebase main &&
 		grep "smudged" a.txt &&
 
-		git checkout removal &&
-		git reset --hard &&
-		git rebase main &&
+		shit checkout removal &&
+		shit reset --hard &&
+		shit rebase main &&
 		grep "clean" a.txt
 	)
 '
@@ -371,77 +371,77 @@ test_expect_success 'rebase--merge.sh and --show-current-patch' '
 		cd conflict-merge &&
 		test_commit init &&
 		echo one >>init.t &&
-		git commit -a -m one &&
+		shit commit -a -m one &&
 		echo two >>init.t &&
-		git commit -a -m two &&
-		git tag two &&
-		test_must_fail git rebase --merge --onto init HEAD^ &&
-		git rebase --show-current-patch >actual.patch &&
-		GIT_TRACE=1 git rebase --show-current-patch >/dev/null 2>stderr &&
+		shit commit -a -m two &&
+		shit tag two &&
+		test_must_fail shit rebase --merge --onto init HEAD^ &&
+		shit rebase --show-current-patch >actual.patch &&
+		shit_TRACE=1 shit rebase --show-current-patch >/dev/null 2>stderr &&
 		grep "show.*REBASE_HEAD" stderr &&
-		test "$(git rev-parse REBASE_HEAD)" = "$(git rev-parse two)"
+		test "$(shit rev-parse REBASE_HEAD)" = "$(shit rev-parse two)"
 	)
 '
 
 test_expect_success 'switch to branch checked out here' '
-	git checkout main &&
-	git rebase main main
+	shit checkout main &&
+	shit rebase main main
 '
 
 test_expect_success 'switch to branch checked out elsewhere fails' '
 	test_when_finished "
-		git worktree remove wt1 &&
-		git worktree remove wt2 &&
-		git branch -d shared
+		shit worktree remove wt1 &&
+		shit worktree remove wt2 &&
+		shit branch -d shared
 	" &&
-	git worktree add wt1 -b shared &&
-	git worktree add wt2 -f shared &&
+	shit worktree add wt1 -b shared &&
+	shit worktree add wt2 -f shared &&
 	# we test in both worktrees to ensure that works
 	# as expected with "first" and "next" worktrees
-	test_must_fail git -C wt1 rebase shared shared &&
-	test_must_fail git -C wt2 rebase shared shared
+	test_must_fail shit -C wt1 rebase shared shared &&
+	test_must_fail shit -C wt2 rebase shared shared
 '
 
 test_expect_success 'switch to branch not checked out' '
-	git checkout main &&
-	git branch other &&
-	git rebase main other
+	shit checkout main &&
+	shit branch other &&
+	shit rebase main other
 '
 
 test_expect_success 'switch to non-branch detaches HEAD' '
-	git checkout main &&
-	old_main=$(git rev-parse HEAD) &&
-	git rebase First Second^0 &&
+	shit checkout main &&
+	old_main=$(shit rev-parse HEAD) &&
+	shit rebase First Second^0 &&
 	test_cmp_rev HEAD Second &&
 	test_cmp_rev main $old_main &&
-	test_must_fail git symbolic-ref HEAD
+	test_must_fail shit symbolic-ref HEAD
 '
 
 test_expect_success 'refuse to switch to branch checked out elsewhere' '
-	git checkout main &&
-	git worktree add wt &&
-	test_must_fail git -C wt rebase main main 2>err &&
+	shit checkout main &&
+	shit worktree add wt &&
+	test_must_fail shit -C wt rebase main main 2>err &&
 	test_grep "already used by worktree at" err
 '
 
 test_expect_success 'rebase when inside worktree subdirectory' '
-	git init main-wt &&
+	shit init main-wt &&
 	(
 		cd main-wt &&
-		git commit --allow-empty -m "initial" &&
+		shit commit --allow-empty -m "initial" &&
 		mkdir -p foo/bar &&
 		test_commit foo/bar/baz &&
 		mkdir -p a/b &&
 		test_commit a/b/c &&
 		# create another branch for our other worktree
-		git branch other &&
-		git worktree add ../other-wt other &&
+		shit branch other &&
+		shit worktree add ../other-wt other &&
 		cd ../other-wt &&
 		# create and cd into a subdirectory
 		mkdir -p random/dir &&
 		cd random/dir &&
 		# now do the rebase
-		git rebase --onto HEAD^^ HEAD^  # drops the HEAD^ commit
+		shit rebase --onto HEAD^^ HEAD^  # drops the HEAD^ commit
 	)
 '
 

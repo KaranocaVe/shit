@@ -28,19 +28,19 @@ else
 fi
 
 wiki_upload_file () {
-	"$CURR_DIR"/test-gitmw.pl upload_file "$@"
+	"$CURR_DIR"/test-shitmw.pl upload_file "$@"
 }
 
 wiki_getpage () {
-	"$CURR_DIR"/test-gitmw.pl get_page "$@"
+	"$CURR_DIR"/test-shitmw.pl get_page "$@"
 }
 
 wiki_delete_page () {
-	"$CURR_DIR"/test-gitmw.pl delete_page "$@"
+	"$CURR_DIR"/test-shitmw.pl delete_page "$@"
 }
 
 wiki_editpage () {
-	"$CURR_DIR"/test-gitmw.pl edit_page "$@"
+	"$CURR_DIR"/test-shitmw.pl edit_page "$@"
 }
 
 die () {
@@ -55,30 +55,30 @@ die_with_status () {
 }
 
 
-# Check the preconditions to run git-remote-mediawiki's tests
+# Check the preconditions to run shit-remote-mediawiki's tests
 test_check_precond () {
 	if ! test_have_prereq PERL
 	then
-		skip_all='skipping gateway git-mw tests, perl not available'
+		skip_all='skipping gateway shit-mw tests, perl not available'
 		test_done
 	fi
 
-	GIT_EXEC_PATH=$(cd "$(dirname "$0")" && cd "../.." && pwd)
-	PATH="$GIT_EXEC_PATH"'/bin-wrapper:'"$PATH"
+	shit_EXEC_PATH=$(cd "$(dirname "$0")" && cd "../.." && pwd)
+	PATH="$shit_EXEC_PATH"'/bin-wrapper:'"$PATH"
 
 	if ! test -d "$WIKI_DIR_INST/$WIKI_DIR_NAME"
 	then
-		skip_all='skipping gateway git-mw tests, no mediawiki found'
+		skip_all='skipping gateway shit-mw tests, no mediawiki found'
 		test_done
 	fi
 }
 
-# test_diff_directories <dir_git> <dir_wiki>
+# test_diff_directories <dir_shit> <dir_wiki>
 #
-# Compare the contents of directories <dir_git> and <dir_wiki> with diff
+# Compare the contents of directories <dir_shit> and <dir_wiki> with diff
 # and errors if they do not match. The program will
-# not look into .git in the process.
-# Warning: the first argument MUST be the directory containing the git data
+# not look into .shit in the process.
+# Warning: the first argument MUST be the directory containing the shit data
 test_diff_directories () {
 	rm -rf "$1_tmp"
 	mkdir -p "$1_tmp"
@@ -139,14 +139,14 @@ wiki_page_exist () {
 #
 # Fetch the name of each page on the wiki.
 wiki_getallpagename () {
-	"$CURR_DIR"/test-gitmw.pl getallpagename
+	"$CURR_DIR"/test-shitmw.pl getallpagename
 }
 
 # wiki_getallpagecategory <category>
 #
 # Fetch the name of each page belonging to <category> on the wiki.
 wiki_getallpagecategory () {
-	"$CURR_DIR"/test-gitmw.pl getallpagename "$@"
+	"$CURR_DIR"/test-shitmw.pl getallpagename "$@"
 }
 
 # wiki_getallpage <dest_dir> [<category>]
@@ -329,14 +329,14 @@ install_mediawiki () {
 	    --dbtype sqlite \
 	    --dbpath $PWD/$FILES_FOLDER_DB/ \
 	    --pass "$WIKI_PASSW" \
-	    Git-MediaWiki-Test \
+	    shit-MediaWiki-Test \
 	    "$WIKI_ADMIN" ||
 		error "Couldn't run $install_script, see errors above. Try to run ./install-wiki.sh delete first."
 	cat <<-'EOF' >>$localsettings
-# Custom settings added by test-gitmw-lib.sh
+# Custom settings added by test-shitmw-lib.sh
 #
 # Uploading text files is needed for
-# t9363-mw-to-git-export-import.sh
+# t9363-mw-to-shit-export-import.sh
 $wgEnableUploads = true;
 $wgFileExtensions[] = 'txt';
 EOF

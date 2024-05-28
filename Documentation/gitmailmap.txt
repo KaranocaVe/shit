@@ -1,13 +1,13 @@
-gitmailmap(5)
+shitmailmap(5)
 =============
 
 NAME
 ----
-gitmailmap - Map author/committer names and/or E-Mail addresses
+shitmailmap - Map author/committer names and/or E-Mail addresses
 
 SYNOPSIS
 --------
-$GIT_WORK_TREE/.mailmap
+$shit_WORK_TREE/.mailmap
 
 
 DESCRIPTION
@@ -15,7 +15,7 @@ DESCRIPTION
 
 If the file `.mailmap` exists at the toplevel of the repository, or at
 the location pointed to by the `mailmap.file` or `mailmap.blob`
-configuration options (see linkgit:git-config[1]), it
+configuration options (see linkshit:shit-config[1]), it
 is used to map author and committer names and email addresses to
 canonical real names and email addresses.
 
@@ -58,7 +58,7 @@ this would also match the 'Commit Name <commit&#64;email.xx>' above:
 NOTES
 -----
 
-Git does not follow symbolic links when accessing a `.mailmap` file in
+shit does not follow symbolic links when accessing a `.mailmap` file in
 the working tree. This keeps behavior consistent when the file is
 accessed from the index or a tree versus from the filesystem.
 
@@ -122,9 +122,9 @@ Jane Doe <jane@example.com> Jane <bugs@example.com>
 
 SEE ALSO
 --------
-linkgit:git-check-mailmap[1]
+linkshit:shit-check-mailmap[1]
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

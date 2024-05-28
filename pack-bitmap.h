@@ -18,7 +18,7 @@ struct bitmap_disk_header {
 	uint16_t version;
 	uint16_t options;
 	uint32_t entry_count;
-	unsigned char checksum[GIT_MAX_RAWSZ];
+	unsigned char checksum[shit_MAX_RAWSZ];
 };
 
 #define NEEDS_BITMAP (1u<<22)
@@ -47,13 +47,13 @@ typedef int (*show_reachable_fn)(
 	enum object_type type,
 	int flags,
 	uint32_t hash,
-	struct packed_git *found_pack,
+	struct packed_shit *found_pack,
 	off_t found_offset);
 
 struct bitmap_index;
 
 struct bitmapped_pack {
-	struct packed_git *p;
+	struct packed_shit *p;
 
 	uint32_t bitmap_pos;
 	uint32_t bitmap_nr;
@@ -61,8 +61,8 @@ struct bitmapped_pack {
 	uint32_t pack_int_id; /* MIDX only */
 };
 
-struct bitmap_index *prepare_bitmap_git(struct repository *r);
-struct bitmap_index *prepare_midx_bitmap_git(struct multi_pack_index *midx);
+struct bitmap_index *prepare_bitmap_shit(struct repository *r);
+struct bitmap_index *prepare_midx_bitmap_shit(struct multi_pack_index *midx);
 void count_bitmap_commit_list(struct bitmap_index *, uint32_t *commits,
 			      uint32_t *trees, uint32_t *blobs, uint32_t *tags);
 void traverse_bitmap_commit_list(struct bitmap_index *,
@@ -72,12 +72,12 @@ void test_bitmap_walk(struct rev_info *revs);
 int test_bitmap_commits(struct repository *r);
 int test_bitmap_hashes(struct repository *r);
 
-#define GIT_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL \
-	"GIT_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL"
+#define shit_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL \
+	"shit_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL"
 
 struct bitmap_index *prepare_bitmap_walk(struct rev_info *revs,
 					 int filter_provided_objects);
-void reuse_partial_packfile_from_bitmap(struct bitmap_index *bitmap_git,
+void reuse_partial_packfile_from_bitmap(struct bitmap_index *bitmap_shit,
 					struct bitmapped_pack **packs_out,
 					size_t *packs_nr_out,
 					struct bitmap **reuse_out,
@@ -102,12 +102,12 @@ void bitmap_writer_set_checksum(const unsigned char *sha1);
 void bitmap_writer_build_type_index(struct packing_data *to_pack,
 				    struct pack_idx_entry **index,
 				    uint32_t index_nr);
-uint32_t *create_bitmap_mapping(struct bitmap_index *bitmap_git,
+uint32_t *create_bitmap_mapping(struct bitmap_index *bitmap_shit,
 				struct packing_data *mapping);
 int rebuild_bitmap(const uint32_t *reposition,
 		   struct ewah_bitmap *source,
 		   struct bitmap *dest);
-struct ewah_bitmap *bitmap_for_commit(struct bitmap_index *bitmap_git,
+struct ewah_bitmap *bitmap_for_commit(struct bitmap_index *bitmap_shit,
 				      struct commit *commit);
 void bitmap_writer_select_commits(struct commit **indexed_commits,
 		unsigned int indexed_commits_nr, int max_bitmaps);
@@ -117,9 +117,9 @@ void bitmap_writer_finish(struct pack_idx_entry **index,
 			  const char *filename,
 			  uint16_t options);
 char *midx_bitmap_filename(struct multi_pack_index *midx);
-char *pack_bitmap_filename(struct packed_git *p);
+char *pack_bitmap_filename(struct packed_shit *p);
 
-int bitmap_is_midx(struct bitmap_index *bitmap_git);
+int bitmap_is_midx(struct bitmap_index *bitmap_shit);
 
 const struct string_list *bitmap_preferred_tips(struct repository *r);
 int bitmap_is_preferred_refname(struct repository *r, const char *refname);

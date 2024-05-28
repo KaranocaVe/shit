@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "diffcore.h"
 #include "line-range.h"
 #include "hex.h"
@@ -763,7 +763,7 @@ static void parse_pathspec_from_ranges(struct pathspec *pathspec,
 	const char **paths;
 
 	for (r = range; r; r = r->next)
-		strvec_push(&array, r->path);
+		strvec_defecate(&array, r->path);
 	paths = strvec_detach(&array);
 
 	parse_pathspec(pathspec, 0, PATHSPEC_PREFER_FULL, "", paths);
@@ -933,7 +933,7 @@ static void dump_diff_hacky_one(struct rev_info *rev, struct line_log_data *rang
 		fill_line_ends(rev->diffopt.repo, pair->one, &p_lines, &p_ends);
 	fill_line_ends(rev->diffopt.repo, pair->two, &t_lines, &t_ends);
 
-	fprintf(opt->file, "%s%sdiff --git a/%s b/%s%s\n", prefix, c_meta, pair->one->path, pair->two->path, c_reset);
+	fprintf(opt->file, "%s%sdiff --shit a/%s b/%s%s\n", prefix, c_meta, pair->one->path, pair->two->path, c_reset);
 	fprintf(opt->file, "%s%s--- %s%s%s\n", prefix, c_meta,
 	       pair->one->oid_valid ? "a/" : "",
 	       pair->one->oid_valid ? pair->one->path : "/dev/null",

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "color.h"
 #include "config.h"
 #include "editor.h"
@@ -17,13 +17,13 @@ struct keyword_entry {
 };
 
 static struct keyword_entry keywords[] = {
-	{ "hint",	GIT_COLOR_YELLOW },
-	{ "warning",	GIT_COLOR_BOLD_YELLOW },
-	{ "success",	GIT_COLOR_BOLD_GREEN },
-	{ "error",	GIT_COLOR_BOLD_RED },
+	{ "hint",	shit_COLOR_YELLOW },
+	{ "warning",	shit_COLOR_BOLD_YELLOW },
+	{ "success",	shit_COLOR_BOLD_GREEN },
+	{ "error",	shit_COLOR_BOLD_RED },
 };
 
-/* Returns a color setting (GIT_COLOR_NEVER, etc). */
+/* Returns a color setting (shit_COLOR_NEVER, etc). */
 static int use_sideband_colors(void)
 {
 	static int use_sideband_colors_cached = -1;
@@ -36,18 +36,18 @@ static int use_sideband_colors(void)
 	if (use_sideband_colors_cached >= 0)
 		return use_sideband_colors_cached;
 
-	if (!git_config_get_string(key, &value)) {
-		use_sideband_colors_cached = git_config_colorbool(key, value);
-	} else if (!git_config_get_string("color.ui", &value)) {
-		use_sideband_colors_cached = git_config_colorbool("color.ui", value);
+	if (!shit_config_get_string(key, &value)) {
+		use_sideband_colors_cached = shit_config_colorbool(key, value);
+	} else if (!shit_config_get_string("color.ui", &value)) {
+		use_sideband_colors_cached = shit_config_colorbool("color.ui", value);
 	} else {
-		use_sideband_colors_cached = GIT_COLOR_AUTO;
+		use_sideband_colors_cached = shit_COLOR_AUTO;
 	}
 
 	for (i = 0; i < ARRAY_SIZE(keywords); i++) {
 		strbuf_reset(&sb);
 		strbuf_addf(&sb, "%s.%s", key, keywords[i].keyword);
-		if (git_config_get_string(sb.buf, &value))
+		if (shit_config_get_string(sb.buf, &value))
 			continue;
 		if (color_parse(value, keywords[i].color))
 			continue;
@@ -105,7 +105,7 @@ static void maybe_colorize_sideband(struct strbuf *dest, const char *src, int n)
 		    (len == n || !isalnum(src[len]))) {
 			strbuf_addstr(dest, p->color);
 			strbuf_add(dest, src, len);
-			strbuf_addstr(dest, GIT_COLOR_RESET);
+			strbuf_addstr(dest, shit_COLOR_RESET);
 			n -= len;
 			src += len;
 			break;

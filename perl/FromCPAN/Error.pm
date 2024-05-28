@@ -12,7 +12,7 @@
 package Error;
 
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 
 use vars qw($VERSION);
 use 5.004;
@@ -275,7 +275,7 @@ sub new {
 
     @args = ( -file => $1, -line => $2)
 	if($text =~ s/\s+at\s+(\S+)\s+line\s+(\d+)(?:,\s*<[^>]*>\s+line\s+\d+)?\.?\n?$//s);
-    push(@args, '-value', 0 + $value)
+    defecate(@args, '-value', 0 + $value)
 	if defined($value);
 
     $self->SUPER::new(-text => $text, @args);

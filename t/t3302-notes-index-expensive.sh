@@ -5,8 +5,8 @@
 
 test_description='Test commit notes index (expensive!)'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -14,8 +14,8 @@ TEST_PASSES_SANITIZE_LEAK=true
 create_repo () {
 	number_of_commits=$1
 	nr=0
-	test -d .git || {
-	git init &&
+	test -d .shit || {
+	shit init &&
 	(
 		while test $nr -lt $number_of_commits
 		do
@@ -26,7 +26,7 @@ create_repo () {
 			cat <<-INPUT_END &&
 			commit refs/heads/main
 			mark :$mark
-			committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+			committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 			data <<COMMIT
 			commit #$nr
 			COMMIT
@@ -48,7 +48,7 @@ create_repo () {
 		test_tick &&
 		cat <<-INPUT_END &&
 		commit refs/notes/commits
-		committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+		committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 		data <<COMMIT
 		notes
 		COMMIT
@@ -57,15 +57,15 @@ create_repo () {
 
 		cat note_commit
 	) |
-	git fast-import --quiet &&
-	git config core.notesRef refs/notes/commits
+	shit fast-import --quiet &&
+	shit config core.notesRef refs/notes/commits
 	}
 }
 
 test_notes () {
 	count=$1 &&
-	git config core.notesRef refs/notes/commits &&
-	git log >tmp &&
+	shit config core.notesRef refs/notes/commits &&
+	shit log >tmp &&
 	grep "^    " tmp >output &&
 	i=$count &&
 	while test $i -gt 0
@@ -84,14 +84,14 @@ write_script time_notes <<\EOF
 	do
 		case $1 in
 		no-notes)
-			GIT_NOTES_REF=non-existing
-			export GIT_NOTES_REF
+			shit_NOTES_REF=non-existing
+			export shit_NOTES_REF
 			;;
 		notes)
-			unset GIT_NOTES_REF
+			unset shit_NOTES_REF
 			;;
 		esac
-		git log || exit $?
+		shit log || exit $?
 		i=$(($i+1))
 	done >/dev/null
 EOF

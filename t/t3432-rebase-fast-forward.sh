@@ -5,8 +5,8 @@
 
 test_description='ensure rebase fast-forwards commits when possible'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -16,7 +16,7 @@ test_expect_success setup '
 	test_commit B &&
 	test_commit C &&
 	test_commit D &&
-	git checkout -t -b side
+	shit checkout -t -b side
 '
 
 test_rebase_same_head () {
@@ -53,20 +53,20 @@ test_rebase_same_head_ () {
 	shift &&
 	if test $abbreviate -eq 1
 	then
-		msg="git rebase$flag $* (rebase.abbreviateCommands = true) with $changes is $what with $cmp HEAD"
+		msg="shit rebase$flag $* (rebase.abbreviateCommands = true) with $changes is $what with $cmp HEAD"
 	else
-		msg="git rebase$flag $* with $changes is $what with $cmp HEAD"
+		msg="shit rebase$flag $* with $changes is $what with $cmp HEAD"
 	fi &&
 	test_expect_$status "$msg" "
 		if test $abbreviate -eq 1
 		then
 			test_config rebase.abbreviateCommands true
 		fi &&
-		oldhead=\$(git rev-parse HEAD) &&
-		test_when_finished 'git reset --hard \$oldhead' &&
-		git reflog HEAD >expect &&
-		git rebase$flag $* >stdout &&
-		git reflog HEAD >actual &&
+		oldhead=\$(shit rev-parse HEAD) &&
+		test_when_finished 'shit reset --hard \$oldhead' &&
+		shit reflog HEAD >expect &&
+		shit rebase$flag $* >stdout &&
+		shit reflog HEAD >actual &&
 		if test $what = work
 		then
 			old=\$(wc -l <expect) &&
@@ -75,7 +75,7 @@ test_rebase_same_head_ () {
 		then
 			test_cmp expect actual
 		fi &&
-		newhead=\$(git rev-parse HEAD) &&
+		newhead=\$(shit rev-parse HEAD) &&
 		if test $cmp = same
 		then
 			test_cmp_rev \$oldhead \$newhead
@@ -123,9 +123,9 @@ test_rebase_same_head success noop same success work same --fork-point --onto ma
 test_rebase_same_head success noop same success work same --fork-point --keep-base main
 
 test_expect_success 'add work same to upstream' '
-	git checkout main &&
+	shit checkout main &&
 	test_commit F &&
-	git checkout side
+	shit checkout side
 '
 
 changes='our and their changes'

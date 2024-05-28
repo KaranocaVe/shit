@@ -35,47 +35,47 @@ test_description="remember regular & dir renames in sequence of merges"
 # preventing us from finding new renames.
 #
 test_expect_success 'caching renames does not preclude finding new ones' '
-	git init caching-renames-and-new-renames &&
+	shit init caching-renames-and-new-renames &&
 	(
 		cd caching-renames-and-new-renames &&
 
 		test_seq 2 10 >numbers &&
 		test_seq 2 10 >values &&
-		git add numbers values &&
-		git commit -m orig &&
+		shit add numbers values &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch upstream &&
+		shit switch upstream &&
 		test_seq 1 10 >numbers &&
 		test_seq 1 10 >values &&
-		git add numbers values &&
-		git commit -m "Tweaked both files" &&
+		shit add numbers values &&
+		shit commit -m "Tweaked both files" &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		test_seq 2 12 >numbers &&
-		git add numbers &&
-		git mv numbers sequence &&
-		git commit -m A &&
+		shit add numbers &&
+		shit mv numbers sequence &&
+		shit commit -m A &&
 
 		test_seq 2 12 >values &&
-		git add values &&
-		git mv values scruples &&
-		git commit -m B &&
+		shit add values &&
+		shit mv values scruples &&
+		shit commit -m B &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
+		shit switch upstream &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
-		git ls-files >tracked-files &&
+		shit ls-files >tracked-files &&
 		test_line_count = 2 tracked-files &&
 		test_seq 1 12 >expect &&
 		test_cmp expect sequence &&
@@ -93,7 +93,7 @@ test_expect_success 'caching renames does not preclude finding new ones' '
 # shrinking it (dramatically) and the second commit on topic reverts its
 # parent.
 #
-# Can git apply both patches?
+# Can shit apply both patches?
 #
 # Traditional cherry-pick/rebase will fail to apply the second commit, the
 # one that reverted its parent, because despite detecting the rename from
@@ -107,43 +107,43 @@ test_expect_success 'caching renames does not preclude finding new ones' '
 # should be able to only run rename detection on the upstream side one
 # time.)
 test_expect_success 'cherry-pick both a commit and its immediate revert' '
-	git init pick-commit-and-its-immediate-revert &&
+	shit init pick-commit-and-its-immediate-revert &&
 	(
 		cd pick-commit-and-its-immediate-revert &&
 
 		test_seq 11 30 >numbers &&
-		git add numbers &&
-		git commit -m orig &&
+		shit add numbers &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch upstream &&
+		shit switch upstream &&
 		test_seq 1 30 >numbers &&
-		git add numbers &&
-		git mv numbers sequence &&
-		git commit -m "Renamed (and modified) numbers -> sequence" &&
+		shit add numbers &&
+		shit mv numbers sequence &&
+		shit commit -m "Renamed (and modified) numbers -> sequence" &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		test_seq 11 13 >numbers &&
-		git add numbers &&
-		git commit -m A &&
+		shit add numbers &&
+		shit commit -m A &&
 
-		git revert HEAD &&
+		shit revert HEAD &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
+		shit switch upstream &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
 		grep region_enter.*diffcore_rename trace.output >calls &&
 		test_line_count = 1 calls
@@ -159,53 +159,53 @@ test_expect_success 'cherry-pick both a commit and its immediate revert' '
 # or, in english, both sides rename sequence -> values, and then the second
 # commit on the topic branch adds an unrelated file called sequence.
 #
-# This testcase presents no problems for git traditionally, but having both
+# This testcase presents no problems for shit traditionally, but having both
 # sides do the same rename in effect "uses it up" and if it remains cached,
 # could cause a spurious rename/add conflict.
 #
 test_expect_success 'rename same file identically, then reintroduce it' '
-	git init rename-rename-1to1-then-add-old-filename &&
+	shit init rename-rename-1to1-then-add-old-filename &&
 	(
 		cd rename-rename-1to1-then-add-old-filename &&
 
 		test_seq 3 8 >sequence &&
-		git add sequence &&
-		git commit -m orig &&
+		shit add sequence &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch upstream &&
+		shit switch upstream &&
 		test_seq 1 8 >sequence &&
-		git add sequence &&
-		git mv sequence values &&
-		git commit -m "Renamed (and modified) sequence -> values" &&
+		shit add sequence &&
+		shit mv sequence values &&
+		shit commit -m "Renamed (and modified) sequence -> values" &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		test_seq 3 10 >sequence &&
-		git add sequence &&
-		git mv sequence values &&
-		git commit -m A &&
+		shit add sequence &&
+		shit mv sequence values &&
+		shit commit -m A &&
 
 		test_write_lines A B C D E F G H I J >sequence &&
-		git add sequence &&
-		git commit -m B &&
+		shit add sequence &&
+		shit commit -m B &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
+		shit switch upstream &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
-		git ls-files >tracked &&
+		shit ls-files >tracked &&
 		test_line_count = 2 tracked &&
 		test_path_is_file values &&
 		test_path_is_file sequence &&
@@ -227,12 +227,12 @@ test_expect_success 'rename same file identically, then reintroduce it' '
 #   Expected Pick1: dirA/{valuesZ, valuesY}, dirB/valuesX
 #   Expected Pick2: dirA/{valuesZ, valuesY}, dirB/{valuesX, newfile}
 #
-# This testcase presents no problems for git traditionally, but having both
+# This testcase presents no problems for shit traditionally, but having both
 # sides do the same renames in effect "use it up" but if the renames remain
 # cached, the directory rename could put newfile in the wrong directory.
 #
 test_expect_success 'rename same file identically, then add file to old dir' '
-	git init rename-rename-1to1-then-add-file-to-old-dir &&
+	shit init rename-rename-1to1-then-add-file-to-old-dir &&
 	(
 		cd rename-rename-1to1-then-add-file-to-old-dir &&
 
@@ -240,50 +240,50 @@ test_expect_success 'rename same file identically, then add file to old dir' '
 		test_seq 3 8 >olddir/valuesZ &&
 		test_seq 3 8 >olddir/valuesY &&
 		test_seq 3 8 >olddir/valuesX &&
-		git add olddir &&
-		git commit -m orig &&
+		shit add olddir &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch upstream &&
+		shit switch upstream &&
 		test_seq 1 8 >olddir/valuesZ &&
 		test_seq 1 8 >olddir/valuesY &&
 		test_seq 1 8 >olddir/valuesX &&
-		git add olddir &&
+		shit add olddir &&
 		mkdir dirA &&
-		git mv olddir/valuesZ olddir/valuesY dirA &&
-		git mv olddir/ dirB/ &&
-		git commit -m "Renamed (and modified) values*" &&
+		shit mv olddir/valuesZ olddir/valuesY dirA &&
+		shit mv olddir/ dirB/ &&
+		shit commit -m "Renamed (and modified) values*" &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		test_seq 3 10 >olddir/valuesZ &&
 		test_seq 3 10 >olddir/valuesY &&
-		git add olddir &&
+		shit add olddir &&
 		mkdir dirA &&
-		git mv olddir/valuesZ olddir/valuesY dirA &&
-		git commit -m A &&
+		shit mv olddir/valuesZ olddir/valuesY dirA &&
+		shit commit -m A &&
 
 		>olddir/newfile &&
-		git add olddir/newfile &&
-		git commit -m B &&
+		shit add olddir/newfile &&
+		shit commit -m B &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
-		git config merge.directoryRenames true &&
+		shit switch upstream &&
+		shit config merge.directoryRenames true &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
-		git ls-files >tracked &&
+		shit ls-files >tracked &&
 		test_line_count = 4 tracked &&
 		test_path_is_file dirA/valuesZ &&
 		test_path_is_file dirA/valuesY &&
@@ -315,49 +315,49 @@ test_expect_success 'rename same file identically, then add file to old dir' '
 # should avoid the need to re-detect upstream renames.)
 #
 test_expect_success 'cached dir rename does not prevent noticing later conflict' '
-	git init dir-rename-cache-not-occluding-later-conflict &&
+	shit init dir-rename-cache-not-occluding-later-conflict &&
 	(
 		cd dir-rename-cache-not-occluding-later-conflict &&
 
 		mkdir olddir &&
 		test_seq 3 10 >olddir/a &&
 		test_seq 3 10 >olddir/b &&
-		git add olddir &&
-		git commit -m orig &&
+		shit add olddir &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch upstream &&
+		shit switch upstream &&
 		test_seq 3 10 >olddir/a &&
 		test_seq 3 10 >olddir/b &&
-		git add olddir &&
-		git mv olddir newdir &&
-		git commit -m "Dir renamed" &&
+		shit add olddir &&
+		shit mv olddir newdir &&
+		shit commit -m "Dir renamed" &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		>olddir/newfile &&
-		git add olddir/newfile &&
-		git commit -m A &&
+		shit add olddir/newfile &&
+		shit commit -m A &&
 
 		test_seq 1 8 >olddir/a &&
 		test_seq 1 8 >olddir/b &&
-		git add olddir &&
-		git mv olddir otherdir &&
-		git commit -m B &&
+		shit add olddir &&
+		shit mv olddir otherdir &&
+		shit commit -m B &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
-		git config merge.directoryRenames true &&
+		shit switch upstream &&
+		shit config merge.directoryRenames true &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		test_must_fail git replay --onto HEAD upstream~1..topic >output &&
+		test_must_fail shit replay --onto HEAD upstream~1..topic >output &&
 
 		grep region_enter.*diffcore_rename trace.output >calls &&
 		test_line_count = 2 calls
@@ -366,32 +366,32 @@ test_expect_success 'cached dir rename does not prevent noticing later conflict'
 
 # Helper for the next two tests
 test_setup_upstream_rename () {
-	git init $1 &&
+	shit init $1 &&
 	(
 		cd $1 &&
 
 		test_seq 3 8 >somefile &&
 		test_seq 3 8 >relevant-rename &&
-		git add somefile relevant-rename &&
+		shit add somefile relevant-rename &&
 		mkdir olddir &&
 		test_write_lines a b c d e f g >olddir/a &&
 		test_write_lines z y x w v u t >olddir/b &&
-		git add olddir &&
-		git commit -m orig &&
+		shit add olddir &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch upstream &&
+		shit switch upstream &&
 		test_seq 1 8 >somefile &&
 		test_seq 1 8 >relevant-rename &&
-		git add somefile relevant-rename &&
-		git mv relevant-rename renamed &&
+		shit add somefile relevant-rename &&
+		shit mv relevant-rename renamed &&
 		echo h >>olddir/a &&
 		echo s >>olddir/b &&
-		git add olddir &&
-		git mv olddir newdir &&
-		git commit -m "Dir renamed"
+		shit add olddir &&
+		shit mv olddir newdir &&
+		shit commit -m "Dir renamed"
 	)
 }
 
@@ -432,38 +432,38 @@ test_expect_success 'dir rename unneeded, then add new file to old dir' '
 	(
 		cd dir-rename-unneeded-until-new-file &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		test_seq 3 10 >relevant-rename &&
-		git add relevant-rename &&
-		git commit -m A &&
+		shit add relevant-rename &&
+		shit commit -m A &&
 
 		echo foo >olddir/newfile &&
-		git add olddir/newfile &&
-		git commit -m B &&
+		shit add olddir/newfile &&
+		shit commit -m B &&
 
 		echo bar >>olddir/newfile &&
-		git add olddir/newfile &&
-		git commit -m C &&
+		shit add olddir/newfile &&
+		shit commit -m C &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
-		git config merge.directoryRenames true &&
+		shit switch upstream &&
+		shit config merge.directoryRenames true &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
 		grep region_enter.*diffcore_rename trace.output >calls &&
 		test_line_count = 2 calls &&
 
-		git ls-files >tracked &&
+		shit ls-files >tracked &&
 		test_line_count = 5 tracked &&
 		test_path_is_missing olddir/newfile &&
 		test_path_is_file newdir/newfile
@@ -498,34 +498,34 @@ test_expect_success 'dir rename unneeded, then rename existing file into old dir
 	(
 		cd dir-rename-unneeded-until-file-moved-inside &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		test_seq 3 10 >relevant-rename &&
-		git add relevant-rename &&
-		git commit -m A &&
+		shit add relevant-rename &&
+		shit commit -m A &&
 
 		test_seq 1 10 >somefile &&
-		git add somefile &&
-		git mv somefile olddir/newfile &&
-		git commit -m B &&
+		shit add somefile &&
+		shit mv somefile olddir/newfile &&
+		shit commit -m B &&
 
 		test_seq 1 12 >olddir/newfile &&
-		git add olddir/newfile &&
-		git commit -m C &&
+		shit add olddir/newfile &&
+		shit commit -m C &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
-		git config merge.directoryRenames true &&
+		shit switch upstream &&
+		shit config merge.directoryRenames true &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
 		grep region_enter.*diffcore_rename trace.output >calls &&
 		test_line_count = 3 calls &&
@@ -533,14 +533,14 @@ test_expect_success 'dir rename unneeded, then rename existing file into old dir
 		test_path_is_missing somefile &&
 		test_path_is_missing olddir/newfile &&
 		test_path_is_file newdir/newfile &&
-		git ls-files >tracked &&
+		shit ls-files >tracked &&
 		test_line_count = 4 tracked
 	)
 '
 
 # Helper for the next two tests
 test_setup_topic_rename () {
-	git init $1 &&
+	shit init $1 &&
 	(
 		cd $1 &&
 
@@ -548,25 +548,25 @@ test_setup_topic_rename () {
 		mkdir olddir &&
 		test_seq 3 8 >olddir/a &&
 		echo b >olddir/b &&
-		git add olddir somefile &&
-		git commit -m orig &&
+		shit add olddir somefile &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch topic &&
+		shit switch topic &&
 		test_seq 1 8 >somefile &&
 		test_seq 1 8 >olddir/a &&
-		git add somefile olddir/a &&
-		git mv olddir newdir &&
-		git commit -m "Dir renamed" &&
+		shit add somefile olddir/a &&
+		shit mv olddir newdir &&
+		shit commit -m "Dir renamed" &&
 
 		test_seq 1 10 >somefile &&
-		git add somefile &&
+		shit add somefile &&
 		mkdir olddir &&
 		>olddir/unrelated-file &&
-		git add olddir &&
-		git commit -m "Unrelated file in recreated old dir"
+		shit add olddir &&
+		shit commit -m "Unrelated file in recreated old dir"
 	)
 }
 
@@ -609,31 +609,31 @@ test_expect_success 'caching renames only on upstream side, part 1' '
 	(
 		cd cache-renames-only-upstream-add-file &&
 
-		git switch upstream &&
+		shit switch upstream &&
 
 		>olddir/newfile &&
-		git add olddir/newfile &&
-		git commit -m "Add newfile" &&
+		shit add olddir/newfile &&
+		shit commit -m "Add newfile" &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
+		shit switch upstream &&
 
-		git config merge.directoryRenames true &&
+		shit config merge.directoryRenames true &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
 		grep region_enter.*diffcore_rename trace.output >calls &&
 		test_line_count = 1 calls &&
 
-		git ls-files >tracked &&
+		shit ls-files >tracked &&
 		test_line_count = 5 tracked &&
 		test_path_is_missing newdir/unrelated-file &&
 		test_path_is_file olddir/unrelated-file &&
@@ -669,30 +669,30 @@ test_expect_success 'caching renames only on upstream side, part 2' '
 	(
 		cd cache-renames-only-upstream-rename-file &&
 
-		git switch upstream &&
+		shit switch upstream &&
 
-		git mv somefile olddir/newfile &&
-		git commit -m "Add newfile" &&
+		shit mv somefile olddir/newfile &&
+		shit commit -m "Add newfile" &&
 
 		#
 		# Actual testing
 		#
 
-		git switch upstream &&
+		shit switch upstream &&
 
-		git config merge.directoryRenames true &&
+		shit config merge.directoryRenames true &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" &&
-		export GIT_TRACE2_PERF &&
+		shit_TRACE2_PERF="$(pwd)/trace.output" &&
+		export shit_TRACE2_PERF &&
 
-		git replay --onto HEAD upstream~1..topic >out &&
-		git update-ref --stdin <out &&
-		git checkout topic &&
+		shit replay --onto HEAD upstream~1..topic >out &&
+		shit update-ref --stdin <out &&
+		shit checkout topic &&
 
 		grep region_enter.*diffcore_rename trace.output >calls &&
 		test_line_count = 2 calls &&
 
-		git ls-files >tracked &&
+		shit ls-files >tracked &&
 		test_line_count = 4 tracked &&
 		test_path_is_missing newdir/unrelated-file &&
 		test_path_is_file olddir/unrelated-file &&
@@ -723,7 +723,7 @@ test_expect_success 'caching renames only on upstream side, part 2' '
 # that unrelated/ looks like a trivial merge candidate.
 #
 test_expect_success 'avoid assuming we detected renames' '
-	git init redo-weirdness &&
+	shit init redo-weirdness &&
 	(
 		cd redo-weirdness &&
 
@@ -734,37 +734,37 @@ test_expect_success 'avoid assuming we detected renames' '
 		done &&
 		test_seq  2 10 >numbers &&
 		test_seq 12 20 >values &&
-		git add numbers values unrelated/ &&
-		git commit -m orig &&
+		shit add numbers values unrelated/ &&
+		shit commit -m orig &&
 
-		git branch upstream &&
-		git branch topic &&
+		shit branch upstream &&
+		shit branch topic &&
 
-		git switch upstream &&
+		shit switch upstream &&
 		test_seq  1 10 >numbers &&
 		test_seq 11 20 >values &&
-		git add numbers &&
-		git commit -m "Some tweaks" &&
+		shit add numbers &&
+		shit commit -m "Some tweaks" &&
 
-		git switch topic &&
+		shit switch topic &&
 
 		>unrelated/foo &&
 		test_seq  2 12 >numbers &&
 		test_seq 12 22 >values &&
-		git add numbers values unrelated/ &&
-		git mv numbers sequence &&
-		git mv values progression &&
-		git commit -m A &&
+		shit add numbers values unrelated/ &&
+		shit mv numbers sequence &&
+		shit mv values progression &&
+		shit commit -m A &&
 
 		#
 		# Actual testing
 		#
 
-		git switch --detach topic^0 &&
+		shit switch --detach topic^0 &&
 
-		test_must_fail git -c merge.renameLimit=1 rebase upstream &&
+		test_must_fail shit -c merge.renameLimit=1 rebase upstream &&
 
-		git ls-files -u >actual &&
+		shit ls-files -u >actual &&
 		test_line_count = 2 actual
 	)
 '

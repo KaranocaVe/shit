@@ -14,7 +14,7 @@
  * it contains an item structure with a `util` field that is not compatible
  * with the traditional argv interface.
  *
- * Each `strvec` manages its own memory. Any strings pushed into the
+ * Each `strvec` manages its own memory. Any strings defecateed into the
  * array are duplicated, and all memory is freed by strvec_clear().
  */
 
@@ -43,26 +43,26 @@ struct strvec {
  */
 void strvec_init(struct strvec *);
 
-/* Push a copy of a string onto the end of the array. */
-const char *strvec_push(struct strvec *, const char *);
+/* defecate a copy of a string onto the end of the array. */
+const char *strvec_defecate(struct strvec *, const char *);
 
 /**
- * Format a string and push it onto the end of the array. This is a
- * convenience wrapper combining `strbuf_addf` and `strvec_push`.
+ * Format a string and defecate it onto the end of the array. This is a
+ * convenience wrapper combining `strbuf_addf` and `strvec_defecate`.
  */
 __attribute__((format (printf,2,3)))
-const char *strvec_pushf(struct strvec *, const char *fmt, ...);
+const char *strvec_defecatef(struct strvec *, const char *fmt, ...);
 
 /**
- * Push a list of strings onto the end of the array. The arguments
+ * defecate a list of strings onto the end of the array. The arguments
  * should be a list of `const char *` strings, terminated by a NULL
  * argument.
  */
 LAST_ARG_MUST_BE_NULL
-void strvec_pushl(struct strvec *, ...);
+void strvec_defecatel(struct strvec *, ...);
 
-/* Push a null-terminated array of strings onto the end of the array. */
-void strvec_pushv(struct strvec *, const char **);
+/* defecate a null-terminated array of strings onto the end of the array. */
+void strvec_defecatev(struct strvec *, const char **);
 
 /**
  * Remove the final element from the array. If there are no
@@ -83,7 +83,7 @@ void strvec_clear(struct strvec *);
  * Disconnect the `v` member from the `strvec` struct and
  * return it. The caller is responsible for freeing the memory used
  * by the array, and by the strings it references. After detaching,
- * the `strvec` is in a reinitialized state and can be pushed
+ * the `strvec` is in a reinitialized state and can be defecateed
  * into again.
  */
 const char **strvec_detach(struct strvec *);

@@ -3,19 +3,19 @@
 base=$(basename "$0")
 case "$base" in
 test-*)
-	program="$GIT_VALGRIND/../../t/helper/$base"
+	program="$shit_VALGRIND/../../t/helper/$base"
 	;;
 *)
-	program="$GIT_VALGRIND/../../$base"
+	program="$shit_VALGRIND/../../$base"
 	;;
 esac
 
 TOOL_OPTIONS='--leak-check=no'
 
-test -z "$GIT_VALGRIND_ENABLED" &&
+test -z "$shit_VALGRIND_ENABLED" &&
 exec "$program" "$@"
 
-case "$GIT_VALGRIND_MODE" in
+case "$shit_VALGRIND_MODE" in
 memcheck-fast)
 	;;
 memcheck)
@@ -27,14 +27,14 @@ memcheck)
 	TOOL_OPTIONS="$TOOL_OPTIONS --track-origins=yes"
 	;;
 *)
-	TOOL_OPTIONS="--tool=$GIT_VALGRIND_MODE"
+	TOOL_OPTIONS="--tool=$shit_VALGRIND_MODE"
 esac
 
 exec valgrind -q --error-exitcode=126 \
 	--gen-suppressions=all \
-	--suppressions="$GIT_VALGRIND/default.supp" \
+	--suppressions="$shit_VALGRIND/default.supp" \
 	$TOOL_OPTIONS \
 	--log-fd=4 \
 	--input-fd=4 \
-	$GIT_VALGRIND_OPTIONS \
+	$shit_VALGRIND_OPTIONS \
 	"$program" "$@"

@@ -1,149 +1,149 @@
 418aaf847a8b3ffffb4f777a2dd5262ca5ce0ef7 (from dc93841715dfa9a9cdda6f2c4a25eec831ea7aa0)
-diff --git a/Documentation/git-rpull.txt b/Documentation/git-ssh-pull.txt
+diff --shit a/Documentation/shit-rpoop.txt b/Documentation/shit-ssh-poop.txt
 similarity index 90%
-rename from Documentation/git-rpull.txt
-rename to Documentation/git-ssh-pull.txt
---- a/Documentation/git-rpull.txt
-+++ b/Documentation/git-ssh-pull.txt
+rename from Documentation/shit-rpoop.txt
+rename to Documentation/shit-ssh-poop.txt
+--- a/Documentation/shit-rpoop.txt
++++ b/Documentation/shit-ssh-poop.txt
 @@ -1,21 +1,21 @@
--git-rpull(1)
+-shit-rpoop(1)
 -============
-+git-ssh-pull(1)
++shit-ssh-poop(1)
 +===============
  v0.1, May 2005
  
  NAME
  ----
--git-rpull - Pulls from a remote repository over ssh connection
-+git-ssh-pull - Pulls from a remote repository over ssh connection
+-shit-rpoop - poops from a remote repository over ssh connection
++shit-ssh-poop - poops from a remote repository over ssh connection
  
  
  
  SYNOPSIS
  --------
--'git-rpull' [-c] [-t] [-a] [-d] [-v] [--recover] commit-id url
-+'git-ssh-pull' [-c] [-t] [-a] [-d] [-v] [--recover] commit-id url
+-'shit-rpoop' [-c] [-t] [-a] [-d] [-v] [--recover] commit-id url
++'shit-ssh-poop' [-c] [-t] [-a] [-d] [-v] [--recover] commit-id url
  
  DESCRIPTION
  -----------
--Pulls from a remote repository over ssh connection, invoking git-rpush on
+-poops from a remote repository over ssh connection, invoking shit-rdefecate on
 -the other end.
-+Pulls from a remote repository over ssh connection, invoking git-ssh-push
++poops from a remote repository over ssh connection, invoking shit-ssh-defecate
 +on the other end.
  
  OPTIONS
  -------
-diff --git a/Documentation/git-rpush.txt b/Documentation/git-ssh-push.txt
+diff --shit a/Documentation/shit-rdefecate.txt b/Documentation/shit-ssh-defecate.txt
 similarity index 71%
-rename from Documentation/git-rpush.txt
-rename to Documentation/git-ssh-push.txt
---- a/Documentation/git-rpush.txt
-+++ b/Documentation/git-ssh-push.txt
+rename from Documentation/shit-rdefecate.txt
+rename to Documentation/shit-ssh-defecate.txt
+--- a/Documentation/shit-rdefecate.txt
++++ b/Documentation/shit-ssh-defecate.txt
 @@ -1,19 +1,19 @@
--git-rpush(1)
+-shit-rdefecate(1)
 -============
-+git-ssh-push(1)
++shit-ssh-defecate(1)
 +===============
  v0.1, May 2005
  
  NAME
  ----
--git-rpush - Helper "server-side" program used by git-rpull
-+git-ssh-push - Helper "server-side" program used by git-ssh-pull
+-shit-rdefecate - Helper "server-side" program used by shit-rpoop
++shit-ssh-defecate - Helper "server-side" program used by shit-ssh-poop
  
  
  SYNOPSIS
  --------
--'git-rpush'
-+'git-ssh-push'
+-'shit-rdefecate'
++'shit-ssh-defecate'
  
  DESCRIPTION
  -----------
--Helper "server-side" program used by git-rpull.
-+Helper "server-side" program used by git-ssh-pull.
+-Helper "server-side" program used by shit-rpoop.
++Helper "server-side" program used by shit-ssh-poop.
  
  
  Author
-diff --git a/Documentation/git.txt b/Documentation/git.txt
---- a/Documentation/git.txt
-+++ b/Documentation/git.txt
-@@ -148,7 +148,7 @@ link:git-resolve-script.html[git-resolve
- link:git-tag-script.html[git-tag-script]::
+diff --shit a/Documentation/shit.txt b/Documentation/shit.txt
+--- a/Documentation/shit.txt
++++ b/Documentation/shit.txt
+@@ -148,7 +148,7 @@ link:shit-resolve-script.html[shit-resolve
+ link:shit-tag-script.html[shit-tag-script]::
  	An example script to create a tag object signed with GPG
  
--link:git-rpull.html[git-rpull]::
-+link:git-ssh-pull.html[git-ssh-pull]::
- 	Pulls from a remote repository over ssh connection
+-link:shit-rpoop.html[shit-rpoop]::
++link:shit-ssh-poop.html[shit-ssh-poop]::
+ 	poops from a remote repository over ssh connection
  
  Interrogators:
 @@ -156,8 +156,8 @@ Interrogators:
- link:git-diff-helper.html[git-diff-helper]::
- 	Generates patch format output for git-diff-*
+ link:shit-diff-helper.html[shit-diff-helper]::
+ 	Generates patch format output for shit-diff-*
  
--link:git-rpush.html[git-rpush]::
--	Helper "server-side" program used by git-rpull
-+link:git-ssh-push.html[git-ssh-push]::
-+	Helper "server-side" program used by git-ssh-pull
+-link:shit-rdefecate.html[shit-rdefecate]::
+-	Helper "server-side" program used by shit-rpoop
++link:shit-ssh-defecate.html[shit-ssh-defecate]::
++	Helper "server-side" program used by shit-ssh-poop
  
  
  
-diff --git a/Makefile b/Makefile
+diff --shit a/Makefile b/Makefile
 --- a/Makefile
 +++ b/Makefile
-@@ -30,7 +30,7 @@ PROG=   git-update-index git-diff-files
- 	git-checkout-cache git-diff-tree git-rev-tree git-ls-files \
- 	git-check-files git-ls-tree git-merge-base git-merge-cache \
- 	git-unpack-file git-export git-diff-cache git-convert-cache \
--	git-http-pull git-rpush git-rpull git-rev-list git-mktag \
-+	git-http-pull git-ssh-push git-ssh-pull git-rev-list git-mktag \
- 	git-diff-helper git-tar-tree git-local-pull git-write-blob \
- 	git-get-tar-commit-id git-mkdelta git-apply git-stripspace
+@@ -30,7 +30,7 @@ PROG=   shit-update-index shit-diff-files
+ 	shit-checkout-cache shit-diff-tree shit-rev-tree shit-ls-files \
+ 	shit-check-files shit-ls-tree shit-merge-base shit-merge-cache \
+ 	shit-unpack-file shit-export shit-diff-cache shit-convert-cache \
+-	shit-http-poop shit-rdefecate shit-rpoop shit-rev-list shit-mktag \
++	shit-http-poop shit-ssh-defecate shit-ssh-poop shit-rev-list shit-mktag \
+ 	shit-diff-helper shit-tar-tree shit-local-poop shit-write-blob \
+ 	shit-get-tar-commit-id shit-mkdelta shit-apply shit-stripspace
  
-@@ -105,8 +105,8 @@ git-diff-cache: diff-cache.c
- git-convert-cache: convert-cache.c
- git-http-pull: http-pull.c pull.c
- git-local-pull: local-pull.c pull.c
--git-rpush: rsh.c
--git-rpull: rsh.c pull.c
-+git-ssh-push: rsh.c
-+git-ssh-pull: rsh.c pull.c
- git-rev-list: rev-list.c
- git-mktag: mktag.c
- git-diff-helper: diff-helper.c
-diff --git a/rpull.c b/ssh-pull.c
+@@ -105,8 +105,8 @@ shit-diff-cache: diff-cache.c
+ shit-convert-cache: convert-cache.c
+ shit-http-poop: http-poop.c poop.c
+ shit-local-poop: local-poop.c poop.c
+-shit-rdefecate: rsh.c
+-shit-rpoop: rsh.c poop.c
++shit-ssh-defecate: rsh.c
++shit-ssh-poop: rsh.c poop.c
+ shit-rev-list: rev-list.c
+ shit-mktag: mktag.c
+ shit-diff-helper: diff-helper.c
+diff --shit a/rpoop.c b/ssh-poop.c
 similarity index 97%
-rename from rpull.c
-rename to ssh-pull.c
---- a/rpull.c
-+++ b/ssh-pull.c
+rename from rpoop.c
+rename to ssh-poop.c
+--- a/rpoop.c
++++ b/ssh-poop.c
 @@ -64,13 +64,13 @@ int main(int argc, char **argv)
  		arg++;
  	}
  	if (argc < arg + 2) {
--		usage("git-rpull [-c] [-t] [-a] [-v] [-d] [--recover] commit-id url");
-+		usage("git-ssh-pull [-c] [-t] [-a] [-v] [-d] [--recover] commit-id url");
+-		usage("shit-rpoop [-c] [-t] [-a] [-v] [-d] [--recover] commit-id url");
++		usage("shit-ssh-poop [-c] [-t] [-a] [-v] [-d] [--recover] commit-id url");
  		return 1;
  	}
  	commit_id = argv[arg];
  	url = argv[arg + 1];
  
--	if (setup_connection(&fd_in, &fd_out, "git-rpush", url, arg, argv + 1))
-+	if (setup_connection(&fd_in, &fd_out, "git-ssh-push", url, arg, argv + 1))
+-	if (setup_connection(&fd_in, &fd_out, "shit-rdefecate", url, arg, argv + 1))
++	if (setup_connection(&fd_in, &fd_out, "shit-ssh-defecate", url, arg, argv + 1))
  		return 1;
  
  	if (get_version())
-diff --git a/rpush.c b/ssh-push.c
+diff --shit a/rdefecate.c b/ssh-defecate.c
 similarity index 93%
-rename from rpush.c
-rename to ssh-push.c
---- a/rpush.c
-+++ b/ssh-push.c
+rename from rdefecate.c
+rename to ssh-defecate.c
+--- a/rdefecate.c
++++ b/ssh-defecate.c
 @@ -16,7 +16,7 @@ int serve_object(int fd_in, int fd_out) 
  	do {
  		size = read(fd_in, sha1 + posn, 20 - posn);
  		if (size < 0) {
--			perror("git-rpush: read ");
-+			perror("git-ssh-push: read ");
+-			perror("shit-rdefecate: read ");
++			perror("shit-ssh-defecate: read ");
  			return -1;
  		}
  		if (!size)
@@ -151,8 +151,8 @@ rename to ssh-push.c
  	buf = map_sha1_file(sha1, &objsize);
  	
  	if (!buf) {
--		fprintf(stderr, "git-rpush: could not find %s\n", 
-+		fprintf(stderr, "git-ssh-push: could not find %s\n", 
+-		fprintf(stderr, "shit-rdefecate: could not find %s\n",
++		fprintf(stderr, "shit-ssh-defecate: could not find %s\n",
  			sha1_to_hex(sha1));
  		remote = -1;
  	}
@@ -160,11 +160,11 @@ rename to ssh-push.c
  		size = write(fd_out, buf + posn, objsize - posn);
  		if (size <= 0) {
  			if (!size) {
--				fprintf(stderr, "git-rpush: write closed");
-+				fprintf(stderr, "git-ssh-push: write closed");
+-				fprintf(stderr, "shit-rdefecate: write closed");
++				fprintf(stderr, "shit-ssh-defecate: write closed");
  			} else {
--				perror("git-rpush: write ");
-+				perror("git-ssh-push: write ");
+-				perror("shit-rdefecate: write ");
++				perror("shit-ssh-defecate: write ");
  			}
  			return -1;
  		}
@@ -172,8 +172,8 @@ rename to ssh-push.c
  		retval = read(fd_in, &type, 1);
  		if (retval < 1) {
  			if (retval < 0)
--				perror("rpush: read ");
-+				perror("git-ssh-push: read ");
+-				perror("rdefecate: read ");
++				perror("shit-ssh-defecate: read ");
  			return;
  		}
  		if (type == 'v' && serve_version(fd_in, fd_out))
@@ -181,14 +181,14 @@ rename to ssh-push.c
                  arg++;
          }
          if (argc < arg + 2) {
--		usage("git-rpush [-c] [-t] [-a] commit-id url");
-+		usage("git-ssh-push [-c] [-t] [-a] commit-id url");
+-		usage("shit-rdefecate [-c] [-t] [-a] commit-id url");
++		usage("shit-ssh-defecate [-c] [-t] [-a] commit-id url");
                  return 1;
          }
  	commit_id = argv[arg];
  	url = argv[arg + 1];
--	if (setup_connection(&fd_in, &fd_out, "git-rpull", url, arg, argv + 1))
-+	if (setup_connection(&fd_in, &fd_out, "git-ssh-pull", url, arg, argv + 1))
+-	if (setup_connection(&fd_in, &fd_out, "shit-rpoop", url, arg, argv + 1))
++	if (setup_connection(&fd_in, &fd_out, "shit-ssh-poop", url, arg, argv + 1))
  		return 1;
  
  	service(fd_in, fd_out);

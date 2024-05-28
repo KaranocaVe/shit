@@ -2,7 +2,7 @@
 
 usage() {
 	cat <<\EOF
-usage: git jump [--stdout] <mode> [<args>]
+usage: shit jump [--stdout] <mode> [<args>]
 
 Jump to interesting elements in an editor.
 The <mode> parameter is one of:
@@ -11,7 +11,7 @@ diff: elements are diff hunks. Arguments are given to diff.
 
 merge: elements are merge conflicts. Arguments are given to ls-files -u.
 
-grep: elements are grep hits. Arguments are given to git grep or, if
+grep: elements are grep hits. Arguments are given to shit grep or, if
       configured, to the command in `jump.grepCmd`.
 
 ws: elements are whitespace errors. Arguments are given to diff --check.
@@ -22,7 +22,7 @@ EOF
 }
 
 open_editor() {
-	editor=`git var GIT_EDITOR`
+	editor=`shit var shit_EDITOR`
 	case "$editor" in
 	*emacs*)
 		# Supported editor values are:
@@ -42,7 +42,7 @@ open_editor() {
 }
 
 mode_diff() {
-	git diff --no-prefix --relative "$@" |
+	shit diff --no-prefix --relative "$@" |
 	perl -ne '
 	if (m{^\+\+\+ (.*)}) { $file = $1; next }
 	defined($file) or next;
@@ -57,7 +57,7 @@ mode_diff() {
 }
 
 mode_merge() {
-	git ls-files -u "$@" |
+	shit ls-files -u "$@" |
 	perl -pe 's/^.*?\t//' |
 	sort -u |
 	while IFS= read fn; do
@@ -69,8 +69,8 @@ mode_merge() {
 # but let's clean up extra whitespace, so they look better if the
 # editor shows them to us in the status bar.
 mode_grep() {
-	cmd=$(git config jump.grepCmd)
-	test -n "$cmd" || cmd="git grep -n --column"
+	cmd=$(shit config jump.grepCmd)
+	test -n "$cmd" || cmd="shit grep -n --column"
 	$cmd "$@" |
 	perl -pe '
 	s/[ \t]+/ /g;
@@ -79,7 +79,7 @@ mode_grep() {
 }
 
 mode_ws() {
-	git diff --check "$@"
+	shit diff --check "$@"
 }
 
 use_stdout=
@@ -111,7 +111,7 @@ if test "$use_stdout" = "t"; then
 fi
 
 trap 'rm -f "$tmp"' 0 1 2 3 15
-tmp=`mktemp -t git-jump.XXXXXX` || exit 1
+tmp=`mktemp -t shit-jump.XXXXXX` || exit 1
 "mode_$mode" "$@" >"$tmp"
 test -s "$tmp" || exit 0
 open_editor "$tmp"

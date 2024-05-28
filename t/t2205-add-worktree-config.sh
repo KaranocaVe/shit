@@ -6,13 +6,13 @@ This test verifies the traversal of the directory tree when the traversal begins
 outside the repository.  Two instances for which this can occur are tested:
 
 	1) The user manually sets the worktree.  For this instance, the test sets
-	   the worktree two levels above the `.git` directory and checks whether we
+	   the worktree two levels above the `.shit` directory and checks whether we
 	   are able to add to the index those files that are in either (1) the
 	   manually configured worktree directory or (2) the standard worktree
-	   location with respect to the `.git` directory (i.e. ensuring that the
-	   encountered `.git` directory is not treated as belonging to a foreign
+	   location with respect to the `.shit` directory (i.e. ensuring that the
+	   encountered `.shit` directory is not treated as belonging to a foreign
 	   nested repository).
-	2) The user manually sets the `git_dir` while the working directory is
+	2) The user manually sets the `shit_dir` while the working directory is
 	   outside the repository.  The test checks that files inside the
 	   repository can be added to the index.
 	'
@@ -25,7 +25,7 @@ test_expect_success '1a: setup--config worktree' '
 	(
 	cd test1 &&
 	test_create_repo repo &&
-	git --git-dir="repo/.git" config core.worktree "$(pwd)" &&
+	shit --shit-dir="repo/.shit" config core.worktree "$(pwd)" &&
 
 	mkdir -p outside-tracked outside-untracked &&
 	mkdir -p repo/inside-tracked repo/inside-untracked &&
@@ -62,8 +62,8 @@ test_expect_success '1a: setup--config worktree' '
 
 	cat expect-tracked-unsorted expect-untracked-unsorted >expect-all-unsorted &&
 
-	cat >.gitignore <<-EOF
-	.gitignore
+	cat >.shitignore <<-EOF
+	.shitignore
 	actual-*
 	expect-*
 	EOF
@@ -74,7 +74,7 @@ test_expect_success '1b: pre-add all' '
 	(
 	cd test1 &&
 	local parent_dir="$(pwd)" &&
-	git -C repo ls-files -o --exclude-standard "$parent_dir" >actual-all-unsorted &&
+	shit -C repo ls-files -o --exclude-standard "$parent_dir" >actual-all-unsorted &&
 	sort actual-all-unsorted >actual-all &&
 	sort expect-all-unsorted >expect-all &&
 	test_cmp expect-all actual-all
@@ -85,7 +85,7 @@ test_expect_success '1c: pre-add dir all' '
 	(
 	cd test1 &&
 	local parent_dir="$(pwd)" &&
-	git -C repo ls-files -o --directory --exclude-standard "$parent_dir" >actual-all-dir-unsorted &&
+	shit -C repo ls-files -o --directory --exclude-standard "$parent_dir" >actual-all-dir-unsorted &&
 	sort actual-all-dir-unsorted >actual-all &&
 	sort expect-all-dir-unsorted >expect-all &&
 	test_cmp expect-all actual-all
@@ -98,11 +98,11 @@ test_expect_success '1d: post-add tracked' '
 	local parent_dir="$(pwd)" &&
 	(
 		cd repo &&
-		git add file-tracked &&
-		git add inside-tracked &&
-		git add ../outside-tracked &&
-		git add "$parent_dir/file-tracked" &&
-		git ls-files "$parent_dir" >../actual-tracked-unsorted
+		shit add file-tracked &&
+		shit add inside-tracked &&
+		shit add ../outside-tracked &&
+		shit add "$parent_dir/file-tracked" &&
+		shit ls-files "$parent_dir" >../actual-tracked-unsorted
 	) &&
 	sort actual-tracked-unsorted >actual-tracked &&
 	sort expect-tracked-unsorted >expect-tracked &&
@@ -114,14 +114,14 @@ test_expect_success '1e: post-add untracked' '
 	(
 	cd test1 &&
 	local parent_dir="$(pwd)" &&
-	git -C repo ls-files -o --exclude-standard "$parent_dir" >actual-untracked-unsorted &&
+	shit -C repo ls-files -o --exclude-standard "$parent_dir" >actual-untracked-unsorted &&
 	sort actual-untracked-unsorted >actual-untracked &&
 	sort expect-untracked-unsorted >expect-untracked &&
 	test_cmp expect-untracked actual-untracked
 	)
 '
 
-test_expect_success '2a: setup--set git-dir' '
+test_expect_success '2a: setup--set shit-dir' '
 	mkdir test2 &&
 	(
 	cd test2 &&
@@ -157,8 +157,8 @@ test_expect_success '2a: setup--set git-dir' '
 
 	cat expect-tracked-unsorted expect-untracked-unsorted >expect-all-unsorted &&
 
-	cat >.gitignore <<-EOF
-	.gitignore
+	cat >.shitignore <<-EOF
+	.shitignore
 	actual-*
 	expect-*
 	EOF
@@ -168,7 +168,7 @@ test_expect_success '2a: setup--set git-dir' '
 test_expect_success '2b: pre-add all' '
 	(
 	cd test2 &&
-	git --git-dir=repo/.git ls-files -o --exclude-standard >actual-all-unsorted &&
+	shit --shit-dir=repo/.shit ls-files -o --exclude-standard >actual-all-unsorted &&
 	sort actual-all-unsorted >actual-all &&
 	sort expect-all-unsorted >expect-all &&
 	test_cmp expect-all actual-all
@@ -178,7 +178,7 @@ test_expect_success '2b: pre-add all' '
 test_expect_success '2c: pre-add dir all' '
 	(
 	cd test2 &&
-	git --git-dir=repo/.git ls-files -o --directory --exclude-standard >actual-all-dir-unsorted &&
+	shit --shit-dir=repo/.shit ls-files -o --directory --exclude-standard >actual-all-dir-unsorted &&
 	sort actual-all-dir-unsorted >actual-all &&
 	sort expect-all-dir-unsorted >expect-all &&
 	test_cmp expect-all actual-all
@@ -188,9 +188,9 @@ test_expect_success '2c: pre-add dir all' '
 test_expect_success '2d: post-add tracked' '
 	(
 	cd test2 &&
-	git --git-dir=repo/.git add repo/file-tracked &&
-	git --git-dir=repo/.git add repo/inside-tracked &&
-	git --git-dir=repo/.git ls-files >actual-tracked-unsorted &&
+	shit --shit-dir=repo/.shit add repo/file-tracked &&
+	shit --shit-dir=repo/.shit add repo/inside-tracked &&
+	shit --shit-dir=repo/.shit ls-files >actual-tracked-unsorted &&
 	sort actual-tracked-unsorted >actual-tracked &&
 	sort expect-tracked-unsorted >expect-tracked &&
 	test_cmp expect-tracked actual-tracked
@@ -200,7 +200,7 @@ test_expect_success '2d: post-add tracked' '
 test_expect_success '2e: post-add untracked' '
 	(
 	cd test2 &&
-	git --git-dir=repo/.git ls-files -o --exclude-standard >actual-untracked-unsorted &&
+	shit --shit-dir=repo/.shit ls-files -o --exclude-standard >actual-untracked-unsorted &&
 	sort actual-untracked-unsorted >actual-untracked &&
 	sort expect-untracked-unsorted >expect-untracked &&
 	test_cmp expect-untracked actual-untracked
@@ -219,8 +219,8 @@ test_expect_success '3a: setup--add repo dir' '
 	>repo/inside-tracked/file &&
 	>repo/inside-ignored/file &&
 
-	cat >.gitignore <<-EOF &&
-	.gitignore
+	cat >.shitignore <<-EOF &&
+	.shitignore
 	actual-*
 	expect-*
 	*ignored
@@ -234,7 +234,7 @@ test_expect_success '3a: setup--add repo dir' '
 	cat >expect-ignored-unsorted <<-EOF
 	repo/file-ignored
 	repo/inside-ignored/
-	.gitignore
+	.shitignore
 	actual-ignored-unsorted
 	expect-ignored-unsorted
 	expect-tracked-unsorted
@@ -245,7 +245,7 @@ test_expect_success '3a: setup--add repo dir' '
 test_expect_success '3b: ignored' '
 	(
 	cd test3 &&
-	git --git-dir=repo/.git ls-files -io --directory --exclude-standard >actual-ignored-unsorted &&
+	shit --shit-dir=repo/.shit ls-files -io --directory --exclude-standard >actual-ignored-unsorted &&
 	sort actual-ignored-unsorted >actual-ignored &&
 	sort expect-ignored-unsorted >expect-ignored &&
 	test_cmp expect-ignored actual-ignored
@@ -255,8 +255,8 @@ test_expect_success '3b: ignored' '
 test_expect_success '3c: add repo' '
 	(
 	cd test3 &&
-	git --git-dir=repo/.git add repo &&
-	git --git-dir=repo/.git ls-files >actual-tracked-unsorted &&
+	shit --shit-dir=repo/.shit add repo &&
+	shit --shit-dir=repo/.shit ls-files >actual-tracked-unsorted &&
 	sort actual-tracked-unsorted >actual-tracked &&
 	sort expect-tracked-unsorted >expect-tracked &&
 	test_cmp expect-tracked actual-tracked

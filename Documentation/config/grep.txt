@@ -17,12 +17,12 @@ grep.extendedRegexp::
 	other than 'default'.
 
 grep.threads::
-	Number of grep worker threads to use. If unset (or set to 0), Git will
+	Number of grep worker threads to use. If unset (or set to 0), shit will
 	use as many threads as the number of logical cores available.
 
 grep.fullName::
 	If set to true, enable `--full-name` option by default.
 
 grep.fallbackToNoIndex::
-	If set to true, fall back to `git grep --no-index` if `git grep`
-	is executed outside of a git repository.  Defaults to false.
+	If set to true, fall back to `shit grep --no-index` if `shit grep`
+	is executed outside of a shit repository.  Defaults to false.

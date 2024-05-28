@@ -13,7 +13,7 @@ gpg.format::
 	Specifies which key format to use when signing with `--gpg-sign`.
 	Default is "openpgp". Other possible values are "x509", "ssh".
 +
-See linkgit:gitformat-signature[5] for the signature format, which differs
+See linkshit:shitformat-signature[5] for the signature format, which differs
 based on the selected `gpg.format`.
 
 gpg.<format>.program::
@@ -44,7 +44,7 @@ gpg.ssh.defaultKeyCommand::
 	This allows for a script doing a dynamic lookup of the correct public
 	key when it is impractical to statically configure `user.signingKey`.
 	For example when keys or SSH Certificates are rotated frequently or
-	selection of the right key depends on external factors unknown to git.
+	selection of the right key depends on external factors unknown to shit.
 
 gpg.ssh.allowedSignersFile::
 	A file containing ssh public keys which you are willing to trust.
@@ -58,11 +58,11 @@ gpg.ssh.allowedSignersFile::
 SSH has no concept of trust levels like gpg does. To be able to differentiate
 between valid signatures and trusted signatures the trust level of a signature
 verification is set to `fully` when the public key is present in the allowedSignersFile.
-Otherwise the trust level is `undefined` and git verify-commit/tag will fail.
+Otherwise the trust level is `undefined` and shit verify-commit/tag will fail.
 +
 This file can be set to a location outside of the repository and every developer
 maintains their own trust store. A central repository server could generate this
-file automatically from ssh keys with push access to verify the code against.
+file automatically from ssh keys with defecate access to verify the code against.
 In a corporate setting this file is probably generated at a global location
 from automation that already handles developer ssh keys.
 +
@@ -71,7 +71,7 @@ in the repository itself using a path relative to the top-level of the working t
 This way only committers with an already valid key can add or change keys in the keyring.
 +
 Since OpensSSH 8.8 this file allows specifying a key lifetime using valid-after &
-valid-before options. Git will mark signatures as valid if the signing key was
+valid-before options. shit will mark signatures as valid if the signing key was
 valid at the time of the signature's creation. This allows users to change a
 signing key without invalidating all previously made signatures.
 +

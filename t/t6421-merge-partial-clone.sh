@@ -31,12 +31,12 @@ test_description="limiting blob downloads when merging with partial clones"
 
 test_setup_repo () {
 	test -d server && return
-	git init server &&
+	shit init server &&
 	(
 		cd server &&
 
-		git config uploadpack.allowfilter 1 &&
-		git config uploadpack.allowanysha1inwant 1 &&
+		shit config uploadpack.allowfilter 1 &&
+		shit config uploadpack.allowanysha1inwant 1 &&
 
 		mkdir -p general &&
 		test_seq 2 9 >general/leap1 &&
@@ -68,18 +68,18 @@ test_setup_repo () {
 		do
 			echo content $i >dir/unchanged/file_$i
 		done &&
-		git add . &&
-		git commit -m "O" &&
+		shit add . &&
+		shit commit -m "O" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B-single &&
-		git branch B-dir &&
-		git branch B-many &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B-single &&
+		shit branch B-dir &&
+		shit branch B-many &&
 
-		git switch A &&
+		shit switch A &&
 
-		git rm general/leap* &&
+		shit rm general/leap* &&
 		mkdir general/ &&
 		test_seq 1 9 >general/jump1 &&
 		cp general/jump1 general/jump2 &&
@@ -94,33 +94,33 @@ test_setup_repo () {
 		echo sequence >>basename/subdir/sequence &&
 		echo values >>basename/subdir/values &&
 
-		git rm dir/subdir/tweaked/f &&
+		shit rm dir/subdir/tweaked/f &&
 		echo more >>dir/subdir/e &&
 		echo more >>dir/subdir/Makefile &&
 		echo more >>dir/subdir/tweaked/Makefile &&
 		mkdir dir/subdir/newsubdir &&
 		echo rust code >dir/subdir/newsubdir/newfile.rs &&
-		git mv dir/subdir/e dir/subdir/newsubdir/ &&
-		git mv dir folder &&
-		git add . &&
-		git commit -m "A" &&
+		shit mv dir/subdir/e dir/subdir/newsubdir/ &&
+		shit mv dir folder &&
+		shit add . &&
+		shit commit -m "A" &&
 
-		git switch B-single &&
+		shit switch B-single &&
 		echo new first line >dir/subdir/Makefile &&
 		cat general/leap1 >>dir/subdir/Makefile &&
 		echo toplevel makefile >>dir/subdir/Makefile &&
 		echo perl code >general/newfile.pl &&
-		git add . &&
-		git commit -m "B-single" &&
+		shit add . &&
+		shit commit -m "B-single" &&
 
-		git switch B-dir &&
+		shit switch B-dir &&
 		echo java code >dir/subdir/newfile.java &&
 		echo scala code >dir/subdir/newfile.scala &&
 		echo groovy code >dir/subdir/newfile.groovy &&
-		git add . &&
-		git commit -m "B-dir" &&
+		shit add . &&
+		shit commit -m "B-dir" &&
 
-		git switch B-many &&
+		shit switch B-many &&
 		test_seq 2 10 >general/leap1 &&
 		rm general/leap2 &&
 		cp general/leap1 general/leap2 &&
@@ -138,10 +138,10 @@ test_setup_repo () {
 		mkdir dir/subdir/newsubdir/ &&
 		echo c code >dir/subdir/newfile.c &&
 		echo python code >dir/subdir/newsubdir/newfile.py &&
-		git add . &&
-		git commit -m "B-many" &&
+		shit add . &&
+		shit commit -m "B-many" &&
 
-		git switch A
+		shit switch A
 	)
 }
 
@@ -209,16 +209,16 @@ test_setup_repo () {
 #
 test_expect_merge_algorithm failure success 'Objects downloaded for single relevant rename' '
 	test_setup_repo &&
-	git clone --sparse --filter=blob:none "file://$(pwd)/server" objects-single &&
+	shit clone --sparse --filter=blob:none "file://$(pwd)/server" objects-single &&
 	(
 		cd objects-single &&
 
-		git rev-list --objects --all --missing=print |
+		shit rev-list --objects --all --missing=print |
 			grep "^?" | sort >missing-objects-before &&
 
-		git checkout -q origin/A &&
+		shit checkout -q origin/A &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" git \
+		shit_TRACE2_PERF="$(pwd)/trace.output" shit \
 			-c merge.directoryRenames=true merge --no-stat \
 			--no-progress origin/B-single &&
 
@@ -234,7 +234,7 @@ test_expect_merge_algorithm failure success 'Objects downloaded for single relev
 		grep d0.*fetch.negotiationAlgorithm trace.output >fetches &&
 		test_line_count = 2 fetches &&
 
-		git rev-list --objects --all --missing=print |
+		shit rev-list --objects --all --missing=print |
 			grep "^?" | sort >missing-objects-after &&
 		comm -2 -3 missing-objects-before missing-objects-after >old &&
 		comm -1 -3 missing-objects-before missing-objects-after >new &&
@@ -298,16 +298,16 @@ test_expect_merge_algorithm failure success 'Objects downloaded for single relev
 #
 test_expect_merge_algorithm failure success 'Objects downloaded when a directory rename triggered' '
 	test_setup_repo &&
-	git clone --sparse --filter=blob:none "file://$(pwd)/server" objects-dir &&
+	shit clone --sparse --filter=blob:none "file://$(pwd)/server" objects-dir &&
 	(
 		cd objects-dir &&
 
-		git rev-list --objects --all --missing=print |
+		shit rev-list --objects --all --missing=print |
 			grep "^?" | sort >missing-objects-before &&
 
-		git checkout -q origin/A &&
+		shit checkout -q origin/A &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" git \
+		shit_TRACE2_PERF="$(pwd)/trace.output" shit \
 			-c merge.directoryRenames=true merge --no-stat \
 			--no-progress origin/B-dir &&
 
@@ -322,7 +322,7 @@ test_expect_merge_algorithm failure success 'Objects downloaded when a directory
 		grep d0.*fetch.negotiationAlgorithm trace.output >fetches &&
 		test_line_count = 1 fetches &&
 
-		git rev-list --objects --all --missing=print |
+		shit rev-list --objects --all --missing=print |
 			grep "^?" | sort >missing-objects-after &&
 		comm -2 -3 missing-objects-before missing-objects-after >old &&
 		comm -1 -3 missing-objects-before missing-objects-after >new &&
@@ -399,16 +399,16 @@ test_expect_merge_algorithm failure success 'Objects downloaded when a directory
 #
 test_expect_merge_algorithm failure success 'Objects downloaded with lots of renames and modifications' '
 	test_setup_repo &&
-	git clone --sparse --filter=blob:none "file://$(pwd)/server" objects-many &&
+	shit clone --sparse --filter=blob:none "file://$(pwd)/server" objects-many &&
 	(
 		cd objects-many &&
 
-		git rev-list --objects --all --missing=print |
+		shit rev-list --objects --all --missing=print |
 			grep "^?" | sort >missing-objects-before &&
 
-		git checkout -q origin/A &&
+		shit checkout -q origin/A &&
 
-		GIT_TRACE2_PERF="$(pwd)/trace.output" git \
+		shit_TRACE2_PERF="$(pwd)/trace.output" shit \
 			-c merge.directoryRenames=true merge --no-stat \
 			--no-progress origin/B-many &&
 
@@ -426,7 +426,7 @@ test_expect_merge_algorithm failure success 'Objects downloaded with lots of ren
 		grep d0.*fetch.negotiationAlgorithm trace.output >fetches &&
 		test_line_count = 4 fetches &&
 
-		git rev-list --objects --all --missing=print |
+		shit rev-list --objects --all --missing=print |
 			grep "^?" | sort >missing-objects-after &&
 		comm -2 -3 missing-objects-before missing-objects-after >old &&
 		comm -1 -3 missing-objects-before missing-objects-after >new &&

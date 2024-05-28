@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "builtin.h"
 #include "exec-cmd.h"
@@ -23,11 +23,11 @@ static uint32_t common_mask =
 	CAT_init | CAT_worktree | CAT_info |
 	CAT_history | CAT_remote;
 static struct category_description common_categories[] = {
-	{ CAT_init, N_("start a working area (see also: git help tutorial)") },
-	{ CAT_worktree, N_("work on the current change (see also: git help everyday)") },
-	{ CAT_info, N_("examine the history and state (see also: git help revisions)") },
+	{ CAT_init, N_("start a working area (see also: shit help tutorial)") },
+	{ CAT_worktree, N_("work on the current change (see also: shit help everyday)") },
+	{ CAT_info, N_("examine the history and state (see also: shit help revisions)") },
 	{ CAT_history, N_("grow, mark and tweak your common history") },
-	{ CAT_remote, N_("collaborate (see also: git help workflows)") },
+	{ CAT_remote, N_("collaborate (see also: shit help workflows)") },
 	{ 0, NULL }
 };
 static struct category_description main_categories[] = {
@@ -53,10 +53,10 @@ static const char *drop_prefix(const char *name, uint32_t category)
 	case CAT_guide:
 	case CAT_userinterfaces:
 	case CAT_developerinterfaces:
-		prefix = "git";
+		prefix = "shit";
 		break;
 	default:
-		prefix = "git-";
+		prefix = "shit-";
 		break;
 	}
 	if (skip_prefix(name, prefix, &new_name))
@@ -246,7 +246,7 @@ static void list_commands_in_dir(struct cmdnames *cmds,
 	if (!dir)
 		return;
 	if (!prefix)
-		prefix = "git-";
+		prefix = "shit-";
 
 	strbuf_addf(&buf, "%s/", path);
 	len = buf.len;
@@ -277,7 +277,7 @@ void load_command_list(const char *prefix,
 		struct cmdnames *other_cmds)
 {
 	const char *env_path = getenv("PATH");
-	const char *exec_path = git_exec_path();
+	const char *exec_path = shit_exec_path();
 
 	load_builtin_commands(prefix, main_cmds);
 
@@ -314,7 +314,7 @@ static int get_colopts(const char *var, const char *value,
 	unsigned int *colopts = data;
 
 	if (starts_with(var, "column."))
-		return git_column_config(var, value, "help", colopts);
+		return shit_column_config(var, value, "help", colopts);
 
 	return 0;
 }
@@ -322,18 +322,18 @@ static int get_colopts(const char *var, const char *value,
 void list_commands(struct cmdnames *main_cmds, struct cmdnames *other_cmds)
 {
 	unsigned int colopts = 0;
-	git_config(get_colopts, &colopts);
+	shit_config(get_colopts, &colopts);
 
 	if (main_cmds->cnt) {
-		const char *exec_path = git_exec_path();
-		printf_ln(_("available git commands in '%s'"), exec_path);
+		const char *exec_path = shit_exec_path();
+		printf_ln(_("available shit commands in '%s'"), exec_path);
 		putchar('\n');
 		pretty_print_cmdnames(main_cmds, colopts);
 		putchar('\n');
 	}
 
 	if (other_cmds->cnt) {
-		puts(_("git commands available from elsewhere on your $PATH"));
+		puts(_("shit commands available from elsewhere on your $PATH"));
 		putchar('\n');
 		pretty_print_cmdnames(other_cmds, colopts);
 		putchar('\n');
@@ -342,7 +342,7 @@ void list_commands(struct cmdnames *main_cmds, struct cmdnames *other_cmds)
 
 void list_common_cmds_help(void)
 {
-	puts(_("These are common Git commands used in various situations:"));
+	puts(_("These are common shit commands used in various situations:"));
 	putchar('\n');
 	print_cmd_by_category(common_categories, NULL);
 }
@@ -354,7 +354,7 @@ void list_all_main_cmds(struct string_list *list)
 
 	memset(&main_cmds, 0, sizeof(main_cmds));
 	memset(&other_cmds, 0, sizeof(other_cmds));
-	load_command_list("git-", &main_cmds, &other_cmds);
+	load_command_list("shit-", &main_cmds, &other_cmds);
 
 	for (i = 0; i < main_cmds.cnt; i++)
 		string_list_append(list, main_cmds.names[i]->name);
@@ -370,7 +370,7 @@ void list_all_other_cmds(struct string_list *list)
 
 	memset(&main_cmds, 0, sizeof(main_cmds));
 	memset(&other_cmds, 0, sizeof(other_cmds));
-	load_command_list("git-", &main_cmds, &other_cmds);
+	load_command_list("shit-", &main_cmds, &other_cmds);
 
 	for (i = 0; i < other_cmds.cnt; i++)
 		string_list_append(list, other_cmds.names[i]->name);
@@ -407,7 +407,7 @@ void list_cmds_by_config(struct string_list *list)
 {
 	const char *cmd_list;
 
-	if (git_config_get_string_tmp("completion.commands", &cmd_list))
+	if (shit_config_get_string_tmp("completion.commands", &cmd_list))
 		return;
 
 	string_list_sort(list);
@@ -432,7 +432,7 @@ void list_cmds_by_config(struct string_list *list)
 void list_guides_help(void)
 {
 	struct category_description catdesc[] = {
-		{ CAT_guide, N_("The Git concept guides are:") },
+		{ CAT_guide, N_("The shit concept guides are:") },
 		{ 0, NULL }
 	};
 	print_cmd_by_category(catdesc, NULL);
@@ -492,7 +492,7 @@ static void list_all_cmds_help_aliases(int longest)
 	struct cmdname_help *aliases;
 	int i;
 
-	git_config(get_alias, &alias_list);
+	shit_config(get_alias, &alias_list);
 	string_list_sort(&alias_list);
 
 	for (i = 0; i < alias_list.nr; i++) {
@@ -520,7 +520,7 @@ void list_all_cmds_help(int show_external_commands, int show_aliases)
 {
 	int longest;
 
-	puts(_("See 'git help <command>' to read about a specific subcommand"));
+	puts(_("See 'shit help <command>' to read about a specific subcommand"));
 	putchar('\n');
 	print_cmd_by_category(main_categories, &longest);
 
@@ -546,7 +546,7 @@ static struct cmdnames aliases;
 #define AUTOCORRECT_NEVER (-2)
 #define AUTOCORRECT_IMMEDIATELY (-1)
 
-static int git_unknown_cmd_config(const char *var, const char *value,
+static int shit_unknown_cmd_config(const char *var, const char *value,
 				  const struct config_context *ctx,
 				  void *cb UNUSED)
 {
@@ -562,7 +562,7 @@ static int git_unknown_cmd_config(const char *var, const char *value,
 		} else if (!strcmp(value, "prompt")) {
 			autocorrect = AUTOCORRECT_PROMPT;
 		} else {
-			int v = git_config_int(var, value, ctx->kvi);
+			int v = shit_config_int(var, value, ctx->kvi);
 			autocorrect = (v < 0)
 				? AUTOCORRECT_IMMEDIATELY : v;
 		}
@@ -599,8 +599,8 @@ static void add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
 #define SIMILAR_ENOUGH(x) ((x) < SIMILARITY_FLOOR)
 
 static const char bad_interpreter_advice[] =
-	N_("'%s' appears to be a git command, but we were not\n"
-	"able to execute it. Maybe git-%s is broken?");
+	N_("'%s' appears to be a shit command, but we were not\n"
+	"able to execute it. Maybe shit-%s is broken?");
 
 const char *help_unknown_cmd(const char *cmd)
 {
@@ -612,7 +612,7 @@ const char *help_unknown_cmd(const char *cmd)
 	memset(&other_cmds, 0, sizeof(other_cmds));
 	memset(&aliases, 0, sizeof(aliases));
 
-	read_early_config(git_unknown_cmd_config, NULL);
+	read_early_config(shit_unknown_cmd_config, NULL);
 
 	/*
 	 * Disable autocorrection prompt in a non-interactive session
@@ -621,11 +621,11 @@ const char *help_unknown_cmd(const char *cmd)
 		autocorrect = AUTOCORRECT_NEVER;
 
 	if (autocorrect == AUTOCORRECT_NEVER) {
-		fprintf_ln(stderr, _("git: '%s' is not a git command. See 'git --help'."), cmd);
+		fprintf_ln(stderr, _("shit: '%s' is not a shit command. See 'shit --help'."), cmd);
 		exit(1);
 	}
 
-	load_command_list("git-", &main_cmds, &other_cmds);
+	load_command_list("shit-", &main_cmds, &other_cmds);
 
 	add_cmd_list(&main_cmds, &aliases);
 	add_cmd_list(&main_cmds, &other_cmds);
@@ -669,7 +669,7 @@ const char *help_unknown_cmd(const char *cmd)
 	QSORT(main_cmds.names, main_cmds.cnt, levenshtein_compare);
 
 	if (!main_cmds.cnt)
-		die(_("Uh oh. Your system reports no Git commands at all."));
+		die(_("Uh oh. Your system reports no shit commands at all."));
 
 	/* skip and count prefix matches */
 	for (n = 0; n < main_cmds.cnt && !main_cmds.names[n]->len; n++)
@@ -691,7 +691,7 @@ const char *help_unknown_cmd(const char *cmd)
 		main_cmds.names[0] = NULL;
 		clean_cmdnames(&main_cmds);
 		fprintf_ln(stderr,
-			   _("WARNING: You called a Git command named '%s', "
+			   _("WARNING: You called a shit command named '%s', "
 			     "which does not exist."),
 			   cmd);
 		if (autocorrect == AUTOCORRECT_IMMEDIATELY)
@@ -703,7 +703,7 @@ const char *help_unknown_cmd(const char *cmd)
 			char *answer;
 			struct strbuf msg = STRBUF_INIT;
 			strbuf_addf(&msg, _("Run '%s' instead [y/N]? "), assumed);
-			answer = git_prompt(msg.buf, PROMPT_ECHO);
+			answer = shit_prompt(msg.buf, PROMPT_ECHO);
 			strbuf_release(&msg);
 			if (!(starts_with(answer, "y") ||
 			      starts_with(answer, "Y")))
@@ -718,7 +718,7 @@ const char *help_unknown_cmd(const char *cmd)
 		return assumed;
 	}
 
-	fprintf_ln(stderr, _("git: '%s' is not a git command. See 'git --help'."), cmd);
+	fprintf_ln(stderr, _("shit: '%s' is not a shit command. See 'shit --help'."), cmd);
 
 	if (SIMILAR_ENOUGH(best_similarity)) {
 		fprintf_ln(stderr,
@@ -737,23 +737,23 @@ void get_version_info(struct strbuf *buf, int show_build_options)
 {
 	/*
 	 * The format of this string should be kept stable for compatibility
-	 * with external projects that rely on the output of "git version".
+	 * with external projects that rely on the output of "shit version".
 	 *
 	 * Always show the version, even if other options are given.
 	 */
-	strbuf_addf(buf, "git version %s\n", git_version_string);
+	strbuf_addf(buf, "shit version %s\n", shit_version_string);
 
 	if (show_build_options) {
-		strbuf_addf(buf, "cpu: %s\n", GIT_HOST_CPU);
-		if (git_built_from_commit_string[0])
+		strbuf_addf(buf, "cpu: %s\n", shit_HOST_CPU);
+		if (shit_built_from_commit_string[0])
 			strbuf_addf(buf, "built from commit: %s\n",
-			       git_built_from_commit_string);
+			       shit_built_from_commit_string);
 		else
 			strbuf_addstr(buf, "no commit associated with this build\n");
 		strbuf_addf(buf, "sizeof-long: %d\n", (int)sizeof(long));
 		strbuf_addf(buf, "sizeof-size_t: %d\n", (int)sizeof(size_t));
 		strbuf_addf(buf, "shell-path: %s\n", SHELL_PATH);
-		/* NEEDSWORK: also save and output GIT-BUILD_OPTIONS? */
+		/* NEEDSWORK: also save and output shit-BUILD_OPTIONS? */
 
 		if (fsmonitor_ipc__is_supported())
 			strbuf_addstr(buf, "feature: fsmonitor--daemon\n");
@@ -765,7 +765,7 @@ int cmd_version(int argc, const char **argv, const char *prefix)
 	struct strbuf buf = STRBUF_INIT;
 	int build_options = 0;
 	const char * const usage[] = {
-		N_("git version [--build-options]"),
+		N_("shit version [--build-options]"),
 		NULL
 	};
 	struct option options[] = {

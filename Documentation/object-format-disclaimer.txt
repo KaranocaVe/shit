@@ -5,5 +5,5 @@ Historically, we warned that SHA-256 repositories may later need
 backward incompatible changes when we introduce such interoperability
 features. Today, we only expect compatible changes. Furthermore, if such
 changes prove to be necessary, it can be expected that SHA-256 repositories
-created with today's Git will be usable by future versions of Git
+created with today's shit will be usable by future versions of shit
 without data loss.

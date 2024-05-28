@@ -15,8 +15,8 @@ static int cached_attrs;
 static int stdin_paths;
 static char *source;
 static const char * const check_attr_usage[] = {
-N_("git check-attr [--source <tree-ish>] [-a | --all | <attr>...] [--] <pathname>..."),
-N_("git check-attr --stdin [-z] [--source <tree-ish>] [-a | --all | <attr>...]"),
+N_("shit check-attr [--source <tree-ish>] [-a | --all | <attr>...] [--] <pathname>..."),
+N_("shit check-attr --stdin [-z] [--source <tree-ish>] [-a | --all | <attr>...]"),
 NULL
 };
 
@@ -24,7 +24,7 @@ static int nul_term_line;
 
 static const struct option check_attr_options[] = {
 	OPT_BOOL('a', "all", &all_attrs, N_("report all attributes set on file")),
-	OPT_BOOL(0,  "cached", &cached_attrs, N_("use .gitattributes only from the index")),
+	OPT_BOOL(0,  "cached", &cached_attrs, N_("use .shitattributes only from the index")),
 	OPT_BOOL(0 , "stdin", &stdin_paths, N_("read file names from stdin")),
 	OPT_BOOL('z', NULL, &nul_term_line,
 		 N_("terminate input and output records by a NUL character")),
@@ -52,11 +52,11 @@ static void output_attr(struct attr_check *check, const char *file)
 			       "%s%c" /* attrname */
 			       "%s%c" /* attrvalue */,
 			       file, 0,
-			       git_attr_name(check->items[j].attr), 0, value, 0);
+			       shit_attr_name(check->items[j].attr), 0, value, 0);
 		} else {
 			quote_c_style(file, NULL, stdout, 0);
 			printf(": %s: %s\n",
-			       git_attr_name(check->items[j].attr), value);
+			       shit_attr_name(check->items[j].attr), value);
 		}
 	}
 }
@@ -70,9 +70,9 @@ static void check_attr(const char *prefix, struct attr_check *check,
 		prefix_path(prefix, prefix ? strlen(prefix) : 0, file);
 
 	if (collect_all) {
-		git_all_attrs(the_repository->index, full_path, check);
+		shit_all_attrs(the_repository->index, full_path, check);
 	} else {
-		git_check_attr(the_repository->index, full_path, check);
+		shit_check_attr(the_repository->index, full_path, check);
 	}
 	output_attr(check, file);
 
@@ -116,7 +116,7 @@ int cmd_check_attr(int argc, const char **argv, const char *prefix)
 	if (!is_bare_repository())
 		setup_work_tree();
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, check_attr_options,
 			     check_attr_usage, PARSE_OPT_KEEP_DASHDASH);
@@ -129,7 +129,7 @@ int cmd_check_attr(int argc, const char **argv, const char *prefix)
 	}
 
 	if (cached_attrs)
-		git_attr_set_direction(GIT_ATTR_INDEX);
+		shit_attr_set_direction(shit_ATTR_INDEX);
 
 	doubledash = -1;
 	for (i = 0; doubledash < 0 && i < argc; i++) {
@@ -176,7 +176,7 @@ int cmd_check_attr(int argc, const char **argv, const char *prefix)
 	check = attr_check_alloc();
 	if (!all_attrs) {
 		for (i = 0; i < cnt; i++) {
-			const struct git_attr *a = git_attr(argv[i]);
+			const struct shit_attr *a = shit_attr(argv[i]);
 
 			if (!a)
 				return error("%s: not a valid attribute name",
@@ -188,7 +188,7 @@ int cmd_check_attr(int argc, const char **argv, const char *prefix)
 	if (source) {
 		if (repo_get_oid_tree(the_repository, source, &initialized_oid))
 			die("%s: not a valid tree-ish source", source);
-		set_git_attr_source(source);
+		set_shit_attr_source(source);
 	}
 
 	if (stdin_paths)

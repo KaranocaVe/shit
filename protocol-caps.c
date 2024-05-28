@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "protocol-caps.h"
 #include "gettext.h"
 #include "hex.h"

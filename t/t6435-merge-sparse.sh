@@ -9,13 +9,13 @@ TEST_PASSES_SANITIZE_LEAK=true
 # test_file $filename $content
 test_file () {
 	echo "$2" > "$1" &&
-	git add "$1"
+	shit add "$1"
 }
 
 # test_commit_this $message_and_tag
 test_commit_this () {
-	git commit -m "$1" &&
-	git tag "$1"
+	shit commit -m "$1" &&
+	shit tag "$1"
 }
 
 test_expect_success 'setup' '
@@ -24,36 +24,36 @@ test_expect_success 'setup' '
 	test_commit_this init &&
 	test_file modify_delete modify_delete_theirs &&
 	test_commit_this theirs &&
-	git reset --hard init &&
-	git rm modify_delete &&
+	shit reset --hard init &&
+	shit rm modify_delete &&
 	test_commit_this ours &&
-	git config core.sparseCheckout true &&
-	mkdir .git/info &&
-	echo "/checked-out" >.git/info/sparse-checkout &&
-	git reset --hard &&
-	test_must_fail git merge theirs
+	shit config core.sparseCheckout true &&
+	mkdir .shit/info &&
+	echo "/checked-out" >.shit/info/sparse-checkout &&
+	shit reset --hard &&
+	test_must_fail shit merge theirs
 '
 
 test_expect_success 'reset --hard works after the conflict' '
-	git reset --hard
+	shit reset --hard
 '
 
 test_expect_success 'is reset properly' '
-	git status --porcelain -- modify_delete >out &&
+	shit status --porcelain -- modify_delete >out &&
 	test_must_be_empty out &&
 	test_path_is_missing modify_delete
 '
 
 test_expect_success 'setup: conflict back' '
-	test_must_fail git merge theirs
+	test_must_fail shit merge theirs
 '
 
 test_expect_success 'Merge abort works after the conflict' '
-	git merge --abort
+	shit merge --abort
 '
 
 test_expect_success 'is aborted properly' '
-	git status --porcelain -- modify_delete >out &&
+	shit status --porcelain -- modify_delete >out &&
 	test_must_be_empty out &&
 	test_path_is_missing modify_delete
 '

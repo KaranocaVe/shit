@@ -26,15 +26,15 @@ test_description='--ancestry-path'
 #  --ancestry-path G..M -- G.t == L
 #  --ancestry-path --simplify-merges G^..M -- G.t == G L
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 test_merge () {
 	test_tick &&
-	git merge -s ours -m "$2" "$1" &&
-	git tag "$2"
+	shit merge -s ours -m "$2" "$1" &&
+	shit tag "$2"
 }
 
 test_expect_success setup '
@@ -44,12 +44,12 @@ test_expect_success setup '
 	test_commit D &&
 	test_commit E &&
 	test_commit F &&
-	git reset --hard C &&
+	shit reset --hard C &&
 	test_commit G &&
 	test_merge E H &&
 	test_commit I &&
 	test_merge F J &&
-	git reset --hard A &&
+	shit reset --hard A &&
 	test_commit K &&
 	test_merge J L &&
 	test_commit M
@@ -60,7 +60,7 @@ test_ancestry () {
 	expected=$2
 	test_expect_success "log $args" "
 		test_write_lines $expected >expect &&
-		git log --format=%s $args >raw &&
+		shit log --format=%s $args >raw &&
 
 		if test -n \"$expected\"
 		then
@@ -102,30 +102,30 @@ test_ancestry "--ancestry-path --simplify-merges G^..M -- G.t" "G L"
 test_expect_success 'setup criss-cross' '
 	mkdir criss-cross &&
 	(cd criss-cross &&
-	 git init &&
+	 shit init &&
 	 test_commit A &&
-	 git checkout -b xb main &&
+	 shit checkout -b xb main &&
 	 test_commit B &&
-	 git checkout -b xc main &&
+	 shit checkout -b xc main &&
 	 test_commit C &&
-	 git checkout -b xbc xb -- &&
-	 git merge xc &&
-	 git checkout -b xcb xc -- &&
-	 git merge xb &&
-	 git checkout main)
+	 shit checkout -b xbc xb -- &&
+	 shit merge xc &&
+	 shit checkout -b xcb xc -- &&
+	 shit merge xb &&
+	 shit checkout main)
 '
 
 # no commits in bc descend from cb
 test_expect_success 'criss-cross: rev-list --ancestry-path cb..bc' '
 	(cd criss-cross &&
-	 git rev-list --ancestry-path xcb..xbc > actual &&
+	 shit rev-list --ancestry-path xcb..xbc > actual &&
 	 test_must_be_empty actual)
 '
 
 # no commits in repository descend from cb
 test_expect_success 'criss-cross: rev-list --ancestry-path --all ^cb' '
 	(cd criss-cross &&
-	 git rev-list --ancestry-path --all ^xcb > actual &&
+	 shit rev-list --ancestry-path --all ^xcb > actual &&
 	 test_must_be_empty actual)
 '
 

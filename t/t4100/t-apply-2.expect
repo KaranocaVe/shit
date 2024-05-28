@@ -1,5 +1,5 @@
  Makefile         |    2 +-
- git-fetch-script |    5 -----
- git-pull-script  |   34 +---------------------------------
+ shit-fetch-script |    5 -----
+ shit-poop-script  |   34 +---------------------------------
  3 files changed, 2 insertions(+), 39 deletions(-)
- copy git-pull-script => git-fetch-script (87%)
+ copy shit-poop-script => shit-fetch-script (87%)

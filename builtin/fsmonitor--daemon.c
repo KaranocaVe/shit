@@ -19,10 +19,10 @@
 #include "trace2.h"
 
 static const char * const builtin_fsmonitor__daemon_usage[] = {
-	N_("git fsmonitor--daemon start [<options>]"),
-	N_("git fsmonitor--daemon run [<options>]"),
-	"git fsmonitor--daemon stop",
-	"git fsmonitor--daemon status",
+	N_("shit fsmonitor--daemon start [<options>]"),
+	N_("shit fsmonitor--daemon run [<options>]"),
+	"shit fsmonitor--daemon stop",
+	"shit fsmonitor--daemon status",
 	NULL
 };
 
@@ -43,7 +43,7 @@ static int fsmonitor_config(const char *var, const char *value,
 			    const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, FSMONITOR__IPC_THREADS)) {
-		int i = git_config_int(var, value, ctx->kvi);
+		int i = shit_config_int(var, value, ctx->kvi);
 		if (i < 1)
 			return error(_("value of '%s' out of range: %d"),
 				     FSMONITOR__IPC_THREADS, i);
@@ -52,7 +52,7 @@ static int fsmonitor_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, FSMONITOR__START_TIMEOUT)) {
-		int i = git_config_int(var, value, ctx->kvi);
+		int i = shit_config_int(var, value, ctx->kvi);
 		if (i < 0)
 			return error(_("value of '%s' out of range: %d"),
 				     FSMONITOR__START_TIMEOUT, i);
@@ -62,7 +62,7 @@ static int fsmonitor_config(const char *var, const char *value,
 
 	if (!strcmp(var, FSMONITOR__ANNOUNCE_STARTUP)) {
 		int is_bool;
-		int i = git_config_bool_or_int(var, value, ctx->kvi, &is_bool);
+		int i = shit_config_bool_or_int(var, value, ctx->kvi, &is_bool);
 		if (i < 0)
 			return error(_("value of '%s' not bool or int: %d"),
 				     var, i);
@@ -70,13 +70,13 @@ static int fsmonitor_config(const char *var, const char *value,
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 /*
  * Acting as a CLIENT.
  *
- * Send a "quit" command to the `git-fsmonitor--daemon` (if running)
+ * Send a "quit" command to the `shit-fsmonitor--daemon` (if running)
  * and wait for it to shutdown.
  */
 static int do_as_client__send_stop(void)
@@ -373,7 +373,7 @@ static struct fsmonitor_token_data *fsmonitor_new_token_data(void)
 	token->client_ref_count = 0;
 
 	if (test_env_value < 0)
-		test_env_value = git_env_bool("GIT_TEST_FSMONITOR_TOKEN", 0);
+		test_env_value = shit_env_bool("shit_TEST_FSMONITOR_TOKEN", 0);
 
 	if (!test_env_value) {
 		struct timeval tv;
@@ -484,7 +484,7 @@ static void fsmonitor_batch__combine(struct fsmonitor_batch *batch_dest,
  * activity, we try to truncate old batches from the end of the list as
  * they become irrelevant.
  *
- * We assume that the .git/index will be updated with the most recent token
+ * We assume that the .shit/index will be updated with the most recent token
  * any time the index is updated.  And future commands will only ask for
  * recent changes *since* that new token.  So as tokens advance into the
  * future, older batch items will never be requested/needed.  So we can
@@ -995,31 +995,31 @@ static int handle_client(void *data,
 enum fsmonitor_path_type fsmonitor_classify_path_workdir_relative(
 	const char *rel)
 {
-	if (fspathncmp(rel, ".git", 4))
+	if (fspathncmp(rel, ".shit", 4))
 		return IS_WORKDIR_PATH;
 	rel += 4;
 
 	if (!*rel)
-		return IS_DOT_GIT;
+		return IS_DOT_shit;
 	if (*rel != '/')
-		return IS_WORKDIR_PATH; /* e.g. .gitignore */
+		return IS_WORKDIR_PATH; /* e.g. .shitignore */
 	rel++;
 
 	if (!fspathncmp(rel, FSMONITOR_COOKIE_PREFIX,
 			strlen(FSMONITOR_COOKIE_PREFIX)))
-		return IS_INSIDE_DOT_GIT_WITH_COOKIE_PREFIX;
+		return IS_INSIDE_DOT_shit_WITH_COOKIE_PREFIX;
 
-	return IS_INSIDE_DOT_GIT;
+	return IS_INSIDE_DOT_shit;
 }
 
-enum fsmonitor_path_type fsmonitor_classify_path_gitdir_relative(
+enum fsmonitor_path_type fsmonitor_classify_path_shitdir_relative(
 	const char *rel)
 {
 	if (!fspathncmp(rel, FSMONITOR_COOKIE_PREFIX,
 			strlen(FSMONITOR_COOKIE_PREFIX)))
-		return IS_INSIDE_GITDIR_WITH_COOKIE_PREFIX;
+		return IS_INSIDE_shitDIR_WITH_COOKIE_PREFIX;
 
-	return IS_INSIDE_GITDIR;
+	return IS_INSIDE_shitDIR;
 }
 
 static enum fsmonitor_path_type try_classify_workdir_abs_path(
@@ -1056,19 +1056,19 @@ enum fsmonitor_path_type fsmonitor_classify_path_absolute(
 	if (t != IS_OUTSIDE_CONE)
 		return t;
 
-	if (fspathncmp(path, state->path_gitdir_watch.buf,
-		       state->path_gitdir_watch.len))
+	if (fspathncmp(path, state->path_shitdir_watch.buf,
+		       state->path_shitdir_watch.len))
 		return IS_OUTSIDE_CONE;
 
-	rel = path + state->path_gitdir_watch.len;
+	rel = path + state->path_shitdir_watch.len;
 
 	if (!*rel)
-		return IS_GITDIR; /* it is the <gitdir> exactly */
+		return IS_shitDIR; /* it is the <shitdir> exactly */
 	if (*rel != '/')
 		return IS_OUTSIDE_CONE;
 	rel++;
 
-	return fsmonitor_classify_path_gitdir_relative(rel);
+	return fsmonitor_classify_path_shitdir_relative(rel);
 }
 
 /*
@@ -1170,8 +1170,8 @@ static void *fsm_listen__thread_proc(void *_state)
 	trace_printf_key(&trace_fsmonitor, "Watching: worktree '%s'",
 			 state->path_worktree_watch.buf);
 	if (state->nr_paths_watching > 1)
-		trace_printf_key(&trace_fsmonitor, "Watching: gitdir '%s'",
-				 state->path_gitdir_watch.buf);
+		trace_printf_key(&trace_fsmonitor, "Watching: shitdir '%s'",
+				 state->path_shitdir_watch.buf);
 
 	fsm_listen__loop(state);
 
@@ -1291,7 +1291,7 @@ static int fsmonitor_run_daemon(void)
 
 	/* Prepare to (recursively) watch the <worktree-root> directory. */
 	strbuf_init(&state.path_worktree_watch, 0);
-	strbuf_addstr(&state.path_worktree_watch, absolute_path(get_git_work_tree()));
+	strbuf_addstr(&state.path_worktree_watch, absolute_path(get_shit_work_tree()));
 	state.nr_paths_watching = 1;
 
 	strbuf_init(&state.alias.alias, 0);
@@ -1300,35 +1300,35 @@ static int fsmonitor_run_daemon(void)
 		goto done;
 
 	/*
-	 * We create and delete cookie files somewhere inside the .git
+	 * We create and delete cookie files somewhere inside the .shit
 	 * directory to help us keep sync with the file system.  If
-	 * ".git" is not a directory, then <gitdir> is not inside the
+	 * ".shit" is not a directory, then <shitdir> is not inside the
 	 * cone of <worktree-root>, so set up a second watch to watch
-	 * the <gitdir> so that we get events for the cookie files.
+	 * the <shitdir> so that we get events for the cookie files.
 	 */
-	strbuf_init(&state.path_gitdir_watch, 0);
-	strbuf_addbuf(&state.path_gitdir_watch, &state.path_worktree_watch);
-	strbuf_addstr(&state.path_gitdir_watch, "/.git");
-	if (!is_directory(state.path_gitdir_watch.buf)) {
-		strbuf_reset(&state.path_gitdir_watch);
-		strbuf_addstr(&state.path_gitdir_watch, absolute_path(get_git_dir()));
+	strbuf_init(&state.path_shitdir_watch, 0);
+	strbuf_addbuf(&state.path_shitdir_watch, &state.path_worktree_watch);
+	strbuf_addstr(&state.path_shitdir_watch, "/.shit");
+	if (!is_directory(state.path_shitdir_watch.buf)) {
+		strbuf_reset(&state.path_shitdir_watch);
+		strbuf_addstr(&state.path_shitdir_watch, absolute_path(get_shit_dir()));
 		state.nr_paths_watching = 2;
 	}
 
 	/*
 	 * We will write filesystem syncing cookie files into
-	 * <gitdir>/<fsmonitor-dir>/<cookie-dir>/<pid>-<seq>.
+	 * <shitdir>/<fsmonitor-dir>/<cookie-dir>/<pid>-<seq>.
 	 *
 	 * The extra layers of subdirectories here keep us from
-	 * changing the mtime on ".git/" or ".git/foo/" when we create
+	 * changing the mtime on ".shit/" or ".shit/foo/" when we create
 	 * or delete cookie files.
 	 *
 	 * There have been problems with some IDEs that do a
-	 * non-recursive watch of the ".git/" directory and run a
+	 * non-recursive watch of the ".shit/" directory and run a
 	 * series of commands any time something happens.
 	 *
 	 * For example, if we place our cookie files directly in
-	 * ".git/" or ".git/foo/" then a `git status` (or similar
+	 * ".shit/" or ".shit/foo/" then a `shit status` (or similar
 	 * command) from the IDE will cause a cookie file to be
 	 * created in one of those dirs.  This causes the mtime of
 	 * those dirs to change.  This triggers the IDE's watch
@@ -1337,11 +1337,11 @@ static int fsmonitor_run_daemon(void)
 	 * idle.
 	 *
 	 * Adding the extra layers of subdirectories prevents the
-	 * mtime of ".git/" and ".git/foo" from changing when a
+	 * mtime of ".shit/" and ".shit/foo" from changing when a
 	 * cookie file is created.
 	 */
 	strbuf_init(&state.path_cookie_prefix, 0);
-	strbuf_addbuf(&state.path_cookie_prefix, &state.path_gitdir_watch);
+	strbuf_addbuf(&state.path_cookie_prefix, &state.path_shitdir_watch);
 
 	strbuf_addch(&state.path_cookie_prefix, '/');
 	strbuf_addstr(&state.path_cookie_prefix, FSMONITOR_DIR);
@@ -1355,8 +1355,8 @@ static int fsmonitor_run_daemon(void)
 
 	/*
 	 * We create a named-pipe or unix domain socket inside of the
-	 * ".git" directory.  (Well, on Windows, we base our named
-	 * pipe in the NPFS on the absolute path of the git
+	 * ".shit" directory.  (Well, on Windows, we base our named
+	 * pipe in the NPFS on the absolute path of the shit
 	 * directory.)
 	 */
 	strbuf_init(&state.path_ipc, 0);
@@ -1380,7 +1380,7 @@ static int fsmonitor_run_daemon(void)
 	/*
 	 * CD out of the worktree root directory.
 	 *
-	 * The common Git startup mechanism causes our CWD to be the
+	 * The common shit startup mechanism causes our CWD to be the
 	 * root of the worktree.  On Windows, this causes our process
 	 * to hold a locked handle on the CWD.  This prevents the
 	 * worktree from being moved or deleted while the daemon is
@@ -1405,7 +1405,7 @@ done:
 	ipc_server_free(state.ipc_server_data);
 
 	strbuf_release(&state.path_worktree_watch);
-	strbuf_release(&state.path_gitdir_watch);
+	strbuf_release(&state.path_shitdir_watch);
 	strbuf_release(&state.path_cookie_prefix);
 	strbuf_release(&state.path_ipc);
 	strbuf_release(&state.alias.alias);
@@ -1434,7 +1434,7 @@ static int try_to_run_foreground_daemon(int detach_console MAYBE_UNUSED)
 		fflush(stderr);
 	}
 
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 	if (detach_console)
 		FreeConsole();
 #endif
@@ -1490,12 +1490,12 @@ static int try_to_start_background_daemon(void)
 		fflush(stderr);
 	}
 
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 
-	strvec_push(&cp.args, "fsmonitor--daemon");
-	strvec_push(&cp.args, "run");
-	strvec_push(&cp.args, "--detach");
-	strvec_pushf(&cp.args, "--ipc-threads=%d", fsmonitor__ipc_threads);
+	strvec_defecate(&cp.args, "fsmonitor--daemon");
+	strvec_defecate(&cp.args, "run");
+	strvec_defecate(&cp.args, "--detach");
+	strvec_defecatef(&cp.args, "--ipc-threads=%d", fsmonitor__ipc_threads);
 
 	cp.no_stdin = 1;
 	cp.no_stdout = 1;
@@ -1539,7 +1539,7 @@ int cmd_fsmonitor__daemon(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(fsmonitor_config, NULL);
+	shit_config(fsmonitor_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, options,
 			     builtin_fsmonitor__daemon_usage, 0);

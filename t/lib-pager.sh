@@ -1,10 +1,10 @@
-# Helpers for tests of git's choice of pager.
+# Helpers for tests of shit's choice of pager.
 
 test_expect_success 'determine default pager' '
-	test_might_fail git config --unset core.pager &&
+	test_might_fail shit config --unset core.pager &&
 	less=$(
-		sane_unset PAGER GIT_PAGER &&
-		git var GIT_PAGER
+		sane_unset PAGER shit_PAGER &&
+		shit var shit_PAGER
 	) &&
 	test -n "$less"
 '

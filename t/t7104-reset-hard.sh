@@ -12,34 +12,34 @@ test_expect_success setup '
 	>before/2 &&
 	>hello &&
 	>later/3 &&
-	git add before hello later &&
-	git commit -m world &&
+	shit add before hello later &&
+	shit commit -m world &&
 
-	H=$(git rev-parse :hello) &&
-	git rm --cached hello &&
-	echo "100644 $H 2	hello" | git update-index --index-info &&
+	H=$(shit rev-parse :hello) &&
+	shit rm --cached hello &&
+	echo "100644 $H 2	hello" | shit update-index --index-info &&
 
 	rm -f hello &&
 	mkdir -p hello &&
 	>hello/world &&
-	test "$(git ls-files -o)" = hello/world
+	test "$(shit ls-files -o)" = hello/world
 
 '
 
 test_expect_success 'reset --hard should restore unmerged ones' '
 
-	git reset --hard &&
-	git ls-files --error-unmatch before/1 before/2 hello later/3 &&
+	shit reset --hard &&
+	shit ls-files --error-unmatch before/1 before/2 hello later/3 &&
 	test -f hello
 
 '
 
 test_expect_success 'reset --hard did not corrupt index or cache-tree' '
 
-	T=$(git write-tree) &&
-	rm -f .git/index &&
-	git add before hello later &&
-	U=$(git write-tree) &&
+	T=$(shit write-tree) &&
+	rm -f .shit/index &&
+	shit add before hello later &&
+	U=$(shit write-tree) &&
 	test "$T" = "$U"
 
 '

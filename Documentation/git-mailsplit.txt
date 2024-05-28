@@ -1,14 +1,14 @@
-git-mailsplit(1)
+shit-mailsplit(1)
 ================
 
 NAME
 ----
-git-mailsplit - Simple UNIX mbox splitter program
+shit-mailsplit - Simple UNIX mbox splitter program
 
 SYNOPSIS
 --------
 [verse]
-'git mailsplit' [-b] [-f<nn>] [-d<prec>] [--keep-cr] [--mboxrd]
+'shit mailsplit' [-b] [-f<nn>] [-d<prec>] [--keep-cr] [--mboxrd]
 		-o<directory> [--] [(<mbox>|<Maildir>)...]
 
 DESCRIPTION
@@ -37,7 +37,7 @@ OPTIONS
 	single mail message instead of signaling an error.
 
 -d<prec>::
-	Instead of the default 4 digits with leading zeros,
+	Instead of the default 4 dishits with leading zeros,
 	different precision can be specified for the generated
 	filenames.
 
@@ -52,6 +52,6 @@ OPTIONS
 	Input is of the "mboxrd" format and "^>+From " line escaping is
 	reversed.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

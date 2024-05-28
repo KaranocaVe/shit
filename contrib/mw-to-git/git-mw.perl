@@ -5,8 +5,8 @@
 #     Celestin Matte <celestin.matte@ensimag.imag.fr>
 # License: GPL v2 or later
 
-# Set of tools for git repo with a mediawiki remote.
-# Documentation & bugtracker: https://github.com/Git-Mediawiki/Git-Mediawiki
+# Set of tools for shit repo with a mediawiki remote.
+# Documentation & bugtracker: https://shithub.com/shit-Mediawiki/shit-Mediawiki
 
 use strict;
 use warnings;
@@ -16,12 +16,12 @@ use URI::URL qw(url);
 use LWP::UserAgent;
 use HTML::TreeBuilder;
 
-use Git;
+use shit;
 use MediaWiki::API;
-use Git::Mediawiki qw(clean_filename connect_maybe
+use shit::Mediawiki qw(clean_filename connect_maybe
 					EMPTY HTTP_CODE_PAGE_NOT_FOUND);
 
-# By default, use UTF-8 to communicate with Git and the user
+# By default, use UTF-8 to communicate with shit and the user
 binmode STDERR, ':encoding(UTF-8)';
 binmode STDOUT, ':encoding(UTF-8)';
 
@@ -76,13 +76,13 @@ GetOptions( %{$cmd->[1]},
 
 sub preview_help {
 	print {*STDOUT} <<'END';
-USAGE: git mw preview [--remote|-r <remote name>] [--autoload|-a]
+USAGE: shit mw preview [--remote|-r <remote name>] [--autoload|-a]
                       [--output|-o <output filename>] [--verbose|-v]
                       <blob> | <filename>
 
 DESCRIPTION:
 Preview is an utiliy to preview local content of a mediawiki repo as if it was
-pushed on the remote.
+defecateed on the remote.
 
 For that, preview searches for the remote name of the current branch's
 upstream if --remote is not set. If that remote is not found or if it
@@ -126,7 +126,7 @@ sub preview {
 	my $file_content;
 
 	if ($file_name eq EMPTY) {
-		die "Missing file argument, see `git mw help`\n";
+		die "Missing file argument, see `shit mw help`\n";
 	}
 
 	v_print("### Selecting remote\n");
@@ -169,8 +169,8 @@ MESSAGE
 
 	# Read file content
 	if (! -e $file_name) {
-		$file_content = git_cmd_try {
-			Git::command('cat-file', 'blob', $file_name); }
+		$file_content = shit_cmd_try {
+			shit::command('cat-file', 'blob', $file_name); }
 			"%s failed w/ code %d";
 
 		if ($file_name =~ /(.+):(.+)/) {
@@ -211,7 +211,7 @@ MESSAGE
 	v_print("### Results\n");
 	if ($autoload) {
 		v_print("Launching browser w/ file: ${preview_file_name}");
-		system('git', 'web--browse', $preview_file_name);
+		system('shit', 'web--browse', $preview_file_name);
 	} else {
 		print {*STDERR} "Preview file saved as: ${preview_file_name}\n";
 	}
@@ -233,7 +233,7 @@ sub merge_contents {
 	$content_tree = HTML::TreeBuilder->new;
 	$content_tree->parse($content);
 
-	$template_content_id = Git::config("remote.${remote_name}.mwIDcontent")
+	$template_content_id = shit::config("remote.${remote_name}.mwIDcontent")
 		|| $template_content_id;
 	v_print("Using '${template_content_id}' as the content ID\n");
 
@@ -242,13 +242,13 @@ sub merge_contents {
 		print {*STDERR} <<"CONFIG";
 Could not combine the new content with the template. You might want to
 configure `mediawiki.IDContent` in your config:
-	git config --add remote.${remote_name}.mwIDcontent <id>
+	shit config --add remote.${remote_name}.mwIDcontent <id>
 and re-run the command afterward.
 CONFIG
 		exit 1;
 	}
 	$mw_content_text->delete_content();
-	$mw_content_text->push_content($content_tree);
+	$mw_content_text->defecate_content($content_tree);
 
 	make_links_absolute($html_tree, $remote_url);
 
@@ -270,8 +270,8 @@ sub make_links_absolute {
 
 sub is_valid_remote {
 	my $remote = shift;
-	my @remotes = git_cmd_try {
-		Git::command('remote') }
+	my @remotes = shit_cmd_try {
+		shit::command('remote') }
 		"%s failed w/ code %d";
 	my $found_remote = 0;
 	foreach my $remote (@remotes) {
@@ -284,32 +284,32 @@ sub is_valid_remote {
 }
 
 sub find_mediawiki_remotes {
-	my @remotes = git_cmd_try {
-		Git::command('remote'); }
+	my @remotes = shit_cmd_try {
+		shit::command('remote'); }
 		"%s failed w/ code %d";
 	my $remote_url;
 	my @valid_remotes = ();
 	foreach my $remote (@remotes) {
 		$remote_url = mediawiki_remote_url_maybe($remote);
 		if ($remote_url) {
-			push(@valid_remotes, $remote);
+			defecate(@valid_remotes, $remote);
 		}
 	}
 	return @valid_remotes;
 }
 
 sub find_upstream_remote_name {
-	my $current_branch = git_cmd_try {
-		Git::command_oneline('symbolic-ref', '--short', 'HEAD') }
+	my $current_branch = shit_cmd_try {
+		shit::command_oneline('symbolic-ref', '--short', 'HEAD') }
 		"%s failed w/ code %d";
-	return Git::config("branch.${current_branch}.remote");
+	return shit::config("branch.${current_branch}.remote");
 }
 
 sub mediawiki_remote_url_maybe {
 	my $remote = shift;
 
 	# Find remote url
-	my $remote_url = Git::config("remote.${remote}.url");
+	my $remote_url = shit::config("remote.${remote}.url");
 	if ($remote_url =~ s/mediawiki::(.*)/$1/) {
 		return url($remote_url)->canonical;
 	}
@@ -358,10 +358,10 @@ WARNING
 
 sub help {
 	print {*STDOUT} <<'END';
-usage: git mw <command> <args>
+usage: shit mw <command> <args>
 
-git mw commands are:
-    help        Display help information about git mw
+shit mw commands are:
+    help        Display help information about shit mw
     preview     Parse and render local file into HTML
 END
 	exit;

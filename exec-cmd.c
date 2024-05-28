@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "environment.h"
 #include "exec-cmd.h"
@@ -30,7 +30,7 @@ static const char *system_prefix(void);
 #ifdef RUNTIME_PREFIX
 
 /**
- * When using a runtime prefix, Git dynamically resolves paths relative to its
+ * When using a runtime prefix, shit dynamically resolves paths relative to its
  * executable.
  *
  * The method for determining the path of the executable is highly
@@ -38,8 +38,8 @@ static const char *system_prefix(void);
  */
 
 /**
- * Path to the current Git executable. Resolved on startup by
- * 'git_resolve_executable_dir'.
+ * Path to the current shit executable. Resolved on startup by
+ * 'shit_resolve_executable_dir'.
  */
 static const char *executable_dirname;
 
@@ -51,9 +51,9 @@ static const char *system_prefix(void)
 	assert(is_absolute_path(executable_dirname));
 
 	if (!prefix &&
-	    !(prefix = strip_path_suffix(executable_dirname, GIT_EXEC_PATH)) &&
+	    !(prefix = strip_path_suffix(executable_dirname, shit_EXEC_PATH)) &&
 	    !(prefix = strip_path_suffix(executable_dirname, BINDIR)) &&
-	    !(prefix = strip_path_suffix(executable_dirname, "git"))) {
+	    !(prefix = strip_path_suffix(executable_dirname, "shit"))) {
 		prefix = FALLBACK_RUNTIME_PREFIX;
 		trace_printf("RUNTIME_PREFIX requested, "
 				"but prefix computation failed.  "
@@ -67,7 +67,7 @@ static const char *system_prefix(void)
  *
  * Returns 0 on success, -1 on failure.
  */
-static int git_get_exec_path_from_argv0(struct strbuf *buf, const char *argv0)
+static int shit_get_exec_path_from_argv0(struct strbuf *buf, const char *argv0)
 {
 	const char *slash;
 
@@ -90,7 +90,7 @@ static int git_get_exec_path_from_argv0(struct strbuf *buf, const char *argv0)
  *
  * Returns 0 on success, -1 on failure.
  */
-static int git_get_exec_path_procfs(struct strbuf *buf)
+static int shit_get_exec_path_procfs(struct strbuf *buf)
 {
 	if (strbuf_realpath(buf, PROCFS_EXECUTABLE_PATH, 0)) {
 		trace_printf(
@@ -108,7 +108,7 @@ static int git_get_exec_path_procfs(struct strbuf *buf)
  *
  * Returns 0 on success, -1 on failure.
  */
-static int git_get_exec_path_bsd_sysctl(struct strbuf *buf)
+static int shit_get_exec_path_bsd_sysctl(struct strbuf *buf)
 {
 	int mib[4];
 	char path[MAXPATHLEN];
@@ -135,7 +135,7 @@ static int git_get_exec_path_bsd_sysctl(struct strbuf *buf)
  *
  * Returns 0 on success, -1 on failure.
  */
-static int git_get_exec_path_darwin(struct strbuf *buf)
+static int shit_get_exec_path_darwin(struct strbuf *buf)
 {
 	char path[PATH_MAX];
 	uint32_t size = sizeof(path);
@@ -156,7 +156,7 @@ static int git_get_exec_path_darwin(struct strbuf *buf)
  *
  * Returns 0 on success, -1 on failure.
  */
-static int git_get_exec_path_wpgmptr(struct strbuf *buf)
+static int shit_get_exec_path_wpgmptr(struct strbuf *buf)
 {
 	int len = wcslen(_wpgmptr) * 3 + 1;
 	strbuf_grow(buf, len);
@@ -173,7 +173,7 @@ static int git_get_exec_path_wpgmptr(struct strbuf *buf)
  *
  * Returns 0 on success, -1 on failure.
  */
-static int git_get_exec_path(struct strbuf *buf, const char *argv0)
+static int shit_get_exec_path(struct strbuf *buf, const char *argv0)
 {
 	/*
 	 * Identifying the executable path is operating system specific.
@@ -191,22 +191,22 @@ static int git_get_exec_path(struct strbuf *buf, const char *argv0)
 	 */
 	if (
 #ifdef HAVE_BSD_KERN_PROC_SYSCTL
-		git_get_exec_path_bsd_sysctl(buf) &&
+		shit_get_exec_path_bsd_sysctl(buf) &&
 #endif /* HAVE_BSD_KERN_PROC_SYSCTL */
 
 #ifdef HAVE_NS_GET_EXECUTABLE_PATH
-		git_get_exec_path_darwin(buf) &&
+		shit_get_exec_path_darwin(buf) &&
 #endif /* HAVE_NS_GET_EXECUTABLE_PATH */
 
 #ifdef PROCFS_EXECUTABLE_PATH
-		git_get_exec_path_procfs(buf) &&
+		shit_get_exec_path_procfs(buf) &&
 #endif /* PROCFS_EXECUTABLE_PATH */
 
 #ifdef HAVE_WPGMPTR
-		git_get_exec_path_wpgmptr(buf) &&
+		shit_get_exec_path_wpgmptr(buf) &&
 #endif /* HAVE_WPGMPTR */
 
-		git_get_exec_path_from_argv0(buf, argv0)) {
+		shit_get_exec_path_from_argv0(buf, argv0)) {
 		return -1;
 	}
 
@@ -220,13 +220,13 @@ static int git_get_exec_path(struct strbuf *buf, const char *argv0)
 	return 0;
 }
 
-void git_resolve_executable_dir(const char *argv0)
+void shit_resolve_executable_dir(const char *argv0)
 {
 	struct strbuf buf = STRBUF_INIT;
 	char *resolved;
 	const char *slash;
 
-	if (git_get_exec_path(&buf, argv0)) {
+	if (shit_get_exec_path(&buf, argv0)) {
 		trace_printf(
 			"trace: could not determine executable path from: %s\n",
 			argv0);
@@ -247,7 +247,7 @@ void git_resolve_executable_dir(const char *argv0)
 #else
 
 /*
- * When not using a runtime prefix, Git uses a hard-coded path.
+ * When not using a runtime prefix, shit uses a hard-coded path.
  */
 static const char *system_prefix(void)
 {
@@ -258,7 +258,7 @@ static const char *system_prefix(void)
  * This is called during initialization, but No work needs to be done here when
  * runtime prefix is not being used.
  */
-void git_resolve_executable_dir(const char *argv0 UNUSED)
+void shit_resolve_executable_dir(const char *argv0 UNUSED)
 {
 }
 
@@ -277,7 +277,7 @@ char *system_path(const char *path)
 
 static const char *exec_path_value;
 
-void git_set_exec_path(const char *exec_path)
+void shit_set_exec_path(const char *exec_path)
 {
 	exec_path_value = exec_path;
 	/*
@@ -286,15 +286,15 @@ void git_set_exec_path(const char *exec_path)
 	setenv(EXEC_PATH_ENVIRONMENT, exec_path, 1);
 }
 
-/* Returns the highest-priority location to look for git programs. */
-const char *git_exec_path(void)
+/* Returns the highest-priority location to look for shit programs. */
+const char *shit_exec_path(void)
 {
 	if (!exec_path_value) {
 		const char *env = getenv(EXEC_PATH_ENVIRONMENT);
 		if (env && *env)
 			exec_path_value = xstrdup(env);
 		else
-			exec_path_value = system_path(GIT_EXEC_PATH);
+			exec_path_value = system_path(shit_EXEC_PATH);
 	}
 	return exec_path_value;
 }
@@ -309,11 +309,11 @@ static void add_path(struct strbuf *out, const char *path)
 
 void setup_path(void)
 {
-	const char *exec_path = git_exec_path();
+	const char *exec_path = shit_exec_path();
 	const char *old_path = getenv("PATH");
 	struct strbuf new_path = STRBUF_INIT;
 
-	git_set_exec_path(exec_path);
+	shit_set_exec_path(exec_path);
 	add_path(&new_path, exec_path);
 
 	if (old_path)
@@ -326,22 +326,22 @@ void setup_path(void)
 	strbuf_release(&new_path);
 }
 
-const char **prepare_git_cmd(struct strvec *out, const char **argv)
+const char **prepare_shit_cmd(struct strvec *out, const char **argv)
 {
-	strvec_push(out, "git");
-	strvec_pushv(out, argv);
+	strvec_defecate(out, "shit");
+	strvec_defecatev(out, argv);
 	return out->v;
 }
 
-int execv_git_cmd(const char **argv)
+int execv_shit_cmd(const char **argv)
 {
 	struct strvec nargv = STRVEC_INIT;
 
-	prepare_git_cmd(&nargv, argv);
+	prepare_shit_cmd(&nargv, argv);
 	trace_argv_printf(nargv.v, "trace: exec:");
 
 	/* execvp() can only ever return if it fails */
-	sane_execvp("git", (char **)nargv.v);
+	sane_execvp("shit", (char **)nargv.v);
 
 	trace_printf("trace: exec failed: %s\n", strerror(errno));
 
@@ -349,7 +349,7 @@ int execv_git_cmd(const char **argv)
 	return -1;
 }
 
-int execl_git_cmd(const char *cmd, ...)
+int execl_shit_cmd(const char *cmd, ...)
 {
 	int argc;
 	const char *argv[MAX_ARGS + 1];
@@ -369,5 +369,5 @@ int execl_git_cmd(const char *cmd, ...)
 		return error(_("too many args to run %s"), cmd);
 
 	argv[argc] = NULL;
-	return execv_git_cmd(argv);
+	return execv_shit_cmd(argv);
 }

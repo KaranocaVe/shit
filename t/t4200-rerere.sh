@@ -3,7 +3,7 @@
 # Copyright (c) 2006 Johannes E. Schindelin
 #
 
-test_description='git rerere
+test_description='shit rerere
 
 ! [fifth] version1
  ! [first] first
@@ -22,8 +22,8 @@ test_description='git rerere
 ++++++ [main] initial
 '
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -41,9 +41,9 @@ test_expect_success 'setup' '
 	Devoutly to be wish'\''d.
 	EOF
 
-	git add a1 &&
+	shit add a1 &&
 	test_tick &&
-	git commit -q -a -m initial &&
+	shit commit -q -a -m initial &&
 
 	cat >>a1 <<-\EOF &&
 	Some title
@@ -56,56 +56,56 @@ test_expect_success 'setup' '
 	That makes calamity of so long life;
 	EOF
 
-	git checkout -b first &&
+	shit checkout -b first &&
 	test_tick &&
-	git commit -q -a -m first &&
+	shit commit -q -a -m first &&
 
-	git checkout -b second main &&
-	git show first:a1 |
+	shit checkout -b second main &&
+	shit show first:a1 |
 	sed -e "s/To die, t/To die! T/" -e "s/Some title/Some Title/" >a1 &&
 	echo "* END *" >>a1 &&
 	test_tick &&
-	git commit -q -a -m second
+	shit commit -q -a -m second
 '
 
 test_expect_success 'nothing recorded without rerere' '
-	rm -rf .git/rr-cache &&
-	git config rerere.enabled false &&
-	test_must_fail git merge first &&
-	! test -d .git/rr-cache
+	rm -rf .shit/rr-cache &&
+	shit config rerere.enabled false &&
+	test_must_fail shit merge first &&
+	! test -d .shit/rr-cache
 '
 
 test_expect_success 'activate rerere, old style (conflicting merge)' '
-	git reset --hard &&
-	mkdir .git/rr-cache &&
-	test_might_fail git config --unset rerere.enabled &&
-	test_must_fail git merge first &&
+	shit reset --hard &&
+	mkdir .shit/rr-cache &&
+	test_might_fail shit config --unset rerere.enabled &&
+	test_must_fail shit merge first &&
 
-	sha1=$(perl -pe "s/	.*//" .git/MERGE_RR) &&
-	rr=.git/rr-cache/$sha1 &&
+	sha1=$(perl -pe "s/	.*//" .shit/MERGE_RR) &&
+	rr=.shit/rr-cache/$sha1 &&
 	grep "^=======\$" $rr/preimage &&
 	! test -f $rr/postimage &&
 	! test -f $rr/thisimage
 '
 
 test_expect_success 'rerere.enabled works, too' '
-	rm -rf .git/rr-cache &&
-	git config rerere.enabled true &&
-	git reset --hard &&
-	test_must_fail git merge first &&
+	rm -rf .shit/rr-cache &&
+	shit config rerere.enabled true &&
+	shit reset --hard &&
+	test_must_fail shit merge first &&
 
-	sha1=$(perl -pe "s/	.*//" .git/MERGE_RR) &&
-	rr=.git/rr-cache/$sha1 &&
+	sha1=$(perl -pe "s/	.*//" .shit/MERGE_RR) &&
+	rr=.shit/rr-cache/$sha1 &&
 	grep ^=======$ $rr/preimage
 '
 
 test_expect_success 'set up rr-cache' '
-	rm -rf .git/rr-cache &&
-	git config rerere.enabled true &&
-	git reset --hard &&
-	test_must_fail git merge first &&
-	sha1=$(perl -pe "s/	.*//" .git/MERGE_RR) &&
-	rr=.git/rr-cache/$sha1
+	rm -rf .shit/rr-cache &&
+	shit config rerere.enabled true &&
+	shit reset --hard &&
+	test_must_fail shit merge first &&
+	sha1=$(perl -pe "s/	.*//" .shit/MERGE_RR) &&
+	rr=.shit/rr-cache/$sha1
 '
 
 test_expect_success 'rr-cache looks sane' '
@@ -120,7 +120,7 @@ test_expect_success 'rr-cache looks sane' '
 '
 
 test_expect_success 'rerere diff' '
-	git show first:a1 >a1 &&
+	shit show first:a1 >a1 &&
 	cat >expect <<-\EOF &&
 	--- a/a1
 	+++ b/a1
@@ -153,29 +153,29 @@ test_expect_success 'rerere diff' '
 	-* END *
 	->>>>>>>
 	EOF
-	git rerere diff >out &&
+	shit rerere diff >out &&
 	test_cmp expect out
 '
 
 test_expect_success 'rerere status' '
 	echo a1 >expect &&
-	git rerere status >out &&
+	shit rerere status >out &&
 	test_cmp expect out
 '
 
 test_expect_success 'first postimage wins' '
-	git show first:a1 | sed "s/To die: t/To die! T/" >expect &&
+	shit show first:a1 | sed "s/To die: t/To die! T/" >expect &&
 
-	git commit -q -a -m "prefer first over second" &&
+	shit commit -q -a -m "prefer first over second" &&
 	test -f $rr/postimage &&
 
 	oldmtimepost=$(test-tool chmtime --get -60 $rr/postimage) &&
 
-	git checkout -b third main &&
-	git show second^:a1 | sed "s/To die: t/To die! T/" >a1 &&
-	git commit -q -a -m third &&
+	shit checkout -b third main &&
+	shit show second^:a1 | sed "s/To die: t/To die! T/" >a1 &&
+	shit commit -q -a -m third &&
 
-	test_must_fail git merge first &&
+	test_must_fail shit merge first &&
 	# rerere kicked in
 	! grep "^=======\$" a1 &&
 	test_cmp expect a1
@@ -187,24 +187,24 @@ test_expect_success 'rerere updates postimage timestamp' '
 '
 
 test_expect_success 'rerere clear' '
-	mv $rr/postimage .git/post-saved &&
-	echo "$sha1	a1" | perl -pe "y/\012/\000/" >.git/MERGE_RR &&
-	git rerere clear &&
+	mv $rr/postimage .shit/post-saved &&
+	echo "$sha1	a1" | perl -pe "y/\012/\000/" >.shit/MERGE_RR &&
+	shit rerere clear &&
 	! test -d $rr
 '
 
 test_expect_success 'leftover directory' '
-	git reset --hard &&
+	shit reset --hard &&
 	mkdir -p $rr &&
-	test_must_fail git merge first &&
+	test_must_fail shit merge first &&
 	test -f $rr/preimage
 '
 
 test_expect_success 'missing preimage' '
-	git reset --hard &&
+	shit reset --hard &&
 	mkdir -p $rr &&
-	cp .git/post-saved $rr/postimage &&
-	test_must_fail git merge first &&
+	cp .shit/post-saved $rr/postimage &&
+	test_must_fail shit merge first &&
 	test -f $rr/preimage
 '
 
@@ -214,7 +214,7 @@ test_expect_success 'set up for garbage collection tests' '
 	echo World >$rr/postimage &&
 
 	sha2=$(test_oid deadbeef) &&
-	rr2=.git/rr-cache/$sha2 &&
+	rr2=.shit/rr-cache/$sha2 &&
 	mkdir $rr2 &&
 	echo Hello >$rr2/preimage &&
 
@@ -229,7 +229,7 @@ test_expect_success 'set up for garbage collection tests' '
 '
 
 test_expect_success 'gc preserves young or recently used records' '
-	git rerere gc &&
+	shit rerere gc &&
 	test -f $rr/preimage &&
 	test -f $rr2/preimage
 '
@@ -237,7 +237,7 @@ test_expect_success 'gc preserves young or recently used records' '
 test_expect_success 'old records rest in peace' '
 	test-tool chmtime =$just_over_60_days_ago $rr/postimage &&
 	test-tool chmtime =$just_over_15_days_ago $rr2/preimage &&
-	git rerere gc &&
+	shit rerere gc &&
 	! test -f $rr/preimage &&
 	! test -f $rr2/preimage
 '
@@ -245,8 +245,8 @@ test_expect_success 'old records rest in peace' '
 rerere_gc_custom_expiry_test () {
 	five_days="$1" right_now="$2"
 	test_expect_success "rerere gc with custom expiry ($five_days, $right_now)" '
-		rm -fr .git/rr-cache &&
-		rr=.git/rr-cache/$ZERO_OID &&
+		rm -fr .shit/rr-cache &&
+		rr=.shit/rr-cache/$ZERO_OID &&
 		mkdir -p "$rr" &&
 		>"$rr/preimage" &&
 		>"$rr/postimage" &&
@@ -255,21 +255,21 @@ rerere_gc_custom_expiry_test () {
 		test-tool chmtime =$two_days_ago "$rr/preimage" &&
 		test-tool chmtime =$two_days_ago "$rr/postimage" &&
 
-		find .git/rr-cache -type f | sort >original &&
+		find .shit/rr-cache -type f | sort >original &&
 
-		git -c "gc.rerereresolved=$five_days" \
+		shit -c "gc.rerereresolved=$five_days" \
 		    -c "gc.rerereunresolved=$five_days" rerere gc &&
-		find .git/rr-cache -type f | sort >actual &&
+		find .shit/rr-cache -type f | sort >actual &&
 		test_cmp original actual &&
 
-		git -c "gc.rerereresolved=$five_days" \
+		shit -c "gc.rerereresolved=$five_days" \
 		    -c "gc.rerereunresolved=$right_now" rerere gc &&
-		find .git/rr-cache -type f | sort >actual &&
+		find .shit/rr-cache -type f | sort >actual &&
 		test_cmp original actual &&
 
-		git -c "gc.rerereresolved=$right_now" \
+		shit -c "gc.rerereresolved=$right_now" \
 		    -c "gc.rerereunresolved=$right_now" rerere gc &&
-		find .git/rr-cache -type f | sort >actual &&
+		find .shit/rr-cache -type f | sort >actual &&
 		test_must_be_empty actual
 	'
 }
@@ -279,166 +279,166 @@ rerere_gc_custom_expiry_test 5 0
 rerere_gc_custom_expiry_test 5.days.ago now
 
 test_expect_success 'setup: file2 added differently in two branches' '
-	git reset --hard &&
+	shit reset --hard &&
 
-	git checkout -b fourth &&
+	shit checkout -b fourth &&
 	echo Hallo >file2 &&
-	git add file2 &&
+	shit add file2 &&
 	test_tick &&
-	git commit -m version1 &&
+	shit commit -m version1 &&
 
-	git checkout third &&
+	shit checkout third &&
 	echo Bello >file2 &&
-	git add file2 &&
+	shit add file2 &&
 	test_tick &&
-	git commit -m version2 &&
+	shit commit -m version2 &&
 
-	test_must_fail git merge fourth &&
+	test_must_fail shit merge fourth &&
 	echo Cello >file2 &&
-	git add file2 &&
-	git commit -m resolution
+	shit add file2 &&
+	shit commit -m resolution
 '
 
 test_expect_success 'resolution was recorded properly' '
 	echo Cello >expected &&
 
-	git reset --hard HEAD~2 &&
-	git checkout -b fifth &&
+	shit reset --hard HEAD~2 &&
+	shit checkout -b fifth &&
 
 	echo Hallo >file3 &&
-	git add file3 &&
+	shit add file3 &&
 	test_tick &&
-	git commit -m version1 &&
+	shit commit -m version1 &&
 
-	git checkout third &&
+	shit checkout third &&
 	echo Bello >file3 &&
-	git add file3 &&
+	shit add file3 &&
 	test_tick &&
-	git commit -m version2 &&
-	git tag version2 &&
+	shit commit -m version2 &&
+	shit tag version2 &&
 
-	test_must_fail git merge fifth &&
+	test_must_fail shit merge fifth &&
 	test_cmp expected file3 &&
-	test_must_fail git update-index --refresh
+	test_must_fail shit update-index --refresh
 '
 
 test_expect_success 'rerere.autoupdate' '
-	git config rerere.autoupdate true &&
-	git reset --hard &&
-	git checkout version2 &&
-	test_must_fail git merge fifth &&
-	git update-index --refresh
+	shit config rerere.autoupdate true &&
+	shit reset --hard &&
+	shit checkout version2 &&
+	test_must_fail shit merge fifth &&
+	shit update-index --refresh
 '
 
 test_expect_success 'merge --rerere-autoupdate' '
-	test_might_fail git config --unset rerere.autoupdate &&
-	git reset --hard &&
-	git checkout version2 &&
-	test_must_fail git merge --rerere-autoupdate fifth &&
-	git update-index --refresh
+	test_might_fail shit config --unset rerere.autoupdate &&
+	shit reset --hard &&
+	shit checkout version2 &&
+	test_must_fail shit merge --rerere-autoupdate fifth &&
+	shit update-index --refresh
 '
 
 test_expect_success 'merge --no-rerere-autoupdate' '
-	headblob=$(git rev-parse version2:file3) &&
-	mergeblob=$(git rev-parse fifth:file3) &&
+	headblob=$(shit rev-parse version2:file3) &&
+	mergeblob=$(shit rev-parse fifth:file3) &&
 	cat >expected <<-EOF &&
 	100644 $headblob 2	file3
 	100644 $mergeblob 3	file3
 	EOF
 
-	git config rerere.autoupdate true &&
-	git reset --hard &&
-	git checkout version2 &&
-	test_must_fail git merge --no-rerere-autoupdate fifth &&
-	git ls-files -u >actual &&
+	shit config rerere.autoupdate true &&
+	shit reset --hard &&
+	shit checkout version2 &&
+	test_must_fail shit merge --no-rerere-autoupdate fifth &&
+	shit ls-files -u >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'set up an unresolved merge' '
-	headblob=$(git rev-parse version2:file3) &&
-	mergeblob=$(git rev-parse fifth:file3) &&
+	headblob=$(shit rev-parse version2:file3) &&
+	mergeblob=$(shit rev-parse fifth:file3) &&
 	cat >expected.unresolved <<-EOF &&
 	100644 $headblob 2	file3
 	100644 $mergeblob 3	file3
 	EOF
 
-	test_might_fail git config --unset rerere.autoupdate &&
-	git reset --hard &&
-	git checkout version2 &&
-	ancestor=$(git merge-base version2 fifth) &&
-	test_must_fail git merge-recursive "$ancestor" -- HEAD fifth &&
+	test_might_fail shit config --unset rerere.autoupdate &&
+	shit reset --hard &&
+	shit checkout version2 &&
+	ancestor=$(shit merge-base version2 fifth) &&
+	test_must_fail shit merge-recursive "$ancestor" -- HEAD fifth &&
 
-	git ls-files --stage >failedmerge &&
+	shit ls-files --stage >failedmerge &&
 	cp file3 file3.conflict &&
 
-	git ls-files -u >actual &&
+	shit ls-files -u >actual &&
 	test_cmp expected.unresolved actual
 '
 
 test_expect_success 'explicit rerere' '
-	test_might_fail git config --unset rerere.autoupdate &&
-	git rm -fr --cached . &&
-	git update-index --index-info <failedmerge &&
+	test_might_fail shit config --unset rerere.autoupdate &&
+	shit rm -fr --cached . &&
+	shit update-index --index-info <failedmerge &&
 	cp file3.conflict file3 &&
-	test_must_fail git update-index --refresh -q &&
+	test_must_fail shit update-index --refresh -q &&
 
-	git rerere &&
-	git ls-files -u >actual &&
+	shit rerere &&
+	shit ls-files -u >actual &&
 	test_cmp expected.unresolved actual
 '
 
 test_expect_success 'explicit rerere with autoupdate' '
-	git config rerere.autoupdate true &&
-	git rm -fr --cached . &&
-	git update-index --index-info <failedmerge &&
+	shit config rerere.autoupdate true &&
+	shit rm -fr --cached . &&
+	shit update-index --index-info <failedmerge &&
 	cp file3.conflict file3 &&
-	test_must_fail git update-index --refresh -q &&
+	test_must_fail shit update-index --refresh -q &&
 
-	git rerere &&
-	git update-index --refresh
+	shit rerere &&
+	shit update-index --refresh
 '
 
 test_expect_success 'explicit rerere --rerere-autoupdate overrides' '
-	git config rerere.autoupdate false &&
-	git rm -fr --cached . &&
-	git update-index --index-info <failedmerge &&
+	shit config rerere.autoupdate false &&
+	shit rm -fr --cached . &&
+	shit update-index --index-info <failedmerge &&
 	cp file3.conflict file3 &&
-	git rerere &&
-	git ls-files -u >actual1 &&
+	shit rerere &&
+	shit ls-files -u >actual1 &&
 
-	git rm -fr --cached . &&
-	git update-index --index-info <failedmerge &&
+	shit rm -fr --cached . &&
+	shit update-index --index-info <failedmerge &&
 	cp file3.conflict file3 &&
-	git rerere --rerere-autoupdate &&
-	git update-index --refresh &&
+	shit rerere --rerere-autoupdate &&
+	shit update-index --refresh &&
 
-	git rm -fr --cached . &&
-	git update-index --index-info <failedmerge &&
+	shit rm -fr --cached . &&
+	shit update-index --index-info <failedmerge &&
 	cp file3.conflict file3 &&
-	git rerere --rerere-autoupdate --no-rerere-autoupdate &&
-	git ls-files -u >actual2 &&
+	shit rerere --rerere-autoupdate --no-rerere-autoupdate &&
+	shit ls-files -u >actual2 &&
 
-	git rm -fr --cached . &&
-	git update-index --index-info <failedmerge &&
+	shit rm -fr --cached . &&
+	shit update-index --index-info <failedmerge &&
 	cp file3.conflict file3 &&
-	git rerere --rerere-autoupdate --no-rerere-autoupdate --rerere-autoupdate &&
-	git update-index --refresh &&
+	shit rerere --rerere-autoupdate --no-rerere-autoupdate --rerere-autoupdate &&
+	shit update-index --refresh &&
 
 	test_cmp expected.unresolved actual1 &&
 	test_cmp expected.unresolved actual2
 '
 
 test_expect_success 'rerere --no-no-rerere-autoupdate' '
-	git rm -fr --cached . &&
-	git update-index --index-info <failedmerge &&
+	shit rm -fr --cached . &&
+	shit update-index --index-info <failedmerge &&
 	cp file3.conflict file3 &&
-	test_must_fail git rerere --no-no-rerere-autoupdate 2>err &&
+	test_must_fail shit rerere --no-no-rerere-autoupdate 2>err &&
 	test_grep [Uu]sage err &&
-	test_must_fail git update-index --refresh
+	test_must_fail shit update-index --refresh
 '
 
 test_expect_success 'rerere -h' '
-	test_must_fail git rerere -h >help &&
+	test_must_fail shit rerere -h >help &&
 	test_grep [Uu]sage help
 '
 
@@ -449,24 +449,24 @@ concat_insert () {
 }
 
 count_pre_post () {
-	find .git/rr-cache/ -type f -name "preimage*" >actual &&
+	find .shit/rr-cache/ -type f -name "preimage*" >actual &&
 	test_line_count = "$1" actual &&
-	find .git/rr-cache/ -type f -name "postimage*" >actual &&
+	find .shit/rr-cache/ -type f -name "postimage*" >actual &&
 	test_line_count = "$2" actual
 }
 
 merge_conflict_resolve () {
-	git reset --hard &&
-	test_must_fail git merge six.1 &&
+	shit reset --hard &&
+	test_must_fail shit merge six.1 &&
 	# Resolution is to replace 7 with 6.1 and 6.2 (i.e. take both)
 	concat_insert short 6.1 6.2 >file1 &&
 	concat_insert long 6.1 6.2 >file2
 }
 
 test_expect_success 'multiple identical conflicts' '
-	rm -fr .git/rr-cache &&
-	mkdir .git/rr-cache &&
-	git reset --hard &&
+	rm -fr .shit/rr-cache &&
+	mkdir .shit/rr-cache &&
+	shit reset --hard &&
 
 	test_seq 1 6 >early &&
 	>late &&
@@ -474,19 +474,19 @@ test_expect_success 'multiple identical conflicts' '
 	test_seq 111 120 >long &&
 	concat_insert short >file1 &&
 	concat_insert long >file2 &&
-	git add file1 file2 &&
-	git commit -m base &&
-	git tag base &&
-	git checkout -b six.1 &&
+	shit add file1 file2 &&
+	shit commit -m base &&
+	shit tag base &&
+	shit checkout -b six.1 &&
 	concat_insert short 6.1 >file1 &&
 	concat_insert long 6.1 >file2 &&
-	git add file1 file2 &&
-	git commit -m 6.1 &&
-	git checkout -b six.2 HEAD^ &&
+	shit add file1 file2 &&
+	shit commit -m 6.1 &&
+	shit checkout -b six.2 HEAD^ &&
 	concat_insert short 6.2 >file1 &&
 	concat_insert long 6.2 >file2 &&
-	git add file1 file2 &&
-	git commit -m 6.2 &&
+	shit add file1 file2 &&
+	shit commit -m 6.2 &&
 
 	# At this point, six.1 and six.2
 	# - derive from common ancestor that has two files
@@ -499,26 +499,26 @@ test_expect_success 'multiple identical conflicts' '
 	# Check that rerere knows that file1 and file2 have conflicts
 
 	printf "%s\n" file1 file2 >expect &&
-	git ls-files -u | sed -e "s/^.*	//" | sort -u >actual &&
+	shit ls-files -u | sed -e "s/^.*	//" | sort -u >actual &&
 	test_cmp expect actual &&
 
-	git rerere status | sort >actual &&
+	shit rerere status | sort >actual &&
 	test_cmp expect actual &&
 
-	git rerere remaining >actual &&
+	shit rerere remaining >actual &&
 	test_cmp expect actual &&
 
 	count_pre_post 2 0 &&
 
 	# Pretend that the conflicts were made quite some time ago
-	test-tool chmtime -172800 $(find .git/rr-cache/ -type f) &&
+	test-tool chmtime -172800 $(find .shit/rr-cache/ -type f) &&
 
 	# Unresolved entries have not expired yet
-	git -c gc.rerereresolved=5 -c gc.rerereunresolved=5 rerere gc &&
+	shit -c gc.rerereresolved=5 -c gc.rerereunresolved=5 rerere gc &&
 	count_pre_post 2 0 &&
 
 	# Unresolved entries have expired
-	git -c gc.rerereresolved=5 -c gc.rerereunresolved=1 rerere gc &&
+	shit -c gc.rerereresolved=5 -c gc.rerereunresolved=1 rerere gc &&
 	count_pre_post 0 0 &&
 
 	# Recreate the conflicted state
@@ -526,7 +526,7 @@ test_expect_success 'multiple identical conflicts' '
 	count_pre_post 2 0 &&
 
 	# Clear it
-	git rerere clear &&
+	shit rerere clear &&
 	count_pre_post 0 0 &&
 
 	# Recreate the conflicted state
@@ -534,19 +534,19 @@ test_expect_success 'multiple identical conflicts' '
 	count_pre_post 2 0 &&
 
 	# We resolved file1 and file2
-	git rerere &&
-	git rerere remaining >actual &&
+	shit rerere &&
+	shit rerere remaining >actual &&
 	test_must_be_empty actual &&
 
 	# We must have recorded both of them
 	count_pre_post 2 2 &&
 
 	# Now we should be able to resolve them both
-	git reset --hard &&
-	test_must_fail git merge six.1 &&
-	git rerere &&
+	shit reset --hard &&
+	test_must_fail shit merge six.1 &&
+	shit rerere &&
 
-	git rerere remaining >actual &&
+	shit rerere remaining >actual &&
 	test_must_be_empty actual &&
 
 	concat_insert short 6.1 6.2 >file1.expect &&
@@ -555,89 +555,89 @@ test_expect_success 'multiple identical conflicts' '
 	test_cmp file2.expect file2 &&
 
 	# Forget resolution for file2
-	git rerere forget file2 &&
+	shit rerere forget file2 &&
 	echo file2 >expect &&
-	git rerere status >actual &&
+	shit rerere status >actual &&
 	test_cmp expect actual &&
 	count_pre_post 2 1 &&
 
 	# file2 already has correct resolution, so record it again
-	git rerere &&
+	shit rerere &&
 
 	# Pretend that the resolutions are old again
-	test-tool chmtime -172800 $(find .git/rr-cache/ -type f) &&
+	test-tool chmtime -172800 $(find .shit/rr-cache/ -type f) &&
 
 	# Resolved entries have not expired yet
-	git -c gc.rerereresolved=5 -c gc.rerereunresolved=5 rerere gc &&
+	shit -c gc.rerereresolved=5 -c gc.rerereunresolved=5 rerere gc &&
 
 	count_pre_post 2 2 &&
 
 	# Resolved entries have expired
-	git -c gc.rerereresolved=1 -c gc.rerereunresolved=5 rerere gc &&
+	shit -c gc.rerereresolved=1 -c gc.rerereunresolved=5 rerere gc &&
 	count_pre_post 0 0
 '
 
 test_expect_success 'rerere with unexpected conflict markers does not crash' '
-	git reset --hard &&
+	shit reset --hard &&
 
-	git checkout -b branch-1 main &&
+	shit checkout -b branch-1 main &&
 	echo "bar" >test &&
-	git add test &&
-	git commit -q -m two &&
+	shit add test &&
+	shit commit -q -m two &&
 
-	git reset --hard &&
-	git checkout -b branch-2 main &&
+	shit reset --hard &&
+	shit checkout -b branch-2 main &&
 	echo "foo" >test &&
-	git add test &&
-	git commit -q -a -m one &&
+	shit add test &&
+	shit commit -q -a -m one &&
 
-	test_must_fail git merge branch-1 &&
+	test_must_fail shit merge branch-1 &&
 	echo "<<<<<<< a" >test &&
-	git rerere &&
+	shit rerere &&
 
-	git rerere clear
+	shit rerere clear
 '
 
 test_expect_success 'rerere with inner conflict markers' '
-	git reset --hard &&
+	shit reset --hard &&
 
-	git checkout -b A main &&
+	shit checkout -b A main &&
 	echo "bar" >test &&
-	git add test &&
-	git commit -q -m two &&
+	shit add test &&
+	shit commit -q -m two &&
 	echo "baz" >test &&
-	git add test &&
-	git commit -q -m three &&
+	shit add test &&
+	shit commit -q -m three &&
 
-	git reset --hard &&
-	git checkout -b B main &&
+	shit reset --hard &&
+	shit checkout -b B main &&
 	echo "foo" >test &&
-	git add test &&
-	git commit -q -a -m one &&
+	shit add test &&
+	shit commit -q -a -m one &&
 
-	test_must_fail git merge A~ &&
-	git add test &&
-	git commit -q -m "will solve conflicts later" &&
-	test_must_fail git merge A &&
+	test_must_fail shit merge A~ &&
+	shit add test &&
+	shit commit -q -m "will solve conflicts later" &&
+	test_must_fail shit merge A &&
 
 	echo "resolved" >test &&
-	git add test &&
-	git commit -q -m "solved conflict" &&
+	shit add test &&
+	shit commit -q -m "solved conflict" &&
 
 	echo "resolved" >expect &&
 
-	git reset --hard HEAD~~ &&
-	test_must_fail git merge A~ &&
-	git add test &&
-	git commit -q -m "will solve conflicts later" &&
-	test_must_fail git merge A &&
+	shit reset --hard HEAD~~ &&
+	test_must_fail shit merge A~ &&
+	shit add test &&
+	shit commit -q -m "will solve conflicts later" &&
+	test_must_fail shit merge A &&
 	cat test >actual &&
 	test_cmp expect actual &&
 
-	git add test &&
-	git commit -m "rerere solved conflict" &&
-	git reset --hard HEAD~ &&
-	test_must_fail git merge A &&
+	shit add test &&
+	shit commit -m "rerere solved conflict" &&
+	shit reset --hard HEAD~ &&
+	test_must_fail shit merge A &&
 	cat test >actual &&
 	test_cmp expect actual
 '
@@ -648,16 +648,16 @@ test_expect_success 'setup simple stage 1 handling' '
 		cd stage_1_handling &&
 
 		test_seq 1 10 >original &&
-		git add original &&
-		git commit -m original &&
+		shit add original &&
+		shit commit -m original &&
 
-		git checkout -b A main &&
-		git mv original A &&
-		git commit -m "rename to A" &&
+		shit checkout -b A main &&
+		shit mv original A &&
+		shit commit -m "rename to A" &&
 
-		git checkout -b B main &&
-		git mv original B &&
-		git commit -m "rename to B"
+		shit checkout -b B main &&
+		shit mv original B &&
+		shit commit -m "rename to B"
 	)
 '
 
@@ -665,64 +665,64 @@ test_expect_success 'test simple stage 1 handling' '
 	(
 		cd stage_1_handling &&
 
-		git config rerere.enabled true &&
-		git checkout A^0 &&
-		test_must_fail git merge B^0
+		shit config rerere.enabled true &&
+		shit checkout A^0 &&
+		test_must_fail shit merge B^0
 	)
 '
 
 test_expect_success 'rerere does not crash with missing preimage' '
-	git config rerere.enabled true &&
+	shit config rerere.enabled true &&
 
 	echo bar >test &&
-	git add test &&
-	git commit -m "one" &&
-	git branch rerere_no_crash &&
+	shit add test &&
+	shit commit -m "one" &&
+	shit branch rerere_no_crash &&
 
 	echo foo >>test &&
-	git add test &&
-	git commit -m "two" &&
+	shit add test &&
+	shit commit -m "two" &&
 
-	git checkout rerere_no_crash &&
+	shit checkout rerere_no_crash &&
 	echo "bar" >>test &&
-	git add test &&
-	git commit -m "three" &&
+	shit add test &&
+	shit commit -m "three" &&
 
-	test_must_fail git rebase main &&
-	rm .git/rr-cache/*/preimage &&
-	git rebase --abort
+	test_must_fail shit rebase main &&
+	rm .shit/rr-cache/*/preimage &&
+	shit rebase --abort
 '
 
 test_expect_success 'rerere does not crash with unmatched conflict marker' '
-	git config rerere.enabled true &&
+	shit config rerere.enabled true &&
 
 	echo bar >test &&
-	git add test &&
-	git commit -m "one" &&
-	git branch rerere_no_preimage &&
+	shit add test &&
+	shit commit -m "one" &&
+	shit branch rerere_no_preimage &&
 
 	cat >test <<-EOF &&
 	test
 	bar
 	foobar
 	EOF
-	git add test &&
-	git commit -m "two" &&
+	shit add test &&
+	shit commit -m "two" &&
 
-	git checkout rerere_no_preimage &&
+	shit checkout rerere_no_preimage &&
 	echo "bar" >>test &&
-	git add test &&
-	git commit -m "three" &&
+	shit add test &&
+	shit commit -m "three" &&
 
 	cat >test <<-EOF &&
 	foobar
 	bar
 	bar
 	EOF
-	git add test &&
-	git commit -m "four" &&
+	shit add test &&
+	shit commit -m "four" &&
 
-	test_must_fail git rebase main &&
+	test_must_fail shit rebase main &&
 	cat >test <<-EOF &&
 	test
 	bar
@@ -730,8 +730,8 @@ test_expect_success 'rerere does not crash with unmatched conflict marker' '
 	foobar
 	bar
 	EOF
-	git add test &&
-	test_must_fail git rebase --continue
+	shit add test &&
+	test_must_fail shit rebase --continue
 '
 
 test_done

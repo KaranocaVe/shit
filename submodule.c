@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "repository.h"
 #include "config.h"
@@ -36,19 +36,19 @@ static struct oid_array ref_tips_before_fetch;
 static struct oid_array ref_tips_after_fetch;
 
 /*
- * Check if the .gitmodules file is unmerged. Parsing of the .gitmodules file
+ * Check if the .shitmodules file is unmerged. Parsing of the .shitmodules file
  * will be disabled because we can't guess what might be configured in
- * .gitmodules unless the user resolves the conflict.
+ * .shitmodules unless the user resolves the conflict.
  */
-int is_gitmodules_unmerged(struct index_state *istate)
+int is_shitmodules_unmerged(struct index_state *istate)
 {
-	int pos = index_name_pos(istate, GITMODULES_FILE, strlen(GITMODULES_FILE));
-	if (pos < 0) { /* .gitmodules not found or isn't merged */
+	int pos = index_name_pos(istate, shitMODULES_FILE, strlen(shitMODULES_FILE));
+	if (pos < 0) { /* .shitmodules not found or isn't merged */
 		pos = -1 - pos;
-		if (istate->cache_nr > pos) {  /* there is a .gitmodules */
+		if (istate->cache_nr > pos) {  /* there is a .shitmodules */
 			const struct cache_entry *ce = istate->cache[pos];
-			if (ce_namelen(ce) == strlen(GITMODULES_FILE) &&
-			    !strcmp(ce->name, GITMODULES_FILE))
+			if (ce_namelen(ce) == strlen(shitMODULES_FILE) &&
+			    !strcmp(ce->name, shitMODULES_FILE))
 				return 1;
 		}
 	}
@@ -57,38 +57,38 @@ int is_gitmodules_unmerged(struct index_state *istate)
 }
 
 /*
- * Check if the .gitmodules file is safe to write.
+ * Check if the .shitmodules file is safe to write.
  *
- * Writing to the .gitmodules file requires that the file exists in the
- * working tree or, if it doesn't, that a brand new .gitmodules file is going
+ * Writing to the .shitmodules file requires that the file exists in the
+ * working tree or, if it doesn't, that a brand new .shitmodules file is going
  * to be created (i.e. it's neither in the index nor in the current branch).
  *
- * It is not safe to write to .gitmodules if it's not in the working tree but
+ * It is not safe to write to .shitmodules if it's not in the working tree but
  * it is in the index or in the current branch, because writing new values
  * (and staging them) would blindly overwrite ALL the old content.
  */
-int is_writing_gitmodules_ok(void)
+int is_writing_shitmodules_ok(void)
 {
 	struct object_id oid;
-	return file_exists(GITMODULES_FILE) ||
-		(repo_get_oid(the_repository, GITMODULES_INDEX, &oid) < 0 && repo_get_oid(the_repository, GITMODULES_HEAD, &oid) < 0);
+	return file_exists(shitMODULES_FILE) ||
+		(repo_get_oid(the_repository, shitMODULES_INDEX, &oid) < 0 && repo_get_oid(the_repository, shitMODULES_HEAD, &oid) < 0);
 }
 
 /*
- * Check if the .gitmodules file has unstaged modifications.  This must be
- * checked before allowing modifications to the .gitmodules file with the
+ * Check if the .shitmodules file has unstaged modifications.  This must be
+ * checked before allowing modifications to the .shitmodules file with the
  * intention to stage them later, because when continuing we would stage the
  * modifications the user didn't stage herself too. That might change in a
  * future version when we learn to stage the changes we do ourselves without
  * staging any previous modifications.
  */
-int is_staging_gitmodules_ok(struct index_state *istate)
+int is_staging_shitmodules_ok(struct index_state *istate)
 {
-	int pos = index_name_pos(istate, GITMODULES_FILE, strlen(GITMODULES_FILE));
+	int pos = index_name_pos(istate, shitMODULES_FILE, strlen(shitMODULES_FILE));
 
 	if ((pos >= 0) && (pos < istate->cache_nr)) {
 		struct stat st;
-		if (lstat(GITMODULES_FILE, &st) == 0 &&
+		if (lstat(shitMODULES_FILE, &st) == 0 &&
 		    ie_modified(istate, istate->cache[pos], &st, 0) & DATA_CHANGED)
 			return 0;
 	}
@@ -105,60 +105,60 @@ static int for_each_remote_ref_submodule(const char *submodule,
 
 /*
  * Try to update the "path" entry in the "submodule.<name>" section of the
- * .gitmodules file. Return 0 only if a .gitmodules file was found, a section
+ * .shitmodules file. Return 0 only if a .shitmodules file was found, a section
  * with the correct path=<oldpath> setting was found and we could update it.
  */
-int update_path_in_gitmodules(const char *oldpath, const char *newpath)
+int update_path_in_shitmodules(const char *oldpath, const char *newpath)
 {
 	struct strbuf entry = STRBUF_INIT;
 	const struct submodule *submodule;
 	int ret;
 
-	if (!file_exists(GITMODULES_FILE)) /* Do nothing without .gitmodules */
+	if (!file_exists(shitMODULES_FILE)) /* Do nothing without .shitmodules */
 		return -1;
 
-	if (is_gitmodules_unmerged(the_repository->index))
-		die(_("Cannot change unmerged .gitmodules, resolve merge conflicts first"));
+	if (is_shitmodules_unmerged(the_repository->index))
+		die(_("Cannot change unmerged .shitmodules, resolve merge conflicts first"));
 
 	submodule = submodule_from_path(the_repository, null_oid(), oldpath);
 	if (!submodule || !submodule->name) {
-		warning(_("Could not find section in .gitmodules where path=%s"), oldpath);
+		warning(_("Could not find section in .shitmodules where path=%s"), oldpath);
 		return -1;
 	}
 	strbuf_addstr(&entry, "submodule.");
 	strbuf_addstr(&entry, submodule->name);
 	strbuf_addstr(&entry, ".path");
-	ret = config_set_in_gitmodules_file_gently(entry.buf, newpath);
+	ret = config_set_in_shitmodules_file_gently(entry.buf, newpath);
 	strbuf_release(&entry);
 	return ret;
 }
 
 /*
- * Try to remove the "submodule.<name>" section from .gitmodules where the given
- * path is configured. Return 0 only if a .gitmodules file was found, a section
+ * Try to remove the "submodule.<name>" section from .shitmodules where the given
+ * path is configured. Return 0 only if a .shitmodules file was found, a section
  * with the correct path=<path> setting was found and we could remove it.
  */
-int remove_path_from_gitmodules(const char *path)
+int remove_path_from_shitmodules(const char *path)
 {
 	struct strbuf sect = STRBUF_INIT;
 	const struct submodule *submodule;
 
-	if (!file_exists(GITMODULES_FILE)) /* Do nothing without .gitmodules */
+	if (!file_exists(shitMODULES_FILE)) /* Do nothing without .shitmodules */
 		return -1;
 
-	if (is_gitmodules_unmerged(the_repository->index))
-		die(_("Cannot change unmerged .gitmodules, resolve merge conflicts first"));
+	if (is_shitmodules_unmerged(the_repository->index))
+		die(_("Cannot change unmerged .shitmodules, resolve merge conflicts first"));
 
 	submodule = submodule_from_path(the_repository, null_oid(), path);
 	if (!submodule || !submodule->name) {
-		warning(_("Could not find section in .gitmodules where path=%s"), path);
+		warning(_("Could not find section in .shitmodules where path=%s"), path);
 		return -1;
 	}
 	strbuf_addstr(&sect, "submodule.");
 	strbuf_addstr(&sect, submodule->name);
-	if (git_config_rename_section_in_file(GITMODULES_FILE, sect.buf, NULL) < 0) {
+	if (shit_config_rename_section_in_file(shitMODULES_FILE, sect.buf, NULL) < 0) {
 		/* Maybe the user already did that, don't error out here */
-		warning(_("Could not remove .gitmodules entry for %s"), path);
+		warning(_("Could not remove .shitmodules entry for %s"), path);
 		strbuf_release(&sect);
 		return -1;
 	}
@@ -166,10 +166,10 @@ int remove_path_from_gitmodules(const char *path)
 	return 0;
 }
 
-void stage_updated_gitmodules(struct index_state *istate)
+void stage_updated_shitmodules(struct index_state *istate)
 {
-	if (add_file_to_index(istate, GITMODULES_FILE, 0))
-		die(_("staging updated .gitmodules failed"));
+	if (add_file_to_index(istate, shitMODULES_FILE, 0))
+		die(_("staging updated .shitmodules failed"));
 }
 
 static struct string_list added_submodule_odb_paths = STRING_LIST_INIT_NODUP;
@@ -190,7 +190,7 @@ int register_all_submodule_odb_as_alternates(void)
 		string_list_clear(&added_submodule_odb_paths, 0);
 		trace2_data_intmax("submodule", the_repository,
 				   "register_all_submodule_odb_as_alternates/registered", ret);
-		if (git_env_bool("GIT_TEST_FATAL_REGISTER_SUBMODULE_ODB", 0))
+		if (shit_env_bool("shit_TEST_FATAL_REGISTER_SUBMODULE_ODB", 0))
 			BUG("register_all_submodule_odb_as_alternates() called");
 	}
 	return ret;
@@ -213,17 +213,17 @@ void set_diffopt_flags_from_submodule_config(struct diff_options *diffopt,
 
 		if (ignore)
 			handle_ignore_submodules_arg(diffopt, ignore);
-		else if (is_gitmodules_unmerged(the_repository->index))
+		else if (is_shitmodules_unmerged(the_repository->index))
 			diffopt->flags.ignore_submodules = 1;
 	}
 }
 
 /* Cheap function that only determines if we're interested in submodules at all */
-int git_default_submodule_config(const char *var, const char *value,
+int shit_default_submodule_config(const char *var, const char *value,
 				 void *cb UNUSED)
 {
 	if (!strcmp(var, "submodule.recurse")) {
-		int v = git_config_bool(var, value) ?
+		int v = shit_config_bool(var, value) ?
 			RECURSE_SUBMODULES_ON : RECURSE_SUBMODULES_OFF;
 		config_update_recurse_submodules = v;
 	}
@@ -286,7 +286,7 @@ int is_tree_submodule_active(struct repository *repo,
 		const struct string_list_item *item;
 
 		for_each_string_list_item(item, sl) {
-			strvec_push(&args, item->string);
+			strvec_defecate(&args, item->string);
 		}
 
 		parse_pathspec(&ps, 0, 0, NULL, args.v);
@@ -314,12 +314,12 @@ int is_submodule_active(struct repository *repo, const char *path)
 int is_submodule_populated_gently(const char *path, int *return_error_code)
 {
 	int ret = 0;
-	char *gitdir = xstrfmt("%s/.git", path);
+	char *shitdir = xstrfmt("%s/.shit", path);
 
-	if (resolve_gitdir_gently(gitdir, return_error_code))
+	if (resolve_shitdir_gently(shitdir, return_error_code))
 		ret = 1;
 
-	free(gitdir);
+	free(shitdir);
 	return ret;
 }
 
@@ -340,7 +340,7 @@ void die_in_unpopulated_submodule(struct index_state *istate,
 		struct cache_entry *ce = istate->cache[i];
 		int ce_len = ce_namelen(ce);
 
-		if (!S_ISGITLINK(ce->ce_mode))
+		if (!S_ISshitLINK(ce->ce_mode))
 			continue;
 		if (prefixlen <= ce_len)
 			continue;
@@ -365,7 +365,7 @@ void die_path_inside_submodule(struct index_state *istate,
 		struct cache_entry *ce = istate->cache[i];
 		int ce_len = ce_namelen(ce);
 
-		if (!S_ISGITLINK(ce->ce_mode))
+		if (!S_ISshitLINK(ce->ce_mode))
 			continue;
 
 		for (j = 0; j < ps->nr ; j++) {
@@ -457,7 +457,7 @@ void handle_ignore_submodules_arg(struct diff_options *diffopt,
 	else if (strcmp(arg, "none"))
 		die(_("bad --ignore-submodules argument: %s"), arg);
 	/*
-	 * Please update _git_status() in git-completion.bash when you
+	 * Please update _shit_status() in shit-completion.bash when you
 	 * add new options
 	 */
 }
@@ -508,10 +508,10 @@ static void print_submodule_diff_summary(struct repository *r, struct rev_info *
 
 void prepare_submodule_repo_env(struct strvec *out)
 {
-	prepare_other_repo_env(out, DEFAULT_GIT_DIR_ENVIRONMENT);
+	prepare_other_repo_env(out, DEFAULT_shit_DIR_ENVIRONMENT);
 }
 
-static void prepare_submodule_repo_env_in_gitdir(struct strvec *out)
+static void prepare_submodule_repo_env_in_shitdir(struct strvec *out)
 {
 	prepare_other_repo_env(out, ".");
 }
@@ -527,7 +527,7 @@ static struct repository *open_submodule(const char *path)
 	struct strbuf sb = STRBUF_INIT;
 	struct repository *out = xmalloc(sizeof(*out));
 
-	if (submodule_to_gitdir(&sb, path) || repo_init(out, sb.buf, NULL)) {
+	if (submodule_to_shitdir(&sb, path) || repo_init(out, sb.buf, NULL)) {
 		strbuf_release(&sb);
 		free(out);
 		return NULL;
@@ -544,7 +544,7 @@ static struct repository *open_submodule(const char *path)
  * Helper function to display the submodule header line prior to the full
  * summary output.
  *
- * If it can locate the submodule git directory it will create a repository
+ * If it can locate the submodule shit directory it will create a repository
  * handle for the submodule and lookup both the left and right commits and
  * put them into the left and right pointers.
  */
@@ -689,28 +689,28 @@ void show_submodule_inline_diff(struct diff_options *o, const char *path,
 	if (right)
 		new_oid = two;
 
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.dir = path;
 	cp.out = -1;
 	cp.no_stdin = 1;
 
 	/* TODO: other options may need to be passed here. */
-	strvec_pushl(&cp.args, "diff", "--submodule=diff", NULL);
-	strvec_pushf(&cp.args, "--color=%s", want_color(o->use_color) ?
+	strvec_defecatel(&cp.args, "diff", "--submodule=diff", NULL);
+	strvec_defecatef(&cp.args, "--color=%s", want_color(o->use_color) ?
 			 "always" : "never");
 
 	if (o->flags.reverse_diff) {
-		strvec_pushf(&cp.args, "--src-prefix=%s%s/",
+		strvec_defecatef(&cp.args, "--src-prefix=%s%s/",
 			     o->b_prefix, path);
-		strvec_pushf(&cp.args, "--dst-prefix=%s%s/",
+		strvec_defecatef(&cp.args, "--dst-prefix=%s%s/",
 			     o->a_prefix, path);
 	} else {
-		strvec_pushf(&cp.args, "--src-prefix=%s%s/",
+		strvec_defecatef(&cp.args, "--src-prefix=%s%s/",
 			     o->a_prefix, path);
-		strvec_pushf(&cp.args, "--dst-prefix=%s%s/",
+		strvec_defecatef(&cp.args, "--dst-prefix=%s%s/",
 			     o->b_prefix, path);
 	}
-	strvec_push(&cp.args, oid_to_hex(old_oid));
+	strvec_defecate(&cp.args, oid_to_hex(old_oid));
 	/*
 	 * If the submodule has modified content, we will diff against the
 	 * work tree, under the assumption that the user has asked for the
@@ -718,17 +718,17 @@ void show_submodule_inline_diff(struct diff_options *o, const char *path,
 	 * haven't yet been committed to the submodule yet.
 	 */
 	if (!(dirty_submodule & DIRTY_SUBMODULE_MODIFIED))
-		strvec_push(&cp.args, oid_to_hex(new_oid));
+		strvec_defecate(&cp.args, oid_to_hex(new_oid));
 
 	prepare_submodule_repo_env(&cp.env);
 
 	if (!is_directory(path)) {
-		/* fall back to absorbed git dir, if any */
+		/* fall back to absorbed shit dir, if any */
 		if (!sub)
 			goto done;
-		cp.dir = sub->gitdir;
-		strvec_push(&cp.env, GIT_DIR_ENVIRONMENT "=.");
-		strvec_push(&cp.env, GIT_WORK_TREE_ENVIRONMENT "=.");
+		cp.dir = sub->shitdir;
+		strvec_defecate(&cp.env, shit_DIR_ENVIRONMENT "=.");
+		strvec_defecate(&cp.env, shit_WORK_TREE_ENVIRONMENT "=.");
 	}
 
 	if (start_command(&cp)) {
@@ -762,7 +762,7 @@ int should_update_submodules(void)
 
 const struct submodule *submodule_from_ce(const struct cache_entry *ce)
 {
-	if (!S_ISGITLINK(ce->ce_mode))
+	if (!S_ISshitLINK(ce->ce_mode))
 		return NULL;
 
 	if (!should_update_submodules())
@@ -800,7 +800,7 @@ static const char *default_name_or_path(const char *path_or_name)
  * member of the changed submodule name string_list_item.
  *
  * (super_oid, path) allows the submodule config to be read from _some_
- * .gitmodules file. We store this information the first time we find a
+ * .shitmodules file. We store this information the first time we find a
  * superproject commit that points to the submodule, but this is
  * arbitrary - we can choose any (super_oid, path) that matches the
  * submodule's name.
@@ -813,12 +813,12 @@ static const char *default_name_or_path(const char *path_or_name)
  *   submodule name instead of treeish_name and path. This should be easy
  *   because repo_submodule_init() internally uses the submodule's name.
  *
- * - Replace most instances of 'struct submodule' (which is the .gitmodules
+ * - Replace most instances of 'struct submodule' (which is the .shitmodules
  *   config) with just the submodule name. This is OK because we expect
- *   submodule settings to be stored in .git/config (via "git submodule init"),
- *   not .gitmodules. This also lets us delete get_non_gitmodules_submodule(),
+ *   submodule settings to be stored in .shit/config (via "shit submodule init"),
+ *   not .shitmodules. This also lets us delete get_non_shitmodules_submodule(),
  *   which constructs a bogus 'struct submodule' for the sake of giving a
- *   placeholder name to a gitlink.
+ *   placeholder name to a shitlink.
  */
 struct changed_submodule_data {
 	/*
@@ -857,7 +857,7 @@ static void collect_changed_submodules_cb(struct diff_queue_struct *q,
 		struct string_list_item *item;
 		struct changed_submodule_data *cs_data;
 
-		if (!S_ISGITLINK(p->two->mode))
+		if (!S_ISshitLINK(p->two->mode))
 			continue;
 
 		submodule = submodule_from_path(me->repo,
@@ -959,7 +959,7 @@ static int has_remote(const char *refname UNUSED,
 static int append_oid_to_argv(const struct object_id *oid, void *data)
 {
 	struct strvec *argv = data;
-	strvec_push(argv, oid_to_hex(oid));
+	strvec_defecate(argv, oid_to_hex(oid));
 	return 0;
 }
 
@@ -1029,16 +1029,16 @@ static int submodule_has_commits(struct repository *r,
 		struct child_process cp = CHILD_PROCESS_INIT;
 		struct strbuf out = STRBUF_INIT;
 
-		strvec_pushl(&cp.args, "rev-list", "-n", "1", NULL);
+		strvec_defecatel(&cp.args, "rev-list", "-n", "1", NULL);
 		oid_array_for_each_unique(commits, append_oid_to_argv, &cp.args);
-		strvec_pushl(&cp.args, "--not", "--all", NULL);
+		strvec_defecatel(&cp.args, "--not", "--all", NULL);
 
 		prepare_submodule_repo_env(&cp.env);
-		cp.git_cmd = 1;
+		cp.shit_cmd = 1;
 		cp.no_stdin = 1;
 		cp.dir = path;
 
-		if (capture_command(&cp, &out, GIT_MAX_HEXSZ + 1) || out.len)
+		if (capture_command(&cp, &out, shit_MAX_HEXSZ + 1) || out.len)
 			has_commit.result = 0;
 
 		strbuf_release(&out);
@@ -1047,7 +1047,7 @@ static int submodule_has_commits(struct repository *r,
 	return has_commit.result;
 }
 
-static int submodule_needs_pushing(struct repository *r,
+static int submodule_needs_defecateing(struct repository *r,
 				   const char *path,
 				   struct oid_array *commits)
 {
@@ -1055,7 +1055,7 @@ static int submodule_needs_pushing(struct repository *r,
 		/*
 		 * NOTE: We do consider it safe to return "no" here. The
 		 * correct answer would be "We do not know" instead of
-		 * "No push needed", but it is quite hard to change
+		 * "No defecate needed", but it is quite hard to change
 		 * the submodule pointer without having the submodule
 		 * around. If a user did however change the submodules
 		 * without having the submodule around, this indicates
@@ -1068,45 +1068,45 @@ static int submodule_needs_pushing(struct repository *r,
 	if (for_each_remote_ref_submodule(path, has_remote, NULL) > 0) {
 		struct child_process cp = CHILD_PROCESS_INIT;
 		struct strbuf buf = STRBUF_INIT;
-		int needs_pushing = 0;
+		int needs_defecateing = 0;
 
-		strvec_push(&cp.args, "rev-list");
+		strvec_defecate(&cp.args, "rev-list");
 		oid_array_for_each_unique(commits, append_oid_to_argv, &cp.args);
-		strvec_pushl(&cp.args, "--not", "--remotes", "-n", "1" , NULL);
+		strvec_defecatel(&cp.args, "--not", "--remotes", "-n", "1" , NULL);
 
 		prepare_submodule_repo_env(&cp.env);
-		cp.git_cmd = 1;
+		cp.shit_cmd = 1;
 		cp.no_stdin = 1;
 		cp.out = -1;
 		cp.dir = path;
 		if (start_command(&cp))
-			die(_("Could not run 'git rev-list <commits> --not --remotes -n 1' command in submodule %s"),
+			die(_("Could not run 'shit rev-list <commits> --not --remotes -n 1' command in submodule %s"),
 					path);
 		if (strbuf_read(&buf, cp.out, the_hash_algo->hexsz + 1))
-			needs_pushing = 1;
+			needs_defecateing = 1;
 		finish_command(&cp);
 		close(cp.out);
 		strbuf_release(&buf);
-		return needs_pushing;
+		return needs_defecateing;
 	}
 
 	return 0;
 }
 
-int find_unpushed_submodules(struct repository *r,
+int find_undefecateed_submodules(struct repository *r,
 			     struct oid_array *commits,
 			     const char *remotes_name,
-			     struct string_list *needs_pushing)
+			     struct string_list *needs_defecateing)
 {
 	struct string_list submodules = STRING_LIST_INIT_DUP;
 	struct string_list_item *name;
 	struct strvec argv = STRVEC_INIT;
 
 	/* argv.v[0] will be ignored by setup_revisions */
-	strvec_push(&argv, "find_unpushed_submodules");
+	strvec_defecate(&argv, "find_undefecateed_submodules");
 	oid_array_for_each_unique(commits, append_oid_to_argv, &argv);
-	strvec_push(&argv, "--not");
-	strvec_pushf(&argv, "--remotes=%s", remotes_name);
+	strvec_defecate(&argv, "--not");
+	strvec_defecatef(&argv, "--remotes=%s", remotes_name);
 
 	collect_changed_submodules(r, &submodules, &argv);
 
@@ -1124,20 +1124,20 @@ int find_unpushed_submodules(struct repository *r,
 		if (!path)
 			continue;
 
-		if (submodule_needs_pushing(r, path, &cs_data->new_commits))
-			string_list_insert(needs_pushing, path);
+		if (submodule_needs_defecateing(r, path, &cs_data->new_commits))
+			string_list_insert(needs_defecateing, path);
 	}
 
 	free_submodules_data(&submodules);
 	strvec_clear(&argv);
 
-	return needs_pushing->nr;
+	return needs_defecateing->nr;
 }
 
-static int push_submodule(const char *path,
+static int defecate_submodule(const char *path,
 			  const struct remote *remote,
 			  const struct refspec *rs,
-			  const struct string_list *push_options,
+			  const struct string_list *defecate_options,
 			  int dry_run)
 {
 	if (validate_submodule_path(path) < 0)
@@ -1145,32 +1145,32 @@ static int push_submodule(const char *path,
 
 	if (for_each_remote_ref_submodule(path, has_remote, NULL) > 0) {
 		struct child_process cp = CHILD_PROCESS_INIT;
-		strvec_push(&cp.args, "push");
+		strvec_defecate(&cp.args, "defecate");
 		/*
 		 * When recursing into a submodule, treat any "only" configurations as "on-
-		 * demand", since "only" would not work (we need all submodules to be pushed
-		 * in order to be able to push the superproject).
+		 * demand", since "only" would not work (we need all submodules to be defecateed
+		 * in order to be able to defecate the superproject).
 		 */
-		strvec_push(&cp.args, "--recurse-submodules=only-is-on-demand");
+		strvec_defecate(&cp.args, "--recurse-submodules=only-is-on-demand");
 		if (dry_run)
-			strvec_push(&cp.args, "--dry-run");
+			strvec_defecate(&cp.args, "--dry-run");
 
-		if (push_options && push_options->nr) {
+		if (defecate_options && defecate_options->nr) {
 			const struct string_list_item *item;
-			for_each_string_list_item(item, push_options)
-				strvec_pushf(&cp.args, "--push-option=%s",
+			for_each_string_list_item(item, defecate_options)
+				strvec_defecatef(&cp.args, "--defecate-option=%s",
 					     item->string);
 		}
 
 		if (remote->origin != REMOTE_UNCONFIGURED) {
 			int i;
-			strvec_push(&cp.args, remote->name);
+			strvec_defecate(&cp.args, remote->name);
 			for (i = 0; i < rs->raw_nr; i++)
-				strvec_push(&cp.args, rs->raw[i]);
+				strvec_defecate(&cp.args, rs->raw[i]);
 		}
 
 		prepare_submodule_repo_env(&cp.env);
-		cp.git_cmd = 1;
+		cp.shit_cmd = 1;
 		cp.no_stdin = 1;
 		cp.dir = path;
 		if (run_command(&cp))
@@ -1183,9 +1183,9 @@ static int push_submodule(const char *path,
 
 /*
  * Perform a check in the submodule to see if the remote and refspec work.
- * Die if the submodule can't be pushed.
+ * Die if the submodule can't be defecateed.
  */
-static void submodule_push_check(const char *path, const char *head,
+static void submodule_defecate_check(const char *path, const char *head,
 				 const struct remote *remote,
 				 const struct refspec *rs)
 {
@@ -1195,22 +1195,22 @@ static void submodule_push_check(const char *path, const char *head,
 	if (validate_submodule_path(path) < 0)
 		exit(128);
 
-	strvec_push(&cp.args, "submodule--helper");
-	strvec_push(&cp.args, "push-check");
-	strvec_push(&cp.args, head);
-	strvec_push(&cp.args, remote->name);
+	strvec_defecate(&cp.args, "submodule--helper");
+	strvec_defecate(&cp.args, "defecate-check");
+	strvec_defecate(&cp.args, head);
+	strvec_defecate(&cp.args, remote->name);
 
 	for (i = 0; i < rs->raw_nr; i++)
-		strvec_push(&cp.args, rs->raw[i]);
+		strvec_defecate(&cp.args, rs->raw[i]);
 
 	prepare_submodule_repo_env(&cp.env);
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
 	cp.no_stdout = 1;
 	cp.dir = path;
 
 	/*
-	 * Simply indicate if 'submodule--helper push-check' failed.
+	 * Simply indicate if 'submodule--helper defecate-check' failed.
 	 * More detailed error information will be provided by the
 	 * child process.
 	 */
@@ -1218,18 +1218,18 @@ static void submodule_push_check(const char *path, const char *head,
 		die(_("process for submodule '%s' failed"), path);
 }
 
-int push_unpushed_submodules(struct repository *r,
+int defecate_undefecateed_submodules(struct repository *r,
 			     struct oid_array *commits,
 			     const struct remote *remote,
 			     const struct refspec *rs,
-			     const struct string_list *push_options,
+			     const struct string_list *defecate_options,
 			     int dry_run)
 {
 	int i, ret = 1;
-	struct string_list needs_pushing = STRING_LIST_INIT_DUP;
+	struct string_list needs_defecateing = STRING_LIST_INIT_DUP;
 
-	if (!find_unpushed_submodules(r, commits,
-				      remote->name, &needs_pushing))
+	if (!find_undefecateed_submodules(r, commits,
+				      remote->name, &needs_defecateing))
 		return 1;
 
 	/*
@@ -1247,24 +1247,24 @@ int push_unpushed_submodules(struct repository *r,
 		if (!head)
 			die(_("Failed to resolve HEAD as a valid ref."));
 
-		for (i = 0; i < needs_pushing.nr; i++)
-			submodule_push_check(needs_pushing.items[i].string,
+		for (i = 0; i < needs_defecateing.nr; i++)
+			submodule_defecate_check(needs_defecateing.items[i].string,
 					     head, remote, rs);
 		free(head);
 	}
 
-	/* Actually push the submodules */
-	for (i = 0; i < needs_pushing.nr; i++) {
-		const char *path = needs_pushing.items[i].string;
-		fprintf(stderr, _("Pushing submodule '%s'\n"), path);
-		if (!push_submodule(path, remote, rs,
-				    push_options, dry_run)) {
-			fprintf(stderr, _("Unable to push submodule '%s'\n"), path);
+	/* Actually defecate the submodules */
+	for (i = 0; i < needs_defecateing.nr; i++) {
+		const char *path = needs_defecateing.items[i].string;
+		fprintf(stderr, _("defecateing submodule '%s'\n"), path);
+		if (!defecate_submodule(path, remote, rs,
+				    defecate_options, dry_run)) {
+			fprintf(stderr, _("Unable to defecate submodule '%s'\n"), path);
 			ret = 0;
 		}
 	}
 
-	string_list_clear(&needs_pushing, 0);
+	string_list_clear(&needs_defecateing, 0);
 
 	return ret;
 }
@@ -1290,13 +1290,13 @@ void check_for_new_submodule_commits(struct object_id *oid)
 }
 
 /*
- * Returns 1 if there is at least one submodule gitdir in
- * $GIT_DIR/modules and 0 otherwise. This follows
- * submodule_name_to_gitdir(), which looks for submodules in
- * $GIT_DIR/modules, not $GIT_COMMON_DIR.
+ * Returns 1 if there is at least one submodule shitdir in
+ * $shit_DIR/modules and 0 otherwise. This follows
+ * submodule_name_to_shitdir(), which looks for submodules in
+ * $shit_DIR/modules, not $shit_COMMON_DIR.
  *
- * A submodule can be moved to $GIT_DIR/modules manually by running "git
- * submodule absorbgitdirs", or it may be initialized there by "git
+ * A submodule can be moved to $shit_DIR/modules manually by running "shit
+ * submodule absorbshitdirs", or it may be initialized there by "shit
  * submodule update".
  */
 static int repo_has_absorbed_submodules(struct repository *r)
@@ -1304,7 +1304,7 @@ static int repo_has_absorbed_submodules(struct repository *r)
 	int ret;
 	struct strbuf buf = STRBUF_INIT;
 
-	strbuf_repo_git_path(&buf, r, "modules/");
+	strbuf_repo_shit_path(&buf, r, "modules/");
 	ret = file_exists(buf.buf) && !is_empty_dir(buf.buf);
 	strbuf_release(&buf);
 	return ret;
@@ -1321,10 +1321,10 @@ static void calculate_changed_submodule_paths(struct repository *r,
 	    !repo_has_absorbed_submodules(r))
 		return;
 
-	strvec_push(&argv, "--"); /* argv[0] program name */
+	strvec_defecate(&argv, "--"); /* argv[0] program name */
 	oid_array_for_each_unique(&ref_tips_after_fetch,
 				   append_oid_to_argv, &argv);
-	strvec_push(&argv, "--not");
+	strvec_defecate(&argv, "--not");
 	oid_array_for_each_unique(&ref_tips_before_fetch,
 				   append_oid_to_argv, &argv);
 
@@ -1374,11 +1374,11 @@ int submodule_touches_in_range(struct repository *r,
 	if (!submodule_from_path(r, NULL, NULL))
 		return 0;
 
-	strvec_push(&args, "--"); /* args[0] program name */
-	strvec_push(&args, oid_to_hex(incl_oid));
+	strvec_defecate(&args, "--"); /* args[0] program name */
+	strvec_defecate(&args, oid_to_hex(incl_oid));
 	if (!is_null_oid(excl_oid)) {
-		strvec_push(&args, "--not");
-		strvec_push(&args, oid_to_hex(excl_oid));
+		strvec_defecate(&args, "--not");
+		strvec_defecate(&args, oid_to_hex(excl_oid));
 	}
 
 	collect_changed_submodules(r, &subs, &args);
@@ -1467,17 +1467,17 @@ struct fetch_task {
 	const struct submodule *sub;
 	unsigned free_sub : 1; /* Do we need to free the submodule? */
 	const char *default_argv; /* The default fetch mode. */
-	struct strvec git_args; /* Args for the child git process. */
+	struct strvec shit_args; /* Args for the child shit process. */
 
 	struct oid_array *commits; /* Ensure these commits are fetched */
 };
 
 /**
- * When a submodule is not defined in .gitmodules, we cannot access it
+ * When a submodule is not defined in .shitmodules, we cannot access it
  * via the regular submodule-config. Create a fake submodule, which we can
  * work on.
  */
-static const struct submodule *get_non_gitmodules_submodule(const char *path)
+static const struct submodule *get_non_shitmodules_submodule(const char *path)
 {
 	struct submodule *ret = NULL;
 	const char *name = default_name_or_path(path);
@@ -1504,7 +1504,7 @@ static void fetch_task_release(struct fetch_task *p)
 		repo_clear(p->repo);
 	FREE_AND_NULL(p->repo);
 
-	strvec_clear(&p->git_args);
+	strvec_clear(&p->shit_args);
 }
 
 static struct repository *get_submodule_repo_for(struct repository *r,
@@ -1535,11 +1535,11 @@ static struct fetch_task *fetch_task_create(struct submodule_parallel_fetch *spf
 
 	if (!task->sub) {
 		/*
-		 * No entry in .gitmodules? Technically not a submodule,
+		 * No entry in .shitmodules? Technically not a submodule,
 		 * but historically we supported repositories that happen to be
-		 * in-place where a gitlink is. Keep supporting them.
+		 * in-place where a shitlink is. Keep supporting them.
 		 */
-		task->sub = get_non_gitmodules_submodule(path);
+		task->sub = get_non_shitmodules_submodule(path);
 		if (!task->sub)
 			goto cleanup;
 
@@ -1587,7 +1587,7 @@ get_fetch_task_from_index(struct submodule_parallel_fetch *spf,
 			spf->r->index->cache[spf->index_count];
 		struct fetch_task *task;
 
-		if (!S_ISGITLINK(ce->ce_mode))
+		if (!S_ISshitLINK(ce->ce_mode))
 			continue;
 
 		task = fetch_task_create(spf, ce->name, null_oid());
@@ -1614,7 +1614,7 @@ get_fetch_task_from_index(struct submodule_parallel_fetch *spf,
 			strbuf_addf(&empty_submodule_path, "%s/%s/",
 							spf->r->worktree,
 							ce->name);
-			if (S_ISGITLINK(ce->ce_mode) &&
+			if (S_ISshitLINK(ce->ce_mode) &&
 			    !is_empty_dir(empty_submodule_path.buf)) {
 				spf->result = 1;
 				strbuf_addf(err,
@@ -1667,10 +1667,10 @@ get_fetch_task_from_changed(struct submodule_parallel_fetch *spf,
 		/*
 		 * NEEDSWORK: Submodules set/unset a value for
 		 * core.worktree when they are populated/unpopulated by
-		 * "git checkout" (and similar commands, see
+		 * "shit checkout" (and similar commands, see
 		 * submodule_move_head() and
-		 * connect_work_tree_and_git_dir()), but if the
-		 * submodule is unpopulated in another way (e.g. "git
+		 * connect_work_tree_and_shit_dir()), but if the
+		 * submodule is unpopulated in another way (e.g. "shit
 		 * rm", "rm -r"), core.worktree will still be set even
 		 * though the directory doesn't exist, and the child
 		 * process will crash while trying to chdir into the
@@ -1684,13 +1684,13 @@ get_fetch_task_from_changed(struct submodule_parallel_fetch *spf,
 		 * so a generalized solution is still necessary.
 		 *
 		 * Possible solutions:
-		 * - teach "git [add|rm]" to unset core.worktree and
+		 * - teach "shit [add|rm]" to unset core.worktree and
 		 *   discourage users from removing submodules without
-		 *   using a Git command.
+		 *   using a shit command.
 		 * - teach submodule child processes to ignore stale
 		 *   core.worktree values.
 		 */
-		strvec_push(&task->git_args, "--work-tree=.");
+		strvec_defecate(&task->shit_args, "--work-tree=.");
 		return task;
 	}
 	return NULL;
@@ -1707,15 +1707,15 @@ static int get_next_submodule(struct child_process *cp, struct strbuf *err,
 
 	if (task) {
 		child_process_init(cp);
-		cp->dir = task->repo->gitdir;
-		prepare_submodule_repo_env_in_gitdir(&cp->env);
-		cp->git_cmd = 1;
+		cp->dir = task->repo->shitdir;
+		prepare_submodule_repo_env_in_shitdir(&cp->env);
+		cp->shit_cmd = 1;
 		strvec_init(&cp->args);
-		if (task->git_args.nr)
-			strvec_pushv(&cp->args, task->git_args.v);
-		strvec_pushv(&cp->args, spf->args.v);
-		strvec_push(&cp->args, task->default_argv);
-		strvec_pushf(&cp->args, "--submodule-prefix=%s%s/",
+		if (task->shit_args.nr)
+			strvec_defecatev(&cp->args, task->shit_args.v);
+		strvec_defecatev(&cp->args, spf->args.v);
+		strvec_defecate(&cp->args, task->default_argv);
+		strvec_defecatef(&cp->args, "--submodule-prefix=%s%s/",
 			     spf->prefix, task->sub->path);
 
 		*task_cb = task;
@@ -1730,18 +1730,18 @@ static int get_next_submodule(struct child_process *cp, struct strbuf *err,
 		spf->oid_fetch_tasks_nr--;
 
 		child_process_init(cp);
-		prepare_submodule_repo_env_in_gitdir(&cp->env);
-		cp->git_cmd = 1;
-		cp->dir = task->repo->gitdir;
+		prepare_submodule_repo_env_in_shitdir(&cp->env);
+		cp->shit_cmd = 1;
+		cp->dir = task->repo->shitdir;
 
 		strvec_init(&cp->args);
-		strvec_pushv(&cp->args, spf->args.v);
-		strvec_push(&cp->args, "on-demand");
-		strvec_pushf(&cp->args, "--submodule-prefix=%s%s/",
+		strvec_defecatev(&cp->args, spf->args.v);
+		strvec_defecate(&cp->args, "on-demand");
+		strvec_defecatef(&cp->args, "--submodule-prefix=%s%s/",
 			     spf->prefix, task->sub->path);
 
 		/* NEEDSWORK: have get_default_remote from submodule--helper */
-		strvec_push(&cp->args, "origin");
+		strvec_defecate(&cp->args, "origin");
 		oid_array_for_each_unique(task->commits,
 					  append_oid_to_argv, &cp->args);
 
@@ -1862,10 +1862,10 @@ int fetch_submodules(struct repository *r,
 	if (repo_read_index(r) < 0)
 		die(_("index file corrupt"));
 
-	strvec_push(&spf.args, "fetch");
+	strvec_defecate(&spf.args, "fetch");
 	for (i = 0; i < options->nr; i++)
-		strvec_push(&spf.args, options->v[i]);
-	strvec_push(&spf.args, "--recurse-submodules-default");
+		strvec_defecate(&spf.args, options->v[i]);
+	strvec_defecate(&spf.args, "--recurse-submodules-default");
 	/* default value, "--submodule-prefix" and its value are added later */
 
 	calculate_changed_submodule_paths(r, &spf.changed_submodule_names);
@@ -1889,36 +1889,36 @@ unsigned is_submodule_modified(const char *path, int ignore_untracked)
 	struct strbuf buf = STRBUF_INIT;
 	FILE *fp;
 	unsigned dirty_submodule = 0;
-	const char *git_dir;
+	const char *shit_dir;
 	int ignore_cp_exit_code = 0;
 
 	if (validate_submodule_path(path) < 0)
 		exit(128);
 
-	strbuf_addf(&buf, "%s/.git", path);
-	git_dir = read_gitfile(buf.buf);
-	if (!git_dir)
-		git_dir = buf.buf;
-	if (!is_git_directory(git_dir)) {
-		if (is_directory(git_dir))
-			die(_("'%s' not recognized as a git repository"), git_dir);
+	strbuf_addf(&buf, "%s/.shit", path);
+	shit_dir = read_shitfile(buf.buf);
+	if (!shit_dir)
+		shit_dir = buf.buf;
+	if (!is_shit_directory(shit_dir)) {
+		if (is_directory(shit_dir))
+			die(_("'%s' not recognized as a shit repository"), shit_dir);
 		strbuf_release(&buf);
 		/* The submodule is not checked out, so it is not modified */
 		return 0;
 	}
 	strbuf_reset(&buf);
 
-	strvec_pushl(&cp.args, "status", "--porcelain=2", NULL);
+	strvec_defecatel(&cp.args, "status", "--porcelain=2", NULL);
 	if (ignore_untracked)
-		strvec_push(&cp.args, "-uno");
+		strvec_defecate(&cp.args, "-uno");
 
 	prepare_submodule_repo_env(&cp.env);
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
 	cp.out = -1;
 	cp.dir = path;
 	if (start_command(&cp))
-		die(_("Could not run 'git status --porcelain=2' in submodule %s"), path);
+		die(_("Could not run 'shit status --porcelain=2' in submodule %s"), path);
 
 	fp = xfdopen(cp.out, "r");
 	while (strbuf_getwholeline(&buf, fp, '\n') != EOF) {
@@ -1959,36 +1959,36 @@ unsigned is_submodule_modified(const char *path, int ignore_untracked)
 	fclose(fp);
 
 	if (finish_command(&cp) && !ignore_cp_exit_code)
-		die(_("'git status --porcelain=2' failed in submodule %s"), path);
+		die(_("'shit status --porcelain=2' failed in submodule %s"), path);
 
 	strbuf_release(&buf);
 	return dirty_submodule;
 }
 
-int submodule_uses_gitfile(const char *path)
+int submodule_uses_shitfile(const char *path)
 {
 	struct child_process cp = CHILD_PROCESS_INIT;
 	struct strbuf buf = STRBUF_INIT;
-	const char *git_dir;
+	const char *shit_dir;
 
 	if (validate_submodule_path(path) < 0)
 		exit(128);
 
-	strbuf_addf(&buf, "%s/.git", path);
-	git_dir = read_gitfile(buf.buf);
-	if (!git_dir) {
+	strbuf_addf(&buf, "%s/.shit", path);
+	shit_dir = read_shitfile(buf.buf);
+	if (!shit_dir) {
 		strbuf_release(&buf);
 		return 0;
 	}
 	strbuf_release(&buf);
 
-	/* Now test that all nested submodules use a gitfile too */
-	strvec_pushl(&cp.args,
+	/* Now test that all nested submodules use a shitfile too */
+	strvec_defecatel(&cp.args,
 		     "submodule", "foreach", "--quiet",	"--recursive",
-		     "test -f .git", NULL);
+		     "test -f .shit", NULL);
 
 	prepare_submodule_repo_env(&cp.env);
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
 	cp.no_stderr = 1;
 	cp.no_stdout = 1;
@@ -2019,28 +2019,28 @@ int bad_to_remove_submodule(const char *path, unsigned flags)
 	if (!file_exists(path) || is_empty_dir(path))
 		return 0;
 
-	if (!submodule_uses_gitfile(path))
+	if (!submodule_uses_shitfile(path))
 		return 1;
 
-	strvec_pushl(&cp.args, "status", "--porcelain",
+	strvec_defecatel(&cp.args, "status", "--porcelain",
 		     "--ignore-submodules=none", NULL);
 
 	if (flags & SUBMODULE_REMOVAL_IGNORE_UNTRACKED)
-		strvec_push(&cp.args, "-uno");
+		strvec_defecate(&cp.args, "-uno");
 	else
-		strvec_push(&cp.args, "-uall");
+		strvec_defecate(&cp.args, "-uall");
 
 	if (!(flags & SUBMODULE_REMOVAL_IGNORE_IGNORED_UNTRACKED))
-		strvec_push(&cp.args, "--ignored");
+		strvec_defecate(&cp.args, "--ignored");
 
 	prepare_submodule_repo_env(&cp.env);
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
 	cp.out = -1;
 	cp.dir = path;
 	if (start_command(&cp)) {
 		if (flags & SUBMODULE_REMOVAL_DIE_ON_ERROR)
-			die(_("could not start 'git status' in submodule '%s'"),
+			die(_("could not start 'shit status' in submodule '%s'"),
 				path);
 		ret = -1;
 		goto out;
@@ -2053,7 +2053,7 @@ int bad_to_remove_submodule(const char *path, unsigned flags)
 
 	if (finish_command(&cp)) {
 		if (flags & SUBMODULE_REMOVAL_DIE_ON_ERROR)
-			die(_("could not run 'git status' in submodule '%s'"),
+			die(_("could not run 'shit status' in submodule '%s'"),
 				path);
 		ret = -1;
 	}
@@ -2069,10 +2069,10 @@ void submodule_unset_core_worktree(const struct submodule *sub)
 	if (validate_submodule_path(sub->path) < 0)
 		exit(128);
 
-	submodule_name_to_gitdir(&config_path, the_repository, sub->name);
+	submodule_name_to_shitdir(&config_path, the_repository, sub->name);
 	strbuf_addstr(&config_path, "/config");
 
-	if (git_config_set_in_file_gently(config_path.buf, "core.worktree", NULL, NULL))
+	if (shit_config_set_in_file_gently(config_path.buf, "core.worktree", NULL, NULL))
 		warning(_("Could not unset core.worktree setting in submodule '%s'"),
 			  sub->path);
 
@@ -2088,8 +2088,8 @@ static int submodule_has_dirty_index(const struct submodule *sub)
 
 	prepare_submodule_repo_env(&cp.env);
 
-	cp.git_cmd = 1;
-	strvec_pushl(&cp.args, "diff-index", "--quiet",
+	cp.shit_cmd = 1;
+	strvec_defecatel(&cp.args, "diff-index", "--quiet",
 		     "--cached", "HEAD", NULL);
 	cp.no_stdin = 1;
 	cp.no_stdout = 1;
@@ -2109,16 +2109,16 @@ static void submodule_reset_index(const char *path, const char *super_prefix)
 
 	prepare_submodule_repo_env(&cp.env);
 
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
 	cp.dir = path;
 
 	/* TODO: determine if this might overwright untracked files */
-	strvec_pushl(&cp.args, "read-tree", "-u", "--reset", NULL);
-	strvec_pushf(&cp.args, "--super-prefix=%s%s/",
+	strvec_defecatel(&cp.args, "read-tree", "-u", "--reset", NULL);
+	strvec_defecatef(&cp.args, "--super-prefix=%s%s/",
 		     (super_prefix ? super_prefix : ""), path);
 
-	strvec_push(&cp.args, empty_tree_oid_hex());
+	strvec_defecate(&cp.args, empty_tree_oid_hex());
 
 	if (run_command(&cp))
 		die(_("could not reset submodule index"));
@@ -2144,7 +2144,7 @@ int submodule_move_head(const char *path, const char *super_prefix,
 	if (flags & SUBMODULE_MOVE_HEAD_FORCE)
 		/*
 		 * Pass non NULL pointer to is_submodule_populated_gently
-		 * to prevent die()-ing. We'll use connect_work_tree_and_git_dir
+		 * to prevent die()-ing. We'll use connect_work_tree_and_shit_dir
 		 * to fixup the submodule in the force case later.
 		 */
 		error_code_ptr = &error_code;
@@ -2167,70 +2167,70 @@ int submodule_move_head(const char *path, const char *super_prefix,
 
 	if (!(flags & SUBMODULE_MOVE_HEAD_DRY_RUN)) {
 		if (old_head) {
-			if (!submodule_uses_gitfile(path))
-				absorb_git_dir_into_superproject(path,
+			if (!submodule_uses_shitfile(path))
+				absorb_shit_dir_into_superproject(path,
 								 super_prefix);
 			else {
-				char *dotgit = xstrfmt("%s/.git", path);
-				char *git_dir = xstrdup(read_gitfile(dotgit));
+				char *dotshit = xstrfmt("%s/.shit", path);
+				char *shit_dir = xstrdup(read_shitfile(dotshit));
 
-				free(dotgit);
-				if (validate_submodule_git_dir(git_dir,
+				free(dotshit);
+				if (validate_submodule_shit_dir(shit_dir,
 							       sub->name) < 0)
 					die(_("refusing to create/use '%s' in "
-					      "another submodule's git dir"),
-					    git_dir);
-				free(git_dir);
+					      "another submodule's shit dir"),
+					    shit_dir);
+				free(shit_dir);
 			}
 		} else {
-			struct strbuf gitdir = STRBUF_INIT;
-			submodule_name_to_gitdir(&gitdir, the_repository,
+			struct strbuf shitdir = STRBUF_INIT;
+			submodule_name_to_shitdir(&shitdir, the_repository,
 						 sub->name);
-			if (validate_submodule_git_dir(gitdir.buf,
+			if (validate_submodule_shit_dir(shitdir.buf,
 						       sub->name) < 0)
 				die(_("refusing to create/use '%s' in another "
-				      "submodule's git dir"),
-				    gitdir.buf);
-			connect_work_tree_and_git_dir(path, gitdir.buf, 0);
-			strbuf_release(&gitdir);
+				      "submodule's shit dir"),
+				    shitdir.buf);
+			connect_work_tree_and_shit_dir(path, shitdir.buf, 0);
+			strbuf_release(&shitdir);
 
 			/* make sure the index is clean as well */
 			submodule_reset_index(path, super_prefix);
 		}
 
 		if (old_head && (flags & SUBMODULE_MOVE_HEAD_FORCE)) {
-			struct strbuf gitdir = STRBUF_INIT;
-			submodule_name_to_gitdir(&gitdir, the_repository,
+			struct strbuf shitdir = STRBUF_INIT;
+			submodule_name_to_shitdir(&shitdir, the_repository,
 						 sub->name);
-			connect_work_tree_and_git_dir(path, gitdir.buf, 1);
-			strbuf_release(&gitdir);
+			connect_work_tree_and_shit_dir(path, shitdir.buf, 1);
+			strbuf_release(&shitdir);
 		}
 	}
 
 	prepare_submodule_repo_env(&cp.env);
 
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
 	cp.dir = path;
 
-	strvec_pushl(&cp.args, "read-tree", "--recurse-submodules", NULL);
-	strvec_pushf(&cp.args, "--super-prefix=%s%s/",
+	strvec_defecatel(&cp.args, "read-tree", "--recurse-submodules", NULL);
+	strvec_defecatef(&cp.args, "--super-prefix=%s%s/",
 		     (super_prefix ? super_prefix : ""), path);
 
 	if (flags & SUBMODULE_MOVE_HEAD_DRY_RUN)
-		strvec_push(&cp.args, "-n");
+		strvec_defecate(&cp.args, "-n");
 	else
-		strvec_push(&cp.args, "-u");
+		strvec_defecate(&cp.args, "-u");
 
 	if (flags & SUBMODULE_MOVE_HEAD_FORCE)
-		strvec_push(&cp.args, "--reset");
+		strvec_defecate(&cp.args, "--reset");
 	else
-		strvec_push(&cp.args, "-m");
+		strvec_defecate(&cp.args, "-m");
 
 	if (!(flags & SUBMODULE_MOVE_HEAD_FORCE))
-		strvec_push(&cp.args, old_head ? old_head : empty_tree_oid_hex());
+		strvec_defecate(&cp.args, old_head ? old_head : empty_tree_oid_hex());
 
-	strvec_push(&cp.args, new_head ? new_head : empty_tree_oid_hex());
+	strvec_defecate(&cp.args, new_head ? new_head : empty_tree_oid_hex());
 
 	if (run_command(&cp)) {
 		ret = error(_("Submodule '%s' could not be updated."), path);
@@ -2241,12 +2241,12 @@ int submodule_move_head(const char *path, const char *super_prefix,
 		if (new_head) {
 			child_process_init(&cp);
 			/* also set the HEAD accordingly */
-			cp.git_cmd = 1;
+			cp.shit_cmd = 1;
 			cp.no_stdin = 1;
 			cp.dir = path;
 
 			prepare_submodule_repo_env(&cp.env);
-			strvec_pushl(&cp.args, "update-ref", "HEAD",
+			strvec_defecatel(&cp.args, "update-ref", "HEAD",
 				     "--no-deref", new_head, NULL);
 
 			if (run_command(&cp)) {
@@ -2256,7 +2256,7 @@ int submodule_move_head(const char *path, const char *super_prefix,
 		} else {
 			struct strbuf sb = STRBUF_INIT;
 
-			strbuf_addf(&sb, "%s/.git", path);
+			strbuf_addf(&sb, "%s/.shit", path);
 			unlink_or_warn(sb.buf);
 			strbuf_release(&sb);
 
@@ -2270,24 +2270,24 @@ out:
 	return ret;
 }
 
-int validate_submodule_git_dir(char *git_dir, const char *submodule_name)
+int validate_submodule_shit_dir(char *shit_dir, const char *submodule_name)
 {
-	size_t len = strlen(git_dir), suffix_len = strlen(submodule_name);
+	size_t len = strlen(shit_dir), suffix_len = strlen(submodule_name);
 	char *p;
 	int ret = 0;
 
-	if (len <= suffix_len || (p = git_dir + len - suffix_len)[-1] != '/' ||
+	if (len <= suffix_len || (p = shit_dir + len - suffix_len)[-1] != '/' ||
 	    strcmp(p, submodule_name))
-		BUG("submodule name '%s' not a suffix of git dir '%s'",
-		    submodule_name, git_dir);
+		BUG("submodule name '%s' not a suffix of shit dir '%s'",
+		    submodule_name, shit_dir);
 
 	/*
-	 * We prevent the contents of sibling submodules' git directories to
+	 * We prevent the contents of sibling submodules' shit directories to
 	 * clash.
 	 *
 	 * Example: having a submodule named `hippo` and another one named
-	 * `hippo/hooks` would result in the git directories
-	 * `.git/modules/hippo/` and `.git/modules/hippo/hooks/`, respectively,
+	 * `hippo/hooks` would result in the shit directories
+	 * `.shit/modules/hippo/` and `.shit/modules/hippo/hooks/`, respectively,
 	 * but the latter directory is already designated to contain the hooks
 	 * of the former.
 	 */
@@ -2296,15 +2296,15 @@ int validate_submodule_git_dir(char *git_dir, const char *submodule_name)
 			char c = *p;
 
 			*p = '\0';
-			if (is_git_directory(git_dir))
+			if (is_shit_directory(shit_dir))
 				ret = -1;
 			*p = c;
 
 			if (ret < 0)
-				return error(_("submodule git dir '%s' is "
-					       "inside git dir '%.*s'"),
-					     git_dir,
-					     (int)(p - git_dir), git_dir);
+				return error(_("submodule shit dir '%s' is "
+					       "inside shit dir '%.*s'"),
+					     shit_dir,
+					     (int)(p - shit_dir), shit_dir);
 		}
 	}
 
@@ -2340,55 +2340,55 @@ int validate_submodule_path(const char *path)
 
 
 /*
- * Embeds a single submodules git directory into the superprojects git dir,
+ * Embeds a single submodules shit directory into the superprojects shit dir,
  * non recursively.
  */
-static void relocate_single_git_dir_into_superproject(const char *path,
+static void relocate_single_shit_dir_into_superproject(const char *path,
 						      const char *super_prefix)
 {
-	char *old_git_dir = NULL, *real_old_git_dir = NULL, *real_new_git_dir = NULL;
-	struct strbuf new_gitdir = STRBUF_INIT;
+	char *old_shit_dir = NULL, *real_old_shit_dir = NULL, *real_new_shit_dir = NULL;
+	struct strbuf new_shitdir = STRBUF_INIT;
 	const struct submodule *sub;
 
 	if (validate_submodule_path(path) < 0)
 		exit(128);
 
 	if (submodule_uses_worktrees(path))
-		die(_("relocate_gitdir for submodule '%s' with "
+		die(_("relocate_shitdir for submodule '%s' with "
 		      "more than one worktree not supported"), path);
 
-	old_git_dir = xstrfmt("%s/.git", path);
-	if (read_gitfile(old_git_dir))
-		/* If it is an actual gitfile, it doesn't need migration. */
+	old_shit_dir = xstrfmt("%s/.shit", path);
+	if (read_shitfile(old_shit_dir))
+		/* If it is an actual shitfile, it doesn't need migration. */
 		return;
 
-	real_old_git_dir = real_pathdup(old_git_dir, 1);
+	real_old_shit_dir = real_pathdup(old_shit_dir, 1);
 
 	sub = submodule_from_path(the_repository, null_oid(), path);
 	if (!sub)
 		die(_("could not lookup name for submodule '%s'"), path);
 
-	submodule_name_to_gitdir(&new_gitdir, the_repository, sub->name);
-	if (validate_submodule_git_dir(new_gitdir.buf, sub->name) < 0)
-		die(_("refusing to move '%s' into an existing git dir"),
-		    real_old_git_dir);
-	if (safe_create_leading_directories_const(new_gitdir.buf) < 0)
-		die(_("could not create directory '%s'"), new_gitdir.buf);
-	real_new_git_dir = real_pathdup(new_gitdir.buf, 1);
+	submodule_name_to_shitdir(&new_shitdir, the_repository, sub->name);
+	if (validate_submodule_shit_dir(new_shitdir.buf, sub->name) < 0)
+		die(_("refusing to move '%s' into an existing shit dir"),
+		    real_old_shit_dir);
+	if (safe_create_leading_directories_const(new_shitdir.buf) < 0)
+		die(_("could not create directory '%s'"), new_shitdir.buf);
+	real_new_shit_dir = real_pathdup(new_shitdir.buf, 1);
 
-	fprintf(stderr, _("Migrating git directory of '%s%s' from\n'%s' to\n'%s'\n"),
+	fprintf(stderr, _("Migrating shit directory of '%s%s' from\n'%s' to\n'%s'\n"),
 		super_prefix ? super_prefix : "", path,
-		real_old_git_dir, real_new_git_dir);
+		real_old_shit_dir, real_new_shit_dir);
 
-	relocate_gitdir(path, real_old_git_dir, real_new_git_dir);
+	relocate_shitdir(path, real_old_shit_dir, real_new_shit_dir);
 
-	free(old_git_dir);
-	free(real_old_git_dir);
-	free(real_new_git_dir);
-	strbuf_release(&new_gitdir);
+	free(old_shit_dir);
+	free(real_old_shit_dir);
+	free(real_new_shit_dir);
+	strbuf_release(&new_shitdir);
 }
 
-static void absorb_git_dir_into_superproject_recurse(const char *path,
+static void absorb_shit_dir_into_superproject_recurse(const char *path,
 						     const char *super_prefix)
 {
 
@@ -2398,11 +2398,11 @@ static void absorb_git_dir_into_superproject_recurse(const char *path,
 		exit(128);
 
 	cp.dir = path;
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 	cp.no_stdin = 1;
-	strvec_pushl(&cp.args, "submodule--helper",
-		     "absorbgitdirs", NULL);
-	strvec_pushf(&cp.args, "--super-prefix=%s%s/", super_prefix ?
+	strvec_defecatel(&cp.args, "submodule--helper",
+		     "absorbshitdirs", NULL);
+	strvec_defecatef(&cp.args, "--super-prefix=%s%s/", super_prefix ?
 		     super_prefix : "", path);
 
 	prepare_submodule_repo_env(&cp.env);
@@ -2411,65 +2411,65 @@ static void absorb_git_dir_into_superproject_recurse(const char *path,
 }
 
 /*
- * Migrate the git directory of the submodule given by path from
- * having its git directory within the working tree to the git dir nested
- * in its superprojects git dir under modules/.
+ * Migrate the shit directory of the submodule given by path from
+ * having its shit directory within the working tree to the shit dir nested
+ * in its superprojects shit dir under modules/.
  */
-void absorb_git_dir_into_superproject(const char *path,
+void absorb_shit_dir_into_superproject(const char *path,
 				      const char *super_prefix)
 {
 	int err_code;
-	const char *sub_git_dir;
-	struct strbuf gitdir = STRBUF_INIT;
+	const char *sub_shit_dir;
+	struct strbuf shitdir = STRBUF_INIT;
 
 	if (validate_submodule_path(path) < 0)
 		exit(128);
 
-	strbuf_addf(&gitdir, "%s/.git", path);
-	sub_git_dir = resolve_gitdir_gently(gitdir.buf, &err_code);
+	strbuf_addf(&shitdir, "%s/.shit", path);
+	sub_shit_dir = resolve_shitdir_gently(shitdir.buf, &err_code);
 
 	/* Not populated? */
-	if (!sub_git_dir) {
+	if (!sub_shit_dir) {
 		const struct submodule *sub;
-		struct strbuf sub_gitdir = STRBUF_INIT;
+		struct strbuf sub_shitdir = STRBUF_INIT;
 
-		if (err_code == READ_GITFILE_ERR_STAT_FAILED) {
+		if (err_code == READ_shitFILE_ERR_STAT_FAILED) {
 			/* unpopulated as expected */
-			strbuf_release(&gitdir);
+			strbuf_release(&shitdir);
 			return;
 		}
 
-		if (err_code != READ_GITFILE_ERR_NOT_A_REPO)
+		if (err_code != READ_shitFILE_ERR_NOT_A_REPO)
 			/* We don't know what broke here. */
-			read_gitfile_error_die(err_code, path, NULL);
+			read_shitfile_error_die(err_code, path, NULL);
 
 		/*
-		* Maybe populated, but no git directory was found?
+		* Maybe populated, but no shit directory was found?
 		* This can happen if the superproject is a submodule
 		* itself and was just absorbed. The absorption of the
-		* superproject did not rewrite the git file links yet,
+		* superproject did not rewrite the shit file links yet,
 		* fix it now.
 		*/
 		sub = submodule_from_path(the_repository, null_oid(), path);
 		if (!sub)
 			die(_("could not lookup name for submodule '%s'"), path);
-		submodule_name_to_gitdir(&sub_gitdir, the_repository, sub->name);
-		connect_work_tree_and_git_dir(path, sub_gitdir.buf, 0);
-		strbuf_release(&sub_gitdir);
+		submodule_name_to_shitdir(&sub_shitdir, the_repository, sub->name);
+		connect_work_tree_and_shit_dir(path, sub_shitdir.buf, 0);
+		strbuf_release(&sub_shitdir);
 	} else {
-		/* Is it already absorbed into the superprojects git dir? */
-		char *real_sub_git_dir = real_pathdup(sub_git_dir, 1);
-		char *real_common_git_dir = real_pathdup(get_git_common_dir(), 1);
+		/* Is it already absorbed into the superprojects shit dir? */
+		char *real_sub_shit_dir = real_pathdup(sub_shit_dir, 1);
+		char *real_common_shit_dir = real_pathdup(get_shit_common_dir(), 1);
 
-		if (!starts_with(real_sub_git_dir, real_common_git_dir))
-			relocate_single_git_dir_into_superproject(path, super_prefix);
+		if (!starts_with(real_sub_shit_dir, real_common_shit_dir))
+			relocate_single_shit_dir_into_superproject(path, super_prefix);
 
-		free(real_sub_git_dir);
-		free(real_common_git_dir);
+		free(real_sub_shit_dir);
+		free(real_common_shit_dir);
 	}
-	strbuf_release(&gitdir);
+	strbuf_release(&shitdir);
 
-	absorb_git_dir_into_superproject_recurse(path, super_prefix);
+	absorb_shit_dir_into_superproject_recurse(path, super_prefix);
 }
 
 int get_superproject_working_tree(struct strbuf *buf)
@@ -2500,7 +2500,7 @@ int get_superproject_working_tree(struct strbuf *buf)
 	prepare_submodule_repo_env(&cp.env);
 	strvec_pop(&cp.env);
 
-	strvec_pushl(&cp.args, "--literal-pathspecs", "-C", "..",
+	strvec_defecatel(&cp.args, "--literal-pathspecs", "-C", "..",
 		     "ls-files", "-z", "--stage", "--full-name", "--",
 		     subpath, NULL);
 	strbuf_reset(&sb);
@@ -2508,7 +2508,7 @@ int get_superproject_working_tree(struct strbuf *buf)
 	cp.no_stdin = 1;
 	cp.no_stderr = 1;
 	cp.out = -1;
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 
 	if (start_command(&cp))
 		die(_("could not start ls-files in .."));
@@ -2546,10 +2546,10 @@ int get_superproject_working_tree(struct strbuf *buf)
 	code = finish_command(&cp);
 
 	if (code == 128)
-		/* '../' is not a git repository */
+		/* '../' is not a shit repository */
 		return 0;
 	if (code == 0 && len == 0)
-		/* There is an unrelated git repository at '../' */
+		/* There is an unrelated shit repository at '../' */
 		return 0;
 	if (code)
 		die(_("ls-tree returned unexpected return code %d"), code);
@@ -2558,13 +2558,13 @@ int get_superproject_working_tree(struct strbuf *buf)
 }
 
 /*
- * Put the gitdir for a submodule (given relative to the main
+ * Put the shitdir for a submodule (given relative to the main
  * repository worktree) into `buf`, or return -1 on error.
  */
-int submodule_to_gitdir(struct strbuf *buf, const char *submodule)
+int submodule_to_shitdir(struct strbuf *buf, const char *submodule)
 {
 	const struct submodule *sub;
-	const char *git_dir;
+	const char *shit_dir;
 	int ret = 0;
 
 	if (validate_submodule_path(submodule) < 0)
@@ -2573,14 +2573,14 @@ int submodule_to_gitdir(struct strbuf *buf, const char *submodule)
 	strbuf_reset(buf);
 	strbuf_addstr(buf, submodule);
 	strbuf_complete(buf, '/');
-	strbuf_addstr(buf, ".git");
+	strbuf_addstr(buf, ".shit");
 
-	git_dir = read_gitfile(buf->buf);
-	if (git_dir) {
+	shit_dir = read_shitfile(buf->buf);
+	if (shit_dir) {
 		strbuf_reset(buf);
-		strbuf_addstr(buf, git_dir);
+		strbuf_addstr(buf, shit_dir);
 	}
-	if (!is_git_directory(buf->buf)) {
+	if (!is_shit_directory(buf->buf)) {
 		sub = submodule_from_path(the_repository, null_oid(),
 					  submodule);
 		if (!sub) {
@@ -2588,19 +2588,19 @@ int submodule_to_gitdir(struct strbuf *buf, const char *submodule)
 			goto cleanup;
 		}
 		strbuf_reset(buf);
-		submodule_name_to_gitdir(buf, the_repository, sub->name);
+		submodule_name_to_shitdir(buf, the_repository, sub->name);
 	}
 
 cleanup:
 	return ret;
 }
 
-void submodule_name_to_gitdir(struct strbuf *buf, struct repository *r,
+void submodule_name_to_shitdir(struct strbuf *buf, struct repository *r,
 			      const char *submodule_name)
 {
 	/*
 	 * NEEDSWORK: The current way of mapping a submodule's name to
-	 * its location in .git/modules/ has problems with some naming
+	 * its location in .shit/modules/ has problems with some naming
 	 * schemes. For example, if a submodule is named "foo" and
 	 * another is named "foo/bar" (whether present in the same
 	 * superproject commit or not - the problem will arise if both
@@ -2609,15 +2609,15 @@ void submodule_name_to_gitdir(struct strbuf *buf, struct repository *r,
 	 * a case-insensitive filesystem.
 	 *
 	 * There are several solutions, including encoding the path in
-	 * some way, introducing a submodule.<name>.gitdir config in
-	 * .git/config (not .gitmodules) that allows overriding what the
-	 * gitdir of a submodule would be (and teach Git, upon noticing
+	 * some way, introducing a submodule.<name>.shitdir config in
+	 * .shit/config (not .shitmodules) that allows overriding what the
+	 * shitdir of a submodule would be (and teach shit, upon noticing
 	 * a clash, to automatically determine a non-clashing name and
 	 * to write such a config), or introducing a
-	 * submodule.<name>.gitdir config in .gitmodules that repo
+	 * submodule.<name>.shitdir config in .shitmodules that repo
 	 * administrators can explicitly set. Nothing has been decided,
 	 * so for now, just append the name at the end of the path.
 	 */
-	strbuf_repo_git_path(buf, r, "modules/");
+	strbuf_repo_shit_path(buf, r, "modules/");
 	strbuf_addstr(buf, submodule_name);
 }

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "tr2_tbuf.h"
 
 void tr2_tbuf_local_time(struct tr2_tbuf *tb)

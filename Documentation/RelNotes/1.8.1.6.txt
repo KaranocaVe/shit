@@ -1,4 +1,4 @@
-Git 1.8.1.6 Release Notes
+shit 1.8.1.6 Release Notes
 =========================
 
 Fixes since v1.8.1.5
@@ -9,7 +9,7 @@ Fixes since v1.8.1.5
    matching a directory "dir" (it only wanted to allow pattern "dir/"
    to also match).
 
- * The code to keep track of what directory names are known to Git on
+ * The code to keep track of what directory names are known to shit on
    platforms with case insensitive filesystems can get confused upon a
    hash collision between these pathnames and looped forever.
 
@@ -18,22 +18,22 @@ Fixes since v1.8.1.5
    setting.
 
  * Annotated tags outside refs/tags/ hierarchy were not advertised
-   correctly to the ls-remote and fetch with recent version of Git.
+   correctly to the ls-remote and fetch with recent version of shit.
 
- * The logic used by "git diff -M --stat" to shorten the names of
+ * The logic used by "shit diff -M --stat" to shorten the names of
    files before and after a rename did not work correctly when the
    common prefix and suffix between the two filenames overlapped.
 
- * "git update-index -h" did not do the usual "-h(elp)" thing.
+ * "shit update-index -h" did not do the usual "-h(elp)" thing.
 
- * perl/Git.pm::cat_blob slurped everything in core only to write it
+ * perl/shit.pm::cat_blob slurped everything in core only to write it
    out to a file descriptor, which was not a very smart thing to do.
 
- * The SSL peer verification done by "git imap-send" did not ask for
+ * The SSL peer verification done by "shit imap-send" did not ask for
    Server Name Indication (RFC 4366), failing to connect SSL/TLS
    sites that serve multiple hostnames on a single IP.
 
- * "git bundle verify" did not say "records a complete history" for a
+ * "shit bundle verify" did not say "records a complete history" for a
    bundle that does not have any prerequisites.
 
 Also contains various documentation fixes.

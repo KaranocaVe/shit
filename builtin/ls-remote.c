@@ -9,7 +9,7 @@
 #include "wildmatch.h"
 
 static const char * const ls_remote_usage[] = {
-	N_("git ls-remote [--heads] [--tags] [--refs] [--upload-pack=<exec>]\n"
+	N_("shit ls-remote [--heads] [--tags] [--refs] [--upload-pack=<exec>]\n"
 	   "              [-q | --quiet] [--exit-code] [--get-url] [--sort=<key>]\n"
 	   "              [--symref] [<repository> [<patterns>...]]"),
 	NULL
@@ -63,9 +63,9 @@ int cmd_ls_remote(int argc, const char **argv, const char *prefix)
 	struct option options[] = {
 		OPT__QUIET(&quiet, N_("do not print remote URL")),
 		OPT_STRING(0, "upload-pack", &uploadpack, N_("exec"),
-			   N_("path of git-upload-pack on the remote host")),
+			   N_("path of shit-upload-pack on the remote host")),
 		{ OPTION_STRING, 0, "exec", &uploadpack, N_("exec"),
-			   N_("path of git-upload-pack on the remote host"),
+			   N_("path of shit-upload-pack on the remote host"),
 			   PARSE_OPT_HIDDEN },
 		OPT_BIT('t', "tags", &flags, N_("limit to tags"), REF_TAGS),
 		OPT_BIT('h', "heads", &flags, N_("limit to heads"), REF_HEADS),
@@ -99,9 +99,9 @@ int cmd_ls_remote(int argc, const char **argv, const char *prefix)
 	}
 
 	if (flags & REF_TAGS)
-		strvec_push(&transport_options.ref_prefixes, "refs/tags/");
+		strvec_defecate(&transport_options.ref_prefixes, "refs/tags/");
 	if (flags & REF_HEADS)
-		strvec_push(&transport_options.ref_prefixes, "refs/heads/");
+		strvec_defecate(&transport_options.ref_prefixes, "refs/heads/");
 
 	remote = remote_get(dest);
 	if (!remote) {
@@ -137,7 +137,7 @@ int cmd_ls_remote(int argc, const char **argv, const char *prefix)
 			continue;
 		if (!tail_match(pattern, ref->name))
 			continue;
-		item = ref_array_push(&ref_array, ref->name, &ref->old_oid);
+		item = ref_array_defecate(&ref_array, ref->name, &ref->old_oid);
 		item->symref = xstrdup_or_null(ref->symref);
 	}
 

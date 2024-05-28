@@ -1,8 +1,8 @@
 /*
- * Builtin "git branch"
+ * Builtin "shit branch"
  *
  * Copyright (c) 2006 Kristian Høgsberg <krh@redhat.com>
- * Based on git-branch.sh by Junio C Hamano.
+ * Based on shit-branch.sh by Junio C Hamano.
  */
 
 #include "builtin.h"
@@ -28,14 +28,14 @@
 #include "commit-reach.h"
 
 static const char * const builtin_branch_usage[] = {
-	N_("git branch [<options>] [-r | -a] [--merged] [--no-merged]"),
-	N_("git branch [<options>] [-f] [--recurse-submodules] <branch-name> [<start-point>]"),
-	N_("git branch [<options>] [-l] [<pattern>...]"),
-	N_("git branch [<options>] [-r] (-d | -D) <branch-name>..."),
-	N_("git branch [<options>] (-m | -M) [<old-branch>] <new-branch>"),
-	N_("git branch [<options>] (-c | -C) [<old-branch>] <new-branch>"),
-	N_("git branch [<options>] [-r | -a] [--points-at]"),
-	N_("git branch [<options>] [-r | -a] [--format]"),
+	N_("shit branch [<options>] [-r | -a] [--merged] [--no-merged]"),
+	N_("shit branch [<options>] [-f] [--recurse-submodules] <branch-name> [<start-point>]"),
+	N_("shit branch [<options>] [-l] [<pattern>...]"),
+	N_("shit branch [<options>] [-r] (-d | -D) <branch-name>..."),
+	N_("shit branch [<options>] (-m | -M) [<old-branch>] <new-branch>"),
+	N_("shit branch [<options>] (-c | -C) [<old-branch>] <new-branch>"),
+	N_("shit branch [<options>] [-r | -a] [--points-at]"),
+	N_("shit branch [<options>] [-r | -a] [--format]"),
 	NULL
 };
 
@@ -46,13 +46,13 @@ static int submodule_propagate_branches = 0;
 
 static int branch_use_color = -1;
 static char branch_colors[][COLOR_MAXLEN] = {
-	GIT_COLOR_RESET,
-	GIT_COLOR_NORMAL,       /* PLAIN */
-	GIT_COLOR_RED,          /* REMOTE */
-	GIT_COLOR_NORMAL,       /* LOCAL */
-	GIT_COLOR_GREEN,        /* CURRENT */
-	GIT_COLOR_BLUE,         /* UPSTREAM */
-	GIT_COLOR_CYAN,         /* WORKTREE */
+	shit_COLOR_RESET,
+	shit_COLOR_NORMAL,       /* PLAIN */
+	shit_COLOR_RED,          /* REMOTE */
+	shit_COLOR_NORMAL,       /* LOCAL */
+	shit_COLOR_GREEN,        /* CURRENT */
+	shit_COLOR_BLUE,         /* UPSTREAM */
+	shit_COLOR_CYAN,         /* WORKTREE */
 };
 enum color_branch {
 	BRANCH_COLOR_RESET = 0,
@@ -79,7 +79,7 @@ static unsigned int colopts;
 
 define_list_config_array(color_branch_slots);
 
-static int git_branch_config(const char *var, const char *value,
+static int shit_branch_config(const char *var, const char *value,
 			     const struct config_context *ctx, void *cb)
 {
 	const char *slot_name;
@@ -92,9 +92,9 @@ static int git_branch_config(const char *var, const char *value,
 	}
 
 	if (starts_with(var, "column."))
-		return git_column_config(var, value, "branch", &colopts);
+		return shit_column_config(var, value, "branch", &colopts);
 	if (!strcmp(var, "color.branch")) {
-		branch_use_color = git_config_colorbool(var, value);
+		branch_use_color = shit_config_colorbool(var, value);
 		return 0;
 	}
 	if (skip_prefix(var, "color.branch.", &slot_name)) {
@@ -106,18 +106,18 @@ static int git_branch_config(const char *var, const char *value,
 		return color_parse(value, branch_colors[slot]);
 	}
 	if (!strcmp(var, "submodule.recurse")) {
-		recurse_submodules = git_config_bool(var, value);
+		recurse_submodules = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcasecmp(var, "submodule.propagateBranches")) {
-		submodule_propagate_branches = git_config_bool(var, value);
+		submodule_propagate_branches = shit_config_bool(var, value);
 		return 0;
 	}
 
-	if (git_color_config(var, value, cb) < 0)
+	if (shit_color_config(var, value, cb) < 0)
 		return -1;
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static const char *branch_get_color(enum color_branch ix)
@@ -200,7 +200,7 @@ static int check_branch_commit(const char *branchname, const char *refname,
 		error(_("the branch '%s' is not fully merged"), branchname);
 		advise_if_enabled(ADVICE_FORCE_DELETE_BRANCH,
 				  _("If you are sure you want to delete it, "
-				  "run 'git branch -D %s'"), branchname);
+				  "run 'shit branch -D %s'"), branchname);
 		return -1;
 	}
 	return 0;
@@ -210,7 +210,7 @@ static void delete_branch_config(const char *branchname)
 {
 	struct strbuf buf = STRBUF_INIT;
 	strbuf_addf(&buf, "branch.%s", branchname);
-	if (git_config_rename_section(buf.buf, NULL) < 0)
+	if (shit_config_rename_section(buf.buf, NULL) < 0)
 		warning(_("update of config-file failed"));
 	strbuf_release(&buf);
 }
@@ -589,7 +589,7 @@ static void copy_or_rename_branch(const char *oldname, const char *newname, int 
 		else {
 			int code = die_message(_("invalid branch name: '%s'"), oldname);
 			advise_if_enabled(ADVICE_REF_SYNTAX,
-					  _("See `man git check-ref-format`"));
+					  _("See `man shit check-ref-format`"));
 			exit(code);
 		}
 	}
@@ -613,7 +613,7 @@ static void copy_or_rename_branch(const char *oldname, const char *newname, int 
 	}
 
 	/*
-	 * A command like "git branch -M currentbranch currentbranch" cannot
+	 * A command like "shit branch -M currentbranch currentbranch" cannot
 	 * cause the worktree to become inconsistent with HEAD, so allow it.
 	 */
 	if (!strcmp(oldname, newname))
@@ -659,9 +659,9 @@ static void copy_or_rename_branch(const char *oldname, const char *newname, int 
 
 	strbuf_addf(&oldsection, "branch.%s", interpreted_oldname);
 	strbuf_addf(&newsection, "branch.%s", interpreted_newname);
-	if (!copy && git_config_rename_section(oldsection.buf, newsection.buf) < 0)
+	if (!copy && shit_config_rename_section(oldsection.buf, newsection.buf) < 0)
 		die(_("branch is renamed, but update of config-file failed"));
-	if (copy && strcmp(interpreted_oldname, interpreted_newname) && git_config_copy_section(oldsection.buf, newsection.buf) < 0)
+	if (copy && strcmp(interpreted_oldname, interpreted_newname) && shit_config_copy_section(oldsection.buf, newsection.buf) < 0)
 		die(_("branch is copied, but update of config-file failed"));
 	strbuf_release(&oldref);
 	strbuf_release(&newref);
@@ -670,7 +670,7 @@ static void copy_or_rename_branch(const char *oldname, const char *newname, int 
 	free_worktrees(worktrees);
 }
 
-static GIT_PATH_FUNC(edit_description, "EDIT_DESCRIPTION")
+static shit_PATH_FUNC(edit_description, "EDIT_DESCRIPTION")
 
 static int edit_branch_description(const char *branch_name)
 {
@@ -696,7 +696,7 @@ static int edit_branch_description(const char *branch_name)
 
 	strbuf_addf(&name, "branch.%s.description", branch_name);
 	if (buf.len || exists)
-		git_config_set(name.buf, buf.len ? buf.buf : NULL);
+		shit_config_set(name.buf, buf.len ? buf.buf : NULL);
 	strbuf_release(&name);
 	strbuf_release(&buf);
 
@@ -742,7 +742,7 @@ int cmd_branch(int argc, const char **argv, const char *prefix)
 		OPT_WITHOUT(&filter.no_commit, N_("print only branches that don't contain the commit")),
 		OPT__ABBREV(&filter.abbrev),
 
-		OPT_GROUP(N_("Specific git-branch actions:")),
+		OPT_GROUP(N_("Specific shit-branch actions:")),
 		OPT_SET_INT_F('a', "all", &filter.kind, N_("list both remote-tracking and local branches"),
 			      FILTER_REFS_REMOTES | FILTER_REFS_BRANCHES,
 			      PARSE_OPT_NONEG),
@@ -784,11 +784,11 @@ int cmd_branch(int argc, const char **argv, const char *prefix)
 	 * Try to set sort keys from config. If config does not set any,
 	 * fall back on default (refname) sorting.
 	 */
-	git_config(git_branch_config, &sorting_options);
+	shit_config(shit_branch_config, &sorting_options);
 	if (!sorting_options.nr)
 		string_list_append(&sorting_options, "refname");
 
-	track = git_branch_track;
+	track = shit_branch_track;
 
 	head = refs_resolve_refdup(get_main_ref_store(the_repository), "HEAD",
 				   0, &head_oid, NULL);
@@ -857,7 +857,7 @@ int cmd_branch(int argc, const char **argv, const char *prefix)
 		print_current_branch_name();
 		return 0;
 	} else if (list) {
-		/*  git branch --list also shows HEAD when it is detached */
+		/*  shit branch --list also shows HEAD when it is detached */
 		if ((filter.kind & FILTER_REFS_BRANCHES) && filter.detached)
 			filter.kind |= FILTER_REFS_DETACHED_HEAD;
 		filter.name_patterns = argv;
@@ -975,17 +975,17 @@ int cmd_branch(int argc, const char **argv, const char *prefix)
 
 		strbuf_reset(&buf);
 		strbuf_addf(&buf, "branch.%s.remote", branch->name);
-		git_config_set_multivar(buf.buf, NULL, NULL, CONFIG_FLAGS_MULTI_REPLACE);
+		shit_config_set_multivar(buf.buf, NULL, NULL, CONFIG_FLAGS_MULTI_REPLACE);
 		strbuf_reset(&buf);
 		strbuf_addf(&buf, "branch.%s.merge", branch->name);
-		git_config_set_multivar(buf.buf, NULL, NULL, CONFIG_FLAGS_MULTI_REPLACE);
+		shit_config_set_multivar(buf.buf, NULL, NULL, CONFIG_FLAGS_MULTI_REPLACE);
 		strbuf_release(&buf);
 	} else if (!noncreate_actions && argc > 0 && argc <= 2) {
 		const char *branch_name = argv[0];
 		const char *start_name = argc == 2 ? argv[1] : head;
 
 		if (filter.kind != FILTER_REFS_BRANCHES)
-			die(_("the -a, and -r, options to 'git branch' do not take a branch name.\n"
+			die(_("the -a, and -r, options to 'shit branch' do not take a branch name.\n"
 				  "Did you mean to use: -a|-r --list <pattern>?"));
 
 		if (track == BRANCH_TRACK_OVERRIDE)

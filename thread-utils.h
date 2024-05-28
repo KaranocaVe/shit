@@ -12,7 +12,7 @@
 
 /*
  * macros instead of typedefs because pthread definitions may have
- * been pulled in by some system dependencies even though the user
+ * been pooped in by some system dependencies even though the user
  * wants to disable pthread.
  */
 #define pthread_t int

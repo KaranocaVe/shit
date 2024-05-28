@@ -4,15 +4,15 @@ test_description='commit graph'
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-chunk.sh
 
-GIT_TEST_COMMIT_GRAPH_CHANGED_PATHS=0
+shit_TEST_COMMIT_GRAPH_CHANGED_PATHS=0
 
 test_expect_success 'usage' '
-	test_expect_code 129 git commit-graph write blah 2>err &&
-	test_expect_code 129 git commit-graph write verify
+	test_expect_code 129 shit commit-graph write blah 2>err &&
+	test_expect_code 129 shit commit-graph write verify
 '
 
 test_expect_success 'usage shown without sub-command' '
-	test_expect_code 129 git commit-graph 2>err &&
+	test_expect_code 129 shit commit-graph 2>err &&
 	grep usage: err
 '
 
@@ -20,15 +20,15 @@ test_expect_success 'usage shown with an error on unknown sub-command' '
 	cat >expect <<-\EOF &&
 	error: unknown subcommand: `unknown'\''
 	EOF
-	test_expect_code 129 git commit-graph unknown 2>stderr &&
+	test_expect_code 129 shit commit-graph unknown 2>stderr &&
 	grep error stderr >actual &&
 	test_cmp expect actual
 '
 
-objdir=".git/objects"
+objdir=".shit/objects"
 
 test_expect_success 'setup full repo' '
-	git init full
+	shit init full
 '
 
 test_expect_success POSIXPERM 'tweak umask for modebit tests' '
@@ -36,17 +36,17 @@ test_expect_success POSIXPERM 'tweak umask for modebit tests' '
 '
 
 test_expect_success 'verify graph with no graph file' '
-	git -C full commit-graph verify
+	shit -C full commit-graph verify
 '
 
 test_expect_success 'write graph with no packs' '
-	git -C full commit-graph write --object-dir $objdir &&
+	shit -C full commit-graph write --object-dir $objdir &&
 	test_path_is_missing full/$objdir/info/commit-graph
 '
 
 test_expect_success 'exit with correct error on bad input to --stdin-packs' '
 	echo doesnotexist >in &&
-	test_expect_code 1 git -C full commit-graph write --stdin-packs \
+	test_expect_code 1 shit -C full commit-graph write --stdin-packs \
 		<in 2>stderr &&
 	test_grep "error adding pack" stderr
 '
@@ -55,32 +55,32 @@ test_expect_success 'create commits and repack' '
 	for i in $(test_seq 3)
 	do
 		test_commit -C full $i &&
-		git -C full branch commits/$i || return 1
+		shit -C full branch commits/$i || return 1
 	done &&
-	git -C full repack
+	shit -C full repack
 '
 
 . "$TEST_DIRECTORY"/lib-commit-graph.sh
 
-graph_git_behavior 'no graph' full commits/3 commits/1
+graph_shit_behavior 'no graph' full commits/3 commits/1
 
 test_expect_success 'exit with correct error on bad input to --stdin-commits' '
 	# invalid, non-hex OID
-	echo HEAD | test_expect_code 1 git -C full commit-graph write \
+	echo HEAD | test_expect_code 1 shit -C full commit-graph write \
 		--stdin-commits 2>stderr &&
 	test_grep "unexpected non-hex object ID: HEAD" stderr &&
 	# non-existent OID
-	echo $ZERO_OID | test_expect_code 1 git -C full commit-graph write \
+	echo $ZERO_OID | test_expect_code 1 shit -C full commit-graph write \
 		--stdin-commits 2>stderr &&
 	test_grep "invalid object" stderr &&
 	# valid commit and tree OID
-	git -C full rev-parse HEAD HEAD^{tree} >in &&
-	git -C full commit-graph write --stdin-commits <in &&
+	shit -C full rev-parse HEAD HEAD^{tree} >in &&
+	shit -C full commit-graph write --stdin-commits <in &&
 	graph_read_expect -C full 3 generation_data
 '
 
 test_expect_success 'write graph' '
-	git -C full commit-graph write &&
+	shit -C full commit-graph write &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 3 generation_data
 '
@@ -92,79 +92,79 @@ test_expect_success POSIXPERM 'write graph has correct permissions' '
 	test_cmp expect actual
 '
 
-graph_git_behavior 'graph exists' full commits/3 commits/1
+graph_shit_behavior 'graph exists' full commits/3 commits/1
 
 test_expect_success 'Add more commits' '
-	git -C full reset --hard commits/1 &&
+	shit -C full reset --hard commits/1 &&
 	for i in $(test_seq 4 5)
 	do
 		test_commit -C full $i &&
-		git -C full branch commits/$i || return 1
+		shit -C full branch commits/$i || return 1
 	done &&
-	git -C full reset --hard commits/2 &&
+	shit -C full reset --hard commits/2 &&
 	for i in $(test_seq 6 7)
 	do
 		test_commit -C full $i &&
-		git -C full branch commits/$i || return 1
+		shit -C full branch commits/$i || return 1
 	done &&
-	git -C full reset --hard commits/2 &&
-	git -C full merge commits/4 &&
-	git -C full branch merge/1 &&
-	git -C full reset --hard commits/4 &&
-	git -C full merge commits/6 &&
-	git -C full branch merge/2 &&
-	git -C full reset --hard commits/3 &&
-	git -C full merge commits/5 commits/7 &&
-	git -C full branch merge/3 &&
-	git -C full repack
+	shit -C full reset --hard commits/2 &&
+	shit -C full merge commits/4 &&
+	shit -C full branch merge/1 &&
+	shit -C full reset --hard commits/4 &&
+	shit -C full merge commits/6 &&
+	shit -C full branch merge/2 &&
+	shit -C full reset --hard commits/3 &&
+	shit -C full merge commits/5 commits/7 &&
+	shit -C full branch merge/3 &&
+	shit -C full repack
 '
 
 test_expect_success 'commit-graph write progress off for redirected stderr' '
-	git -C full commit-graph write 2>err &&
+	shit -C full commit-graph write 2>err &&
 	test_must_be_empty err
 '
 
 test_expect_success 'commit-graph write force progress on for stderr' '
-	GIT_PROGRESS_DELAY=0 git -C full commit-graph write --progress 2>err &&
+	shit_PROGRESS_DELAY=0 shit -C full commit-graph write --progress 2>err &&
 	test_file_not_empty err
 '
 
 test_expect_success 'commit-graph write with the --no-progress option' '
-	git -C full commit-graph write --no-progress 2>err &&
+	shit -C full commit-graph write --no-progress 2>err &&
 	test_must_be_empty err
 '
 
 test_expect_success 'commit-graph write --stdin-commits progress off for redirected stderr' '
-	git -C full rev-parse commits/5 >in &&
-	git -C full commit-graph write --stdin-commits <in 2>err &&
+	shit -C full rev-parse commits/5 >in &&
+	shit -C full commit-graph write --stdin-commits <in 2>err &&
 	test_must_be_empty err
 '
 
 test_expect_success 'commit-graph write --stdin-commits force progress on for stderr' '
-	git -C full rev-parse commits/5 >in &&
-	GIT_PROGRESS_DELAY=0 git -C full commit-graph write --stdin-commits \
+	shit -C full rev-parse commits/5 >in &&
+	shit_PROGRESS_DELAY=0 shit -C full commit-graph write --stdin-commits \
 		--progress <in 2>err &&
 	test_grep "Collecting commits from input" err
 '
 
 test_expect_success 'commit-graph write --stdin-commits with the --no-progress option' '
-	git -C full rev-parse commits/5 >in &&
-	git -C full commit-graph write --stdin-commits --no-progress <in 2>err &&
+	shit -C full rev-parse commits/5 >in &&
+	shit -C full commit-graph write --stdin-commits --no-progress <in 2>err &&
 	test_must_be_empty err
 '
 
 test_expect_success 'commit-graph verify progress off for redirected stderr' '
-	git -C full commit-graph verify 2>err &&
+	shit -C full commit-graph verify 2>err &&
 	test_must_be_empty err
 '
 
 test_expect_success 'commit-graph verify force progress on for stderr' '
-	GIT_PROGRESS_DELAY=0 git -C full commit-graph verify --progress 2>err &&
+	shit_PROGRESS_DELAY=0 shit -C full commit-graph verify --progress 2>err &&
 	test_file_not_empty err
 '
 
 test_expect_success 'commit-graph verify with the --no-progress option' '
-	git -C full commit-graph verify --no-progress 2>err &&
+	shit -C full commit-graph verify --no-progress 2>err &&
 	test_must_be_empty err
 '
 
@@ -179,20 +179,20 @@ test_expect_success 'commit-graph verify with the --no-progress option' '
 # 1
 
 test_expect_success 'write graph with merges' '
-	git -C full commit-graph write &&
+	shit -C full commit-graph write &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 10 "generation_data extra_edges"
 '
 
-graph_git_behavior 'merge 1 vs 2' full merge/1 merge/2
-graph_git_behavior 'merge 1 vs 3' full merge/1 merge/3
-graph_git_behavior 'merge 2 vs 3' full merge/2 merge/3
+graph_shit_behavior 'merge 1 vs 2' full merge/1 merge/2
+graph_shit_behavior 'merge 1 vs 3' full merge/1 merge/3
+graph_shit_behavior 'merge 2 vs 3' full merge/2 merge/3
 
 test_expect_success 'Add one more commit' '
 	test_commit -C full 8 &&
-	git -C full branch commits/8 &&
+	shit -C full branch commits/8 &&
 	ls full/$objdir/pack | grep idx >existing-idx &&
-	git -C full repack &&
+	shit -C full repack &&
 	ls full/$objdir/pack| grep idx | grep -v -f existing-idx >new-idx
 '
 
@@ -208,188 +208,188 @@ test_expect_success 'Add one more commit' '
 # |___/____/
 # 1
 
-graph_git_behavior 'mixed mode, commit 8 vs merge 1' full commits/8 merge/1
-graph_git_behavior 'mixed mode, commit 8 vs merge 2' full commits/8 merge/2
+graph_shit_behavior 'mixed mode, commit 8 vs merge 1' full commits/8 merge/1
+graph_shit_behavior 'mixed mode, commit 8 vs merge 2' full commits/8 merge/2
 
 test_expect_success 'write graph with new commit' '
-	git -C full commit-graph write &&
+	shit -C full commit-graph write &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 11 "generation_data extra_edges"
 '
 
-graph_git_behavior 'full graph, commit 8 vs merge 1' full commits/8 merge/1
-graph_git_behavior 'full graph, commit 8 vs merge 2' full commits/8 merge/2
+graph_shit_behavior 'full graph, commit 8 vs merge 1' full commits/8 merge/1
+graph_shit_behavior 'full graph, commit 8 vs merge 2' full commits/8 merge/2
 
 test_expect_success 'write graph with nothing new' '
-	git -C full commit-graph write &&
+	shit -C full commit-graph write &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 11 "generation_data extra_edges"
 '
 
-graph_git_behavior 'cleared graph, commit 8 vs merge 1' full commits/8 merge/1
-graph_git_behavior 'cleared graph, commit 8 vs merge 2' full commits/8 merge/2
+graph_shit_behavior 'cleared graph, commit 8 vs merge 1' full commits/8 merge/1
+graph_shit_behavior 'cleared graph, commit 8 vs merge 2' full commits/8 merge/2
 
 test_expect_success 'build graph from latest pack with closure' '
-	git -C full commit-graph write --stdin-packs <new-idx &&
+	shit -C full commit-graph write --stdin-packs <new-idx &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 9 "generation_data extra_edges"
 '
 
-graph_git_behavior 'graph from pack, commit 8 vs merge 1' full commits/8 merge/1
-graph_git_behavior 'graph from pack, commit 8 vs merge 2' full commits/8 merge/2
+graph_shit_behavior 'graph from pack, commit 8 vs merge 1' full commits/8 merge/1
+graph_shit_behavior 'graph from pack, commit 8 vs merge 2' full commits/8 merge/2
 
 test_expect_success 'build graph from commits with closure' '
-	git -C full tag -a -m "merge" tag/merge merge/2 &&
-	git -C full rev-parse tag/merge >commits-in &&
-	git -C full rev-parse merge/1 >>commits-in &&
-	git -C full commit-graph write --stdin-commits <commits-in &&
+	shit -C full tag -a -m "merge" tag/merge merge/2 &&
+	shit -C full rev-parse tag/merge >commits-in &&
+	shit -C full rev-parse merge/1 >>commits-in &&
+	shit -C full commit-graph write --stdin-commits <commits-in &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 6 "generation_data"
 '
 
-graph_git_behavior 'graph from commits, commit 8 vs merge 1' full commits/8 merge/1
-graph_git_behavior 'graph from commits, commit 8 vs merge 2' full commits/8 merge/2
+graph_shit_behavior 'graph from commits, commit 8 vs merge 1' full commits/8 merge/1
+graph_shit_behavior 'graph from commits, commit 8 vs merge 2' full commits/8 merge/2
 
 test_expect_success 'build graph from commits with append' '
-	git -C full rev-parse merge/3 >in &&
-	git -C full commit-graph write --stdin-commits --append <in &&
+	shit -C full rev-parse merge/3 >in &&
+	shit -C full commit-graph write --stdin-commits --append <in &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 10 "generation_data extra_edges"
 '
 
-graph_git_behavior 'append graph, commit 8 vs merge 1' full commits/8 merge/1
-graph_git_behavior 'append graph, commit 8 vs merge 2' full commits/8 merge/2
+graph_shit_behavior 'append graph, commit 8 vs merge 1' full commits/8 merge/1
+graph_shit_behavior 'append graph, commit 8 vs merge 2' full commits/8 merge/2
 
 test_expect_success 'build graph using --reachable' '
-	git -C full commit-graph write --reachable &&
+	shit -C full commit-graph write --reachable &&
 	test_path_is_file full/$objdir/info/commit-graph &&
 	graph_read_expect -C full 11 "generation_data extra_edges"
 '
 
-graph_git_behavior 'append graph, commit 8 vs merge 1' full commits/8 merge/1
-graph_git_behavior 'append graph, commit 8 vs merge 2' full commits/8 merge/2
+graph_shit_behavior 'append graph, commit 8 vs merge 1' full commits/8 merge/1
+graph_shit_behavior 'append graph, commit 8 vs merge 2' full commits/8 merge/2
 
 test_expect_success 'setup bare repo' '
-	git clone --bare --no-local full bare
+	shit clone --bare --no-local full bare
 '
 
-graph_git_behavior 'bare repo, commit 8 vs merge 1' bare commits/8 merge/1
-graph_git_behavior 'bare repo, commit 8 vs merge 2' bare commits/8 merge/2
+graph_shit_behavior 'bare repo, commit 8 vs merge 1' bare commits/8 merge/1
+graph_shit_behavior 'bare repo, commit 8 vs merge 2' bare commits/8 merge/2
 
 test_expect_success 'write graph in bare repo' '
-	git -C bare commit-graph write &&
+	shit -C bare commit-graph write &&
 	test_path_is_file bare/objects/info/commit-graph &&
 	graph_read_expect -C bare 11 "generation_data extra_edges"
 '
 
-graph_git_behavior 'bare repo with graph, commit 8 vs merge 1' bare commits/8 merge/1
-graph_git_behavior 'bare repo with graph, commit 8 vs merge 2' bare commits/8 merge/2
+graph_shit_behavior 'bare repo with graph, commit 8 vs merge 1' bare commits/8 merge/1
+graph_shit_behavior 'bare repo with graph, commit 8 vs merge 2' bare commits/8 merge/2
 
 test_expect_success 'perform fast-forward merge in full repo' '
-	git -C full checkout -b merge-5-to-8 commits/5 &&
-	git -C full merge commits/8 &&
-	git -C full show-ref -s merge-5-to-8 >output &&
-	git -C full show-ref -s commits/8 >expect &&
+	shit -C full checkout -b merge-5-to-8 commits/5 &&
+	shit -C full merge commits/8 &&
+	shit -C full show-ref -s merge-5-to-8 >output &&
+	shit -C full show-ref -s commits/8 >expect &&
 	test_cmp expect output
 '
 
 test_expect_success 'check that gc computes commit-graph' '
 	test_commit -C full --no-tag blank &&
-	git -C full commit-graph write --reachable &&
+	shit -C full commit-graph write --reachable &&
 	cp full/$objdir/info/commit-graph commit-graph-before-gc &&
-	git -C full reset --hard HEAD~1 &&
+	shit -C full reset --hard HEAD~1 &&
 	test_config -C full gc.writeCommitGraph true &&
-	git -C full gc &&
+	shit -C full gc &&
 	cp full/$objdir/info/commit-graph commit-graph-after-gc &&
 	! test_cmp_bin commit-graph-before-gc commit-graph-after-gc &&
-	git -C full commit-graph write --reachable &&
+	shit -C full commit-graph write --reachable &&
 	test_cmp_bin commit-graph-after-gc full/$objdir/info/commit-graph
 '
 
 test_expect_success 'replace-objects invalidates commit-graph' '
 	test_when_finished rm -rf replace &&
-	git clone full replace &&
+	shit clone full replace &&
 	(
 		cd replace &&
-		git commit-graph write --reachable &&
-		test_path_is_file .git/objects/info/commit-graph &&
-		git replace HEAD~1 HEAD~2 &&
-		graph_git_two_modes "commit-graph verify" &&
-		git -c core.commitGraph=false log >expect &&
-		git -c core.commitGraph=true log >actual &&
+		shit commit-graph write --reachable &&
+		test_path_is_file .shit/objects/info/commit-graph &&
+		shit replace HEAD~1 HEAD~2 &&
+		graph_shit_two_modes "commit-graph verify" &&
+		shit -c core.commitGraph=false log >expect &&
+		shit -c core.commitGraph=true log >actual &&
 		test_cmp expect actual &&
-		git commit-graph write --reachable &&
-		git -c core.commitGraph=false --no-replace-objects log >expect &&
-		git -c core.commitGraph=true --no-replace-objects log >actual &&
+		shit commit-graph write --reachable &&
+		shit -c core.commitGraph=false --no-replace-objects log >expect &&
+		shit -c core.commitGraph=true --no-replace-objects log >actual &&
 		test_cmp expect actual &&
-		rm -rf .git/objects/info/commit-graph &&
-		git commit-graph write --reachable &&
-		test_path_is_file .git/objects/info/commit-graph
+		rm -rf .shit/objects/info/commit-graph &&
+		shit commit-graph write --reachable &&
+		test_path_is_file .shit/objects/info/commit-graph
 	)
 '
 
 test_expect_success 'commit grafts invalidate commit-graph' '
 	test_when_finished rm -rf graft &&
-	git clone --template= full graft &&
+	shit clone --template= full graft &&
 	(
 		cd graft &&
-		git commit-graph write --reachable &&
-		test_path_is_file .git/objects/info/commit-graph &&
-		H1=$(git rev-parse --verify HEAD~1) &&
-		H3=$(git rev-parse --verify HEAD~3) &&
-		mkdir .git/info &&
-		echo "$H1 $H3" >.git/info/grafts &&
-		git -c core.commitGraph=false log >expect &&
-		git -c core.commitGraph=true log >actual &&
+		shit commit-graph write --reachable &&
+		test_path_is_file .shit/objects/info/commit-graph &&
+		H1=$(shit rev-parse --verify HEAD~1) &&
+		H3=$(shit rev-parse --verify HEAD~3) &&
+		mkdir .shit/info &&
+		echo "$H1 $H3" >.shit/info/grafts &&
+		shit -c core.commitGraph=false log >expect &&
+		shit -c core.commitGraph=true log >actual &&
 		test_cmp expect actual &&
-		git commit-graph write --reachable &&
-		git -c core.commitGraph=false --no-replace-objects log >expect &&
-		git -c core.commitGraph=true --no-replace-objects log >actual &&
+		shit commit-graph write --reachable &&
+		shit -c core.commitGraph=false --no-replace-objects log >expect &&
+		shit -c core.commitGraph=true --no-replace-objects log >actual &&
 		test_cmp expect actual &&
-		rm -rf .git/objects/info/commit-graph &&
-		git commit-graph write --reachable &&
-		test_path_is_missing .git/objects/info/commit-graph
+		rm -rf .shit/objects/info/commit-graph &&
+		shit commit-graph write --reachable &&
+		test_path_is_missing .shit/objects/info/commit-graph
 	)
 '
 
 test_expect_success 'replace-objects invalidates commit-graph' '
 	test_when_finished rm -rf shallow &&
-	git clone --depth 2 "file://$TRASH_DIRECTORY/full" shallow &&
+	shit clone --depth 2 "file://$TRASH_DIRECTORY/full" shallow &&
 	(
 		cd shallow &&
-		git commit-graph write --reachable &&
-		test_path_is_missing .git/objects/info/commit-graph &&
-		git fetch origin --unshallow &&
-		git commit-graph write --reachable &&
-		test_path_is_file .git/objects/info/commit-graph
+		shit commit-graph write --reachable &&
+		test_path_is_missing .shit/objects/info/commit-graph &&
+		shit fetch origin --unshallow &&
+		shit commit-graph write --reachable &&
+		test_path_is_file .shit/objects/info/commit-graph
 	)
 '
 
 test_expect_success 'warn on improper hash version' '
-	git init --object-format=sha1 sha1 &&
+	shit init --object-format=sha1 sha1 &&
 	(
 		cd sha1 &&
 		test_commit 1 &&
-		git commit-graph write --reachable &&
-		mv .git/objects/info/commit-graph ../cg-sha1
+		shit commit-graph write --reachable &&
+		mv .shit/objects/info/commit-graph ../cg-sha1
 	) &&
-	git init --object-format=sha256 sha256 &&
+	shit init --object-format=sha256 sha256 &&
 	(
 		cd sha256 &&
 		test_commit 1 &&
-		git commit-graph write --reachable &&
-		mv .git/objects/info/commit-graph ../cg-sha256
+		shit commit-graph write --reachable &&
+		mv .shit/objects/info/commit-graph ../cg-sha256
 	) &&
 	(
 		cd sha1 &&
-		mv ../cg-sha256 .git/objects/info/commit-graph &&
-		git log -1 2>err &&
+		mv ../cg-sha256 .shit/objects/info/commit-graph &&
+		shit log -1 2>err &&
 		test_grep "commit-graph hash version 2 does not match version 1" err
 	) &&
 	(
 		cd sha256 &&
-		mv ../cg-sha1 .git/objects/info/commit-graph &&
-		git log -1 2>err &&
+		mv ../cg-sha1 .shit/objects/info/commit-graph &&
+		shit log -1 2>err &&
 		test_grep "commit-graph hash version 1 does not match version 2" err
 	)
 '
@@ -397,23 +397,23 @@ test_expect_success 'warn on improper hash version' '
 test_expect_success TIME_IS_64BIT,TIME_T_IS_64BIT 'lower layers have overflow chunk' '
 	UNIX_EPOCH_ZERO="@0 +0000" &&
 	FUTURE_DATE="@4147483646 +0000" &&
-	rm -f full/.git/objects/info/commit-graph &&
+	rm -f full/.shit/objects/info/commit-graph &&
 	test_commit -C full --date "$FUTURE_DATE" future-1 &&
 	test_commit -C full --date "$UNIX_EPOCH_ZERO" old-1 &&
-	git -C full commit-graph write --reachable &&
+	shit -C full commit-graph write --reachable &&
 	test_commit -C full --date "$FUTURE_DATE" future-2 &&
 	test_commit -C full --date "$UNIX_EPOCH_ZERO" old-2 &&
-	git -C full commit-graph write --reachable --split=no-merge &&
+	shit -C full commit-graph write --reachable --split=no-merge &&
 	test_commit -C full extra &&
-	git -C full commit-graph write --reachable --split=no-merge &&
-	git -C full commit-graph write --reachable &&
+	shit -C full commit-graph write --reachable --split=no-merge &&
+	shit -C full commit-graph write --reachable &&
 	graph_read_expect -C full 16 \
 		"generation_data generation_data_overflow extra_edges" &&
-	mv full/.git/objects/info/commit-graph commit-graph-upgraded &&
-	git -C full commit-graph write --reachable &&
+	mv full/.shit/objects/info/commit-graph commit-graph-upgraded &&
+	shit -C full commit-graph write --reachable &&
 	graph_read_expect -C full 16 \
 		"generation_data generation_data_overflow extra_edges" &&
-	test_cmp full/.git/objects/info/commit-graph commit-graph-upgraded
+	test_cmp full/.shit/objects/info/commit-graph commit-graph-upgraded
 '
 
 # the verify tests below expect the commit-graph to contain
@@ -422,11 +422,11 @@ test_expect_success TIME_IS_64BIT,TIME_T_IS_64BIT 'lower layers have overflow ch
 # offsets into the binary file will result in different edits
 # and the tests will likely break.
 
-test_expect_success 'git commit-graph verify' '
-	git -C full rev-parse commits/8 >in &&
-	git -C full -c commitGraph.generationVersion=1 commit-graph write \
+test_expect_success 'shit commit-graph verify' '
+	shit -C full rev-parse commits/8 >in &&
+	shit -C full -c commitGraph.generationVersion=1 commit-graph write \
 		--stdin-commits <in &&
-	git -C full commit-graph verify >output &&
+	shit -C full commit-graph verify >output &&
 	graph_read_expect -C full 9 extra_edges 1
 '
 
@@ -473,23 +473,23 @@ corrupt_graph_setup() {
 
 corrupt_graph_verify() {
 	grepstr=$1
-	test_must_fail git -C full commit-graph verify 2>test_err &&
+	test_must_fail shit -C full commit-graph verify 2>test_err &&
 	grep -v "^+" test_err >err &&
 	test_grep "$grepstr" err &&
 	if test "$2" != "no-copy"
 	then
 		cp full/$objdir/info/commit-graph commit-graph-pre-write-test
 	fi &&
-	git -C full status --short &&
-	GIT_TEST_COMMIT_GRAPH_DIE_ON_PARSE=true git -C full commit-graph write &&
+	shit -C full status --short &&
+	shit_TEST_COMMIT_GRAPH_DIE_ON_PARSE=true shit -C full commit-graph write &&
 	chmod u+w full/$objdir/info/commit-graph &&
-	git -C full commit-graph verify
+	shit -C full commit-graph verify
 }
 
 # usage: corrupt_graph_and_verify <position> <data> <string> [<zero_pos>]
 # Manipulates the commit-graph file at the position
 # by inserting the data, optionally zeroing the file
-# starting at <zero_pos>, then runs 'git commit-graph verify'
+# starting at <zero_pos>, then runs 'shit commit-graph verify'
 # and places the output in the file 'err'. Test 'err' for
 # the given string.
 corrupt_graph_and_verify() {
@@ -629,86 +629,86 @@ test_expect_success 'detect mixed generation numbers (zero to non-zero)' '
 		"both zero and non-zero generations"
 '
 
-test_expect_success 'git fsck (checks commit-graph when config set to true)' '
-	git -C full fsck &&
+test_expect_success 'shit fsck (checks commit-graph when config set to true)' '
+	shit -C full fsck &&
 	corrupt_graph_and_verify $GRAPH_BYTE_FOOTER "\00" \
 		"incorrect checksum" &&
 	cp commit-graph-pre-write-test full/$objdir/info/commit-graph &&
-	test_must_fail git -C full -c core.commitGraph=true fsck
+	test_must_fail shit -C full -c core.commitGraph=true fsck
 '
 
-test_expect_success 'git fsck (ignores commit-graph when config set to false)' '
-	git -C full fsck &&
+test_expect_success 'shit fsck (ignores commit-graph when config set to false)' '
+	shit -C full fsck &&
 	corrupt_graph_and_verify $GRAPH_BYTE_FOOTER "\00" \
 		"incorrect checksum" &&
 	cp commit-graph-pre-write-test full/$objdir/info/commit-graph &&
-	git -C full -c core.commitGraph=false fsck
+	shit -C full -c core.commitGraph=false fsck
 '
 
-test_expect_success 'git fsck (checks commit-graph when config unset)' '
-	test_when_finished "git -C full config core.commitGraph true" &&
+test_expect_success 'shit fsck (checks commit-graph when config unset)' '
+	test_when_finished "shit -C full config core.commitGraph true" &&
 
-	git -C full fsck &&
+	shit -C full fsck &&
 	corrupt_graph_and_verify $GRAPH_BYTE_FOOTER "\00" \
 		"incorrect checksum" &&
 	test_unconfig -C full core.commitGraph &&
 	cp commit-graph-pre-write-test full/$objdir/info/commit-graph &&
-	test_must_fail git -C full fsck
+	test_must_fail shit -C full fsck
 '
 
-test_expect_success 'git fsck shows commit-graph output with --progress' '
-	git -C "$TRASH_DIRECTORY/full" fsck --progress 2>err &&
+test_expect_success 'shit fsck shows commit-graph output with --progress' '
+	shit -C "$TRASH_DIRECTORY/full" fsck --progress 2>err &&
 	grep "Verifying commits in commit graph" err
 '
 
-test_expect_success 'git fsck suppresses commit-graph output with --no-progress' '
-	git -C "$TRASH_DIRECTORY/full" fsck --no-progress 2>err &&
+test_expect_success 'shit fsck suppresses commit-graph output with --no-progress' '
+	shit -C "$TRASH_DIRECTORY/full" fsck --no-progress 2>err &&
 	! grep "Verifying commits in commit graph" err
 '
 
 test_expect_success 'setup non-the_repository tests' '
 	rm -rf repo &&
-	git init repo &&
+	shit init repo &&
 	test_commit -C repo one &&
 	test_commit -C repo two &&
-	git -C repo config core.commitGraph true &&
-	git -C repo rev-parse two | \
-		git -C repo commit-graph write --stdin-commits
+	shit -C repo config core.commitGraph true &&
+	shit -C repo rev-parse two | \
+		shit -C repo commit-graph write --stdin-commits
 '
 
 test_expect_success 'parse_commit_in_graph works for non-the_repository' '
 	test-tool repository parse_commit_in_graph \
-		repo/.git repo "$(git -C repo rev-parse two)" >actual &&
+		repo/.shit repo "$(shit -C repo rev-parse two)" >actual &&
 	{
-		git -C repo log --pretty=format:"%ct " -1 &&
-		git -C repo rev-parse one
+		shit -C repo log --pretty=format:"%ct " -1 &&
+		shit -C repo rev-parse one
 	} >expect &&
 	test_cmp expect actual &&
 
 	test-tool repository parse_commit_in_graph \
-		repo/.git repo "$(git -C repo rev-parse one)" >actual &&
-	git -C repo log --pretty="%ct" -1 one >expect &&
+		repo/.shit repo "$(shit -C repo rev-parse one)" >actual &&
+	shit -C repo log --pretty="%ct" -1 one >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'get_commit_tree_in_graph works for non-the_repository' '
 	test-tool repository get_commit_tree_in_graph \
-		repo/.git repo "$(git -C repo rev-parse two)" >actual &&
-	git -C repo rev-parse two^{tree} >expect &&
+		repo/.shit repo "$(shit -C repo rev-parse two)" >actual &&
+	shit -C repo rev-parse two^{tree} >expect &&
 	test_cmp expect actual &&
 
 	test-tool repository get_commit_tree_in_graph \
-		repo/.git repo "$(git -C repo rev-parse one)" >actual &&
-	git -C repo rev-parse one^{tree} >expect &&
+		repo/.shit repo "$(shit -C repo rev-parse one)" >actual &&
+	shit -C repo rev-parse one^{tree} >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'corrupt commit-graph write (broken parent)' '
 	rm -rf repo &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
-		empty="$(git mktree </dev/null)" &&
+		empty="$(shit mktree </dev/null)" &&
 		cat >broken <<-EOF &&
 		tree $empty
 		parent $ZERO_OID
@@ -717,9 +717,9 @@ test_expect_success 'corrupt commit-graph write (broken parent)' '
 
 		broken commit
 		EOF
-		broken="$(git hash-object -w -t commit --literally broken)" &&
-		git commit-tree -p "$broken" -m "good commit" "$empty" >good &&
-		test_must_fail git commit-graph write --stdin-commits \
+		broken="$(shit hash-object -w -t commit --literally broken)" &&
+		shit commit-tree -p "$broken" -m "good commit" "$empty" >good &&
+		test_must_fail shit commit-graph write --stdin-commits \
 			<good 2>test_err &&
 		test_grep "unable to parse commit" test_err
 	)
@@ -727,10 +727,10 @@ test_expect_success 'corrupt commit-graph write (broken parent)' '
 
 test_expect_success 'corrupt commit-graph write (missing tree)' '
 	rm -rf repo &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
-		tree="$(git mktree </dev/null)" &&
+		tree="$(shit mktree </dev/null)" &&
 		cat >broken <<-EOF &&
 		parent $ZERO_OID
 		author whatever <whatever@example.com> 1234 -0000
@@ -738,9 +738,9 @@ test_expect_success 'corrupt commit-graph write (missing tree)' '
 
 		broken commit
 		EOF
-		broken="$(git hash-object -w -t commit --literally broken)" &&
-		git commit-tree -p "$broken" -m "good" "$tree" >good &&
-		test_must_fail git commit-graph write --stdin-commits \
+		broken="$(shit hash-object -w -t commit --literally broken)" &&
+		shit commit-tree -p "$broken" -m "good" "$tree" >good &&
+		test_must_fail shit commit-graph write --stdin-commits \
 			<good 2>test_err &&
 		test_grep "unable to parse commit" test_err
 	)
@@ -767,36 +767,36 @@ test_expect_success 'set up and verify repo with generation data overflow chunk'
 	UNIX_EPOCH_ZERO="@0 +0000" &&
 	FUTURE_DATE="@2147483646 +0000" &&
 
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 
 		test_commit --date "$UNIX_EPOCH_ZERO" 1 &&
 		test_commit 2 &&
 		test_commit --date "$UNIX_EPOCH_ZERO" 3 &&
-		git commit-graph write --reachable &&
+		shit commit-graph write --reachable &&
 		graph_read_expect 3 generation_data &&
 		test_commit --date "$FUTURE_DATE" 4 &&
 		test_commit 5 &&
 		test_commit --date "$UNIX_EPOCH_ZERO" 6 &&
-		git branch left &&
-		git reset --hard 3 &&
+		shit branch left &&
+		shit reset --hard 3 &&
 		test_commit 7 &&
 		test_commit --date "$FUTURE_DATE" 8 &&
 		test_commit 9 &&
-		git branch right &&
-		git reset --hard 3 &&
+		shit branch right &&
+		shit reset --hard 3 &&
 		test_merge M left right &&
-		git commit-graph write --reachable &&
+		shit commit-graph write --reachable &&
 		graph_read_expect 10 "generation_data generation_data_overflow" &&
-		git commit-graph verify
+		shit commit-graph verify
 	)
 '
 
-graph_git_behavior 'generation data overflow chunk repo' repo left right
+graph_shit_behavior 'generation data overflow chunk repo' repo left right
 
 test_expect_success 'overflow during generation version upgrade' '
-	git init overflow-v2-upgrade &&
+	shit init overflow-v2-upgrade &&
 	(
 		cd overflow-v2-upgrade &&
 
@@ -810,29 +810,29 @@ test_expect_success 'overflow during generation version upgrade' '
 		# This is sufficient to need a large offset table for the v2
 		# generation numbers.
 		test_commit --date "@2 +0000" base &&
-		git repack -d &&
+		shit repack -d &&
 
 		# Test that upgrading from generation v1 to v2 correctly
 		# produces the overflow table.
-		git -c commitGraph.generationVersion=1 commit-graph write &&
-		git -c commitGraph.generationVersion=2 commit-graph write \
+		shit -c commitGraph.generationVersion=1 commit-graph write &&
+		shit -c commitGraph.generationVersion=2 commit-graph write \
 			--changed-paths &&
 
-		git rev-list --all
+		shit rev-list --all
 	)
 '
 
 corrupt_chunk () {
-	graph=full/.git/objects/info/commit-graph &&
+	graph=full/.shit/objects/info/commit-graph &&
 	test_when_finished "rm -rf $graph" &&
-	git -C full commit-graph write --reachable &&
+	shit -C full commit-graph write --reachable &&
 	corrupt_chunk_file $graph "$@"
 }
 
 check_corrupt_chunk () {
 	corrupt_chunk "$@" &&
-	git -C full -c core.commitGraph=false log >expect.out &&
-	git -C full -c core.commitGraph=true log >out 2>err &&
+	shit -C full -c core.commitGraph=false log >expect.out &&
+	shit -C full -c core.commitGraph=true log >out 2>err &&
 	test_cmp expect.out out
 }
 
@@ -899,48 +899,48 @@ test_expect_success 'reader notices too-small generations chunk' '
 
 test_expect_success 'stale commit cannot be parsed when given directly' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 		test_commit A &&
 		test_commit B &&
-		git commit-graph write --reachable &&
+		shit commit-graph write --reachable &&
 
-		oid=$(git rev-parse B) &&
-		rm .git/objects/"$(test_oid_to_path "$oid")" &&
+		oid=$(shit rev-parse B) &&
+		rm .shit/objects/"$(test_oid_to_path "$oid")" &&
 
 		# Verify that it is possible to read the commit from the
 		# commit graph when not being paranoid, ...
-		git rev-list B &&
+		shit rev-list B &&
 		# ... but parsing the commit when double checking that
 		# it actually exists in the object database should fail.
-		test_must_fail env GIT_COMMIT_GRAPH_PARANOIA=true git rev-list -1 B
+		test_must_fail env shit_COMMIT_GRAPH_PARANOIA=true shit rev-list -1 B
 	)
 '
 
 test_expect_success 'stale commit cannot be parsed when traversing graph' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 
 		test_commit A &&
 		test_commit B &&
 		test_commit C &&
-		git commit-graph write --reachable &&
+		shit commit-graph write --reachable &&
 
 		# Corrupt the repository by deleting the intermediate commit
 		# object. Commands should notice that this object is absent and
 		# thus that the repository is corrupt even if the commit graph
 		# exists.
-		oid=$(git rev-parse B) &&
-		rm .git/objects/"$(test_oid_to_path "$oid")" &&
+		oid=$(shit rev-parse B) &&
+		rm .shit/objects/"$(test_oid_to_path "$oid")" &&
 
 		# Again, we should be able to parse the commit when not
 		# being paranoid about commit graph staleness...
-		git rev-parse HEAD~2 &&
+		shit rev-parse HEAD~2 &&
 		# ... but fail when we are paranoid.
-		test_must_fail env GIT_COMMIT_GRAPH_PARANOIA=true git rev-parse HEAD~2 2>error &&
+		test_must_fail env shit_COMMIT_GRAPH_PARANOIA=true shit rev-parse HEAD~2 2>error &&
 		grep "error: commit $oid exists in commit-graph but not in the object database" error
 	)
 '

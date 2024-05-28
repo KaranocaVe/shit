@@ -1,9 +1,9 @@
 /*
- * "git reset" builtin command
+ * "shit reset" builtin command
  *
  * Copyright (c) 2007 Carlos Rica
  *
- * Based on git-reset.sh, which is
+ * Based on shit-reset.sh, which is
  *
  * Copyright (c) 2005, 2006 Linus Torvalds and Junio C Hamano
  */
@@ -38,11 +38,11 @@
 
 #define REFRESH_INDEX_DELAY_WARNING_IN_MS (2 * 1000)
 
-static const char * const git_reset_usage[] = {
-	N_("git reset [--mixed | --soft | --hard | --merge | --keep] [-q] [<commit>]"),
-	N_("git reset [-q] [<tree-ish>] [--] <pathspec>..."),
-	N_("git reset [-q] [--pathspec-from-file [--pathspec-file-nul]] [<tree-ish>]"),
-	N_("git reset --patch [<tree-ish>] [--] [<pathspec>...]"),
+static const char * const shit_reset_usage[] = {
+	N_("shit reset [--mixed | --soft | --hard | --merge | --keep] [-q] [<commit>]"),
+	N_("shit reset [-q] [<tree-ish>] [--] <pathspec>..."),
+	N_("shit reset [-q] [--pathspec-from-file [--pathspec-file-nul]] [<tree-ish>]"),
+	N_("shit reset --patch [<tree-ish>] [--] [<pathspec>...]"),
 	NULL
 };
 
@@ -53,7 +53,7 @@ static const char *reset_type_names[] = {
 
 static inline int is_merge(void)
 {
-	return !access(git_path_merge_head(the_repository), F_OK);
+	return !access(shit_path_merge_head(the_repository), F_OK);
 }
 
 static int reset_index(const char *ref, const struct object_id *oid, int reset_type, int quiet)
@@ -222,7 +222,7 @@ static int read_from_tree(const struct pathspec *pathspec,
 static void set_reflog_message(struct strbuf *sb, const char *action,
 			       const char *rev)
 {
-	const char *rla = getenv("GIT_REFLOG_ACTION");
+	const char *rla = getenv("shit_REFLOG_ACTION");
 
 	strbuf_reset(sb);
 	if (rla)
@@ -251,11 +251,11 @@ static void parse_args(struct pathspec *pathspec,
 	/*
 	 * Possible arguments are:
 	 *
-	 * git reset [-opts] [<rev>]
-	 * git reset [-opts] <tree> [<paths>...]
-	 * git reset [-opts] <tree> -- [<paths>...]
-	 * git reset [-opts] -- [<paths>...]
-	 * git reset [-opts] <paths>...
+	 * shit reset [-opts] [<rev>]
+	 * shit reset [-opts] <tree> [<paths>...]
+	 * shit reset [-opts] <tree> -- [<paths>...]
+	 * shit reset [-opts] -- [<paths>...]
+	 * shit reset [-opts] <paths>...
 	 *
 	 * At this point, argv points immediately after [-opts].
 	 */
@@ -321,13 +321,13 @@ static int reset_refs(const char *rev, const struct object_id *oid)
 	return update_ref_status;
 }
 
-static int git_reset_config(const char *var, const char *value,
+static int shit_reset_config(const char *var, const char *value,
 			    const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "submodule.recurse"))
-		return git_default_submodule_config(var, value, cb);
+		return shit_default_submodule_config(var, value, cb);
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 int cmd_reset(int argc, const char **argv, const char *prefix)
@@ -371,9 +371,9 @@ int cmd_reset(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_reset_config, NULL);
+	shit_config(shit_reset_config, NULL);
 
-	argc = parse_options(argc, argv, prefix, options, git_reset_usage,
+	argc = parse_options(argc, argv, prefix, options, shit_reset_usage,
 						PARSE_OPT_KEEP_DASHDASH);
 	parse_args(&pathspec, argv, prefix, patch_mode, &rev);
 
@@ -423,12 +423,12 @@ int cmd_reset(int argc, const char **argv, const char *prefix)
 		goto cleanup;
 	}
 
-	/* git reset tree [--] paths... can be used to
+	/* shit reset tree [--] paths... can be used to
 	 * load chosen paths from the tree into the index without
 	 * affecting the working tree nor HEAD. */
 	if (pathspec.nr) {
 		if (reset_type == MIXED)
-			warning(_("--mixed with paths is deprecated; use 'git reset -- <paths>' instead."));
+			warning(_("--mixed with paths is deprecated; use 'shit reset -- <paths>' instead."));
 		else if (reset_type != NONE)
 			die(_("Cannot do %s reset with paths."),
 					_(reset_type_names[reset_type]));
@@ -441,7 +441,7 @@ int cmd_reset(int argc, const char **argv, const char *prefix)
 	else
 		trace2_cmd_mode(reset_type_names[reset_type]);
 
-	if (reset_type != SOFT && (reset_type != MIXED || get_git_work_tree()))
+	if (reset_type != SOFT && (reset_type != MIXED || get_shit_work_tree()))
 		setup_work_tree();
 
 	if (reset_type == MIXED && is_bare_repository())
@@ -474,7 +474,7 @@ int cmd_reset(int argc, const char **argv, const char *prefix)
 				goto cleanup;
 			}
 			the_repository->index->updated_skipworktree = 1;
-			if (!no_refresh && get_git_work_tree()) {
+			if (!no_refresh && get_shit_work_tree()) {
 				uint64_t t_begin, t_delta_in_ms;
 
 				t_begin = getnanotime();

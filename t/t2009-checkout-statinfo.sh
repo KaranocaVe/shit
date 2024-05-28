@@ -2,8 +2,8 @@
 
 test_description='checkout should leave clean stat info'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,44 +11,44 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success 'setup' '
 
 	echo hello >world &&
-	git update-index --add world &&
-	git commit -m initial &&
-	git branch side &&
+	shit update-index --add world &&
+	shit commit -m initial &&
+	shit branch side &&
 	echo goodbye >world &&
-	git update-index --add world &&
-	git commit -m second
+	shit update-index --add world &&
+	shit commit -m second
 
 '
 
 test_expect_success 'branch switching' '
 
-	git reset --hard &&
-	test "$(git diff-files --raw)" = "" &&
+	shit reset --hard &&
+	test "$(shit diff-files --raw)" = "" &&
 
-	git checkout main &&
-	test "$(git diff-files --raw)" = "" &&
+	shit checkout main &&
+	test "$(shit diff-files --raw)" = "" &&
 
-	git checkout side &&
-	test "$(git diff-files --raw)" = "" &&
+	shit checkout side &&
+	test "$(shit diff-files --raw)" = "" &&
 
-	git checkout main &&
-	test "$(git diff-files --raw)" = ""
+	shit checkout main &&
+	test "$(shit diff-files --raw)" = ""
 
 '
 
 test_expect_success 'path checkout' '
 
-	git reset --hard &&
-	test "$(git diff-files --raw)" = "" &&
+	shit reset --hard &&
+	test "$(shit diff-files --raw)" = "" &&
 
-	git checkout main world &&
-	test "$(git diff-files --raw)" = "" &&
+	shit checkout main world &&
+	test "$(shit diff-files --raw)" = "" &&
 
-	git checkout side world &&
-	test "$(git diff-files --raw)" = "" &&
+	shit checkout side world &&
+	test "$(shit diff-files --raw)" = "" &&
 
-	git checkout main world &&
-	test "$(git diff-files --raw)" = ""
+	shit checkout main world &&
+	test "$(shit diff-files --raw)" = ""
 
 '
 

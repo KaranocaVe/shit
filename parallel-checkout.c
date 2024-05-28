@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "entry.h"
 #include "gettext.h"
@@ -40,12 +40,12 @@ static const int DEFAULT_NUM_WORKERS = 1;
 
 void get_parallel_checkout_configs(int *num_workers, int *threshold)
 {
-	char *env_workers = getenv("GIT_TEST_CHECKOUT_WORKERS");
+	char *env_workers = getenv("shit_TEST_CHECKOUT_WORKERS");
 
 	if (env_workers && *env_workers) {
 		if (strtol_i(env_workers, 10, num_workers)) {
 			die(_("invalid value for '%s': '%s'"),
-			    "GIT_TEST_CHECKOUT_WORKERS", env_workers);
+			    "shit_TEST_CHECKOUT_WORKERS", env_workers);
 		}
 		if (*num_workers < 1)
 			*num_workers = online_cpus();
@@ -54,12 +54,12 @@ void get_parallel_checkout_configs(int *num_workers, int *threshold)
 		return;
 	}
 
-	if (git_config_get_int("checkout.workers", num_workers))
+	if (shit_config_get_int("checkout.workers", num_workers))
 		*num_workers = DEFAULT_NUM_WORKERS;
 	else if (*num_workers < 1)
 		*num_workers = online_cpus();
 
-	if (git_config_get_int("checkout.thresholdForParallelism", threshold))
+	if (shit_config_get_int("checkout.thresholdForParallelism", threshold))
 		*threshold = DEFAULT_THRESHOLD_FOR_PARALLELISM;
 }
 
@@ -219,7 +219,7 @@ static int handle_results(struct checkout *state)
 			 * However, this would leave the unwritten entries with
 			 * null stat() fields on the index, which could
 			 * potentially slow down subsequent operations that
-			 * require refreshing it: git would not be able to
+			 * require refreshing it: shit would not be able to
 			 * trust st_size and would have to go to the filesystem
 			 * to see if the contents match (see ie_modified()).
 			 *
@@ -452,7 +452,7 @@ static void send_one_item(int fd, struct parallel_checkout_item *pc_item)
 static void send_batch(int fd, size_t start, size_t nr)
 {
 	size_t i;
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	for (i = 0; i < nr; i++)
 		send_one_item(fd, &parallel_checkout.items[start + i]);
 	packet_flush(fd);
@@ -471,13 +471,13 @@ static struct pc_worker *setup_workers(struct checkout *state, int num_workers)
 		struct child_process *cp = &workers[i].cp;
 
 		child_process_init(cp);
-		cp->git_cmd = 1;
+		cp->shit_cmd = 1;
 		cp->in = -1;
 		cp->out = -1;
 		cp->clean_on_exit = 1;
-		strvec_push(&cp->args, "checkout--worker");
+		strvec_defecate(&cp->args, "checkout--worker");
 		if (state->base_dir_len)
-			strvec_pushf(&cp->args, "--prefix=%s", state->base_dir);
+			strvec_defecatef(&cp->args, "--prefix=%s", state->base_dir);
 		if (start_command(cp))
 			die("failed to spawn checkout worker");
 	}

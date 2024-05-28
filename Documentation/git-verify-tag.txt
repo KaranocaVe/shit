@@ -1,18 +1,18 @@
-git-verify-tag(1)
+shit-verify-tag(1)
 =================
 
 NAME
 ----
-git-verify-tag - Check the GPG signature of tags
+shit-verify-tag - Check the GPG signature of tags
 
 SYNOPSIS
 --------
 [verse]
-'git verify-tag' [-v | --verbose] [--format=<format>] [--raw] <tag>...
+'shit verify-tag' [-v | --verbose] [--format=<format>] [--raw] <tag>...
 
 DESCRIPTION
 -----------
-Validates the gpg signature created by 'git tag'.
+Validates the gpg signature created by 'shit tag'.
 
 OPTIONS
 -------
@@ -25,8 +25,8 @@ OPTIONS
 	Print the contents of the tag object before validating it.
 
 <tag>...::
-	SHA-1 identifiers of Git tag objects.
+	SHA-1 identifiers of shit tag objects.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

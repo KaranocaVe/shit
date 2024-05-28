@@ -7,7 +7,7 @@
 #include "parse.h"
 
 /**
- * The config API gives callers a way to access Git configuration files
+ * The config API gives callers a way to access shit configuration files
  * (and files which have the same syntax).
  *
  * General Usage
@@ -17,16 +17,16 @@
  * caller-provided callback function. The callback function is responsible
  * for any actions to be taken on the config option, and is free to ignore
  * some options. It is not uncommon for the configuration to be parsed
- * several times during the run of a Git program, with different callbacks
+ * several times during the run of a shit program, with different callbacks
  * picking out different variables useful to themselves.
  */
 
 struct object_id;
 
-/* git_config_parse_key() returns these negated: */
+/* shit_config_parse_key() returns these negated: */
 #define CONFIG_INVALID_KEY 1
 #define CONFIG_NO_SECTION_OR_NAME 2
-/* git_config_set_gently(), git_config_set_multivar_gently() return the above or these: */
+/* shit_config_set_gently(), shit_config_set_multivar_gently() return the above or these: */
 #define CONFIG_NO_LOCK -1
 #define CONFIG_INVALID_FILE 3
 #define CONFIG_NO_WRITE 4
@@ -47,7 +47,7 @@ enum config_scope {
 };
 const char *config_scope_name(enum config_scope scope);
 
-struct git_config_source {
+struct shit_config_source {
 	unsigned int use_stdin:1;
 	const char *file;
 	const char *blob;
@@ -101,7 +101,7 @@ struct config_options {
 	unsigned int unconditional_remote_url : 1;
 
 	const char *commondir;
-	const char *git_dir;
+	const char *shit_dir;
 	/*
 	 * event_fn and event_fn_data are for internal use only. Handles events
 	 * emitted by the config parser.
@@ -165,74 +165,74 @@ struct config_context {
 typedef int (*config_fn_t)(const char *, const char *,
 			   const struct config_context *, void *);
 
-int git_default_config(const char *, const char *,
+int shit_default_config(const char *, const char *,
 		       const struct config_context *, void *);
 
 /**
- * Read a specific file in git-config format.
- * This function takes the same callback and data parameters as `git_config`.
+ * Read a specific file in shit-config format.
+ * This function takes the same callback and data parameters as `shit_config`.
  *
- * Unlike git_config(), this function does not respect includes.
+ * Unlike shit_config(), this function does not respect includes.
  */
-int git_config_from_file(config_fn_t fn, const char *, void *);
+int shit_config_from_file(config_fn_t fn, const char *, void *);
 
-int git_config_from_file_with_options(config_fn_t fn, const char *,
+int shit_config_from_file_with_options(config_fn_t fn, const char *,
 				      void *, enum config_scope,
 				      const struct config_options *);
-int git_config_from_mem(config_fn_t fn,
+int shit_config_from_mem(config_fn_t fn,
 			const enum config_origin_type,
 			const char *name,
 			const char *buf, size_t len,
 			void *data, enum config_scope scope,
 			const struct config_options *opts);
-int git_config_from_blob_oid(config_fn_t fn, const char *name,
+int shit_config_from_blob_oid(config_fn_t fn, const char *name,
 			     struct repository *repo,
 			     const struct object_id *oid, void *data,
 			     enum config_scope scope);
-void git_config_push_parameter(const char *text);
-void git_config_push_env(const char *spec);
-int git_config_from_parameters(config_fn_t fn, void *data);
+void shit_config_defecate_parameter(const char *text);
+void shit_config_defecate_env(const char *spec);
+int shit_config_from_parameters(config_fn_t fn, void *data);
 void read_early_config(config_fn_t cb, void *data);
 void read_very_early_config(config_fn_t cb, void *data);
 
 /**
  * Most programs will simply want to look up variables in all config files
- * that Git knows about, using the normal precedence rules. To do this,
- * call `git_config` with a callback function and void data pointer.
+ * that shit knows about, using the normal precedence rules. To do this,
+ * call `shit_config` with a callback function and void data pointer.
  *
- * `git_config` will read all config sources in order of increasing
+ * `shit_config` will read all config sources in order of increasing
  * priority. Thus a callback should typically overwrite previously-seen
- * entries with new ones (e.g., if both the user-wide `~/.gitconfig` and
- * repo-specific `.git/config` contain `color.ui`, the config machinery
+ * entries with new ones (e.g., if both the user-wide `~/.shitconfig` and
+ * repo-specific `.shit/config` contain `color.ui`, the config machinery
  * will first feed the user-wide one to the callback, and then the
  * repo-specific one; by overwriting, the higher-priority repo-specific
  * value is left at the end).
  *
- * Unlike git_config_from_file(), this function respects includes.
+ * Unlike shit_config_from_file(), this function respects includes.
  */
-void git_config(config_fn_t fn, void *);
+void shit_config(config_fn_t fn, void *);
 
 /**
  * Lets the caller examine config while adjusting some of the default
- * behavior of `git_config`. It should almost never be used by "regular"
- * Git code that is looking up configuration variables.
- * It is intended for advanced callers like `git-config`, which are
+ * behavior of `shit_config`. It should almost never be used by "regular"
+ * shit code that is looking up configuration variables.
+ * It is intended for advanced callers like `shit-config`, which are
  * intentionally tweaking the normal config-lookup process.
  * It takes two extra parameters:
  *
  * - `config_source`
  * If this parameter is non-NULL, it specifies the source to parse for
  * configuration, rather than looking in the usual files. See `struct
- * git_config_source` in `config.h` for details. Regular `git_config` defaults
+ * shit_config_source` in `config.h` for details. Regular `shit_config` defaults
  * to `NULL`.
  *
  * - `opts`
  * Specify options to adjust the behavior of parsing config files. See `struct
- * config_options` in `config.h` for details. As an example: regular `git_config`
+ * config_options` in `config.h` for details. As an example: regular `shit_config`
  * sets `opts.respect_includes` to `1` by default.
  */
 int config_with_options(config_fn_t fn, void *,
-			struct git_config_source *config_source,
+			struct shit_config_source *config_source,
 			struct repository *repo,
 			const struct config_options *opts);
 
@@ -247,25 +247,25 @@ int config_with_options(config_fn_t fn, void *,
  * Parse the string to an integer, including unit factors. Dies on error;
  * otherwise, returns the parsed result.
  */
-int git_config_int(const char *, const char *, const struct key_value_info *);
+int shit_config_int(const char *, const char *, const struct key_value_info *);
 
-int64_t git_config_int64(const char *, const char *,
+int64_t shit_config_int64(const char *, const char *,
 			 const struct key_value_info *);
 
 /**
- * Identical to `git_config_int`, but for unsigned longs.
+ * Identical to `shit_config_int`, but for unsigned longs.
  */
-unsigned long git_config_ulong(const char *, const char *,
+unsigned long shit_config_ulong(const char *, const char *,
 			       const struct key_value_info *);
 
-ssize_t git_config_ssize_t(const char *, const char *,
+ssize_t shit_config_ssize_t(const char *, const char *,
 			   const struct key_value_info *);
 
 /**
- * Same as `git_config_bool`, except that integers are returned as-is, and
+ * Same as `shit_config_bool`, except that integers are returned as-is, and
  * an `is_bool` flag is unset.
  */
-int git_config_bool_or_int(const char *, const char *,
+int shit_config_bool_or_int(const char *, const char *,
 			   const struct key_value_info *, int *);
 
 /**
@@ -274,31 +274,31 @@ int git_config_bool_or_int(const char *, const char *,
  * are non-zero or zero, respectively). Other values cause a die(). If
  * parsing is successful, the return value is the result.
  */
-int git_config_bool(const char *, const char *);
+int shit_config_bool(const char *, const char *);
 
 /**
  * Allocates and copies the value string into the `dest` parameter; if no
  * string is given, prints an error message and returns -1.
  */
-int git_config_string(const char **, const char *, const char *);
+int shit_config_string(const char **, const char *, const char *);
 
 /**
- * Similar to `git_config_string`, but expands `~` or `~user` into the
+ * Similar to `shit_config_string`, but expands `~` or `~user` into the
  * user's home directory when found at the beginning of the path.
  */
-int git_config_pathname(const char **, const char *, const char *);
+int shit_config_pathname(const char **, const char *, const char *);
 
-int git_config_expiry_date(timestamp_t *, const char *, const char *);
-int git_config_color(char *, const char *, const char *);
-int git_config_set_in_file_gently(const char *, const char *, const char *, const char *);
+int shit_config_expiry_date(timestamp_t *, const char *, const char *);
+int shit_config_color(char *, const char *, const char *);
+int shit_config_set_in_file_gently(const char *, const char *, const char *, const char *);
 
 /**
  * write config values to a specific config file, takes a key/value pair as
  * parameter.
  */
-void git_config_set_in_file(const char *, const char *, const char *);
+void shit_config_set_in_file(const char *, const char *, const char *);
 
-int git_config_set_gently(const char *, const char *);
+int shit_config_set_gently(const char *, const char *);
 
 /**
  * Write a config value that should apply to the current worktree. If
@@ -308,15 +308,15 @@ int git_config_set_gently(const char *, const char *);
 int repo_config_set_worktree_gently(struct repository *, const char *, const char *);
 
 /**
- * write config values to `.git/config`, takes a key/value pair as parameter.
+ * write config values to `.shit/config`, takes a key/value pair as parameter.
  */
-void git_config_set(const char *, const char *);
+void shit_config_set(const char *, const char *);
 
-int git_config_parse_key(const char *, char **, size_t *);
+int shit_config_parse_key(const char *, char **, size_t *);
 
 /*
  * The following macros specify flag bits that alter the behavior
- * of the git_config_set_multivar*() methods.
+ * of the shit_config_set_multivar*() methods.
  */
 
 /*
@@ -333,12 +333,12 @@ int git_config_parse_key(const char *, char **, size_t *);
  */
 #define CONFIG_FLAGS_FIXED_VALUE (1 << 1)
 
-int git_config_set_multivar_gently(const char *, const char *, const char *, unsigned);
-void git_config_set_multivar(const char *, const char *, const char *, unsigned);
+int shit_config_set_multivar_gently(const char *, const char *, const char *, unsigned);
+void shit_config_set_multivar(const char *, const char *, const char *, unsigned);
 int repo_config_set_multivar_gently(struct repository *, const char *, const char *, const char *, unsigned);
-int git_config_set_multivar_in_file_gently(const char *, const char *, const char *, const char *, const char *, unsigned);
+int shit_config_set_multivar_in_file_gently(const char *, const char *, const char *, const char *, const char *, unsigned);
 
-char *git_config_prepare_comment_string(const char *);
+char *shit_config_prepare_comment_string(const char *);
 
 /**
  * takes four parameters:
@@ -360,7 +360,7 @@ char *git_config_prepare_comment_string(const char *);
  *
  * It returns 0 on success.
  */
-void git_config_set_multivar_in_file(const char *config_filename,
+void shit_config_set_multivar_in_file(const char *config_filename,
 				     const char *key,
 				     const char *value,
 				     const char *value_pattern,
@@ -372,22 +372,22 @@ void git_config_set_multivar_in_file(const char *config_filename,
  * If NULL is passed through `new_name` parameter,
  * the section will be removed from the config file.
  */
-int git_config_rename_section(const char *, const char *);
+int shit_config_rename_section(const char *, const char *);
 
-int git_config_rename_section_in_file(const char *, const char *, const char *);
-int git_config_copy_section(const char *, const char *);
-int git_config_copy_section_in_file(const char *, const char *, const char *);
-int git_config_system(void);
+int shit_config_rename_section_in_file(const char *, const char *, const char *);
+int shit_config_copy_section(const char *, const char *);
+int shit_config_copy_section_in_file(const char *, const char *, const char *);
+int shit_config_system(void);
 int config_error_nonbool(const char *);
 #if defined(__GNUC__)
 #define config_error_nonbool(s) (config_error_nonbool(s), const_error())
 #endif
 
-char *git_system_config(void);
-char *git_global_config(void);
-void git_global_config_paths(char **user, char **xdg);
+char *shit_system_config(void);
+char *shit_global_config(void);
+void shit_global_config_paths(char **user, char **xdg);
 
-int git_config_parse_parameter(const char *, config_fn_t fn, void *data);
+int shit_config_parse_parameter(const char *, config_fn_t fn, void *data);
 
 const char *config_origin_type_name(enum config_origin_type type);
 void kvi_from_param(struct key_value_info *out);
@@ -415,23 +415,23 @@ int parse_config_key(const char *var,
  * -----------------
  *
  * A `config_set` can be used to construct an in-memory cache for
- * config-like files that the caller specifies (i.e., files like `.gitmodules`,
- * `~/.gitconfig` etc.). For example,
+ * config-like files that the caller specifies (i.e., files like `.shitmodules`,
+ * `~/.shitconfig` etc.). For example,
  *
  * ----------------------------------------
  * struct config_set gm_config;
- * git_configset_init(&gm_config);
+ * shit_configset_init(&gm_config);
  * int b;
  * //we add config files to the config_set
- * git_configset_add_file(&gm_config, ".gitmodules");
- * git_configset_add_file(&gm_config, ".gitmodules_alt");
+ * shit_configset_add_file(&gm_config, ".shitmodules");
+ * shit_configset_add_file(&gm_config, ".shitmodules_alt");
  *
- * if (!git_configset_get_bool(gm_config, "submodule.frotz.ignore", &b)) {
+ * if (!shit_configset_get_bool(gm_config, "submodule.frotz.ignore", &b)) {
  * //hack hack hack
  * }
  *
  * when we are done with the configset:
- * git_configset_clear(&gm_config);
+ * shit_configset_clear(&gm_config);
  * ----------------------------------------
  *
  * Configset API provides functions for the above mentioned work flow
@@ -451,7 +451,7 @@ struct configset_list_item {
 /*
  * the contents of the list are ordered according to their
  * position in the config files and order of parsing the files.
- * (i.e. key-value pair at the last position of .git/config will
+ * (i.e. key-value pair at the last position of .shit/config will
  * be at the last item of the list)
  */
 struct configset_list {
@@ -468,7 +468,7 @@ struct config_set {
 /**
  * Initializes the config_set `cs`.
  */
-void git_configset_init(struct config_set *cs);
+void shit_configset_init(struct config_set *cs);
 
 /**
  * Parses the file and adds the variable-value pairs to the `config_set`,
@@ -477,7 +477,7 @@ void git_configset_init(struct config_set *cs);
  * whether to free the incomplete configset or continue using it when
  * the function returns -1.
  */
-int git_configset_add_file(struct config_set *cs, const char *filename);
+int shit_configset_add_file(struct config_set *cs, const char *filename);
 
 /**
  * Finds and returns the value list, sorted in order of increasing priority
@@ -485,33 +485,33 @@ int git_configset_add_file(struct config_set *cs, const char *filename);
  * configuration variable `key` is not found, returns 1 without touching
  * `value`.
  *
- * The key will be parsed for validity with git_config_parse_key(), on
+ * The key will be parsed for validity with shit_config_parse_key(), on
  * error a negative value will be returned.
  *
  * The caller should not free or modify the returned pointer, as it is
  * owned by the cache.
  */
 RESULT_MUST_BE_USED
-int git_configset_get_value_multi(struct config_set *cs, const char *key,
+int shit_configset_get_value_multi(struct config_set *cs, const char *key,
 				  const struct string_list **dest);
 
 /**
- * A validation wrapper for git_configset_get_value_multi() which does
- * for it what git_configset_get_string() does for
- * git_configset_get_value().
+ * A validation wrapper for shit_configset_get_value_multi() which does
+ * for it what shit_configset_get_string() does for
+ * shit_configset_get_value().
  *
  * The configuration syntax allows for "[section] key", which will
  * give us a NULL entry in the "struct string_list", as opposed to
  * "[section] key =" which is the empty string. Most users of the API
  * are not prepared to handle NULL in a "struct string_list".
  */
-int git_configset_get_string_multi(struct config_set *cs, const char *key,
+int shit_configset_get_string_multi(struct config_set *cs, const char *key,
 				   const struct string_list **dest);
 
 /**
  * Clears `config_set` structure, removes all saved variable-value pairs.
  */
-void git_configset_clear(struct config_set *cs);
+void shit_configset_clear(struct config_set *cs);
 
 /*
  * These functions return 1 if not found, and 0 if found, leaving the found
@@ -519,11 +519,11 @@ void git_configset_clear(struct config_set *cs);
  */
 
 /**
- * git_configset_get() returns negative values on error, see
+ * shit_configset_get() returns negative values on error, see
  * repo_config_get() below.
  */
 RESULT_MUST_BE_USED
-int git_configset_get(struct config_set *cs, const char *key);
+int shit_configset_get(struct config_set *cs, const char *key);
 
 /*
  * Finds the highest-priority value for the configuration variable `key`
@@ -532,16 +532,16 @@ int git_configset_get(struct config_set *cs, const char *key);
  * touching `value`. The caller should not free or modify `value`, as it
  * is owned by the cache.
  */
-int git_configset_get_value(struct config_set *cs, const char *key,
+int shit_configset_get_value(struct config_set *cs, const char *key,
 			    const char **dest, struct key_value_info *kvi);
 
-int git_configset_get_string(struct config_set *cs, const char *key, char **dest);
-int git_configset_get_int(struct config_set *cs, const char *key, int *dest);
-int git_configset_get_ulong(struct config_set *cs, const char *key, unsigned long *dest);
-int git_configset_get_bool(struct config_set *cs, const char *key, int *dest);
-int git_configset_get_bool_or_int(struct config_set *cs, const char *key, int *is_bool, int *dest);
-int git_configset_get_maybe_bool(struct config_set *cs, const char *key, int *dest);
-int git_configset_get_pathname(struct config_set *cs, const char *key, const char **dest);
+int shit_configset_get_string(struct config_set *cs, const char *key, char **dest);
+int shit_configset_get_int(struct config_set *cs, const char *key, int *dest);
+int shit_configset_get_ulong(struct config_set *cs, const char *key, unsigned long *dest);
+int shit_configset_get_bool(struct config_set *cs, const char *key, int *dest);
+int shit_configset_get_bool_or_int(struct config_set *cs, const char *key, int *is_bool, int *dest);
+int shit_configset_get_maybe_bool(struct config_set *cs, const char *key, int *dest);
+int shit_configset_get_pathname(struct config_set *cs, const char *key, const char **dest);
 
 /* Functions for reading a repository's config */
 struct repository;
@@ -584,24 +584,24 @@ int repo_config_get_pathname(struct repository *repo,
  * config ignores repository config, so these do not take a `struct
  * repository` parameter.
  */
-void git_protected_config(config_fn_t fn, void *data);
+void shit_protected_config(config_fn_t fn, void *data);
 
 /**
  * Querying For Specific Variables
  * -------------------------------
  *
  * For programs wanting to query for specific variables in a non-callback
- * manner, the config API provides two functions `git_config_get_value`
- * and `git_config_get_value_multi`. They both read values from an internal
+ * manner, the config API provides two functions `shit_config_get_value`
+ * and `shit_config_get_value_multi`. They both read values from an internal
  * cache generated previously from reading the config files.
  *
- * For those git_config_get*() functions that aren't documented,
+ * For those shit_config_get*() functions that aren't documented,
  * consult the corresponding repo_config_get*() function's
  * documentation.
  */
 
 RESULT_MUST_BE_USED
-int git_config_get(const char *key);
+int shit_config_get(const char *key);
 
 /**
  * Finds the highest-priority value for the configuration variable `key`,
@@ -610,7 +610,7 @@ int git_config_get(const char *key);
  * `value`. The caller should not free or modify `value`, as it is owned
  * by the cache.
  */
-int git_config_get_value(const char *key, const char **value);
+int shit_config_get_value(const char *key, const char **value);
 
 /**
  * Finds and returns the value list, sorted in order of increasing priority
@@ -621,16 +621,16 @@ int git_config_get_value(const char *key, const char **value);
  * owned by the cache.
  */
 RESULT_MUST_BE_USED
-int git_config_get_value_multi(const char *key,
+int shit_config_get_value_multi(const char *key,
 			       const struct string_list **dest);
 RESULT_MUST_BE_USED
-int git_config_get_string_multi(const char *key,
+int shit_config_get_string_multi(const char *key,
 				const struct string_list **dest);
 
 /**
  * Resets and invalidates the config cache.
  */
-void git_config_clear(void);
+void shit_config_clear(void);
 
 /**
  * Allocates and copies the retrieved string into the `dest` parameter for
@@ -638,14 +638,14 @@ void git_config_clear(void);
  * error message and returns -1. When the configuration variable `key` is
  * not found, returns 1 without touching `dest`.
  */
-int git_config_get_string(const char *key, char **dest);
+int shit_config_get_string(const char *key, char **dest);
 
 /**
- * Similar to `git_config_get_string`, but does not allocate any new
+ * Similar to `shit_config_get_string`, but does not allocate any new
  * memory; on success `dest` will point to memory owned by the config
  * machinery, which could be invalidated if it is discarded and reloaded.
  */
-int git_config_get_string_tmp(const char *key, const char **dest);
+int shit_config_get_string_tmp(const char *key, const char **dest);
 
 /**
  * Finds and parses the value to an integer for the configuration variable
@@ -653,12 +653,12 @@ int git_config_get_string_tmp(const char *key, const char **dest);
  * `dest` and returns 0. When the configuration variable `key` is not found,
  * returns 1 without touching `dest`.
  */
-int git_config_get_int(const char *key, int *dest);
+int shit_config_get_int(const char *key, int *dest);
 
 /**
- * Similar to `git_config_get_int` but for unsigned longs.
+ * Similar to `shit_config_get_int` but for unsigned longs.
  */
-int git_config_get_ulong(const char *key, unsigned long *dest);
+int shit_config_get_ulong(const char *key, unsigned long *dest);
 
 /**
  * Finds and parses the value into a boolean value, for the configuration
@@ -669,50 +669,50 @@ int git_config_get_ulong(const char *key, unsigned long *dest);
  * configuration variable `key` is not found, returns 1 without touching
  * `dest`.
  */
-int git_config_get_bool(const char *key, int *dest);
+int shit_config_get_bool(const char *key, int *dest);
 
 /**
- * Similar to `git_config_get_bool`, except that integers are copied as-is,
+ * Similar to `shit_config_get_bool`, except that integers are copied as-is,
  * and `is_bool` flag is unset.
  */
-int git_config_get_bool_or_int(const char *key, int *is_bool, int *dest);
+int shit_config_get_bool_or_int(const char *key, int *is_bool, int *dest);
 
 /**
- * Similar to `git_config_get_bool`, except that it returns -1 on error
+ * Similar to `shit_config_get_bool`, except that it returns -1 on error
  * rather than dying.
  */
-int git_config_get_maybe_bool(const char *key, int *dest);
+int shit_config_get_maybe_bool(const char *key, int *dest);
 
 /**
- * Similar to `git_config_get_string`, but expands `~` or `~user` into
+ * Similar to `shit_config_get_string`, but expands `~` or `~user` into
  * the user's home directory when found at the beginning of the path.
  */
-int git_config_get_pathname(const char *key, const char **dest);
+int shit_config_get_pathname(const char *key, const char **dest);
 
-int git_config_get_index_threads(int *dest);
-int git_config_get_split_index(void);
-int git_config_get_max_percent_split_change(void);
+int shit_config_get_index_threads(int *dest);
+int shit_config_get_split_index(void);
+int shit_config_get_max_percent_split_change(void);
 
 /* This dies if the configured or default date is in the future */
-int git_config_get_expiry(const char *key, const char **output);
+int shit_config_get_expiry(const char *key, const char **output);
 
 /* parse either "this many days" integer, or "5.days.ago" approxidate */
-int git_config_get_expiry_in_days(const char *key, timestamp_t *, timestamp_t now);
+int shit_config_get_expiry_in_days(const char *key, timestamp_t *, timestamp_t now);
 
 /**
  * First prints the error message specified by the caller in `err` and then
  * dies printing the line number and the file name of the highest priority
  * value for the configuration variable `key`.
  */
-NORETURN void git_die_config(const char *key, const char *err, ...) __attribute__((format(printf, 2, 3)));
+NORETURN void shit_die_config(const char *key, const char *err, ...) __attribute__((format(printf, 2, 3)));
 
 /**
  * Helper function which formats the die error message according to the
- * parameters entered. Used by `git_die_config()`. It can be used by callers
- * handling `git_config_get_value_multi()` to print the correct error message
+ * parameters entered. Used by `shit_die_config()`. It can be used by callers
+ * handling `shit_config_get_value_multi()` to print the correct error message
  * for the desired value.
  */
-NORETURN void git_die_config_linenr(const char *key, const char *filename, int linenr);
+NORETURN void shit_die_config_linenr(const char *key, const char *filename, int linenr);
 
 #define LOOKUP_CONFIG(mapping, var) \
 	lookup_config(mapping, ARRAY_SIZE(mapping), var)

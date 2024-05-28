@@ -5,7 +5,7 @@
 
 test_description='Test submodules set-url subcommand
 
-This test verifies that the set-url subcommand of git-submodule is working
+This test verifies that the set-url subcommand of shit-submodule is working
 as expected.
 '
 
@@ -13,33 +13,33 @@ TEST_NO_CREATE_REPO=1
 . ./test-lib.sh
 
 test_expect_success 'setup' '
-	git config --global protocol.file.allow always
+	shit config --global protocol.file.allow always
 '
 
 test_expect_success 'submodule config cache setup' '
 	mkdir submodule &&
 	(
 		cd submodule &&
-		git init &&
+		shit init &&
 		echo a >file &&
-		git add file &&
-		git commit -ma
+		shit add file &&
+		shit commit -ma
 	) &&
 	mkdir namedsubmodule &&
 	(
 		cd namedsubmodule &&
-		git init &&
+		shit init &&
 		echo 1 >file &&
-		git add file &&
-		git commit -m1
+		shit add file &&
+		shit commit -m1
 	) &&
 	mkdir super &&
 	(
 		cd super &&
-		git init &&
-		git submodule add ../submodule &&
-		git submodule add --name thename ../namedsubmodule thepath &&
-		git commit -m "add submodules"
+		shit init &&
+		shit submodule add ../submodule &&
+		shit submodule add --name thename ../namedsubmodule thepath &&
+		shit commit -m "add submodules"
 	)
 '
 
@@ -48,33 +48,33 @@ test_expect_success 'test submodule set-url' '
 	(
 		cd submodule &&
 		echo b >>file &&
-		git add file &&
-		git commit -mb
+		shit add file &&
+		shit commit -mb
 	) &&
 	mv submodule newsubmodule &&
 
 	(
 		cd namedsubmodule &&
 		echo 2 >>file &&
-		git add file &&
-		git commit -m2
+		shit add file &&
+		shit commit -m2
 	) &&
 	mv namedsubmodule newnamedsubmodule &&
 
-	git -C newsubmodule show >expect &&
-	git -C newnamedsubmodule show >>expect &&
+	shit -C newsubmodule show >expect &&
+	shit -C newnamedsubmodule show >>expect &&
 	(
 		cd super &&
-		test_must_fail git submodule update --remote &&
-		git submodule set-url submodule ../newsubmodule &&
-		test_cmp_config ../newsubmodule -f .gitmodules submodule.submodule.url &&
-		git submodule set-url thepath ../newnamedsubmodule &&
-		test_cmp_config ../newnamedsubmodule -f .gitmodules submodule.thename.url &&
-		test_cmp_config "" -f .gitmodules --default "" submodule.thepath.url &&
-		git submodule update --remote
+		test_must_fail shit submodule update --remote &&
+		shit submodule set-url submodule ../newsubmodule &&
+		test_cmp_config ../newsubmodule -f .shitmodules submodule.submodule.url &&
+		shit submodule set-url thepath ../newnamedsubmodule &&
+		test_cmp_config ../newnamedsubmodule -f .shitmodules submodule.thename.url &&
+		test_cmp_config "" -f .shitmodules --default "" submodule.thepath.url &&
+		shit submodule update --remote
 	) &&
-	git -C super/submodule show >actual &&
-	git -C super/thepath show >>actual &&
+	shit -C super/submodule show >actual &&
+	shit -C super/thepath show >>actual &&
 	test_cmp expect actual
 '
 

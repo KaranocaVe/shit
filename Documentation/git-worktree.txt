@@ -1,63 +1,63 @@
-git-worktree(1)
+shit-worktree(1)
 ===============
 
 NAME
 ----
-git-worktree - Manage multiple working trees
+shit-worktree - Manage multiple working trees
 
 
 SYNOPSIS
 --------
 [verse]
-'git worktree add' [-f] [--detach] [--checkout] [--lock [--reason <string>]]
+'shit worktree add' [-f] [--detach] [--checkout] [--lock [--reason <string>]]
 		   [--orphan] [(-b | -B) <new-branch>] <path> [<commit-ish>]
-'git worktree list' [-v | --porcelain [-z]]
-'git worktree lock' [--reason <string>] <worktree>
-'git worktree move' <worktree> <new-path>
-'git worktree prune' [-n] [-v] [--expire <expire>]
-'git worktree remove' [-f] <worktree>
-'git worktree repair' [<path>...]
-'git worktree unlock' <worktree>
+'shit worktree list' [-v | --porcelain [-z]]
+'shit worktree lock' [--reason <string>] <worktree>
+'shit worktree move' <worktree> <new-path>
+'shit worktree prune' [-n] [-v] [--expire <expire>]
+'shit worktree remove' [-f] <worktree>
+'shit worktree repair' [<path>...]
+'shit worktree unlock' <worktree>
 
 DESCRIPTION
 -----------
 
 Manage multiple working trees attached to the same repository.
 
-A git repository can support multiple working trees, allowing you to check
-out more than one branch at a time.  With `git worktree add` a new working
+A shit repository can support multiple working trees, allowing you to check
+out more than one branch at a time.  With `shit worktree add` a new working
 tree is associated with the repository, along with additional metadata
 that differentiates that working tree from others in the same repository.
 The working tree, along with this metadata, is called a "worktree".
 
 This new worktree is called a "linked worktree" as opposed to the "main
-worktree" prepared by linkgit:git-init[1] or linkgit:git-clone[1].
+worktree" prepared by linkshit:shit-init[1] or linkshit:shit-clone[1].
 A repository has one main worktree (if it's not a bare repository) and
 zero or more linked worktrees. When you are done with a linked worktree,
-remove it with `git worktree remove`.
+remove it with `shit worktree remove`.
 
-In its simplest form, `git worktree add <path>` automatically creates a
+In its simplest form, `shit worktree add <path>` automatically creates a
 new branch whose name is the final component of `<path>`, which is
-convenient if you plan to work on a new topic. For instance, `git
+convenient if you plan to work on a new topic. For instance, `shit
 worktree add ../hotfix` creates new branch `hotfix` and checks it out at
 path `../hotfix`. To instead work on an existing branch in a new worktree,
-use `git worktree add <path> <branch>`. On the other hand, if you just
+use `shit worktree add <path> <branch>`. On the other hand, if you just
 plan to make some experimental changes or do testing without disturbing
 existing development, it is often convenient to create a 'throwaway'
 worktree not associated with any branch. For instance,
-`git worktree add -d <path>` creates a new worktree with a detached `HEAD`
+`shit worktree add -d <path>` creates a new worktree with a detached `HEAD`
 at the same commit as the current branch.
 
-If a working tree is deleted without using `git worktree remove`, then
+If a working tree is deleted without using `shit worktree remove`, then
 its associated administrative files, which reside in the repository
 (see "DETAILS" below), will eventually be removed automatically (see
-`gc.worktreePruneExpire` in linkgit:git-config[1]), or you can run
-`git worktree prune` in the main or any linked worktree to clean up any
+`gc.worktreePruneExpire` in linkshit:shit-config[1]), or you can run
+`shit worktree prune` in the main or any linked worktree to clean up any
 stale administrative files.
 
 If the working tree for a linked worktree is stored on a portable device
 or network share which is not always mounted, you can prevent its
-administrative files from being pruned by issuing the `git worktree lock`
+administrative files from being pruned by issuing the `shit worktree lock`
 command, optionally specifying `--reason` to explain why the worktree is
 locked.
 
@@ -76,7 +76,7 @@ exist a tracking branch in exactly one remote (call it `<remote>`)
 with a matching name, treat as equivalent to:
 +
 ------------
-$ git worktree add --track -b <branch> <path> <remote>/<branch>
+$ shit worktree add --track -b <branch> <path> <remote>/<branch>
 ------------
 +
 If the branch exists in multiple remotes and one of them is named by
@@ -86,7 +86,7 @@ unique across all remotes. Set it to
 e.g. `checkout.defaultRemote=origin` to always checkout remote
 branches from there if `<branch>` is ambiguous but exists on the
 `origin` remote. See also `checkout.defaultRemote` in
-linkgit:git-config[1].
+linkshit:shit-config[1].
 +
 If `<commit-ish>` is omitted and neither `-b` nor `-B` nor `--detach` used,
 then, as a convenience, the new worktree is associated with a branch (call
@@ -126,12 +126,12 @@ move::
 
 Move a worktree to a new location. Note that the main worktree or linked
 worktrees containing submodules cannot be moved with this command. (The
-`git worktree repair` command, however, can reestablish the connection
+`shit worktree repair` command, however, can reestablish the connection
 with linked worktrees if you move the main worktree manually.)
 
 prune::
 
-Prune worktree information in `$GIT_DIR/worktrees`.
+Prune worktree information in `$shit_DIR/worktrees`.
 
 remove::
 
@@ -151,7 +151,7 @@ worktree will reestablish the connection from linked worktrees back to the
 main worktree.
 +
 Similarly, if the working tree for a linked worktree is moved without
-using `git worktree move`, the main worktree (or bare repository) will be
+using `shit worktree move`, the main worktree (or bare repository) will be
 unable to locate it. Running `repair` within the recently-moved worktree
 will reestablish the connection. If multiple linked worktrees are moved,
 running `repair` from any worktree with each tree's new `<path>` as an
@@ -198,13 +198,13 @@ To remove a locked worktree, specify `--force` twice.
 -d::
 --detach::
 	With `add`, detach `HEAD` in the new worktree. See "DETACHED HEAD"
-	in linkgit:git-checkout[1].
+	in linkshit:shit-checkout[1].
 
 --[no-]checkout::
 	By default, `add` checks out `<commit-ish>`, however, `--no-checkout` can
 	be used to suppress checkout in order to make customizations,
 	such as configuring sparse-checkout. See "Sparse checkout"
-	in linkgit:git-read-tree[1].
+	in linkshit:shit-read-tree[1].
 
 --[no-]guess-remote::
 	With `worktree add <path>`, without `<commit-ish>`, instead
@@ -220,11 +220,11 @@ This can also be set up as the default behaviour by using the
 	When creating a new branch, if `<commit-ish>` is a branch,
 	mark it as "upstream" from the new branch.  This is the
 	default if `<commit-ish>` is a remote-tracking branch.  See
-	`--track` in linkgit:git-branch[1] for details.
+	`--track` in linkshit:shit-branch[1] for details.
 
 --lock::
 	Keep the worktree locked after creation. This is the
-	equivalent of `git worktree lock` after `git worktree add`,
+	equivalent of `shit worktree lock` after `shit worktree add`,
 	but without a race condition.
 
 -n::
@@ -238,7 +238,7 @@ This can also be set up as the default behaviour by using the
 
 --porcelain::
 	With `list`, output in an easy-to-parse format for scripts.
-	This format will remain stable across Git versions and regardless of user
+	This format will remain stable across shit versions and regardless of user
 	configuration.  It is recommended to combine this with `-z`.
 	See below for details.
 
@@ -285,7 +285,7 @@ rules and how to access refs of one worktree from another.
 
 In general, all pseudo refs are per-worktree and all refs starting with
 `refs/` are shared. Pseudo refs are ones like `HEAD` which are directly
-under `$GIT_DIR` instead of inside `$GIT_DIR/refs`. There are exceptions,
+under `$shit_DIR` instead of inside `$shit_DIR/refs`. There are exceptions,
 however: refs inside `refs/bisect`, `refs/worktree` and `refs/rewritten` are
 not shared.
 
@@ -298,11 +298,11 @@ For example, `main-worktree/HEAD` or `main-worktree/refs/bisect/good`
 resolve to the same value as the main worktree's `HEAD` and
 `refs/bisect/good` respectively. Similarly, `worktrees/foo/HEAD` or
 `worktrees/bar/refs/bisect/bad` are the same as
-`$GIT_COMMON_DIR/worktrees/foo/HEAD` and
-`$GIT_COMMON_DIR/worktrees/bar/refs/bisect/bad`.
+`$shit_COMMON_DIR/worktrees/foo/HEAD` and
+`$shit_COMMON_DIR/worktrees/bar/refs/bisect/bad`.
 
-To access refs, it's best not to look inside `$GIT_DIR` directly. Instead
-use commands such as linkgit:git-rev-parse[1] or linkgit:git-update-ref[1]
+To access refs, it's best not to look inside `$shit_DIR` directly. Instead
+use commands such as linkshit:shit-rev-parse[1] or linkshit:shit-update-ref[1]
 which will handle refs correctly.
 
 CONFIGURATION FILE
@@ -316,16 +316,16 @@ In order to have worktree-specific configuration, you can turn on the
 `worktreeConfig` extension, e.g.:
 
 ------------
-$ git config extensions.worktreeConfig true
+$ shit config extensions.worktreeConfig true
 ------------
 
-In this mode, specific configuration stays in the path pointed by `git
-rev-parse --git-path config.worktree`. You can add or update
-configuration in this file with `git config --worktree`. Older Git
+In this mode, specific configuration stays in the path pointed by `shit
+rev-parse --shit-path config.worktree`. You can add or update
+configuration in this file with `shit config --worktree`. Older shit
 versions will refuse to access repositories with this extension.
 
 Note that in this file, the exception for `core.bare` and `core.worktree`
-is gone. If they exist in `$GIT_DIR/config`, you must move
+is gone. If they exist in `$shit_DIR/config`, you must move
 them to the `config.worktree` of the main worktree. You may also take this
 opportunity to review and move other configuration that you do not want to
 share to all worktrees:
@@ -338,61 +338,61 @@ share to all worktrees:
    always use sparse checkout for all worktrees.
 
 See the documentation of `extensions.worktreeConfig` in
-linkgit:git-config[1] for more details.
+linkshit:shit-config[1] for more details.
 
 DETAILS
 -------
 Each linked worktree has a private sub-directory in the repository's
-`$GIT_DIR/worktrees` directory.  The private sub-directory's name is usually
+`$shit_DIR/worktrees` directory.  The private sub-directory's name is usually
 the base name of the linked worktree's path, possibly appended with a
-number to make it unique.  For example, when `$GIT_DIR=/path/main/.git` the
-command `git worktree add /path/other/test-next next` creates the linked
+number to make it unique.  For example, when `$shit_DIR=/path/main/.shit` the
+command `shit worktree add /path/other/test-next next` creates the linked
 worktree in `/path/other/test-next` and also creates a
-`$GIT_DIR/worktrees/test-next` directory (or `$GIT_DIR/worktrees/test-next1`
+`$shit_DIR/worktrees/test-next` directory (or `$shit_DIR/worktrees/test-next1`
 if `test-next` is already taken).
 
-Within a linked worktree, `$GIT_DIR` is set to point to this private
-directory (e.g. `/path/main/.git/worktrees/test-next` in the example) and
-`$GIT_COMMON_DIR` is set to point back to the main worktree's `$GIT_DIR`
-(e.g. `/path/main/.git`). These settings are made in a `.git` file located at
+Within a linked worktree, `$shit_DIR` is set to point to this private
+directory (e.g. `/path/main/.shit/worktrees/test-next` in the example) and
+`$shit_COMMON_DIR` is set to point back to the main worktree's `$shit_DIR`
+(e.g. `/path/main/.shit`). These settings are made in a `.shit` file located at
 the top directory of the linked worktree.
 
-Path resolution via `git rev-parse --git-path` uses either
-`$GIT_DIR` or `$GIT_COMMON_DIR` depending on the path. For example, in the
-linked worktree `git rev-parse --git-path HEAD` returns
-`/path/main/.git/worktrees/test-next/HEAD` (not
-`/path/other/test-next/.git/HEAD` or `/path/main/.git/HEAD`) while `git
-rev-parse --git-path refs/heads/master` uses
-`$GIT_COMMON_DIR` and returns `/path/main/.git/refs/heads/master`,
+Path resolution via `shit rev-parse --shit-path` uses either
+`$shit_DIR` or `$shit_COMMON_DIR` depending on the path. For example, in the
+linked worktree `shit rev-parse --shit-path HEAD` returns
+`/path/main/.shit/worktrees/test-next/HEAD` (not
+`/path/other/test-next/.shit/HEAD` or `/path/main/.shit/HEAD`) while `shit
+rev-parse --shit-path refs/heads/master` uses
+`$shit_COMMON_DIR` and returns `/path/main/.shit/refs/heads/master`,
 since refs are shared across all worktrees, except `refs/bisect`,
 `refs/worktree` and `refs/rewritten`.
 
-See linkgit:gitrepository-layout[5] for more information. The rule of
+See linkshit:shitrepository-layout[5] for more information. The rule of
 thumb is do not make any assumption about whether a path belongs to
-`$GIT_DIR` or `$GIT_COMMON_DIR` when you need to directly access something
-inside `$GIT_DIR`. Use `git rev-parse --git-path` to get the final path.
+`$shit_DIR` or `$shit_COMMON_DIR` when you need to directly access something
+inside `$shit_DIR`. Use `shit rev-parse --shit-path` to get the final path.
 
-If you manually move a linked worktree, you need to update the `gitdir` file
+If you manually move a linked worktree, you need to update the `shitdir` file
 in the entry's directory. For example, if a linked worktree is moved
-to `/newpath/test-next` and its `.git` file points to
-`/path/main/.git/worktrees/test-next`, then update
-`/path/main/.git/worktrees/test-next/gitdir` to reference `/newpath/test-next`
-instead. Better yet, run `git worktree repair` to reestablish the connection
+to `/newpath/test-next` and its `.shit` file points to
+`/path/main/.shit/worktrees/test-next`, then update
+`/path/main/.shit/worktrees/test-next/shitdir` to reference `/newpath/test-next`
+instead. Better yet, run `shit worktree repair` to reestablish the connection
 automatically.
 
-To prevent a `$GIT_DIR/worktrees` entry from being pruned (which
+To prevent a `$shit_DIR/worktrees` entry from being pruned (which
 can be useful in some situations, such as when the
 entry's worktree is stored on a portable device), use the
-`git worktree lock` command, which adds a file named
+`shit worktree lock` command, which adds a file named
 `locked` to the entry's directory. The file contains the reason in
-plain text. For example, if a linked worktree's `.git` file points
-to `/path/main/.git/worktrees/test-next` then a file named
-`/path/main/.git/worktrees/test-next/locked` will prevent the
+plain text. For example, if a linked worktree's `.shit` file points
+to `/path/main/.shit/worktrees/test-next` then a file named
+`/path/main/.shit/worktrees/test-next/locked` will prevent the
 `test-next` entry from being pruned.  See
-linkgit:gitrepository-layout[5] for details.
+linkshit:shitrepository-layout[5] for details.
 
 When `extensions.worktreeConfig` is enabled, the config file
-`.git/worktrees/<id>/config.worktree` is read after `.git/config` is.
+`.shit/worktrees/<id>/config.worktree` is read after `.shit/config` is.
 
 LIST OUTPUT FORMAT
 ------------------
@@ -400,7 +400,7 @@ The `worktree list` command has two output formats. The default format shows the
 details on a single line with columns.  For example:
 
 ------------
-$ git worktree list
+$ shit worktree list
 /path/to/bare-source            (bare)
 /path/to/linked-worktree        abcd1234 [master]
 /path/to/other-linked-worktree  1234abc  (detached HEAD)
@@ -410,10 +410,10 @@ The command also shows annotations for each worktree, according to its state.
 These annotations are:
 
  * `locked`, if the worktree is locked.
- * `prunable`, if the worktree can be pruned via `git worktree prune`.
+ * `prunable`, if the worktree can be pruned via `shit worktree prune`.
 
 ------------
-$ git worktree list
+$ shit worktree list
 /path/to/linked-worktree    abcd1234 [master]
 /path/to/locked-worktree    acbd5678 (brancha) locked
 /path/to/prunable-worktree  5678abc  (detached HEAD) prunable
@@ -424,13 +424,13 @@ seen using the verbose mode. The annotation is then moved to the next line
 indented followed by the additional information.
 
 ------------
-$ git worktree list --verbose
+$ shit worktree list --verbose
 /path/to/linked-worktree              abcd1234 [master]
 /path/to/locked-worktree-no-reason    abcd5678 (detached HEAD) locked
 /path/to/locked-worktree-with-reason  1234abcd (brancha)
 	locked: worktree path is mounted on a portable device
 /path/to/prunable-worktree            5678abc1 (detached HEAD)
-	prunable: gitdir file points to non-existent location
+	prunable: shitdir file points to non-existent location
 ------------
 
 Note that the annotation is moved to the next line if the additional
@@ -449,7 +449,7 @@ attribute of a worktree is always `worktree`, an empty line indicates the
 end of the record.  For example:
 
 ------------
-$ git worktree list --porcelain
+$ shit worktree list --porcelain
 worktree /path/to/bare-source
 bare
 
@@ -474,17 +474,17 @@ locked reason why is locked
 worktree /path/to/linked-worktree-prunable
 HEAD 1233def1234def1234def1234def1234def1234b
 detached
-prunable gitdir file points to non-existent location
+prunable shitdir file points to non-existent location
 
 ------------
 
 Unless `-z` is used any "unusual" characters in the lock reason such as newlines
 are escaped and the entire reason is quoted as explained for the
-configuration variable `core.quotePath` (see linkgit:git-config[1]).
+configuration variable `core.quotePath` (see linkshit:shit-config[1]).
 For Example:
 
 ------------
-$ git worktree list --porcelain
+$ shit worktree list --porcelain
 ...
 locked "reason\nwhy is locked"
 ...
@@ -494,7 +494,7 @@ EXAMPLES
 --------
 You are in the middle of a refactoring session and your boss comes in and
 demands that you fix something immediately. You might typically use
-linkgit:git-stash[1] to store your changes away temporarily, however, your
+linkshit:shit-stash[1] to store your changes away temporarily, however, your
 working tree is in such a state of disarray (with new, moved, and removed
 files, and other bits and pieces strewn around) that you don't want to risk
 disturbing any of it. Instead, you create a temporary linked worktree to
@@ -502,12 +502,12 @@ make the emergency fix, remove it when done, and then resume your earlier
 refactoring session.
 
 ------------
-$ git worktree add -b emergency-fix ../temp master
-$ pushd ../temp
+$ shit worktree add -b emergency-fix ../temp master
+$ defecated ../temp
 # ... hack hack hack ...
-$ git commit -a -m 'emergency fix for boss'
+$ shit commit -a -m 'emergency fix for boss'
 $ popd
-$ git worktree remove ../temp
+$ shit worktree remove ../temp
 ------------
 
 BUGS
@@ -516,6 +516,6 @@ Multiple checkout in general is still experimental, and the support
 for submodules is incomplete. It is NOT recommended to make multiple
 checkouts of a superproject.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

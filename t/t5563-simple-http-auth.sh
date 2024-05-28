@@ -18,7 +18,7 @@ test_expect_success 'setup_credential_helper' '
 	PATH=$PATH:"$TRASH_DIRECTORY/bin" &&
 	export PATH &&
 
-	CREDENTIAL_HELPER="$TRASH_DIRECTORY/bin/git-credential-test-helper" &&
+	CREDENTIAL_HELPER="$TRASH_DIRECTORY/bin/shit-credential-test-helper" &&
 	write_script "$CREDENTIAL_HELPER" <<-\EOF
 	cmd=$1
 	teefile=$cmd-query-temp.cred
@@ -59,8 +59,8 @@ per_test_cleanup () {
 
 test_expect_success 'setup repository' '
 	test_commit foo &&
-	git init --bare "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" &&
-	git push --mirror "$HTTPD_DOCUMENT_ROOT_PATH/repo.git"
+	shit init --bare "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" &&
+	shit defecate --mirror "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit"
 '
 
 test_expect_success 'access using basic auth' '
@@ -82,7 +82,7 @@ test_expect_success 'access using basic auth' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -120,7 +120,7 @@ test_expect_success 'access using basic auth via authtype' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	GIT_CURL_VERBOSE=1 git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit_CURL_VERBOSE=1 shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -158,7 +158,7 @@ test_expect_success 'access using basic auth invalid credentials' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	test_must_fail git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	test_must_fail shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -198,7 +198,7 @@ test_expect_success 'access using basic auth with extra challenges' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -239,7 +239,7 @@ test_expect_success 'access using basic auth mixed-case wwwauth header name' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -285,7 +285,7 @@ test_expect_success 'access using basic auth with wwwauth header continuations' 
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -333,7 +333,7 @@ test_expect_success 'access using basic auth with wwwauth header empty continuat
 	printf "id=default response=WWW-Authenticate: Basic realm=\"example.com\"\r\n" >>"$CHALLENGE" &&
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -377,7 +377,7 @@ test_expect_success 'access using basic auth with wwwauth header mixed line-endi
 	printf "id=default response=WWW-Authenticate: Basic realm=\"example.com\"" >>"$CHALLENGE" &&
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -405,7 +405,7 @@ test_expect_success 'access using bearer auth' '
 	credential=YS1naXQtdG9rZW4=
 	EOF
 
-	# Basic base64(a-git-token)
+	# Basic base64(a-shit-token)
 	cat >"$HTTPD_ROOT_PATH/custom-auth.valid" <<-EOF &&
 	id=1 creds=Bearer YS1naXQtdG9rZW4=
 	EOF
@@ -420,7 +420,7 @@ test_expect_success 'access using bearer auth' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -450,7 +450,7 @@ test_expect_success 'access using bearer auth with invalid credentials' '
 	credential=incorrect-token
 	EOF
 
-	# Basic base64(a-git-token)
+	# Basic base64(a-shit-token)
 	cat >"$HTTPD_ROOT_PATH/custom-auth.valid" <<-EOF &&
 	id=1 creds=Bearer YS1naXQtdG9rZW4=
 	EOF
@@ -465,7 +465,7 @@ test_expect_success 'access using bearer auth with invalid credentials' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	test_must_fail git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	test_must_fail shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype
@@ -525,7 +525,7 @@ test_expect_success 'access using three-legged auth' '
 	EOF
 
 	test_config_global credential.helper test-helper &&
-	git ls-remote "$HTTPD_URL/custom_auth/repo.git" &&
+	shit ls-remote "$HTTPD_URL/custom_auth/repo.shit" &&
 
 	expect_credential_query get <<-EOF &&
 	capability[]=authtype

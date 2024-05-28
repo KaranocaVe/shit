@@ -17,7 +17,7 @@ test_expect_success 'get by URL: 404' '
 	get $url file1
 	EOF
 
-	test_must_fail git remote-http $url <input 2>err &&
+	test_must_fail shit remote-http $url <input 2>err &&
 	test_path_is_missing file1 &&
 	grep "failed to download file at URL" err
 '
@@ -32,7 +32,7 @@ test_expect_success 'get by URL: 200' '
 
 	EOF
 
-	git remote-http $url <input &&
+	shit remote-http $url <input &&
 	test_cmp "$HTTPD_DOCUMENT_ROOT_PATH/exists.txt" file2
 '
 

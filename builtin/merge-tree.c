@@ -321,7 +321,7 @@ static void unresolved(const struct traverse_info *info, struct name_entry n[3])
  *    where not all of the 1/2/3 lines may exist, of course.
  *
  * The successful merge rules are the same as for the three-way merge
- * in git-read-tree.
+ * in shit-read-tree.
  */
 static int threeway_callback(int n UNUSED, unsigned long mask,
 			     unsigned long dirmask UNUSED,
@@ -534,8 +534,8 @@ int cmd_merge_tree(int argc, const char **argv, const char *prefix)
 	const char *merge_base = NULL;
 
 	const char * const merge_tree_usage[] = {
-		N_("git merge-tree [--write-tree] [<options>] <branch1> <branch2>"),
-		N_("git merge-tree [--trivial-merge] <base-tree> <branch1> <branch2>"),
+		N_("shit merge-tree [--write-tree] [<options>] <branch1> <branch2>"),
+		N_("shit merge-tree [--trivial-merge] <base-tree> <branch1> <branch2>"),
 		NULL
 	};
 	struct option mt_options[] = {
@@ -659,7 +659,7 @@ int cmd_merge_tree(int argc, const char **argv, const char *prefix)
 	if (argc != expected_remaining_argc)
 		usage_with_options(merge_tree_usage, mt_options);
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	/* Do the relevant type of merge */
 	if (o.mode == MODE_REAL)

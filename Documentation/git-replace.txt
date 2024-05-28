@@ -1,19 +1,19 @@
-git-replace(1)
+shit-replace(1)
 ==============
 
 NAME
 ----
-git-replace - Create, list, delete refs to replace objects
+shit-replace - Create, list, delete refs to replace objects
 
 SYNOPSIS
 --------
 [verse]
-'git replace' [-f] <object> <replacement>
-'git replace' [-f] --edit <object>
-'git replace' [-f] --graft <commit> [<parent>...]
-'git replace' [-f] --convert-graft-file
-'git replace' -d <object>...
-'git replace' [--format=<format>] [-l [<pattern>]]
+'shit replace' [-f] <object> <replacement>
+'shit replace' [-f] --edit <object>
+'shit replace' [-f] --graft <commit> [<parent>...]
+'shit replace' [-f] --convert-graft-file
+'shit replace' -d <object>...
+'shit replace' [--format=<format>] [-l [<pattern>]]
 
 DESCRIPTION
 -----------
@@ -31,28 +31,28 @@ Unless `-f` is given, the 'replace' reference must not yet exist.
 There is no other restriction on the replaced and replacement objects.
 Merge commits can be replaced by non-merge commits and vice versa.
 
-Replacement references will be used by default by all Git commands
+Replacement references will be used by default by all shit commands
 except those doing reachability traversal (prune, pack transfer and
 fsck).
 
 It is possible to disable the use of replacement references for any
-command using the `--no-replace-objects` option just after 'git'.
+command using the `--no-replace-objects` option just after 'shit'.
 
 For example if commit 'foo' has been replaced by commit 'bar':
 
 ------------------------------------------------
-$ git --no-replace-objects cat-file commit foo
+$ shit --no-replace-objects cat-file commit foo
 ------------------------------------------------
 
 shows information about commit 'foo', while:
 
 ------------------------------------------------
-$ git cat-file commit foo
+$ shit cat-file commit foo
 ------------------------------------------------
 
 shows information about commit 'bar'.
 
-The `GIT_NO_REPLACE_OBJECTS` environment variable can be set to
+The `shit_NO_REPLACE_OBJECTS` environment variable can be set to
 achieve the same effect as the `--no-replace-objects` option.
 
 OPTIONS
@@ -72,7 +72,7 @@ OPTIONS
 	editor is launched on the file, and the result is parsed to
 	create a new object of the same type as <object>. A
 	replacement ref is then created to replace <object> with the
-	newly created object. See linkgit:git-var[1] for details about
+	newly created object. See linkshit:shit-var[1] for details about
 	how the editor will be chosen.
 
 --raw::
@@ -89,10 +89,10 @@ OPTIONS
 	[<parent>...] instead of <commit>'s parents. A replacement ref
 	is then created to replace <commit> with the newly created
 	commit. Use `--convert-graft-file` to convert a
-	`$GIT_DIR/info/grafts` file and use replace refs instead.
+	`$shit_DIR/info/grafts` file and use replace refs instead.
 
 --convert-graft-file::
-	Creates graft commits for all entries in `$GIT_DIR/info/grafts`
+	Creates graft commits for all entries in `$shit_DIR/info/grafts`
 	and deletes that file upon success. The purpose is to help users
 	with transitioning off of the now-deprecated graft file.
 
@@ -100,7 +100,7 @@ OPTIONS
 --list <pattern>::
 	List replace refs for objects that match the given pattern (or
 	all if no pattern is given).
-	Typing "git replace" without arguments, also lists all replace
+	Typing "shit replace" without arguments, also lists all replace
 	refs.
 
 --format=<format>::
@@ -123,10 +123,10 @@ The following formats are available:
 CREATING REPLACEMENT OBJECTS
 ----------------------------
 
-linkgit:git-hash-object[1], linkgit:git-rebase[1], and
-https://github.com/newren/git-filter-repo[git-filter-repo], among other git commands, can be used to
+linkshit:shit-hash-object[1], linkshit:shit-rebase[1], and
+https://shithub.com/newren/shit-filter-repo[shit-filter-repo], among other shit commands, can be used to
 create replacement objects from existing objects. The `--edit` option
-can also be used with 'git replace' to create a replacement object by
+can also be used with 'shit replace' to create a replacement object by
 editing an existing object.
 
 If you want to replace many blobs, trees or commits that are part of a
@@ -138,24 +138,24 @@ of commits.
 BUGS
 ----
 Comparing blobs or trees that have been replaced with those that
-replace them will not work properly. And using `git reset --hard` to
+replace them will not work properly. And using `shit reset --hard` to
 go back to a replaced commit will move the branch to the replacement
 commit instead of the replaced commit.
 
-There may be other problems when using 'git rev-list' related to
+There may be other problems when using 'shit rev-list' related to
 pending objects.
 
 SEE ALSO
 --------
-linkgit:git-hash-object[1]
-linkgit:git-rebase[1]
-linkgit:git-tag[1]
-linkgit:git-branch[1]
-linkgit:git-commit[1]
-linkgit:git-var[1]
-linkgit:git[1]
-https://github.com/newren/git-filter-repo[git-filter-repo]
+linkshit:shit-hash-object[1]
+linkshit:shit-rebase[1]
+linkshit:shit-tag[1]
+linkshit:shit-branch[1]
+linkshit:shit-commit[1]
+linkshit:shit-var[1]
+linkshit:shit[1]
+https://shithub.com/newren/shit-filter-repo[shit-filter-repo]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

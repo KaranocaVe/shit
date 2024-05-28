@@ -1,15 +1,15 @@
-git-ls-tree(1)
+shit-ls-tree(1)
 ==============
 
 NAME
 ----
-git-ls-tree - List the contents of a tree object
+shit-ls-tree - List the contents of a tree object
 
 
 SYNOPSIS
 --------
 [verse]
-'git ls-tree' [-d] [-r] [-t] [-l] [-z]
+'shit ls-tree' [-d] [-r] [-t] [-l] [-z]
 	    [--name-only] [--name-status] [--object-only] [--full-name] [--full-tree] [--abbrev[=<n>]] [--format=<format>]
 	    <tree-ish> [<path>...]
 
@@ -25,10 +25,10 @@ in the current working directory.  Note that:
 
  - the behaviour is similar to that of "/bin/ls" in that the '<path>' is
    taken as relative to the current working directory.  E.g. when you are
-   in a directory 'sub' that has a directory 'dir', you can run 'git
+   in a directory 'sub' that has a directory 'dir', you can run 'shit
    ls-tree -r HEAD dir' to list the contents of the tree (that is
    `sub/dir` in `HEAD`).  You don't want to give a tree that is not at the
-   root level (e.g. `git ls-tree -r HEAD:sub dir`) in this case, as that
+   root level (e.g. `shit ls-tree -r HEAD:sub dir`) in this case, as that
    would result in asking for `sub/sub/dir` in the `HEAD` commit.
    However, the current working directory can be ignored by passing
    --full-tree option.
@@ -72,8 +72,8 @@ OPTIONS
 --abbrev[=<n>]::
 	Instead of showing the full 40-byte hexadecimal object
 	lines, show the shortest prefix that is at least '<n>'
-	hexdigits long that uniquely refers the object.
-	Non default number of digits can be specified with --abbrev=<n>.
+	hexdishits long that uniquely refers the object.
+	Non default number of dishits can be specified with --abbrev=<n>.
 
 --full-name::
 	Instead of showing the path names relative to the current working
@@ -86,7 +86,7 @@ OPTIONS
 --format=<format>::
 	A string that interpolates `%(fieldname)` from the result
 	being shown. It also interpolates `%%` to `%`, and
-	`%xNN` where `NN` are hex digits interpolates to character
+	`%xNN` where `NN` are hex dishits interpolates to character
 	with hex code `NN`; for example `%x00` interpolates to
 	`\0` (NUL), `%x09` to `\t` (TAB) and `%x0a` to `\n` (LF).
 	When specified, `--format` cannot be combined with other
@@ -117,7 +117,7 @@ is equivalent to:
 	%(objectmode) %(objecttype) %(objectname)%x09%(path)
 
 This output format is compatible with what `--index-info --stdin` of
-'git update-index' expects.
+'shit update-index' expects.
 
 When the `-l` option is used, format changes to
 
@@ -129,7 +129,7 @@ with minimum width of 7 characters.  Object size is given only for blobs
 
 Without the `-z` option, pathnames with "unusual" characters are
 quoted as explained for the configuration variable `core.quotePath`
-(see linkgit:git-config[1]).  Using `-z` the filename is output
+(see linkshit:shit-config[1]).  Using `-z` the filename is output
 verbatim and the line is terminated by a NUL byte.
 
 Customized format:
@@ -139,7 +139,7 @@ which is able to interpolate different fields using a `%(fieldname)` notation.
 For example, if you only care about the "objectname" and "path" fields, you
 can execute with a specific "--format" like
 
-	git ls-tree --format='%(objectname) %(path)' <tree-ish>
+	shit ls-tree --format='%(objectname) %(path)' <tree-ish>
 
 FIELD NAMES
 -----------
@@ -160,6 +160,6 @@ objectsize[:padded]::
 path::
 	The pathname of the object.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

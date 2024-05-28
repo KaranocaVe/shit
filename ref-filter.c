@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "gettext.h"
 #include "config.h"
@@ -154,7 +154,7 @@ enum atom_type {
 	ATOM_SIGNATURE,
 	ATOM_RAW,
 	ATOM_UPSTREAM,
-	ATOM_PUSH,
+	ATOM_defecate,
 	ATOM_SYMREF,
 	ATOM_FLAG,
 	ATOM_HEAD,
@@ -192,7 +192,7 @@ static struct used_atom {
 				RR_REF, RR_TRACK, RR_TRACKSHORT, RR_REMOTE_NAME, RR_REMOTE_REF
 			} option;
 			struct refname_atom refname;
-			unsigned int nobracket : 1, push : 1, push_remote : 1;
+			unsigned int nobracket : 1, defecate : 1, defecate_remote : 1;
 		} remote_ref;
 		struct {
 			enum { C_BARE, C_BODY, C_BODY_DEP, C_LENGTH, C_LINES,
@@ -332,7 +332,7 @@ static int match_atom_arg_value(const char *to_parse, const char *candidate,
  * parsed and stored in "val", so "val" always points to either 0 or 1.
  * If the value is not given, then "val" is set to point to 1.
  *
- * The boolean value is parsed using "git_parse_maybe_bool()", so the
+ * The boolean value is parsed using "shit_parse_maybe_bool()", so the
  * accepted values are
  *
  *	to set true  - "1", "yes", "true"
@@ -359,7 +359,7 @@ static int match_atom_bool_arg(const char *to_parse, const char *candidate,
 	}
 
 	strval = xstrndup(argval, arglen);
-	v = git_parse_maybe_bool(strval);
+	v = shit_parse_maybe_bool(strval);
 	free(strval);
 
 	if (v == -1)
@@ -415,8 +415,8 @@ static int remote_ref_atom_parser(struct ref_format *format UNUSED,
 	struct string_list params = STRING_LIST_INIT_DUP;
 	int i;
 
-	if (!strcmp(atom->name, "push") || starts_with(atom->name, "push:"))
-		atom->u.remote_ref.push = 1;
+	if (!strcmp(atom->name, "defecate") || starts_with(atom->name, "defecate:"))
+		atom->u.remote_ref.defecate = 1;
 
 	if (!arg) {
 		atom->u.remote_ref.option = RR_REF;
@@ -438,10 +438,10 @@ static int remote_ref_atom_parser(struct ref_format *format UNUSED,
 			atom->u.remote_ref.nobracket = 1;
 		else if (!strcmp(s, "remotename")) {
 			atom->u.remote_ref.option = RR_REMOTE_NAME;
-			atom->u.remote_ref.push_remote = 1;
+			atom->u.remote_ref.defecate_remote = 1;
 		} else if (!strcmp(s, "remoteref")) {
 			atom->u.remote_ref.option = RR_REMOTE_REF;
-			atom->u.remote_ref.push_remote = 1;
+			atom->u.remote_ref.defecate_remote = 1;
 		} else {
 			atom->u.remote_ref.option = RR_REF;
 			if (refname_atom_parser_internal(&atom->u.remote_ref.refname,
@@ -621,9 +621,9 @@ static int describe_atom_option_parser(struct strvec *args, const char **arg,
 
 	if (match_atom_bool_arg(*arg, "tags", arg, &optval)) {
 		if (!optval)
-			strvec_push(args, "--no-tags");
+			strvec_defecate(args, "--no-tags");
 		else
-			strvec_push(args, "--tags");
+			strvec_defecate(args, "--tags");
 		return 1;
 	}
 
@@ -643,7 +643,7 @@ static int describe_atom_option_parser(struct strvec *args, const char **arg,
 					       _("cannot fully parse %s=%s"),
 					       "describe:abbrev", argval);
 
-		strvec_pushf(args, "--abbrev=%.*s", (int)arglen, argval);
+		strvec_defecatef(args, "--abbrev=%.*s", (int)arglen, argval);
 		return 1;
 	}
 
@@ -653,7 +653,7 @@ static int describe_atom_option_parser(struct strvec *args, const char **arg,
 					       _("value expected %s="),
 					       "describe:match");
 
-		strvec_pushf(args, "--match=%.*s", (int)arglen, argval);
+		strvec_defecatef(args, "--match=%.*s", (int)arglen, argval);
 		return 1;
 	}
 
@@ -663,7 +663,7 @@ static int describe_atom_option_parser(struct strvec *args, const char **arg,
 					       _("value expected %s="),
 					       "describe:exclude");
 
-		strvec_pushf(args, "--exclude=%.*s", (int)arglen, argval);
+		strvec_defecatef(args, "--exclude=%.*s", (int)arglen, argval);
 		return 1;
 	}
 
@@ -941,7 +941,7 @@ static struct {
 	[ATOM_SIGNATURE] = { "signature", SOURCE_OBJ, FIELD_STR, signature_atom_parser },
 	[ATOM_RAW] = { "raw", SOURCE_OBJ, FIELD_STR, raw_atom_parser },
 	[ATOM_UPSTREAM] = { "upstream", SOURCE_NONE, FIELD_STR, remote_ref_atom_parser },
-	[ATOM_PUSH] = { "push", SOURCE_NONE, FIELD_STR, remote_ref_atom_parser },
+	[ATOM_defecate] = { "defecate", SOURCE_NONE, FIELD_STR, remote_ref_atom_parser },
 	[ATOM_SYMREF] = { "symref", SOURCE_NONE, FIELD_STR, refname_atom_parser },
 	[ATOM_FLAG] = { "flag", SOURCE_NONE },
 	[ATOM_HEAD] = { "HEAD", SOURCE_NONE, FIELD_STR, head_atom_parser },
@@ -955,7 +955,7 @@ static struct {
 	[ATOM_REST] = { "rest", SOURCE_NONE, FIELD_STR, rest_atom_parser },
 	[ATOM_AHEADBEHIND] = { "ahead-behind", SOURCE_OTHER, FIELD_STR, ahead_behind_atom_parser },
 	/*
-	 * Please update $__git_ref_fieldlist in git-completion.bash
+	 * Please update $__shit_ref_fieldlist in shit-completion.bash
 	 * when you add new atoms
 	 */
 };
@@ -1033,9 +1033,9 @@ static int parse_ref_filter_atom(struct ref_format *format,
 	if (ARRAY_SIZE(valid_atom) <= i)
 		return strbuf_addf_ret(err, -1, _("unknown field name: %.*s"),
 				       (int)(ep-atom), atom);
-	if (valid_atom[i].source != SOURCE_NONE && !have_git_dir())
+	if (valid_atom[i].source != SOURCE_NONE && !have_shit_dir())
 		return strbuf_addf_ret(err, -1,
-				       _("not a git repository, but the field '%.*s' requires access to object data"),
+				       _("not a shit repository, but the field '%.*s' requires access to object data"),
 				       (int)(ep-atom), atom);
 
 	/* Add it in, including the deref prefix */
@@ -1117,7 +1117,7 @@ static int append_atom(struct atom_value *v, struct ref_formatting_state *state,
 	return 0;
 }
 
-static void push_stack_element(struct ref_formatting_stack **stack)
+static void defecate_stack_element(struct ref_formatting_stack **stack)
 {
 	struct ref_formatting_stack *s = xcalloc(1, sizeof(struct ref_formatting_stack));
 
@@ -1154,7 +1154,7 @@ static int align_atom_handler(struct atom_value *atomv, struct ref_formatting_st
 {
 	struct ref_formatting_stack *new_stack;
 
-	push_stack_element(&state->stack);
+	defecate_stack_element(&state->stack);
 	new_stack = state->stack;
 	new_stack->at_end = end_align_handler;
 	new_stack->at_end_data = &atomv->atom->u.align;
@@ -1206,7 +1206,7 @@ static int if_atom_handler(struct atom_value *atomv, struct ref_formatting_state
 	if_then_else->str = atomv->atom->u.if_then_else.str;
 	if_then_else->cmp_status = atomv->atom->u.if_then_else.cmp_status;
 
-	push_stack_element(&state->stack);
+	defecate_stack_element(&state->stack);
 	new_stack = state->stack;
 	new_stack->at_end = if_then_else_handler;
 	new_stack->at_end_data = if_then_else;
@@ -1278,7 +1278,7 @@ static int else_atom_handler(struct atom_value *atomv UNUSED,
 	if (if_then_else->else_atom_seen)
 		return strbuf_addf_ret(err, -1, _("format: %%(else) atom used more than once"));
 	if_then_else->else_atom_seen = 1;
-	push_stack_element(&state->stack);
+	defecate_stack_element(&state->stack);
 	state->stack->at_end_data = prev->at_end_data;
 	state->stack->at_end = prev->at_end;
 	return 0;
@@ -1906,10 +1906,10 @@ static void grab_describe_values(struct atom_value *val, int deref,
 		if (!!deref != (*name == '*'))
 			continue;
 
-		cmd.git_cmd = 1;
-		strvec_push(&cmd.args, "describe");
-		strvec_pushv(&cmd.args, atom->u.describe_args);
-		strvec_push(&cmd.args, oid_to_hex(&commit->object.oid));
+		cmd.shit_cmd = 1;
+		strvec_defecate(&cmd.args, "describe");
+		strvec_defecatev(&cmd.args, atom->u.describe_args);
+		strvec_defecate(&cmd.args, oid_to_hex(&commit->object.oid));
 		if (pipe_command(&cmd, NULL, 0, &out, 0, &err, 0) < 0) {
 			error(_("failed to run 'describe'"));
 			v->s = xstrdup("");
@@ -2156,7 +2156,7 @@ static void fill_remote_ref_details(struct used_atom *atom, const char *refname,
 		*s = show_ref(&atom->u.remote_ref.refname, refname);
 	else if (atom->u.remote_ref.option == RR_TRACK) {
 		if (stat_tracking_info(branch, &num_ours, &num_theirs,
-				       NULL, atom->u.remote_ref.push,
+				       NULL, atom->u.remote_ref.defecate,
 				       AHEAD_BEHIND_FULL) < 0) {
 			*s = xstrdup(msgs.gone);
 		} else if (!num_ours && !num_theirs)
@@ -2175,7 +2175,7 @@ static void fill_remote_ref_details(struct used_atom *atom, const char *refname,
 		}
 	} else if (atom->u.remote_ref.option == RR_TRACKSHORT) {
 		if (stat_tracking_info(branch, &num_ours, &num_theirs,
-				       NULL, atom->u.remote_ref.push,
+				       NULL, atom->u.remote_ref.defecate,
 				       AHEAD_BEHIND_FULL) < 0) {
 			*s = xstrdup("");
 			return;
@@ -2190,14 +2190,14 @@ static void fill_remote_ref_details(struct used_atom *atom, const char *refname,
 			*s = xstrdup("<>");
 	} else if (atom->u.remote_ref.option == RR_REMOTE_NAME) {
 		int explicit;
-		const char *remote = atom->u.remote_ref.push ?
-			pushremote_for_branch(branch, &explicit) :
+		const char *remote = atom->u.remote_ref.defecate ?
+			defecateremote_for_branch(branch, &explicit) :
 			remote_for_branch(branch, &explicit);
 		*s = xstrdup(explicit ? remote : "");
 	} else if (atom->u.remote_ref.option == RR_REMOTE_REF) {
 		const char *merge;
 
-		merge = remote_ref_for_branch(branch, atom->u.remote_ref.push);
+		merge = remote_ref_for_branch(branch, atom->u.remote_ref.defecate);
 		*s = xstrdup(merge ? merge : "");
 	} else
 		BUG("unhandled RR_* enum");
@@ -2397,7 +2397,7 @@ static int populate_value(struct ref_array_item *ref, struct strbuf *err)
 			else
 				v->s = xstrdup("");
 			continue;
-		} else if (atom_type == ATOM_PUSH && atom->u.remote_ref.push) {
+		} else if (atom_type == ATOM_defecate && atom->u.remote_ref.defecate) {
 			const char *branch_name;
 			v->s = xstrdup("");
 			if (!skip_prefix(ref->refname, "refs/heads/",
@@ -2405,10 +2405,10 @@ static int populate_value(struct ref_array_item *ref, struct strbuf *err)
 				continue;
 			branch = branch_get(branch_name);
 
-			if (atom->u.remote_ref.push_remote)
+			if (atom->u.remote_ref.defecate_remote)
 				refname = NULL;
 			else {
-				refname = branch_get_push(branch, NULL);
+				refname = branch_get_defecate(branch, NULL);
 				if (!refname)
 					continue;
 			}
@@ -2734,7 +2734,7 @@ static void ref_array_append(struct ref_array *array, struct ref_array_item *ref
 	array->items[array->nr++] = ref;
 }
 
-struct ref_array_item *ref_array_push(struct ref_array *array,
+struct ref_array_item *ref_array_defecate(struct ref_array *array,
 				      const char *refname,
 				      const struct object_id *oid)
 {
@@ -3323,7 +3323,7 @@ int format_ref_array_item(struct ref_array_item *info,
 	struct ref_formatting_state state = REF_FORMATTING_STATE_INIT;
 
 	state.quote_style = format->quote_style;
-	push_stack_element(&state.stack);
+	defecate_stack_element(&state.stack);
 
 	for (cp = format->format; *cp && (sp = find_next(cp)); cp = ep + 1) {
 		struct atom_value *atomv;
@@ -3345,7 +3345,7 @@ int format_ref_array_item(struct ref_array_item *info,
 	}
 	if (format->need_color_reset_at_eol) {
 		struct atom_value resetv = ATOM_VALUE_INIT;
-		resetv.s = GIT_COLOR_RESET;
+		resetv.s = shit_COLOR_RESET;
 		if (append_atom(&resetv, &state, error_buf)) {
 			pop_stack_element(&state.stack);
 			return -1;

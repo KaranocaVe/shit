@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "environment.h"
 #include "gettext.h"
@@ -61,8 +61,8 @@ static struct worktree *get_main_worktree(int skip_reading_head)
 	struct worktree *worktree = NULL;
 	struct strbuf worktree_path = STRBUF_INIT;
 
-	strbuf_add_real_path(&worktree_path, get_git_common_dir());
-	strbuf_strip_suffix(&worktree_path, "/.git");
+	strbuf_add_real_path(&worktree_path, get_shit_common_dir());
+	strbuf_strip_suffix(&worktree_path, "/.shit");
 
 	CALLOC_ARRAY(worktree, 1);
 	worktree->path = strbuf_detach(&worktree_path, NULL);
@@ -90,12 +90,12 @@ struct worktree *get_linked_worktree(const char *id,
 	if (!id)
 		die("Missing linked worktree name");
 
-	strbuf_git_common_path(&path, the_repository, "worktrees/%s/gitdir", id);
+	strbuf_shit_common_path(&path, the_repository, "worktrees/%s/shitdir", id);
 	if (strbuf_read_file(&worktree_path, path.buf, 0) <= 0)
-		/* invalid gitdir file */
+		/* invalid shitdir file */
 		goto done;
 	strbuf_rtrim(&worktree_path);
-	strbuf_strip_suffix(&worktree_path, "/.git");
+	strbuf_strip_suffix(&worktree_path, "/.shit");
 
 	CALLOC_ARRAY(worktree, 1);
 	worktree->path = strbuf_detach(&worktree_path, NULL);
@@ -111,19 +111,19 @@ done:
 
 static void mark_current_worktree(struct worktree **worktrees)
 {
-	char *git_dir = absolute_pathdup(get_git_dir());
+	char *shit_dir = absolute_pathdup(get_shit_dir());
 	int i;
 
 	for (i = 0; worktrees[i]; i++) {
 		struct worktree *wt = worktrees[i];
-		const char *wt_git_dir = get_worktree_git_dir(wt);
+		const char *wt_shit_dir = get_worktree_shit_dir(wt);
 
-		if (!fspathcmp(git_dir, absolute_path(wt_git_dir))) {
+		if (!fspathcmp(shit_dir, absolute_path(wt_shit_dir))) {
 			wt->is_current = 1;
 			break;
 		}
 	}
-	free(git_dir);
+	free(shit_dir);
 }
 
 /*
@@ -145,7 +145,7 @@ static struct worktree **get_worktrees_internal(int skip_reading_head)
 
 	list[counter++] = get_main_worktree(skip_reading_head);
 
-	strbuf_addf(&path, "%s/worktrees", get_git_common_dir());
+	strbuf_addf(&path, "%s/worktrees", get_shit_common_dir());
 	dir = opendir(path.buf);
 	strbuf_release(&path);
 	if (dir) {
@@ -171,14 +171,14 @@ struct worktree **get_worktrees(void)
 	return get_worktrees_internal(0);
 }
 
-const char *get_worktree_git_dir(const struct worktree *wt)
+const char *get_worktree_shit_dir(const struct worktree *wt)
 {
 	if (!wt)
-		return get_git_dir();
+		return get_shit_dir();
 	else if (!wt->id)
-		return get_git_common_dir();
+		return get_shit_common_dir();
 	else
-		return git_common_path("worktrees/%s", wt->id);
+		return shit_common_path("worktrees/%s", wt->id);
 }
 
 static struct worktree *find_worktree_by_suffix(struct worktree **list,
@@ -255,7 +255,7 @@ const char *worktree_lock_reason(struct worktree *wt)
 	if (!wt->lock_reason_valid) {
 		struct strbuf path = STRBUF_INIT;
 
-		strbuf_addstr(&path, worktree_git_path(wt, "locked"));
+		strbuf_addstr(&path, worktree_shit_path(wt, "locked"));
 		if (file_exists(path.buf)) {
 			struct strbuf lock_reason = STRBUF_INIT;
 			if (strbuf_read_file(&lock_reason, path.buf, 0) < 0)
@@ -312,7 +312,7 @@ int validate_worktree(const struct worktree *wt, struct strbuf *errmsg,
 	char *path = NULL;
 	int err, ret = -1;
 
-	strbuf_addf(&wt_path, "%s/.git", wt->path);
+	strbuf_addf(&wt_path, "%s/.shit", wt->path);
 
 	if (is_main_worktree(wt)) {
 		if (is_directory(wt_path.buf)) {
@@ -320,10 +320,10 @@ int validate_worktree(const struct worktree *wt, struct strbuf *errmsg,
 			goto done;
 		}
 		/*
-		 * Main worktree using .git file to point to the
+		 * Main worktree using .shit file to point to the
 		 * repository would make it impossible to know where
 		 * the actual worktree is if this function is executed
-		 * from another worktree. No .git file support for now.
+		 * from another worktree. No .shit file support for now.
 		 */
 		strbuf_addf_gently(errmsg,
 				   _("'%s' at main working tree is not the repository directory"),
@@ -332,13 +332,13 @@ int validate_worktree(const struct worktree *wt, struct strbuf *errmsg,
 	}
 
 	/*
-	 * Make sure "gitdir" file points to a real .git file and that
+	 * Make sure "shitdir" file points to a real .shit file and that
 	 * file points back here.
 	 */
 	if (!is_absolute_path(wt->path)) {
 		strbuf_addf_gently(errmsg,
 				   _("'%s' file does not contain absolute path to the working tree location"),
-				   git_common_path("worktrees/%s/gitdir", wt->id));
+				   shit_common_path("worktrees/%s/shitdir", wt->id));
 		goto done;
 	}
 
@@ -353,19 +353,19 @@ int validate_worktree(const struct worktree *wt, struct strbuf *errmsg,
 		goto done;
 	}
 
-	path = xstrdup_or_null(read_gitfile_gently(wt_path.buf, &err));
+	path = xstrdup_or_null(read_shitfile_gently(wt_path.buf, &err));
 	if (!path) {
-		strbuf_addf_gently(errmsg, _("'%s' is not a .git file, error code %d"),
+		strbuf_addf_gently(errmsg, _("'%s' is not a .shit file, error code %d"),
 				   wt_path.buf, err);
 		goto done;
 	}
 
-	strbuf_realpath(&realpath, git_common_path("worktrees/%s", wt->id), 1);
+	strbuf_realpath(&realpath, shit_common_path("worktrees/%s", wt->id), 1);
 	ret = fspathcmp(path, realpath.buf);
 
 	if (ret)
 		strbuf_addf_gently(errmsg, _("'%s' does not point back to '%s'"),
-				   wt->path, git_common_path("worktrees/%s", wt->id));
+				   wt->path, shit_common_path("worktrees/%s", wt->id));
 done:
 	free(path);
 	strbuf_release(&wt_path);
@@ -382,8 +382,8 @@ void update_worktree_location(struct worktree *wt, const char *path_)
 
 	strbuf_realpath(&path, path_, 1);
 	if (fspathcmp(wt->path, path.buf)) {
-		write_file(git_common_path("worktrees/%s/gitdir", wt->id),
-			   "%s/.git", path.buf);
+		write_file(shit_common_path("worktrees/%s/shitdir", wt->id),
+			   "%s/.shit", path.buf);
 		free(wt->path);
 		wt->path = strbuf_detach(&path, NULL);
 	}
@@ -469,20 +469,20 @@ const struct worktree *find_shared_symref(struct worktree **worktrees,
 
 int submodule_uses_worktrees(const char *path)
 {
-	char *submodule_gitdir;
+	char *submodule_shitdir;
 	struct strbuf sb = STRBUF_INIT, err = STRBUF_INIT;
 	DIR *dir;
 	struct dirent *d;
 	int ret = 0;
 	struct repository_format format = REPOSITORY_FORMAT_INIT;
 
-	submodule_gitdir = git_pathdup_submodule(path, "%s", "");
-	if (!submodule_gitdir)
+	submodule_shitdir = shit_pathdup_submodule(path, "%s", "");
+	if (!submodule_shitdir)
 		return 0;
 
 	/* The env would be set for the superproject. */
-	get_common_dir_noenv(&sb, submodule_gitdir);
-	free(submodule_gitdir);
+	get_common_dir_noenv(&sb, submodule_shitdir);
+	free(submodule_shitdir);
 
 	strbuf_addstr(&sb, "/config");
 	read_repository_format(&format, sb.buf);
@@ -559,13 +559,13 @@ int other_head_refs(each_ref_fn fn, void *cb_data)
 }
 
 /*
- * Repair worktree's /path/to/worktree/.git file if missing, corrupt, or not
+ * Repair worktree's /path/to/worktree/.shit file if missing, corrupt, or not
  * pointing at <repo>/worktrees/<id>.
  */
-static void repair_gitfile(struct worktree *wt,
+static void repair_shitfile(struct worktree *wt,
 			   worktree_repair_fn fn, void *cb_data)
 {
-	struct strbuf dotgit = STRBUF_INIT;
+	struct strbuf dotshit = STRBUF_INIT;
 	struct strbuf repo = STRBUF_INIT;
 	char *backlink;
 	const char *repair = NULL;
@@ -580,25 +580,25 @@ static void repair_gitfile(struct worktree *wt,
 		return;
 	}
 
-	strbuf_realpath(&repo, git_common_path("worktrees/%s", wt->id), 1);
-	strbuf_addf(&dotgit, "%s/.git", wt->path);
-	backlink = xstrdup_or_null(read_gitfile_gently(dotgit.buf, &err));
+	strbuf_realpath(&repo, shit_common_path("worktrees/%s", wt->id), 1);
+	strbuf_addf(&dotshit, "%s/.shit", wt->path);
+	backlink = xstrdup_or_null(read_shitfile_gently(dotshit.buf, &err));
 
-	if (err == READ_GITFILE_ERR_NOT_A_FILE)
-		fn(1, wt->path, _(".git is not a file"), cb_data);
+	if (err == READ_shitFILE_ERR_NOT_A_FILE)
+		fn(1, wt->path, _(".shit is not a file"), cb_data);
 	else if (err)
-		repair = _(".git file broken");
+		repair = _(".shit file broken");
 	else if (fspathcmp(backlink, repo.buf))
-		repair = _(".git file incorrect");
+		repair = _(".shit file incorrect");
 
 	if (repair) {
 		fn(0, wt->path, repair, cb_data);
-		write_file(dotgit.buf, "gitdir: %s", repo.buf);
+		write_file(dotshit.buf, "shitdir: %s", repo.buf);
 	}
 
 	free(backlink);
 	strbuf_release(&repo);
-	strbuf_release(&dotgit);
+	strbuf_release(&dotshit);
 }
 
 static void repair_noop(int iserr UNUSED,
@@ -617,7 +617,7 @@ void repair_worktrees(worktree_repair_fn fn, void *cb_data)
 	if (!fn)
 		fn = repair_noop;
 	for (; *wt; wt++)
-		repair_gitfile(*wt, fn, cb_data);
+		repair_shitfile(*wt, fn, cb_data);
 	free_worktrees(worktrees);
 }
 
@@ -628,9 +628,9 @@ static int is_main_worktree_path(const char *path)
 	int cmp;
 
 	strbuf_add_real_path(&target, path);
-	strbuf_strip_suffix(&target, "/.git");
-	strbuf_add_real_path(&maindir, get_git_common_dir());
-	strbuf_strip_suffix(&maindir, "/.git");
+	strbuf_strip_suffix(&target, "/.shit");
+	strbuf_add_real_path(&maindir, get_shit_common_dir());
+	strbuf_strip_suffix(&maindir, "/.shit");
 	cmp = fspathcmp(maindir.buf, target.buf);
 
 	strbuf_release(&maindir);
@@ -640,20 +640,20 @@ static int is_main_worktree_path(const char *path)
 
 /*
  * If both the main worktree and linked worktree have been moved, then the
- * gitfile /path/to/worktree/.git won't point into the repository, thus we
- * won't know which <repo>/worktrees/<id>/gitdir to repair. However, we may
- * be able to infer the gitdir by manually reading /path/to/worktree/.git,
+ * shitfile /path/to/worktree/.shit won't point into the repository, thus we
+ * won't know which <repo>/worktrees/<id>/shitdir to repair. However, we may
+ * be able to infer the shitdir by manually reading /path/to/worktree/.shit,
  * extracting the <id>, and checking if <repo>/worktrees/<id> exists.
  */
-static char *infer_backlink(const char *gitfile)
+static char *infer_backlink(const char *shitfile)
 {
 	struct strbuf actual = STRBUF_INIT;
 	struct strbuf inferred = STRBUF_INIT;
 	const char *id;
 
-	if (strbuf_read_file(&actual, gitfile, 0) < 0)
+	if (strbuf_read_file(&actual, shitfile, 0) < 0)
 		goto error;
-	if (!starts_with(actual.buf, "gitdir:"))
+	if (!starts_with(actual.buf, "shitdir:"))
 		goto error;
 	if (!(id = find_last_dir_sep(actual.buf)))
 		goto error;
@@ -661,7 +661,7 @@ static char *infer_backlink(const char *gitfile)
 	id++; /* advance past '/' to point at <id> */
 	if (!*id)
 		goto error;
-	strbuf_git_common_path(&inferred, the_repository, "worktrees/%s", id);
+	strbuf_shit_common_path(&inferred, the_repository, "worktrees/%s", id);
 	if (!is_directory(inferred.buf))
 		goto error;
 
@@ -675,16 +675,16 @@ error:
 }
 
 /*
- * Repair <repo>/worktrees/<id>/gitdir if missing, corrupt, or not pointing at
+ * Repair <repo>/worktrees/<id>/shitdir if missing, corrupt, or not pointing at
  * the worktree's path.
  */
 void repair_worktree_at_path(const char *path,
 			     worktree_repair_fn fn, void *cb_data)
 {
-	struct strbuf dotgit = STRBUF_INIT;
-	struct strbuf realdotgit = STRBUF_INIT;
-	struct strbuf gitdir = STRBUF_INIT;
-	struct strbuf olddotgit = STRBUF_INIT;
+	struct strbuf dotshit = STRBUF_INIT;
+	struct strbuf realdotshit = STRBUF_INIT;
+	struct strbuf shitdir = STRBUF_INIT;
+	struct strbuf olddotshit = STRBUF_INIT;
 	char *backlink = NULL;
 	const char *repair = NULL;
 	int err;
@@ -695,45 +695,45 @@ void repair_worktree_at_path(const char *path,
 	if (is_main_worktree_path(path))
 		goto done;
 
-	strbuf_addf(&dotgit, "%s/.git", path);
-	if (!strbuf_realpath(&realdotgit, dotgit.buf, 0)) {
+	strbuf_addf(&dotshit, "%s/.shit", path);
+	if (!strbuf_realpath(&realdotshit, dotshit.buf, 0)) {
 		fn(1, path, _("not a valid path"), cb_data);
 		goto done;
 	}
 
-	backlink = xstrdup_or_null(read_gitfile_gently(realdotgit.buf, &err));
-	if (err == READ_GITFILE_ERR_NOT_A_FILE) {
-		fn(1, realdotgit.buf, _("unable to locate repository; .git is not a file"), cb_data);
+	backlink = xstrdup_or_null(read_shitfile_gently(realdotshit.buf, &err));
+	if (err == READ_shitFILE_ERR_NOT_A_FILE) {
+		fn(1, realdotshit.buf, _("unable to locate repository; .shit is not a file"), cb_data);
 		goto done;
-	} else if (err == READ_GITFILE_ERR_NOT_A_REPO) {
-		if (!(backlink = infer_backlink(realdotgit.buf))) {
-			fn(1, realdotgit.buf, _("unable to locate repository; .git file does not reference a repository"), cb_data);
+	} else if (err == READ_shitFILE_ERR_NOT_A_REPO) {
+		if (!(backlink = infer_backlink(realdotshit.buf))) {
+			fn(1, realdotshit.buf, _("unable to locate repository; .shit file does not reference a repository"), cb_data);
 			goto done;
 		}
 	} else if (err) {
-		fn(1, realdotgit.buf, _("unable to locate repository; .git file broken"), cb_data);
+		fn(1, realdotshit.buf, _("unable to locate repository; .shit file broken"), cb_data);
 		goto done;
 	}
 
-	strbuf_addf(&gitdir, "%s/gitdir", backlink);
-	if (strbuf_read_file(&olddotgit, gitdir.buf, 0) < 0)
-		repair = _("gitdir unreadable");
+	strbuf_addf(&shitdir, "%s/shitdir", backlink);
+	if (strbuf_read_file(&olddotshit, shitdir.buf, 0) < 0)
+		repair = _("shitdir unreadable");
 	else {
-		strbuf_rtrim(&olddotgit);
-		if (fspathcmp(olddotgit.buf, realdotgit.buf))
-			repair = _("gitdir incorrect");
+		strbuf_rtrim(&olddotshit);
+		if (fspathcmp(olddotshit.buf, realdotshit.buf))
+			repair = _("shitdir incorrect");
 	}
 
 	if (repair) {
-		fn(0, gitdir.buf, repair, cb_data);
-		write_file(gitdir.buf, "%s", realdotgit.buf);
+		fn(0, shitdir.buf, repair, cb_data);
+		write_file(shitdir.buf, "%s", realdotshit.buf);
 	}
 done:
 	free(backlink);
-	strbuf_release(&olddotgit);
-	strbuf_release(&gitdir);
-	strbuf_release(&realdotgit);
-	strbuf_release(&dotgit);
+	strbuf_release(&olddotshit);
+	strbuf_release(&shitdir);
+	strbuf_release(&realdotshit);
+	strbuf_release(&dotshit);
 }
 
 int should_prune_worktree(const char *id, struct strbuf *reason, char **wtpath, timestamp_t expire)
@@ -745,19 +745,19 @@ int should_prune_worktree(const char *id, struct strbuf *reason, char **wtpath, 
 	ssize_t read_result;
 
 	*wtpath = NULL;
-	if (!is_directory(git_path("worktrees/%s", id))) {
+	if (!is_directory(shit_path("worktrees/%s", id))) {
 		strbuf_addstr(reason, _("not a valid directory"));
 		return 1;
 	}
-	if (file_exists(git_path("worktrees/%s/locked", id)))
+	if (file_exists(shit_path("worktrees/%s/locked", id)))
 		return 0;
-	if (stat(git_path("worktrees/%s/gitdir", id), &st)) {
-		strbuf_addstr(reason, _("gitdir file does not exist"));
+	if (stat(shit_path("worktrees/%s/shitdir", id), &st)) {
+		strbuf_addstr(reason, _("shitdir file does not exist"));
 		return 1;
 	}
-	fd = open(git_path("worktrees/%s/gitdir", id), O_RDONLY);
+	fd = open(shit_path("worktrees/%s/shitdir", id), O_RDONLY);
 	if (fd < 0) {
-		strbuf_addf(reason, _("unable to read gitdir file (%s)"),
+		strbuf_addf(reason, _("unable to read shitdir file (%s)"),
 			    strerror(errno));
 		return 1;
 	}
@@ -766,7 +766,7 @@ int should_prune_worktree(const char *id, struct strbuf *reason, char **wtpath, 
 
 	read_result = read_in_full(fd, path, len);
 	if (read_result < 0) {
-		strbuf_addf(reason, _("unable to read gitdir file (%s)"),
+		strbuf_addf(reason, _("unable to read shitdir file (%s)"),
 			    strerror(errno));
 		close(fd);
 		free(path);
@@ -784,15 +784,15 @@ int should_prune_worktree(const char *id, struct strbuf *reason, char **wtpath, 
 	while (len && (path[len - 1] == '\n' || path[len - 1] == '\r'))
 		len--;
 	if (!len) {
-		strbuf_addstr(reason, _("invalid gitdir file"));
+		strbuf_addstr(reason, _("invalid shitdir file"));
 		free(path);
 		return 1;
 	}
 	path[len] = '\0';
 	if (!file_exists(path)) {
-		if (stat(git_path("worktrees/%s/index", id), &st) ||
+		if (stat(shit_path("worktrees/%s/index", id), &st) ||
 		    st.st_mtime <= expire) {
-			strbuf_addstr(reason, _("gitdir file points to non-existent location"));
+			strbuf_addstr(reason, _("shitdir file points to non-existent location"));
 			free(path);
 			return 1;
 		} else {
@@ -807,9 +807,9 @@ int should_prune_worktree(const char *id, struct strbuf *reason, char **wtpath, 
 static int move_config_setting(const char *key, const char *value,
 			       const char *from_file, const char *to_file)
 {
-	if (git_config_set_in_file_gently(to_file, key, NULL, value))
+	if (shit_config_set_in_file_gently(to_file, key, NULL, value))
 		return error(_("unable to set %s in '%s'"), key, to_file);
-	if (git_config_set_in_file_gently(from_file, key, NULL, NULL))
+	if (shit_config_set_in_file_gently(from_file, key, NULL, NULL))
 		return error(_("unable to unset %s in '%s'"), key, from_file);
 	return 0;
 }
@@ -829,14 +829,14 @@ int init_worktree_config(struct repository *r)
 	 */
 	if (r->repository_format_worktree_config)
 		return 0;
-	if ((res = git_config_set_gently("extensions.worktreeConfig", "true")))
+	if ((res = shit_config_set_gently("extensions.worktreeConfig", "true")))
 		return error(_("failed to set extensions.worktreeConfig setting"));
 
 	common_config_file = xstrfmt("%s/config", r->commondir);
 	main_worktree_file = xstrfmt("%s/config.worktree", r->commondir);
 
-	git_configset_init(&cs);
-	git_configset_add_file(&cs, common_config_file);
+	shit_configset_init(&cs);
+	shit_configset_add_file(&cs, common_config_file);
 
 	/*
 	 * If core.bare is true in the common config file, then we need to
@@ -844,7 +844,7 @@ int init_worktree_config(struct repository *r)
 	 * worktrees. If it is false, then leave it in place because it
 	 * _could_ be negating a global core.bare=true.
 	 */
-	if (!git_configset_get_bool(&cs, "core.bare", &bare) && bare) {
+	if (!shit_configset_get_bool(&cs, "core.bare", &bare) && bare) {
 		if ((res = move_config_setting("core.bare", "true",
 					       common_config_file,
 					       main_worktree_file)))
@@ -852,11 +852,11 @@ int init_worktree_config(struct repository *r)
 	}
 	/*
 	 * If core.worktree is set, then the main worktree is located
-	 * somewhere different than the parent of the common Git dir.
+	 * somewhere different than the parent of the common shit dir.
 	 * Relocate that value to avoid breaking all worktrees with this
 	 * upgrade to worktree config.
 	 */
-	if (!git_configset_get_value(&cs, "core.worktree", &core_worktree, NULL)) {
+	if (!shit_configset_get_value(&cs, "core.worktree", &core_worktree, NULL)) {
 		if ((res = move_config_setting("core.worktree", core_worktree,
 					       common_config_file,
 					       main_worktree_file)))
@@ -870,7 +870,7 @@ int init_worktree_config(struct repository *r)
 	r->repository_format_worktree_config = 1;
 
 cleanup:
-	git_configset_clear(&cs);
+	shit_configset_clear(&cs);
 	free(common_config_file);
 	free(main_worktree_file);
 	return res;

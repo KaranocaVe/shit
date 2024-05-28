@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git cvsimport basic tests'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+test_description='shit cvsimport basic tests'
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./lib-cvs.sh
 
@@ -52,18 +52,18 @@ EOF
 
 test_expect_success PERL 'import a trivial module' '
 
-	git cvsimport -a -R -z 0 -C module-git module &&
-	test_cmp module-cvs/o_fortuna module-git/o_fortuna
+	shit cvsimport -a -R -z 0 -C module-shit module &&
+	test_cmp module-cvs/o_fortuna module-shit/o_fortuna
 
 '
 
-test_expect_success PERL 'pack refs' '(cd module-git && git gc)'
+test_expect_success PERL 'pack refs' '(cd module-shit && shit gc)'
 
-test_expect_success PERL 'initial import has correct .git/cvs-revisions' '
+test_expect_success PERL 'initial import has correct .shit/cvs-revisions' '
 
-	(cd module-git &&
-	 git log --format="o_fortuna 1.1 %H" -1) > expected &&
-	test_cmp expected module-git/.git/cvs-revisions
+	(cd module-shit &&
+	 shit log --format="o_fortuna 1.1 %H" -1) > expected &&
+	test_cmp expected module-shit/.shit/cvs-revisions
 '
 
 test_expect_success PERL 'update cvs module' '
@@ -94,23 +94,23 @@ EOF
 	)
 '
 
-test_expect_success PERL 'update git module' '
+test_expect_success PERL 'update shit module' '
 
-	(cd module-git &&
-	git config cvsimport.trackRevisions true &&
-	git cvsimport -a -z 0 module &&
-	git merge origin
+	(cd module-shit &&
+	shit config cvsimport.trackRevisions true &&
+	shit cvsimport -a -z 0 module &&
+	shit merge origin
 	) &&
-	test_cmp module-cvs/o_fortuna module-git/o_fortuna
+	test_cmp module-cvs/o_fortuna module-shit/o_fortuna
 
 '
 
-test_expect_success PERL 'update has correct .git/cvs-revisions' '
+test_expect_success PERL 'update has correct .shit/cvs-revisions' '
 
-	(cd module-git &&
-	 git log --format="o_fortuna 1.1 %H" -1 HEAD^ &&
-	 git log --format="o_fortuna 1.2 %H" -1 HEAD) > expected &&
-	test_cmp expected module-git/.git/cvs-revisions
+	(cd module-shit &&
+	 shit log --format="o_fortuna 1.1 %H" -1 HEAD^ &&
+	 shit log --format="o_fortuna 1.2 %H" -1 HEAD) > expected &&
+	test_cmp expected module-shit/.shit/cvs-revisions
 '
 
 test_expect_success PERL 'update cvs module' '
@@ -124,41 +124,41 @@ test_expect_success PERL 'update cvs module' '
 
 test_expect_success PERL 'cvsimport.module config works' '
 
-	(cd module-git &&
-		git config cvsimport.module module &&
-		git config cvsimport.trackRevisions true &&
-		git cvsimport -a -z0 &&
-		git merge origin
+	(cd module-shit &&
+		shit config cvsimport.module module &&
+		shit config cvsimport.trackRevisions true &&
+		shit cvsimport -a -z0 &&
+		shit merge origin
 	) &&
-	test_cmp module-cvs/tick module-git/tick
+	test_cmp module-cvs/tick module-shit/tick
 
 '
 
-test_expect_success PERL 'second update has correct .git/cvs-revisions' '
+test_expect_success PERL 'second update has correct .shit/cvs-revisions' '
 
-	(cd module-git &&
-	 git log --format="o_fortuna 1.1 %H" -1 HEAD^^ &&
-	 git log --format="o_fortuna 1.2 %H" -1 HEAD^ &&
-	 git log --format="tick 1.1 %H" -1 HEAD) > expected &&
-	test_cmp expected module-git/.git/cvs-revisions
+	(cd module-shit &&
+	 shit log --format="o_fortuna 1.1 %H" -1 HEAD^^ &&
+	 shit log --format="o_fortuna 1.2 %H" -1 HEAD^ &&
+	 shit log --format="tick 1.1 %H" -1 HEAD) > expected &&
+	test_cmp expected module-shit/.shit/cvs-revisions
 '
 
 test_expect_success PERL 'import from a CVS working tree' '
 
 	$CVS co -d import-from-wt module &&
 	(cd import-from-wt &&
-		git config cvsimport.trackRevisions false &&
-		git cvsimport -a -z0 &&
+		shit config cvsimport.trackRevisions false &&
+		shit cvsimport -a -z0 &&
 		echo 1 >expect &&
-		git log -1 --pretty=format:%s%n >actual &&
+		shit log -1 --pretty=format:%s%n >actual &&
 		test_cmp expect actual
 	)
 
 '
 
-test_expect_success PERL 'no .git/cvs-revisions created by default' '
+test_expect_success PERL 'no .shit/cvs-revisions created by default' '
 
-	! test -e import-from-wt/.git/cvs-revisions
+	! test -e import-from-wt/.shit/cvs-revisions
 
 '
 

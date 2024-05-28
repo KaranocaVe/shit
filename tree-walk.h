@@ -24,7 +24,7 @@ struct name_entry {
  * A semi-opaque data structure used to maintain the current state of the walk.
  */
 struct tree_desc {
-	const struct git_hash_algo *algo;
+	const struct shit_hash_algo *algo;
 	/*
 	 * pointer into the memory representation of the tree. It always
 	 * points at the current entry being visited.

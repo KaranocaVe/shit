@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "hash.h"
 #include "path.h"
 #include "object-store.h"
@@ -13,7 +13,7 @@ static const char *loose_object_header = "# loose-object-idx\n";
 
 static inline int should_use_loose_object_map(struct repository *repo)
 {
-	return repo->compat_hash_algo && repo->gitdir;
+	return repo->compat_hash_algo && repo->shitdir;
 }
 
 void loose_object_map_init(struct loose_object_map **map)
@@ -74,7 +74,7 @@ static int load_one_loose_object_map(struct repository *repo, struct object_dire
 	insert_loose_map(dir, repo->hash_algo->empty_blob, repo->compat_hash_algo->empty_blob);
 	insert_loose_map(dir, repo->hash_algo->null_oid, repo->compat_hash_algo->null_oid);
 
-	strbuf_git_common_path(&path, repo, "objects/loose-object-idx");
+	strbuf_shit_common_path(&path, repo, "objects/loose-object-idx");
 	fp = fopen(path.buf, "rb");
 	if (!fp) {
 		strbuf_release(&path);
@@ -132,7 +132,7 @@ int repo_write_loose_object_map(struct repository *repo)
 	if (!should_use_loose_object_map(repo))
 		return 0;
 
-	strbuf_git_common_path(&path, repo, "objects/loose-object-idx");
+	strbuf_shit_common_path(&path, repo, "objects/loose-object-idx");
 	fd = hold_lock_file_for_update_timeout(&lock, path.buf, LOCK_DIE_ON_ERROR, -1);
 	iter = kh_begin(map);
 	if (write_in_full(fd, loose_object_header, strlen(loose_object_header)) < 0)
@@ -173,7 +173,7 @@ static int write_one_object(struct repository *repo, const struct object_id *oid
 	struct stat st;
 	struct strbuf buf = STRBUF_INIT, path = STRBUF_INIT;
 
-	strbuf_git_common_path(&path, repo, "objects/loose-object-idx");
+	strbuf_shit_common_path(&path, repo, "objects/loose-object-idx");
 	hold_lock_file_for_update_timeout(&lock, path.buf, LOCK_DIE_ON_ERROR, -1);
 
 	fd = open(path.buf, O_WRONLY | O_CREAT | O_APPEND, 0666);
@@ -219,7 +219,7 @@ int repo_add_loose_object_map(struct repository *repo, const struct object_id *o
 
 int repo_loose_object_map_oid(struct repository *repo,
 			      const struct object_id *src,
-			      const struct git_hash_algo *to,
+			      const struct shit_hash_algo *to,
 			      struct object_id *dest)
 {
 	struct object_directory *dir;

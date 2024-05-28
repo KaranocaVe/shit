@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "hex.h"
 #include "repository.h"
@@ -24,7 +24,7 @@ static int compare_entries(const void *e1, const void *e2)
 	return 0;
 }
 
-int check_pack_crc(struct packed_git *p, struct pack_window **w_curs,
+int check_pack_crc(struct packed_shit *p, struct pack_window **w_curs,
 		   off_t offset, off_t len, unsigned int nr)
 {
 	const uint32_t *index_crc;
@@ -47,7 +47,7 @@ int check_pack_crc(struct packed_git *p, struct pack_window **w_curs,
 }
 
 static int verify_packfile(struct repository *r,
-			   struct packed_git *p,
+			   struct packed_shit *p,
 			   struct pack_window **w_curs,
 			   verify_fn fn,
 			   struct progress *progress, uint32_t base_count)
@@ -55,8 +55,8 @@ static int verify_packfile(struct repository *r,
 {
 	off_t index_size = p->index_size;
 	const unsigned char *index_base = p->index_data;
-	git_hash_ctx ctx;
-	unsigned char hash[GIT_MAX_RAWSZ], *pack_sig;
+	shit_hash_ctx ctx;
+	unsigned char hash[shit_MAX_RAWSZ], *pack_sig;
 	off_t offset = 0, pack_sig_ofs = 0;
 	uint32_t nr_objects, i;
 	int err = 0;
@@ -168,7 +168,7 @@ static int verify_packfile(struct repository *r,
 	return err;
 }
 
-int verify_pack_index(struct packed_git *p)
+int verify_pack_index(struct packed_shit *p)
 {
 	int err = 0;
 
@@ -182,7 +182,7 @@ int verify_pack_index(struct packed_git *p)
 	return err;
 }
 
-int verify_pack(struct repository *r, struct packed_git *p, verify_fn fn,
+int verify_pack(struct repository *r, struct packed_shit *p, verify_fn fn,
 		struct progress *progress, uint32_t base_count)
 {
 	int err = 0;

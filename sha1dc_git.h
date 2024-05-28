@@ -9,16 +9,16 @@
 #endif
 
 #ifdef DC_SHA1_EXTERNAL
-void git_SHA1DCInit(SHA1_CTX *);
+void shit_SHA1DCInit(SHA1_CTX *);
 #else
-#define git_SHA1DCInit	SHA1DCInit
+#define shit_SHA1DCInit	SHA1DCInit
 #endif
 
-void git_SHA1DCFinal(unsigned char [20], SHA1_CTX *);
-void git_SHA1DCUpdate(SHA1_CTX *ctx, const void *data, unsigned long len);
+void shit_SHA1DCFinal(unsigned char [20], SHA1_CTX *);
+void shit_SHA1DCUpdate(SHA1_CTX *ctx, const void *data, unsigned long len);
 
 #define platform_SHA_IS_SHA1DC /* used by "test-tool sha1-is-sha1dc" */
 #define platform_SHA_CTX SHA1_CTX
-#define platform_SHA1_Init git_SHA1DCInit
-#define platform_SHA1_Update git_SHA1DCUpdate
-#define platform_SHA1_Final git_SHA1DCFinal
+#define platform_SHA1_Init shit_SHA1DCInit
+#define platform_SHA1_Update shit_SHA1DCUpdate
+#define platform_SHA1_Final shit_SHA1DCFinal

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "string-list.h"
 
 void string_list_init_nodup(struct string_list *list)

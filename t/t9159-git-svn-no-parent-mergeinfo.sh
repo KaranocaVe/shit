@@ -1,11 +1,11 @@
 #!/bin/sh
-test_description='git svn handling of root commits in merge ranges'
-. ./lib-git-svn.sh
+test_description='shit svn handling of root commits in merge ranges'
+. ./lib-shit-svn.sh
 
 svn_ver="$(svn --version --quiet)"
 case $svn_ver in
 0.* | 1.[0-4].*)
-	skip_all="skipping git-svn test - SVN too old ($svn_ver)"
+	skip_all="skipping shit-svn test - SVN too old ($svn_ver)"
 	test_done
 	;;
 esac
@@ -34,8 +34,8 @@ test_expect_success 'test handling of root commits in merge ranges' '
 		svn_cmd propset svn:mergeinfo /branches/b:5-6 branches/c &&
 		svn_cmd commit -m "Fake merge of branch b r6 into branch c"
 	) &&
-	git svn init -s "$svnrepo" &&
-	git svn fetch
+	shit svn init -s "$svnrepo" &&
+	shit svn fetch
 	'
 
 test_done

@@ -4,7 +4,7 @@
  * Copyright (c) 2008 by Junio C Hamano
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "color.h"
 #include "commit.h"
@@ -54,7 +54,7 @@ static int get_mode(const char *path, int *mode, enum special *special)
 
 	if (!path || !strcmp(path, "/dev/null")) {
 		*mode = 0;
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 	} else if (!strcasecmp(path, "nul")) {
 		*mode = 0;
 #endif
@@ -291,7 +291,7 @@ static void fixup_paths(const char **path, struct strbuf *replacement)
 }
 
 static const char * const diff_no_index_usage[] = {
-	N_("git diff --no-index [<options>] <path> <path>"),
+	N_("shit diff --no-index [<options>] <path> <path>"),
 	NULL
 };
 
@@ -317,7 +317,7 @@ int diff_no_index(struct rev_info *revs,
 			     diff_no_index_usage, 0);
 	if (argc != 2) {
 		if (implicit_no_index)
-			warning(_("Not a git repository. Use --no-index to "
+			warning(_("Not a shit repository. Use --no-index to "
 				  "compare two paths outside a working tree"));
 		usage_with_options(diff_no_index_usage, options);
 	}

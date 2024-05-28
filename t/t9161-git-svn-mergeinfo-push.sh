@@ -4,23 +4,23 @@
 # Portions copyright (c) 2011 Bryan Jacobs
 #
 
-test_description='git-svn svn mergeinfo propagation'
+test_description='shit-svn svn mergeinfo propagation'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 test_expect_success 'load svn dump' "
 	svnadmin load -q '$rawsvnrepo' \
 	  < '$TEST_DIRECTORY/t9161/branches.dump' &&
-	git svn init --minimize-url -R svnmerge \
+	shit svn init --minimize-url -R svnmerge \
 	  -T trunk -b branches '$svnrepo' &&
-	git svn fetch --all
+	shit svn fetch --all
 	"
 
 test_expect_success 'propagate merge information' '
-	git config svn.pushmergeinfo yes &&
-	git checkout origin/svnb1 &&
-	git merge --no-ff origin/svnb2 &&
-	git svn dcommit
+	shit config svn.defecatemergeinfo yes &&
+	shit checkout origin/svnb1 &&
+	shit merge --no-ff origin/svnb2 &&
+	shit svn dcommit
 	'
 
 test_expect_success 'check svn:mergeinfo' '
@@ -29,8 +29,8 @@ test_expect_success 'check svn:mergeinfo' '
 	'
 
 test_expect_success 'merge another branch' '
-	git merge --no-ff origin/svnb3 &&
-	git svn dcommit
+	shit merge --no-ff origin/svnb3 &&
+	shit svn dcommit
 	'
 
 test_expect_success 'check primary parent mergeinfo respected' '
@@ -40,8 +40,8 @@ test_expect_success 'check primary parent mergeinfo respected' '
 	'
 
 test_expect_success 'merge existing merge' '
-	git merge --no-ff origin/svnb4 &&
-	git svn dcommit
+	shit merge --no-ff origin/svnb4 &&
+	shit svn dcommit
 	'
 
 test_expect_success "check both parents' mergeinfo respected" '
@@ -53,20 +53,20 @@ test_expect_success "check both parents' mergeinfo respected" '
 	'
 
 test_expect_success 'make further commits to branch' '
-	git checkout origin/svnb2 &&
+	shit checkout origin/svnb2 &&
 	touch newb2file &&
-	git add newb2file &&
-	git commit -m "later b2 commit" &&
+	shit add newb2file &&
+	shit commit -m "later b2 commit" &&
 	touch newb2file-2 &&
-	git add newb2file-2 &&
-	git commit -m "later b2 commit 2" &&
-	git svn dcommit
+	shit add newb2file-2 &&
+	shit commit -m "later b2 commit 2" &&
+	shit svn dcommit
 	'
 
 test_expect_success 'second forward merge' '
-	git checkout origin/svnb1 &&
-	git merge --no-ff origin/svnb2 &&
-	git svn dcommit
+	shit checkout origin/svnb1 &&
+	shit merge --no-ff origin/svnb2 &&
+	shit svn dcommit
 	'
 
 test_expect_success 'check new mergeinfo added' '
@@ -78,9 +78,9 @@ test_expect_success 'check new mergeinfo added' '
 	'
 
 test_expect_success 'reintegration merge' '
-	git checkout origin/svnb4 &&
-	git merge --no-ff origin/svnb1 &&
-	git svn dcommit
+	shit checkout origin/svnb4 &&
+	shit merge --no-ff origin/svnb1 &&
+	shit svn dcommit
 	'
 
 test_expect_success 'check reintegration mergeinfo' '
@@ -92,12 +92,12 @@ test_expect_success 'check reintegration mergeinfo' '
 	'
 
 test_expect_success 'dcommit a merge at the top of a stack' '
-	git checkout origin/svnb1 &&
+	shit checkout origin/svnb1 &&
 	touch anotherfile &&
-	git add anotherfile &&
-	git commit -m "a commit" &&
-	git merge origin/svnb4 &&
-	git svn dcommit
+	shit add anotherfile &&
+	shit commit -m "a commit" &&
+	shit merge origin/svnb4 &&
+	shit svn dcommit
 	'
 
 test_done

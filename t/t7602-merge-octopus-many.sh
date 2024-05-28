@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git merge
+test_description='shit merge
 
 Testing octopus merge with more than 25 refs.'
 
@@ -9,23 +9,23 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success 'setup' '
 	echo c0 > c0.c &&
-	git add c0.c &&
-	git commit -m c0 &&
-	git tag c0 &&
+	shit add c0.c &&
+	shit commit -m c0 &&
+	shit tag c0 &&
 	i=1 &&
 	while test $i -le 30
 	do
-		git reset --hard c0 &&
+		shit reset --hard c0 &&
 		echo c$i > c$i.c &&
-		git add c$i.c &&
-		git commit -m c$i &&
-		git tag c$i &&
+		shit add c$i.c &&
+		shit commit -m c$i &&
+		shit tag c$i &&
 		i=$(expr $i + 1) || return 1
 	done
 '
 
 test_expect_success 'merge c1 with c2, c3, c4, ... c29' '
-	git reset --hard c1 &&
+	shit reset --hard c1 &&
 	i=2 &&
 	refs="" &&
 	while test $i -le 30
@@ -33,15 +33,15 @@ test_expect_success 'merge c1 with c2, c3, c4, ... c29' '
 		refs="$refs c$i" &&
 		i=$(expr $i + 1) || return 1
 	done &&
-	git merge $refs &&
-	test "$(git rev-parse c1)" != "$(git rev-parse HEAD)" &&
+	shit merge $refs &&
+	test "$(shit rev-parse c1)" != "$(shit rev-parse HEAD)" &&
 	i=1 &&
 	while test $i -le 30
 	do
-		test "$(git rev-parse c$i)" = "$(git rev-parse HEAD^$i)" &&
+		test "$(shit rev-parse c$i)" = "$(shit rev-parse HEAD^$i)" &&
 		i=$(expr $i + 1) || return 1
 	done &&
-	git diff --exit-code &&
+	shit diff --exit-code &&
 	i=1 &&
 	while test $i -le 30
 	do
@@ -65,8 +65,8 @@ Merge made by the 'octopus' strategy.
 EOF
 
 test_expect_success 'merge output uses pretty names' '
-	git reset --hard c1 &&
-	git merge c2 c3 c4 >actual &&
+	shit reset --hard c1 &&
+	shit merge c2 c3 c4 >actual &&
 	test_cmp expected actual
 '
 
@@ -78,13 +78,13 @@ Merge made by the 'recursive' strategy.
 EOF
 
 test_expect_success 'merge reduces irrelevant remote heads' '
-	if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+	if test "$shit_TEST_MERGE_ALGORITHM" = ort
 	then
 		mv expected expected.tmp &&
 		sed s/recursive/ort/ expected.tmp >expected &&
 		rm expected.tmp
 	fi &&
-	GIT_MERGE_VERBOSITY=0 git merge c4 c5 >actual &&
+	shit_MERGE_VERBOSITY=0 shit merge c4 c5 >actual &&
 	test_cmp expected actual
 '
 
@@ -100,8 +100,8 @@ Merge made by the 'octopus' strategy.
 EOF
 
 test_expect_success 'merge fast-forward output uses pretty names' '
-	git reset --hard c0 &&
-	git merge c1 c2 >actual &&
+	shit reset --hard c0 &&
+	shit merge c1 c2 >actual &&
 	test_cmp expected actual
 '
 

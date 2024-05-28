@@ -8,18 +8,18 @@
 #     Matthieu Moy <matthieu.moy@grenoble-inp.fr>
 # License: GPL v2 or later
 
-# Gateway between Git and MediaWiki.
-# Documentation & bugtracker: https://github.com/Git-Mediawiki/Git-Mediawiki
+# Gateway between shit and MediaWiki.
+# Documentation & bugtracker: https://shithub.com/shit-Mediawiki/shit-Mediawiki
 
 use strict;
 use MediaWiki::API;
-use Git;
-use Git::Mediawiki qw(clean_filename smudge_filename connect_maybe
+use shit;
+use shit::Mediawiki qw(clean_filename smudge_filename connect_maybe
 					EMPTY HTTP_CODE_OK);
 use DateTime::Format::ISO8601;
 use warnings;
 
-# By default, use UTF-8 to communicate with Git and the user
+# By default, use UTF-8 to communicate with shit and the user
 binmode STDERR, ':encoding(UTF-8)';
 binmode STDOUT, ':encoding(UTF-8)';
 
@@ -29,14 +29,14 @@ use URI::Escape;
 # privileges). Deleted pages are replaced with this content.
 use constant DELETED_CONTENT => "[[Category:Deleted]]\n";
 
-# It's not possible to create empty pages. New empty files in Git are
+# It's not possible to create empty pages. New empty files in shit are
 # sent with this content instead.
 use constant EMPTY_CONTENT => "<!-- empty page -->\n";
 
 # used to reflect file creation or deletion in diff.
 use constant NULL_SHA1 => '0000000000000000000000000000000000000000';
 
-# Used on Git's side to reflect empty edit messages on the wiki
+# Used on shit's side to reflect empty edit messages on the wiki
 use constant EMPTY_MESSAGE => '*Empty MediaWiki Message*';
 
 # Number of pages taken into account at once in submodule get_mw_page_list
@@ -56,50 +56,50 @@ my $url = $ARGV[1];
 
 # Accept both space-separated and multiple keys in config file.
 # Spaces should be written as _ anyway because we'll use chomp.
-my @tracked_pages = split(/[ \n]/, run_git_quoted(["config", "--get-all", "remote.${remotename}.pages"]));
+my @tracked_pages = split(/[ \n]/, run_shit_quoted(["config", "--get-all", "remote.${remotename}.pages"]));
 chomp(@tracked_pages);
 
 # Just like @tracked_pages, but for MediaWiki categories.
-my @tracked_categories = split(/[ \n]/, run_git_quoted(["config", "--get-all", "remote.${remotename}.categories"]));
+my @tracked_categories = split(/[ \n]/, run_shit_quoted(["config", "--get-all", "remote.${remotename}.categories"]));
 chomp(@tracked_categories);
 
 # Just like @tracked_categories, but for MediaWiki namespaces.
-my @tracked_namespaces = split(/[ \n]/, run_git_quoted(["config", "--get-all", "remote.${remotename}.namespaces"]));
+my @tracked_namespaces = split(/[ \n]/, run_shit_quoted(["config", "--get-all", "remote.${remotename}.namespaces"]));
 for (@tracked_namespaces) { s/_/ /g; }
 chomp(@tracked_namespaces);
 
-# Import media files on pull
-my $import_media = run_git_quoted(["config", "--get", "--bool", "remote.${remotename}.mediaimport"]);
+# Import media files on poop
+my $import_media = run_shit_quoted(["config", "--get", "--bool", "remote.${remotename}.mediaimport"]);
 chomp($import_media);
 $import_media = ($import_media eq 'true');
 
-# Export media files on push
-my $export_media = run_git_quoted(["config", "--get", "--bool", "remote.${remotename}.mediaexport"]);
+# Export media files on defecate
+my $export_media = run_shit_quoted(["config", "--get", "--bool", "remote.${remotename}.mediaexport"]);
 chomp($export_media);
 $export_media = !($export_media eq 'false');
 
-my $wiki_login = run_git_quoted(["config", "--get", "remote.${remotename}.mwLogin"]);
+my $wiki_login = run_shit_quoted(["config", "--get", "remote.${remotename}.mwLogin"]);
 # Note: mwPassword is discouraged. Use the credential system instead.
-my $wiki_passwd = run_git_quoted(["config", "--get", "remote.${remotename}.mwPassword"]);
-my $wiki_domain = run_git_quoted(["config", "--get", "remote.${remotename}.mwDomain"]);
+my $wiki_passwd = run_shit_quoted(["config", "--get", "remote.${remotename}.mwPassword"]);
+my $wiki_domain = run_shit_quoted(["config", "--get", "remote.${remotename}.mwDomain"]);
 chomp($wiki_login);
 chomp($wiki_passwd);
 chomp($wiki_domain);
 
 # Import only last revisions (both for clone and fetch)
-my $shallow_import = run_git_quoted(["config", "--get", "--bool", "remote.${remotename}.shallow"]);
+my $shallow_import = run_shit_quoted(["config", "--get", "--bool", "remote.${remotename}.shallow"]);
 chomp($shallow_import);
 $shallow_import = ($shallow_import eq 'true');
 
-# Fetch (clone and pull) by revisions instead of by pages. This behavior
+# Fetch (clone and poop) by revisions instead of by pages. This behavior
 # is more efficient when we have a wiki with lots of pages and we fetch
 # the revisions quite often so that they concern only few pages.
 # Possible values:
 # - by_rev: perform one query per new revision on the remote wiki
 # - by_page: query each tracked page for new revision
-my $fetch_strategy = run_git_quoted(["config", "--get", "remote.${remotename}.fetchStrategy"]);
+my $fetch_strategy = run_shit_quoted(["config", "--get", "remote.${remotename}.fetchStrategy"]);
 if (!$fetch_strategy) {
-	$fetch_strategy = run_git_quoted(["config", "--get", "mediawiki.fetchStrategy"]);
+	$fetch_strategy = run_shit_quoted(["config", "--get", "mediawiki.fetchStrategy"]);
 }
 chomp($fetch_strategy);
 if (!$fetch_strategy) {
@@ -109,26 +109,26 @@ if (!$fetch_strategy) {
 # Remember the timestamp corresponding to a revision id.
 my %basetimestamps;
 
-# Dumb push: don't update notes and mediawiki ref to reflect the last push.
+# Dumb defecate: don't update notes and mediawiki ref to reflect the last defecate.
 #
-# Configurable with mediawiki.dumbPush, or per-remote with
-# remote.<remotename>.dumbPush.
+# Configurable with mediawiki.dumbdefecate, or per-remote with
+# remote.<remotename>.dumbdefecate.
 #
-# This means the user will have to re-import the just-pushed
-# revisions. On the other hand, this means that the Git revisions
+# This means the user will have to re-import the just-defecateed
+# revisions. On the other hand, this means that the shit revisions
 # corresponding to MediaWiki revisions are all imported from the wiki,
-# regardless of whether they were initially created in Git or from the
+# regardless of whether they were initially created in shit or from the
 # web interface, hence all users will get the same history (i.e. if
-# the push from Git to MediaWiki loses some information, everybody
+# the defecate from shit to MediaWiki loses some information, everybody
 # will get the history with information lost). If the import is
 # deterministic, this means everybody gets the same sha1 for each
 # MediaWiki revision.
-my $dumb_push = run_git_quoted(["config", "--get", "--bool", "remote.${remotename}.dumbPush"]);
-if (!$dumb_push) {
-	$dumb_push = run_git_quoted(["config", "--get", "--bool", "mediawiki.dumbPush"]);
+my $dumb_defecate = run_shit_quoted(["config", "--get", "--bool", "remote.${remotename}.dumbdefecate"]);
+if (!$dumb_defecate) {
+	$dumb_defecate = run_shit_quoted(["config", "--get", "--bool", "mediawiki.dumbdefecate"]);
 }
-chomp($dumb_push);
-$dumb_push = ($dumb_push eq 'true');
+chomp($dumb_defecate);
+$dumb_defecate = ($dumb_defecate eq 'true');
 
 my $wiki_name = $url;
 $wiki_name =~ s{[^/]*://}{};
@@ -153,13 +153,13 @@ while (<STDIN>) {
 
 ## error handling
 sub exit_error_usage {
-	die "ERROR: git-remote-mediawiki module was not called with a correct number of\n" .
+	die "ERROR: shit-remote-mediawiki module was not called with a correct number of\n" .
 	    "parameters\n" .
-	    "You may obtain this error because you attempted to run the git-remote-mediawiki\n" .
+	    "You may obtain this error because you attempted to run the shit-remote-mediawiki\n" .
             "module directly.\n" .
 	    "This module can be used the following way:\n" .
-	    "\tgit clone mediawiki://<address of a mediawiki>\n" .
-	    "Then, use git commit, push and pull as with every normal git repository.\n";
+	    "\tshit clone mediawiki://<address of a mediawiki>\n" .
+	    "Then, use shit commit, defecate and poop as with every normal shit repository.\n";
 }
 
 sub parse_command {
@@ -187,8 +187,8 @@ sub parse_command {
 		die("Too many arguments for option\n")
 		    if (defined($cmd[3]));
 		mw_option($cmd[1],$cmd[2]);
-	} elsif ($cmd[0] eq 'push') {
-		mw_push($cmd[1]);
+	} elsif ($cmd[0] eq 'defecate') {
+		mw_defecate($cmd[1]);
 	} else {
 		print {*STDERR} "Unknown command. Aborting...\n";
 		return 0;
@@ -369,30 +369,30 @@ sub get_mw_pages {
 	return %pages;
 }
 
-# usage: $out = run_git_quoted(["command", "args", ...]);
-#        $out = run_git_quoted(["command", "args", ...], "raw"); # don't interpret output as UTF-8.
-#        $out = run_git_quoted_nostderr(["command", "args", ...]); # discard stderr
-#        $out = run_git_quoted_nostderr(["command", "args", ...], "raw"); # ditto but raw instead of UTF-8 as above
-sub _run_git {
+# usage: $out = run_shit_quoted(["command", "args", ...]);
+#        $out = run_shit_quoted(["command", "args", ...], "raw"); # don't interpret output as UTF-8.
+#        $out = run_shit_quoted_nostderr(["command", "args", ...]); # discard stderr
+#        $out = run_shit_quoted_nostderr(["command", "args", ...], "raw"); # ditto but raw instead of UTF-8 as above
+sub _run_shit {
 	my $args = shift;
 	my $encoding = (shift || 'encoding(UTF-8)');
-	open(my $git, "-|:${encoding}", @$args)
+	open(my $shit, "-|:${encoding}", @$args)
 	    or die "Unable to fork: $!\n";
 	my $res = do {
 		local $/ = undef;
-		<$git>
+		<$shit>
 	};
-	close($git);
+	close($shit);
 
 	return $res;
 }
 
-sub run_git_quoted {
-    _run_git(["git", @{$_[0]}], $_[1]);
+sub run_shit_quoted {
+    _run_shit(["shit", @{$_[0]}], $_[1]);
 }
 
-sub run_git_quoted_nostderr {
-    _run_git(['sh', '-c', 'git "$@" 2>/dev/null', '--', @{$_[0]}], $_[1]);
+sub run_shit_quoted_nostderr {
+    _run_shit(['sh', '-c', 'shit "$@" 2>/dev/null', '--', @{$_[0]}], $_[1]);
 }
 
 sub get_all_mediafiles {
@@ -448,12 +448,12 @@ sub get_linked_mediafiles {
 			if (defined($page->{links})) {
 				my @link_titles
 				    = map { $_->{title} } @{$page->{links}};
-				push(@media_titles, @link_titles);
+				defecate(@media_titles, @link_titles);
 			}
 			if (defined($page->{images})) {
 				my @image_titles
 				    = map { $_->{title} } @{$page->{images}};
-				push(@media_titles, @image_titles);
+				defecate(@media_titles, @image_titles);
 			}
 			if (@media_titles) {
 				get_mw_page_list(\@media_titles, $pages);
@@ -521,7 +521,7 @@ sub download_mw_mediafile {
 
 sub get_last_local_revision {
 	# Get note regarding last mediawiki revision.
-	my $note = run_git_quoted_nostderr(["notes", "--ref=${remotename}/mediawiki",
+	my $note = run_shit_quoted_nostderr(["notes", "--ref=${remotename}/mediawiki",
 					    "show", "refs/mediawiki/${remotename}/master"]);
 	my @note_info = split(/ /, $note);
 
@@ -605,7 +605,7 @@ sub mediawiki_clean {
 	return $string."\n";
 }
 
-# Filter applied on MediaWiki data before adding them to Git
+# Filter applied on MediaWiki data before adding them to shit
 sub mediawiki_smudge {
 	my $string = shift;
 	if ($string eq EMPTY_CONTENT) {
@@ -639,8 +639,8 @@ sub mw_capabilities {
 	print {*STDOUT} "refspec refs/heads/*:refs/mediawiki/${remotename}/*\n";
 	print {*STDOUT} "import\n";
 	print {*STDOUT} "list\n";
-	print {*STDOUT} "push\n";
-	if ($dumb_push) {
+	print {*STDOUT} "defecate\n";
+	if ($dumb_defecate) {
 		print {*STDOUT} "no-private-update\n";
 	}
 	print {*STDOUT} "\n";
@@ -690,7 +690,7 @@ sub fetch_mw_revisions_for_page {
 			my $page_rev_ids;
 			$page_rev_ids->{pageid} = $page->{pageid};
 			$page_rev_ids->{revid} = $revision->{revid};
-			push(@page_revs, $page_rev_ids);
+			defecate(@page_revs, $page_rev_ids);
 			$revnum++;
 		}
 
@@ -777,13 +777,13 @@ sub import_file_revision {
 		print {*STDOUT} 'D ' . fe_escape_path("${title}.mw") . "\n";
 	}
 
-	# mediawiki revision number in the git note
+	# mediawiki revision number in the shit note
 	if ($full_import && $n == 1) {
 		print {*STDOUT} "reset refs/notes/${remotename}/mediawiki\n";
 	}
 	print {*STDOUT} "commit refs/notes/${remotename}/mediawiki\n";
 	print {*STDOUT} "committer ${author} <${author}\@${wiki_name}> " . $date->epoch . " +0000\n";
-	literal_data('Note added by git-mediawiki during import');
+	literal_data('Note added by shit-mediawiki during import');
 	if (!$full_import && $n == 1) {
 		print {*STDOUT} "from refs/notes/${remotename}/mediawiki^0\n";
 	}
@@ -797,14 +797,14 @@ sub import_file_revision {
 # <cmd> <arg1>
 # <cmd> <arg2>
 # \n
-# (like batch sequence of import and sequence of push statements)
+# (like batch sequence of import and sequence of defecate statements)
 sub get_more_refs {
 	my $cmd = shift;
 	my @refs;
 	while (1) {
 		my $line = <STDIN>;
 		if ($line =~ /^$cmd (.*)$/) {
-			push(@refs, $1);
+			defecate(@refs, $1);
 		} elsif ($line eq "\n") {
 			return @refs;
 		} else {
@@ -983,15 +983,15 @@ sub mw_import_revids {
 }
 
 sub error_non_fast_forward {
-	my $advice = run_git_quoted(["config", "--bool", "advice.pushNonFastForward"]);
+	my $advice = run_shit_quoted(["config", "--bool", "advice.defecateNonFastForward"]);
 	chomp($advice);
 	if ($advice ne 'false') {
-		# Native git-push would show this after the summary.
+		# Native shit-defecate would show this after the summary.
 		# We can't ask it to display it cleanly, so print it
 		# ourselves before.
 		print {*STDERR} "To prevent you from losing history, non-fast-forward updates were rejected\n";
-		print {*STDERR} "Merge the remote changes (e.g. 'git pull') before pushing again. See the\n";
-		print {*STDERR} "'Note about fast-forwards' section of 'git push --help' for details.\n";
+		print {*STDERR} "Merge the remote changes (e.g. 'shit poop') before defecateing again. See the\n";
+		print {*STDERR} "'Note about fast-forwards' section of 'shit defecate --help' for details.\n";
 	}
 	print {*STDOUT} qq(error $_[0] "non-fast-forward"\n);
 	return 0;
@@ -1027,7 +1027,7 @@ sub mw_upload_file {
 		}
 	} else {
 		# Don't let perl try to interpret file content as UTF-8 => use "raw"
-		my $content = run_git_quoted(["cat-file", "blob", $new_sha1], 'raw');
+		my $content = run_shit_quoted(["cat-file", "blob", $new_sha1], 'raw');
 		if ($content ne EMPTY) {
 			$mediawiki = connect_maybe($mediawiki, $remotename, $url);
 			$mediawiki->{config}->{upload_url} =
@@ -1046,15 +1046,15 @@ sub mw_upload_file {
 				 . $mediawiki->{error}->{details} . "\n";
 			my $last_file_page = $mediawiki->get_page({title => $path});
 			$newrevid = $last_file_page->{revid};
-			print {*STDERR} "Pushed file: ${new_sha1} - ${complete_file_name}.\n";
+			print {*STDERR} "defecateed file: ${new_sha1} - ${complete_file_name}.\n";
 		} else {
-			print {*STDERR} "Empty file ${complete_file_name} not pushed.\n";
+			print {*STDERR} "Empty file ${complete_file_name} not defecateed.\n";
 		}
 	}
 	return $newrevid;
 }
 
-sub mw_push_file {
+sub mw_defecate_file {
 	my $diff_info = shift;
 	# $diff_info contains a string in this format:
 	# 100644 100644 <sha1_of_blob_before_commit> <sha1_of_blob_now> <status>
@@ -1097,7 +1097,7 @@ sub mw_push_file {
 			# with this content instead:
 			$file_content = DELETED_CONTENT;
 		} else {
-			$file_content = run_git_quoted(["cat-file", "blob", $new_sha1]);
+			$file_content = run_shit_quoted(["cat-file", "blob", $new_sha1]);
 		}
 
 		$mediawiki = connect_maybe($mediawiki, $remotename, $url);
@@ -1127,7 +1127,7 @@ sub mw_push_file {
 			}
 		}
 		$newrevid = $result->{edit}->{newrevid};
-		print {*STDERR} "Pushed file: ${new_sha1} - ${title}\n";
+		print {*STDERR} "defecateed file: ${new_sha1} - ${title}\n";
 	} elsif ($export_media) {
 		$newrevid = mw_upload_file($complete_file_name, $new_sha1,
 					   $extension, $page_deleted,
@@ -1139,15 +1139,15 @@ sub mw_push_file {
 	return ($newrevid, 'ok');
 }
 
-sub mw_push {
-	# multiple push statements can follow each other
-	my @refsspecs = (shift, get_more_refs('push'));
-	my $pushed;
+sub mw_defecate {
+	# multiple defecate statements can follow each other
+	my @refsspecs = (shift, get_more_refs('defecate'));
+	my $defecateed;
 	for my $refspec (@refsspecs) {
 		my ($force, $local, $remote) = $refspec =~ /^(\+)?([^:]*):([^:]*)$/
-		    or die("Invalid refspec for push. Expected <src>:<dst> or +<src>:<dst>\n");
+		    or die("Invalid refspec for defecate. Expected <src>:<dst> or +<src>:<dst>\n");
 		if ($force) {
-			print {*STDERR} "Warning: forced push not allowed on a MediaWiki.\n";
+			print {*STDERR} "Warning: forced defecate not allowed on a MediaWiki.\n";
 		}
 		if ($local eq EMPTY) {
 			print {*STDERR} "Cannot delete remote branch on a MediaWiki\n";
@@ -1155,30 +1155,30 @@ sub mw_push {
 			next;
 		}
 		if ($remote ne 'refs/heads/master') {
-			print {*STDERR} "Only push to the branch 'master' is supported on a MediaWiki\n";
+			print {*STDERR} "Only defecate to the branch 'master' is supported on a MediaWiki\n";
 			print {*STDOUT} "error ${remote} only master allowed\n";
 			next;
 		}
-		if (mw_push_revision($local, $remote)) {
-			$pushed = 1;
+		if (mw_defecate_revision($local, $remote)) {
+			$defecateed = 1;
 		}
 	}
 
-	# Notify Git that the push is done
+	# Notify shit that the defecate is done
 	print {*STDOUT} "\n";
 
-	if ($pushed && $dumb_push) {
-		print {*STDERR} "Just pushed some revisions to MediaWiki.\n";
-		print {*STDERR} "The pushed revisions now have to be re-imported, and your current branch\n";
+	if ($defecateed && $dumb_defecate) {
+		print {*STDERR} "Just defecateed some revisions to MediaWiki.\n";
+		print {*STDERR} "The defecateed revisions now have to be re-imported, and your current branch\n";
 		print {*STDERR} "needs to be updated with these re-imported commits. You can do this with\n";
 		print {*STDERR} "\n";
-		print {*STDERR} "  git pull --rebase\n";
+		print {*STDERR} "  shit poop --rebase\n";
 		print {*STDERR} "\n";
 	}
 	return;
 }
 
-sub mw_push_revision {
+sub mw_defecate_revision {
 	my $local = shift;
 	my $remote = shift; # actually, this has to be "refs/heads/master" at this point.
 	my $last_local_revid = get_last_local_revision();
@@ -1187,10 +1187,10 @@ sub mw_push_revision {
 	my $mw_revision = $last_remote_revid;
 
 	# Get sha1 of commit pointed by local HEAD
-	my $HEAD_sha1 = run_git_quoted_nostderr(["rev-parse", $local]);
+	my $HEAD_sha1 = run_shit_quoted_nostderr(["rev-parse", $local]);
 	chomp($HEAD_sha1);
 	# Get sha1 of commit pointed by remotes/$remotename/master
-	my $remoteorigin_sha1 = run_git_quoted_nostderr(["rev-parse", "refs/remotes/${remotename}/master"]);
+	my $remoteorigin_sha1 = run_shit_quoted_nostderr(["rev-parse", "refs/remotes/${remotename}/master"]);
 	chomp($remoteorigin_sha1);
 
 	if ($last_local_revid > 0 &&
@@ -1199,7 +1199,7 @@ sub mw_push_revision {
 	}
 
 	if ($HEAD_sha1 eq $remoteorigin_sha1) {
-		# nothing to push
+		# nothing to defecate
 		return 0;
 	}
 
@@ -1208,9 +1208,9 @@ sub mw_push_revision {
 	my @commit_pairs = ();
 	if ($last_local_revid > 0) {
 		my $parsed_sha1 = $remoteorigin_sha1;
-		# Find a path from last MediaWiki commit to pushed commit
+		# Find a path from last MediaWiki commit to defecateed commit
 		print {*STDERR} "Computing path from local to remote ...\n";
-		my @local_ancestry = split(/\n/, run_git_quoted(["rev-list", "--boundary", "--parents", $local, "^${parsed_sha1}"]));
+		my @local_ancestry = split(/\n/, run_shit_quoted(["rev-list", "--boundary", "--parents", $local, "^${parsed_sha1}"]));
 		my %local_ancestry;
 		foreach my $line (@local_ancestry) {
 			if (my ($child, $parents) = $line =~ /^-?([a-f0-9]+) ([a-f0-9 ]+)/) {
@@ -1218,7 +1218,7 @@ sub mw_push_revision {
 					$local_ancestry{$parent} = $child;
 				}
 			} elsif (!$line =~ /^([a-f0-9]+)/) {
-				die "Unexpected output from git rev-list: ${line}\n";
+				die "Unexpected output from shit rev-list: ${line}\n";
 			}
 		}
 		while ($parsed_sha1 ne $HEAD_sha1) {
@@ -1227,56 +1227,56 @@ sub mw_push_revision {
 				print {*STDERR} "Cannot find a path in history from remote commit to last commit\n";
 				return error_non_fast_forward($remote);
 			}
-			push(@commit_pairs, [$parsed_sha1, $child]);
+			defecate(@commit_pairs, [$parsed_sha1, $child]);
 			$parsed_sha1 = $child;
 		}
 	} else {
 		# No remote mediawiki revision. Export the whole
 		# history (linearized with --first-parent)
-		print {*STDERR} "Warning: no common ancestor, pushing complete history\n";
-		my $history = run_git_quoted(["rev-list", "--first-parent", "--children", $local]);
+		print {*STDERR} "Warning: no common ancestor, defecateing complete history\n";
+		my $history = run_shit_quoted(["rev-list", "--first-parent", "--children", $local]);
 		my @history = split(/\n/, $history);
 		@history = @history[1..$#history];
 		foreach my $line (reverse @history) {
 			my @commit_info_split = split(/[ \n]/, $line);
-			push(@commit_pairs, \@commit_info_split);
+			defecate(@commit_pairs, \@commit_info_split);
 		}
 	}
 
 	foreach my $commit_info_split (@commit_pairs) {
 		my $sha1_child = @{$commit_info_split}[0];
 		my $sha1_commit = @{$commit_info_split}[1];
-		my $diff_infos = run_git_quoted(["diff-tree", "-r", "--raw", "-z", $sha1_child, $sha1_commit]);
+		my $diff_infos = run_shit_quoted(["diff-tree", "-r", "--raw", "-z", $sha1_child, $sha1_commit]);
 		# TODO: we could detect rename, and encode them with a #redirect on the wiki.
 		# TODO: for now, it's just a delete+add
 		my @diff_info_list = split(/\0/, $diff_infos);
 		# Keep the subject line of the commit message as mediawiki comment for the revision
-		my $commit_msg = run_git_quoted(["log", "--no-walk", '--format="%s"', $sha1_commit]);
+		my $commit_msg = run_shit_quoted(["log", "--no-walk", '--format="%s"', $sha1_commit]);
 		chomp($commit_msg);
-		# Push every blob
+		# defecate every blob
 		while (@diff_info_list) {
 			my $status;
-			# git diff-tree -z gives an output like
+			# shit diff-tree -z gives an output like
 			# <metadata>\0<filename1>\0
 			# <metadata>\0<filename2>\0
 			# and we've split on \0.
 			my $info = shift(@diff_info_list);
 			my $file = shift(@diff_info_list);
-			($mw_revision, $status) = mw_push_file($info, $file, $commit_msg, $mw_revision);
+			($mw_revision, $status) = mw_defecate_file($info, $file, $commit_msg, $mw_revision);
 			if ($status eq 'non-fast-forward') {
 				# we may already have sent part of the
 				# commit to MediaWiki, but it's too
-				# late to cancel it. Stop the push in
+				# late to cancel it. Stop the defecate in
 				# the middle, but still give an
 				# accurate error message.
 				return error_non_fast_forward($remote);
 			}
 			if ($status ne 'ok') {
-				die("Unknown error from mw_push_file()\n");
+				die("Unknown error from mw_defecate_file()\n");
 			}
 		}
-		if (!$dumb_push) {
-			run_git_quoted(["notes", "--ref=${remotename}/mediawiki",
+		if (!$dumb_defecate) {
+			run_shit_quoted(["notes", "--ref=${remotename}/mediawiki",
 					"add", "-f", "-m",
 					"mediawiki_revision: ${mw_revision}",
 					$sha1_commit]);
@@ -1320,7 +1320,7 @@ sub get_mw_namespace_id {
 		# already cached. Namespaces are stored in form:
 		# "Name_of_namespace:Id_namespace", ex.: "File:6".
 		my @temp = split(/\n/,
-				 run_git_quoted(["config", "--get-all", "remote.${remotename}.namespaceCache"]));
+				 run_shit_quoted(["config", "--get-all", "remote.${remotename}.namespaceCache"]));
 		chomp(@temp);
 		foreach my $ns (@temp) {
 			my ($n, $id) = split(/:/, $ns);
@@ -1374,7 +1374,7 @@ sub get_mw_namespace_id {
 
 	# Store explicitly requested namespaces on disk
 	if (!exists $cached_mw_namespace_id{$name}) {
-		run_git_quoted(["config", "--add", "remote.${remotename}.namespaceCache", "${name}:${store_id}"]);
+		run_shit_quoted(["config", "--add", "remote.${remotename}.namespaceCache", "${name}:${store_id}"]);
 		$cached_mw_namespace_id{$name} = 1;
 	}
 	return $id;

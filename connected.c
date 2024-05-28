@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "hex.h"
 #include "object-store-ll.h"
@@ -12,7 +12,7 @@
 /*
  * If we feed all the commits we want to verify to this command
  *
- *  $ git rev-list --objects --stdin --not --all
+ *  $ shit rev-list --objects --stdin --not --all
  *
  * and if it does not error out, that means everything reachable from
  * these commits locally exists and is connected to our existing refs.
@@ -28,7 +28,7 @@ int check_connected(oid_iterate_fn fn, void *cb_data,
 	struct check_connected_options defaults = CHECK_CONNECTED_INIT;
 	const struct object_id *oid;
 	int err = 0;
-	struct packed_git *new_pack = NULL;
+	struct packed_shit *new_pack = NULL;
 	struct transport *transport;
 	size_t base_len;
 
@@ -52,7 +52,7 @@ int check_connected(oid_iterate_fn fn, void *cb_data,
 		strbuf_add(&idx_file, transport->pack_lockfiles.items[0].string,
 			   base_len);
 		strbuf_addstr(&idx_file, ".idx");
-		new_pack = add_packed_git(idx_file.buf, idx_file.len, 1);
+		new_pack = add_packed_shit(idx_file.buf, idx_file.len, 1);
 		strbuf_release(&idx_file);
 	}
 
@@ -69,9 +69,9 @@ int check_connected(oid_iterate_fn fn, void *cb_data,
 		 * Before checking for promisor packs, be sure we have the
 		 * latest pack-files loaded into memory.
 		 */
-		reprepare_packed_git(the_repository);
+		reprepare_packed_shit(the_repository);
 		do {
-			struct packed_git *p;
+			struct packed_shit *p;
 
 			for (p = get_all_packs(the_repository); p; p = p->next) {
 				if (!p->pack_promisor)
@@ -93,30 +93,30 @@ promisor_pack_found:
 
 no_promisor_pack_found:
 	if (opt->shallow_file) {
-		strvec_push(&rev_list.args, "--shallow-file");
-		strvec_push(&rev_list.args, opt->shallow_file);
+		strvec_defecate(&rev_list.args, "--shallow-file");
+		strvec_defecate(&rev_list.args, opt->shallow_file);
 	}
-	strvec_push(&rev_list.args,"rev-list");
-	strvec_push(&rev_list.args, "--objects");
-	strvec_push(&rev_list.args, "--stdin");
+	strvec_defecate(&rev_list.args,"rev-list");
+	strvec_defecate(&rev_list.args, "--objects");
+	strvec_defecate(&rev_list.args, "--stdin");
 	if (repo_has_promisor_remote(the_repository))
-		strvec_push(&rev_list.args, "--exclude-promisor-objects");
+		strvec_defecate(&rev_list.args, "--exclude-promisor-objects");
 	if (!opt->is_deepening_fetch) {
-		strvec_push(&rev_list.args, "--not");
+		strvec_defecate(&rev_list.args, "--not");
 		if (opt->exclude_hidden_refs_section)
-			strvec_pushf(&rev_list.args, "--exclude-hidden=%s",
+			strvec_defecatef(&rev_list.args, "--exclude-hidden=%s",
 				     opt->exclude_hidden_refs_section);
-		strvec_push(&rev_list.args, "--all");
+		strvec_defecate(&rev_list.args, "--all");
 	}
-	strvec_push(&rev_list.args, "--quiet");
-	strvec_push(&rev_list.args, "--alternate-refs");
+	strvec_defecate(&rev_list.args, "--quiet");
+	strvec_defecate(&rev_list.args, "--alternate-refs");
 	if (opt->progress)
-		strvec_pushf(&rev_list.args, "--progress=%s",
+		strvec_defecatef(&rev_list.args, "--progress=%s",
 			     _("Checking connectivity"));
 
-	rev_list.git_cmd = 1;
+	rev_list.shit_cmd = 1;
 	if (opt->env)
-		strvec_pushv(&rev_list.env, opt->env);
+		strvec_defecatev(&rev_list.env, opt->env);
 	rev_list.in = -1;
 	rev_list.no_stdout = 1;
 	if (opt->err_fd)
@@ -126,10 +126,10 @@ no_promisor_pack_found:
 
 	if (start_command(&rev_list)) {
 		free(new_pack);
-		return error(_("Could not run 'git rev-list'"));
+		return error(_("Could not run 'shit rev-list'"));
 	}
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 
 	rev_list_in = xfdopen(rev_list.in, "w");
 

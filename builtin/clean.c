@@ -1,9 +1,9 @@
 /*
- * "git clean" builtin command
+ * "shit clean" builtin command
  *
  * Copyright (C) 2007 Shawn Bohrer
  *
- * Based on git-clean.sh by Pavel Roskin
+ * Based on shit-clean.sh by Pavel Roskin
  */
 
 #include "builtin.h"
@@ -30,14 +30,14 @@ static struct string_list del_list = STRING_LIST_INIT_DUP;
 static unsigned int colopts;
 
 static const char *const builtin_clean_usage[] = {
-	N_("git clean [-d] [-f] [-i] [-n] [-q] [-e <pattern>] [-x | -X] [--] [<pathspec>...]"),
+	N_("shit clean [-d] [-f] [-i] [-n] [-q] [-e <pattern>] [-x | -X] [--] [<pathspec>...]"),
 	NULL
 };
 
 static const char *msg_remove = N_("Removing %s\n");
 static const char *msg_would_remove = N_("Would remove %s\n");
-static const char *msg_skip_git_dir = N_("Skipping repository %s\n");
-static const char *msg_would_skip_git_dir = N_("Would skip repository %s\n");
+static const char *msg_skip_shit_dir = N_("Skipping repository %s\n");
+static const char *msg_would_skip_shit_dir = N_("Would skip repository %s\n");
 static const char *msg_warn_remove_failed = N_("failed to remove %s");
 static const char *msg_warn_lstat_failed = N_("could not lstat %s\n");
 static const char *msg_skip_cwd = N_("Refusing to remove current working directory\n");
@@ -63,12 +63,12 @@ static const char *color_interactive_slots[] = {
 
 static int clean_use_color = -1;
 static char clean_colors[][COLOR_MAXLEN] = {
-	[CLEAN_COLOR_ERROR] = GIT_COLOR_BOLD_RED,
-	[CLEAN_COLOR_HEADER] = GIT_COLOR_BOLD,
-	[CLEAN_COLOR_HELP] = GIT_COLOR_BOLD_RED,
-	[CLEAN_COLOR_PLAIN] = GIT_COLOR_NORMAL,
-	[CLEAN_COLOR_PROMPT] = GIT_COLOR_BOLD_BLUE,
-	[CLEAN_COLOR_RESET] = GIT_COLOR_RESET,
+	[CLEAN_COLOR_ERROR] = shit_COLOR_BOLD_RED,
+	[CLEAN_COLOR_HEADER] = shit_COLOR_BOLD,
+	[CLEAN_COLOR_HELP] = shit_COLOR_BOLD_RED,
+	[CLEAN_COLOR_PLAIN] = shit_COLOR_NORMAL,
+	[CLEAN_COLOR_PROMPT] = shit_COLOR_BOLD_BLUE,
+	[CLEAN_COLOR_RESET] = shit_COLOR_RESET,
 };
 
 #define MENU_OPTS_SINGLETON		01
@@ -103,18 +103,18 @@ struct menu_stuff {
 
 define_list_config_array(color_interactive_slots);
 
-static int git_clean_config(const char *var, const char *value,
+static int shit_clean_config(const char *var, const char *value,
 			    const struct config_context *ctx, void *cb)
 {
 	const char *slot_name;
 
 	if (starts_with(var, "column."))
-		return git_column_config(var, value, "clean", &colopts);
+		return shit_column_config(var, value, "clean", &colopts);
 
 	/* honors the color.interactive* config variables which also
-	   applied in git-add--interactive and git-stash */
+	   applied in shit-add--interactive and shit-stash */
 	if (!strcmp(var, "color.interactive")) {
-		clean_use_color = git_config_colorbool(var, value);
+		clean_use_color = shit_config_colorbool(var, value);
 		return 0;
 	}
 	if (skip_prefix(var, "color.interactive.", &slot_name)) {
@@ -127,14 +127,14 @@ static int git_clean_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, "clean.requireforce")) {
-		require_force = git_config_bool(var, value);
+		require_force = shit_config_bool(var, value);
 		return 0;
 	}
 
-	if (git_color_config(var, value, cb) < 0)
+	if (shit_color_config(var, value, cb) < 0)
 		return -1;
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static const char *clean_get_color(enum color_clean ix)
@@ -170,11 +170,11 @@ static int remove_dirs(struct strbuf *path, const char *prefix, int force_flag,
 
 	*dir_gone = 1;
 
-	if ((force_flag & REMOVE_DIR_KEEP_NESTED_GIT) &&
+	if ((force_flag & REMOVE_DIR_KEEP_NESTED_shit) &&
 	    is_nonbare_repository_dir(path)) {
 		if (!quiet) {
 			quote_path(path->buf, prefix, &quoted, 0);
-			printf(dry_run ?  _(msg_would_skip_git_dir) : _(msg_skip_git_dir),
+			printf(dry_run ?  _(msg_would_skip_shit_dir) : _(msg_skip_shit_dir),
 					quoted.buf);
 		}
 
@@ -521,7 +521,7 @@ static int parse_choice(struct menu_stuff *menu_stuff,
 					is_range = 0;
 					break;
 				}
-			} else if (!isdigit(*p)) {
+			} else if (!isdishit(*p)) {
 				is_number = 0;
 				is_range = 0;
 				break;
@@ -566,7 +566,7 @@ static int parse_choice(struct menu_stuff *menu_stuff,
 }
 
 /*
- * Implement a git-add-interactive compatible UI, which is borrowed
+ * Implement a shit-add-interactive compatible UI, which is borrowed
  * from add-interactive.c.
  *
  * Return value:
@@ -611,7 +611,7 @@ static int *list_and_choose(struct menu_opts *opts, struct menu_stuff *stuff)
 			       clean_get_color(CLEAN_COLOR_RESET));
 		}
 
-		if (git_read_line_interactively(&choice) == EOF) {
+		if (shit_read_line_interactively(&choice) == EOF) {
 			eof = 1;
 			break;
 		}
@@ -691,7 +691,7 @@ static int filter_by_patterns_cmd(void)
 		clean_print_color(CLEAN_COLOR_PROMPT);
 		printf(_("Input ignore patterns>> "));
 		clean_print_color(CLEAN_COLOR_RESET);
-		if (git_read_line_interactively(&confirm) == EOF)
+		if (shit_read_line_interactively(&confirm) == EOF)
 			putchar('\n');
 
 		/* quit filter_by_pattern mode if press ENTER or Ctrl-D */
@@ -786,7 +786,7 @@ static int ask_each_cmd(void)
 			qname = quote_path(item->string, NULL, &buf, 0);
 			/* TRANSLATORS: Make sure to keep [y/N] as is */
 			printf(_("Remove %s [y/N]? "), qname);
-			if (git_read_line_interactively(&confirm) == EOF) {
+			if (shit_read_line_interactively(&confirm) == EOF) {
 				putchar('\n');
 				eof = 1;
 			}
@@ -920,7 +920,7 @@ int cmd_clean(int argc, const char **argv, const char *prefix)
 	int i, res;
 	int dry_run = 0, remove_directories = 0, quiet = 0, ignored = 0;
 	int ignored_only = 0, force = 0, errors = 0, gone = 1;
-	int rm_flags = REMOVE_DIR_KEEP_NESTED_GIT;
+	int rm_flags = REMOVE_DIR_KEEP_NESTED_shit;
 	struct strbuf abs_path = STRBUF_INIT;
 	struct dir_struct dir = DIR_INIT;
 	struct pathspec pathspec;
@@ -944,7 +944,7 @@ int cmd_clean(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_clean_config, NULL);
+	shit_config(shit_clean_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, options, builtin_clean_usage,
 			     0);
@@ -955,7 +955,7 @@ int cmd_clean(int argc, const char **argv, const char *prefix)
 	if (force > 1)
 		rm_flags = 0;
 	else
-		dir.flags |= DIR_SKIP_NESTED_GIT;
+		dir.flags |= DIR_SKIP_NESTED_shit;
 
 	dir.flags |= DIR_SHOW_OTHER_DIRECTORIES;
 

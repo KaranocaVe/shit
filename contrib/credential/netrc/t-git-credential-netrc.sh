@@ -1,7 +1,7 @@
 #!/bin/sh
 (
 	cd ../../../t
-	test_description='git-credential-netrc'
+	test_description='shit-credential-netrc'
 	. ./test-lib.sh
 	. "$TEST_DIRECTORY"/lib-perl.sh
 
@@ -11,11 +11,11 @@
 
 	test_expect_success \
 		'set up test repository' \
-		'git config --add gpg.program test.git-config-gpg'
+		'shit config --add gpg.program test.shit-config-gpg'
 
-	export PERL5LIB="$GITPERLLIB"
-	test_expect_success 'git-credential-netrc' '
-		perl "$GIT_BUILD_DIR"/contrib/credential/netrc/test.pl
+	export PERL5LIB="$shitPERLLIB"
+	test_expect_success 'shit-credential-netrc' '
+		perl "$shit_BUILD_DIR"/contrib/credential/netrc/test.pl
 	'
 
 	test_done

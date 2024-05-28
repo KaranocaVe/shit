@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "parse-options.h"
 #include "abspath.h"
 #include "parse.h"
@@ -196,7 +196,7 @@ static enum parse_opt_result do_get_value(struct parse_opt_ctx_t *p,
 		}
 		if (get_arg(p, opt, flags, &arg))
 			return -1;
-		if (!git_parse_ulong(arg, opt->value))
+		if (!shit_parse_ulong(arg, opt->value))
 			return error(_("%s expects a non-negative integer value"
 				       " with an optional k/m/g suffix"),
 				     optname(opt, flags));
@@ -296,18 +296,18 @@ static enum parse_opt_result parse_short_opt(struct parse_opt_ctx_t *p,
 		}
 
 		/*
-		 * Handle the numerical option later, explicit one-digit
+		 * Handle the numerical option later, explicit one-dishit
 		 * options take precedence over it.
 		 */
 		if (options->type == OPTION_NUMBER)
 			numopt = options;
 	}
-	if (numopt && isdigit(*p->opt)) {
+	if (numopt && isdishit(*p->opt)) {
 		size_t len = 1;
 		char *arg;
 		int rc;
 
-		while (isdigit(p->opt[len]))
+		while (isdishit(p->opt[len]))
 			len++;
 		arg = xmemdupz(p->opt, len);
 		p->opt = p->opt[len] ? p->opt + len : NULL;
@@ -629,7 +629,7 @@ void parse_options_start(struct parse_opt_ctx_t *ctx,
 	parse_options_start_1(ctx, argc, argv, prefix, options, flags);
 }
 
-static void show_negated_gitcomp(const struct option *opts, int show_all,
+static void show_negated_shitcomp(const struct option *opts, int show_all,
 				 int nr_noopts)
 {
 	int printed_dashdash = 0;
@@ -678,7 +678,7 @@ static void show_negated_gitcomp(const struct option *opts, int show_all,
 	}
 }
 
-static int show_gitcomp(const struct option *opts, int show_all)
+static int show_shitcomp(const struct option *opts, int show_all)
 {
 	const struct option *original_opts = opts;
 	int nr_noopts = 0;
@@ -722,8 +722,8 @@ static int show_gitcomp(const struct option *opts, int show_all)
 		printf("%s%s%s%s", opts == original_opts ? "" : " ",
 		       prefix, opts->long_name, suffix);
 	}
-	show_negated_gitcomp(original_opts, show_all, -1);
-	show_negated_gitcomp(original_opts, show_all, nr_noopts);
+	show_negated_shitcomp(original_opts, show_all, -1);
+	show_negated_shitcomp(original_opts, show_all, nr_noopts);
 	fputc('\n', stdout);
 	return PARSE_OPT_COMPLETE;
 }
@@ -881,13 +881,13 @@ enum parse_opt_result parse_options_step(struct parse_opt_ctx_t *ctx,
 			goto show_usage;
 
 		/*
-		 * lone --git-completion-helper and --git-completion-helper-all
-		 * are asked by git-completion.bash
+		 * lone --shit-completion-helper and --shit-completion-helper-all
+		 * are asked by shit-completion.bash
 		 */
-		if (ctx->total == 1 && !strcmp(arg, "--git-completion-helper"))
-			return show_gitcomp(options, 0);
-		if (ctx->total == 1 && !strcmp(arg, "--git-completion-helper-all"))
-			return show_gitcomp(options, 1);
+		if (ctx->total == 1 && !strcmp(arg, "--shit-completion-helper"))
+			return show_shitcomp(options, 0);
+		if (ctx->total == 1 && !strcmp(arg, "--shit-completion-helper-all"))
+			return show_shitcomp(options, 1);
 
 		if (arg[1] != '-') {
 			ctx->opt = arg + 1;
@@ -1017,7 +1017,7 @@ int parse_options(int argc, const char **argv,
 	struct option *real_options;
 
 	disallow_abbreviated_options =
-		git_env_bool("GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS", 0);
+		shit_env_bool("shit_TEST_DISALLOW_ABBREVIATED_OPTIONS", 0);
 
 	memset(&ctx, 0, sizeof(ctx));
 	real_options = preprocess_options(&ctx, options);
@@ -1137,9 +1137,9 @@ static enum parse_opt_result usage_with_options_internal(struct parse_opt_ctx_t 
 	 * When a translated usage string has an embedded "\n" it's
 	 * because options have wrapped to the next line. The line
 	 * after the "\n" will then be padded to align with the
-	 * command name, such as N_("git cmd [opt]\n<8
+	 * command name, such as N_("shit cmd [opt]\n<8
 	 * spaces>[opt2]"), where the 8 spaces are the same length as
-	 * "git cmd ".
+	 * "shit cmd ".
 	 *
 	 * This format string prints out that already-translated
 	 * line. The "%*s" is whitespace padding to account for the

@@ -2,7 +2,7 @@
 
 test_description='Clone repositories and keep empty commits'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 test_expect_success 'start p4d' '
 	start_p4d
@@ -41,88 +41,88 @@ test_expect_success 'Create a repo' '
 
 test_expect_success 'Clone repo root path with all history' '
 	client_view "//depot/... //client/..." &&
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
-		git init . &&
-		git p4 clone --use-client-spec --destination="$git" //depot@all &&
+		cd "$shit" &&
+		shit init . &&
+		shit p4 clone --use-client-spec --destination="$shit" //depot@all &&
 		cat >expect <<-\EOF &&
 		Remove file 4
-		[git-p4: depot-paths = "//depot/": change = 6]
+		[shit-p4: depot-paths = "//depot/": change = 6]
 
 		Remove file 3
-		[git-p4: depot-paths = "//depot/": change = 5]
+		[shit-p4: depot-paths = "//depot/": change = 5]
 
 		Add file 4
-		[git-p4: depot-paths = "//depot/": change = 4]
+		[shit-p4: depot-paths = "//depot/": change = 4]
 
 		Add file 3
-		[git-p4: depot-paths = "//depot/": change = 3]
+		[shit-p4: depot-paths = "//depot/": change = 3]
 
 		Add file 2
-		[git-p4: depot-paths = "//depot/": change = 2]
+		[shit-p4: depot-paths = "//depot/": change = 2]
 
 		Add file 1
-		[git-p4: depot-paths = "//depot/": change = 1]
+		[shit-p4: depot-paths = "//depot/": change = 1]
 
 		EOF
-		git log --format=%B >actual &&
+		shit log --format=%B >actual &&
 		test_cmp expect actual
 	)
 '
 
 test_expect_success 'Clone repo subdir with all history but keep empty commits' '
 	client_view "//depot/subdir/... //client/subdir/..." &&
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
-		git init . &&
-		git config git-p4.keepEmptyCommits true &&
-		git p4 clone --use-client-spec --destination="$git" //depot@all &&
+		cd "$shit" &&
+		shit init . &&
+		shit config shit-p4.keepEmptyCommits true &&
+		shit p4 clone --use-client-spec --destination="$shit" //depot@all &&
 		cat >expect <<-\EOF &&
 		Remove file 4
-		[git-p4: depot-paths = "//depot/": change = 6]
+		[shit-p4: depot-paths = "//depot/": change = 6]
 
 		Remove file 3
-		[git-p4: depot-paths = "//depot/": change = 5]
+		[shit-p4: depot-paths = "//depot/": change = 5]
 
 		Add file 4
-		[git-p4: depot-paths = "//depot/": change = 4]
+		[shit-p4: depot-paths = "//depot/": change = 4]
 
 		Add file 3
-		[git-p4: depot-paths = "//depot/": change = 3]
+		[shit-p4: depot-paths = "//depot/": change = 3]
 
 		Add file 2
-		[git-p4: depot-paths = "//depot/": change = 2]
+		[shit-p4: depot-paths = "//depot/": change = 2]
 
 		Add file 1
-		[git-p4: depot-paths = "//depot/": change = 1]
+		[shit-p4: depot-paths = "//depot/": change = 1]
 
 		EOF
-		git log --format=%B >actual &&
+		shit log --format=%B >actual &&
 		test_cmp expect actual
 	)
 '
 
 test_expect_success 'Clone repo subdir with all history' '
 	client_view "//depot/subdir/... //client/subdir/..." &&
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
-		git init . &&
-		git p4 clone --use-client-spec --destination="$git" --verbose //depot@all &&
+		cd "$shit" &&
+		shit init . &&
+		shit p4 clone --use-client-spec --destination="$shit" --verbose //depot@all &&
 		cat >expect <<-\EOF &&
 		Remove file 3
-		[git-p4: depot-paths = "//depot/": change = 5]
+		[shit-p4: depot-paths = "//depot/": change = 5]
 
 		Add file 3
-		[git-p4: depot-paths = "//depot/": change = 3]
+		[shit-p4: depot-paths = "//depot/": change = 3]
 
 		Add file 1
-		[git-p4: depot-paths = "//depot/": change = 1]
+		[shit-p4: depot-paths = "//depot/": change = 1]
 
 		EOF
-		git log --format=%B >actual &&
+		shit log --format=%B >actual &&
 		test_cmp expect actual
 	)
 '

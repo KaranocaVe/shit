@@ -1,9 +1,9 @@
 #!/bin/sh
 
-test_description='git-merge with case-changing rename on case-insensitive file system'
+test_description='shit-merge with case-changing rename on case-insensitive file system'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -14,42 +14,42 @@ then
 fi
 
 test_expect_success 'merge with case-changing rename' '
-	test $(git config core.ignorecase) = true &&
+	test $(shit config core.ignorecase) = true &&
 	>TestCase &&
-	git add TestCase &&
-	git commit -m "add TestCase" &&
-	git tag baseline &&
-	git checkout -b with-camel &&
+	shit add TestCase &&
+	shit commit -m "add TestCase" &&
+	shit tag baseline &&
+	shit checkout -b with-camel &&
 	>foo &&
-	git add foo &&
-	git commit -m "intervening commit" &&
-	git checkout main &&
-	git rm TestCase &&
+	shit add foo &&
+	shit commit -m "intervening commit" &&
+	shit checkout main &&
+	shit rm TestCase &&
 	>testcase &&
-	git add testcase &&
-	git commit -m "rename to testcase" &&
-	git checkout with-camel &&
-	git merge main -m "merge" &&
+	shit add testcase &&
+	shit commit -m "rename to testcase" &&
+	shit checkout with-camel &&
+	shit merge main -m "merge" &&
 	test_path_is_file testcase
 '
 
 test_expect_success 'merge with case-changing rename on both sides' '
-	git checkout main &&
-	git reset --hard baseline &&
-	git branch -D with-camel &&
-	git checkout -b with-camel &&
-	git mv TestCase testcase &&
-	git commit -m "recase on branch" &&
+	shit checkout main &&
+	shit reset --hard baseline &&
+	shit branch -D with-camel &&
+	shit checkout -b with-camel &&
+	shit mv TestCase testcase &&
+	shit commit -m "recase on branch" &&
 	>foo &&
-	git add foo &&
-	git commit -m "intervening commit" &&
-	git checkout main &&
-	git rm TestCase &&
+	shit add foo &&
+	shit commit -m "intervening commit" &&
+	shit checkout main &&
+	shit rm TestCase &&
 	>testcase &&
-	git add testcase &&
-	git commit -m "rename to testcase" &&
-	git checkout with-camel &&
-	git merge main -m "merge" &&
+	shit add testcase &&
+	shit commit -m "rename to testcase" &&
+	shit checkout with-camel &&
+	shit merge main -m "merge" &&
 	test_path_is_file testcase
 '
 

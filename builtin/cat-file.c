@@ -1,5 +1,5 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
@@ -132,7 +132,7 @@ static int cat_one_file(int opt, const char *exp_type, const char *obj_name,
 	case 't':
 		oi.type_name = &sb;
 		if (oid_object_info_extended(the_repository, &oid, &oi, flags) < 0)
-			die("git cat-file: could not get object info");
+			die("shit cat-file: could not get object info");
 		if (sb.len) {
 			printf("%s\n", sb.buf);
 			strbuf_release(&sb);
@@ -150,7 +150,7 @@ static int cat_one_file(int opt, const char *exp_type, const char *obj_name,
 		}
 
 		if (oid_object_info_extended(the_repository, &oid, &oi, flags) < 0)
-			die("git cat-file: could not get object info");
+			die("shit cat-file: could not get object info");
 
 		if (use_mailmap && (type == OBJ_COMMIT || type == OBJ_TAG)) {
 			size_t s = size;
@@ -258,11 +258,11 @@ static int cat_one_file(int opt, const char *exp_type, const char *obj_name,
 		break;
 	}
 	default:
-		die("git cat-file: unknown option: %s", exp_type);
+		die("shit cat-file: unknown option: %s", exp_type);
 	}
 
 	if (!buf)
-		die("git cat-file %s: bad file", obj_name);
+		die("shit cat-file %s: bad file", obj_name);
 
 	write_or_die(1, buf, size);
 	ret = 0;
@@ -460,7 +460,7 @@ static void batch_object_write(const char *obj_name,
 			       struct strbuf *scratch,
 			       struct batch_options *opt,
 			       struct expand_data *data,
-			       struct packed_git *pack,
+			       struct packed_shit *pack,
 			       off_t offset)
 {
 	if (!data->skip_object_info) {
@@ -596,7 +596,7 @@ static int collect_loose_object(const struct object_id *oid,
 }
 
 static int collect_packed_object(const struct object_id *oid,
-				 struct packed_git *pack UNUSED,
+				 struct packed_shit *pack UNUSED,
 				 uint32_t pos UNUSED,
 				 void *data)
 {
@@ -605,7 +605,7 @@ static int collect_packed_object(const struct object_id *oid,
 }
 
 static int batch_unordered_object(const struct object_id *oid,
-				  struct packed_git *pack, off_t offset,
+				  struct packed_shit *pack, off_t offset,
 				  void *vdata)
 {
 	struct object_cb_data *data = vdata;
@@ -627,7 +627,7 @@ static int batch_unordered_loose(const struct object_id *oid,
 }
 
 static int batch_unordered_packed(const struct object_id *oid,
-				  struct packed_git *pack,
+				  struct packed_shit *pack,
 				  uint32_t pos,
 				  void *data)
 {
@@ -756,7 +756,7 @@ static void batch_objects_command(struct batch_options *opt,
 
 	if (opt->buffer_output &&
 	    nr &&
-	    !git_env_bool("GIT_TEST_CAT_FILE_NO_FLUSH_ON_EXIT", 0)) {
+	    !shit_env_bool("shit_TEST_CAT_FILE_NO_FLUSH_ON_EXIT", 0)) {
 		dispatch_calls(opt, output, data, queued_cmd, nr);
 		free_cmds(queued_cmd, &nr);
 	}
@@ -881,13 +881,13 @@ static int batch_objects(struct batch_options *opt)
 	return retval;
 }
 
-static int git_cat_file_config(const char *var, const char *value,
+static int shit_cat_file_config(const char *var, const char *value,
 			       const struct config_context *ctx, void *cb)
 {
 	if (userdiff_config(var, value) < 0)
 		return -1;
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static int batch_option_callback(const struct option *opt,
@@ -930,12 +930,12 @@ int cmd_cat_file(int argc, const char **argv, const char *prefix)
 	int nul_terminated = 0;
 
 	const char * const usage[] = {
-		N_("git cat-file <type> <object>"),
-		N_("git cat-file (-e | -p) <object>"),
-		N_("git cat-file (-t | -s) [--allow-unknown-type] <object>"),
-		N_("git cat-file (--textconv | --filters)\n"
+		N_("shit cat-file <type> <object>"),
+		N_("shit cat-file (-e | -p) <object>"),
+		N_("shit cat-file (-t | -s) [--allow-unknown-type] <object>"),
+		N_("shit cat-file (--textconv | --filters)\n"
 		   "             [<rev>:<path|tree-ish> | --path=<path|tree-ish> <rev>]"),
-		N_("git cat-file (--batch | --batch-check | --batch-command) [--batch-all-objects]\n"
+		N_("shit cat-file (--batch | --batch-check | --batch-command) [--batch-all-objects]\n"
 		   "             [--buffer] [--follow-symlinks] [--unordered]\n"
 		   "             [--textconv | --filters] [-Z]"),
 		NULL
@@ -991,7 +991,7 @@ int cmd_cat_file(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_cat_file_config, NULL);
+	shit_config(shit_cat_file_config, NULL);
 
 	batch.buffer_output = -1;
 
@@ -1081,6 +1081,6 @@ int cmd_cat_file(int argc, const char **argv, const char *prefix)
 	}
 
 	if (unknown_type && opt != 't' && opt != 's')
-		die("git cat-file --allow-unknown-type: use with -s or -t");
+		die("shit cat-file --allow-unknown-type: use with -s or -t");
 	return cat_one_file(opt, exp_type, obj_name, unknown_type);
 }

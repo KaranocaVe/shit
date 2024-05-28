@@ -5,18 +5,18 @@ test_description='Test handling of overwriting untracked files'
 . ./test-lib.sh
 
 test_setup_reset () {
-	git init reset_$1 &&
+	shit init reset_$1 &&
 	(
 		cd reset_$1 &&
 		test_commit init &&
 
-		git branch stable &&
-		git branch work &&
+		shit branch stable &&
+		shit branch work &&
 
-		git checkout work &&
+		shit checkout work &&
 		test_commit foo &&
 
-		git checkout stable
+		shit checkout stable
 	)
 }
 
@@ -24,15 +24,15 @@ test_expect_success 'reset --hard will nuke untracked files/dirs' '
 	test_setup_reset hard &&
 	(
 		cd reset_hard &&
-		git ls-tree -r stable &&
-		git log --all --name-status --oneline &&
-		git ls-tree -r work &&
+		shit ls-tree -r stable &&
+		shit log --all --name-status --oneline &&
+		shit ls-tree -r work &&
 
 		mkdir foo.t &&
 		echo precious >foo.t/file &&
 		echo foo >expect &&
 
-		git reset --hard work &&
+		shit reset --hard work &&
 
 		# check that untracked directory foo.t/ was nuked
 		test_path_is_file foo.t &&
@@ -49,7 +49,7 @@ test_expect_success 'reset --merge will preserve untracked files/dirs' '
 		echo precious >foo.t/file &&
 		cp foo.t/file expect &&
 
-		test_must_fail git reset --merge work 2>error &&
+		test_must_fail shit reset --merge work 2>error &&
 		test_cmp expect foo.t/file &&
 		grep "Updating .foo.t. would lose untracked files" error
 	)
@@ -64,31 +64,31 @@ test_expect_success 'reset --keep will preserve untracked files/dirs' '
 		echo precious >foo.t/file &&
 		cp foo.t/file expect &&
 
-		test_must_fail git reset --merge work 2>error &&
+		test_must_fail shit reset --merge work 2>error &&
 		test_cmp expect foo.t/file &&
 		grep "Updating.*foo.t.*would lose untracked files" error
 	)
 '
 
 test_setup_checkout_m () {
-	git init checkout &&
+	shit init checkout &&
 	(
 		cd checkout &&
 		test_commit init &&
 
 		test_write_lines file has some >filler &&
-		git add filler &&
-		git commit -m filler &&
+		shit add filler &&
+		shit commit -m filler &&
 
-		git branch stable &&
+		shit branch stable &&
 
-		git switch -c work &&
+		shit switch -c work &&
 		echo stuff >notes.txt &&
 		test_write_lines file has some words >filler &&
-		git add notes.txt filler &&
-		git commit -m filler &&
+		shit add notes.txt filler &&
+		shit commit -m filler &&
 
-		git checkout stable
+		shit checkout stable
 	)
 }
 
@@ -103,106 +103,106 @@ test_expect_success 'checkout -m does not nuke untracked file' '
 		echo precious >notes.txt &&
 		cp notes.txt expect &&
 
-		test_must_fail git checkout -m work &&
+		test_must_fail shit checkout -m work &&
 		test_cmp expect notes.txt
 	)
 '
 
 test_setup_sequencing () {
-	git init sequencing_$1 &&
+	shit init sequencing_$1 &&
 	(
 		cd sequencing_$1 &&
 		test_commit init &&
 
 		test_write_lines this file has some words >filler &&
-		git add filler &&
-		git commit -m filler &&
+		shit add filler &&
+		shit commit -m filler &&
 
 		mkdir -p foo/bar &&
 		test_commit foo/bar/baz &&
 
-		git branch simple &&
-		git branch fooey &&
+		shit branch simple &&
+		shit branch fooey &&
 
-		git checkout fooey &&
-		git rm foo/bar/baz.t &&
+		shit checkout fooey &&
+		shit rm foo/bar/baz.t &&
 		echo stuff >>filler &&
-		git add -u &&
-		git commit -m "changes" &&
+		shit add -u &&
+		shit commit -m "changes" &&
 
-		git checkout simple &&
+		shit checkout simple &&
 		echo items >>filler &&
 		echo newstuff >>newfile &&
-		git add filler newfile &&
-		git commit -m another
+		shit add filler newfile &&
+		shit commit -m another
 	)
 }
 
-test_expect_success 'git rebase --abort and untracked files' '
+test_expect_success 'shit rebase --abort and untracked files' '
 	test_setup_sequencing rebase_abort_and_untracked &&
 	(
 		cd sequencing_rebase_abort_and_untracked &&
-		git checkout fooey &&
-		test_must_fail git rebase simple &&
+		shit checkout fooey &&
+		test_must_fail shit rebase simple &&
 
 		cat init.t &&
-		git rm init.t &&
+		shit rm init.t &&
 		echo precious >init.t &&
 		cp init.t expect &&
-		git status --porcelain &&
-		test_must_fail git rebase --abort &&
+		shit status --porcelain &&
+		test_must_fail shit rebase --abort &&
 		test_cmp expect init.t
 	)
 '
 
-test_expect_success 'git rebase fast forwarding and untracked files' '
+test_expect_success 'shit rebase fast forwarding and untracked files' '
 	test_setup_sequencing rebase_fast_forward_and_untracked &&
 	(
 		cd sequencing_rebase_fast_forward_and_untracked &&
-		git checkout init &&
+		shit checkout init &&
 		echo precious >filler &&
 		cp filler expect &&
-		test_must_fail git rebase init simple &&
+		test_must_fail shit rebase init simple &&
 		test_cmp expect filler
 	)
 '
 
-test_expect_failure 'git rebase --autostash and untracked files' '
+test_expect_failure 'shit rebase --autostash and untracked files' '
 	test_setup_sequencing rebase_autostash_and_untracked &&
 	(
 		cd sequencing_rebase_autostash_and_untracked &&
-		git checkout simple &&
-		git rm filler &&
+		shit checkout simple &&
+		shit rm filler &&
 		mkdir filler &&
 		echo precious >filler/file &&
 		cp filler/file expect &&
-		git rebase --autostash init &&
+		shit rebase --autostash init &&
 		test_path_is_file filler/file
 	)
 '
 
-test_expect_failure 'git stash and untracked files' '
+test_expect_failure 'shit stash and untracked files' '
 	test_setup_sequencing stash_and_untracked_files &&
 	(
 		cd sequencing_stash_and_untracked_files &&
-		git checkout simple &&
-		git rm filler &&
+		shit checkout simple &&
+		shit rm filler &&
 		mkdir filler &&
 		echo precious >filler/file &&
 		cp filler/file expect &&
-		git status --porcelain &&
-		git stash push &&
-		git status --porcelain &&
+		shit status --porcelain &&
+		shit stash defecate &&
+		shit status --porcelain &&
 		test_path_is_file filler/file
 	)
 '
 
-test_expect_success 'git am --abort and untracked dir vs. unmerged file' '
+test_expect_success 'shit am --abort and untracked dir vs. unmerged file' '
 	test_setup_sequencing am_abort_and_untracked &&
 	(
 		cd sequencing_am_abort_and_untracked &&
-		git format-patch -1 --stdout fooey >changes.mbox &&
-		test_must_fail git am --3way changes.mbox &&
+		shit format-patch -1 --stdout fooey >changes.mbox &&
+		test_must_fail shit am --3way changes.mbox &&
 
 		# Delete the conflicted file; we will stage and commit it later
 		rm filler &&
@@ -212,19 +212,19 @@ test_expect_success 'git am --abort and untracked dir vs. unmerged file' '
 		echo foo >filler/file1 &&
 		echo bar >filler/file2 &&
 
-		test_must_fail git am --abort 2>errors &&
+		test_must_fail shit am --abort 2>errors &&
 		test_path_is_dir filler &&
 		grep "Updating .filler. would lose untracked files in it" errors
 	)
 '
 
-test_expect_success 'git am --skip and untracked dir vs deleted file' '
+test_expect_success 'shit am --skip and untracked dir vs deleted file' '
 	test_setup_sequencing am_skip_and_untracked &&
 	(
 		cd sequencing_am_skip_and_untracked &&
-		git checkout fooey &&
-		git format-patch -1 --stdout simple >changes.mbox &&
-		test_must_fail git am --3way changes.mbox &&
+		shit checkout fooey &&
+		shit format-patch -1 --stdout simple >changes.mbox &&
+		test_must_fail shit am --3way changes.mbox &&
 
 		# Delete newfile
 		rm newfile &&
@@ -235,7 +235,7 @@ test_expect_success 'git am --skip and untracked dir vs deleted file' '
 		echo bar >newfile/file2 &&
 
 		# Change our mind about resolutions, just skip this patch
-		test_must_fail git am --skip 2>errors &&
+		test_must_fail shit am --skip 2>errors &&
 		test_path_is_dir newfile &&
 		grep "Updating .newfile. would lose untracked files in it" errors
 	)

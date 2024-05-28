@@ -19,7 +19,7 @@ enum fsmonitor_reason {
 	FSMONITOR_REASON_BARE,
 	FSMONITOR_REASON_ERROR, /* FS error probing for compatibility */
 	FSMONITOR_REASON_REMOTE,
-	FSMONITOR_REASON_VFS4GIT, /* VFS for Git virtualization */
+	FSMONITOR_REASON_VFS4shit, /* VFS for shit virtualization */
 	FSMONITOR_REASON_NOSOCKETS, /* NTFS,FAT32 do not support Unix sockets */
 };
 

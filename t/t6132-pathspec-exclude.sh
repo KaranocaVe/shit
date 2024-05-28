@@ -10,10 +10,10 @@ test_expect_success 'setup' '
 			mkdir -p $(dirname $p)
 		fi &&
 		: >$p &&
-		git add $p &&
-		git commit -m $p || return 1
+		shit add $p &&
+		shit commit -m $p || return 1
 	done &&
-	git log --oneline --format=%s >actual &&
+	shit log --oneline --format=%s >actual &&
 	cat <<EOF >expect &&
 sub2/file
 sub/sub/sub/file
@@ -26,13 +26,13 @@ EOF
 '
 
 test_expect_success 'exclude only pathspec uses default implicit pathspec' '
-	git log --oneline --format=%s -- . ":(exclude)sub" >expect &&
-	git log --oneline --format=%s -- ":(exclude)sub" >actual &&
+	shit log --oneline --format=%s -- . ":(exclude)sub" >expect &&
+	shit log --oneline --format=%s -- ":(exclude)sub" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 't_e_i() exclude sub' '
-	git log --oneline --format=%s -- . ":(exclude)sub" >actual &&
+	shit log --oneline --format=%s -- . ":(exclude)sub" >actual &&
 	cat <<EOF >expect &&
 sub2/file
 file
@@ -41,7 +41,7 @@ EOF
 '
 
 test_expect_success 't_e_i() exclude sub/sub/file' '
-	git log --oneline --format=%s -- . ":(exclude)sub/sub/file" >actual &&
+	shit log --oneline --format=%s -- . ":(exclude)sub/sub/file" >actual &&
 	cat <<EOF >expect &&
 sub2/file
 sub/sub/sub/file
@@ -53,7 +53,7 @@ EOF
 '
 
 test_expect_success 't_e_i() exclude sub using mnemonic' '
-	git log --oneline --format=%s -- . ":!sub" >actual &&
+	shit log --oneline --format=%s -- . ":!sub" >actual &&
 	cat <<EOF >expect &&
 sub2/file
 file
@@ -62,7 +62,7 @@ EOF
 '
 
 test_expect_success 't_e_i() exclude :(icase)SUB' '
-	git log --oneline --format=%s -- . ":(exclude,icase)SUB" >actual &&
+	shit log --oneline --format=%s -- . ":(exclude,icase)SUB" >actual &&
 	cat <<EOF >expect &&
 sub2/file
 file
@@ -73,7 +73,7 @@ EOF
 test_expect_success 't_e_i() exclude sub2 from sub' '
 	(
 	cd sub &&
-	git log --oneline --format=%s -- :/ ":/!sub2" >actual &&
+	shit log --oneline --format=%s -- :/ ":/!sub2" >actual &&
 	cat <<EOF >expect &&
 sub/sub/sub/file
 sub/file2
@@ -86,7 +86,7 @@ EOF
 '
 
 test_expect_success 't_e_i() exclude sub/*file' '
-	git log --oneline --format=%s -- . ":(exclude)sub/*file" >actual &&
+	shit log --oneline --format=%s -- . ":(exclude)sub/*file" >actual &&
 	cat <<EOF >expect &&
 sub2/file
 sub/file2
@@ -96,7 +96,7 @@ EOF
 '
 
 test_expect_success 't_e_i() exclude :(glob)sub/*/file' '
-	git log --oneline --format=%s -- . ":(exclude,glob)sub/*/file" >actual &&
+	shit log --oneline --format=%s -- . ":(exclude,glob)sub/*/file" >actual &&
 	cat <<EOF >expect &&
 sub2/file
 sub/sub/sub/file
@@ -108,7 +108,7 @@ EOF
 '
 
 test_expect_success 'm_p_d() exclude sub' '
-	git ls-files -- . ":(exclude)sub" >actual &&
+	shit ls-files -- . ":(exclude)sub" >actual &&
 	cat <<EOF >expect &&
 file
 sub2/file
@@ -117,7 +117,7 @@ EOF
 '
 
 test_expect_success 'm_p_d() exclude sub/sub/file' '
-	git ls-files -- . ":(exclude)sub/sub/file" >actual &&
+	shit ls-files -- . ":(exclude)sub/sub/file" >actual &&
 	cat <<EOF >expect &&
 file
 sub/file
@@ -129,7 +129,7 @@ EOF
 '
 
 test_expect_success 'm_p_d() exclude sub using mnemonic' '
-	git ls-files -- . ":!sub" >actual &&
+	shit ls-files -- . ":!sub" >actual &&
 	cat <<EOF >expect &&
 file
 sub2/file
@@ -138,7 +138,7 @@ EOF
 '
 
 test_expect_success 'm_p_d() exclude :(icase)SUB' '
-	git ls-files -- . ":(exclude,icase)SUB" >actual &&
+	shit ls-files -- . ":(exclude,icase)SUB" >actual &&
 	cat <<EOF >expect &&
 file
 sub2/file
@@ -149,7 +149,7 @@ EOF
 test_expect_success 'm_p_d() exclude sub2 from sub' '
 	(
 	cd sub &&
-	git ls-files -- :/ ":/!sub2" >actual &&
+	shit ls-files -- :/ ":/!sub2" >actual &&
 	cat <<EOF >expect &&
 ../file
 file
@@ -162,7 +162,7 @@ EOF
 '
 
 test_expect_success 'm_p_d() exclude sub/*file' '
-	git ls-files -- . ":(exclude)sub/*file" >actual &&
+	shit ls-files -- . ":(exclude)sub/*file" >actual &&
 	cat <<EOF >expect &&
 file
 sub/file2
@@ -172,7 +172,7 @@ EOF
 '
 
 test_expect_success 'm_p_d() exclude :(glob)sub/*/file' '
-	git ls-files -- . ":(exclude,glob)sub/*/file" >actual &&
+	shit ls-files -- . ":(exclude,glob)sub/*/file" >actual &&
 	cat <<EOF >expect &&
 file
 sub/file
@@ -184,7 +184,7 @@ EOF
 '
 
 test_expect_success 'multiple exclusions' '
-	git ls-files -- ":^*/file2" ":^sub2" >actual &&
+	shit ls-files -- ":^*/file2" ":^sub2" >actual &&
 	cat <<-\EOF >expect &&
 	file
 	sub/file
@@ -196,17 +196,17 @@ test_expect_success 'multiple exclusions' '
 
 test_expect_success 't_e_i() exclude case #8' '
 	test_when_finished "rm -fr case8" &&
-	git init case8 &&
+	shit init case8 &&
 	(
 		cd case8 &&
 		echo file >file1 &&
 		echo file >file2 &&
-		git add file1 file2 &&
-		git commit -m twofiles &&
-		git grep -l file HEAD :^file2 >actual &&
+		shit add file1 file2 &&
+		shit commit -m twofiles &&
+		shit grep -l file HEAD :^file2 >actual &&
 		echo HEAD:file1 >expected &&
 		test_cmp expected actual &&
-		git grep -l file HEAD :^file1 >actual &&
+		shit grep -l file HEAD :^file1 >actual &&
 		echo HEAD:file2 >expected &&
 		test_cmp expected actual
 	)
@@ -223,7 +223,7 @@ test_expect_success 'grep --untracked PATTERN' '
 	sub/actual
 	sub/expect
 	EOF
-	git grep -l --untracked file -- >actual-grep &&
+	shit grep -l --untracked file -- >actual-grep &&
 	test_cmp expect-grep actual-grep
 '
 
@@ -232,7 +232,7 @@ test_expect_success 'grep --untracked PATTERN :(exclude)DIR' '
 	actual
 	expect
 	EOF
-	git grep -l --untracked file -- ":(exclude)sub" >actual-grep &&
+	shit grep -l --untracked file -- ":(exclude)sub" >actual-grep &&
 	test_cmp expect-grep actual-grep
 '
 
@@ -241,7 +241,7 @@ test_expect_success 'grep --untracked PATTERN :(exclude)*FILE' '
 	actual
 	sub/actual
 	EOF
-	git grep -l --untracked file -- ":(exclude)*expect" >actual-grep &&
+	shit grep -l --untracked file -- ":(exclude)*expect" >actual-grep &&
 	test_cmp expect-grep actual-grep
 '
 
@@ -256,13 +256,13 @@ test_expect_success 'grep --untracked PATTERN :(exclude)*FILE' '
 # sub/sub/sub/file
 # sub2/file
 #
-# but there may also be some cruft that interferes with "git clean"
-# and "git add" tests.
+# but there may also be some cruft that interferes with "shit clean"
+# and "shit add" tests.
 
 test_expect_success 'archive with all negative' '
-	git reset --hard &&
-	git clean -f &&
-	git -C sub archive --format=tar HEAD -- ":!sub/" >archive &&
+	shit reset --hard &&
+	shit clean -f &&
+	shit -C sub archive --format=tar HEAD -- ":!sub/" >archive &&
 	"$TAR" tf archive >actual &&
 	cat >expect <<-\EOF &&
 	file
@@ -272,59 +272,59 @@ test_expect_success 'archive with all negative' '
 '
 
 test_expect_success 'add with all negative' '
-	H=$(git rev-parse HEAD) &&
-	git reset --hard $H &&
-	git clean -f &&
-	test_when_finished "git reset --hard $H" &&
+	H=$(shit rev-parse HEAD) &&
+	shit reset --hard $H &&
+	shit clean -f &&
+	test_when_finished "shit reset --hard $H" &&
 	for path in file sub/file sub/sub/file sub2/file
 	do
 		echo smudge >>"$path" || return 1
 	done &&
-	git -C sub add -- ":!sub/" &&
-	git diff --name-only --no-renames --cached >actual &&
+	shit -C sub add -- ":!sub/" &&
+	shit diff --name-only --no-renames --cached >actual &&
 	cat >expect <<-\EOF &&
 	file
 	sub/file
 	sub2/file
 	EOF
 	test_cmp expect actual &&
-	git diff --name-only --no-renames >actual &&
+	shit diff --name-only --no-renames >actual &&
 	echo sub/sub/file >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'add -p with all negative' '
-	H=$(git rev-parse HEAD) &&
-	git reset --hard $H &&
-	git clean -f &&
-	test_when_finished "git reset --hard $H" &&
+	H=$(shit rev-parse HEAD) &&
+	shit reset --hard $H &&
+	shit clean -f &&
+	test_when_finished "shit reset --hard $H" &&
 	for path in file sub/file sub/sub/file sub2/file
 	do
 		echo smudge >>"$path" || return 1
 	done &&
-	yes | git -C sub add -p -- ":!sub/" &&
-	git diff --name-only --no-renames --cached >actual &&
+	yes | shit -C sub add -p -- ":!sub/" &&
+	shit diff --name-only --no-renames --cached >actual &&
 	cat >expect <<-\EOF &&
 	file
 	sub/file
 	sub2/file
 	EOF
 	test_cmp expect actual &&
-	git diff --name-only --no-renames >actual &&
+	shit diff --name-only --no-renames >actual &&
 	echo sub/sub/file >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'clean with all negative' '
-	H=$(git rev-parse HEAD) &&
-	git reset --hard $H &&
-	test_when_finished "git reset --hard $H && git clean -f" &&
-	git clean -f &&
+	H=$(shit rev-parse HEAD) &&
+	shit reset --hard $H &&
+	test_when_finished "shit reset --hard $H && shit clean -f" &&
+	shit clean -f &&
 	for path in file9 sub/file9 sub/sub/file9 sub2/file9
 	do
 		echo cruft >"$path" || return 1
 	done &&
-	git -C sub clean -f -- ":!sub" &&
+	shit -C sub clean -f -- ":!sub" &&
 	test_path_is_file file9 &&
 	test_path_is_missing sub/file9 &&
 	test_path_is_file sub/sub/file9 &&
@@ -332,50 +332,50 @@ test_expect_success 'clean with all negative' '
 '
 
 test_expect_success 'commit with all negative' '
-	H=$(git rev-parse HEAD) &&
-	git reset --hard $H &&
-	test_when_finished "git reset --hard $H" &&
+	H=$(shit rev-parse HEAD) &&
+	shit reset --hard $H &&
+	test_when_finished "shit reset --hard $H" &&
 	for path in file sub/file sub/sub/file sub2/file
 	do
 		echo smudge >>"$path" || return 1
 	done &&
-	git -C sub commit -m sample -- ":!sub/" &&
-	git diff --name-only --no-renames HEAD^ HEAD >actual &&
+	shit -C sub commit -m sample -- ":!sub/" &&
+	shit diff --name-only --no-renames HEAD^ HEAD >actual &&
 	cat >expect <<-\EOF &&
 	file
 	sub/file
 	sub2/file
 	EOF
 	test_cmp expect actual &&
-	git diff --name-only --no-renames HEAD >actual &&
+	shit diff --name-only --no-renames HEAD >actual &&
 	echo sub/sub/file >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'reset with all negative' '
-	H=$(git rev-parse HEAD) &&
-	git reset --hard $H &&
-	test_when_finished "git reset --hard $H" &&
+	H=$(shit rev-parse HEAD) &&
+	shit reset --hard $H &&
+	test_when_finished "shit reset --hard $H" &&
 	for path in file sub/file sub/sub/file sub2/file
 	do
 		echo smudge >>"$path" &&
-		git add "$path" || return 1
+		shit add "$path" || return 1
 	done &&
-	git -C sub reset --quiet -- ":!sub/" &&
-	git diff --name-only --no-renames --cached >actual &&
+	shit -C sub reset --quiet -- ":!sub/" &&
+	shit diff --name-only --no-renames --cached >actual &&
 	echo sub/sub/file >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'grep with all negative' '
-	H=$(git rev-parse HEAD) &&
-	git reset --hard $H &&
-	test_when_finished "git reset --hard $H" &&
+	H=$(shit rev-parse HEAD) &&
+	shit reset --hard $H &&
+	test_when_finished "shit reset --hard $H" &&
 	for path in file sub/file sub/sub/file sub2/file
 	do
 		echo "needle $path" >>"$path" || return 1
 	done &&
-	git -C sub grep -h needle -- ":!sub/" >actual &&
+	shit -C sub grep -h needle -- ":!sub/" >actual &&
 	cat >expect <<-\EOF &&
 	needle sub/file
 	EOF
@@ -383,8 +383,8 @@ test_expect_success 'grep with all negative' '
 '
 
 test_expect_success 'ls-files with all negative' '
-	git reset --hard &&
-	git -C sub ls-files -- ":!sub/" >actual &&
+	shit reset --hard &&
+	shit -C sub ls-files -- ":!sub/" >actual &&
 	cat >expect <<-\EOF &&
 	file
 	file2
@@ -393,10 +393,10 @@ test_expect_success 'ls-files with all negative' '
 '
 
 test_expect_success 'rm with all negative' '
-	git reset --hard &&
-	test_when_finished "git reset --hard" &&
-	git -C sub rm -r --cached -- ":!sub/" >actual &&
-	git diff --name-only --no-renames --diff-filter=D --cached >actual &&
+	shit reset --hard &&
+	test_when_finished "shit reset --hard" &&
+	shit -C sub rm -r --cached -- ":!sub/" >actual &&
+	shit diff --name-only --no-renames --diff-filter=D --cached >actual &&
 	cat >expect <<-\EOF &&
 	sub/file
 	sub/file2
@@ -405,18 +405,18 @@ test_expect_success 'rm with all negative' '
 '
 
 test_expect_success 'stash with all negative' '
-	H=$(git rev-parse HEAD) &&
-	git reset --hard $H &&
-	test_when_finished "git reset --hard $H" &&
+	H=$(shit rev-parse HEAD) &&
+	shit reset --hard $H &&
+	test_when_finished "shit reset --hard $H" &&
 	for path in file sub/file sub/sub/file sub2/file
 	do
 		echo smudge >>"$path" || return 1
 	done &&
-	git -C sub stash push -m sample -- ":!sub/" &&
-	git diff --name-only --no-renames HEAD >actual &&
+	shit -C sub stash defecate -m sample -- ":!sub/" &&
+	shit diff --name-only --no-renames HEAD >actual &&
 	echo sub/sub/file >expect &&
 	test_cmp expect actual &&
-	git stash show --name-only >actual &&
+	shit stash show --name-only >actual &&
 	cat >expect <<-\EOF &&
 	file
 	sub/file

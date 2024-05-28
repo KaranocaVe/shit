@@ -2,8 +2,8 @@
 
 test_description='recursive merge corner cases involving criss-cross merges'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -20,32 +20,32 @@ TEST_PASSES_SANITIZE_LEAK=true
 #
 
 test_expect_success 'setup basic criss-cross + rename with no modifications' '
-	git init basic-rename &&
+	shit init basic-rename &&
 	(
 		cd basic-rename &&
 
 		ten="0 1 2 3 4 5 6 7 8 9" &&
 		printf "line %d in a sample file\n" $ten >one &&
 		printf "line %d in another sample file\n" $ten >two &&
-		git add one two &&
-		test_tick && git commit -m initial &&
+		shit add one two &&
+		test_tick && shit commit -m initial &&
 
-		git branch L1 &&
-		git checkout -b R1 &&
-		git mv one three &&
-		test_tick && git commit -m R1 &&
+		shit branch L1 &&
+		shit checkout -b R1 &&
+		shit mv one three &&
+		test_tick && shit commit -m R1 &&
 
-		git checkout L1 &&
-		git mv two three &&
-		test_tick && git commit -m L1 &&
+		shit checkout L1 &&
+		shit mv two three &&
+		test_tick && shit commit -m L1 &&
 
-		git checkout L1^0 &&
-		test_tick && git merge -s ours R1 &&
-		git tag L2 &&
+		shit checkout L1^0 &&
+		test_tick && shit merge -s ours R1 &&
+		shit tag L2 &&
 
-		git checkout R1^0 &&
-		test_tick && git merge -s ours L1 &&
-		git tag R2
+		shit checkout R1^0 &&
+		test_tick && shit merge -s ours L1 &&
+		shit tag R2
 	)
 '
 
@@ -53,21 +53,21 @@ test_expect_success 'merge simple rename+criss-cross with no modifications' '
 	(
 		cd basic-rename &&
 
-		git reset --hard &&
-		git checkout L2^0 &&
+		shit reset --hard &&
+		shit checkout L2^0 &&
 
-		test_must_fail git merge -s recursive R2^0 &&
+		test_must_fail shit merge -s recursive R2^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 5 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git rev-parse >expect       \
+		shit rev-parse >expect       \
 			L2:three   R2:three &&
-		git rev-parse   >actual     \
+		shit rev-parse   >actual     \
 			:2:three   :3:three &&
 		test_cmp expect actual
 	)
@@ -86,34 +86,34 @@ test_expect_success 'merge simple rename+criss-cross with no modifications' '
 #
 
 test_expect_success 'setup criss-cross + rename merges with basic modification' '
-	git init rename-modify &&
+	shit init rename-modify &&
 	(
 		cd rename-modify &&
 
 		ten="0 1 2 3 4 5 6 7 8 9" &&
 		printf "line %d in a sample file\n" $ten >one &&
 		printf "line %d in another sample file\n" $ten >two &&
-		git add one two &&
-		test_tick && git commit -m initial &&
+		shit add one two &&
+		test_tick && shit commit -m initial &&
 
-		git branch L1 &&
-		git checkout -b R1 &&
-		git mv one three &&
+		shit branch L1 &&
+		shit checkout -b R1 &&
+		shit mv one three &&
 		echo more >>two &&
-		git add two &&
-		test_tick && git commit -m R1 &&
+		shit add two &&
+		test_tick && shit commit -m R1 &&
 
-		git checkout L1 &&
-		git mv two three &&
-		test_tick && git commit -m L1 &&
+		shit checkout L1 &&
+		shit mv two three &&
+		test_tick && shit commit -m L1 &&
 
-		git checkout L1^0 &&
-		test_tick && git merge -s ours R1 &&
-		git tag L2 &&
+		shit checkout L1^0 &&
+		test_tick && shit merge -s ours R1 &&
+		shit tag L2 &&
 
-		git checkout R1^0 &&
-		test_tick && git merge -s ours L1 &&
-		git tag R2
+		shit checkout R1^0 &&
+		test_tick && shit merge -s ours L1 &&
+		shit tag R2
 	)
 '
 
@@ -121,20 +121,20 @@ test_expect_success 'merge criss-cross + rename merges with basic modification' 
 	(
 		cd rename-modify &&
 
-		git checkout L2^0 &&
+		shit checkout L2^0 &&
 
-		test_must_fail git merge -s recursive R2^0 &&
+		test_must_fail shit merge -s recursive R2^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 5 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git rev-parse >expect       \
+		shit rev-parse >expect       \
 			L2:three   R2:three &&
-		git rev-parse   >actual     \
+		shit rev-parse   >actual     \
 			:2:three   :3:three &&
 		test_cmp expect actual
 	)
@@ -149,7 +149,7 @@ test_expect_success 'merge criss-cross + rename merges with basic modification' 
 # Later, two different people merge and resolve differently:
 #   Commit D: Merge B & C, ignoring separately created 'new_a'
 #   Commit E: Merge B & C making use of some piece of secondary 'new_a'
-# Finally, someone goes to merge D & E.  Does git detect the conflict?
+# Finally, someone goes to merge D & E.  Does shit detect the conflict?
 #
 #      B   D
 #      o---o
@@ -161,84 +161,84 @@ test_expect_success 'merge criss-cross + rename merges with basic modification' 
 #
 
 test_expect_success 'setup differently handled merges of rename/add conflict' '
-	git init rename-add &&
+	shit init rename-add &&
 	(
 		cd rename-add &&
 
 		printf "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n" >a &&
-		git add a &&
-		test_tick && git commit -m A &&
+		shit add a &&
+		test_tick && shit commit -m A &&
 
-		git branch B &&
-		git checkout -b C &&
+		shit branch B &&
+		shit checkout -b C &&
 		echo 10 >>a &&
 		test_write_lines 0 1 2 3 4 5 6 7 foobar >new_a &&
-		git add a new_a &&
-		test_tick && git commit -m C &&
+		shit add a new_a &&
+		test_tick && shit commit -m C &&
 
-		git checkout B &&
-		git mv a new_a &&
-		test_tick && git commit -m B &&
+		shit checkout B &&
+		shit mv a new_a &&
+		test_tick && shit commit -m B &&
 
-		git checkout B^0 &&
-		test_must_fail git merge C &&
-		git show :2:new_a >new_a &&
-		git add new_a &&
-		test_tick && git commit -m D &&
-		git tag D &&
+		shit checkout B^0 &&
+		test_must_fail shit merge C &&
+		shit show :2:new_a >new_a &&
+		shit add new_a &&
+		test_tick && shit commit -m D &&
+		shit tag D &&
 
-		git checkout C^0 &&
-		test_must_fail git merge B &&
+		shit checkout C^0 &&
+		test_must_fail shit merge B &&
 		test_write_lines 0 1 2 3 4 5 6 7 bad_merge >new_a &&
-		git add -u &&
-		test_tick && git commit -m E &&
-		git tag E
+		shit add -u &&
+		test_tick && shit commit -m E &&
+		shit tag E
 	)
 '
 
-test_expect_success 'git detects differently handled merges conflict' '
+test_expect_success 'shit detects differently handled merges conflict' '
 	(
 		cd rename-add &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git cat-file -p C:new_a >ours &&
-		git cat-file -p C:a >theirs &&
+		shit cat-file -p C:new_a >ours &&
+		shit cat-file -p C:a >theirs &&
 		>empty &&
-		test_must_fail git merge-file \
+		test_must_fail shit merge-file \
 			-L "Temporary merge branch 1" \
 			-L "" \
 			-L "Temporary merge branch 2" \
 			ours empty theirs &&
 		sed -e "s/^\([<=>]\)/\1\1\1/" ours >ours-tweaked &&
-		git hash-object ours-tweaked >expect &&
-		git rev-parse >>expect      \
+		shit hash-object ours-tweaked >expect &&
+		shit rev-parse >>expect      \
 				  D:new_a  E:new_a &&
-		git rev-parse   >actual     \
+		shit rev-parse   >actual     \
 			:1:new_a :2:new_a :3:new_a &&
 		test_cmp expect actual &&
 
 		# Test that the two-way merge in new_a is as expected
-		git cat-file -p D:new_a >ours &&
-		git cat-file -p E:new_a >theirs &&
+		shit cat-file -p D:new_a >ours &&
+		shit cat-file -p E:new_a >theirs &&
 		>empty &&
-		test_must_fail git merge-file \
+		test_must_fail shit merge-file \
 			-L "HEAD" \
 			-L "" \
 			-L "E^0" \
 			ours empty theirs &&
 		sed -e "s/^\([<=>]\)/\1\1\1/" ours >expect &&
-		git hash-object new_a >actual &&
-		git hash-object ours  >expect &&
+		shit hash-object new_a >actual &&
+		shit hash-object ours  >expect &&
 		test_cmp expect actual
 	)
 '
@@ -247,60 +247,60 @@ test_expect_success 'git detects differently handled merges conflict' '
 # the two merge bases having different orderings of commit timestamps so
 # that they are reversed in the order they are provided to merge-recursive,
 # so that we can improve code coverage.
-test_expect_success 'git detects differently handled merges conflict, swapped' '
+test_expect_success 'shit detects differently handled merges conflict, swapped' '
 	(
 		cd rename-add &&
 
 		# Difference #1: Do cleanup from previous testrun
-		git reset --hard &&
-		git clean -fdqx &&
+		shit reset --hard &&
+		shit clean -fdqx &&
 
 		# Difference #2: Change commit timestamps
-		btime=$(git log --no-walk --date=raw --format=%cd B | awk "{print \$1}") &&
-		ctime=$(git log --no-walk --date=raw --format=%cd C | awk "{print \$1}") &&
+		btime=$(shit log --no-walk --date=raw --format=%cd B | awk "{print \$1}") &&
+		ctime=$(shit log --no-walk --date=raw --format=%cd C | awk "{print \$1}") &&
 		newctime=$(($btime+1)) &&
-		git fast-export --no-data --all | sed -e s/$ctime/$newctime/ | git fast-import --force --quiet &&
+		shit fast-export --no-data --all | sed -e s/$ctime/$newctime/ | shit fast-import --force --quiet &&
 		# End of most differences; rest is copy-paste of last test,
 		# other than swapping C:a and C:new_a due to order switch
 
-		git checkout D^0 &&
-		test_must_fail git merge -s recursive E^0 &&
+		shit checkout D^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git cat-file -p C:a >ours &&
-		git cat-file -p C:new_a >theirs &&
+		shit cat-file -p C:a >ours &&
+		shit cat-file -p C:new_a >theirs &&
 		>empty &&
-		test_must_fail git merge-file \
+		test_must_fail shit merge-file \
 			-L "Temporary merge branch 1" \
 			-L "" \
 			-L "Temporary merge branch 2" \
 			ours empty theirs &&
 		sed -e "s/^\([<=>]\)/\1\1\1/" ours >ours-tweaked &&
-		git hash-object ours-tweaked >expect &&
-		git rev-parse >>expect      \
+		shit hash-object ours-tweaked >expect &&
+		shit rev-parse >>expect      \
 				  D:new_a  E:new_a &&
-		git rev-parse   >actual     \
+		shit rev-parse   >actual     \
 			:1:new_a :2:new_a :3:new_a &&
 		test_cmp expect actual &&
 
 		# Test that the two-way merge in new_a is as expected
-		git cat-file -p D:new_a >ours &&
-		git cat-file -p E:new_a >theirs &&
+		shit cat-file -p D:new_a >ours &&
+		shit cat-file -p E:new_a >theirs &&
 		>empty &&
-		test_must_fail git merge-file \
+		test_must_fail shit merge-file \
 			-L "HEAD" \
 			-L "" \
 			-L "E^0" \
 			ours empty theirs &&
 		sed -e "s/^\([<=>]\)/\1\1\1/" ours >expect &&
-		git hash-object new_a >actual &&
-		git hash-object ours  >expect &&
+		shit hash-object new_a >actual &&
+		shit hash-object ours  >expect &&
 		test_cmp expect actual
 	)
 '
@@ -325,82 +325,82 @@ test_expect_success 'git detects differently handled merges conflict, swapped' '
 # Merging commits D & E should result in modify/delete conflict.
 
 test_expect_success 'setup criss-cross + modify/delete resolved differently' '
-	git init modify-delete &&
+	shit init modify-delete &&
 	(
 		cd modify-delete &&
 
 		echo A >file &&
-		git add file &&
+		shit add file &&
 		test_tick &&
-		git commit -m A &&
+		shit commit -m A &&
 
-		git branch B &&
-		git checkout -b C &&
-		git rm file &&
+		shit branch B &&
+		shit checkout -b C &&
+		shit rm file &&
 		test_tick &&
-		git commit -m C &&
+		shit commit -m C &&
 
-		git checkout B &&
+		shit checkout B &&
 		echo B >file &&
-		git add file &&
+		shit add file &&
 		test_tick &&
-		git commit -m B &&
+		shit commit -m B &&
 
-		git checkout B^0 &&
-		test_must_fail git merge C &&
+		shit checkout B^0 &&
+		test_must_fail shit merge C &&
 		echo B >file &&
-		git add file &&
+		shit add file &&
 		test_tick &&
-		git commit -m D &&
-		git tag D &&
+		shit commit -m D &&
+		shit tag D &&
 
-		git checkout C^0 &&
-		test_must_fail git merge B &&
-		git rm file &&
+		shit checkout C^0 &&
+		test_must_fail shit merge B &&
+		shit rm file &&
 		test_tick &&
-		git commit -m E &&
-		git tag E
+		shit commit -m E &&
+		shit tag E
 	)
 '
 
-test_expect_success 'git detects conflict merging criss-cross+modify/delete' '
+test_expect_success 'shit detects conflict merging criss-cross+modify/delete' '
 	(
 		cd modify-delete &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 2 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 2 out &&
 
-		git rev-parse >expect       \
+		shit rev-parse >expect       \
 			main:file    B:file &&
-		git rev-parse   >actual      \
+		shit rev-parse   >actual      \
 			:1:file      :2:file &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'git detects conflict merging criss-cross+modify/delete, reverse direction' '
+test_expect_success 'shit detects conflict merging criss-cross+modify/delete, reverse direction' '
 	(
 		cd modify-delete &&
 
-		git reset --hard &&
-		git checkout E^0 &&
+		shit reset --hard &&
+		shit checkout E^0 &&
 
-		test_must_fail git merge -s recursive D^0 &&
+		test_must_fail shit merge -s recursive D^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 2 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 2 out &&
 
-		git rev-parse >expect       \
+		shit rev-parse >expect       \
 			main:file    B:file &&
-		git rev-parse   >actual      \
+		shit rev-parse   >actual      \
 			:1:file      :3:file &&
 		test_cmp expect actual
 	)
@@ -470,7 +470,7 @@ test_expect_success 'git detects conflict merging criss-cross+modify/delete, rev
 # it once, and then suppress it for individual filepaths underneath.
 #
 #
-# As of time of writing, git uses choice 5.  Directory rename detection and
+# As of time of writing, shit uses choice 5.  Directory rename detection and
 # rename detection performance improvements might make choice 6 a desirable
 # improvement.  But we can at least document where we fall short for now...
 #
@@ -500,128 +500,128 @@ test_expect_success 'git detects conflict merging criss-cross+modify/delete, rev
 #
 
 test_expect_success 'setup differently handled merges of directory/file conflict' '
-	git init directory-file &&
+	shit init directory-file &&
 	(
 		cd directory-file &&
 
 		>ignore-me &&
-		git add ignore-me &&
+		shit add ignore-me &&
 		test_tick &&
-		git commit -m A &&
-		git tag A &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git branch B &&
-		git checkout -b C &&
+		shit branch B &&
+		shit checkout -b C &&
 		mkdir a &&
 		test_write_lines a b c d e f g >a/file &&
-		git add a/file &&
+		shit add a/file &&
 		test_tick &&
-		git commit -m C &&
+		shit commit -m C &&
 
-		git checkout B &&
+		shit checkout B &&
 		test_write_lines 1 2 3 4 5 6 7 >a &&
-		git add a &&
+		shit add a &&
 		test_tick &&
-		git commit -m B &&
+		shit commit -m B &&
 
-		git checkout B^0 &&
-		git merge -s ours -m D1 C^0 &&
-		git tag D1 &&
+		shit checkout B^0 &&
+		shit merge -s ours -m D1 C^0 &&
+		shit tag D1 &&
 
-		git checkout B^0 &&
-		test_must_fail git merge C^0 &&
-		if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+		shit checkout B^0 &&
+		test_must_fail shit merge C^0 &&
+		if test "$shit_TEST_MERGE_ALGORITHM" = ort
 		then
-			git rm -rf a/ &&
-			git rm a~HEAD
+			shit rm -rf a/ &&
+			shit rm a~HEAD
 		else
-			git clean -fd &&
-			git rm -rf a/ &&
-			git rm a
+			shit clean -fd &&
+			shit rm -rf a/ &&
+			shit rm a
 		fi &&
-		git cat-file -p B:a >a2 &&
-		git add a2 &&
-		git commit -m D2 &&
-		git tag D2 &&
+		shit cat-file -p B:a >a2 &&
+		shit add a2 &&
+		shit commit -m D2 &&
+		shit tag D2 &&
 
-		git checkout C^0 &&
-		git merge -s ours -m E1 B^0 &&
-		git tag E1 &&
+		shit checkout C^0 &&
+		shit merge -s ours -m E1 B^0 &&
+		shit tag E1 &&
 
-		git checkout C^0 &&
-		git merge -s ours -m E2 B^0 &&
+		shit checkout C^0 &&
+		shit merge -s ours -m E2 B^0 &&
 		test_write_lines a b c d e f g h >a/file &&
-		git add a/file &&
-		git commit --amend -C HEAD &&
-		git tag E2 &&
+		shit add a/file &&
+		shit commit --amend -C HEAD &&
+		shit tag E2 &&
 
-		git checkout C^0 &&
-		test_must_fail git merge B^0 &&
-		if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+		shit checkout C^0 &&
+		test_must_fail shit merge B^0 &&
+		if test "$shit_TEST_MERGE_ALGORITHM" = ort
 		then
-			git rm a~B^0
+			shit rm a~B^0
 		else
-			git clean -fd
+			shit clean -fd
 		fi &&
-		git rm -rf a/ &&
+		shit rm -rf a/ &&
 		test_write_lines 1 2 3 4 5 6 7 8 >a &&
-		git add a &&
-		git commit -m E3 &&
-		git tag E3 &&
+		shit add a &&
+		shit commit -m E3 &&
+		shit tag E3 &&
 
-		git checkout C^0 &&
-		test_must_fail git merge B^0 &&
-		if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+		shit checkout C^0 &&
+		test_must_fail shit merge B^0 &&
+		if test "$shit_TEST_MERGE_ALGORITHM" = ort
 		then
-			git rm -rf a/ &&
-			git rm a~B^0
+			shit rm -rf a/ &&
+			shit rm a~B^0
 		else
-			git clean -fd &&
-			git rm -rf a/ &&
-			git rm a
+			shit clean -fd &&
+			shit rm -rf a/ &&
+			shit rm a
 		fi &&
 		test_write_lines 1 2 3 4 5 6 7 8 >a2 &&
-		git add a2 &&
-		git commit -m E4 &&
-		git tag E4
+		shit add a2 &&
+		shit commit -m E4 &&
+		shit tag E4
 	)
 '
 
 test_expect_success 'merge of D1 & E1 fails but has appropriate contents' '
-	test_when_finished "git -C directory-file reset --hard" &&
-	test_when_finished "git -C directory-file clean -fdqx" &&
+	test_when_finished "shit -C directory-file reset --hard" &&
+	test_when_finished "shit -C directory-file clean -fdqx" &&
 	(
 		cd directory-file &&
 
-		git checkout D1^0 &&
+		shit checkout D1^0 &&
 
-		test_must_fail git merge -s recursive E1^0 &&
+		test_must_fail shit merge -s recursive E1^0 &&
 
-		if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+		if test "$shit_TEST_MERGE_ALGORITHM" = ort
 		then
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 3 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 2 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 1 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				A:ignore-me  B:a  D1:a &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:0:ignore-me :1:a :2:a &&
 			test_cmp expect actual
 		else
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 2 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 1 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 1 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				A:ignore-me  B:a &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:0:ignore-me :2:a &&
 			test_cmp expect actual
 		fi
@@ -629,40 +629,40 @@ test_expect_success 'merge of D1 & E1 fails but has appropriate contents' '
 '
 
 test_expect_success 'merge of E1 & D1 fails but has appropriate contents' '
-	test_when_finished "git -C directory-file reset --hard" &&
-	test_when_finished "git -C directory-file clean -fdqx" &&
+	test_when_finished "shit -C directory-file reset --hard" &&
+	test_when_finished "shit -C directory-file clean -fdqx" &&
 	(
 		cd directory-file &&
 
-		git checkout E1^0 &&
+		shit checkout E1^0 &&
 
-		test_must_fail git merge -s recursive D1^0 &&
+		test_must_fail shit merge -s recursive D1^0 &&
 
-		if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+		if test "$shit_TEST_MERGE_ALGORITHM" = ort
 		then
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 3 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 2 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 1 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				A:ignore-me  B:a  D1:a &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:0:ignore-me :1:a :3:a &&
 			test_cmp expect actual
 		else
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 2 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 1 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 1 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				A:ignore-me  B:a &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:0:ignore-me :3:a &&
 			test_cmp expect actual
 		fi
@@ -670,39 +670,39 @@ test_expect_success 'merge of E1 & D1 fails but has appropriate contents' '
 '
 
 test_expect_success 'merge of D1 & E2 fails but has appropriate contents' '
-	test_when_finished "git -C directory-file reset --hard" &&
-	test_when_finished "git -C directory-file clean -fdqx" &&
+	test_when_finished "shit -C directory-file reset --hard" &&
+	test_when_finished "shit -C directory-file clean -fdqx" &&
 	(
 		cd directory-file &&
 
-		git checkout D1^0 &&
+		shit checkout D1^0 &&
 
-		test_must_fail git merge -s recursive E2^0 &&
+		test_must_fail shit merge -s recursive E2^0 &&
 
-		if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+		if test "$shit_TEST_MERGE_ALGORITHM" = ort
 		then
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 5 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 4 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 1 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				B:a       D1:a      E2:a/file  C:a/file   A:ignore-me &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:1:a~HEAD :2:a~HEAD :3:a/file  :1:a/file  :0:ignore-me
 		else
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 4 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 3 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 2 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				B:a    E2:a/file  C:a/file   A:ignore-me &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:2:a   :3:a/file  :1:a/file  :0:ignore-me
 		fi &&
 		test_cmp expect actual &&
@@ -712,39 +712,39 @@ test_expect_success 'merge of D1 & E2 fails but has appropriate contents' '
 '
 
 test_expect_success 'merge of E2 & D1 fails but has appropriate contents' '
-	test_when_finished "git -C directory-file reset --hard" &&
-	test_when_finished "git -C directory-file clean -fdqx" &&
+	test_when_finished "shit -C directory-file reset --hard" &&
+	test_when_finished "shit -C directory-file clean -fdqx" &&
 	(
 		cd directory-file &&
 
-		git checkout E2^0 &&
+		shit checkout E2^0 &&
 
-		test_must_fail git merge -s recursive D1^0 &&
+		test_must_fail shit merge -s recursive D1^0 &&
 
-		if test "$GIT_TEST_MERGE_ALGORITHM" = ort
+		if test "$shit_TEST_MERGE_ALGORITHM" = ort
 		then
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 5 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 4 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 1 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				B:a       D1:a      E2:a/file  C:a/file   A:ignore-me &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:1:a~D1^0 :3:a~D1^0 :2:a/file  :1:a/file  :0:ignore-me
 		else
-			git ls-files -s >out &&
+			shit ls-files -s >out &&
 			test_line_count = 4 out &&
-			git ls-files -u >out &&
+			shit ls-files -u >out &&
 			test_line_count = 3 out &&
-			git ls-files -o >out &&
+			shit ls-files -o >out &&
 			test_line_count = 2 out &&
 
-			git rev-parse >expect    \
+			shit rev-parse >expect    \
 				B:a   E2:a/file  C:a/file   A:ignore-me &&
-			git rev-parse   >actual   \
+			shit rev-parse   >actual   \
 				:3:a  :2:a/file  :1:a/file  :0:ignore-me
 		fi &&
 		test_cmp expect actual &&
@@ -754,75 +754,75 @@ test_expect_success 'merge of E2 & D1 fails but has appropriate contents' '
 '
 
 test_expect_success 'merge of D1 & E3 succeeds' '
-	test_when_finished "git -C directory-file reset --hard" &&
-	test_when_finished "git -C directory-file clean -fdqx" &&
+	test_when_finished "shit -C directory-file reset --hard" &&
+	test_when_finished "shit -C directory-file clean -fdqx" &&
 	(
 		cd directory-file &&
 
-		git checkout D1^0 &&
+		shit checkout D1^0 &&
 
-		git merge -s recursive E3^0 &&
+		shit merge -s recursive E3^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 2 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 0 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git rev-parse >expect    \
+		shit rev-parse >expect    \
 			A:ignore-me  E3:a &&
-		git rev-parse   >actual   \
+		shit rev-parse   >actual   \
 			:0:ignore-me :0:a &&
 		test_cmp expect actual
 	)
 '
 
 test_expect_merge_algorithm failure success 'merge of D1 & E4 puts merge of a and a2 in both a and a2' '
-	test_when_finished "git -C directory-file reset --hard" &&
-	test_when_finished "git -C directory-file clean -fdqx" &&
+	test_when_finished "shit -C directory-file reset --hard" &&
+	test_when_finished "shit -C directory-file clean -fdqx" &&
 	(
 		cd directory-file &&
 
-		git checkout D1^0 &&
+		shit checkout D1^0 &&
 
-		test_must_fail git merge -s recursive E4^0 &&
+		test_must_fail shit merge -s recursive E4^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 4 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git rev-parse >expect                  \
+		shit rev-parse >expect                  \
 			A:ignore-me  B:a   E4:a2  E4:a2 &&
-		git rev-parse   >actual                \
+		shit rev-parse   >actual                \
 			:0:ignore-me :1:a~Temporary\ merge\ branch\ 2  :2:a  :3:a2 &&
 		test_cmp expect actual
 	)
 '
 
 test_expect_failure 'merge of D2 & E4 merges a2s & reports conflict for a/file' '
-	test_when_finished "git -C directory-file reset --hard" &&
-	test_when_finished "git -C directory-file clean -fdqx" &&
+	test_when_finished "shit -C directory-file reset --hard" &&
+	test_when_finished "shit -C directory-file clean -fdqx" &&
 	(
 		cd directory-file &&
 
-		git checkout D2^0 &&
+		shit checkout D2^0 &&
 
-		test_must_fail git merge -s recursive E4^0 &&
+		test_must_fail shit merge -s recursive E4^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 1 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git rev-parse >expect                 \
+		shit rev-parse >expect                 \
 			A:ignore-me  E4:a2  D2:a/file &&
-		git rev-parse   >actual               \
+		shit rev-parse   >actual               \
 			:0:ignore-me :0:a2  :2:a/file &&
 		test_cmp expect actual
 	)
@@ -868,38 +868,38 @@ test_expect_failure 'merge of D2 & E4 merges a2s & reports conflict for a/file' 
 # but that may cancel out at the final merge stage".
 
 test_expect_success 'setup rename/rename(1to2)/modify followed by what looks like rename/rename(2to1)/modify' '
-	git init rename-squared-squared &&
+	shit init rename-squared-squared &&
 	(
 		cd rename-squared-squared &&
 
 		printf "1\n2\n3\n4\n5\n6\n" >a &&
-		git add a &&
-		git commit -m A &&
-		git tag A &&
+		shit add a &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
-		git mv a b &&
+		shit checkout -b B A &&
+		shit mv a b &&
 		echo 7 >>b &&
-		git add -u &&
-		git commit -m B &&
+		shit add -u &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
-		git mv a c &&
-		git commit -m C &&
+		shit checkout -b C A &&
+		shit mv a c &&
+		shit commit -m C &&
 
-		git checkout -q B^0 &&
-		git merge --no-commit -s ours C^0 &&
-		git mv b newname &&
-		git commit -m "Merge commit C^0 into HEAD" &&
-		git tag D &&
+		shit checkout -q B^0 &&
+		shit merge --no-commit -s ours C^0 &&
+		shit mv b newname &&
+		shit commit -m "Merge commit C^0 into HEAD" &&
+		shit tag D &&
 
-		git checkout -q C^0 &&
-		git merge --no-commit -s ours B^0 &&
-		git mv c newname &&
+		shit checkout -q C^0 &&
+		shit merge --no-commit -s ours B^0 &&
+		shit mv c newname &&
 		printf "7\n8\n" >>newname &&
-		git add -u &&
-		git commit -m "Merge commit B^0 into HEAD" &&
-		git tag E
+		shit add -u &&
+		shit commit -m "Merge commit B^0 into HEAD" &&
+		shit tag E
 	)
 '
 
@@ -907,18 +907,18 @@ test_expect_success 'handle rename/rename(1to2)/modify followed by what looks li
 	(
 		cd rename-squared-squared &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		git merge -s recursive E^0 &&
+		shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 1 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 0 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		test $(git rev-parse HEAD:newname) = $(git rev-parse E:newname)
+		test $(shit rev-parse HEAD:newname) = $(shit rev-parse E:newname)
 	)
 '
 
@@ -945,43 +945,43 @@ test_expect_success 'handle rename/rename(1to2)/modify followed by what looks li
 # content merge handled.
 
 test_expect_success 'setup criss-cross + rename/rename/add-source + modify/modify' '
-	git init rename-rename-add-source &&
+	shit init rename-rename-add-source &&
 	(
 		cd rename-rename-add-source &&
 
 		printf "lots\nof\nwords\nand\ncontent\n" >a &&
-		git add a &&
-		git commit -m A &&
-		git tag A &&
+		shit add a &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
-		git mv a b &&
-		git commit -m B &&
+		shit checkout -b B A &&
+		shit mv a b &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
-		git mv a c &&
+		shit checkout -b C A &&
+		shit mv a c &&
 		printf "2\n3\n4\n5\n6\n7\n" >a &&
-		git add a &&
-		git commit -m C &&
+		shit add a &&
+		shit commit -m C &&
 
-		git checkout B^0 &&
-		git merge --no-commit -s ours C^0 &&
-		git checkout C -- a c &&
+		shit checkout B^0 &&
+		shit merge --no-commit -s ours C^0 &&
+		shit checkout C -- a c &&
 		mv a old_a &&
 		echo 1 >a &&
 		cat old_a >>a &&
 		rm old_a &&
-		git add -u &&
-		git commit -m "Merge commit C^0 into HEAD" &&
-		git tag D &&
+		shit add -u &&
+		shit commit -m "Merge commit C^0 into HEAD" &&
+		shit tag D &&
 
-		git checkout C^0 &&
-		git merge --no-commit -s ours B^0 &&
-		git checkout B -- b &&
+		shit checkout C^0 &&
+		shit merge --no-commit -s ours B^0 &&
+		shit checkout B -- b &&
 		echo 8 >>a &&
-		git add -u &&
-		git commit -m "Merge commit B^0 into HEAD" &&
-		git tag E
+		shit add -u &&
+		shit commit -m "Merge commit B^0 into HEAD" &&
+		shit tag E
 	)
 '
 
@@ -989,24 +989,24 @@ test_expect_failure 'detect rename/rename/add-source for virtual merge-base' '
 	(
 		cd rename-rename-add-source &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		git merge -s recursive E^0 &&
+		shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 0 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
 		printf "1\n2\n3\n4\n5\n6\n7\n8\n" >correct &&
-		git rev-parse >expect \
+		shit rev-parse >expect \
 			A:a   A:a     \
 			correct       &&
-		git rev-parse   >actual  \
+		shit rev-parse   >actual  \
 			:0:b  :0:c       &&
-		git hash-object >>actual \
+		shit hash-object >>actual \
 			a                &&
 		test_cmp expect actual
 	)
@@ -1033,38 +1033,38 @@ test_expect_failure 'detect rename/rename/add-source for virtual merge-base' '
 # base of B & C needs to not delete B:c for that to work, though...
 
 test_expect_success 'setup criss-cross+rename/rename/add-dest + simple modify' '
-	git init rename-rename-add-dest &&
+	shit init rename-rename-add-dest &&
 	(
 		cd rename-rename-add-dest &&
 
 		>a &&
-		git add a &&
-		git commit -m A &&
-		git tag A &&
+		shit add a &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
-		git mv a b &&
+		shit checkout -b B A &&
+		shit mv a b &&
 		printf "1\n2\n3\n4\n5\n6\n7\n" >c &&
-		git add c &&
-		git commit -m B &&
+		shit add c &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
-		git mv a c &&
-		git commit -m C &&
+		shit checkout -b C A &&
+		shit mv a c &&
+		shit commit -m C &&
 
-		git checkout B^0 &&
-		git merge --no-commit -s ours C^0 &&
-		git mv b a &&
-		git commit -m "D is like B but renames b back to a" &&
-		git tag D &&
+		shit checkout B^0 &&
+		shit merge --no-commit -s ours C^0 &&
+		shit mv b a &&
+		shit commit -m "D is like B but renames b back to a" &&
+		shit tag D &&
 
-		git checkout B^0 &&
-		git merge --no-commit -s ours C^0 &&
-		git mv b a &&
+		shit checkout B^0 &&
+		shit merge --no-commit -s ours C^0 &&
+		shit mv b a &&
 		echo 8 >>c &&
-		git add c &&
-		git commit -m "E like D but has mod in c" &&
-		git tag E
+		shit add c &&
+		shit commit -m "E like D but has mod in c" &&
+		shit tag E
 	)
 '
 
@@ -1072,20 +1072,20 @@ test_expect_success 'virtual merge base handles rename/rename(1to2)/add-dest' '
 	(
 		cd rename-rename-add-dest &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		git merge -s recursive E^0 &&
+		shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 2 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 0 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
-		git rev-parse >expect \
+		shit rev-parse >expect \
 			A:a   E:c     &&
-		git rev-parse   >actual \
+		shit rev-parse   >actual \
 			:0:a  :0:c      &&
 		test_cmp expect actual
 	)
@@ -1109,35 +1109,35 @@ test_expect_success 'virtual merge base handles rename/rename(1to2)/add-dest' '
 #   Commit E: merge B&C, resolving in favor of C
 #
 # This is an obvious modify/modify conflict for the symlink 'fickle'.  Can
-# git detect it?
+# shit detect it?
 
 test_expect_success 'setup symlink modify/modify' '
-	git init symlink-modify-modify &&
+	shit init symlink-modify-modify &&
 	(
 		cd symlink-modify-modify &&
 
 		test_ln_s_add lagoon fickle &&
-		git commit -m A &&
-		git tag A &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
-		git rm fickle &&
+		shit checkout -b B A &&
+		shit rm fickle &&
 		test_ln_s_add disneyland fickle &&
-		git commit -m B &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
-		git rm fickle &&
+		shit checkout -b C A &&
+		shit rm fickle &&
 		test_ln_s_add home fickle &&
-		git add fickle &&
-		git commit -m C &&
+		shit add fickle &&
+		shit commit -m C &&
 
-		git checkout -q B^0 &&
-		git merge -s ours -m D C^0 &&
-		git tag D &&
+		shit checkout -q B^0 &&
+		shit merge -s ours -m D C^0 &&
+		shit tag D &&
 
-		git checkout -q C^0 &&
-		git merge -s ours -m E B^0 &&
-		git tag E
+		shit checkout -q C^0 &&
+		shit merge -s ours -m E B^0 &&
+		shit tag E
 	)
 '
 
@@ -1145,15 +1145,15 @@ test_expect_merge_algorithm failure success 'check symlink modify/modify' '
 	(
 		cd symlink-modify-modify &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out
 	)
 '
@@ -1176,34 +1176,34 @@ test_expect_merge_algorithm failure success 'check symlink modify/modify' '
 #   Commit E: merge B&C, resolving in favor of C
 #
 # This is an obvious add/add conflict for the symlink 'fickle'.  Can
-# git detect it?
+# shit detect it?
 
 test_expect_success 'setup symlink add/add' '
-	git init symlink-add-add &&
+	shit init symlink-add-add &&
 	(
 		cd symlink-add-add &&
 
 		touch ignoreme &&
-		git add ignoreme &&
-		git commit -m A &&
-		git tag A &&
+		shit add ignoreme &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
+		shit checkout -b B A &&
 		test_ln_s_add disneyland fickle &&
-		git commit -m B &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
+		shit checkout -b C A &&
 		test_ln_s_add home fickle &&
-		git add fickle &&
-		git commit -m C &&
+		shit add fickle &&
+		shit commit -m C &&
 
-		git checkout -q B^0 &&
-		git merge -s ours -m D C^0 &&
-		git tag D &&
+		shit checkout -q B^0 &&
+		shit merge -s ours -m D C^0 &&
+		shit tag D &&
 
-		git checkout -q C^0 &&
-		git merge -s ours -m E B^0 &&
-		git tag E
+		shit checkout -q C^0 &&
+		shit merge -s ours -m E B^0 &&
+		shit tag E
 	)
 '
 
@@ -1211,15 +1211,15 @@ test_expect_merge_algorithm failure success 'check symlink add/add' '
 	(
 		cd symlink-add-add &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 2 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out
 	)
 '
@@ -1242,56 +1242,56 @@ test_expect_merge_algorithm failure success 'check symlink add/add' '
 #   Commit E: merge B&C, resolving in favor of C
 #
 # This is an obvious modify/modify conflict for the submodule 'repo'.  Can
-# git detect it?
+# shit detect it?
 
 test_expect_success 'setup submodule modify/modify' '
-	git init submodule-modify-modify &&
+	shit init submodule-modify-modify &&
 	(
 		cd submodule-modify-modify &&
 
-		git init submod &&
+		shit init submod &&
 		(
 			cd submod &&
 			touch file-A &&
-			git add file-A &&
-			git commit -m A &&
-			git tag A &&
+			shit add file-A &&
+			shit commit -m A &&
+			shit tag A &&
 
-			git checkout -b B A &&
+			shit checkout -b B A &&
 			touch file-B &&
-			git add file-B &&
-			git commit -m B &&
-			git tag B &&
+			shit add file-B &&
+			shit commit -m B &&
+			shit tag B &&
 
-			git checkout -b C A &&
+			shit checkout -b C A &&
 			touch file-C &&
-			git add file-C &&
-			git commit -m C &&
-			git tag C
+			shit add file-C &&
+			shit commit -m C &&
+			shit tag C
 		) &&
 
-		git -C submod reset --hard A &&
-		git add submod &&
-		git commit -m A &&
-		git tag A &&
+		shit -C submod reset --hard A &&
+		shit add submod &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
-		git -C submod reset --hard B &&
-		git add submod &&
-		git commit -m B &&
+		shit checkout -b B A &&
+		shit -C submod reset --hard B &&
+		shit add submod &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
-		git -C submod reset --hard C &&
-		git add submod &&
-		git commit -m C &&
+		shit checkout -b C A &&
+		shit -C submod reset --hard C &&
+		shit add submod &&
+		shit commit -m C &&
 
-		git checkout -q B^0 &&
-		git merge -s ours -m D C^0 &&
-		git tag D &&
+		shit checkout -q B^0 &&
+		shit merge -s ours -m D C^0 &&
+		shit tag D &&
 
-		git checkout -q C^0 &&
-		git merge -s ours -m E B^0 &&
-		git tag E
+		shit checkout -q C^0 &&
+		shit merge -s ours -m E B^0 &&
+		shit tag E
 	)
 '
 
@@ -1299,15 +1299,15 @@ test_expect_merge_algorithm failure success 'check submodule modify/modify' '
 	(
 		cd submodule-modify-modify &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out
 	)
 '
@@ -1330,56 +1330,56 @@ test_expect_merge_algorithm failure success 'check submodule modify/modify' '
 #   Commit E: merge B&C, resolving in favor of C
 #
 # This is an obvious add/add conflict for the submodule 'repo'.  Can
-# git detect it?
+# shit detect it?
 
 test_expect_success 'setup submodule add/add' '
-	git init submodule-add-add &&
+	shit init submodule-add-add &&
 	(
 		cd submodule-add-add &&
 
-		git init submod &&
+		shit init submod &&
 		(
 			cd submod &&
 			touch file-A &&
-			git add file-A &&
-			git commit -m A &&
-			git tag A &&
+			shit add file-A &&
+			shit commit -m A &&
+			shit tag A &&
 
-			git checkout -b B A &&
+			shit checkout -b B A &&
 			touch file-B &&
-			git add file-B &&
-			git commit -m B &&
-			git tag B &&
+			shit add file-B &&
+			shit commit -m B &&
+			shit tag B &&
 
-			git checkout -b C A &&
+			shit checkout -b C A &&
 			touch file-C &&
-			git add file-C &&
-			git commit -m C &&
-			git tag C
+			shit add file-C &&
+			shit commit -m C &&
+			shit tag C
 		) &&
 
 		touch irrelevant-file &&
-		git add irrelevant-file &&
-		git commit -m A &&
-		git tag A &&
+		shit add irrelevant-file &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
-		git -C submod reset --hard B &&
-		git add submod &&
-		git commit -m B &&
+		shit checkout -b B A &&
+		shit -C submod reset --hard B &&
+		shit add submod &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
-		git -C submod reset --hard C &&
-		git add submod &&
-		git commit -m C &&
+		shit checkout -b C A &&
+		shit -C submod reset --hard C &&
+		shit add submod &&
+		shit commit -m C &&
 
-		git checkout -q B^0 &&
-		git merge -s ours -m D C^0 &&
-		git tag D &&
+		shit checkout -q B^0 &&
+		shit merge -s ours -m D C^0 &&
+		shit tag D &&
 
-		git checkout -q C^0 &&
-		git merge -s ours -m E B^0 &&
-		git tag E
+		shit checkout -q C^0 &&
+		shit merge -s ours -m E B^0 &&
+		shit tag E
 	)
 '
 
@@ -1387,15 +1387,15 @@ test_expect_merge_algorithm failure success 'check submodule add/add' '
 	(
 		cd submodule-add-add &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 2 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out
 	)
 '
@@ -1417,44 +1417,44 @@ test_expect_merge_algorithm failure success 'check submodule add/add' '
 #   Commit D: merge B&C, resolving in favor of B
 #   Commit E: merge B&C, resolving in favor of C
 #
-# This is an obvious add/add conflict for 'path'.  Can git detect it?
+# This is an obvious add/add conflict for 'path'.  Can shit detect it?
 
 test_expect_success 'setup conflicting entry types (submodule vs symlink)' '
-	git init submodule-symlink-add-add &&
+	shit init submodule-symlink-add-add &&
 	(
 		cd submodule-symlink-add-add &&
 
-		git init path &&
+		shit init path &&
 		(
 			cd path &&
 			touch file-B &&
-			git add file-B &&
-			git commit -m B &&
-			git tag B
+			shit add file-B &&
+			shit commit -m B &&
+			shit tag B
 		) &&
 
 		touch irrelevant-file &&
-		git add irrelevant-file &&
-		git commit -m A &&
-		git tag A &&
+		shit add irrelevant-file &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
-		git -C path reset --hard B &&
-		git add path &&
-		git commit -m B &&
+		shit checkout -b B A &&
+		shit -C path reset --hard B &&
+		shit add path &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
+		shit checkout -b C A &&
 		rm -rf path/ &&
 		test_ln_s_add irrelevant-file path &&
-		git commit -m C &&
+		shit commit -m C &&
 
-		git checkout -q B^0 &&
-		git merge -s ours -m D C^0 &&
-		git tag D &&
+		shit checkout -q B^0 &&
+		shit merge -s ours -m D C^0 &&
+		shit tag D &&
 
-		git checkout -q C^0 &&
-		git merge -s ours -m E B^0 &&
-		git tag E
+		shit checkout -q C^0 &&
+		shit merge -s ours -m E B^0 &&
+		shit tag E
 	)
 '
 
@@ -1462,15 +1462,15 @@ test_expect_merge_algorithm failure success 'check conflicting entry types (subm
 	(
 		cd submodule-symlink-add-add &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 2 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out
 	)
 '
@@ -1492,36 +1492,36 @@ test_expect_merge_algorithm failure success 'check conflicting entry types (subm
 #   Commit D: merge B&C, resolving in favor of B
 #   Commit E: merge B&C, resolving in favor of C
 #
-# This is an obvious add/add mode conflict.  Can git detect it?
+# This is an obvious add/add mode conflict.  Can shit detect it?
 
 test_expect_success 'setup conflicting modes for regular file' '
-	git init regular-file-mode-conflict &&
+	shit init regular-file-mode-conflict &&
 	(
 		cd regular-file-mode-conflict &&
 
 		touch irrelevant-file &&
-		git add irrelevant-file &&
-		git commit -m A &&
-		git tag A &&
+		shit add irrelevant-file &&
+		shit commit -m A &&
+		shit tag A &&
 
-		git checkout -b B A &&
+		shit checkout -b B A &&
 		echo "command_to_run" >source_me.bash &&
-		git add source_me.bash &&
-		git commit -m B &&
+		shit add source_me.bash &&
+		shit commit -m B &&
 
-		git checkout -b C A &&
+		shit checkout -b C A &&
 		echo "command_to_run" >source_me.bash &&
-		git add source_me.bash &&
+		shit add source_me.bash &&
 		test_chmod +x source_me.bash &&
-		git commit -m C &&
+		shit commit -m C &&
 
-		git checkout -q B^0 &&
-		git merge -s ours -m D C^0 &&
-		git tag D &&
+		shit checkout -q B^0 &&
+		shit merge -s ours -m D C^0 &&
+		shit tag D &&
 
-		git checkout -q C^0 &&
-		git merge -s ours -m E B^0 &&
-		git tag E
+		shit checkout -q C^0 &&
+		shit merge -s ours -m E B^0 &&
+		shit tag E
 	)
 '
 
@@ -1529,15 +1529,15 @@ test_expect_failure 'check conflicting modes for regular file' '
 	(
 		cd regular-file-mode-conflict &&
 
-		git checkout D^0 &&
+		shit checkout D^0 &&
 
-		test_must_fail git merge -s recursive E^0 &&
+		test_must_fail shit merge -s recursive E^0 &&
 
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 2 out &&
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out
 	)
 '
@@ -1572,7 +1572,7 @@ test_expect_failure 'check conflicting modes for regular file' '
 #   to ensure that we handle it as well as practical.
 
 test_expect_success 'setup nested conflicts' '
-	git init nested_conflicts &&
+	shit init nested_conflicts &&
 	(
 		cd nested_conflicts &&
 
@@ -1603,47 +1603,47 @@ test_expect_success 'setup nested conflicts' '
 		cp initial a &&
 		echo b >>b &&
 		echo a >>a &&
-		git add b a &&
-		test_tick && git commit -m initial &&
+		shit add b a &&
+		test_tick && shit commit -m initial &&
 
-		git branch L &&
-		git branch R &&
+		shit branch L &&
+		shit branch R &&
 
 		# Handle the left side
-		git checkout L &&
+		shit checkout L &&
 		mv -f b_L1 b &&
 		mv -f a_L1 a &&
-		git add b a &&
-		test_tick && git commit -m "version L1 of files" &&
-		git tag L1 &&
+		shit add b a &&
+		test_tick && shit commit -m "version L1 of files" &&
+		shit tag L1 &&
 
 		# Handle the right side
-		git checkout R &&
+		shit checkout R &&
 		mv -f b_R1 b &&
 		mv -f a_R1 a &&
-		git add b a &&
-		test_tick && git commit -m "version R1 of files" &&
-		git tag R1 &&
+		shit add b a &&
+		test_tick && shit commit -m "version R1 of files" &&
+		shit tag R1 &&
 
 		# Create first merge on left side
-		git checkout L &&
-		test_must_fail git merge R1 &&
+		shit checkout L &&
+		test_must_fail shit merge R1 &&
 		mv -f b_L2 b &&
 		mv -f a_L2 a &&
-		git add b a &&
-		git mv b m &&
-		test_tick && git commit -m "left merge, rename b->m" &&
-		git tag L2 &&
+		shit add b a &&
+		shit mv b m &&
+		test_tick && shit commit -m "left merge, rename b->m" &&
+		shit tag L2 &&
 
 		# Create first merge on right side
-		git checkout R &&
-		test_must_fail git merge L1 &&
+		shit checkout R &&
+		test_must_fail shit merge L1 &&
 		mv -f b_R2 b &&
 		mv -f a_R2 a &&
-		git add b a &&
-		git mv a m &&
-		test_tick && git commit -m "right merge, rename a->m" &&
-		git tag R2
+		shit add b a &&
+		shit mv a m &&
+		test_tick && shit commit -m "right merge, rename a->m" &&
+		shit tag R2
 	)
 '
 
@@ -1651,27 +1651,27 @@ test_expect_success 'check nested conflicts' '
 	(
 		cd nested_conflicts &&
 
-		git clean -f &&
-		MAIN=$(git rev-parse --short main) &&
-		git checkout L2^0 &&
+		shit clean -f &&
+		MAIN=$(shit rev-parse --short main) &&
+		shit checkout L2^0 &&
 
 		# Merge must fail; there is a conflict
-		test_must_fail git -c merge.conflictstyle=diff3 merge -s recursive R2^0 &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge -s recursive R2^0 &&
 
 		# Make sure the index has the right number of entries
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 2 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 2 out &&
 		# Ensure we have the correct number of untracked files
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
 		# Create a and b from virtual merge base X
-		git cat-file -p main:a >base &&
-		git cat-file -p L1:a >ours &&
-		git cat-file -p R1:a >theirs &&
-		test_must_fail git merge-file --diff3 \
+		shit cat-file -p main:a >base &&
+		shit cat-file -p L1:a >ours &&
+		shit cat-file -p R1:a >theirs &&
+		test_must_fail shit merge-file --diff3 \
 			-L "Temporary merge branch 1" \
 			-L "$MAIN"  \
 			-L "Temporary merge branch 2" \
@@ -1680,10 +1680,10 @@ test_expect_success 'check nested conflicts' '
 			theirs &&
 		sed -e "s/^\([<|=>]\)/\1\1/" ours >vmb_a &&
 
-		git cat-file -p main:b >base &&
-		git cat-file -p L1:b >ours &&
-		git cat-file -p R1:b >theirs &&
-		test_must_fail git merge-file --diff3 \
+		shit cat-file -p main:b >base &&
+		shit cat-file -p L1:b >ours &&
+		shit cat-file -p R1:b >theirs &&
+		test_must_fail shit merge-file --diff3 \
 			-L "Temporary merge branch 1" \
 			-L "$MAIN"  \
 			-L "Temporary merge branch 2" \
@@ -1693,9 +1693,9 @@ test_expect_success 'check nested conflicts' '
 		sed -e "s/^\([<|=>]\)/\1\1/" ours >vmb_b &&
 
 		# Compare :2:m to expected values
-		git cat-file -p L2:m >ours &&
-		git cat-file -p R2:b >theirs &&
-		test_must_fail git merge-file --diff3  \
+		shit cat-file -p L2:m >ours &&
+		shit cat-file -p R2:b >theirs &&
+		test_must_fail shit merge-file --diff3  \
 			-L "HEAD:m"                    \
 			-L "merged common ancestors:b" \
 			-L "R2^0:b"                    \
@@ -1703,13 +1703,13 @@ test_expect_success 'check nested conflicts' '
 			vmb_b                          \
 			theirs                         &&
 		sed -e "s/^\([<|=>]\)/\1\1/" ours >m_stage_2 &&
-		git cat-file -p :2:m >actual &&
+		shit cat-file -p :2:m >actual &&
 		test_cmp m_stage_2 actual &&
 
 		# Compare :3:m to expected values
-		git cat-file -p L2:a >ours &&
-		git cat-file -p R2:m >theirs &&
-		test_must_fail git merge-file --diff3  \
+		shit cat-file -p L2:a >ours &&
+		shit cat-file -p R2:m >theirs &&
+		test_must_fail shit merge-file --diff3  \
 			-L "HEAD:a"                    \
 			-L "merged common ancestors:a" \
 			-L "R2^0:m"                    \
@@ -1717,13 +1717,13 @@ test_expect_success 'check nested conflicts' '
 			vmb_a                          \
 			theirs                         &&
 		sed -e "s/^\([<|=>]\)/\1\1/" ours >m_stage_3 &&
-		git cat-file -p :3:m >actual &&
+		shit cat-file -p :3:m >actual &&
 		test_cmp m_stage_3 actual &&
 
 		# Compare m to expected contents
 		>empty &&
 		cp m_stage_2 expected_final_m &&
-		test_must_fail git merge-file --diff3 \
+		test_must_fail shit merge-file --diff3 \
 			-L "HEAD"                     \
 			-L "merged common ancestors"  \
 			-L "R2^0"                     \
@@ -1758,7 +1758,7 @@ test_expect_success 'check nested conflicts' '
 #   have three levels of conflict markers.  Can we distinguish all three?
 
 test_expect_success 'setup virtual merge base with nested conflicts' '
-	git init virtual_merge_base_has_nested_conflicts &&
+	shit init virtual_merge_base_has_nested_conflicts &&
 	(
 		cd virtual_merge_base_has_nested_conflicts &&
 
@@ -1766,53 +1766,53 @@ test_expect_success 'setup virtual merge base with nested conflicts' '
 		printf "Random base content line %d\n" $(test_seq 1 10) >content &&
 
 		# Setup original commit
-		git add content &&
-		test_tick && git commit -m initial &&
+		shit add content &&
+		test_tick && shit commit -m initial &&
 
-		git branch L &&
-		git branch R &&
+		shit branch L &&
+		shit branch R &&
 
 		# Create L1
-		git checkout L &&
+		shit checkout L &&
 		echo left >>content &&
-		git add content &&
-		test_tick && git commit -m "version L1 of content" &&
-		git tag L1 &&
+		shit add content &&
+		test_tick && shit commit -m "version L1 of content" &&
+		shit tag L1 &&
 
 		# Create R1
-		git checkout R &&
+		shit checkout R &&
 		echo right >>content &&
-		git add content &&
-		test_tick && git commit -m "version R1 of content" &&
-		git tag R1 &&
+		shit add content &&
+		test_tick && shit commit -m "version R1 of content" &&
+		shit tag R1 &&
 
 		# Create L2
-		git checkout L &&
-		test_must_fail git -c merge.conflictstyle=diff3 merge R1 &&
-		git checkout L1 content &&
-		test_tick && git commit -m "version L2 of content" &&
-		git tag L2 &&
+		shit checkout L &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge R1 &&
+		shit checkout L1 content &&
+		test_tick && shit commit -m "version L2 of content" &&
+		shit tag L2 &&
 
 		# Create R2
-		git checkout R &&
-		test_must_fail git -c merge.conflictstyle=diff3 merge L1 &&
-		git checkout R1 content &&
-		test_tick && git commit -m "version R2 of content" &&
-		git tag R2 &&
+		shit checkout R &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge L1 &&
+		shit checkout R1 content &&
+		test_tick && shit commit -m "version R2 of content" &&
+		shit tag R2 &&
 
 		# Create L3
-		git checkout L &&
-		test_must_fail git -c merge.conflictstyle=diff3 merge R2 &&
-		git checkout L1 content &&
-		test_tick && git commit -m "version L3 of content" &&
-		git tag L3 &&
+		shit checkout L &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge R2 &&
+		shit checkout L1 content &&
+		test_tick && shit commit -m "version L3 of content" &&
+		shit tag L3 &&
 
 		# Create R3
-		git checkout R &&
-		test_must_fail git -c merge.conflictstyle=diff3 merge L2 &&
-		git checkout R1 content &&
-		test_tick && git commit -m "version R3 of content" &&
-		git tag R3
+		shit checkout R &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge L2 &&
+		shit checkout R1 content &&
+		test_tick && shit commit -m "version R3 of content" &&
+		shit tag R3
 	)
 '
 
@@ -1820,34 +1820,34 @@ test_expect_success 'check virtual merge base with nested conflicts' '
 	(
 		cd virtual_merge_base_has_nested_conflicts &&
 
-		MAIN=$(git rev-parse --short main) &&
-		git checkout L3^0 &&
+		MAIN=$(shit rev-parse --short main) &&
+		shit checkout L3^0 &&
 
 		# Merge must fail; there is a conflict
-		test_must_fail git -c merge.conflictstyle=diff3 merge -s recursive R3^0 &&
+		test_must_fail shit -c merge.conflictstyle=diff3 merge -s recursive R3^0 &&
 
 		# Make sure the index has the right number of entries
-		git ls-files -s >out &&
+		shit ls-files -s >out &&
 		test_line_count = 3 out &&
-		git ls-files -u >out &&
+		shit ls-files -u >out &&
 		test_line_count = 3 out &&
 		# Ensure we have the correct number of untracked files
-		git ls-files -o >out &&
+		shit ls-files -o >out &&
 		test_line_count = 1 out &&
 
 		# Compare :[23]:content to expected values
-		git rev-parse L1:content R1:content >expect &&
-		git rev-parse :2:content :3:content >actual &&
+		shit rev-parse L1:content R1:content >expect &&
+		shit rev-parse :2:content :3:content >actual &&
 		test_cmp expect actual &&
 
 		# Imitate X1 merge base, except without long enough conflict
 		# markers because a subsequent sed will modify them.  Put
 		# result into vmb.
-		git cat-file -p main:content >base &&
-		git cat-file -p L:content >left &&
-		git cat-file -p R:content >right &&
+		shit cat-file -p main:content >base &&
+		shit cat-file -p L:content >left &&
+		shit cat-file -p R:content >right &&
 		cp left merged-once &&
-		test_must_fail git merge-file --diff3 \
+		test_must_fail shit merge-file --diff3 \
 			-L "Temporary merge branch 1" \
 			-L "$MAIN"  \
 			-L "Temporary merge branch 2" \
@@ -1860,7 +1860,7 @@ test_expect_success 'check virtual merge base with nested conflicts' '
 		# extend both sets of conflict markers to make them longer
 		# with the sed command.
 		cp left merged-twice &&
-		test_must_fail git merge-file --diff3 \
+		test_must_fail shit merge-file --diff3 \
 			-L "Temporary merge branch 1" \
 			-L "merged common ancestors"  \
 			-L "Temporary merge branch 2" \
@@ -1870,13 +1870,13 @@ test_expect_success 'check virtual merge base with nested conflicts' '
 		sed -e "s/^\([<|=>]\)/\1\1\1/" merged-twice >vmb &&
 
 		# Compare :1:content to expected value
-		git cat-file -p :1:content >actual &&
+		shit cat-file -p :1:content >actual &&
 		test_cmp vmb actual &&
 
 		# Determine expected content in final outer merge, compare to
 		# what the merge generated.
 		cp -f left expect &&
-		test_must_fail git merge-file --diff3                      \
+		test_must_fail shit merge-file --diff3                      \
 			-L "HEAD"  -L "merged common ancestors"  -L "R3^0" \
 			expect     vmb                           right     &&
 		test_cmp expect content

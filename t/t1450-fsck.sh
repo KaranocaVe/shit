@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git fsck random collection of tests
+test_description='shit fsck random collection of tests
 
 * (HEAD) B
 * (main) A
@@ -9,31 +9,31 @@ test_description='git fsck random collection of tests
 . ./test-lib.sh
 
 test_expect_success setup '
-	git config gc.auto 0 &&
-	git config i18n.commitencoding ISO-8859-1 &&
+	shit config gc.auto 0 &&
+	shit config i18n.commitencoding ISO-8859-1 &&
 	test_commit A fileA one &&
-	git config --unset i18n.commitencoding &&
-	git checkout HEAD^0 &&
+	shit config --unset i18n.commitencoding &&
+	shit checkout HEAD^0 &&
 	test_commit B fileB two &&
-	orig_head=$(git rev-parse HEAD) &&
-	git tag -d A B &&
-	git reflog expire --expire=now --all
+	orig_head=$(shit rev-parse HEAD) &&
+	shit tag -d A B &&
+	shit reflog expire --expire=now --all
 '
 
 test_expect_success 'loose objects borrowed from alternate are not missing' '
 	mkdir another &&
 	(
 		cd another &&
-		git init &&
-		echo ../../../.git/objects >.git/objects/info/alternates &&
+		shit init &&
+		echo ../../../.shit/objects >.shit/objects/info/alternates &&
 		test_commit C fileC one &&
-		git fsck --no-dangling >../actual 2>&1
+		shit fsck --no-dangling >../actual 2>&1
 	) &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'HEAD is part of refs, valid objects appear valid' '
-	git fsck >actual 2>&1 &&
+	shit fsck >actual 2>&1 &&
 	test_must_be_empty actual
 '
 
@@ -42,7 +42,7 @@ test_expect_success 'HEAD is part of refs, valid objects appear valid' '
 # it.
 
 sha1_file () {
-	git rev-parse --git-path objects/$(test_oid_to_path "$1")
+	shit rev-parse --shit-path objects/$(test_oid_to_path "$1")
 }
 
 remove_object () {
@@ -50,56 +50,56 @@ remove_object () {
 }
 
 test_expect_success 'object with hash mismatch' '
-	git init --bare hash-mismatch &&
+	shit init --bare hash-mismatch &&
 	(
 		cd hash-mismatch &&
 
-		oid=$(echo blob | git hash-object -w --stdin) &&
+		oid=$(echo blob | shit hash-object -w --stdin) &&
 		oldoid=$oid &&
 		old=$(test_oid_to_path "$oid") &&
 		new=$(dirname $old)/$(test_oid ff_2) &&
 		oid="$(dirname $new)$(basename $new)" &&
 
 		mv objects/$old objects/$new &&
-		git update-index --add --cacheinfo 100644 $oid foo &&
-		tree=$(git write-tree) &&
-		cmt=$(echo bogus | git commit-tree $tree) &&
-		git update-ref refs/heads/bogus $cmt &&
+		shit update-index --add --cacheinfo 100644 $oid foo &&
+		tree=$(shit write-tree) &&
+		cmt=$(echo bogus | shit commit-tree $tree) &&
+		shit update-ref refs/heads/bogus $cmt &&
 
-		test_must_fail git fsck 2>out &&
+		test_must_fail shit fsck 2>out &&
 		grep "$oldoid: hash-path mismatch, found at: .*$new" out
 	)
 '
 
 test_expect_success 'object with hash and type mismatch' '
-	git init --bare hash-type-mismatch &&
+	shit init --bare hash-type-mismatch &&
 	(
 		cd hash-type-mismatch &&
 
-		oid=$(echo blob | git hash-object -w --stdin -t garbage --literally) &&
+		oid=$(echo blob | shit hash-object -w --stdin -t garbage --literally) &&
 		oldoid=$oid &&
 		old=$(test_oid_to_path "$oid") &&
 		new=$(dirname $old)/$(test_oid ff_2) &&
 		oid="$(dirname $new)$(basename $new)" &&
 
 		mv objects/$old objects/$new &&
-		git update-index --add --cacheinfo 100644 $oid foo &&
-		tree=$(git write-tree) &&
-		cmt=$(echo bogus | git commit-tree $tree) &&
-		git update-ref refs/heads/bogus $cmt &&
+		shit update-index --add --cacheinfo 100644 $oid foo &&
+		tree=$(shit write-tree) &&
+		cmt=$(echo bogus | shit commit-tree $tree) &&
+		shit update-ref refs/heads/bogus $cmt &&
 
 
-		test_must_fail git fsck 2>out &&
+		test_must_fail shit fsck 2>out &&
 		grep "^error: $oldoid: hash-path mismatch, found at: .*$new" out &&
 		grep "^error: $oldoid: object is of unknown type '"'"'garbage'"'"'" out
 	)
 '
 
 test_expect_success 'zlib corrupt loose object output ' '
-	git init --bare corrupt-loose-output &&
+	shit init --bare corrupt-loose-output &&
 	(
 		cd corrupt-loose-output &&
-		oid=$(git hash-object -w --stdin --literally </dev/null) &&
+		oid=$(shit hash-object -w --stdin --literally </dev/null) &&
 		oidf=objects/$(test_oid_to_path "$oid") &&
 		chmod +w $oidf &&
 		echo extra garbage >>$oidf &&
@@ -109,73 +109,73 @@ test_expect_success 'zlib corrupt loose object output ' '
 		error: unable to unpack contents of ./$oidf
 		error: $oid: object corrupt or missing: ./$oidf
 		EOF
-		test_must_fail git fsck 2>actual &&
+		test_must_fail shit fsck 2>actual &&
 		grep ^error: actual >error &&
 		test_cmp expect.error error
 	)
 '
 
 test_expect_success 'branch pointing to non-commit' '
-	tree_oid=$(git rev-parse --verify HEAD^{tree}) &&
-	test_when_finished "git update-ref -d refs/heads/invalid" &&
+	tree_oid=$(shit rev-parse --verify HEAD^{tree}) &&
+	test_when_finished "shit update-ref -d refs/heads/invalid" &&
 	test-tool ref-store main update-ref msg refs/heads/invalid $tree_oid $ZERO_OID REF_SKIP_OID_VERIFICATION &&
-	test_must_fail git fsck 2>out &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "not a commit" out
 '
 
 test_expect_success REFFILES 'HEAD link pointing at a funny object' '
-	test_when_finished "git update-ref HEAD $orig_head" &&
-	echo $ZERO_OID >.git/HEAD &&
+	test_when_finished "shit update-ref HEAD $orig_head" &&
+	echo $ZERO_OID >.shit/HEAD &&
 	# avoid corrupt/broken HEAD from interfering with repo discovery
-	test_must_fail env GIT_DIR=.git git fsck 2>out &&
+	test_must_fail env shit_DIR=.shit shit fsck 2>out &&
 	test_grep "detached HEAD points" out
 '
 
 test_expect_success 'HEAD link pointing at a funny place' '
-	test_when_finished "git update-ref --no-deref HEAD $orig_head" &&
+	test_when_finished "shit update-ref --no-deref HEAD $orig_head" &&
 	test-tool ref-store main create-symref HEAD refs/funny/place &&
 	# avoid corrupt/broken HEAD from interfering with repo discovery
-	test_must_fail env GIT_DIR=.git git fsck 2>out &&
+	test_must_fail env shit_DIR=.shit shit fsck 2>out &&
 	test_grep "HEAD points to something strange" out
 '
 
 test_expect_success REFFILES 'HEAD link pointing at a funny object (from different wt)' '
-	test_when_finished "git update-ref HEAD $orig_head" &&
-	test_when_finished "git worktree remove -f wt" &&
-	git worktree add wt &&
-	echo $ZERO_OID >.git/HEAD &&
+	test_when_finished "shit update-ref HEAD $orig_head" &&
+	test_when_finished "shit worktree remove -f wt" &&
+	shit worktree add wt &&
+	echo $ZERO_OID >.shit/HEAD &&
 	# avoid corrupt/broken HEAD from interfering with repo discovery
-	test_must_fail git -C wt fsck 2>out &&
+	test_must_fail shit -C wt fsck 2>out &&
 	test_grep "main-worktree/HEAD: detached HEAD points" out
 '
 
 test_expect_success REFFILES 'other worktree HEAD link pointing at a funny object' '
-	test_when_finished "git worktree remove -f other" &&
-	git worktree add other &&
-	echo $ZERO_OID >.git/worktrees/other/HEAD &&
-	test_must_fail git fsck 2>out &&
+	test_when_finished "shit worktree remove -f other" &&
+	shit worktree add other &&
+	echo $ZERO_OID >.shit/worktrees/other/HEAD &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "worktrees/other/HEAD: detached HEAD points" out
 '
 
 test_expect_success 'other worktree HEAD link pointing at missing object' '
-	test_when_finished "git worktree remove -f other" &&
-	git worktree add other &&
-	object_id=$(echo "Contents missing from repo" | git hash-object --stdin) &&
+	test_when_finished "shit worktree remove -f other" &&
+	shit worktree add other &&
+	object_id=$(echo "Contents missing from repo" | shit hash-object --stdin) &&
 	test-tool -C other ref-store main update-ref msg HEAD $object_id "" REF_NO_DEREF,REF_SKIP_OID_VERIFICATION &&
-	test_must_fail git fsck 2>out &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "worktrees/other/HEAD: invalid sha1 pointer" out
 '
 
 test_expect_success 'other worktree HEAD link pointing at a funny place' '
-	test_when_finished "git worktree remove -f other" &&
-	git worktree add other &&
-	git -C other symbolic-ref HEAD refs/funny/place &&
-	test_must_fail git fsck 2>out &&
+	test_when_finished "shit worktree remove -f other" &&
+	shit worktree add other &&
+	shit -C other symbolic-ref HEAD refs/funny/place &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "worktrees/other/HEAD points to something strange" out
 '
 
 test_expect_success 'commit with multiple signatures is okay' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	cat >sigs <<-EOF &&
 	gpgsig -----BEGIN PGP SIGNATURE-----
 	  VGhpcyBpcyBub3QgcmVhbGx5IGEgc2lnbmF0dXJlLg==
@@ -189,112 +189,112 @@ test_expect_success 'commit with multiple signatures is okay' '
 	echo >>okay &&
 	sed -e "1,/^$/d" basis >>okay &&
 	cat okay &&
-	new=$(git hash-object -t commit -w --stdin <okay) &&
+	new=$(shit hash-object -t commit -w --stdin <okay) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	shit fsck 2>out &&
 	cat out &&
 	! grep "commit $new" out
 '
 
 test_expect_success 'email without @ is okay' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/@/AT/" basis >okay &&
-	new=$(git hash-object -t commit -w --stdin <okay) &&
+	new=$(shit hash-object -t commit -w --stdin <okay) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	shit fsck 2>out &&
 	! grep "commit $new" out
 '
 
 test_expect_success 'email with embedded > is not okay' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/@[a-z]/&>/" basis >bad-email &&
-	new=$(git hash-object --literally -t commit -w --stdin <bad-email) &&
+	new=$(shit hash-object --literally -t commit -w --stdin <bad-email) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	test_must_fail git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in commit $new" out
 '
 
 test_expect_success 'missing < email delimiter is reported nicely' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/<//" basis >bad-email-2 &&
-	new=$(git hash-object --literally -t commit -w --stdin <bad-email-2) &&
+	new=$(shit hash-object --literally -t commit -w --stdin <bad-email-2) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	test_must_fail git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in commit $new.* - bad name" out
 '
 
 test_expect_success 'missing email is reported nicely' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/[a-z]* <[^>]*>//" basis >bad-email-3 &&
-	new=$(git hash-object --literally -t commit -w --stdin <bad-email-3) &&
+	new=$(shit hash-object --literally -t commit -w --stdin <bad-email-3) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	test_must_fail git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in commit $new.* - missing email" out
 '
 
 test_expect_success '> in name is reported' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/ </> </" basis >bad-email-4 &&
-	new=$(git hash-object --literally -t commit -w --stdin <bad-email-4) &&
+	new=$(shit hash-object --literally -t commit -w --stdin <bad-email-4) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	test_must_fail git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in commit $new" out
 '
 
 # date is 2^64 + 1
 test_expect_success 'integer overflow in timestamps is reported' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/^\\(author .*>\\) [0-9]*/\\1 18446744073709551617/" \
 		<basis >bad-timestamp &&
-	new=$(git hash-object --literally -t commit -w --stdin <bad-timestamp) &&
+	new=$(shit hash-object --literally -t commit -w --stdin <bad-timestamp) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	test_must_fail git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in commit $new.*integer overflow" out
 '
 
 test_expect_success 'commit with NUL in header' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/author ./author Q/" <basis | q_to_nul >commit-NUL-header &&
-	new=$(git hash-object --literally -t commit -w --stdin <commit-NUL-header) &&
+	new=$(shit hash-object --literally -t commit -w --stdin <commit-NUL-header) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	test_must_fail git fsck 2>out &&
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in commit $new.*unterminated header: NUL at offset" out
 '
 
 test_expect_success 'tree object with duplicate entries' '
 	test_when_finished "for i in \$T; do remove_object \$i; done" &&
 	T=$(
-		GIT_INDEX_FILE=test-index &&
-		export GIT_INDEX_FILE &&
+		shit_INDEX_FILE=test-index &&
+		export shit_INDEX_FILE &&
 		rm -f test-index &&
 		>x &&
-		git add x &&
-		git rev-parse :x &&
-		T=$(git write-tree) &&
+		shit add x &&
+		shit rev-parse :x &&
+		T=$(shit write-tree) &&
 		echo $T &&
 		(
-			git cat-file tree $T &&
-			git cat-file tree $T
+			shit cat-file tree $T &&
+			shit cat-file tree $T
 		) |
-		git hash-object --literally -w -t tree --stdin
+		shit hash-object --literally -w -t tree --stdin
 	) &&
-	test_must_fail git fsck 2>out &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in tree .*contains duplicate file entries" out
 '
 
@@ -306,9 +306,9 @@ check_duplicate_names () {
 		test_when_finished "remove_object \$blob" &&
 		test_when_finished "remove_object \$tree" &&
 		test_when_finished "remove_object \$badtree" &&
-		blob=$(echo blob | git hash-object -w --stdin) &&
+		blob=$(echo blob | shit hash-object -w --stdin) &&
 		printf "100644 blob %s\t%s\n" $blob x.2 >tree &&
-		tree=$(git mktree <tree) &&
+		tree=$(shit mktree <tree) &&
 		for name in $names
 		do
 			case "$name" in
@@ -316,8 +316,8 @@ check_duplicate_names () {
 			*)  printf "100644 blob %s\t%s\n" $blob "$name" ;;
 			esac
 		done >badtree &&
-		badtree=$(git mktree <badtree) &&
-		test_must_fail git fsck 2>out &&
+		badtree=$(shit mktree <badtree) &&
+		test_must_fail shit fsck 2>out &&
 		test_grep "$badtree" out &&
 		test_grep "error in tree .*contains duplicate file entries" out
 	'
@@ -333,14 +333,14 @@ test_expect_success 'unparseable tree object' '
 	junk sha256:twenty-bytes-of-junk-twelve-more
 	EOF
 
-	test_when_finished "git update-ref -d refs/heads/wrong" &&
+	test_when_finished "shit update-ref -d refs/heads/wrong" &&
 	test_when_finished "remove_object \$tree_sha1" &&
 	test_when_finished "remove_object \$commit_sha1" &&
 	junk=$(test_oid junk) &&
-	tree_sha1=$(printf "100644 \0$junk" | git hash-object -t tree --stdin -w --literally) &&
-	commit_sha1=$(git commit-tree $tree_sha1) &&
-	git update-ref refs/heads/wrong $commit_sha1 &&
-	test_must_fail git fsck 2>out &&
+	tree_sha1=$(printf "100644 \0$junk" | shit hash-object -t tree --stdin -w --literally) &&
+	commit_sha1=$(shit commit-tree $tree_sha1) &&
+	shit update-ref refs/heads/wrong $commit_sha1 &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error: empty filename in tree entry" out &&
 	test_grep "$tree_sha1" out &&
 	test_grep ! "fatal: empty filename in tree entry" out
@@ -350,16 +350,16 @@ test_expect_success 'tree entry with type mismatch' '
 	test_when_finished "remove_object \$blob" &&
 	test_when_finished "remove_object \$tree" &&
 	test_when_finished "remove_object \$commit" &&
-	test_when_finished "git update-ref -d refs/heads/type_mismatch" &&
-	blob=$(echo blob | git hash-object -w --stdin) &&
+	test_when_finished "shit update-ref -d refs/heads/type_mismatch" &&
+	blob=$(echo blob | shit hash-object -w --stdin) &&
 	blob_bin=$(echo $blob | hex2oct) &&
 	tree=$(
 		printf "40000 dir\0${blob_bin}100644 file\0${blob_bin}" |
-		git hash-object -t tree --stdin -w --literally
+		shit hash-object -t tree --stdin -w --literally
 	) &&
-	commit=$(git commit-tree $tree) &&
-	git update-ref refs/heads/type_mismatch $commit &&
-	test_must_fail git fsck >out 2>&1 &&
+	commit=$(shit commit-tree $tree) &&
+	shit update-ref refs/heads/type_mismatch $commit &&
+	test_must_fail shit fsck >out 2>&1 &&
 	test_grep "is a blob, not a tree" out &&
 	test_grep ! "dangling blob" out
 '
@@ -367,11 +367,11 @@ test_expect_success 'tree entry with type mismatch' '
 test_expect_success 'tree entry with bogus mode' '
 	test_when_finished "remove_object \$blob" &&
 	test_when_finished "remove_object \$tree" &&
-	blob=$(echo blob | git hash-object -w --stdin) &&
+	blob=$(echo blob | shit hash-object -w --stdin) &&
 	blob_oct=$(echo $blob | hex2oct) &&
 	tree=$(printf "100000 foo\0${blob_oct}" |
-	       git hash-object -t tree --stdin -w --literally) &&
-	git fsck 2>err &&
+	       shit hash-object -t tree --stdin -w --literally) &&
+	shit fsck 2>err &&
 	cat >expect <<-EOF &&
 	warning in tree $tree: badFilemode: contains bad file modes
 	EOF
@@ -389,16 +389,16 @@ test_expect_success 'tag pointing to nonexistent' '
 	This is an invalid tag.
 	EOF
 
-	tag=$(git hash-object -t tag -w --stdin <invalid-tag) &&
+	tag=$(shit hash-object -t tag -w --stdin <invalid-tag) &&
 	test_when_finished "remove_object $tag" &&
-	git update-ref refs/tags/invalid $tag &&
-	test_when_finished "git update-ref -d refs/tags/invalid" &&
-	test_must_fail git fsck --tags >out &&
+	shit update-ref refs/tags/invalid $tag &&
+	test_when_finished "shit update-ref -d refs/tags/invalid" &&
+	test_must_fail shit fsck --tags >out &&
 	test_grep "broken link" out
 '
 
 test_expect_success 'tag pointing to something else than its type' '
-	sha=$(echo blob | git hash-object -w --stdin) &&
+	sha=$(echo blob | shit hash-object -w --stdin) &&
 	test_when_finished "remove_object $sha" &&
 	cat >wrong-tag <<-EOF &&
 	object $sha
@@ -409,15 +409,15 @@ test_expect_success 'tag pointing to something else than its type' '
 	This is an invalid tag.
 	EOF
 
-	tag=$(git hash-object -t tag -w --stdin <wrong-tag) &&
+	tag=$(shit hash-object -t tag -w --stdin <wrong-tag) &&
 	test_when_finished "remove_object $tag" &&
-	git update-ref refs/tags/wrong $tag &&
-	test_when_finished "git update-ref -d refs/tags/wrong" &&
-	test_must_fail git fsck --tags
+	shit update-ref refs/tags/wrong $tag &&
+	test_when_finished "shit update-ref -d refs/tags/wrong" &&
+	test_must_fail shit fsck --tags
 '
 
 test_expect_success 'tag with incorrect tag name & missing tagger' '
-	sha=$(git rev-parse HEAD) &&
+	sha=$(shit rev-parse HEAD) &&
 	cat >wrong-tag <<-EOF &&
 	object $sha
 	type commit
@@ -426,11 +426,11 @@ test_expect_success 'tag with incorrect tag name & missing tagger' '
 	This is an invalid tag.
 	EOF
 
-	tag=$(git hash-object --literally -t tag -w --stdin <wrong-tag) &&
+	tag=$(shit hash-object --literally -t tag -w --stdin <wrong-tag) &&
 	test_when_finished "remove_object $tag" &&
-	git update-ref refs/tags/wrong $tag &&
-	test_when_finished "git update-ref -d refs/tags/wrong" &&
-	git fsck --tags 2>out &&
+	shit update-ref refs/tags/wrong $tag &&
+	test_when_finished "shit update-ref -d refs/tags/wrong" &&
+	shit fsck --tags 2>out &&
 
 	cat >expect <<-EOF &&
 	warning in tag $tag: badTagName: invalid '\''tag'\'' name: wrong name format
@@ -440,7 +440,7 @@ test_expect_success 'tag with incorrect tag name & missing tagger' '
 '
 
 test_expect_success 'tag with bad tagger' '
-	sha=$(git rev-parse HEAD) &&
+	sha=$(shit rev-parse HEAD) &&
 	cat >wrong-tag <<-EOF &&
 	object $sha
 	type commit
@@ -450,16 +450,16 @@ test_expect_success 'tag with bad tagger' '
 	This is an invalid tag.
 	EOF
 
-	tag=$(git hash-object --literally -t tag -w --stdin <wrong-tag) &&
+	tag=$(shit hash-object --literally -t tag -w --stdin <wrong-tag) &&
 	test_when_finished "remove_object $tag" &&
-	git update-ref refs/tags/wrong $tag &&
-	test_when_finished "git update-ref -d refs/tags/wrong" &&
-	test_must_fail git fsck --tags 2>out &&
+	shit update-ref refs/tags/wrong $tag &&
+	test_when_finished "shit update-ref -d refs/tags/wrong" &&
+	test_must_fail shit fsck --tags 2>out &&
 	test_grep "error in tag .*: invalid author/committer" out
 '
 
 test_expect_success 'tag with NUL in header' '
-	sha=$(git rev-parse HEAD) &&
+	sha=$(shit rev-parse HEAD) &&
 	q_to_nul >tag-NUL-header <<-EOF &&
 	object $sha
 	type commit
@@ -469,41 +469,41 @@ test_expect_success 'tag with NUL in header' '
 	This is an invalid tag.
 	EOF
 
-	tag=$(git hash-object --literally -t tag -w --stdin <tag-NUL-header) &&
+	tag=$(shit hash-object --literally -t tag -w --stdin <tag-NUL-header) &&
 	test_when_finished "remove_object $tag" &&
-	git update-ref refs/tags/wrong $tag &&
-	test_when_finished "git update-ref -d refs/tags/wrong" &&
-	test_must_fail git fsck --tags 2>out &&
+	shit update-ref refs/tags/wrong $tag &&
+	test_when_finished "shit update-ref -d refs/tags/wrong" &&
+	test_must_fail shit fsck --tags 2>out &&
 	test_grep "error in tag $tag.*unterminated header: NUL at offset" out
 '
 
 test_expect_success 'cleaned up' '
-	git fsck >actual 2>&1 &&
+	shit fsck >actual 2>&1 &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'rev-list --verify-objects' '
-	git rev-list --verify-objects --all >/dev/null 2>out &&
+	shit rev-list --verify-objects --all >/dev/null 2>out &&
 	test_must_be_empty out
 '
 
 test_expect_success 'rev-list --verify-objects with bad sha1' '
-	sha=$(echo blob | git hash-object -w --stdin) &&
+	sha=$(echo blob | shit hash-object -w --stdin) &&
 	old=$(test_oid_to_path $sha) &&
 	new=$(dirname $old)/$(test_oid ff_2) &&
 	sha="$(dirname $new)$(basename $new)" &&
-	mv .git/objects/$old .git/objects/$new &&
+	mv .shit/objects/$old .shit/objects/$new &&
 	test_when_finished "remove_object $sha" &&
-	git update-index --add --cacheinfo 100644 $sha foo &&
-	test_when_finished "git read-tree -u --reset HEAD" &&
-	tree=$(git write-tree) &&
+	shit update-index --add --cacheinfo 100644 $sha foo &&
+	test_when_finished "shit read-tree -u --reset HEAD" &&
+	tree=$(shit write-tree) &&
 	test_when_finished "remove_object $tree" &&
-	cmt=$(echo bogus | git commit-tree $tree) &&
+	cmt=$(echo bogus | shit commit-tree $tree) &&
 	test_when_finished "remove_object $cmt" &&
-	git update-ref refs/heads/bogus $cmt &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
+	shit update-ref refs/heads/bogus $cmt &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
 
-	test_might_fail git rev-list --verify-objects refs/heads/bogus >/dev/null 2>out &&
+	test_might_fail shit rev-list --verify-objects refs/heads/bogus >/dev/null 2>out &&
 	test_grep -q "error: hash mismatch $(dirname $new)$(test_oid ff_2)" out
 '
 
@@ -511,35 +511,35 @@ test_expect_success 'rev-list --verify-objects with bad sha1' '
 # this provides an easy way to have commits which don't match their purported
 # hashes, but which aren't so broken we can't read them at all.
 test_expect_success 'rev-list --verify-objects notices swapped commits' '
-	git init swapped-commits &&
+	shit init swapped-commits &&
 	(
 		cd swapped-commits &&
 		test_commit one &&
 		test_commit two &&
-		one_oid=$(git rev-parse HEAD) &&
-		two_oid=$(git rev-parse HEAD^) &&
-		one=.git/objects/$(test_oid_to_path $one_oid) &&
-		two=.git/objects/$(test_oid_to_path $two_oid) &&
+		one_oid=$(shit rev-parse HEAD) &&
+		two_oid=$(shit rev-parse HEAD^) &&
+		one=.shit/objects/$(test_oid_to_path $one_oid) &&
+		two=.shit/objects/$(test_oid_to_path $two_oid) &&
 		mv $one tmp &&
 		mv $two $one &&
 		mv tmp $two &&
-		test_must_fail git rev-list --verify-objects HEAD
+		test_must_fail shit rev-list --verify-objects HEAD
 	)
 '
 
 test_expect_success 'set up repository with commit-graph' '
-	git init corrupt-graph &&
+	shit init corrupt-graph &&
 	(
 		cd corrupt-graph &&
 		test_commit one &&
 		test_commit two &&
-		git commit-graph write --reachable
+		shit commit-graph write --reachable
 	)
 '
 
 corrupt_graph_obj () {
-	oid=$(git -C corrupt-graph rev-parse "$1") &&
-	obj=corrupt-graph/.git/objects/$(test_oid_to_path $oid) &&
+	oid=$(shit -C corrupt-graph rev-parse "$1") &&
+	obj=corrupt-graph/.shit/objects/$(test_oid_to_path $oid) &&
 	test_when_finished 'mv backup $obj' &&
 	mv $obj backup &&
 	echo garbage >$obj
@@ -547,54 +547,54 @@ corrupt_graph_obj () {
 
 test_expect_success 'rev-list --verify-objects with commit graph (tip)' '
 	corrupt_graph_obj HEAD &&
-	test_must_fail git -C corrupt-graph rev-list --verify-objects HEAD
+	test_must_fail shit -C corrupt-graph rev-list --verify-objects HEAD
 '
 
 test_expect_success 'rev-list --verify-objects with commit graph (parent)' '
 	corrupt_graph_obj HEAD^ &&
-	test_must_fail git -C corrupt-graph rev-list --verify-objects HEAD
+	test_must_fail shit -C corrupt-graph rev-list --verify-objects HEAD
 '
 
 test_expect_success 'force fsck to ignore double author' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/^author .*/&,&/" <basis | tr , \\n >multiple-authors &&
-	new=$(git hash-object --literally -t commit -w --stdin <multiple-authors) &&
+	new=$(shit hash-object --literally -t commit -w --stdin <multiple-authors) &&
 	test_when_finished "remove_object $new" &&
-	git update-ref refs/heads/bogus "$new" &&
-	test_when_finished "git update-ref -d refs/heads/bogus" &&
-	test_must_fail git fsck &&
-	git -c fsck.multipleAuthors=ignore fsck
+	shit update-ref refs/heads/bogus "$new" &&
+	test_when_finished "shit update-ref -d refs/heads/bogus" &&
+	test_must_fail shit fsck &&
+	shit -c fsck.multipleAuthors=ignore fsck
 '
 
 _bz='\0'
 _bzoid=$(printf $ZERO_OID | sed -e 's/00/\\0/g')
 
 test_expect_success 'fsck notices blob entry pointing to null sha1' '
-	(git init null-blob &&
+	(shit init null-blob &&
 	 cd null-blob &&
 	 sha=$(printf "100644 file$_bz$_bzoid" |
-	       git hash-object --literally -w --stdin -t tree) &&
-	  git fsck 2>out &&
+	       shit hash-object --literally -w --stdin -t tree) &&
+	  shit fsck 2>out &&
 	  test_grep "warning.*null sha1" out
 	)
 '
 
 test_expect_success 'fsck notices submodule entry pointing to null sha1' '
-	(git init null-commit &&
+	(shit init null-commit &&
 	 cd null-commit &&
 	 sha=$(printf "160000 submodule$_bz$_bzoid" |
-	       git hash-object --literally -w --stdin -t tree) &&
-	  git fsck 2>out &&
+	       shit hash-object --literally -w --stdin -t tree) &&
+	  shit fsck 2>out &&
 	  test_grep "warning.*null sha1" out
 	)
 '
 
 test_expect_success 'fsck notices excessively large tree entry name' '
-	git init large-name &&
+	shit init large-name &&
 	(
 		cd large-name &&
 		test_commit a-long-name &&
-		git -c fsck.largePathname=warn:10 fsck 2>out &&
+		shit -c fsck.largePathname=warn:10 fsck 2>out &&
 		grep "warning.*large pathname" out
 	)
 '
@@ -604,18 +604,18 @@ while read name path pretty; do
 		: ${pretty:=$path}
 		test_expect_success "fsck notices $pretty as $type" '
 		(
-			git init $name-$type &&
+			shit init $name-$type &&
 			cd $name-$type &&
-			git config core.protectNTFS false &&
+			shit config core.protectNTFS false &&
 			echo content >file &&
-			git add file &&
-			git commit -m base &&
-			blob=$(git rev-parse :file) &&
-			tree=$(git rev-parse HEAD^{tree}) &&
+			shit add file &&
+			shit commit -m base &&
+			blob=$(shit rev-parse :file) &&
+			tree=$(shit rev-parse HEAD^{tree}) &&
 			value=$(eval "echo \$$type") &&
 			printf "$mode $type %s\t%s" "$value" "$path" >bad &&
-			bad_tree=$(git mktree <bad) &&
-			git fsck 2>out &&
+			bad_tree=$(shit mktree <bad) &&
+			shit fsck 2>out &&
 			test_grep "warning.*tree $bad_tree" out
 		)'
 	done <<-\EOF
@@ -625,45 +625,45 @@ while read name path pretty; do
 done <<-EOF
 dot .
 dotdot ..
-dotgit .git
-dotgit-case .GIT
-dotgit-unicode .gI${u200c}T .gI{u200c}T
-dotgit-case2 .Git
-git-tilde1 git~1
-dotgitdot .git.
-dot-backslash-case .\\\\.GIT\\\\foobar
-dotgit-case-backslash .git\\\\foobar
+dotshit .shit
+dotshit-case .shit
+dotshit-unicode .gI${u200c}T .gI{u200c}T
+dotshit-case2 .shit
+shit-tilde1 shit~1
+dotshitdot .shit.
+dot-backslash-case .\\\\.shit\\\\foobar
+dotshit-case-backslash .shit\\\\foobar
 EOF
 
 test_expect_success 'fsck allows .Ňit' '
 	(
-		git init not-dotgit &&
-		cd not-dotgit &&
+		shit init not-dotshit &&
+		cd not-dotshit &&
 		echo content >file &&
-		git add file &&
-		git commit -m base &&
-		blob=$(git rev-parse :file) &&
+		shit add file &&
+		shit commit -m base &&
+		blob=$(shit rev-parse :file) &&
 		printf "100644 blob $blob\t.\\305\\207it" >tree &&
-		tree=$(git mktree <tree) &&
-		git fsck 2>err &&
+		tree=$(shit mktree <tree) &&
+		shit fsck 2>err &&
 		test_line_count = 0 err
 	)
 '
 
 test_expect_success 'NUL in commit' '
 	rm -fr nul-in-commit &&
-	git init nul-in-commit &&
+	shit init nul-in-commit &&
 	(
 		cd nul-in-commit &&
-		git commit --allow-empty -m "initial commitQNUL after message" &&
-		git cat-file commit HEAD >original &&
+		shit commit --allow-empty -m "initial commitQNUL after message" &&
+		shit cat-file commit HEAD >original &&
 		q_to_nul <original >munged &&
-		git hash-object --literally -w -t commit --stdin <munged >name &&
-		git branch bad $(cat name) &&
+		shit hash-object --literally -w -t commit --stdin <munged >name &&
+		shit branch bad $(cat name) &&
 
-		test_must_fail git -c fsck.nulInCommit=error fsck 2>warn.1 &&
+		test_must_fail shit -c fsck.nulInCommit=error fsck 2>warn.1 &&
 		test_grep nulInCommit warn.1 &&
-		git fsck 2>warn.2 &&
+		shit fsck 2>warn.2 &&
 		test_grep nulInCommit warn.2
 	)
 '
@@ -673,184 +673,184 @@ test_expect_success 'NUL in commit' '
 # in the new repository).
 create_repo_missing () {
 	rm -rf missing &&
-	git init missing &&
+	shit init missing &&
 	(
 		cd missing &&
-		git commit -m one --allow-empty &&
+		shit commit -m one --allow-empty &&
 		mkdir subdir &&
 		echo content >subdir/file &&
-		git add subdir/file &&
-		git commit -m two &&
-		unrelated=$(echo unrelated | git hash-object --stdin -w) &&
-		git tag -m foo tag $unrelated &&
-		sha1=$(git rev-parse --verify "$1") &&
+		shit add subdir/file &&
+		shit commit -m two &&
+		unrelated=$(echo unrelated | shit hash-object --stdin -w) &&
+		shit tag -m foo tag $unrelated &&
+		sha1=$(shit rev-parse --verify "$1") &&
 		path=$(echo $sha1 | sed 's|..|&/|') &&
-		rm .git/objects/$path
+		rm .shit/objects/$path
 	)
 }
 
 test_expect_success 'fsck notices missing blob' '
 	create_repo_missing HEAD:subdir/file &&
-	test_must_fail git -C missing fsck
+	test_must_fail shit -C missing fsck
 '
 
 test_expect_success 'fsck notices missing subtree' '
 	create_repo_missing HEAD:subdir &&
-	test_must_fail git -C missing fsck
+	test_must_fail shit -C missing fsck
 '
 
 test_expect_success 'fsck notices missing root tree' '
 	create_repo_missing HEAD^{tree} &&
-	test_must_fail git -C missing fsck
+	test_must_fail shit -C missing fsck
 '
 
 test_expect_success 'fsck notices missing parent' '
 	create_repo_missing HEAD^ &&
-	test_must_fail git -C missing fsck
+	test_must_fail shit -C missing fsck
 '
 
 test_expect_success 'fsck notices missing tagged object' '
 	create_repo_missing tag^{blob} &&
-	test_must_fail git -C missing fsck
+	test_must_fail shit -C missing fsck
 '
 
 test_expect_success 'fsck notices ref pointing to missing commit' '
 	create_repo_missing HEAD &&
-	test_must_fail git -C missing fsck
+	test_must_fail shit -C missing fsck
 '
 
 test_expect_success 'fsck notices ref pointing to missing tag' '
 	create_repo_missing tag &&
-	test_must_fail git -C missing fsck
+	test_must_fail shit -C missing fsck
 '
 
 test_expect_success 'fsck --connectivity-only' '
 	rm -rf connectivity-only &&
-	git init connectivity-only &&
+	shit init connectivity-only &&
 	(
 		cd connectivity-only &&
 		touch empty &&
-		git add empty &&
+		shit add empty &&
 		test_commit empty &&
 
 		# Drop the index now; we want to be sure that we
 		# recursively notice the broken objects
 		# because they are reachable from refs, not because
 		# they are in the index.
-		rm -f .git/index &&
+		rm -f .shit/index &&
 
 		# corrupt the blob, but in a way that we can still identify
 		# its type. That lets us see that --connectivity-only is
 		# not actually looking at the contents, but leaves it
 		# free to examine the type if it chooses.
-		empty=.git/objects/$(test_oid_to_path $EMPTY_BLOB) &&
-		blob=$(echo unrelated | git hash-object -w --stdin) &&
+		empty=.shit/objects/$(test_oid_to_path $EMPTY_BLOB) &&
+		blob=$(echo unrelated | shit hash-object -w --stdin) &&
 		mv -f $(sha1_file $blob) $empty &&
 
-		test_must_fail git fsck --strict &&
-		git fsck --strict --connectivity-only &&
-		tree=$(git rev-parse HEAD:) &&
+		test_must_fail shit fsck --strict &&
+		shit fsck --strict --connectivity-only &&
+		tree=$(shit rev-parse HEAD:) &&
 		suffix=${tree#??} &&
-		tree=.git/objects/${tree%$suffix}/$suffix &&
+		tree=.shit/objects/${tree%$suffix}/$suffix &&
 		rm -f $tree &&
 		echo invalid >$tree &&
-		test_must_fail git fsck --strict --connectivity-only
+		test_must_fail shit fsck --strict --connectivity-only
 	)
 '
 
 test_expect_success 'fsck --connectivity-only with explicit head' '
 	rm -rf connectivity-only &&
-	git init connectivity-only &&
+	shit init connectivity-only &&
 	(
 		cd connectivity-only &&
 		test_commit foo &&
-		rm -f .git/index &&
-		tree=$(git rev-parse HEAD^{tree}) &&
-		remove_object $(git rev-parse HEAD:foo.t) &&
-		test_must_fail git fsck --connectivity-only $tree
+		rm -f .shit/index &&
+		tree=$(shit rev-parse HEAD^{tree}) &&
+		remove_object $(shit rev-parse HEAD:foo.t) &&
+		test_must_fail shit fsck --connectivity-only $tree
 	)
 '
 
 test_expect_success 'fsck --name-objects' '
 	rm -rf name-objects &&
-	git init name-objects &&
+	shit init name-objects &&
 	(
 		cd name-objects &&
-		git config core.logAllRefUpdates false &&
+		shit config core.logAllRefUpdates false &&
 		test_commit julius caesar.t &&
 		test_commit augustus44 &&
 		test_commit caesar  &&
-		remove_object $(git rev-parse julius:caesar.t) &&
-		tree=$(git rev-parse --verify julius:) &&
-		git tag -d julius &&
-		test_must_fail git fsck --name-objects >out &&
+		remove_object $(shit rev-parse julius:caesar.t) &&
+		tree=$(shit rev-parse --verify julius:) &&
+		shit tag -d julius &&
+		test_must_fail shit fsck --name-objects >out &&
 		test_grep "$tree (refs/tags/augustus44\\^:" out
 	)
 '
 
 test_expect_success 'alternate objects are correctly blamed' '
-	test_when_finished "rm -rf alt.git .git/objects/info/alternates" &&
+	test_when_finished "rm -rf alt.shit .shit/objects/info/alternates" &&
 	name=$(test_oid numeric) &&
 	path=$(test_oid_to_path "$name") &&
-	git init --bare alt.git &&
-	echo "../../alt.git/objects" >.git/objects/info/alternates &&
-	mkdir alt.git/objects/$(dirname $path) &&
-	>alt.git/objects/$(dirname $path)/$(basename $path) &&
-	test_must_fail git fsck >out 2>&1 &&
-	test_grep alt.git out
+	shit init --bare alt.shit &&
+	echo "../../alt.shit/objects" >.shit/objects/info/alternates &&
+	mkdir alt.shit/objects/$(dirname $path) &&
+	>alt.shit/objects/$(dirname $path)/$(basename $path) &&
+	test_must_fail shit fsck >out 2>&1 &&
+	test_grep alt.shit out
 '
 
 test_expect_success 'fsck errors in packed objects' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	sed "s/</one/" basis >one &&
 	sed "s/</foo/" basis >two &&
-	one=$(git hash-object --literally -t commit -w one) &&
-	two=$(git hash-object --literally -t commit -w two) &&
+	one=$(shit hash-object --literally -t commit -w one) &&
+	two=$(shit hash-object --literally -t commit -w two) &&
 	pack=$(
 		{
 			echo $one &&
 			echo $two
-		} | git pack-objects .git/objects/pack/pack
+		} | shit pack-objects .shit/objects/pack/pack
 	) &&
-	test_when_finished "rm -f .git/objects/pack/pack-$pack.*" &&
+	test_when_finished "rm -f .shit/objects/pack/pack-$pack.*" &&
 	remove_object $one &&
 	remove_object $two &&
-	test_must_fail git fsck 2>out &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "error in commit $one.* - bad name" out &&
 	test_grep "error in commit $two.* - bad name" out &&
 	! grep corrupt out
 '
 
 test_expect_success 'fsck fails on corrupt packfile' '
-	hsh=$(git commit-tree -m mycommit HEAD^{tree}) &&
-	pack=$(echo $hsh | git pack-objects .git/objects/pack/pack) &&
+	hsh=$(shit commit-tree -m mycommit HEAD^{tree}) &&
+	pack=$(echo $hsh | shit pack-objects .shit/objects/pack/pack) &&
 
 	# Corrupt the first byte of the first object. (It contains 3 type bits,
 	# at least one of which is not zero, so setting the first byte to 0 is
 	# sufficient.)
-	chmod a+w .git/objects/pack/pack-$pack.pack &&
-	printf "\0" | dd of=.git/objects/pack/pack-$pack.pack bs=1 conv=notrunc seek=12 &&
+	chmod a+w .shit/objects/pack/pack-$pack.pack &&
+	printf "\0" | dd of=.shit/objects/pack/pack-$pack.pack bs=1 conv=notrunc seek=12 &&
 
-	test_when_finished "rm -f .git/objects/pack/pack-$pack.*" &&
+	test_when_finished "rm -f .shit/objects/pack/pack-$pack.*" &&
 	remove_object $hsh &&
-	test_must_fail git fsck 2>out &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "checksum mismatch" out
 '
 
 test_expect_success 'fsck finds problems in duplicate loose objects' '
 	rm -rf broken-duplicate &&
-	git init broken-duplicate &&
+	shit init broken-duplicate &&
 	(
 		cd broken-duplicate &&
 		test_commit duplicate &&
 		# no "-d" here, so we end up with duplicates
-		git repack &&
+		shit repack &&
 		# now corrupt the loose copy
-		oid="$(git rev-parse HEAD)" &&
+		oid="$(shit rev-parse HEAD)" &&
 		file=$(sha1_file "$oid") &&
 		rm "$file" &&
 		echo broken >"$file" &&
-		test_must_fail git fsck 2>err &&
+		test_must_fail shit fsck 2>err &&
 
 		cat >expect <<-EOF &&
 		error: inflate: data stream error (incorrect header check)
@@ -863,24 +863,24 @@ test_expect_success 'fsck finds problems in duplicate loose objects' '
 '
 
 test_expect_success 'fsck detects trailing loose garbage (commit)' '
-	git cat-file commit HEAD >basis &&
+	shit cat-file commit HEAD >basis &&
 	echo bump-commit-sha1 >>basis &&
-	commit=$(git hash-object -w -t commit basis) &&
+	commit=$(shit hash-object -w -t commit basis) &&
 	file=$(sha1_file $commit) &&
 	test_when_finished "remove_object $commit" &&
 	chmod +w "$file" &&
 	echo garbage >>"$file" &&
-	test_must_fail git fsck 2>out &&
+	test_must_fail shit fsck 2>out &&
 	test_grep "garbage.*$commit" out
 '
 
 test_expect_success 'fsck detects trailing loose garbage (large blob)' '
-	blob=$(echo trailing | git hash-object -w --stdin) &&
+	blob=$(echo trailing | shit hash-object -w --stdin) &&
 	file=$(sha1_file $blob) &&
 	test_when_finished "remove_object $blob" &&
 	chmod +w "$file" &&
 	echo garbage >>"$file" &&
-	test_must_fail git -c core.bigfilethreshold=5 fsck 2>out &&
+	test_must_fail shit -c core.bigfilethreshold=5 fsck 2>out &&
 	test_grep "garbage.*$blob" out
 '
 
@@ -888,7 +888,7 @@ test_expect_success 'fsck detects truncated loose object' '
 	# make it big enough that we know we will truncate in the data
 	# portion, not the header
 	test-tool genrandom truncate 4096 >file &&
-	blob=$(git hash-object -w file) &&
+	blob=$(shit hash-object -w file) &&
 	file=$(sha1_file $blob) &&
 	test_when_finished "remove_object $blob" &&
 	test_copy_bytes 1024 <"$file" >tmp &&
@@ -896,10 +896,10 @@ test_expect_success 'fsck detects truncated loose object' '
 	mv -f tmp "$file" &&
 
 	# check both regular and streaming code paths
-	test_must_fail git fsck 2>out &&
+	test_must_fail shit fsck 2>out &&
 	test_grep corrupt.*$blob out &&
 
-	test_must_fail git -c core.bigfilethreshold=128 fsck 2>out &&
+	test_must_fail shit -c core.bigfilethreshold=128 fsck 2>out &&
 	test_grep corrupt.*$blob out
 '
 
@@ -907,15 +907,15 @@ test_expect_success 'fsck detects truncated loose object' '
 # (and so while unreachable, not dangling), and another variant which really is
 # dangling.
 test_expect_success 'create dangling-object repository' '
-	git init dangling &&
+	shit init dangling &&
 	(
 		cd dangling &&
-		blob=$(echo not-dangling | git hash-object -w --stdin) &&
-		dblob=$(echo dangling | git hash-object -w --stdin) &&
-		tree=$(printf "100644 blob %s\t%s\n" $blob one | git mktree) &&
-		dtree=$(printf "100644 blob %s\t%s\n" $blob two | git mktree) &&
-		commit=$(git commit-tree $tree) &&
-		dcommit=$(git commit-tree -p $commit $tree) &&
+		blob=$(echo not-dangling | shit hash-object -w --stdin) &&
+		dblob=$(echo dangling | shit hash-object -w --stdin) &&
+		tree=$(printf "100644 blob %s\t%s\n" $blob one | shit mktree) &&
+		dtree=$(printf "100644 blob %s\t%s\n" $blob two | shit mktree) &&
+		commit=$(shit commit-tree $tree) &&
+		dcommit=$(shit commit-tree -p $commit $tree) &&
 
 		cat >expect <<-EOF
 		dangling blob $dblob
@@ -928,7 +928,7 @@ test_expect_success 'create dangling-object repository' '
 test_expect_success 'fsck notices dangling objects' '
 	(
 		cd dangling &&
-		git fsck >actual &&
+		shit fsck >actual &&
 		# the output order is non-deterministic, as it comes from a hash
 		sort <actual >actual.sorted &&
 		test_cmp expect actual.sorted
@@ -938,7 +938,7 @@ test_expect_success 'fsck notices dangling objects' '
 test_expect_success 'fsck --connectivity-only notices dangling objects' '
 	(
 		cd dangling &&
-		git fsck --connectivity-only >actual &&
+		shit fsck --connectivity-only >actual &&
 		# the output order is non-deterministic, as it comes from a hash
 		sort <actual >actual.sorted &&
 		test_cmp expect actual.sorted
@@ -946,18 +946,18 @@ test_expect_success 'fsck --connectivity-only notices dangling objects' '
 '
 
 test_expect_success 'fsck $name notices bogus $name' '
-	test_must_fail git fsck bogus &&
-	test_must_fail git fsck $ZERO_OID
+	test_must_fail shit fsck bogus &&
+	test_must_fail shit fsck $ZERO_OID
 '
 
 test_expect_success 'bogus head does not fallback to all heads' '
 	# set up a case that will cause a reachability complaint
 	echo to-be-deleted >foo &&
-	git add foo &&
-	blob=$(git rev-parse :foo) &&
-	test_when_finished "git rm --cached foo" &&
+	shit add foo &&
+	blob=$(shit rev-parse :foo) &&
+	test_when_finished "shit rm --cached foo" &&
 	remove_object $blob &&
-	test_must_fail git fsck $ZERO_OID >out 2>&1 &&
+	test_must_fail shit fsck $ZERO_OID >out 2>&1 &&
 	! grep $blob out
 '
 
@@ -966,7 +966,7 @@ test_expect_success 'bogus head does not fallback to all heads' '
 corrupt_index_checksum () {
     perl -w -e '
 	use Fcntl ":seek";
-	open my $fh, "+<", ".git/index" or die "open: $!";
+	open my $fh, "+<", ".shit/index" or die "open: $!";
 	binmode $fh;
 	seek $fh, -1, SEEK_END or die "seek: $!";
 	read $fh, my $in_byte, 1 or die "read: $!";
@@ -985,75 +985,75 @@ corrupt_index_checksum () {
 # Corrupt the checksum on the index and then
 # verify that only fsck notices.
 test_expect_success 'detect corrupt index file in fsck' '
-	cp .git/index .git/index.backup &&
-	test_when_finished "mv .git/index.backup .git/index" &&
+	cp .shit/index .shit/index.backup &&
+	test_when_finished "mv .shit/index.backup .shit/index" &&
 	corrupt_index_checksum &&
-	test_must_fail git fsck --cache 2>errors &&
+	test_must_fail shit fsck --cache 2>errors &&
 	test_grep "bad index file" errors
 '
 
 test_expect_success 'fsck error and recovery on invalid object type' '
-	git init --bare garbage-type &&
+	shit init --bare garbage-type &&
 	(
 		cd garbage-type &&
 
-		garbage_blob=$(git hash-object --stdin -w -t garbage --literally </dev/null) &&
+		garbage_blob=$(shit hash-object --stdin -w -t garbage --literally </dev/null) &&
 
-		test_must_fail git fsck 2>err &&
+		test_must_fail shit fsck 2>err &&
 		grep -e "^error" -e "^fatal" err >errors &&
 		test_line_count = 1 errors &&
 		grep "$garbage_blob: object is of unknown type '"'"'garbage'"'"':" err
 	)
 '
 
-test_expect_success 'fsck error on gitattributes with excessive line lengths' '
-	blob=$(printf "pattern %02048d" 1 | git hash-object -w --stdin) &&
+test_expect_success 'fsck error on shitattributes with excessive line lengths' '
+	blob=$(printf "pattern %02048d" 1 | shit hash-object -w --stdin) &&
 	test_when_finished "remove_object $blob" &&
-	tree=$(printf "100644 blob %s\t%s\n" $blob .gitattributes | git mktree) &&
+	tree=$(printf "100644 blob %s\t%s\n" $blob .shitattributes | shit mktree) &&
 	test_when_finished "remove_object $tree" &&
 	cat >expected <<-EOF &&
-	error in blob $blob: gitattributesLineLength: .gitattributes has too long lines to parse
+	error in blob $blob: shitattributesLineLength: .shitattributes has too long lines to parse
 	EOF
-	test_must_fail git fsck --no-dangling >actual 2>&1 &&
+	test_must_fail shit fsck --no-dangling >actual 2>&1 &&
 	test_cmp expected actual
 '
 
-test_expect_success 'fsck error on gitattributes with excessive size' '
-	blob=$(test-tool genzeros $((100 * 1024 * 1024 + 1)) | git hash-object -w --stdin) &&
+test_expect_success 'fsck error on shitattributes with excessive size' '
+	blob=$(test-tool genzeros $((100 * 1024 * 1024 + 1)) | shit hash-object -w --stdin) &&
 	test_when_finished "remove_object $blob" &&
-	tree=$(printf "100644 blob %s\t%s\n" $blob .gitattributes | git mktree) &&
+	tree=$(printf "100644 blob %s\t%s\n" $blob .shitattributes | shit mktree) &&
 	test_when_finished "remove_object $tree" &&
 	cat >expected <<-EOF &&
-	error in blob $blob: gitattributesLarge: .gitattributes too large to parse
+	error in blob $blob: shitattributesLarge: .shitattributes too large to parse
 	EOF
-	test_must_fail git fsck --no-dangling >actual 2>&1 &&
+	test_must_fail shit fsck --no-dangling >actual 2>&1 &&
 	test_cmp expected actual
 '
 
 test_expect_success 'fsck detects problems in worktree index' '
-	test_when_finished "git worktree remove -f wt" &&
-	git worktree add wt &&
+	test_when_finished "shit worktree remove -f wt" &&
+	shit worktree add wt &&
 
 	echo "this will be removed to break the worktree index" >wt/file &&
-	git -C wt add file &&
-	blob=$(git -C wt rev-parse :file) &&
+	shit -C wt add file &&
+	blob=$(shit -C wt rev-parse :file) &&
 	remove_object $blob &&
 
-	test_must_fail git fsck --name-objects >actual 2>&1 &&
+	test_must_fail shit fsck --name-objects >actual 2>&1 &&
 	cat >expect <<-EOF &&
-	missing blob $blob (.git/worktrees/wt/index:file)
+	missing blob $blob (.shit/worktrees/wt/index:file)
 	EOF
 	test_cmp expect actual
 '
 
 test_expect_success 'fsck reports problems in current worktree index without filename' '
-	test_when_finished "rm -f .git/index && git read-tree HEAD" &&
+	test_when_finished "rm -f .shit/index && shit read-tree HEAD" &&
 	echo "this object will be removed to break current worktree index" >file &&
-	git add file &&
-	blob=$(git rev-parse :file) &&
+	shit add file &&
+	blob=$(shit rev-parse :file) &&
 	remove_object $blob &&
 
-	test_must_fail git fsck --name-objects >actual 2>&1 &&
+	test_must_fail shit fsck --name-objects >actual 2>&1 &&
 	cat >expect <<-EOF &&
 	missing blob $blob (:file)
 	EOF
@@ -1061,38 +1061,38 @@ test_expect_success 'fsck reports problems in current worktree index without fil
 '
 
 test_expect_success 'fsck warning on symlink target with excessive length' '
-	symlink_target=$(printf "pattern %032769d" 1 | git hash-object -w --stdin) &&
+	symlink_target=$(printf "pattern %032769d" 1 | shit hash-object -w --stdin) &&
 	test_when_finished "remove_object $symlink_target" &&
-	tree=$(printf "120000 blob %s\t%s\n" $symlink_target symlink | git mktree) &&
+	tree=$(printf "120000 blob %s\t%s\n" $symlink_target symlink | shit mktree) &&
 	test_when_finished "remove_object $tree" &&
 	cat >expected <<-EOF &&
 	warning in blob $symlink_target: symlinkTargetLength: symlink target too long
 	EOF
-	git fsck --no-dangling >actual 2>&1 &&
+	shit fsck --no-dangling >actual 2>&1 &&
 	test_cmp expected actual
 '
 
-test_expect_success 'fsck warning on symlink target pointing inside git dir' '
-	gitdir=$(printf ".git" | git hash-object -w --stdin) &&
-	ntfs_gitdir=$(printf "GIT~1" | git hash-object -w --stdin) &&
-	hfs_gitdir=$(printf ".${u200c}git" | git hash-object -w --stdin) &&
-	inside_gitdir=$(printf "nested/.git/config" | git hash-object -w --stdin) &&
-	benign_target=$(printf "legit/config" | git hash-object -w --stdin) &&
+test_expect_success 'fsck warning on symlink target pointing inside shit dir' '
+	shitdir=$(printf ".shit" | shit hash-object -w --stdin) &&
+	ntfs_shitdir=$(printf "shit~1" | shit hash-object -w --stdin) &&
+	hfs_shitdir=$(printf ".${u200c}shit" | shit hash-object -w --stdin) &&
+	inside_shitdir=$(printf "nested/.shit/config" | shit hash-object -w --stdin) &&
+	benign_target=$(printf "leshit/config" | shit hash-object -w --stdin) &&
 	tree=$(printf "120000 blob %s\t%s\n" \
 		$benign_target benign_target \
-		$gitdir gitdir \
-		$hfs_gitdir hfs_gitdir \
-		$inside_gitdir inside_gitdir \
-		$ntfs_gitdir ntfs_gitdir |
-		git mktree) &&
-	for o in $gitdir $ntfs_gitdir $hfs_gitdir $inside_gitdir $benign_target $tree
+		$shitdir shitdir \
+		$hfs_shitdir hfs_shitdir \
+		$inside_shitdir inside_shitdir \
+		$ntfs_shitdir ntfs_shitdir |
+		shit mktree) &&
+	for o in $shitdir $ntfs_shitdir $hfs_shitdir $inside_shitdir $benign_target $tree
 	do
 		test_when_finished "remove_object $o" || return 1
 	done &&
-	printf "warning in blob %s: symlinkPointsToGitDir: symlink target points to git dir\n" \
-		$gitdir $hfs_gitdir $inside_gitdir $ntfs_gitdir |
+	printf "warning in blob %s: symlinkPointsToshitDir: symlink target points to shit dir\n" \
+		$shitdir $hfs_shitdir $inside_shitdir $ntfs_shitdir |
 	sort >expected &&
-	git fsck --no-dangling >actual 2>&1 &&
+	shit fsck --no-dangling >actual 2>&1 &&
 	sort actual >actual.sorted &&
 	test_cmp expected actual.sorted
 '

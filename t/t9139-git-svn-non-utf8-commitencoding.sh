@@ -2,10 +2,10 @@
 #
 # Copyright (c) 2009 Eric Wong
 
-test_description='git svn refuses to dcommit non-UTF8 messages'
+test_description='shit svn refuses to dcommit non-UTF8 messages'
 
 TEST_FAILS_SANITIZE_LEAK=true
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 # ISO-2022-JP can pass for valid UTF-8, so skipping that in this test
 
@@ -14,21 +14,21 @@ do
 	test_expect_success "$H setup" '
 		mkdir $H &&
 		svn_cmd import -m "$H test" $H "$svnrepo"/$H &&
-		git svn clone "$svnrepo"/$H $H
+		shit svn clone "$svnrepo"/$H $H
 	'
 done
 
 for H in ISO8859-1 eucJP
 do
-	test_expect_success "$H commit on git side" '
+	test_expect_success "$H commit on shit side" '
 	(
 		cd $H &&
-		git config i18n.commitencoding $H &&
-		git checkout -b t refs/remotes/git-svn &&
+		shit config i18n.commitencoding $H &&
+		shit checkout -b t refs/remotes/shit-svn &&
 		echo $H >F &&
-		git add F &&
-		git commit -a -F "$TEST_DIRECTORY"/t3900/$H.txt &&
-		E=$(git cat-file commit HEAD | sed -ne "s/^encoding //p") &&
+		shit add F &&
+		shit commit -a -F "$TEST_DIRECTORY"/t3900/$H.txt &&
+		E=$(shit cat-file commit HEAD | sed -ne "s/^encoding //p") &&
 		test "z$E" = "z$H"
 	)
 	'
@@ -39,8 +39,8 @@ do
 	test_expect_success "$H dcommit to svn" '
 	(
 		cd $H &&
-		git config --unset i18n.commitencoding &&
-		test_must_fail git svn dcommit
+		shit config --unset i18n.commitencoding &&
+		test_must_fail shit svn dcommit
 	)
 	'
 done

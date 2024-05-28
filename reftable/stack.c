@@ -61,7 +61,7 @@ int reftable_new_stack(struct reftable_stack **dest, const char *dir,
 	int err = 0;
 
 	if (config.hash_id == 0) {
-		config.hash_id = GIT_SHA1_FORMAT_ID;
+		config.hash_id = shit_SHA1_FORMAT_ID;
 	}
 
 	*dest = NULL;
@@ -542,7 +542,7 @@ int reftable_stack_add(struct reftable_stack *st,
 static void format_name(struct strbuf *dest, uint64_t min, uint64_t max)
 {
 	char buf[100];
-	uint32_t rnd = (uint32_t)git_rand();
+	uint32_t rnd = (uint32_t)shit_rand();
 	snprintf(buf, sizeof(buf), "0x%012" PRIx64 "-0x%012" PRIx64 "-%08x",
 		 min, max, rnd);
 	strbuf_reset(dest);
@@ -1286,7 +1286,7 @@ static uint64_t *stack_table_sizes_for_compaction(struct reftable_stack *st)
 {
 	uint64_t *sizes =
 		reftable_calloc(st->merged->stack_len, sizeof(*sizes));
-	int version = (st->config.hash_id == GIT_SHA1_FORMAT_ID) ? 1 : 2;
+	int version = (st->config.hash_id == shit_SHA1_FORMAT_ID) ? 1 : 2;
 	int overhead = header_size(version) - 1;
 	int i = 0;
 	for (i = 0; i < st->merged->stack_len; i++) {

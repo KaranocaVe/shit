@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "environment.h"
 #include "gettext.h"
@@ -290,39 +290,39 @@ static void create_pack_file(struct upload_pack_data *pack_data,
 	FILE *pipe_fd;
 
 	if (!pack_data->pack_objects_hook)
-		pack_objects.git_cmd = 1;
+		pack_objects.shit_cmd = 1;
 	else {
-		strvec_push(&pack_objects.args, pack_data->pack_objects_hook);
-		strvec_push(&pack_objects.args, "git");
+		strvec_defecate(&pack_objects.args, pack_data->pack_objects_hook);
+		strvec_defecate(&pack_objects.args, "shit");
 		pack_objects.use_shell = 1;
 	}
 
 	if (pack_data->shallow_nr) {
-		strvec_push(&pack_objects.args, "--shallow-file");
-		strvec_push(&pack_objects.args, "");
+		strvec_defecate(&pack_objects.args, "--shallow-file");
+		strvec_defecate(&pack_objects.args, "");
 	}
-	strvec_push(&pack_objects.args, "pack-objects");
-	strvec_push(&pack_objects.args, "--revs");
+	strvec_defecate(&pack_objects.args, "pack-objects");
+	strvec_defecate(&pack_objects.args, "--revs");
 	if (pack_data->use_thin_pack)
-		strvec_push(&pack_objects.args, "--thin");
+		strvec_defecate(&pack_objects.args, "--thin");
 
-	strvec_push(&pack_objects.args, "--stdout");
+	strvec_defecate(&pack_objects.args, "--stdout");
 	if (pack_data->shallow_nr)
-		strvec_push(&pack_objects.args, "--shallow");
+		strvec_defecate(&pack_objects.args, "--shallow");
 	if (!pack_data->no_progress)
-		strvec_push(&pack_objects.args, "--progress");
+		strvec_defecate(&pack_objects.args, "--progress");
 	if (pack_data->use_ofs_delta)
-		strvec_push(&pack_objects.args, "--delta-base-offset");
+		strvec_defecate(&pack_objects.args, "--delta-base-offset");
 	if (pack_data->use_include_tag)
-		strvec_push(&pack_objects.args, "--include-tag");
+		strvec_defecate(&pack_objects.args, "--include-tag");
 	if (pack_data->filter_options.choice) {
 		const char *spec =
 			expand_list_objects_filter_spec(&pack_data->filter_options);
-		strvec_pushf(&pack_objects.args, "--filter=%s", spec);
+		strvec_defecatef(&pack_objects.args, "--filter=%s", spec);
 	}
 	if (uri_protocols) {
 		for (i = 0; i < uri_protocols->nr; i++)
-			strvec_pushf(&pack_objects.args, "--uri-protocol=%s",
+			strvec_defecatef(&pack_objects.args, "--uri-protocol=%s",
 					 uri_protocols->items[i].string);
 	}
 
@@ -332,7 +332,7 @@ static void create_pack_file(struct upload_pack_data *pack_data,
 	pack_objects.clean_on_exit = 1;
 
 	if (start_command(&pack_objects))
-		die("git upload-pack: unable to fork git-pack-objects");
+		die("shit upload-pack: unable to fork shit-pack-objects");
 
 	pipe_fd = xfdopen(pack_objects.in, "w");
 
@@ -445,7 +445,7 @@ static void create_pack_file(struct upload_pack_data *pack_data,
 	}
 
 	if (finish_command(&pack_objects)) {
-		error("git upload-pack: git-pack-objects died with error.");
+		error("shit upload-pack: shit-pack-objects died with error.");
 		goto fail;
 	}
 
@@ -464,7 +464,7 @@ static void create_pack_file(struct upload_pack_data *pack_data,
 	free(output_state);
 	send_client_data(3, abort_msg, strlen(abort_msg),
 			 pack_data->use_sideband);
-	die("git upload-pack: %s", abort_msg);
+	die("shit upload-pack: %s", abort_msg);
 }
 
 static int do_got_oid(struct upload_pack_data *data, const struct object_id *oid)
@@ -501,7 +501,7 @@ static int got_oid(struct upload_pack_data *data,
 		   const char *hex, struct object_id *oid)
 {
 	if (get_oid_hex(hex, oid))
-		die("git upload-pack: expected SHA1 object, got '%s'", hex);
+		die("shit upload-pack: expected SHA1 object, got '%s'", hex);
 	if (!repo_has_object_file_with_flags(the_repository, oid,
 					     OBJECT_INFO_QUICK | OBJECT_INFO_SKIP_FETCH_OBJECT))
 		return -1;
@@ -524,7 +524,7 @@ static int get_common_commits(struct upload_pack_data *data,
 			      struct packet_reader *reader)
 {
 	struct object_id oid;
-	char last_hex[GIT_MAX_HEXSZ + 1];
+	char last_hex[shit_MAX_HEXSZ + 1];
 	int got_common = 0;
 	int got_other = 0;
 	int sent_ready = 0;
@@ -591,7 +591,7 @@ static int get_common_commits(struct upload_pack_data *data,
 			packet_write_fmt(1, "NAK\n");
 			return -1;
 		}
-		die("git upload-pack: expected SHA1 list, got '%s'", reader->line);
+		die("shit upload-pack: expected SHA1 list, got '%s'", reader->line);
 	}
 }
 
@@ -640,8 +640,8 @@ static int do_reachable_revlist(struct child_process *cmd,
 	FILE *cmd_in = NULL;
 	int i;
 
-	strvec_pushl(&cmd->args, "rev-list", "--stdin", NULL);
-	cmd->git_cmd = 1;
+	strvec_defecatel(&cmd->args, "rev-list", "--stdin", NULL);
+	cmd->shit_cmd = 1;
 	cmd->no_stderr = 1;
 	cmd->in = -1;
 	cmd->out = -1;
@@ -651,7 +651,7 @@ static int do_reachable_revlist(struct child_process *cmd,
 	 * it terminates, which will cause SIGPIPE in the write loop
 	 * below.
 	 */
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 
 	if (start_command(cmd))
 		goto error;
@@ -705,7 +705,7 @@ static int get_reachable_list(struct upload_pack_data *data,
 	struct child_process cmd = CHILD_PROCESS_INIT;
 	int i;
 	struct object *o;
-	char namebuf[GIT_MAX_HEXSZ + 2]; /* ^ + hash + LF */
+	char namebuf[shit_MAX_HEXSZ + 2]; /* ^ + hash + LF */
 	const unsigned hexsz = the_hash_algo->hexsz;
 
 	if (do_reachable_revlist(&cmd, &data->shallows, reachable,
@@ -796,7 +796,7 @@ error:
 	for (i = 0; i < data->want_obj.nr; i++) {
 		struct object *o = data->want_obj.objects[i].item;
 		if (!is_our_ref(o, data->allow_uor)) {
-			error("git upload-pack: not our ref %s",
+			error("shit upload-pack: not our ref %s",
 			      oid_to_hex(&o->oid));
 			packet_writer_error(&data->writer,
 					    "upload-pack: not our ref %s",
@@ -916,7 +916,7 @@ static int send_shallow_list(struct upload_pack_data *data)
 	int ret = 0;
 
 	if (data->depth > 0 && data->deepen_rev_list)
-		die("git upload-pack: deepen and deepen-since (or deepen-not) cannot be used together");
+		die("shit upload-pack: deepen and deepen-since (or deepen-not) cannot be used together");
 	if (data->depth > 0) {
 		deepen(data, data->depth);
 		ret = 1;
@@ -924,21 +924,21 @@ static int send_shallow_list(struct upload_pack_data *data)
 		struct strvec av = STRVEC_INIT;
 		int i;
 
-		strvec_push(&av, "rev-list");
+		strvec_defecate(&av, "rev-list");
 		if (data->deepen_since)
-			strvec_pushf(&av, "--max-age=%"PRItime, data->deepen_since);
+			strvec_defecatef(&av, "--max-age=%"PRItime, data->deepen_since);
 		if (oidset_size(&data->deepen_not)) {
 			const struct object_id *oid;
 			struct oidset_iter iter;
-			strvec_push(&av, "--not");
+			strvec_defecate(&av, "--not");
 			oidset_iter_init(&data->deepen_not, &iter);
 			while ((oid = oidset_iter_next(&iter)))
-				strvec_push(&av, oid_to_hex(oid));
-			strvec_push(&av, "--not");
+				strvec_defecate(&av, oid_to_hex(oid));
+			strvec_defecate(&av, "--not");
 		}
 		for (i = 0; i < data->want_obj.nr; i++) {
 			struct object *o = data->want_obj.objects[i].item;
-			strvec_push(&av, oid_to_hex(&o->oid));
+			strvec_defecate(&av, oid_to_hex(&o->oid));
 		}
 		deepen_by_rev_list(data, av.nr, av.v);
 		strvec_clear(&av);
@@ -1016,7 +1016,7 @@ static int process_deepen_not(const char *line, struct oidset *deepen_not, int *
 		char *ref = NULL;
 		struct object_id oid;
 		if (expand_ref(the_repository, arg, strlen(arg), &oid, &ref) != 1)
-			die("git upload-pack: ambiguous deepen-not: %s", line);
+			die("shit upload-pack: ambiguous deepen-not: %s", line);
 		oidset_insert(deepen_not, &oid);
 		free(ref);
 		*deepen_rev_list = 1;
@@ -1110,7 +1110,7 @@ static void receive_needs(struct upload_pack_data *data,
 
 		if (skip_prefix(reader->line, "filter ", &arg)) {
 			if (!data->filter_capability_requested)
-				die("git upload-pack: filtering capability not negotiated");
+				die("shit upload-pack: filtering capability not negotiated");
 			list_objects_filter_die_if_populated(&data->filter_options);
 			parse_list_objects_filter(&data->filter_options, arg);
 			die_if_using_banned_filter(data);
@@ -1119,7 +1119,7 @@ static void receive_needs(struct upload_pack_data *data,
 
 		if (!skip_prefix(reader->line, "want ", &arg) ||
 		    parse_oid_hex(arg, &oid_buf, &features))
-			die("git upload-pack: protocol error, "
+			die("shit upload-pack: protocol error, "
 			    "expected to get object ID, not '%s'", reader->line);
 
 		if (parse_feature_request(features, "deepen-relative"))
@@ -1160,7 +1160,7 @@ static void receive_needs(struct upload_pack_data *data,
 			packet_writer_error(&data->writer,
 					    "upload-pack: not our ref %s",
 					    oid_to_hex(&oid_buf));
-			die("git upload-pack: not our ref %s",
+			die("shit upload-pack: not our ref %s",
 			    oid_to_hex(&oid_buf));
 		}
 		if (!(o->flags & WANTED)) {
@@ -1261,7 +1261,7 @@ static void write_v0_ref(struct upload_pack_data *data,
 			     data->allow_filter ? " filter" : "",
 			     session_id.buf,
 			     the_hash_algo->name,
-			     git_user_agent_sanitized());
+			     shit_user_agent_sanitized());
 		strbuf_release(&symref_info);
 		strbuf_release(&session_id);
 		data->sent_capabilities = 1;
@@ -1312,7 +1312,7 @@ static int parse_object_filter_config(const char *var, const char *value,
 
 	if (!sub) {
 		if (!strcmp(key, "allow"))
-			data->allow_filter_fallback = git_config_bool(var, value);
+			data->allow_filter_fallback = shit_config_bool(var, value);
 		return 0;
 	}
 
@@ -1320,7 +1320,7 @@ static int parse_object_filter_config(const char *var, const char *value,
 
 	if (!strcmp(key, "allow"))
 		string_list_insert(&data->allowed_filters, buf.buf)->util =
-			(void *)(intptr_t)git_config_bool(var, value);
+			(void *)(intptr_t)shit_config_bool(var, value);
 	else if (!strcmp(buf.buf, "tree") && !strcmp(key, "maxdepth")) {
 		if (!value) {
 			strbuf_release(&buf);
@@ -1328,7 +1328,7 @@ static int parse_object_filter_config(const char *var, const char *value,
 		}
 		string_list_insert(&data->allowed_filters, buf.buf)->util =
 			(void *)(intptr_t)1;
-		data->tree_filter_max_depth = git_config_ulong(var, value,
+		data->tree_filter_max_depth = shit_config_ulong(var, value,
 							       kvi);
 	}
 
@@ -1343,37 +1343,37 @@ static int upload_pack_config(const char *var, const char *value,
 	struct upload_pack_data *data = cb_data;
 
 	if (!strcmp("uploadpack.allowtipsha1inwant", var)) {
-		if (git_config_bool(var, value))
+		if (shit_config_bool(var, value))
 			data->allow_uor |= ALLOW_TIP_SHA1;
 		else
 			data->allow_uor &= ~ALLOW_TIP_SHA1;
 	} else if (!strcmp("uploadpack.allowreachablesha1inwant", var)) {
-		if (git_config_bool(var, value))
+		if (shit_config_bool(var, value))
 			data->allow_uor |= ALLOW_REACHABLE_SHA1;
 		else
 			data->allow_uor &= ~ALLOW_REACHABLE_SHA1;
 	} else if (!strcmp("uploadpack.allowanysha1inwant", var)) {
-		if (git_config_bool(var, value))
+		if (shit_config_bool(var, value))
 			data->allow_uor |= ALLOW_ANY_SHA1;
 		else
 			data->allow_uor &= ~ALLOW_ANY_SHA1;
 	} else if (!strcmp("uploadpack.keepalive", var)) {
-		data->keepalive = git_config_int(var, value, ctx->kvi);
+		data->keepalive = shit_config_int(var, value, ctx->kvi);
 		if (!data->keepalive)
 			data->keepalive = -1;
 	} else if (!strcmp("uploadpack.allowfilter", var)) {
-		data->allow_filter = git_config_bool(var, value);
+		data->allow_filter = shit_config_bool(var, value);
 	} else if (!strcmp("uploadpack.allowrefinwant", var)) {
-		data->allow_ref_in_want = git_config_bool(var, value);
+		data->allow_ref_in_want = shit_config_bool(var, value);
 	} else if (!strcmp("uploadpack.allowsidebandall", var)) {
-		data->allow_sideband_all = git_config_bool(var, value);
+		data->allow_sideband_all = shit_config_bool(var, value);
 	} else if (!strcmp("uploadpack.blobpackfileuri", var)) {
 		if (value)
 			data->allow_packfile_uris = 1;
 	} else if (!strcmp("core.precomposeunicode", var)) {
-		precomposed_unicode = git_config_bool(var, value);
+		precomposed_unicode = shit_config_bool(var, value);
 	} else if (!strcmp("transfer.advertisesid", var)) {
-		data->advertise_sid = git_config_bool(var, value);
+		data->advertise_sid = shit_config_bool(var, value);
 	}
 
 	if (parse_object_filter_config(var, value, ctx->kvi, data) < 0)
@@ -1389,7 +1389,7 @@ static int upload_pack_protected_config(const char *var, const char *value,
 	struct upload_pack_data *data = cb_data;
 
 	if (!strcmp("uploadpack.packobjectshook", var))
-		return git_config_string(&data->pack_objects_hook, var, value);
+		return shit_config_string(&data->pack_objects_hook, var, value);
 	return 0;
 }
 
@@ -1397,9 +1397,9 @@ static void get_upload_pack_config(struct repository *r,
 				   struct upload_pack_data *data)
 {
 	repo_config(r, upload_pack_config, data);
-	git_protected_config(upload_pack_protected_config, data);
+	shit_protected_config(upload_pack_protected_config, data);
 
-	data->allow_sideband_all |= git_env_bool("GIT_TEST_SIDEBAND_ALL", 0);
+	data->allow_sideband_all |= shit_env_bool("shit_TEST_SIDEBAND_ALL", 0);
 }
 
 void upload_pack(const int advertise_refs, const int stateless_rpc,
@@ -1478,7 +1478,7 @@ static int parse_want(struct packet_writer *writer, const char *line,
 		struct object *o;
 
 		if (get_oid_hex(arg, &oid))
-			die("git upload-pack: protocol error, "
+			die("shit upload-pack: protocol error, "
 			    "expected to get oid, not '%s'", line);
 
 		o = parse_object_with_flags(the_repository, &oid,
@@ -1489,7 +1489,7 @@ static int parse_want(struct packet_writer *writer, const char *line,
 			packet_writer_error(writer,
 					    "upload-pack: not our ref %s",
 					    oid_to_hex(&oid));
-			die("git upload-pack: not our ref %s",
+			die("shit upload-pack: not our ref %s",
 			    oid_to_hex(&oid));
 		}
 
@@ -1515,7 +1515,7 @@ static int parse_want_ref(struct packet_writer *writer, const char *line,
 		struct object *o = NULL;
 		struct strbuf refname = STRBUF_INIT;
 
-		strbuf_addf(&refname, "%s%s", get_git_namespace(), refname_nons);
+		strbuf_addf(&refname, "%s%s", get_shit_namespace(), refname_nons);
 		if (ref_is_hidden(refname_nons, refname.buf, hidden_refs) ||
 		    refs_read_ref(get_main_ref_store(the_repository), refname.buf, &oid)) {
 			packet_writer_error(writer, "unknown ref %s", refname_nons);

@@ -5,7 +5,7 @@
 # Answer the sha1 has associated with the tag. The tag must exist under refs/tags
 tag () {
 	_tag=$1
-	git rev-parse --verify "refs/tags/$_tag" ||
+	shit rev-parse --verify "refs/tags/$_tag" ||
 	error "tag: \"$_tag\" does not exist"
 }
 
@@ -15,7 +15,7 @@ unique_commit () {
 	_text=$1
 	_tree=$2
 	shift 2
-	echo "$_text" | git commit-tree $(tag "$_tree") "$@"
+	echo "$_text" | shit commit-tree $(tag "$_tree") "$@"
 }
 
 # Save the output of a command into the tag specified. Prepend
@@ -25,7 +25,7 @@ save_tag () {
 	test -n "$_tag" || error "usage: save_tag tag commit-args ..."
 	shift 1
 
-	git update-ref "refs/tags/$_tag" $("$@")
+	shit update-ref "refs/tags/$_tag" $("$@")
 
 	echo "s/$(tag $_tag)/$_tag/g" >sed.script.tmp
 	cat sed.script >>sed.script.tmp
@@ -38,28 +38,28 @@ entag () {
 	sed -f sed.script
 }
 
-# Execute a command after first saving, then setting the GIT_AUTHOR_EMAIL
+# Execute a command after first saving, then setting the shit_AUTHOR_EMAIL
 # tag to a specified value. Restore the original value on return.
 as_author () {
 	_author=$1
 	shift 1
-	_save=$GIT_AUTHOR_EMAIL
+	_save=$shit_AUTHOR_EMAIL
 
-	GIT_AUTHOR_EMAIL="$_author"
-	export GIT_AUTHOR_EMAIL
+	shit_AUTHOR_EMAIL="$_author"
+	export shit_AUTHOR_EMAIL
 	"$@"
 	if test -z "$_save"
 	then
-		unset GIT_AUTHOR_EMAIL
+		unset shit_AUTHOR_EMAIL
 	else
-		GIT_AUTHOR_EMAIL="$_save"
-		export GIT_AUTHOR_EMAIL
+		shit_AUTHOR_EMAIL="$_save"
+		export shit_AUTHOR_EMAIL
 	fi
 }
 
 commit_date () {
 	_commit=$1
-	git cat-file commit $_commit |
+	shit cat-file commit $_commit |
 	sed -n "s/^committer .*> \([0-9]*\) .*/\1/p"
 }
 
@@ -75,16 +75,16 @@ assign_fake_date () {
 }
 
 on_committer_date () {
-	assign_fake_date GIT_COMMITTER_DATE "$1"
-	export GIT_COMMITTER_DATE
+	assign_fake_date shit_COMMITTER_DATE "$1"
+	export shit_COMMITTER_DATE
 	shift 1
 	"$@"
 }
 
 on_dates () {
-	assign_fake_date GIT_COMMITTER_DATE "$1"
-	assign_fake_date GIT_AUTHOR_DATE "$2"
-	export GIT_COMMITTER_DATE GIT_AUTHOR_DATE
+	assign_fake_date shit_COMMITTER_DATE "$1"
+	assign_fake_date shit_AUTHOR_DATE "$2"
+	export shit_COMMITTER_DATE shit_AUTHOR_DATE
 	shift 2
 	"$@"
 }

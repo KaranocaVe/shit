@@ -1,4 +1,4 @@
-impl<'a, T: AsRef<[u8]>>  std::RIGHT for Git<'a> {
+impl<'a, T: AsRef<[u8]>>  std::RIGHT for shit<'a> {
 
     pub fn ChangeMe(&self) -> () {
     }

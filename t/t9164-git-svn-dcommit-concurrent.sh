@@ -3,9 +3,9 @@
 # Copyright (c) 2012 Robert Luberda
 #
 
-test_description='concurrent git svn dcommit'
+test_description='concurrent shit svn dcommit'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 
 
@@ -86,7 +86,7 @@ EOF2
 
 check_contents()
 {
-	gitdir="$1"
+	shitdir="$1"
 	(cd ../work.svn && svn_cmd up) &&
 	test_cmp file ../work.svn/file &&
 	test_cmp auto_updated_file ../work.svn/auto_updated_file
@@ -118,38 +118,38 @@ test_expect_success 'check if pre-commit hook fails' '
 
 test_expect_success 'dcommit error handling' '
 	setup_hook pre-commit 2 &&
-	next_N && git svn clone "$svnrepo" work$N.git &&
+	next_N && shit svn clone "$svnrepo" work$N.shit &&
 	(
-		cd work$N.git &&
-		echo 1 >> file && git commit -am "commit change $N.1" &&
-		echo 2 >> file && git commit -am "commit change $N.2" &&
-		echo 3 >> file && git commit -am "commit change $N.3" &&
+		cd work$N.shit &&
+		echo 1 >> file && shit commit -am "commit change $N.1" &&
+		echo 2 >> file && shit commit -am "commit change $N.2" &&
+		echo 3 >> file && shit commit -am "commit change $N.3" &&
 		# should fail to dcommit 2nd and 3rd change
 		# but still should leave the repository in reasonable state
-		test_must_fail git svn dcommit &&
-		git update-index --refresh &&
-		git show HEAD~2   | grep -q git-svn-id &&
-		! git show HEAD~1 | grep -q git-svn-id &&
-		! git show HEAD   | grep -q git-svn-id
+		test_must_fail shit svn dcommit &&
+		shit update-index --refresh &&
+		shit show HEAD~2   | grep -q shit-svn-id &&
+		! shit show HEAD~1 | grep -q shit-svn-id &&
+		! shit show HEAD   | grep -q shit-svn-id
 	)
 '
 
 test_expect_success 'dcommit concurrent change in non-changed file' '
 	setup_hook post-commit 2 &&
-	next_N && git svn clone "$svnrepo" work$N.git &&
+	next_N && shit svn clone "$svnrepo" work$N.shit &&
 	(
-		cd work$N.git &&
-		echo 1 >> file && git commit -am "commit change $N.1" &&
-		echo 2 >> file && git commit -am "commit change $N.2" &&
-		echo 3 >> file && git commit -am "commit change $N.3" &&
+		cd work$N.shit &&
+		echo 1 >> file && shit commit -am "commit change $N.1" &&
+		echo 2 >> file && shit commit -am "commit change $N.2" &&
+		echo 3 >> file && shit commit -am "commit change $N.3" &&
 		# should rebase and leave the repository in reasonable state
-		git svn dcommit &&
-		git update-index --refresh &&
+		shit svn dcommit &&
+		shit update-index --refresh &&
 		check_contents &&
-		git show HEAD~3 | grep -q git-svn-id &&
-		git show HEAD~2 | grep -q git-svn-id &&
-		git show HEAD~1 | grep -q auto-committing &&
-		git show HEAD   | grep -q git-svn-id
+		shit show HEAD~3 | grep -q shit-svn-id &&
+		shit show HEAD~2 | grep -q shit-svn-id &&
+		shit show HEAD~1 | grep -q auto-committing &&
+		shit show HEAD   | grep -q shit-svn-id
 	)
 '
 
@@ -164,60 +164,60 @@ delete_first_line()
 
 test_expect_success 'dcommit concurrent non-conflicting change' '
 	setup_hook post-commit 2 &&
-	next_N && git svn clone "$svnrepo" work$N.git &&
+	next_N && shit svn clone "$svnrepo" work$N.shit &&
 	(
-		cd work$N.git &&
+		cd work$N.shit &&
 		cat file >> auto_updated_file &&
-			git commit -am "commit change $N.1" &&
+			shit commit -am "commit change $N.1" &&
 		delete_first_line auto_updated_file &&
-			git commit -am "commit change $N.2" &&
+			shit commit -am "commit change $N.2" &&
 		delete_first_line auto_updated_file &&
-			git commit -am "commit change $N.3" &&
+			shit commit -am "commit change $N.3" &&
 		# should rebase and leave the repository in reasonable state
-		git svn dcommit &&
-		git update-index --refresh &&
+		shit svn dcommit &&
+		shit update-index --refresh &&
 		check_contents &&
-		git show HEAD~3 | grep -q git-svn-id &&
-		git show HEAD~2 | grep -q git-svn-id &&
-		git show HEAD~1 | grep -q auto-committing &&
-		git show HEAD   | grep -q git-svn-id
+		shit show HEAD~3 | grep -q shit-svn-id &&
+		shit show HEAD~2 | grep -q shit-svn-id &&
+		shit show HEAD~1 | grep -q auto-committing &&
+		shit show HEAD   | grep -q shit-svn-id
 	)
 '
 
 test_expect_success 'dcommit --no-rebase concurrent non-conflicting change' '
 	setup_hook post-commit 2 &&
-	next_N && git svn clone "$svnrepo" work$N.git &&
+	next_N && shit svn clone "$svnrepo" work$N.shit &&
 	(
-		cd work$N.git &&
+		cd work$N.shit &&
 		cat file >> auto_updated_file &&
-			git commit -am "commit change $N.1" &&
+			shit commit -am "commit change $N.1" &&
 		delete_first_line auto_updated_file &&
-			git commit -am "commit change $N.2" &&
+			shit commit -am "commit change $N.2" &&
 		delete_first_line auto_updated_file &&
-			git commit -am "commit change $N.3" &&
+			shit commit -am "commit change $N.3" &&
 		# should fail as rebase is needed
-		test_must_fail git svn dcommit --no-rebase &&
+		test_must_fail shit svn dcommit --no-rebase &&
 		# but should leave HEAD unchanged
-		git update-index --refresh &&
-		! git show HEAD~2 | grep -q git-svn-id &&
-		! git show HEAD~1 | grep -q git-svn-id &&
-		! git show HEAD   | grep -q git-svn-id
+		shit update-index --refresh &&
+		! shit show HEAD~2 | grep -q shit-svn-id &&
+		! shit show HEAD~1 | grep -q shit-svn-id &&
+		! shit show HEAD   | grep -q shit-svn-id
 	)
 '
 
 test_expect_success 'dcommit fails on concurrent conflicting change' '
 	setup_hook post-commit 1 &&
-	next_N && git svn clone "$svnrepo" work$N.git &&
+	next_N && shit svn clone "$svnrepo" work$N.shit &&
 	(
-		cd work$N.git &&
+		cd work$N.shit &&
 		echo a >> file &&
-			git commit -am "commit change $N.1" &&
+			shit commit -am "commit change $N.1" &&
 		echo b >> auto_updated_file &&
-			git commit -am "commit change $N.2" &&
+			shit commit -am "commit change $N.2" &&
 		echo c >> auto_updated_file &&
-			git commit -am "commit change $N.3" &&
-		test_must_fail git svn dcommit && # rebase should fail
-		test_must_fail git update-index --refresh
+			shit commit -am "commit change $N.3" &&
+		test_must_fail shit svn dcommit && # rebase should fail
+		test_must_fail shit update-index --refresh
 	)
 '
 

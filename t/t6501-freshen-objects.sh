@@ -19,14 +19,14 @@
 #      works-in-progress. Most workflows would mention
 #      referenced objects in the index, which prune takes
 #      into account. However, many operations don't. For
-#      example, a partial commit with "git commit foo"
+#      example, a partial commit with "shit commit foo"
 #      will use a temporary index. Or they may not need
 #      an index at all (e.g., creating a new commit
 #      to refer to an existing tree).
 
 test_description='check pruning of dependent objects'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -35,12 +35,12 @@ TEST_PASSES_SANITIZE_LEAK=true
 # the normal test_commit, which creates extra tags.
 add () {
 	echo "$1" >"$1" &&
-	git add "$1"
+	shit add "$1"
 }
 commit () {
 	test_tick &&
 	add "$1" &&
-	git commit -m "$1"
+	shit commit -m "$1"
 }
 
 maybe_repack () {
@@ -49,10 +49,10 @@ maybe_repack () {
 		: skip repack
 		;;
 	repack)
-		git repack -ad
+		shit repack -ad
 		;;
 	bitmap)
-		git repack -adb
+		shit repack -adb
 		;;
 	*)
 		echo >&2 "unknown test type in maybe_repack"
@@ -64,13 +64,13 @@ maybe_repack () {
 for title in loose repack bitmap
 do
 	test_expect_success "make repo completely empty ($title)" '
-		rm -rf .git &&
-		git init
+		rm -rf .shit &&
+		shit init
 	'
 
 	test_expect_success "disable reflogs ($title)" '
-		git config core.logallrefupdates false &&
-		git reflog expire --expire=all --all
+		shit config core.logallrefupdates false &&
+		shit reflog expire --expire=all --all
 	'
 
 	test_expect_success "setup basic history ($title)" '
@@ -78,66 +78,66 @@ do
 	'
 
 	test_expect_success "create and abandon some objects ($title)" '
-		git checkout -b experiment &&
+		shit checkout -b experiment &&
 		commit abandon &&
 		maybe_repack &&
-		git checkout main &&
-		git branch -D experiment
+		shit checkout main &&
+		shit branch -D experiment
 	'
 
 	test_expect_success "simulate time passing ($title)" '
-		test-tool chmtime --get -86400 $(find .git/objects -type f)
+		test-tool chmtime --get -86400 $(find .shit/objects -type f)
 	'
 
 	test_expect_success "start writing new commit with old blob ($title)" '
 		tree=$(
-			GIT_INDEX_FILE=index.tmp &&
-			export GIT_INDEX_FILE &&
-			git read-tree HEAD &&
+			shit_INDEX_FILE=index.tmp &&
+			export shit_INDEX_FILE &&
+			shit read-tree HEAD &&
 			add unrelated &&
 			add abandon &&
-			git write-tree
+			shit write-tree
 		)
 	'
 
 	test_expect_success "simultaneous gc ($title)" '
-		git gc --no-cruft --prune=12.hours.ago
+		shit gc --no-cruft --prune=12.hours.ago
 	'
 
 	test_expect_success "finish writing out commit ($title)" '
-		commit=$(echo foo | git commit-tree -p HEAD $tree) &&
-		git update-ref HEAD $commit
+		commit=$(echo foo | shit commit-tree -p HEAD $tree) &&
+		shit update-ref HEAD $commit
 	'
 
 	# "abandon" blob should have been rescued by reference from new tree
 	test_expect_success "repository passes fsck ($title)" '
-		git fsck
+		shit fsck
 	'
 
 	test_expect_success "abandon objects again ($title)" '
-		git reset --hard HEAD^ &&
-		test-tool chmtime --get -86400 $(find .git/objects -type f)
+		shit reset --hard HEAD^ &&
+		test-tool chmtime --get -86400 $(find .shit/objects -type f)
 	'
 
 	test_expect_success "start writing new commit with same tree ($title)" '
 		tree=$(
-			GIT_INDEX_FILE=index.tmp &&
-			export GIT_INDEX_FILE &&
-			git read-tree HEAD &&
+			shit_INDEX_FILE=index.tmp &&
+			export shit_INDEX_FILE &&
+			shit read-tree HEAD &&
 			add abandon &&
 			add unrelated &&
-			git write-tree
+			shit write-tree
 		)
 	'
 
 	test_expect_success "simultaneous gc ($title)" '
-		git gc --no-cruft --prune=12.hours.ago
+		shit gc --no-cruft --prune=12.hours.ago
 	'
 
 	# tree should have been refreshed by write-tree
 	test_expect_success "finish writing out commit ($title)" '
-		commit=$(echo foo | git commit-tree -p HEAD $tree) &&
-		git update-ref HEAD $commit
+		commit=$(echo foo | shit commit-tree -p HEAD $tree) &&
+		shit update-ref HEAD $commit
 	'
 done
 
@@ -150,9 +150,9 @@ test_expect_success 'do not complain about existing broken links (commit)' '
 
 	some message
 	EOF
-	commit=$(git hash-object -t commit -w broken-commit) &&
-	git gc --no-cruft -q 2>stderr &&
-	git cat-file -e $commit &&
+	commit=$(shit hash-object -t commit -w broken-commit) &&
+	shit gc --no-cruft -q 2>stderr &&
+	shit cat-file -e $commit &&
 	test_must_be_empty stderr
 '
 
@@ -160,9 +160,9 @@ test_expect_success 'do not complain about existing broken links (tree)' '
 	cat >broken-tree <<-EOF &&
 	100644 blob $(test_oid 003)	foo
 	EOF
-	tree=$(git mktree --missing <broken-tree) &&
-	git gc --no-cruft -q 2>stderr &&
-	git cat-file -e $tree &&
+	tree=$(shit mktree --missing <broken-tree) &&
+	shit gc --no-cruft -q 2>stderr &&
+	shit cat-file -e $tree &&
 	test_must_be_empty stderr
 '
 
@@ -175,9 +175,9 @@ test_expect_success 'do not complain about existing broken links (tag)' '
 
 	this is a broken tag
 	EOF
-	tag=$(git hash-object -t tag -w broken-tag) &&
-	git gc --no-cruft -q 2>stderr &&
-	git cat-file -e $tag &&
+	tag=$(shit hash-object -t tag -w broken-tag) &&
+	shit gc --no-cruft -q 2>stderr &&
+	shit cat-file -e $tag &&
 	test_must_be_empty stderr
 '
 

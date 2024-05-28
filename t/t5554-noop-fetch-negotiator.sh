@@ -15,7 +15,7 @@ test_expect_success 'noop negotiator does not emit any "have"' '
 	test_commit -C client we_have &&
 
 	test_config -C client fetch.negotiationalgorithm noop &&
-	GIT_TRACE_PACKET="$(pwd)/trace" git -C client fetch "$(pwd)/server" &&
+	shit_TRACE_PACKET="$(pwd)/trace" shit -C client fetch "$(pwd)/server" &&
 
 	! grep "fetch> have" trace &&
 	grep "fetch> done" trace

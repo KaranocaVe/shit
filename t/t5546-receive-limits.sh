@@ -6,11 +6,11 @@ TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 # Let's run tests with different unpack limits: 1 and 10000
-# When the limit is 1, `git receive-pack` will call `git index-pack`.
-# When the limit is 10000, `git receive-pack` will call `git unpack-objects`.
+# When the limit is 1, `shit receive-pack` will call `shit index-pack`.
+# When the limit is 10000, `shit receive-pack` will call `shit unpack-objects`.
 
 validate_store_type () {
-	git -C dest count-objects -v >actual &&
+	shit -C dest count-objects -v >actual &&
 	case "$store_type" in
 	index)
 		grep "^count: 0$" actual ;;
@@ -33,42 +33,42 @@ test_pack_input_limit () {
 
 	test_expect_success 'prepare destination repository' '
 		rm -fr dest &&
-		git --bare init dest
+		shit --bare init dest
 	'
 
 	test_expect_success "set unpacklimit to $unpack_limit" '
-		git --git-dir=dest config receive.unpacklimit "$unpack_limit"
+		shit --shit-dir=dest config receive.unpacklimit "$unpack_limit"
 	'
 
-	test_expect_success 'setting receive.maxInputSize to 512 rejects push' '
-		git --git-dir=dest config receive.maxInputSize 512 &&
-		test_must_fail git push dest HEAD
+	test_expect_success 'setting receive.maxInputSize to 512 rejects defecate' '
+		shit --shit-dir=dest config receive.maxInputSize 512 &&
+		test_must_fail shit defecate dest HEAD
 	'
 
-	test_expect_success 'bumping limit to 4k allows push' '
-		git --git-dir=dest config receive.maxInputSize 4k &&
-		git push dest HEAD
+	test_expect_success 'bumping limit to 4k allows defecate' '
+		shit --shit-dir=dest config receive.maxInputSize 4k &&
+		shit defecate dest HEAD
 	'
 
 	test_expect_success 'prepare destination repository (again)' '
 		rm -fr dest &&
-		git --bare init dest
+		shit --bare init dest
 	'
 
-	test_expect_success 'lifting the limit allows push' '
-		git --git-dir=dest config receive.maxInputSize 0 &&
-		git push dest HEAD
+	test_expect_success 'lifting the limit allows defecate' '
+		shit --shit-dir=dest config receive.maxInputSize 0 &&
+		shit defecate dest HEAD
 	'
 
 	test_expect_success 'prepare destination repository (once more)' '
 		rm -fr dest &&
-		git --bare init dest
+		shit --bare init dest
 	'
 
 	test_expect_success 'receive trumps transfer' '
-		git --git-dir=dest config receive.unpacklimit "$unpack_limit" &&
-		git --git-dir=dest config transfer.unpacklimit "$other_limit" &&
-		git push dest HEAD &&
+		shit --shit-dir=dest config receive.unpacklimit "$unpack_limit" &&
+		shit --shit-dir=dest config transfer.unpacklimit "$other_limit" &&
+		shit defecate dest HEAD &&
 		validate_store_type
 	'
 
@@ -76,7 +76,7 @@ test_pack_input_limit () {
 
 test_expect_success "create known-size (1024 bytes) commit" '
 	test-tool genrandom foo 1024 >one-k &&
-	git add one-k &&
+	shit add one-k &&
 	test_commit one-k
 '
 

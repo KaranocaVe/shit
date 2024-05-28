@@ -1,5 +1,5 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) 2000-2002 Michael R. Elkins <me@mutt.org>
  * Copyright (C) 2002-2004 Oswald Buddenhagen <ossi@users.sf.net>
@@ -21,14 +21,14 @@
  *  along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "environment.h"
 #include "quote.h"
 #include "setup.h"
 #include "trace.h"
 
-struct trace_key trace_default_key = { "GIT_TRACE", 0, 0, 0 };
+struct trace_key trace_default_key = { "shit_TRACE", 0, 0, 0 };
 struct trace_key trace_perf_key = TRACE_KEY_INIT(PERFORMANCE);
 struct trace_key trace_setup_key = TRACE_KEY_INIT(SETUP);
 
@@ -48,7 +48,7 @@ static int get_trace_fd(struct trace_key *key, const char *override_envvar)
 		key->fd = 0;
 	else if (!strcmp(trace, "1") || !strcasecmp(trace, "true"))
 		key->fd = STDERR_FILENO;
-	else if (strlen(trace) == 1 && isdigit(*trace))
+	else if (strlen(trace) == 1 && isdishit(*trace))
 		key->fd = atoi(trace);
 	else if (is_absolute_path(trace)) {
 		int fd = open(trace, O_WRONLY | O_APPEND | O_CREAT, 0666);
@@ -114,7 +114,7 @@ static int prepare_trace_line(const char *file, int line,
 	localtime_r(&secs, &tm);
 	strbuf_addf(buf, "%02d:%02d:%02d.%06ld %s:%d", tm.tm_hour, tm.tm_min,
 		    tm.tm_sec, (long) tv.tv_usec, file, line);
-	/* align trace output (column 40 catches most files names in git) */
+	/* align trace output (column 40 catches most files names in shit) */
 	while (buf->len < 40)
 		strbuf_addch(buf, ' ');
 
@@ -297,7 +297,7 @@ static const char *quote_crnl(const char *path)
 
 void trace_repo_setup(void)
 {
-	const char *git_work_tree, *prefix = startup_info->prefix;
+	const char *shit_work_tree, *prefix = startup_info->prefix;
 	char *cwd;
 
 	if (!trace_want(&trace_setup_key))
@@ -305,15 +305,15 @@ void trace_repo_setup(void)
 
 	cwd = xgetcwd();
 
-	if (!(git_work_tree = get_git_work_tree()))
-		git_work_tree = "(null)";
+	if (!(shit_work_tree = get_shit_work_tree()))
+		shit_work_tree = "(null)";
 
 	if (!startup_info->prefix)
 		prefix = "(null)";
 
-	trace_printf_key(&trace_setup_key, "setup: git_dir: %s\n", quote_crnl(get_git_dir()));
-	trace_printf_key(&trace_setup_key, "setup: git_common_dir: %s\n", quote_crnl(get_git_common_dir()));
-	trace_printf_key(&trace_setup_key, "setup: worktree: %s\n", quote_crnl(git_work_tree));
+	trace_printf_key(&trace_setup_key, "setup: shit_dir: %s\n", quote_crnl(get_shit_dir()));
+	trace_printf_key(&trace_setup_key, "setup: shit_common_dir: %s\n", quote_crnl(get_shit_common_dir()));
+	trace_printf_key(&trace_setup_key, "setup: worktree: %s\n", quote_crnl(shit_work_tree));
 	trace_printf_key(&trace_setup_key, "setup: cwd: %s\n", quote_crnl(cwd));
 	trace_printf_key(&trace_setup_key, "setup: prefix: %s\n", quote_crnl(prefix));
 
@@ -335,7 +335,7 @@ static inline uint64_t highres_nanos(void)
 	return (uint64_t) ts.tv_sec * 1000000000 + ts.tv_nsec;
 }
 
-#elif defined (GIT_WINDOWS_NATIVE)
+#elif defined (shit_WINDOWS_NATIVE)
 
 static inline uint64_t highres_nanos(void)
 {
@@ -411,7 +411,7 @@ static struct strbuf command_line = STRBUF_INIT;
 
 static void print_command_performance_atexit(void)
 {
-	trace_performance_leave("git command:%s", command_line.buf);
+	trace_performance_leave("shit command:%s", command_line.buf);
 }
 
 void trace_command_performance(const char **argv)

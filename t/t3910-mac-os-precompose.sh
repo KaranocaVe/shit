@@ -5,8 +5,8 @@
 
 test_description='utf-8 decomposed (nfd) converted to precomposed (nfc)'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -38,185 +38,185 @@ Alongc=$Alongc$Alongc$Alongc$Alongc$Alongc           #250 Byte
 Alongc=$Alongc$AEligatu$AEligatu                     #254 Byte
 
 test_expect_success "detect if nfd needed" '
-	precomposeunicode=$(git config core.precomposeunicode) &&
+	precomposeunicode=$(shit config core.precomposeunicode) &&
 	test "$precomposeunicode" = true &&
-	git config core.precomposeunicode true
+	shit config core.precomposeunicode true
 '
 test_expect_success "setup" '
 	>x &&
-	git add x &&
-	git commit -m "1st commit" &&
-	git rm x &&
-	git commit -m "rm x"
+	shit add x &&
+	shit commit -m "1st commit" &&
+	shit rm x &&
+	shit commit -m "rm x"
 '
 test_expect_success "setup case mac" '
-	git checkout -b mac_os
+	shit checkout -b mac_os
 '
-# This will test nfd2nfc in git diff
-test_expect_success "git diff f.Adiar" '
+# This will test nfd2nfc in shit diff
+test_expect_success "shit diff f.Adiar" '
 	touch f.$Adiarnfc &&
-	git add f.$Adiarnfc &&
+	shit add f.$Adiarnfc &&
 	echo f.Adiarnfc >f.$Adiarnfc &&
-	git diff f.$Adiarnfd >expect &&
-	git diff f.$Adiarnfc >actual &&
+	shit diff f.$Adiarnfd >expect &&
+	shit diff f.$Adiarnfc >actual &&
 	test_cmp expect actual &&
-	git reset HEAD f.Adiarnfc &&
+	shit reset HEAD f.Adiarnfc &&
 	rm f.$Adiarnfc expect actual
 '
-# This will test nfd2nfc in git diff-files
-test_expect_success "git diff-files f.Adiar" '
+# This will test nfd2nfc in shit diff-files
+test_expect_success "shit diff-files f.Adiar" '
 	touch f.$Adiarnfc &&
-	git add f.$Adiarnfc &&
+	shit add f.$Adiarnfc &&
 	echo f.Adiarnfc >f.$Adiarnfc &&
-	git diff-files f.$Adiarnfd >expect &&
-	git diff-files f.$Adiarnfc >actual &&
+	shit diff-files f.$Adiarnfd >expect &&
+	shit diff-files f.$Adiarnfc >actual &&
 	test_cmp expect actual &&
-	git reset HEAD f.Adiarnfc &&
+	shit reset HEAD f.Adiarnfc &&
 	rm f.$Adiarnfc expect actual
 '
-# This will test nfd2nfc in git diff-index
-test_expect_success "git diff-index f.Adiar" '
+# This will test nfd2nfc in shit diff-index
+test_expect_success "shit diff-index f.Adiar" '
 	touch f.$Adiarnfc &&
-	git add f.$Adiarnfc &&
+	shit add f.$Adiarnfc &&
 	echo f.Adiarnfc >f.$Adiarnfc &&
-	git diff-index HEAD f.$Adiarnfd >expect &&
-	git diff-index HEAD f.$Adiarnfc >actual &&
+	shit diff-index HEAD f.$Adiarnfd >expect &&
+	shit diff-index HEAD f.$Adiarnfc >actual &&
 	test_cmp expect actual &&
-	git reset HEAD f.Adiarnfc &&
+	shit reset HEAD f.Adiarnfc &&
 	rm f.$Adiarnfc expect actual
 '
 # This will test nfd2nfc in readdir()
 test_expect_success "add file Adiarnfc" '
 	echo f.Adiarnfc >f.$Adiarnfc &&
-	git add f.$Adiarnfc &&
-	git commit -m "add f.$Adiarnfc"
+	shit add f.$Adiarnfc &&
+	shit commit -m "add f.$Adiarnfc"
 '
-# This will test nfd2nfc in git diff-tree
-test_expect_success "git diff-tree f.Adiar" '
+# This will test nfd2nfc in shit diff-tree
+test_expect_success "shit diff-tree f.Adiar" '
 	echo f.Adiarnfc >>f.$Adiarnfc &&
-	git diff-tree HEAD f.$Adiarnfd >expect &&
-	git diff-tree HEAD f.$Adiarnfc >actual &&
+	shit diff-tree HEAD f.$Adiarnfd >expect &&
+	shit diff-tree HEAD f.$Adiarnfc >actual &&
 	test_cmp expect actual &&
-	git checkout f.$Adiarnfc &&
+	shit checkout f.$Adiarnfc &&
 	rm expect actual
 '
-# This will test nfd2nfc in git stage()
+# This will test nfd2nfc in shit stage()
 test_expect_success "stage file d.Adiarnfd/f.Adiarnfd" '
 	mkdir d.$Adiarnfd &&
 	echo d.$Adiarnfd/f.$Adiarnfd >d.$Adiarnfd/f.$Adiarnfd &&
-	git stage d.$Adiarnfd/f.$Adiarnfd &&
-	git commit -m "add d.$Adiarnfd/f.$Adiarnfd"
+	shit stage d.$Adiarnfd/f.$Adiarnfd &&
+	shit commit -m "add d.$Adiarnfd/f.$Adiarnfd"
 '
 test_expect_success "add link Adiarnfc" '
 	ln -s d.$Adiarnfd/f.$Adiarnfd l.$Adiarnfc &&
-	git add l.$Adiarnfc &&
-	git commit -m "add l.Adiarnfc"
+	shit add l.$Adiarnfc &&
+	shit commit -m "add l.Adiarnfc"
 '
-# This will test git log
-test_expect_success "git log f.Adiar" '
-	git log f.$Adiarnfc > f.Adiarnfc.log &&
-	git log f.$Adiarnfd > f.Adiarnfd.log &&
+# This will test shit log
+test_expect_success "shit log f.Adiar" '
+	shit log f.$Adiarnfc > f.Adiarnfc.log &&
+	shit log f.$Adiarnfd > f.Adiarnfd.log &&
 	test -s f.Adiarnfc.log &&
 	test -s f.Adiarnfd.log &&
 	test_cmp f.Adiarnfc.log f.Adiarnfd.log &&
 	rm f.Adiarnfc.log f.Adiarnfd.log
 '
-# This will test git ls-files
-test_expect_success "git lsfiles f.Adiar" '
-	git ls-files f.$Adiarnfc > f.Adiarnfc.log &&
-	git ls-files f.$Adiarnfd > f.Adiarnfd.log &&
+# This will test shit ls-files
+test_expect_success "shit lsfiles f.Adiar" '
+	shit ls-files f.$Adiarnfc > f.Adiarnfc.log &&
+	shit ls-files f.$Adiarnfd > f.Adiarnfd.log &&
 	test -s f.Adiarnfc.log &&
 	test -s f.Adiarnfd.log &&
 	test_cmp f.Adiarnfc.log f.Adiarnfd.log &&
 	rm f.Adiarnfc.log f.Adiarnfd.log
 '
-# This will test git mv
-test_expect_success "git mv" '
-	git mv f.$Adiarnfd f.$Odiarnfc &&
-	git mv d.$Adiarnfd d.$Odiarnfc &&
-	git mv l.$Adiarnfd l.$Odiarnfc &&
-	git commit -m "mv Adiarnfd Odiarnfc"
+# This will test shit mv
+test_expect_success "shit mv" '
+	shit mv f.$Adiarnfd f.$Odiarnfc &&
+	shit mv d.$Adiarnfd d.$Odiarnfc &&
+	shit mv l.$Adiarnfd l.$Odiarnfc &&
+	shit commit -m "mv Adiarnfd Odiarnfc"
 '
 # Files can be checked out as nfc
 # And the link has been corrected from nfd to nfc
-test_expect_success "git checkout nfc" '
+test_expect_success "shit checkout nfc" '
 	rm f.$Odiarnfc &&
-	git checkout f.$Odiarnfc
+	shit checkout f.$Odiarnfc
 '
 # Make it possible to checkout files with their NFD names
-test_expect_success "git checkout file nfd" '
+test_expect_success "shit checkout file nfd" '
 	rm -f f.* &&
-	git checkout f.$Odiarnfd
+	shit checkout f.$Odiarnfd
 '
 # Make it possible to checkout links with their NFD names
-test_expect_success "git checkout link nfd" '
+test_expect_success "shit checkout link nfd" '
 	rm l.* &&
-	git checkout l.$Odiarnfd
+	shit checkout l.$Odiarnfd
 '
 test_expect_success "setup case mac2" '
-	git checkout main &&
-	git reset --hard &&
-	git checkout -b mac_os_2
+	shit checkout main &&
+	shit reset --hard &&
+	shit checkout -b mac_os_2
 '
-# This will test nfd2nfc in git commit
+# This will test nfd2nfc in shit commit
 test_expect_success "commit file d2.Adiarnfd/f.Adiarnfd" '
 	mkdir d2.$Adiarnfd &&
 	echo d2.$Adiarnfd/f.$Adiarnfd >d2.$Adiarnfd/f.$Adiarnfd &&
-	git add d2.$Adiarnfd/f.$Adiarnfd &&
-	git commit -m "add d2.$Adiarnfd/f.$Adiarnfd" -- d2.$Adiarnfd/f.$Adiarnfd
+	shit add d2.$Adiarnfd/f.$Adiarnfd &&
+	shit commit -m "add d2.$Adiarnfd/f.$Adiarnfd" -- d2.$Adiarnfd/f.$Adiarnfd
 '
 test_expect_success "setup for long decomposed filename" '
-	git checkout main &&
-	git reset --hard &&
-	git checkout -b mac_os_long_nfd_fn
+	shit checkout main &&
+	shit reset --hard &&
+	shit checkout -b mac_os_long_nfd_fn
 '
 test_expect_success "Add long decomposed filename" '
 	echo longd >$Alongd &&
-	git add * &&
-	git commit -m "Long filename"
+	shit add * &&
+	shit commit -m "Long filename"
 '
 test_expect_success "setup for long precomposed filename" '
-	git checkout main &&
-	git reset --hard &&
-	git checkout -b mac_os_long_nfc_fn
+	shit checkout main &&
+	shit reset --hard &&
+	shit checkout -b mac_os_long_nfc_fn
 '
 test_expect_success "Add long precomposed filename" '
 	echo longc >$Alongc &&
-	git add * &&
-	git commit -m "Long filename"
+	shit add * &&
+	shit commit -m "Long filename"
 '
 
 test_expect_failure 'handle existing decomposed filenames' '
 	echo content >"verbatim.$Adiarnfd" &&
-	git -c core.precomposeunicode=false add "verbatim.$Adiarnfd" &&
-	git commit -m "existing decomposed file" &&
-	git ls-files --exclude-standard -o "verbatim*" >untracked &&
+	shit -c core.precomposeunicode=false add "verbatim.$Adiarnfd" &&
+	shit commit -m "existing decomposed file" &&
+	shit ls-files --exclude-standard -o "verbatim*" >untracked &&
 	test_must_be_empty untracked
 '
 
-test_expect_success "unicode decomposed: git restore -p . " '
+test_expect_success "unicode decomposed: shit restore -p . " '
 	DIRNAMEPWD=dir.Odiarnfc &&
 	DIRNAMEINREPO=dir.$Adiarnfc &&
 	export DIRNAMEPWD DIRNAMEINREPO &&
-	git init "$DIRNAMEPWD" &&
+	shit init "$DIRNAMEPWD" &&
 	(
 		cd "$DIRNAMEPWD" &&
 		mkdir "$DIRNAMEINREPO" &&
 		cd "$DIRNAMEINREPO" &&
 		echo "Initial" >file &&
-		git add file &&
+		shit add file &&
 		echo "More stuff" >>file &&
-		echo y | git restore -p .
+		echo y | shit restore -p .
 	)
 '
 
 # Test if the global core.precomposeunicode stops autosensing
 # Must be the last test case
-test_expect_success "respect git config --global core.precomposeunicode" '
-	git config --global core.precomposeunicode true &&
-	rm -rf .git &&
-	git init &&
-	precomposeunicode=$(git config core.precomposeunicode) &&
+test_expect_success "respect shit config --global core.precomposeunicode" '
+	shit config --global core.precomposeunicode true &&
+	rm -rf .shit &&
+	shit init &&
+	precomposeunicode=$(shit config core.precomposeunicode) &&
 	test "$precomposeunicode" = "true"
 '
 

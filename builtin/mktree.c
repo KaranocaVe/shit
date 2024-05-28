@@ -1,5 +1,5 @@
 /*
- * GIT - the stupid content tracker
+ * shit - the stupid content tracker
  *
  * Copyright (c) Junio C Hamano, 2006, 2009
  */
@@ -66,7 +66,7 @@ static void write_tree(struct object_id *oid)
 }
 
 static const char *mktree_usage[] = {
-	"git mktree [-z] [--missing] [--batch]",
+	"shit mktree [-z] [--missing] [--batch]",
 	NULL
 };
 
@@ -96,7 +96,7 @@ static void mktree_line(char *buf, int nul_term_line, int allow_missing)
 		die("input format error: %s", buf);
 
 	/* It is perfectly normal if we do not have a commit from a submodule */
-	if (S_ISGITLINK(mode))
+	if (S_ISshitLINK(mode))
 		allow_missing = 1;
 
 

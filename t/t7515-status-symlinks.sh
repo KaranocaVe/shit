@@ -1,43 +1,43 @@
 #!/bin/sh
 
-test_description='git status and symlinks'
+test_description='shit status and symlinks'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'setup' '
-	echo .gitignore >.gitignore &&
-	echo actual >>.gitignore &&
-	echo expect >>.gitignore &&
+	echo .shitignore >.shitignore &&
+	echo actual >>.shitignore &&
+	echo expect >>.shitignore &&
 	mkdir dir &&
 	echo x >dir/file1 &&
 	echo y >dir/file2 &&
-	git add dir &&
-	git commit -m initial &&
-	git tag initial
+	shit add dir &&
+	shit commit -m initial &&
+	shit tag initial
 '
 
 test_expect_success SYMLINKS 'symlink to a directory' '
 	test_when_finished "rm symlink" &&
 	ln -s dir symlink &&
 	echo "?? symlink" >expect &&
-	git status --porcelain >actual &&
+	shit status --porcelain >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success SYMLINKS 'symlink replacing a directory' '
-	test_when_finished "rm -rf copy && git reset --hard initial" &&
+	test_when_finished "rm -rf copy && shit reset --hard initial" &&
 	mkdir copy &&
 	cp dir/file1 copy/file1 &&
 	echo "changed in copy" >copy/file2 &&
-	git add copy &&
-	git commit -m second &&
+	shit add copy &&
+	shit commit -m second &&
 	rm -rf copy &&
 	ln -s dir copy &&
 	echo " D copy/file1" >expect &&
 	echo " D copy/file2" >>expect &&
 	echo "?? copy" >>expect &&
-	git status --porcelain >actual &&
+	shit status --porcelain >actual &&
 	test_cmp expect actual
 '
 

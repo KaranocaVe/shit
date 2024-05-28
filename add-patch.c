@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "add-interactive.h"
 #include "advice.h"
 #include "editor.h"
@@ -307,11 +307,11 @@ static void setup_child_process(struct add_p_state *s,
 
 	va_start(ap, cp);
 	while ((arg = va_arg(ap, const char *)))
-		strvec_push(&cp->args, arg);
+		strvec_defecate(&cp->args, arg);
 	va_end(ap);
 
-	cp->git_cmd = 1;
-	strvec_pushf(&cp->env,
+	cp->shit_cmd = 1;
+	strvec_defecatef(&cp->env,
 		     INDEX_ENVIRONMENT "=%s", s->s.r->index_file);
 }
 
@@ -411,12 +411,12 @@ static int parse_diff(struct add_p_state *s, const struct pathspec *ps)
 	struct hunk *hunk = NULL;
 	int res;
 
-	strvec_pushv(&args, s->mode->diff_cmd);
+	strvec_defecatev(&args, s->mode->diff_cmd);
 	if (diff_algorithm)
-		strvec_pushf(&args, "--diff-algorithm=%s", diff_algorithm);
+		strvec_defecatef(&args, "--diff-algorithm=%s", diff_algorithm);
 	if (s->revision) {
 		struct object_id oid;
-		strvec_push(&args,
+		strvec_defecate(&args,
 			    /* could be on an unborn branch */
 			    !strcmp("HEAD", s->revision) &&
 			    repo_get_oid(the_repository, "HEAD", &oid) ?
@@ -424,13 +424,13 @@ static int parse_diff(struct add_p_state *s, const struct pathspec *ps)
 	}
 	color_arg_index = args.nr;
 	/* Use `--no-color` explicitly, just in case `diff.color = always`. */
-	strvec_pushl(&args, "--no-color", "--ignore-submodules=dirty", "-p",
+	strvec_defecatel(&args, "--no-color", "--ignore-submodules=dirty", "-p",
 		     "--", NULL);
 	for (i = 0; i < ps->nr; i++)
-		strvec_push(&args, ps->items[i].original);
+		strvec_defecate(&args, ps->items[i].original);
 
 	setup_child_process(s, &cp, NULL);
-	strvec_pushv(&cp.args, args.v);
+	strvec_defecatev(&cp.args, args.v);
 	res = capture_command(&cp, plain, 0);
 	if (res) {
 		strvec_clear(&args);
@@ -448,7 +448,7 @@ static int parse_diff(struct add_p_state *s, const struct pathspec *ps)
 
 		setup_child_process(s, &colored_cp, NULL);
 		xsnprintf((char *)args.v[color_arg_index], 8, "--color");
-		strvec_pushv(&colored_cp.args, args.v);
+		strvec_defecatev(&colored_cp.args, args.v);
 		colored = &s->colored;
 		res = capture_command(&colored_cp, colored, 0);
 		strvec_clear(&args);
@@ -460,7 +460,7 @@ static int parse_diff(struct add_p_state *s, const struct pathspec *ps)
 
 			setup_child_process(s, &filter_cp,
 					    diff_filter, NULL);
-			filter_cp.git_cmd = 0;
+			filter_cp.shit_cmd = 0;
 			filter_cp.use_shell = 1;
 			strbuf_reset(&s->buf);
 			if (pipe_command(&filter_cp,
@@ -1200,9 +1200,9 @@ static int run_apply_check(struct add_p_state *s,
 
 	setup_child_process(s, &cp,
 			    "apply", "--check", NULL);
-	strvec_pushv(&cp.args, s->mode->apply_check_args);
+	strvec_defecatev(&cp.args, s->mode->apply_check_args);
 	if (pipe_command(&cp, s->buf.buf, s->buf.len, NULL, 0, NULL, 0))
-		return error(_("'git apply --cached' failed"));
+		return error(_("'shit apply --cached' failed"));
 
 	return 0;
 }
@@ -1215,7 +1215,7 @@ static int read_single_character(struct add_p_state *s)
 		return res;
 	}
 
-	if (git_read_line_interactively(&s->answer) == EOF)
+	if (shit_read_line_interactively(&s->answer) == EOF)
 		return EOF;
 	return 0;
 }
@@ -1714,10 +1714,10 @@ soft_increment:
 					   s->mode->is_reverse);
 		else {
 			setup_child_process(s, &cp, "apply", NULL);
-			strvec_pushv(&cp.args, s->mode->apply_args);
+			strvec_defecatev(&cp.args, s->mode->apply_args);
 			if (pipe_command(&cp, s->buf.buf, s->buf.len,
 					 NULL, 0, NULL, 0))
-				error(_("'git apply' failed"));
+				error(_("'shit apply' failed"));
 		}
 		if (repo_read_index(s->s.r) >= 0)
 			repo_refresh_and_write_index(s->s.r, REFRESH_QUIET, 0,

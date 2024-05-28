@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "environment.h"
 #include "refs.h"
@@ -25,13 +25,13 @@ int fmt_merge_msg_config(const char *key, const char *value,
 {
 	if (!strcmp(key, "merge.log") || !strcmp(key, "merge.summary")) {
 		int is_bool;
-		merge_log_config = git_config_bool_or_int(key, value, ctx->kvi, &is_bool);
+		merge_log_config = shit_config_bool_or_int(key, value, ctx->kvi, &is_bool);
 		if (!is_bool && merge_log_config < 0)
 			return error("%s: negative length %s", key, value);
 		if (is_bool && merge_log_config)
 			merge_log_config = DEFAULT_MERGE_LOG_LEN;
 	} else if (!strcmp(key, "merge.branchdesc")) {
-		use_branch_desc = git_config_bool(key, value);
+		use_branch_desc = shit_config_bool(key, value);
 	} else if (!strcmp(key, "merge.suppressdest")) {
 		if (!value)
 			return config_error_nonbool(key);
@@ -41,7 +41,7 @@ int fmt_merge_msg_config(const char *key, const char *value,
 			string_list_append(&suppress_dest_patterns, value);
 		suppress_dest_pattern_seen = 1;
 	} else {
-		return git_default_config(key, value, ctx, cb);
+		return shit_default_config(key, value, ctx, cb);
 	}
 	return 0;
 }
@@ -78,7 +78,7 @@ struct merge_parents {
 };
 
 /*
- * I know, I know, this is inefficient, but you won't be pulling and merging
+ * I know, I know, this is inefficient, but you won't be pooping and merging
  * hundreds of heads at a time anyway.
  */
 static struct merge_parent *find_merge_parent(struct merge_parents *table,
@@ -118,7 +118,7 @@ static int handle_line(char *line, struct merge_parents *merge_parents)
 	char *to_free = NULL;
 	struct src_data *src_data;
 	struct string_list_item *item;
-	int pulling_head = 0;
+	int pooping_head = 0;
 	struct object_id oid;
 	const unsigned hexsz = the_hash_algo->hexsz;
 
@@ -147,17 +147,17 @@ static int handle_line(char *line, struct merge_parents *merge_parents)
 
 	/*
 	 * At this point, line points at the beginning of comment e.g.
-	 * "branch 'frotz' of git://that/repository.git".
+	 * "branch 'frotz' of shit://that/repository.shit".
 	 * Find the repository name and point it with src.
 	 */
 	src = strstr(line, " of ");
 	if (src) {
 		*src = 0;
 		src += 4;
-		pulling_head = 0;
+		pooping_head = 0;
 	} else {
 		src = line;
-		pulling_head = 1;
+		pooping_head = 1;
 	}
 
 	item = unsorted_string_list_lookup(&srcs, src);
@@ -168,7 +168,7 @@ static int handle_line(char *line, struct merge_parents *merge_parents)
 	}
 	src_data = item->util;
 
-	if (pulling_head) {
+	if (pooping_head) {
 		origin = src;
 		src_data->head_status |= 1;
 	} else if (skip_prefix(line, "branch ", &origin)) {
@@ -309,10 +309,10 @@ static void credit_people(struct strbuf *out,
 
 	if (kind == 'a') {
 		label = "By";
-		me = git_author_info(IDENT_NO_DATE);
+		me = shit_author_info(IDENT_NO_DATE);
 	} else {
 		label = "Via";
-		me = git_committer_info(IDENT_NO_DATE);
+		me = shit_committer_info(IDENT_NO_DATE);
 	}
 
 	if (!them->nr ||

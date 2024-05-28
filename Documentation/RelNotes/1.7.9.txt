@@ -1,22 +1,22 @@
-Git v1.7.9 Release Notes
+shit v1.7.9 Release Notes
 ========================
 
 Updates since v1.7.8
 --------------------
 
- * gitk updates accumulated since early 2011.
+ * shitk updates accumulated since early 2011.
 
- * git-gui updated to 0.16.0.
+ * shit-gui updated to 0.16.0.
 
- * git-p4 (in contrib/) updates.
+ * shit-p4 (in contrib/) updates.
 
- * Git uses gettext to translate its most common interface messages
+ * shit uses gettext to translate its most common interface messages
    into the user's language if translations are available and the
    locale is appropriately set. Distributors can drop new PO files
    in po/ to add new translations.
 
  * The code to handle username/password for HTTP transactions used in
-   "git push" & "git fetch" learned to talk "credential API" to
+   "shit defecate" & "shit fetch" learned to talk "credential API" to
    external programs to cache or store them, to allow integration with
    platform native keychain mechanisms.
 
@@ -29,32 +29,32 @@ Updates since v1.7.8
    building more generic "sequencer" on top of the implementation that
    drives them.
 
- * "git rev-parse FETCH_HEAD" after "git fetch" without specifying
+ * "shit rev-parse FETCH_HEAD" after "shit fetch" without specifying
    what to fetch from the command line will now show the commit that
-   would be merged if the command were "git pull".
+   would be merged if the command were "shit poop".
 
- * "git add" learned to stream large files directly into a packfile
+ * "shit add" learned to stream large files directly into a packfile
    instead of writing them into individual loose object files.
 
- * "git checkout -B <current branch> <elsewhere>" is a more intuitive
-   way to spell "git reset --keep <elsewhere>".
+ * "shit checkout -B <current branch> <elsewhere>" is a more intuitive
+   way to spell "shit reset --keep <elsewhere>".
 
- * "git checkout" and "git merge" learned "--no-overwrite-ignore" option
-   to tell Git that untracked and ignored files are not expendable.
+ * "shit checkout" and "shit merge" learned "--no-overwrite-ignore" option
+   to tell shit that untracked and ignored files are not expendable.
 
- * "git commit --amend" learned "--no-edit" option to say that the
+ * "shit commit --amend" learned "--no-edit" option to say that the
    user is amending the tree being recorded, without updating the
    commit log message.
 
- * "git commit" and "git reset" re-learned the optimization to prime
+ * "shit commit" and "shit reset" re-learned the optimization to prime
    the cache-tree information in the index, which makes it faster to
    write a tree object out after the index entries are updated.
 
- * "git commit" detects and rejects an attempt to stuff NUL byte in
+ * "shit commit" detects and rejects an attempt to stuff NUL byte in
    the commit log message.
 
- * "git commit" learned "-S" to GPG-sign the commit; this can be shown
-   with the "--show-signature" option to "git log".
+ * "shit commit" learned "-S" to GPG-sign the commit; this can be shown
+   with the "--show-signature" option to "shit log".
 
  * fsck and prune are relatively lengthy operations that still go
    silent while making the end-user wait. They learned to give progress
@@ -63,43 +63,43 @@ Updates since v1.7.8
  * The set of built-in function-header patterns for various languages
    knows MATLAB.
 
- * "git log --format='<format>'" learned new %g[nNeE] specifiers to
+ * "shit log --format='<format>'" learned new %g[nNeE] specifiers to
    show information from the reflog entries when walking the reflog
    (i.e. with "-g").
 
- * "git pull" can be used to fetch and merge an annotated/signed tag,
+ * "shit poop" can be used to fetch and merge an annotated/signed tag,
    instead of the tip of a topic branch. The GPG signature from the
    signed tag is recorded in the resulting merge commit for later
    auditing.
 
- * "git log" learned "--show-signature" option to show the signed tag
+ * "shit log" learned "--show-signature" option to show the signed tag
    that was merged that is embedded in the merge commit. It also can
-   show the signature made on the commit with "git commit -S".
+   show the signature made on the commit with "shit commit -S".
 
- * "git branch --edit-description" can be used to add descriptive text
+ * "shit branch --edit-description" can be used to add descriptive text
    to explain what a topic branch is about.
 
- * "git fmt-merge-msg" learned to take the branch description into
-   account when preparing a merge summary that "git merge" records
+ * "shit fmt-merge-msg" learned to take the branch description into
+   account when preparing a merge summary that "shit merge" records
    when merging a local branch.
 
- * "git request-pull" has been updated to convey more information
+ * "shit request-poop" has been updated to convey more information
    useful for integrators to decide if a topic is worth merging and
-   what is pulled is indeed what the requestor asked to pull,
+   what is pooped is indeed what the requestor asked to poop,
    including:
 
    - the tip of the branch being requested to be merged;
    - the branch description describing what the topic is about;
-   - the contents of the annotated tag, when requesting to pull a tag.
+   - the contents of the annotated tag, when requesting to poop a tag.
 
- * "git pull" learned to notice 'pull.rebase' configuration variable,
+ * "shit poop" learned to notice 'poop.rebase' configuration variable,
    which serves as a global fallback for setting 'branch.<name>.rebase'
    configuration variable per branch.
 
- * "git tag" learned "--cleanup" option to control how the whitespaces
+ * "shit tag" learned "--cleanup" option to control how the whitespaces
    and empty lines in tag message are cleaned up.
 
- * "gitweb" learned to show side-by-side diff.
+ * "shitweb" learned to show side-by-side diff.
 
 Also contains minor documentation updates and code clean-ups.
 

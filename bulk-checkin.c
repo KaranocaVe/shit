@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2011, Google Inc.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "bulk-checkin.h"
 #include "environment.h"
 #include "gettext.h"
@@ -49,7 +49,7 @@ static void finish_tmp_packfile(struct strbuf *basename,
 
 static void flush_bulk_checkin_packfile(struct bulk_checkin_packfile *state)
 {
-	unsigned char hash[GIT_MAX_RAWSZ];
+	unsigned char hash[shit_MAX_RAWSZ];
 	struct strbuf packname = STRBUF_INIT;
 	int i;
 
@@ -85,7 +85,7 @@ clear_exit:
 
 	strbuf_release(&packname);
 	/* Make objects we just wrote available to ourselves */
-	reprepare_packed_git(the_repository);
+	reprepare_packed_shit(the_repository);
 }
 
 /*
@@ -155,11 +155,11 @@ static int already_written(struct bulk_checkin_packfile *state, struct object_id
  * with a new pack.
  */
 static int stream_blob_to_pack(struct bulk_checkin_packfile *state,
-			       git_hash_ctx *ctx, off_t *already_hashed_to,
+			       shit_hash_ctx *ctx, off_t *already_hashed_to,
 			       int fd, size_t size, const char *path,
 			       unsigned flags)
 {
-	git_zstream s;
+	shit_zstream s;
 	unsigned char ibuf[16384];
 	unsigned char obuf[16384];
 	unsigned hdrlen;
@@ -167,7 +167,7 @@ static int stream_blob_to_pack(struct bulk_checkin_packfile *state,
 	int write_object = (flags & HASH_WRITE_OBJECT);
 	off_t offset = 0;
 
-	git_deflate_init(&s, pack_compression_level);
+	shit_deflate_init(&s, pack_compression_level);
 
 	hdrlen = encode_in_pack_object_header(obuf, sizeof(obuf), OBJ_BLOB, size);
 	s.next_out = obuf + hdrlen;
@@ -196,7 +196,7 @@ static int stream_blob_to_pack(struct bulk_checkin_packfile *state,
 			size -= rsize;
 		}
 
-		status = git_deflate(&s, size ? 0 : Z_FINISH);
+		status = shit_deflate(&s, size ? 0 : Z_FINISH);
 
 		if (!s.avail_out || status == Z_STREAM_END) {
 			if (write_object) {
@@ -206,7 +206,7 @@ static int stream_blob_to_pack(struct bulk_checkin_packfile *state,
 				if (state->nr_written &&
 				    pack_size_limit_cfg &&
 				    pack_size_limit_cfg < state->offset + written) {
-					git_deflate_abort(&s);
+					shit_deflate_abort(&s);
 					return -1;
 				}
 
@@ -226,7 +226,7 @@ static int stream_blob_to_pack(struct bulk_checkin_packfile *state,
 			die("unexpected deflate failure: %d", status);
 		}
 	}
-	git_deflate_end(&s);
+	shit_deflate_end(&s);
 	return 0;
 }
 
@@ -252,7 +252,7 @@ static int deflate_blob_to_pack(struct bulk_checkin_packfile *state,
 				const char *path, unsigned flags)
 {
 	off_t seekback, already_hashed_to;
-	git_hash_ctx ctx;
+	shit_hash_ctx ctx;
 	unsigned char obuf[16384];
 	unsigned header_len;
 	struct hashfile_checkpoint checkpoint = {0};
@@ -342,7 +342,7 @@ void fsync_loose_object_bulk_checkin(int fd, const char *filename)
 	 * flush_batch_fsync.
 	 */
 	if (!bulk_fsync_objdir ||
-	    git_fsync(fd, FSYNC_WRITEOUT_ONLY) < 0) {
+	    shit_fsync(fd, FSYNC_WRITEOUT_ONLY) < 0) {
 		if (errno == ENOSYS)
 			warning(_("core.fsyncMethod = batch is unsupported on this platform"));
 		fsync_or_die(fd, filename);

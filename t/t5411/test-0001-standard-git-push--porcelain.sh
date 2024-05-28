@@ -1,8 +1,8 @@
 # Refs of upstream : main(A)  
 # Refs of workbench: main(A)  tags/v123
-# git-push         : main(B)             next(A)
-test_expect_success "git-push ($PROTOCOL/porcelain)" '
-	git -C workbench push --porcelain origin \
+# shit-defecate         : main(B)             next(A)
+test_expect_success "shit-defecate ($PROTOCOL/porcelain)" '
+	shit -C workbench defecate --porcelain origin \
 		$B:refs/heads/main \
 		HEAD:refs/heads/next \
 		>out 2>&1 &&
@@ -14,7 +14,7 @@ test_expect_success "git-push ($PROTOCOL/porcelain)" '
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <COMMIT-A> <COMMIT-B> refs/heads/main        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  	<COMMIT-B>:refs/heads/main	<COMMIT-A>..<COMMIT-B>
 	> *	HEAD:refs/heads/next	[new branch]
 	> Done
@@ -29,9 +29,9 @@ test_expect_success "git-push ($PROTOCOL/porcelain)" '
 
 # Refs of upstream : main(B)  next(A)
 # Refs of workbench: main(A)           tags/v123
-# git-push --atomic: main(A)  next(B)
-test_expect_success "git-push --atomic ($PROTOCOL/porcelain)" '
-	test_must_fail git -C workbench push --atomic --porcelain origin \
+# shit-defecate --atomic: main(A)  next(B)
+test_expect_success "shit-defecate --atomic ($PROTOCOL/porcelain)" '
+	test_must_fail shit -C workbench defecate --atomic --porcelain origin \
 		main \
 		$B:refs/heads/next \
 		>out-$test_count 2>&1 &&
@@ -41,9 +41,9 @@ test_expect_success "git-push --atomic ($PROTOCOL/porcelain)" '
 		-e "/^!/ { p; }" \
 		<out-$test_count >actual &&
 	format_and_save_expect <<-EOF &&
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	> !	refs/heads/main:refs/heads/main	[rejected] (non-fast-forward)
-	> !	<COMMIT-B>:refs/heads/next	[rejected] (atomic push failed)
+	> !	<COMMIT-B>:refs/heads/next	[rejected] (atomic defecate failed)
 	EOF
 	test_cmp expect actual &&
 
@@ -55,12 +55,12 @@ test_expect_success "git-push --atomic ($PROTOCOL/porcelain)" '
 
 # Refs of upstream : main(B)  next(A)
 # Refs of workbench: main(A)           tags/v123
-# git-push         : main(A)  next(B)
-test_expect_success "non-fast-forward git-push ($PROTOCOL/porcelain)" '
-	test_must_fail git \
+# shit-defecate         : main(A)  next(B)
+test_expect_success "non-fast-forward shit-defecate ($PROTOCOL/porcelain)" '
+	test_must_fail shit \
 		-C workbench \
-		-c advice.pushUpdateRejected=false \
-		push --porcelain origin \
+		-c advice.defecateUpdateRejected=false \
+		defecate --porcelain origin \
 		main \
 		$B:refs/heads/next \
 		>out-$test_count 2>&1 &&
@@ -70,7 +70,7 @@ test_expect_success "non-fast-forward git-push ($PROTOCOL/porcelain)" '
 	> remote: pre-receive< <COMMIT-A> <COMMIT-B> refs/heads/next        Z
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <COMMIT-A> <COMMIT-B> refs/heads/next        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  	<COMMIT-B>:refs/heads/next	<COMMIT-A>..<COMMIT-B>
 	> !	refs/heads/main:refs/heads/main	[rejected] (non-fast-forward)
 	> Done
@@ -85,9 +85,9 @@ test_expect_success "non-fast-forward git-push ($PROTOCOL/porcelain)" '
 
 # Refs of upstream : main(B)  next(B)
 # Refs of workbench: main(A)           tags/v123
-# git-push -f      : main(A)  NULL     tags/v123  refs/review/main/topic(A)  a/b/c(A)
-test_expect_success "git-push -f ($PROTOCOL/porcelain)" '
-	git -C workbench push --porcelain -f origin \
+# shit-defecate -f      : main(A)  NULL     tags/v123  refs/review/main/topic(A)  a/b/c(A)
+test_expect_success "shit-defecate -f ($PROTOCOL/porcelain)" '
+	shit -C workbench defecate --porcelain -f origin \
 		refs/tags/v123 \
 		:refs/heads/next \
 		main \
@@ -108,7 +108,7 @@ test_expect_success "git-push -f ($PROTOCOL/porcelain)" '
 	> remote: post-receive< <ZERO-OID> <TAG-v123> refs/tags/v123        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/review/main/topic        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/a/b/c        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	> +	refs/heads/main:refs/heads/main	<COMMIT-B>...<COMMIT-A> (forced update)
 	> -	:refs/heads/next	[deleted]
 	> *	refs/tags/v123:refs/tags/v123	[new tag]
@@ -131,8 +131,8 @@ test_expect_success "git-push -f ($PROTOCOL/porcelain)" '
 test_expect_success "cleanup ($PROTOCOL/porcelain)" '
 	(
 		cd "$upstream" &&
-		git update-ref -d refs/review/main/topic &&
-		git update-ref -d refs/tags/v123 &&
-		git update-ref -d refs/heads/a/b/c
+		shit update-ref -d refs/review/main/topic &&
+		shit update-ref -d refs/tags/v123 &&
+		shit update-ref -d refs/heads/a/b/c
 	)
 '

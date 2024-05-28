@@ -2,7 +2,7 @@
 
 == What's an Object Walk?
 
-The object walk is a key concept in Git - this is the process that underpins
+The object walk is a key concept in shit - this is the process that underpins
 operations like object transfer and fsck. Beginning from a given commit, the
 list of objects is found by walking parent relationships between commits (commit
 X based on commit W) and containment relationships between objects (tree Y is
@@ -11,15 +11,15 @@ working tree for commit X something like `y/z.txt`).
 
 A related concept is the revision walk, which is focused on commit objects and
 their parent relationships and does not delve into other object types. The
-revision walk is used for operations like `git log`.
+revision walk is used for operations like `shit log`.
 
 === Related Reading
 
-- `Documentation/user-manual.txt` under "Hacking Git" contains some coverage of
+- `Documentation/user-manual.txt` under "Hacking shit" contains some coverage of
   the revision walker in its various incarnations.
 - `revision.h`
-- https://eagain.net/articles/git-for-computer-scientists/[Git for Computer Scientists]
-  gives a good overview of the types of objects in Git and what your object
+- https://eagain.net/articles/shit-for-computer-scientists/[shit for Computer Scientists]
+  gives a good overview of the types of objects in shit and what your object
   walk is really describing.
 
 == Setting Up
@@ -27,15 +27,15 @@ revision walk is used for operations like `git log`.
 Create a new branch from `master`.
 
 ----
-git checkout -b revwalk origin/master
+shit checkout -b revwalk origin/master
 ----
 
-We'll put our fiddling into a new command. For fun, let's name it `git walken`.
+We'll put our fiddling into a new command. For fun, let's name it `shit walken`.
 Open up a new file `builtin/walken.c` and set up the command handler:
 
 ----
 /*
- * "git walken"
+ * "shit walken"
  *
  * Part of the "My First Object Walk" tutorial.
  */
@@ -56,7 +56,7 @@ tutorial, we will write `walken` as though it is intended for use as
 a "plumbing" command: that is, a command which is used primarily in
 scripts, rather than interactively by humans (a "porcelain" command).
 So we will send our debug output to `trace_printf()` instead.
-When running, enable trace output by setting the environment variable `GIT_TRACE`.
+When running, enable trace output by setting the environment variable `shit_TRACE`.
 
 Add usage text and `-h` handling, like all subcommands should consistently do
 (our test suite will notice and complain if you fail to do so).
@@ -70,7 +70,7 @@ We'll need to include the `parse-options.h` header.
 int cmd_walken(int argc, const char **argv, const char *prefix)
 {
 	const char * const walken_usage[] = {
-		N_("git walken"),
+		N_("shit walken"),
 		NULL,
 	};
 	struct option options[] = {
@@ -89,7 +89,7 @@ Also add the relevant line in `builtin.h` near `cmd_whatchanged()`:
 int cmd_walken(int argc, const char **argv, const char *prefix);
 ----
 
-Include the command in `git.c` in `commands[]` near the entry for `whatchanged`,
+Include the command in `shit.c` in `commands[]` near the entry for `whatchanged`,
 maintaining alphabetical ordering:
 
 ----
@@ -103,19 +103,19 @@ BUILTIN_OBJS += builtin/walken.o
 ----
 
 Build and test out your command, without forgetting to ensure the `DEVELOPER`
-flag is set, and with `GIT_TRACE` enabled so the debug output can be seen:
+flag is set, and with `shit_TRACE` enabled so the debug output can be seen:
 
 ----
 $ echo DEVELOPER=1 >>config.mak
 $ make
-$ GIT_TRACE=1 ./bin-wrappers/git walken
+$ shit_TRACE=1 ./bin-wrappers/shit walken
 ----
 
 NOTE: For a more exhaustive overview of the new command process, take a look at
 `Documentation/MyFirstContribution.txt`.
 
 NOTE: A reference implementation can be found at
-https://github.com/nasamuffin/git/tree/revwalk.
+https://shithub.com/nasamuffin/shit/tree/revwalk.
 
 === `struct rev_cmdline_info`
 
@@ -131,11 +131,11 @@ used to track the allocated size of the list.
 
 Per entry, we find:
 
-`item` is the object provided upon which to base the object walk. Items in Git
-can be blobs, trees, commits, or tags. (See `Documentation/gittutorial-2.txt`.)
+`item` is the object provided upon which to base the object walk. Items in shit
+can be blobs, trees, commits, or tags. (See `Documentation/shittutorial-2.txt`.)
 
 `name` is the object ID (OID) of the object - a hex string you may be familiar
-with from using Git to organize your source in the past. Check the tutorial
+with from using shit to organize your source in the past. Check the tutorial
 mentioned above towards the top for a discussion of where the OID can come
 from.
 
@@ -158,7 +158,7 @@ good idea to take some time and read through that document.
 
 == Basic Commit Walk
 
-First, let's see if we can replicate the output of `git log --oneline`. We'll
+First, let's see if we can replicate the output of `shit log --oneline`. We'll
 refer back to the implementation frequently to discover norms when performing
 an object walk of our own.
 
@@ -183,23 +183,23 @@ Preparing for your object walk has some distinct stages.
 
 Before examining configuration files which may modify command behavior, set up
 default state for switches or options your command may have. If your command
-utilizes other Git components, ask them to set up their default states as well.
-For instance, `git log` takes advantage of `grep` and `diff` functionality, so
+utilizes other shit components, ask them to set up their default states as well.
+For instance, `shit log` takes advantage of `grep` and `diff` functionality, so
 its `init_log_defaults()` sets its own state (`decoration_style`) and asks
 `grep` and `diff` to initialize themselves by calling each of their
 initialization functions.
 
-==== Configuring From `.gitconfig`
+==== Configuring From `.shitconfig`
 
 Next, we should have a look at any relevant configuration settings (i.e.,
-settings readable and settable from `git config`). This is done by providing a
-callback to `git_config()`; within that callback, you can also invoke methods
+settings readable and settable from `shit config`). This is done by providing a
+callback to `shit_config()`; within that callback, you can also invoke methods
 from other components you may need that need to intercept these options. Your
-callback will be invoked once per each configuration value which Git knows about
+callback will be invoked once per each configuration value which shit knows about
 (global, local, worktree, etc.).
 
 Similarly to the default values, we don't have anything to do here yet
-ourselves; however, we should call `git_default_config()` if we aren't calling
+ourselves; however, we should call `shit_default_config()` if we aren't calling
 any other existing config callbacks.
 
 Add a new function to `builtin/walken.c`.
@@ -210,25 +210,25 @@ We'll also need to include the `config.h` header:
 
 ...
 
-static int git_walken_config(const char *var, const char *value,
+static int shit_walken_config(const char *var, const char *value,
 			     const struct config_context *ctx, void *cb)
 {
 	/*
 	 * For now, we don't have any custom configuration, so fall back to
 	 * the default config.
 	 */
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 ----
 
-Make sure to invoke `git_config()` with it in your `cmd_walken()`:
+Make sure to invoke `shit_config()` with it in your `cmd_walken()`:
 
 ----
 int cmd_walken(int argc, const char **argv, const char *prefix)
 {
 	...
 
-	git_config(git_walken_config, NULL);
+	shit_config(shit_walken_config, NULL);
 
 	...
 }
@@ -256,7 +256,7 @@ int cmd_walken(int argc, const char **argv, const char *prefix)
 	struct rev_info rev;
 	...
 
-	/* This should go after the git_config() call. */
+	/* This should go after the shit_config() call. */
 	repo_init_revisions(the_repository, &rev, prefix);
 
 	...
@@ -273,7 +273,7 @@ helper for clarity, so let's add one:
 static void final_rev_info_setup(struct rev_info *rev)
 {
 	/*
-	 * We want to mimic the appearance of `git log --oneline`, so let's
+	 * We want to mimic the appearance of `shit log --oneline`, so let's
 	 * force oneline format.
 	 */
 	get_commit_format("oneline", rev);
@@ -371,12 +371,12 @@ Give it a shot.
 
 ----
 $ make
-$ ./bin-wrappers/git walken
+$ ./bin-wrappers/shit walken
 ----
 
 You should see all of the subject lines of all the commits in
 your tree's history, in order, ending with the initial commit, "Initial revision
-of "git", the information manager from hell". Congratulations! You've written
+of "shit", the information manager from hell". Congratulations! You've written
 your first revision walk. You can play with printing some additional fields
 from each commit if you're curious; have a look at the functions available in
 `commit.h`.
@@ -384,24 +384,24 @@ from each commit if you're curious; have a look at the functions available in
 === Adding a Filter
 
 Next, let's try to filter the commits we see based on their author. This is
-equivalent to running `git log --author=<pattern>`. We can add a filter by
+equivalent to running `shit log --author=<pattern>`. We can add a filter by
 modifying `rev_info.grep_filter`, which is a `struct grep_opt`.
 
-First some setup. Add `grep_config()` to `git_walken_config()`:
+First some setup. Add `grep_config()` to `shit_walken_config()`:
 
 ----
-static int git_walken_config(const char *var, const char *value,
+static int shit_walken_config(const char *var, const char *value,
 			     const struct config_context *ctx, void *cb)
 {
 	grep_config(var, value, ctx, cb);
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 ----
 
 Next, we can modify the `grep_filter`. This is done with convenience functions
 found in `grep.h`. For fun, we're filtering to only commits from folks using a
 `gmail.com` email address - a not-very-precise guess at who may be working on
-Git as a hobby. Since we're checking the author, which is a specific line in the
+shit as a hobby. Since we're checking the author, which is a specific line in the
 header, we'll use the `append_header_grep_pattern()` helper. We can use
 the `enum grep_header_field` to indicate which part of the commit header we want
 to search.
@@ -439,9 +439,9 @@ There are a few ways that we can change the order of the commits during a
 revision walk. Firstly, we can use the `enum rev_sort_order` to choose from some
 typical orderings.
 
-`topo_order` is the same as `git log --topo-order`: we avoid showing a parent
+`topo_order` is the same as `shit log --topo-order`: we avoid showing a parent
 before all of its children have been shown, and we avoid mixing commits which
-are in different lines of history. (`git help log`'s section on `--topo-order`
+are in different lines of history. (`shit help log`'s section on `--topo-order`
 has a very nice diagram to illustrate this.)
 
 Let's see what happens when we run with `REV_SORT_BY_COMMIT_DATE` as opposed to
@@ -465,7 +465,7 @@ author date.
 
 ----
 $ make
-$ ./bin-wrappers/git walken > commit-date.txt
+$ ./bin-wrappers/shit walken > commit-date.txt
 ----
 
 Then, let's sort by author date and run it again.
@@ -485,7 +485,7 @@ static void final_rev_info_setup(int argc, const char **argv,
 
 ----
 $ make
-$ ./bin-wrappers/git walken > author-date.txt
+$ ./bin-wrappers/shit walken > author-date.txt
 ----
 
 Finally, compare the two. This is a little less helpful without object names or
@@ -496,7 +496,7 @@ $ diff -u commit-date.txt author-date.txt
 ----
 
 This display indicates that commits can be reordered after they're written, for
-example with `git rebase`.
+example with `shit rebase`.
 
 Let's try one more reordering of commits. `rev_info` exposes a `reverse` flag.
 Set that flag somewhere inside of `final_rev_info_setup()`:
@@ -519,11 +519,11 @@ HEAD.)
 
 == Basic Object Walk
 
-So far we've been walking only commits. But Git has more types of objects than
+So far we've been walking only commits. But shit has more types of objects than
 that! Let's see if we can walk _all_ objects, and find out some information
 about each one.
 
-We can base our work on an example. `git pack-objects` prepares all kinds of
+We can base our work on an example. `shit pack-objects` prepares all kinds of
 objects for packing into a bitmap or packfile. The work we are interested in
 resides in `builtin/pack-objects.c:get_object_list()`; examination of that
 function shows that the all-object walk is being performed by
@@ -613,7 +613,7 @@ to `traverse_commit_list()` and `traverse_commit_list_filtered()`. Finally,
 To help assure us that we aren't double-counting commits, we'll include some
 complaining if a commit object is routed through our non-commit callback; we'll
 also complain if we see an invalid object type. Since those two cases should be
-unreachable, and would only change in the event of a semantic change to the Git
+unreachable, and would only change in the event of a semantic change to the shit
 codebase, we complain by using `BUG()` - which is a signal to a developer that
 the change they made caused unintended consequences, and the rest of the
 codebase needs to be updated to understand that change. `BUG()` is not intended
@@ -699,13 +699,13 @@ output should look similar to this example, but with different counts:
 Object walk completed. Found 55733 commits, 100274 blobs, 0 tags, and 104210 trees.
 ----
 
-This makes sense. We have more trees than commits because the Git project has
+This makes sense. We have more trees than commits because the shit project has
 lots of subdirectories which can change, plus at least one tree per commit. We
 have no tags because we started on a commit (`HEAD`) and while tags can point to
 commits, commits can't point to tags.
 
 NOTE: You will have different counts when you run this yourself! The number of
-objects grows along with the Git project.
+objects grows along with the shit project.
 
 === Adding a Filter
 
@@ -748,13 +748,13 @@ a hardcoded string using `parse_list_objects_filter()`.
 
 With the filter spec "tree:1", we are expecting to see _only_ the root tree for
 each commit; therefore, the tree object count should be less than or equal to
-the number of commits. (For an example of why that's true: `git commit --revert`
+the number of commits. (For an example of why that's true: `shit commit --revert`
 points to the same tree object as its grandparent.)
 
 === Counting Omitted Objects
 
 We also have the capability to enumerate all objects which were omitted by a
-filter, like with `git log --filter=<spec> --filter-print-omitted`. To do this,
+filter, like with `shit log --filter=<spec> --filter-print-omitted`. To do this,
 change `traverse_commit_list()` to `traverse_commit_list_filtered()`, which is
 able to populate an `omitted` list.  Asking for this list of filtered objects
 may cause performance degradations, however, because in this case, despite
@@ -848,11 +848,11 @@ those lines without having to recompile.
 With only that change, run again (but save yourself some scrollback):
 
 ----
-$ GIT_TRACE=1 ./bin-wrappers/git walken 2>&1 | head -n 10
+$ shit_TRACE=1 ./bin-wrappers/shit walken 2>&1 | head -n 10
 ----
 
-Take a look at the top commit with `git show` and the object ID you printed; it
-should be the same as the output of `git show HEAD`.
+Take a look at the top commit with `shit show` and the object ID you printed; it
+should be the same as the output of `shit show HEAD`.
 
 Next, let's change a setting on our `struct rev_info` within
 `walken_object_walk()`. Find where you're changing the other settings on `rev`,
@@ -876,12 +876,12 @@ of the first handful:
 
 ----
 $ make
-$ GIT_TRACE=1 ./bin-wrappers/git walken 2>&1 | tail -n 10
+$ shit_TRACE=1 ./bin-wrappers/shit walken 2>&1 | tail -n 10
 ----
 
 The last commit object given should have the same OID as the one we saw at the
-top before, and running `git show <oid>` with that OID should give you again
-the same results as `git show HEAD`. Furthermore, if you run and examine the
+top before, and running `shit show <oid>` with that OID should give you again
+the same results as `shit show HEAD`. Furthermore, if you run and examine the
 first ten lines again (with `head` instead of `tail` like we did before applying
 the `reverse` setting), you should see that now the first commit printed is the
 initial commit, `e83c5163`.

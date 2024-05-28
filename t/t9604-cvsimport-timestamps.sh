@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git cvsimport timestamps'
+test_description='shit cvsimport timestamps'
 . ./lib-cvs.sh
 
 test_lazy_prereq POSIX_TIMEZONE '
@@ -24,11 +24,11 @@ setup_cvs_test_repository t9604
 test_expect_success PERL,POSIX_TIMEZONE 'check timestamps are UTC' '
 
 	TZ=CST6CDT,M4.1.0,M10.5.0 \
-	git cvsimport -p"-x" -C module-1 module &&
-	git cvsimport -p"-x" -C module-1 module &&
+	shit cvsimport -p"-x" -C module-1 module &&
+	shit cvsimport -p"-x" -C module-1 module &&
 	(
 		cd module-1 &&
-		git log --format="%s %ai"
+		shit log --format="%s %ai"
 	) >actual-1 &&
 	cat >expect-1 <<-EOF &&
 	Rev 16 2006-10-29 07:00:01 +0000
@@ -59,10 +59,10 @@ test_expect_success PERL,POSIX_TIMEZONE 'check timestamps with author-specific t
 	user3=User Three <user3@domain.org> EST5EDT,M4.1.0,M10.5.0
 	user4=User Four <user4@domain.org> MST7MDT,M4.1.0,M10.5.0
 	EOF
-	git cvsimport -p"-x" -A cvs-authors -C module-2 module &&
+	shit cvsimport -p"-x" -A cvs-authors -C module-2 module &&
 	(
 		cd module-2 &&
-		git log --format="%s %ai %an"
+		shit log --format="%s %ai %an"
 	) >actual-2 &&
 	cat >expect-2 <<-EOF &&
 	Rev 16 2006-10-29 01:00:01 -0600 User Two

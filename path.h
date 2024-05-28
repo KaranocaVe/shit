@@ -24,30 +24,30 @@ char *mkpathdup(const char *fmt, ...)
 	__attribute__((format (printf, 1, 2)));
 
 /*
- * The `git_common_path` family of functions will construct a path into a
- * repository's common git directory, which is shared by all worktrees.
+ * The `shit_common_path` family of functions will construct a path into a
+ * repository's common shit directory, which is shared by all worktrees.
  */
 
 /*
- * Constructs a path into the common git directory of repository `repo` and
+ * Constructs a path into the common shit directory of repository `repo` and
  * append it in the provided buffer `sb`.
  */
-void strbuf_git_common_path(struct strbuf *sb,
+void strbuf_shit_common_path(struct strbuf *sb,
 			    const struct repository *repo,
 			    const char *fmt, ...)
 	__attribute__((format (printf, 3, 4)));
 
 /*
  * Return a statically allocated path into the main repository's
- * (the_repository) common git directory.
+ * (the_repository) common shit directory.
  */
-const char *git_common_path(const char *fmt, ...)
+const char *shit_common_path(const char *fmt, ...)
 	__attribute__((format (printf, 1, 2)));
 
 
 /*
- * The `git_path` family of functions will construct a path into a repository's
- * git directory.
+ * The `shit_path` family of functions will construct a path into a repository's
+ * shit directory.
  *
  * These functions will perform adjustments to the resultant path to account
  * for special paths which are either considered common among worktrees (e.g.
@@ -55,51 +55,51 @@ const char *git_common_path(const char *fmt, ...)
  * environment variable or config (e.g. path to the index file).
  *
  * For an exhaustive list of the adjustments made look at `common_list` and
- * `adjust_git_path` in path.c.
+ * `adjust_shit_path` in path.c.
  */
 
 /*
- * Return a path into the git directory of repository `repo`.
+ * Return a path into the shit directory of repository `repo`.
  */
-char *repo_git_path(const struct repository *repo,
+char *repo_shit_path(const struct repository *repo,
 		    const char *fmt, ...)
 	__attribute__((format (printf, 2, 3)));
 
 /*
- * Construct a path into the git directory of repository `repo` and append it
+ * Construct a path into the shit directory of repository `repo` and append it
  * to the provided buffer `sb`.
  */
-void strbuf_repo_git_path(struct strbuf *sb,
+void strbuf_repo_shit_path(struct strbuf *sb,
 			  const struct repository *repo,
 			  const char *fmt, ...)
 	__attribute__((format (printf, 3, 4)));
 
 /*
  * Return a statically allocated path into the main repository's
- * (the_repository) git directory.
+ * (the_repository) shit directory.
  */
-const char *git_path(const char *fmt, ...)
+const char *shit_path(const char *fmt, ...)
 	__attribute__((format (printf, 1, 2)));
 
 /*
- * Return a path into the main repository's (the_repository) git directory.
+ * Return a path into the main repository's (the_repository) shit directory.
  */
-char *git_pathdup(const char *fmt, ...)
+char *shit_pathdup(const char *fmt, ...)
 	__attribute__((format (printf, 1, 2)));
 
 /*
- * Construct a path into the main repository's (the_repository) git directory
+ * Construct a path into the main repository's (the_repository) shit directory
  * and place it in the provided buffer `buf`, the contents of the buffer will
  * be overridden.
  */
-char *git_path_buf(struct strbuf *buf, const char *fmt, ...)
+char *shit_path_buf(struct strbuf *buf, const char *fmt, ...)
 	__attribute__((format (printf, 2, 3)));
 
 /*
- * Construct a path into the main repository's (the_repository) git directory
+ * Construct a path into the main repository's (the_repository) shit directory
  * and append it to the provided buffer `sb`.
  */
-void strbuf_git_path(struct strbuf *sb, const char *fmt, ...)
+void strbuf_shit_path(struct strbuf *sb, const char *fmt, ...)
 	__attribute__((format (printf, 2, 3)));
 
 /*
@@ -123,54 +123,54 @@ void strbuf_repo_worktree_path(struct strbuf *sb,
 	__attribute__((format (printf, 3, 4)));
 
 /*
- * Return a path into a submodule's git directory located at `path`.  `path`
+ * Return a path into a submodule's shit directory located at `path`.  `path`
  * must only reference a submodule of the main repository (the_repository).
  */
-char *git_pathdup_submodule(const char *path, const char *fmt, ...)
+char *shit_pathdup_submodule(const char *path, const char *fmt, ...)
 	__attribute__((format (printf, 2, 3)));
 
 /*
- * Construct a path into a submodule's git directory located at `path` and
+ * Construct a path into a submodule's shit directory located at `path` and
  * append it to the provided buffer `sb`.  `path` must only reference a
  * submodule of the main repository (the_repository).
  */
-int strbuf_git_path_submodule(struct strbuf *sb, const char *path,
+int strbuf_shit_path_submodule(struct strbuf *sb, const char *path,
 				     const char *fmt, ...)
 	__attribute__((format (printf, 3, 4)));
 
 void report_linked_checkout_garbage(void);
 
 /*
- * You can define a static memoized git path like:
+ * You can define a static memoized shit path like:
  *
- *    static GIT_PATH_FUNC(git_path_foo, "FOO")
+ *    static shit_PATH_FUNC(shit_path_foo, "FOO")
  *
  * or use one of the global ones below.
  */
-#define GIT_PATH_FUNC(func, filename) \
+#define shit_PATH_FUNC(func, filename) \
 	const char *func(void) \
 	{ \
 		static char *ret; \
 		if (!ret) \
-			ret = git_pathdup(filename); \
+			ret = shit_pathdup(filename); \
 		return ret; \
 	}
 
-#define REPO_GIT_PATH_FUNC(var, filename) \
-	const char *git_path_##var(struct repository *r) \
+#define REPO_shit_PATH_FUNC(var, filename) \
+	const char *shit_path_##var(struct repository *r) \
 	{ \
 		if (!r->cached_paths.var) \
-			r->cached_paths.var = repo_git_path(r, filename); \
+			r->cached_paths.var = repo_shit_path(r, filename); \
 		return r->cached_paths.var; \
 	}
 
-const char *git_path_squash_msg(struct repository *r);
-const char *git_path_merge_msg(struct repository *r);
-const char *git_path_merge_rr(struct repository *r);
-const char *git_path_merge_mode(struct repository *r);
-const char *git_path_merge_head(struct repository *r);
-const char *git_path_fetch_head(struct repository *r);
-const char *git_path_shallow(struct repository *r);
+const char *shit_path_squash_msg(struct repository *r);
+const char *shit_path_merge_msg(struct repository *r);
+const char *shit_path_merge_rr(struct repository *r);
+const char *shit_path_merge_mode(struct repository *r);
+const char *shit_path_merge_head(struct repository *r);
+const char *shit_path_fetch_head(struct repository *r);
+const char *shit_path_shallow(struct repository *r);
 
 int ends_with_path_components(const char *path, const char *components);
 int validate_headref(const char *ref);
@@ -194,13 +194,13 @@ char *strip_path_suffix(const char *path, const char *suffix);
 int daemon_avoid_alias(const char *path);
 
 /*
- * These functions match their is_hfs_dotgit() counterparts; see utf8.h for
+ * These functions match their is_hfs_dotshit() counterparts; see utf8.h for
  * details.
  */
-int is_ntfs_dotgit(const char *name);
-int is_ntfs_dotgitmodules(const char *name);
-int is_ntfs_dotgitignore(const char *name);
-int is_ntfs_dotgitattributes(const char *name);
+int is_ntfs_dotshit(const char *name);
+int is_ntfs_dotshitmodules(const char *name);
+int is_ntfs_dotshitignore(const char *name);
+int is_ntfs_dotshitattributes(const char *name);
 int is_ntfs_dotmailmap(const char *name);
 
 /*
@@ -220,22 +220,22 @@ char *xdg_config_home_for(const char *subdir, const char *filename);
 
 /**
  * Return a newly allocated string with the evaluation of
- * "$XDG_CONFIG_HOME/git/$filename" if $XDG_CONFIG_HOME is non-empty, otherwise
- * "$HOME/.config/git/$filename". Return NULL upon error.
+ * "$XDG_CONFIG_HOME/shit/$filename" if $XDG_CONFIG_HOME is non-empty, otherwise
+ * "$HOME/.config/shit/$filename". Return NULL upon error.
  */
 char *xdg_config_home(const char *filename);
 
 /**
  * Return a newly allocated string with the evaluation of
- * "$XDG_CACHE_HOME/git/$filename" if $XDG_CACHE_HOME is non-empty, otherwise
- * "$HOME/.cache/git/$filename". Return NULL upon error.
+ * "$XDG_CACHE_HOME/shit/$filename" if $XDG_CACHE_HOME is non-empty, otherwise
+ * "$HOME/.cache/shit/$filename". Return NULL upon error.
  */
 char *xdg_cache_home(const char *filename);
 
 /*
  * Create a directory and (if share is nonzero) adjust its permissions
  * according to the shared_repository setting. Only use this for
- * directories under $GIT_DIR.  Don't use it for working tree
+ * directories under $shit_DIR.  Don't use it for working tree
  * directories.
  */
 void safe_create_dir(const char *dir, int share);

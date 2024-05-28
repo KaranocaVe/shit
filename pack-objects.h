@@ -135,8 +135,8 @@ struct packing_data {
 	 * the pack of an object using in_pack_idx field. If not,
 	 * in_pack[] array is used the same way as in_pack_pos[]
 	 */
-	struct packed_git **in_pack_by_idx;
-	struct packed_git **in_pack;
+	struct packed_shit **in_pack_by_idx;
+	struct packed_shit **in_pack;
 
 	/*
 	 * During packing with multiple threads, protect the in-core
@@ -235,7 +235,7 @@ static inline void oe_set_in_pack_pos(const struct packing_data *pack,
 	pack->in_pack_pos[e - pack->objects] = pos;
 }
 
-static inline struct packed_git *oe_in_pack(const struct packing_data *pack,
+static inline struct packed_shit *oe_in_pack(const struct packing_data *pack,
 					    const struct object_entry *e)
 {
 	if (pack->in_pack_by_idx)
@@ -248,7 +248,7 @@ void oe_map_new_pack(struct packing_data *pack);
 
 static inline void oe_set_in_pack(struct packing_data *pack,
 				  struct object_entry *e,
-				  struct packed_git *p)
+				  struct packed_shit *p)
 {
 	if (pack->in_pack_by_idx) {
 		if (p->index) {

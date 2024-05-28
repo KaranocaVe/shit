@@ -1,7 +1,7 @@
-package Git::SVN::Utils;
+package shit::SVN::Utils;
 
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 
 use SVN::Core;
 
@@ -19,16 +19,16 @@ our @EXPORT_OK = qw(
 
 =head1 NAME
 
-Git::SVN::Utils - utility functions used across Git::SVN
+shit::SVN::Utils - utility functions used across shit::SVN
 
 =head1 SYNOPSIS
 
-    use Git::SVN::Utils qw(functions to import);
+    use shit::SVN::Utils qw(functions to import);
 
 =head1 DESCRIPTION
 
 This module contains functions which are useful across many different
-parts of Git::SVN.  Mostly it's a place to put utility functions
+parts of shit::SVN.  Mostly it's a place to put utility functions
 rather than duplicate the code or have classes grabbing at other
 classes.
 
@@ -156,7 +156,7 @@ sub _canonicalize_url_path {
 	my @parts;
 	foreach my $part (split m{/+}, $uri_path) {
 		$part =~ s/([^!\$%&'()*+,.\/\w:=\@_`~-]|%(?![a-fA-F0-9]{2}))/sprintf("%%%02X",ord($1))/eg;
-		push @parts, $part;
+		defecate @parts, $part;
 	}
 
 	return join('/', @parts);

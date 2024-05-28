@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More 'no_plan';
 
-use Git::SVN::Utils qw(
+use shit::SVN::Utils qw(
 	add_path_to_url
 );
 

@@ -32,28 +32,28 @@ test_expect_success 'setup a tree' '
 	while read path
 	do
 		echo content >$path &&
-		git add $path || return 1
+		shit add $path || return 1
 	done <expect &&
-	git commit -m "initial commit" &&
-	git ls-files >actual &&
+	shit commit -m "initial commit" &&
+	shit ls-files >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'pathspec with no attr' '
-	test_must_fail git ls-files ":(attr:)"
+	test_must_fail shit ls-files ":(attr:)"
 '
 
-test_expect_success 'pathspec with labels and non existent .gitattributes' '
-	git ls-files ":(attr:label)" >actual &&
+test_expect_success 'pathspec with labels and non existent .shitattributes' '
+	shit ls-files ":(attr:label)" >actual &&
 	test_must_be_empty actual
 '
 
-test_expect_success 'pathspec with labels and non existent .gitattributes (2)' '
-	test_must_fail git grep content HEAD -- ":(attr:label)"
+test_expect_success 'pathspec with labels and non existent .shitattributes (2)' '
+	test_must_fail shit grep content HEAD -- ":(attr:label)"
 '
 
-test_expect_success 'setup .gitattributes' '
-	cat <<-\EOF >.gitattributes &&
+test_expect_success 'setup .shitattributes' '
+	cat <<-\EOF >.shitattributes &&
 	fileA labelA
 	fileB labelB
 	fileC labelC
@@ -67,19 +67,19 @@ test_expect_success 'setup .gitattributes' '
 	newFileA* labelA
 	newFileB* labelB
 	EOF
-	echo fileSetLabel label1 >sub/.gitattributes &&
-	git add .gitattributes sub/.gitattributes &&
-	git commit -m "add attributes"
+	echo fileSetLabel label1 >sub/.shitattributes &&
+	shit add .shitattributes sub/.shitattributes &&
+	shit commit -m "add attributes"
 '
 
-test_expect_success 'setup .gitignore' '
-	cat <<-\EOF >.gitignore &&
+test_expect_success 'setup .shitignore' '
+	cat <<-\EOF >.shitignore &&
 	actual
 	expect
 	pathspec_file
 	EOF
-	git add .gitignore &&
-	git commit -m "add gitignore"
+	shit add .shitignore &&
+	shit commit -m "add shitignore"
 '
 
 test_expect_success 'check specific set attr' '
@@ -87,17 +87,17 @@ test_expect_success 'check specific set attr' '
 	fileSetLabel
 	sub/fileSetLabel
 	EOF
-	git ls-files ":(attr:label)" >actual &&
+	shit ls-files ":(attr:label)" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'check set attr with pathspec pattern' '
 	echo sub/fileSetLabel >expect &&
 
-	git ls-files ":(attr:label)sub" >actual &&
+	shit ls-files ":(attr:label)sub" >actual &&
 	test_cmp expect actual &&
 
-	git ls-files ":(attr:label)sub/" >actual &&
+	shit ls-files ":(attr:label)sub/" >actual &&
 	test_cmp expect actual
 '
 
@@ -106,17 +106,17 @@ test_expect_success 'check specific set attr in tree-ish' '
 	HEAD:fileSetLabel
 	HEAD:sub/fileSetLabel
 	EOF
-	git grep -l content HEAD ":(attr:label)" >actual &&
+	shit grep -l content HEAD ":(attr:label)" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'check specific set attr with pathspec pattern in tree-ish' '
 	echo HEAD:sub/fileSetLabel >expect &&
 
-	git grep -l content HEAD ":(attr:label)sub" >actual &&
+	shit grep -l content HEAD ":(attr:label)sub" >actual &&
 	test_cmp expect actual &&
 
-	git grep -l content HEAD ":(attr:label)sub/" >actual &&
+	shit grep -l content HEAD ":(attr:label)sub/" >actual &&
 	test_cmp expect actual
 '
 
@@ -125,7 +125,7 @@ test_expect_success 'check specific unset attr' '
 	fileUnsetLabel
 	sub/fileUnsetLabel
 	EOF
-	git ls-files ":(attr:-label)" >actual &&
+	shit ls-files ":(attr:-label)" >actual &&
 	test_cmp expect actual
 '
 
@@ -134,7 +134,7 @@ test_expect_success 'check specific unset attr (2)' '
 	HEAD:fileUnsetLabel
 	HEAD:sub/fileUnsetLabel
 	EOF
-	git grep -l content HEAD ":(attr:-label)" >actual &&
+	shit grep -l content HEAD ":(attr:-label)" >actual &&
 	test_cmp expect actual
 '
 
@@ -143,9 +143,9 @@ test_expect_success 'check specific value attr' '
 	fileValue
 	sub/fileValue
 	EOF
-	git ls-files ":(attr:label=foo)" >actual &&
+	shit ls-files ":(attr:label=foo)" >actual &&
 	test_cmp expect actual &&
-	git ls-files ":(attr:label=bar)" >actual &&
+	shit ls-files ":(attr:label=bar)" >actual &&
 	test_must_be_empty actual
 '
 
@@ -154,15 +154,15 @@ test_expect_success 'check specific value attr (2)' '
 	HEAD:fileValue
 	HEAD:sub/fileValue
 	EOF
-	git grep -l content HEAD ":(attr:label=foo)" >actual &&
+	shit grep -l content HEAD ":(attr:label=foo)" >actual &&
 	test_cmp expect actual &&
-	test_must_fail git grep -l content HEAD ":(attr:label=bar)"
+	test_must_fail shit grep -l content HEAD ":(attr:label=bar)"
 '
 
 test_expect_success 'check unspecified attr' '
 	cat <<-\EOF >expect &&
-	.gitattributes
-	.gitignore
+	.shitattributes
+	.shitignore
 	fileA
 	fileAB
 	fileAC
@@ -171,7 +171,7 @@ test_expect_success 'check unspecified attr' '
 	fileC
 	fileNoLabel
 	fileWrongLabel
-	sub/.gitattributes
+	sub/.shitattributes
 	sub/fileA
 	sub/fileAB
 	sub/fileAC
@@ -181,14 +181,14 @@ test_expect_success 'check unspecified attr' '
 	sub/fileNoLabel
 	sub/fileWrongLabel
 	EOF
-	git ls-files ":(attr:!label)" >actual &&
+	shit ls-files ":(attr:!label)" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'check unspecified attr (2)' '
 	cat <<-\EOF >expect &&
-	HEAD:.gitattributes
-	HEAD:.gitignore
+	HEAD:.shitattributes
+	HEAD:.shitignore
 	HEAD:fileA
 	HEAD:fileAB
 	HEAD:fileAC
@@ -197,7 +197,7 @@ test_expect_success 'check unspecified attr (2)' '
 	HEAD:fileC
 	HEAD:fileNoLabel
 	HEAD:fileWrongLabel
-	HEAD:sub/.gitattributes
+	HEAD:sub/.shitattributes
 	HEAD:sub/fileA
 	HEAD:sub/fileAB
 	HEAD:sub/fileAC
@@ -207,23 +207,23 @@ test_expect_success 'check unspecified attr (2)' '
 	HEAD:sub/fileNoLabel
 	HEAD:sub/fileWrongLabel
 	EOF
-	git grep -l ^ HEAD ":(attr:!label)" >actual &&
+	shit grep -l ^ HEAD ":(attr:!label)" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'check multiple unspecified attr' '
 	cat <<-\EOF >expect &&
-	.gitattributes
-	.gitignore
+	.shitattributes
+	.shitignore
 	fileC
 	fileNoLabel
 	fileWrongLabel
-	sub/.gitattributes
+	sub/.shitattributes
 	sub/fileC
 	sub/fileNoLabel
 	sub/fileWrongLabel
 	EOF
-	git ls-files ":(attr:!labelB !labelA !label)" >actual &&
+	shit ls-files ":(attr:!labelB !labelA !label)" >actual &&
 	test_cmp expect actual
 '
 
@@ -233,7 +233,7 @@ test_expect_success 'check label with more labels but excluded path' '
 	fileB
 	fileBC
 	EOF
-	git ls-files ":(attr:labelB)" ":(exclude)sub/" >actual &&
+	shit ls-files ":(attr:labelB)" ":(exclude)sub/" >actual &&
 	test_cmp expect actual
 '
 
@@ -245,12 +245,12 @@ test_expect_success 'check label excluding other labels' '
 	sub/fileAB
 	sub/fileB
 	EOF
-	git ls-files ":(attr:labelB)" ":(exclude,attr:labelC)sub/" >actual &&
+	shit ls-files ":(attr:labelB)" ":(exclude,attr:labelC)sub/" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'fail on multiple attr specifiers in one pathspec item' '
-	test_must_fail git ls-files . ":(attr:labelB,attr:labelC)" 2>actual &&
+	test_must_fail shit ls-files . ":(attr:labelB,attr:labelC)" 2>actual &&
 	test_grep "Only one" actual
 '
 
@@ -260,34 +260,34 @@ test_expect_success 'fail if attr magic is used in places not implemented' '
 	# attr magic. This test does not advocate check-ignore to stay that way.
 	# When you teach the command to grok the pathspec, you need to find
 	# another command to replace it for the test.
-	test_must_fail git check-ignore ":(attr:labelB)" 2>actual &&
+	test_must_fail shit check-ignore ":(attr:labelB)" 2>actual &&
 	test_grep "magic not supported" actual
 '
 
-test_expect_success 'check that attr magic works for git stash push' '
+test_expect_success 'check that attr magic works for shit stash defecate' '
 	cat <<-\EOF >expect &&
 	A	sub/newFileA-foo
 	EOF
 	>sub/newFileA-foo &&
 	>sub/newFileB-foo &&
-	git stash push --include-untracked -- ":(exclude,attr:labelB)" &&
-	git stash show --include-untracked --name-status >actual &&
+	shit stash defecate --include-untracked -- ":(exclude,attr:labelB)" &&
+	shit stash show --include-untracked --name-status >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'check that attr magic works for git add --all' '
+test_expect_success 'check that attr magic works for shit add --all' '
 	cat <<-\EOF >expect &&
 	sub/newFileA-foo
 	EOF
 	>sub/newFileA-foo &&
 	>sub/newFileB-foo &&
-	git add --all ":(exclude,attr:labelB)" &&
-	git diff --name-only --cached >actual &&
-	git restore -W -S . &&
+	shit add --all ":(exclude,attr:labelB)" &&
+	shit diff --name-only --cached >actual &&
+	shit restore -W -S . &&
 	test_cmp expect actual
 '
 
-test_expect_success 'check that attr magic works for git add -u' '
+test_expect_success 'check that attr magic works for shit add -u' '
 	cat <<-\EOF >expect &&
 	sub/fileA
 	EOF
@@ -295,13 +295,13 @@ test_expect_success 'check that attr magic works for git add -u' '
 	>sub/newFileB-foo &&
 	>sub/fileA &&
 	>sub/fileB &&
-	git add -u ":(exclude,attr:labelB)" &&
-	git diff --name-only --cached  >actual &&
-	git restore -S -W . && rm sub/new* &&
+	shit add -u ":(exclude,attr:labelB)" &&
+	shit diff --name-only --cached  >actual &&
+	shit restore -S -W . && rm sub/new* &&
 	test_cmp expect actual
 '
 
-test_expect_success 'check that attr magic works for git add <path>' '
+test_expect_success 'check that attr magic works for shit add <path>' '
 	cat <<-\EOF >expect &&
 	fileA
 	fileB
@@ -311,13 +311,13 @@ test_expect_success 'check that attr magic works for git add <path>' '
 	>fileB &&
 	>sub/fileA &&
 	>sub/fileB &&
-	git add ":(exclude,attr:labelB)sub/*" &&
-	git diff --name-only --cached >actual &&
-	git restore -S -W . &&
+	shit add ":(exclude,attr:labelB)sub/*" &&
+	shit diff --name-only --cached >actual &&
+	shit restore -S -W . &&
 	test_cmp expect actual
 '
 
-test_expect_success 'check that attr magic works for git -add .' '
+test_expect_success 'check that attr magic works for shit -add .' '
 	cat <<-\EOF >expect &&
 	sub/fileA
 	EOF
@@ -326,14 +326,14 @@ test_expect_success 'check that attr magic works for git -add .' '
 	>sub/fileA &&
 	>sub/fileB &&
 	cd sub &&
-	git add . ":(exclude,attr:labelB)" &&
+	shit add . ":(exclude,attr:labelB)" &&
 	cd .. &&
-	git diff --name-only --cached >actual &&
-	git restore -S -W . &&
+	shit diff --name-only --cached >actual &&
+	shit restore -S -W . &&
 	test_cmp expect actual
 '
 
-test_expect_success 'check that attr magic works for git add --pathspec-from-file' '
+test_expect_success 'check that attr magic works for shit add --pathspec-from-file' '
 	cat <<-\EOF >pathspec_file &&
 	:(exclude,attr:labelB)
 	EOF
@@ -342,53 +342,53 @@ test_expect_success 'check that attr magic works for git add --pathspec-from-fil
 	EOF
 	>sub/newFileA-foo &&
 	>sub/newFileB-foo &&
-	git add --all --pathspec-from-file=pathspec_file &&
-	git diff --name-only --cached >actual &&
+	shit add --all --pathspec-from-file=pathspec_file &&
+	shit diff --name-only --cached >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'abort on giving invalid label on the command line' '
-	test_must_fail git ls-files . ":(attr:☺)"
+	test_must_fail shit ls-files . ":(attr:☺)"
 '
 
 test_expect_success 'abort on asking for wrong magic' '
-	test_must_fail git ls-files . ":(attr:-label=foo)" &&
-	test_must_fail git ls-files . ":(attr:!label=foo)"
+	test_must_fail shit ls-files . ":(attr:-label=foo)" &&
+	test_must_fail shit ls-files . ":(attr:!label=foo)"
 '
 
 test_expect_success 'check attribute list' '
-	cat <<-EOF >>.gitattributes &&
+	cat <<-EOF >>.shitattributes &&
 	* whitespace=indent,trail,space
 	EOF
-	git ls-files ":(attr:whitespace=indent\,trail\,space)" >actual &&
-	git ls-files >expect &&
+	shit ls-files ":(attr:whitespace=indent\,trail\,space)" >actual &&
+	shit ls-files >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'backslash cannot be the last character' '
-	test_must_fail git ls-files ":(attr:label=foo\\ labelA=bar)" 2>actual &&
+	test_must_fail shit ls-files ":(attr:label=foo\\ labelA=bar)" 2>actual &&
 	test_grep "not allowed as last character in attr value" actual
 '
 
 test_expect_success 'backslash cannot be used as a value' '
-	test_must_fail git ls-files ":(attr:label=f\\\oo)" 2>actual &&
+	test_must_fail shit ls-files ":(attr:label=f\\\oo)" 2>actual &&
 	test_grep "for value matching" actual
 '
 
-test_expect_success 'reading from .gitattributes in a subdirectory (1)' '
-	git ls-files ":(attr:label1)" >actual &&
+test_expect_success 'reading from .shitattributes in a subdirectory (1)' '
+	shit ls-files ":(attr:label1)" >actual &&
 	test_write_lines "sub/fileSetLabel" >expect &&
 	test_cmp expect actual
 '
 
-test_expect_success 'reading from .gitattributes in a subdirectory (2)' '
-	git ls-files ":(attr:label1)sub" >actual &&
+test_expect_success 'reading from .shitattributes in a subdirectory (2)' '
+	shit ls-files ":(attr:label1)sub" >actual &&
 	test_write_lines "sub/fileSetLabel" >expect &&
 	test_cmp expect actual
 '
 
-test_expect_success 'reading from .gitattributes in a subdirectory (3)' '
-	git ls-files ":(attr:label1)sub/" >actual &&
+test_expect_success 'reading from .shitattributes in a subdirectory (3)' '
+	shit ls-files ":(attr:label1)sub/" >actual &&
 	test_write_lines "sub/fileSetLabel" >expect &&
 	test_cmp expect actual
 '
@@ -396,13 +396,13 @@ test_expect_success 'reading from .gitattributes in a subdirectory (3)' '
 test_expect_success POSIXPERM 'pathspec with builtin_objectmode attr can be used' '
 	>mode_exec_file_1 &&
 
-	git status -s ":(attr:builtin_objectmode=100644)mode_exec_*" >actual &&
+	shit status -s ":(attr:builtin_objectmode=100644)mode_exec_*" >actual &&
 	echo ?? mode_exec_file_1 >expect &&
 	test_cmp expect actual &&
 
-	git add mode_exec_file_1 &&
+	shit add mode_exec_file_1 &&
 	chmod +x mode_exec_file_1 &&
-	git status -s ":(attr:builtin_objectmode=100755)mode_exec_*" >actual &&
+	shit status -s ":(attr:builtin_objectmode=100755)mode_exec_*" >actual &&
 	echo AM mode_exec_file_1 >expect &&
 	test_cmp expect actual
 '
@@ -411,11 +411,11 @@ test_expect_success POSIXPERM 'builtin_objectmode attr can be excluded' '
 	>mode_1_regular &&
 	>mode_1_exec  &&
 	chmod +x mode_1_exec &&
-	git status -s ":(exclude,attr:builtin_objectmode=100644)" "mode_1_*" >actual &&
+	shit status -s ":(exclude,attr:builtin_objectmode=100644)" "mode_1_*" >actual &&
 	echo ?? mode_1_exec >expect &&
 	test_cmp expect actual &&
 
-	git status -s ":(exclude,attr:builtin_objectmode=100755)" "mode_1_*" >actual &&
+	shit status -s ":(exclude,attr:builtin_objectmode=100755)" "mode_1_*" >actual &&
 	echo ?? mode_1_regular >expect &&
 	test_cmp expect actual
 '

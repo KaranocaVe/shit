@@ -1,15 +1,15 @@
 #!/bin/sh
 
-test_description='fetch/push involving alternates'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+test_description='fetch/defecate involving alternates'
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 count_objects () {
 	loose=0 inpack=0
 	eval "$(
-		git count-objects -v |
+		shit count-objects -v |
 		sed -n -e 's/^count: \(.*\)/loose=\1/p' \
 		    -e 's/^in-pack: \(.*\)/inpack=\1/p'
 	)" &&
@@ -19,36 +19,36 @@ count_objects () {
 
 test_expect_success setup '
 	(
-		git init original &&
+		shit init original &&
 		cd original &&
 		i=0 &&
 		while test $i -le 100
 		do
 			echo "$i" >count &&
-			git add count &&
-			git commit -m "$i" || exit
+			shit add count &&
+			shit commit -m "$i" || exit
 			i=$(($i + 1))
 		done
 	) &&
 	(
-		git clone --reference=original "file://$(pwd)/original" one &&
+		shit clone --reference=original "file://$(pwd)/original" one &&
 		cd one &&
 		echo Z >count &&
-		git add count &&
-		git commit -m Z &&
+		shit add count &&
+		shit commit -m Z &&
 		count_objects >../one.count
 	) &&
-	A=$(pwd)/original/.git/objects &&
-	git init receiver &&
-	echo "$A" >receiver/.git/objects/info/alternates &&
-	git init fetcher &&
-	echo "$A" >fetcher/.git/objects/info/alternates
+	A=$(pwd)/original/.shit/objects &&
+	shit init receiver &&
+	echo "$A" >receiver/.shit/objects/info/alternates &&
+	shit init fetcher &&
+	echo "$A" >fetcher/.shit/objects/info/alternates
 '
 
-test_expect_success 'pushing into a repository with the same alternate' '
+test_expect_success 'defecateing into a repository with the same alternate' '
 	(
 		cd one &&
-		git push ../receiver main:refs/heads/it
+		shit defecate ../receiver main:refs/heads/it
 	) &&
 	(
 		cd receiver &&
@@ -60,7 +60,7 @@ test_expect_success 'pushing into a repository with the same alternate' '
 test_expect_success 'fetching from a repository with the same alternate' '
 	(
 		cd fetcher &&
-		git fetch ../one main:refs/heads/it &&
+		shit fetch ../one main:refs/heads/it &&
 		count_objects >../fetcher.count
 	) &&
 	test_cmp one.count fetcher.count

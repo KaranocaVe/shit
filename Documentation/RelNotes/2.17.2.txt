@@ -1,4 +1,4 @@
-Git v2.17.2 Release Notes
+shit v2.17.2 Release Notes
 =========================
 
 This release merges up the fixes that appear in v2.14.5 to address
@@ -6,7 +6,7 @@ the recently reported CVE-2018-17456; see the release notes for that
 version for details.
 
 In addition, this release also teaches "fsck" and the server side
-logic to reject pushes to repositories that attempt to create such a
-problematic ".gitmodules" file as tracked contents, to help hosting
+logic to reject defecatees to repositories that attempt to create such a
+problematic ".shitmodules" file as tracked contents, to help hosting
 sites protect their customers by preventing malicious contents from
 spreading.

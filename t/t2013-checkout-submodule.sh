@@ -8,58 +8,58 @@ test_description='checkout can handle submodules'
 test_expect_success 'setup' '
 	mkdir submodule &&
 	(cd submodule &&
-	 git init &&
+	 shit init &&
 	 test_commit first) &&
-	git add submodule &&
+	shit add submodule &&
 	test_tick &&
-	git commit -m superproject &&
+	shit commit -m superproject &&
 	(cd submodule &&
 	 test_commit second) &&
-	git add submodule &&
+	shit add submodule &&
 	test_tick &&
-	git commit -m updated.superproject
+	shit commit -m updated.superproject
 '
 
 test_expect_success '"reset <submodule>" updates the index' '
-	git update-index --refresh &&
-	git diff-files --quiet &&
-	git diff-index --quiet --cached HEAD &&
-	git reset HEAD^ submodule &&
-	test_must_fail git diff-files --quiet &&
-	git reset submodule &&
-	git diff-files --quiet
+	shit update-index --refresh &&
+	shit diff-files --quiet &&
+	shit diff-index --quiet --cached HEAD &&
+	shit reset HEAD^ submodule &&
+	test_must_fail shit diff-files --quiet &&
+	shit reset submodule &&
+	shit diff-files --quiet
 '
 
 test_expect_success '"checkout <submodule>" updates the index only' '
-	git update-index --refresh &&
-	git diff-files --quiet &&
-	git diff-index --quiet --cached HEAD &&
-	git checkout HEAD^ submodule &&
-	test_must_fail git diff-files --quiet &&
-	git checkout HEAD submodule &&
-	git diff-files --quiet
+	shit update-index --refresh &&
+	shit diff-files --quiet &&
+	shit diff-index --quiet --cached HEAD &&
+	shit checkout HEAD^ submodule &&
+	test_must_fail shit diff-files --quiet &&
+	shit checkout HEAD submodule &&
+	shit diff-files --quiet
 '
 
 test_expect_success '"checkout <submodule>" honors diff.ignoreSubmodules' '
-	git config diff.ignoreSubmodules dirty &&
+	shit config diff.ignoreSubmodules dirty &&
 	echo x> submodule/untracked &&
-	git checkout HEAD >actual 2>&1 &&
+	shit checkout HEAD >actual 2>&1 &&
 	test_must_be_empty actual
 '
 
-test_expect_success '"checkout <submodule>" honors submodule.*.ignore from .gitmodules' '
-	git config diff.ignoreSubmodules none &&
-	git config -f .gitmodules submodule.submodule.path submodule &&
-	git config -f .gitmodules submodule.submodule.ignore untracked &&
-	git checkout HEAD >actual 2>&1 &&
+test_expect_success '"checkout <submodule>" honors submodule.*.ignore from .shitmodules' '
+	shit config diff.ignoreSubmodules none &&
+	shit config -f .shitmodules submodule.submodule.path submodule &&
+	shit config -f .shitmodules submodule.submodule.ignore untracked &&
+	shit checkout HEAD >actual 2>&1 &&
 	test_must_be_empty actual
 '
 
-test_expect_success '"checkout <submodule>" honors submodule.*.ignore from .git/config' '
-	git config -f .gitmodules submodule.submodule.ignore none &&
-	git config submodule.submodule.path submodule &&
-	git config submodule.submodule.ignore all &&
-	git checkout HEAD >actual 2>&1 &&
+test_expect_success '"checkout <submodule>" honors submodule.*.ignore from .shit/config' '
+	shit config -f .shitmodules submodule.submodule.ignore none &&
+	shit config submodule.submodule.path submodule &&
+	shit config submodule.submodule.ignore all &&
+	shit checkout HEAD >actual 2>&1 &&
 	test_must_be_empty actual
 '
 

@@ -10,7 +10,7 @@ int cmd__read_graph(int argc UNUSED, const char **argv UNUSED)
 	struct commit_graph *graph = NULL;
 	struct object_directory *odb;
 
-	setup_git_directory();
+	setup_shit_directory();
 	odb = the_repository->objects->odb;
 
 	prepare_repo_settings(the_repository);

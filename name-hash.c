@@ -5,7 +5,7 @@
  *
  * Copyright (C) 2008 Linus Torvalds
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "gettext.h"
 #include "name-hash.h"
@@ -59,7 +59,7 @@ static struct dir_entry *hash_dir_entry(struct index_state *istate,
 {
 	/*
 	 * Throw each directory component in the hash for quick lookup
-	 * during a git status. Directory components are stored without their
+	 * during a shit status. Directory components are stored without their
 	 * closing slash.  Despite submodules being a directory, they never
 	 * reach this point, because they are stored
 	 * in index_state.name_hash (as ordinary cache_entries).

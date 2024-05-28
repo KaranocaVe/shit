@@ -1,24 +1,24 @@
-Git 2.15 Release Notes
+shit 2.15 Release Notes
 ======================
 
 Backward compatibility notes and other notable changes.
 
  * Use of an empty string as a pathspec element that is used for
-   'everything matches' is still warned and Git asks users to use a
+   'everything matches' is still warned and shit asks users to use a
    more explicit '.' for that instead.  The hope is that existing
    users will not mind this change, and eventually the warning can be
    turned into a hard error, upgrading the deprecation into removal of
-   this (mis)feature.  That is now scheduled to happen in Git v2.16,
+   this (mis)feature.  That is now scheduled to happen in shit v2.16,
    the next major release after this one.
 
- * Git now avoids blindly falling back to ".git" when the setup
-   sequence said we are _not_ in Git repository.  A corner case that
+ * shit now avoids blindly falling back to ".shit" when the setup
+   sequence said we are _not_ in shit repository.  A corner case that
    happens to work right now may be broken by a call to BUG().
    We've tried hard to locate such cases and fixed them, but there
    might still be cases that need to be addressed--bug reports are
    greatly appreciated.
 
- * "branch --set-upstream" that has been deprecated in Git 1.8 has
+ * "branch --set-upstream" that has been deprecated in shit 1.8 has
    finally been retired.
 
 
@@ -31,41 +31,41 @@ UI, Workflows & Features
    and an old example in it that added a sign-off manually has been
    improved to use the interpret-trailers command.
 
- * The advice message given when "git rebase" stops for conflicting
+ * The advice message given when "shit rebase" stops for conflicting
    changes has been improved.
 
  * The "rerere-train" script (in contrib/) learned the "--overwrite"
    option to allow overwriting existing recorded resolutions.
 
- * "git contacts" (in contrib/) now lists the address on the
+ * "shit contacts" (in contrib/) now lists the address on the
    "Reported-by:" trailer to its output, in addition to those on
    S-o-b: and other trailers, to make it easier to notify (and thank)
    the original bug reporter.
 
- * "git rebase", especially when it is run by mistake and ends up
+ * "shit rebase", especially when it is run by mistake and ends up
    trying to replay many changes, spent long time in silence.  The
    command has been taught to show progress report when it spends
    long time preparing these many changes to replay (which would give
    the user a chance to abort with ^C).
 
- * "git merge" learned a "--signoff" option to add the Signed-off-by:
+ * "shit merge" learned a "--signoff" option to add the Signed-off-by:
    trailer with the committer's name.
 
- * "git diff" learned to optionally paint new lines that are the same
+ * "shit diff" learned to optionally paint new lines that are the same
    as deleted lines elsewhere differently from genuinely new lines.
 
- * "git interpret-trailers" learned to take the trailer specifications
+ * "shit interpret-trailers" learned to take the trailer specifications
    from the command line that overrides the configured values.
 
- * "git interpret-trailers" has been taught a "--parse" and a few
+ * "shit interpret-trailers" has been taught a "--parse" and a few
    other options to make it easier for scripts to grab existing
    trailer lines from a commit log message.
 
- * The "--format=%(trailers)" option "git log" and its friends take
+ * The "--format=%(trailers)" option "shit log" and its friends take
    learned to take the 'unfold' and 'only' modifiers to normalize its
-   output, e.g. "git log --format=%(trailers:only,unfold)".
+   output, e.g. "shit log --format=%(trailers:only,unfold)".
 
- * "gitweb" shows a link to visit the 'raw' contents of blobs in the
+ * "shitweb" shows a link to visit the 'raw' contents of blobs in the
    history overview page.
 
  * "[gc] rerereResolved = 5.days" used to be invalid, as the variable
@@ -73,33 +73,33 @@ UI, Workflows & Features
    is allowed.
 
  * The code to acquire a lock on a reference (e.g. while accepting a
-   push from a client) used to immediately fail when the reference is
+   defecate from a client) used to immediately fail when the reference is
    already locked---now it waits for a very short while and retries,
    which can make it succeed if the lock holder was holding it during
    a read-only operation.
 
- * "branch --set-upstream" that has been deprecated in Git 1.8 has
+ * "branch --set-upstream" that has been deprecated in shit 1.8 has
    finally been retired.
 
  * The codepath to call external process filter for smudge/clean
    operation learned to show the progress meter.
 
- * "git rev-parse" learned "--is-shallow-repository", that is to be
+ * "shit rev-parse" learned "--is-shallow-repository", that is to be
    used in a way similar to existing "--is-bare-repository" and
    friends.
 
- * "git describe --match <pattern>" has been taught to play well with
+ * "shit describe --match <pattern>" has been taught to play well with
    the "--all" option.
 
- * "git branch" learned "-c/-C" to create a new branch by copying an
+ * "shit branch" learned "-c/-C" to create a new branch by copying an
    existing one.
 
- * Some commands (most notably "git status") makes an opportunistic
+ * Some commands (most notably "shit status") makes an opportunistic
    update when performing a read-only operation to help optimize later
    operations in the same repository.  The new "--no-optional-locks"
-   option can be passed to Git to disable them.
+   option can be passed to shit to disable them.
 
- * "git for-each-ref --format=..." learned a new format element,
+ * "shit for-each-ref --format=..." learned a new format element,
    %(trailers), to show only the commit log trailer part of the log
    message.
 
@@ -122,11 +122,11 @@ Performance, Internal Implementation, Development Support etc.
    The callback implementations have been updated to take "void *"
    pointers and cast them to the type they expect instead.
 
- * Because recent Git for Windows do come with a real msgfmt, the
-   build procedure for git-gui has been updated to use it instead of a
+ * Because recent shit for Windows do come with a real msgfmt, the
+   build procedure for shit-gui has been updated to use it instead of a
    hand-rolled substitute.
 
- * "git grep --recurse-submodules" has been reworked to give a more
+ * "shit grep --recurse-submodules" has been reworked to give a more
    consistent output across submodule boundary (and do its thing
    without having to fork a separate process).
 
@@ -136,7 +136,7 @@ Performance, Internal Implementation, Development Support etc.
 
  * The "ref-store" code reorganization continues.
 
- * "git commit" used to discard the index and re-read from the filesystem
+ * "shit commit" used to discard the index and re-read from the filesystem
    just in case the pre-commit hook has updated it in the middle; this
    has been optimized out when we know we do not run the pre-commit hook.
    (merge 680ee550d7 kw/commit-keep-index-when-pre-commit-is-not-run later to maint).
@@ -151,8 +151,8 @@ Performance, Internal Implementation, Development Support etc.
    been simplified.
    (merge 8aade107dd jc/simplify-progress later to maint).
 
- * Code clean-up to avoid mixing values read from the .gitmodules file
-   and values read from the .git/config file.
+ * Code clean-up to avoid mixing values read from the .shitmodules file
+   and values read from the .shit/config file.
 
  * We used to spend more than necessary cycles allocating and freeing
    piece of memory while writing each index entry out.  This has been
@@ -181,24 +181,24 @@ Performance, Internal Implementation, Development Support etc.
    a mechanism for developers to mark that the region of memory
    pointed by a pointer is not lost/leaking to help these tools.
 
- * As "git commit" to conclude a conflicted "git merge" honors the
-   commit-msg hook, "git merge" that records a merge commit that
+ * As "shit commit" to conclude a conflicted "shit merge" honors the
+   commit-msg hook, "shit merge" that records a merge commit that
    cleanly auto-merges should, but it didn't.
 
- * The codepath for "git merge-recursive" has been cleaned up.
+ * The codepath for "shit merge-recursive" has been cleaned up.
 
  * Many leaks of strbuf have been fixed.
 
- * "git imap-send" has our own implementation of the protocol and also
+ * "shit imap-send" has our own implementation of the protocol and also
    can use more recent libCurl with the imap protocol support.  Update
    the latter so that it can use the credential subsystem, and then
    make it the default option to use, so that we can eventually
    deprecate and remove the former.
 
- * "make style" runs git-clang-format to help developers by pointing
+ * "make style" runs shit-clang-format to help developers by pointing
    out coding style issues.
 
- * A test to demonstrate "git mv" failing to adjust nested submodules
+ * A test to demonstrate "shit mv" failing to adjust nested submodules
    has been added.
    (merge c514167df2 hv/mv-nested-submodules-test later to maint).
 
@@ -213,12 +213,12 @@ Performance, Internal Implementation, Development Support etc.
  * Add a helper for DLL loading in anticipation for its need in a
    future topic RSN.
 
- * "git status --ignored", when noticing that a directory without any
+ * "shit status --ignored", when noticing that a directory without any
    tracked path is ignored, still enumerated all the ignored paths in
    the directory, which is unnecessary.  The codepath has been
    optimized to avoid this overhead.
 
- * The final batch to "git rebase -i" updates to move more code from
+ * The final batch to "shit rebase -i" updates to move more code from
    the shell script to C has been merged.
 
  * Operations that do not touch (majority of) packed refs have been
@@ -257,11 +257,11 @@ Fixes since v2.14
  * Numerous bugs in walking of reflogs via "log -g" and friends have
    been fixed.
 
- * "git commit" when seeing an totally empty message said "you did not
+ * "shit commit" when seeing an totally empty message said "you did not
    edit the message", which is clearly wrong.  The message has been
    corrected.
 
- * When a directory is not readable, "gitweb" fails to build the
+ * When a directory is not readable, "shitweb" fails to build the
    project list.  Work this around by skipping such a directory.
 
  * Some versions of GnuPG fails to kill gpg-agent it auto-spawned
@@ -273,93 +273,93 @@ Fixes since v2.14
    daemon is torn down were flaky.  This was fixed by reacting to
    ECONNRESET and behaving as if we got an EOF.
 
- * "git log --tag=no-such-tag" showed log starting from HEAD, which
+ * "shit log --tag=no-such-tag" showed log starting from HEAD, which
    has been fixed---it now shows nothing.
 
  * The "tag.pager" configuration variable was useless for those who
    actually create tag objects, as it interfered with the use of an
    editor.  A new mechanism has been introduced for commands to enable
    pager depending on what operation is being carried out to fix this,
-   and then "git tag -l" is made to run pager by default.
+   and then "shit tag -l" is made to run pager by default.
 
- * "git push --recurse-submodules $there HEAD:$target" was not
+ * "shit defecate --recurse-submodules $there HEAD:$target" was not
    propagated down to the submodules, but now it is.
 
- * Commands like "git rebase" accepted the --rerere-autoupdate option
+ * Commands like "shit rebase" accepted the --rerere-autoupdate option
    from the command line, but did not always use it.  This has been
    fixed.
 
- * "git clone --recurse-submodules --quiet" did not pass the quiet
+ * "shit clone --recurse-submodules --quiet" did not pass the quiet
    option down to submodules.
 
  * Test portability fix for OBSD.
 
  * Portability fix for OBSD.
 
- * "git am -s" has been taught that some input may end with a trailer
+ * "shit am -s" has been taught that some input may end with a trailer
    block that is not Signed-off-by: and it should refrain from adding
    an extra blank line before adding a new sign-off in such a case.
 
- * "git svn" used with "--localtime" option did not compute the tz
+ * "shit svn" used with "--localtime" option did not compute the tz
    offset for the timestamp in question and instead always used the
    current time, which has been corrected.
 
  * Memory leak in an error codepath has been plugged.
 
- * "git stash -u" used the contents of the committed version of the
-   ".gitignore" file to decide which paths are ignored, even when the
+ * "shit stash -u" used the contents of the committed version of the
+   ".shitignore" file to decide which paths are ignored, even when the
    file has local changes.  The command has been taught to instead use
    the locally modified contents.
 
  * bash 4.4 or newer gave a warning on NUL byte in command
-   substitution done in "git stash"; this has been squelched.
+   substitution done in "shit stash"; this has been squelched.
 
- * "git grep -L" and "git grep --quiet -L" reported different exit
+ * "shit grep -L" and "shit grep --quiet -L" reported different exit
    codes; this has been corrected.
 
  * When handshake with a subprocess filter notices that the process
-   asked for an unknown capability, Git did not report what program
+   asked for an unknown capability, shit did not report what program
    the offending subprocess was running.  This has been corrected.
 
- * "git apply" that is used as a better "patch -p1" failed to apply a
+ * "shit apply" that is used as a better "patch -p1" failed to apply a
    taken from a file with CRLF line endings to a file with CRLF line
-   endings.  The root cause was because it misused convert_to_git()
+   endings.  The root cause was because it misused convert_to_shit()
    that tried to do "safe-crlf" processing by looking at the index
    entry at the same path, which is a nonsense---in that mode, "apply"
    is not working on the data in (or derived from) the index at all.
    This has been fixed.
 
- * Killing "git merge --edit" before the editor returns control left
+ * Killing "shit merge --edit" before the editor returns control left
    the repository in a state with MERGE_MSG but without MERGE_HEAD,
-   which incorrectly tells the subsequent "git commit" that there was
+   which incorrectly tells the subsequent "shit commit" that there was
    a squash merge in progress.  This has been fixed.
 
- * "git archive" did not work well with pathspecs and the
+ * "shit archive" did not work well with pathspecs and the
    export-ignore attribute.
 
  * In addition to "cc: <a@dd.re.ss> # cruft", "cc: a@dd.re.ss # cruft"
-   was taught to "git send-email" as a valid way to tell it that it
+   was taught to "shit send-email" as a valid way to tell it that it
    needs to also send a carbon copy to <a@dd.re.ss> in the trailer
    section.
 
- * "git branch -M a b" while on a branch that is completely unrelated
+ * "shit branch -M a b" while on a branch that is completely unrelated
    to either branch a or branch b misbehaved when multiple worktree
    was in use.  This has been fixed.
    (merge 31824d180d nd/worktree-kill-parse-ref later to maint).
 
- * "git gc" and friends when multiple worktrees are used off of a
+ * "shit gc" and friends when multiple worktrees are used off of a
    single repository did not consider the index and per-worktree refs
    of other worktrees as the root for reachability traversal, making
    objects that are in use only in other worktrees to be subject to
    garbage collection.
 
- * A regression to "gitk --bisect" by a recent update has been fixed.
+ * A regression to "shitk --bisect" by a recent update has been fixed.
 
- * "git -c submodule.recurse=yes pull" did not work as if the
+ * "shit -c submodule.recurse=yes poop" did not work as if the
    "--recurse-submodules" option was given from the command line.
    This has been corrected.
 
- * Unlike "git commit-tree < file", "git commit-tree -F file" did not
+ * Unlike "shit commit-tree < file", "shit commit-tree -F file" did not
    pass the contents of the file verbatim and instead completed an
    incomplete line at the end, if exists.  The latter has been updated
    to match the behaviour of the former.
@@ -369,11 +369,11 @@ Fixes since v2.14
    which have been corrected.
    (merge f48ecd38cb jk/write-in-full-fix later to maint).
 
- * "git help co" now says "co is aliased to ...", not "git co is".
+ * "shit help co" now says "co is aliased to ...", not "shit co is".
    (merge b3a8076e0d ks/help-alias-label later to maint).
 
- * "git archive", especially when used with pathspec, stored an empty
-   directory in its output, even though Git itself never does so.
+ * "shit archive", especially when used with pathspec, stored an empty
+   directory in its output, even though shit itself never does so.
    This has been fixed.
 
  * API error-proofing which happens to also squelch warnings from GCC.
@@ -382,7 +382,7 @@ Fixes since v2.14
    slightly tweaked.
    (merge 8c4b1a3593 ks/commit-do-not-touch-cut-line later to maint).
 
- * "git gc" tries to avoid running two instances at the same time by
+ * "shit gc" tries to avoid running two instances at the same time by
    reading and writing pid/host from and to a lock file; it used to
    use an incorrect fscanf() format when reading, which has been
    corrected.
@@ -400,23 +400,23 @@ Fixes since v2.14
    alternate object stores overrun the end of the string.
    (merge f0f7bebef7 jk/info-alternates-fix later to maint).
 
- * "git describe --match" learned to take multiple patterns in v2.13
+ * "shit describe --match" learned to take multiple patterns in v2.13
    series, but the feature ignored the patterns after the first one
    and did not work at all.  This has been fixed.
 
- * "git filter-branch" cannot reproduce a history with a tag without
-   the tagger field, which only ancient versions of Git allowed to be
+ * "shit filter-branch" cannot reproduce a history with a tag without
+   the tagger field, which only ancient versions of shit allowed to be
    created.  This has been corrected.
    (merge b2c1ca6b4b ic/fix-filter-branch-to-handle-tag-without-tagger later to maint).
 
- * "git cat-file --textconv" started segfaulting recently, which
+ * "shit cat-file --textconv" started segfaulting recently, which
    has been corrected.
 
  * The built-in pattern to detect the "function header" for HTML did
    not match <H1>..<H6> elements without any attributes, which has
    been fixed.
 
- * "git mailinfo" was loose in decoding quoted printable and produced
+ * "shit mailinfo" was loose in decoding quoted printable and produced
    garbage when the two letters after the equal sign are not
    hexadecimal.  This has been fixed.
 
@@ -433,7 +433,7 @@ Fixes since v2.14
  * The documentation for '-X<option>' for merges was misleadingly
    written to suggest that "-s theirs" exists, which is not the case.
 
- * "git fast-export" with -M/-C option issued "copy" instruction on a
+ * "shit fast-export" with -M/-C option issued "copy" instruction on a
    path that is simultaneously modified, which was incorrect.
    (merge b3e8ca89cf jt/fast-export-copy-modify-fix later to maint).
 
@@ -444,19 +444,19 @@ Fixes since v2.14
  * Memory leaks in various codepaths have been plugged.
    (merge 4d01a7fa65 ma/leakplugs later to maint).
 
- * Recent versions of "git rev-parse --parseopt" did not parse the
+ * Recent versions of "shit rev-parse --parseopt" did not parse the
    option specification that does not have the optional flags (*=?!)
    correctly, which has been corrected.
    (merge a6304fa4c2 bc/rev-parse-parseopt-fix later to maint).
 
- * The checkpoint command "git fast-import" did not flush updates to
+ * The checkpoint command "shit fast-import" did not flush updates to
    refs and marks unless at least one object was created since the
    last checkpoint, which has been corrected, as these things can
    happen without any new object getting created.
    (merge 30e215a65c er/fast-import-dump-refs-on-checkpoint later to maint).
 
- * Spell the name of our system as "Git" in the output from
-   request-pull script.
+ * Spell the name of our system as "shit" in the output from
+   request-poop script.
 
  * Fixes for a handful memory access issues identified by valgrind.
 
@@ -465,25 +465,25 @@ Fixes since v2.14
 
  * Users with "color.ui = always" in their configuration were broken
    by a recent change that made plumbing commands to pay attention to
-   them as the patch created internally by "git add -p" were colored
+   them as the patch created internally by "shit add -p" were colored
    (heh) and made unusable.  This has been fixed by reverting the
    offending change.
 
- * In the "--format=..." option of the "git for-each-ref" command (and
-   its friends, i.e. the listing mode of "git branch/tag"), "%(atom:)"
+ * In the "--format=..." option of the "shit for-each-ref" command (and
+   its friends, i.e. the listing mode of "shit branch/tag"), "%(atom:)"
    (e.g. "%(refname:)", "%(body:)" used to error out.  Instead, treat
    them as if the colon and an empty string that follows it were not
    there.
 
- * An ancient bug that made Git misbehave with creation/renaming of
+ * An ancient bug that made shit misbehave with creation/renaming of
    refs has been fixed.
 
- * "git fetch <there> <src>:<dst>" allows an object name on the <src>
-   side when the other side accepts such a request since Git v2.5, but
+ * "shit fetch <there> <src>:<dst>" allows an object name on the <src>
+   side when the other side accepts such a request since shit v2.5, but
    the documentation was left stale.
    (merge 83558a412a jc/fetch-refspec-doc-update later to maint).
 
- * Update the documentation for "git filter-branch" so that the filter
+ * Update the documentation for "shit filter-branch" so that the filter
    options are listed in the same order as they are applied, as
    described in an earlier part of the doc.
    (merge 07c4984508 dg/filter-branch-filter-order-doc later to maint).

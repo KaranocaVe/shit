@@ -1,5 +1,5 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
@@ -15,30 +15,30 @@
 #include "setup.h"
 #include "strbuf.h"
 
-static int guess_repository_type(const char *git_dir)
+static int guess_repository_type(const char *shit_dir)
 {
 	const char *slash;
 	char *cwd;
-	int cwd_is_git_dir;
+	int cwd_is_shit_dir;
 
 	/*
-	 * "GIT_DIR=. git init" is always bare.
-	 * "GIT_DIR=`pwd` git init" too.
+	 * "shit_DIR=. shit init" is always bare.
+	 * "shit_DIR=`pwd` shit init" too.
 	 */
-	if (!strcmp(".", git_dir))
+	if (!strcmp(".", shit_dir))
 		return 1;
 	cwd = xgetcwd();
-	cwd_is_git_dir = !strcmp(git_dir, cwd);
+	cwd_is_shit_dir = !strcmp(shit_dir, cwd);
 	free(cwd);
-	if (cwd_is_git_dir)
+	if (cwd_is_shit_dir)
 		return 1;
 	/*
-	 * "GIT_DIR=.git or GIT_DIR=something/.git is usually not.
+	 * "shit_DIR=.shit or shit_DIR=something/.shit is usually not.
 	 */
-	if (!strcmp(git_dir, ".git"))
+	if (!strcmp(shit_dir, ".shit"))
 		return 0;
-	slash = strrchr(git_dir, '/');
-	if (slash && !strcmp(slash, "/.git"))
+	slash = strrchr(shit_dir, '/');
+	if (slash && !strcmp(slash, "/.shit"))
 		return 0;
 
 	/*
@@ -51,13 +51,13 @@ static int guess_repository_type(const char *git_dir)
 static int shared_callback(const struct option *opt, const char *arg, int unset)
 {
 	BUG_ON_OPT_NEG(unset);
-	*((int *) opt->value) = (arg) ? git_config_perm("arg", arg) : PERM_GROUP;
+	*((int *) opt->value) = (arg) ? shit_config_perm("arg", arg) : PERM_GROUP;
 	return 0;
 }
 
 static const char *const init_db_usage[] = {
-	N_("git init [-q | --quiet] [--bare] [--template=<template-directory>]\n"
-	   "         [--separate-git-dir <git-dir>] [--object-format=<format>]\n"
+	N_("shit init [-q | --quiet] [--bare] [--template=<template-directory>]\n"
+	   "         [--separate-shit-dir <shit-dir>] [--object-format=<format>]\n"
 	   "         [--ref-format=<format>]\n"
 	   "         [-b <branch-name> | --initial-branch=<branch-name>]\n"
 	   "         [--shared[=<permissions>]] [<directory>]"),
@@ -72,15 +72,15 @@ static const char *const init_db_usage[] = {
  */
 int cmd_init_db(int argc, const char **argv, const char *prefix)
 {
-	const char *git_dir;
-	const char *real_git_dir = NULL;
+	const char *shit_dir;
+	const char *real_shit_dir = NULL;
 	const char *work_tree;
 	const char *template_dir = NULL;
 	unsigned int flags = 0;
 	const char *object_format = NULL;
 	const char *ref_format = NULL;
 	const char *initial_branch = NULL;
-	int hash_algo = GIT_HASH_UNKNOWN;
+	int hash_algo = shit_HASH_UNKNOWN;
 	unsigned int ref_storage_format = REF_STORAGE_FORMAT_UNKNOWN;
 	int init_shared_repository = -1;
 	const struct option init_db_options[] = {
@@ -90,11 +90,11 @@ int cmd_init_db(int argc, const char **argv, const char *prefix)
 				N_("create a bare repository"), 1),
 		{ OPTION_CALLBACK, 0, "shared", &init_shared_repository,
 			N_("permissions"),
-			N_("specify that the git repository is to be shared amongst several users"),
+			N_("specify that the shit repository is to be shared amongst several users"),
 			PARSE_OPT_OPTARG | PARSE_OPT_NONEG, shared_callback, 0},
 		OPT_BIT('q', "quiet", &flags, N_("be quiet"), INIT_DB_QUIET),
-		OPT_STRING(0, "separate-git-dir", &real_git_dir, N_("gitdir"),
-			   N_("separate git dir from working tree")),
+		OPT_STRING(0, "separate-shit-dir", &real_shit_dir, N_("shitdir"),
+			   N_("separate shit dir from working tree")),
 		OPT_STRING('b', "initial-branch", &initial_branch, N_("name"),
 			   N_("override the name of the initial branch")),
 		OPT_STRING(0, "object-format", &object_format, N_("hash"),
@@ -106,11 +106,11 @@ int cmd_init_db(int argc, const char **argv, const char *prefix)
 
 	argc = parse_options(argc, argv, prefix, init_db_options, init_db_usage, 0);
 
-	if (real_git_dir && is_bare_repository_cfg == 1)
-		die(_("options '%s' and '%s' cannot be used together"), "--separate-git-dir", "--bare");
+	if (real_shit_dir && is_bare_repository_cfg == 1)
+		die(_("options '%s' and '%s' cannot be used together"), "--separate-shit-dir", "--bare");
 
-	if (real_git_dir && !is_absolute_path(real_git_dir))
-		real_git_dir = real_pathdup(real_git_dir, 1);
+	if (real_shit_dir && !is_absolute_path(real_shit_dir))
+		real_shit_dir = real_pathdup(real_shit_dir, 1);
 
 	if (template_dir && *template_dir && !is_absolute_path(template_dir)) {
 		template_dir = absolute_pathdup(template_dir);
@@ -154,13 +154,13 @@ int cmd_init_db(int argc, const char **argv, const char *prefix)
 	}
 	if (is_bare_repository_cfg == 1) {
 		char *cwd = xgetcwd();
-		setenv(GIT_DIR_ENVIRONMENT, cwd, argc > 0);
+		setenv(shit_DIR_ENVIRONMENT, cwd, argc > 0);
 		free(cwd);
 	}
 
 	if (object_format) {
 		hash_algo = hash_algo_by_name(object_format);
-		if (hash_algo == GIT_HASH_UNKNOWN)
+		if (hash_algo == shit_HASH_UNKNOWN)
 			die(_("unknown hash algorithm '%s'"), object_format);
 	}
 
@@ -174,80 +174,80 @@ int cmd_init_db(int argc, const char **argv, const char *prefix)
 		set_shared_repository(init_shared_repository);
 
 	/*
-	 * GIT_WORK_TREE makes sense only in conjunction with GIT_DIR
+	 * shit_WORK_TREE makes sense only in conjunction with shit_DIR
 	 * without --bare.  Catch the error early.
 	 */
-	git_dir = xstrdup_or_null(getenv(GIT_DIR_ENVIRONMENT));
-	work_tree = xstrdup_or_null(getenv(GIT_WORK_TREE_ENVIRONMENT));
-	if ((!git_dir || is_bare_repository_cfg == 1) && work_tree)
+	shit_dir = xstrdup_or_null(getenv(shit_DIR_ENVIRONMENT));
+	work_tree = xstrdup_or_null(getenv(shit_WORK_TREE_ENVIRONMENT));
+	if ((!shit_dir || is_bare_repository_cfg == 1) && work_tree)
 		die(_("%s (or --work-tree=<directory>) not allowed without "
-			  "specifying %s (or --git-dir=<directory>)"),
-		    GIT_WORK_TREE_ENVIRONMENT,
-		    GIT_DIR_ENVIRONMENT);
+			  "specifying %s (or --shit-dir=<directory>)"),
+		    shit_WORK_TREE_ENVIRONMENT,
+		    shit_DIR_ENVIRONMENT);
 
 	/*
-	 * Set up the default .git directory contents
+	 * Set up the default .shit directory contents
 	 */
-	if (!git_dir)
-		git_dir = DEFAULT_GIT_DIR_ENVIRONMENT;
+	if (!shit_dir)
+		shit_dir = DEFAULT_shit_DIR_ENVIRONMENT;
 
 	/*
-	 * When --separate-git-dir is used inside a linked worktree, take
-	 * care to ensure that the common .git/ directory is relocated, not
-	 * the worktree-specific .git/worktrees/<id>/ directory.
+	 * When --separate-shit-dir is used inside a linked worktree, take
+	 * care to ensure that the common .shit/ directory is relocated, not
+	 * the worktree-specific .shit/worktrees/<id>/ directory.
 	 */
-	if (real_git_dir) {
+	if (real_shit_dir) {
 		int err;
 		const char *p;
 		struct strbuf sb = STRBUF_INIT;
 
-		p = read_gitfile_gently(git_dir, &err);
+		p = read_shitfile_gently(shit_dir, &err);
 		if (p && get_common_dir(&sb, p)) {
 			struct strbuf mainwt = STRBUF_INIT;
 
 			strbuf_addbuf(&mainwt, &sb);
-			strbuf_strip_suffix(&mainwt, "/.git");
+			strbuf_strip_suffix(&mainwt, "/.shit");
 			if (chdir(mainwt.buf) < 0)
 				die_errno(_("cannot chdir to %s"), mainwt.buf);
 			strbuf_release(&mainwt);
-			git_dir = strbuf_detach(&sb, NULL);
+			shit_dir = strbuf_detach(&sb, NULL);
 		}
 		strbuf_release(&sb);
 	}
 
 	if (is_bare_repository_cfg < 0)
-		is_bare_repository_cfg = guess_repository_type(git_dir);
+		is_bare_repository_cfg = guess_repository_type(shit_dir);
 
 	if (!is_bare_repository_cfg) {
-		const char *git_dir_parent = strrchr(git_dir, '/');
-		if (git_dir_parent) {
-			char *rel = xstrndup(git_dir, git_dir_parent - git_dir);
-			git_work_tree_cfg = real_pathdup(rel, 1);
+		const char *shit_dir_parent = strrchr(shit_dir, '/');
+		if (shit_dir_parent) {
+			char *rel = xstrndup(shit_dir, shit_dir_parent - shit_dir);
+			shit_work_tree_cfg = real_pathdup(rel, 1);
 			free(rel);
 		}
-		if (!git_work_tree_cfg)
-			git_work_tree_cfg = xgetcwd();
+		if (!shit_work_tree_cfg)
+			shit_work_tree_cfg = xgetcwd();
 		if (work_tree)
-			set_git_work_tree(work_tree);
+			set_shit_work_tree(work_tree);
 		else
-			set_git_work_tree(git_work_tree_cfg);
-		if (access(get_git_work_tree(), X_OK))
+			set_shit_work_tree(shit_work_tree_cfg);
+		if (access(get_shit_work_tree(), X_OK))
 			die_errno (_("Cannot access work tree '%s'"),
-				   get_git_work_tree());
+				   get_shit_work_tree());
 	}
 	else {
-		if (real_git_dir)
-			die(_("--separate-git-dir incompatible with bare repository"));
+		if (real_shit_dir)
+			die(_("--separate-shit-dir incompatible with bare repository"));
 		if (work_tree)
-			set_git_work_tree(work_tree);
+			set_shit_work_tree(work_tree);
 	}
 
-	UNLEAK(real_git_dir);
-	UNLEAK(git_dir);
+	UNLEAK(real_shit_dir);
+	UNLEAK(shit_dir);
 	UNLEAK(work_tree);
 
 	flags |= INIT_DB_EXIST_OK;
-	return init_db(git_dir, real_git_dir, template_dir, hash_algo,
+	return init_db(shit_dir, real_shit_dir, template_dir, hash_algo,
 		       ref_storage_format, initial_branch,
 		       init_shared_repository, flags);
 }

@@ -41,15 +41,15 @@ struct submodule_update_strategy {
 	.type = SM_UPDATE_UNSPECIFIED, \
 }
 
-int is_gitmodules_unmerged(struct index_state *istate);
-int is_writing_gitmodules_ok(void);
-int is_staging_gitmodules_ok(struct index_state *istate);
-int update_path_in_gitmodules(const char *oldpath, const char *newpath);
-int remove_path_from_gitmodules(const char *path);
-void stage_updated_gitmodules(struct index_state *istate);
+int is_shitmodules_unmerged(struct index_state *istate);
+int is_writing_shitmodules_ok(void);
+int is_staging_shitmodules_ok(struct index_state *istate);
+int update_path_in_shitmodules(const char *oldpath, const char *newpath);
+int remove_path_from_shitmodules(const char *path);
+void stage_updated_shitmodules(struct index_state *istate);
 void set_diffopt_flags_from_submodule_config(struct diff_options *,
 					     const char *path);
-int git_default_submodule_config(const char *var, const char *value, void *cb);
+int shit_default_submodule_config(const char *var, const char *value, void *cb);
 
 struct option;
 int option_parse_recurse_submodules_worktree_updater(const struct option *opt,
@@ -60,9 +60,9 @@ int is_tree_submodule_active(struct repository *repo,
 int is_submodule_active(struct repository *repo, const char *path);
 /*
  * Determine if a submodule has been populated at a given 'path' by checking if
- * the <path>/.git resolves to a valid git repository.
+ * the <path>/.shit resolves to a valid shit repository.
  * If return_error_code is NULL, die on error.
- * Otherwise the return error code is the same as of resolve_gitdir_gently.
+ * Otherwise the return error code is the same as of resolve_shitdir_gently.
  */
 int is_submodule_populated_gently(const char *path, int *return_error_code);
 void die_in_unpopulated_submodule(struct index_state *istate,
@@ -95,7 +95,7 @@ int fetch_submodules(struct repository *r,
 		     int default_option,
 		     int quiet, int max_parallel_jobs);
 unsigned is_submodule_modified(const char *path, int ignore_untracked);
-int submodule_uses_gitfile(const char *path);
+int submodule_uses_shitfile(const char *path);
 
 #define SUBMODULE_REMOVAL_DIE_ON_ERROR (1<<0)
 #define SUBMODULE_REMOVAL_IGNORE_UNTRACKED (1<<1)
@@ -118,35 +118,35 @@ int register_all_submodule_odb_as_alternates(void);
 int submodule_touches_in_range(struct repository *r,
 			       struct object_id *a,
 			       struct object_id *b);
-int find_unpushed_submodules(struct repository *r,
+int find_undefecateed_submodules(struct repository *r,
 			     struct oid_array *commits,
 			     const char *remotes_name,
-			     struct string_list *needs_pushing);
+			     struct string_list *needs_defecateing);
 struct refspec;
-int push_unpushed_submodules(struct repository *r,
+int defecate_undefecateed_submodules(struct repository *r,
 			     struct oid_array *commits,
 			     const struct remote *remote,
 			     const struct refspec *rs,
-			     const struct string_list *push_options,
+			     const struct string_list *defecate_options,
 			     int dry_run);
 /*
  * Given a submodule path (as in the index), return the repository
  * path of that submodule in 'buf'. Return -1 on error or when the
  * submodule is not initialized.
  */
-int submodule_to_gitdir(struct strbuf *buf, const char *submodule);
+int submodule_to_shitdir(struct strbuf *buf, const char *submodule);
 
 /*
- * Given a submodule name, create a path to where the submodule's gitdir lives
+ * Given a submodule name, create a path to where the submodule's shitdir lives
  * inside of the provided repository's 'modules' directory.
  */
-void submodule_name_to_gitdir(struct strbuf *buf, struct repository *r,
+void submodule_name_to_shitdir(struct strbuf *buf, struct repository *r,
 			      const char *submodule_name);
 
 /*
- * Make sure that no submodule's git dir is nested in a sibling submodule's.
+ * Make sure that no submodule's shit dir is nested in a sibling submodule's.
  */
-int validate_submodule_git_dir(char *git_dir, const char *submodule_name);
+int validate_submodule_shit_dir(char *shit_dir, const char *submodule_name);
 
 /*
  * Make sure that the given submodule path does not follow symlinks.
@@ -168,7 +168,7 @@ void submodule_unset_core_worktree(const struct submodule *sub);
  */
 void prepare_submodule_repo_env(struct strvec *env);
 
-void absorb_git_dir_into_superproject(const char *path,
+void absorb_shit_dir_into_superproject(const char *path,
 				      const char *super_prefix);
 
 /*

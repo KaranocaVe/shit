@@ -1,6 +1,6 @@
 bundle.*::
 	The `bundle.*` keys may appear in a bundle list file found via the
-	`git clone --bundle-uri` option. These keys currently have no effect
+	`shit clone --bundle-uri` option. These keys currently have no effect
 	if placed in a repository config file, though this will change in the
 	future. See link:technical/bundle-uri.html[the bundle URI design
 	document] for more details.
@@ -17,7 +17,7 @@ bundle.mode::
 
 bundle.heuristic::
 	If this string-valued key exists, then the bundle list is designed to
-	work well with incremental `git fetch` commands. The heuristic signals
+	work well with incremental `shit fetch` commands. The heuristic signals
 	that there are additional keys available for each bundle that help
 	determine which subset of bundles the client should download. The
 	only value currently understood is `creationToken`.
@@ -27,5 +27,5 @@ bundle.<id>.*::
 	bundle list, grouped under `<id>` for identification purposes.
 
 bundle.<id>.uri::
-	This string value defines the URI by which Git can reach the contents
+	This string value defines the URI by which shit can reach the contents
 	of this `<id>`. This URI may be a bundle file or another bundle list.

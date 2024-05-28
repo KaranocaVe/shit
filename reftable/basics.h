@@ -10,7 +10,7 @@ https://developers.google.com/open-source/licenses/bsd
 #define BASICS_H
 
 /*
- * miscellaneous utilities that are not provided by Git.
+ * miscellaneous utilities that are not provided by shit.
  */
 
 #include "system.h"

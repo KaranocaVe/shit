@@ -16,8 +16,8 @@
 #include "strmap.h"
 
 static char const * const shortlog_usage[] = {
-	N_("git shortlog [<options>] [<revision-range>] [[--] <path>...]"),
-	N_("git log --pretty=short | git shortlog [<options>]"),
+	N_("shit shortlog [<options>] [<revision-range>] [[--] <path>...]"),
+	N_("shit log --pretty=short | shit shortlog [<options>]"),
 	NULL
 };
 
@@ -382,7 +382,7 @@ int cmd_shortlog(int argc, const char **argv, const char *prefix)
 {
 	struct shortlog log = { STRING_LIST_INIT_NODUP };
 	struct rev_info rev;
-	int nongit = !startup_info->have_repository;
+	int nonshit = !startup_info->have_repository;
 
 	const struct option options[] = {
 		OPT_BIT('c', "committer", &log.groups,
@@ -404,7 +404,7 @@ int cmd_shortlog(int argc, const char **argv, const char *prefix)
 
 	struct parse_opt_ctx_t ctx;
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 	shortlog_init(&log);
 	repo_init_revisions(the_repository, &rev, prefix);
 	parse_options_start(&ctx, argc, argv, prefix, options,
@@ -430,7 +430,7 @@ parse_done:
 	revision_opts_finish(&rev);
 	argc = parse_options_end(&ctx);
 
-	if (nongit && argc > 1) {
+	if (nonshit && argc > 1) {
 		error(_("too many arguments given outside repository"));
 		usage_with_options(shortlog_usage, options);
 	}
@@ -450,7 +450,7 @@ parse_done:
 	shortlog_finish_setup(&log);
 
 	/* assume HEAD if from a tty */
-	if (!nongit && !rev.pending.nr && isatty(0))
+	if (!nonshit && !rev.pending.nr && isatty(0))
 		add_head_to_pending(&rev);
 	if (rev.pending.nr == 0) {
 		if (isatty(0))

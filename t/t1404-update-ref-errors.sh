@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='Test git update-ref error handling'
+test_description='Test shit update-ref error handling'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -21,16 +21,16 @@ test_update_rejected () {
 	create="$3" &&
 	error="$4" &&
 	printf "create $prefix/%s $C\n" $before |
-	git update-ref --stdin &&
-	git for-each-ref $prefix >unchanged &&
+	shit update-ref --stdin &&
+	shit for-each-ref $prefix >unchanged &&
 	if $pack
 	then
-		git pack-refs --all
+		shit pack-refs --all
 	fi &&
 	printf "create $prefix/%s $C\n" $create >input &&
-	test_must_fail git update-ref --stdin <input 2>output.err &&
+	test_must_fail shit update-ref --stdin <input 2>output.err &&
 	test_grep -F "$error" output.err &&
-	git for-each-ref $prefix >actual &&
+	shit for-each-ref $prefix >actual &&
 	test_cmp unchanged actual
 }
 
@@ -44,7 +44,7 @@ df_test() {
 	do
 		case "$1" in
 		--pack)
-			pack="git pack-refs --all"
+			pack="shit pack-refs --all"
 			shift
 			;;
 		--sym-add)
@@ -77,18 +77,18 @@ df_test() {
 			;;
 		esac
 	done
-	git update-ref "$delref" $C &&
+	shit update-ref "$delref" $C &&
 	if $symadd
 	then
 		addname="$prefix/s/symadd" &&
-		git symbolic-ref "$addname" "$addref"
+		shit symbolic-ref "$addname" "$addref"
 	else
 		addname="$addref"
 	fi &&
 	if $symdel
 	then
 		delname="$prefix/s/symdel" &&
-		git symbolic-ref "$delname" "$delref"
+		shit symbolic-ref "$delname" "$delref"
 	else
 		delname="$delref"
 	fi &&
@@ -99,21 +99,21 @@ df_test() {
 	else
 		printf "%s\n" "delete $delname" "create $addname $D"
 	fi >commands &&
-	test_must_fail git update-ref --stdin <commands 2>output.err &&
+	test_must_fail shit update-ref --stdin <commands 2>output.err &&
 	grep -E "fatal:( cannot lock ref $SQ$addname$SQ:)? $SQ$delref$SQ exists; cannot create $SQ$addref$SQ" output.err &&
 	printf "%s\n" "$C $delref" >expected-refs &&
-	git for-each-ref --format="%(objectname) %(refname)" $prefix/r >actual-refs &&
+	shit for-each-ref --format="%(objectname) %(refname)" $prefix/r >actual-refs &&
 	test_cmp expected-refs actual-refs
 }
 
 test_expect_success 'setup' '
 
-	git commit --allow-empty -m Initial &&
-	C=$(git rev-parse HEAD) &&
-	git commit --allow-empty -m Second &&
-	D=$(git rev-parse HEAD) &&
-	git commit --allow-empty -m Third &&
-	E=$(git rev-parse HEAD)
+	shit commit --allow-empty -m Initial &&
+	C=$(shit rev-parse HEAD) &&
+	shit commit --allow-empty -m Second &&
+	D=$(shit rev-parse HEAD) &&
+	shit commit --allow-empty -m Third &&
+	E=$(shit rev-parse HEAD)
 '
 
 test_expect_success 'existing loose ref is a simple prefix of new' '
@@ -262,134 +262,134 @@ test_expect_success 'missing old value blocks update' '
 	fatal: cannot lock ref $SQ$prefix/foo$SQ: unable to resolve reference $SQ$prefix/foo$SQ
 	EOF
 	printf "%s\n" "update $prefix/foo $E $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'incorrect old value blocks update' '
 	prefix=refs/incorrect-update &&
-	git update-ref $prefix/foo $C &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/foo$SQ: is at $C but expected $D
 	EOF
 	printf "%s\n" "update $prefix/foo $E $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'existing old value blocks create' '
 	prefix=refs/existing-create &&
-	git update-ref $prefix/foo $C &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/foo$SQ: reference already exists
 	EOF
 	printf "%s\n" "create $prefix/foo $E" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'incorrect old value blocks delete' '
 	prefix=refs/incorrect-delete &&
-	git update-ref $prefix/foo $C &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/foo$SQ: is at $C but expected $D
 	EOF
 	printf "%s\n" "delete $prefix/foo $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'missing old value blocks indirect update' '
 	prefix=refs/missing-indirect-update &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: unable to resolve reference $SQ$prefix/foo$SQ
 	EOF
 	printf "%s\n" "update $prefix/symref $E $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'incorrect old value blocks indirect update' '
 	prefix=refs/incorrect-indirect-update &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
-	git update-ref $prefix/foo $C &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: is at $C but expected $D
 	EOF
 	printf "%s\n" "update $prefix/symref $E $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'existing old value blocks indirect create' '
 	prefix=refs/existing-indirect-create &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
-	git update-ref $prefix/foo $C &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: reference already exists
 	EOF
 	printf "%s\n" "create $prefix/symref $E" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'incorrect old value blocks indirect delete' '
 	prefix=refs/incorrect-indirect-delete &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
-	git update-ref $prefix/foo $C &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: is at $C but expected $D
 	EOF
 	printf "%s\n" "delete $prefix/symref $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'missing old value blocks indirect no-deref update' '
 	prefix=refs/missing-noderef-update &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: reference is missing but expected $D
 	EOF
 	printf "%s\n" "option no-deref" "update $prefix/symref $E $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'incorrect old value blocks indirect no-deref update' '
 	prefix=refs/incorrect-noderef-update &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
-	git update-ref $prefix/foo $C &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: is at $C but expected $D
 	EOF
 	printf "%s\n" "option no-deref" "update $prefix/symref $E $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'existing old value blocks indirect no-deref create' '
 	prefix=refs/existing-noderef-create &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
-	git update-ref $prefix/foo $C &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: reference already exists
 	EOF
 	printf "%s\n" "option no-deref" "create $prefix/symref $E" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 
 test_expect_success 'incorrect old value blocks indirect no-deref delete' '
 	prefix=refs/incorrect-noderef-delete &&
-	git symbolic-ref $prefix/symref $prefix/foo &&
-	git update-ref $prefix/foo $C &&
+	shit symbolic-ref $prefix/symref $prefix/foo &&
+	shit update-ref $prefix/foo $C &&
 	cat >expected <<-EOF &&
 	fatal: cannot lock ref $SQ$prefix/symref$SQ: is at $C but expected $D
 	EOF
 	printf "%s\n" "option no-deref" "delete $prefix/symref $D" |
-	test_must_fail git update-ref --stdin 2>output.err &&
+	test_must_fail shit update-ref --stdin 2>output.err &&
 	test_cmp expected output.err
 '
 

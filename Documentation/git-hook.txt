@@ -1,32 +1,32 @@
-git-hook(1)
+shit-hook(1)
 ===========
 
 NAME
 ----
-git-hook - Run git hooks
+shit-hook - Run shit hooks
 
 SYNOPSIS
 --------
 [verse]
-'git hook' run [--ignore-missing] [--to-stdin=<path>] <hook-name> [-- <hook-args>]
+'shit hook' run [--ignore-missing] [--to-stdin=<path>] <hook-name> [-- <hook-args>]
 
 DESCRIPTION
 -----------
 
-A command interface for running git hooks (see linkgit:githooks[5]),
-for use by other scripted git commands.
+A command interface for running shit hooks (see linkshit:shithooks[5]),
+for use by other scripted shit commands.
 
 SUBCOMMANDS
 -----------
 
 run::
-	Run the `<hook-name>` hook. See linkgit:githooks[5] for
+	Run the `<hook-name>` hook. See linkshit:shithooks[5] for
 	supported hook names.
 +
 
 Any positional arguments to the hook should be passed after a
-mandatory `--` (or `--end-of-options`, see linkgit:gitcli[7]). See
-linkgit:githooks[5] for arguments hooks might expect (if any).
+mandatory `--` (or `--end-of-options`, see linkshit:shitcli[7]). See
+linkshit:shithooks[5] for arguments hooks might expect (if any).
 
 OPTIONS
 -------
@@ -43,8 +43,8 @@ OPTIONS
 
 SEE ALSO
 --------
-linkgit:githooks[5]
+linkshit:shithooks[5]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

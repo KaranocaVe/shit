@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='test that git handles an svn repository with empty symlinks'
+test_description='test that shit handles an svn repository with empty symlinks'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 test_expect_success 'load svn dumpfile' '
 	svnadmin load "$rawsvnrepo" <<EOF
 SVN-fs-dump-format-version: 2
@@ -82,28 +82,28 @@ link doink
 EOF
 '
 
-test_expect_success 'clone using git svn' 'git svn clone -r1 "$svnrepo" x'
+test_expect_success 'clone using shit svn' 'shit svn clone -r1 "$svnrepo" x'
 test_expect_success 'enable broken symlink workaround' \
-  '(cd x && git config svn.brokenSymlinkWorkaround true)'
+  '(cd x && shit config svn.brokenSymlinkWorkaround true)'
 test_expect_success '"bar" is an empty file' 'test_must_be_empty x/bar'
 test_expect_success 'get "bar" => symlink fix from svn' \
-		'(cd x && git svn rebase)'
+		'(cd x && shit svn rebase)'
 test_expect_success SYMLINKS '"bar" becomes a symlink' 'test -h x/bar'
 
 
-test_expect_success 'clone using git svn' 'git svn clone -r1 "$svnrepo" y'
+test_expect_success 'clone using shit svn' 'shit svn clone -r1 "$svnrepo" y'
 test_expect_success 'disable broken symlink workaround' \
-  '(cd y && git config svn.brokenSymlinkWorkaround false)'
+  '(cd y && shit config svn.brokenSymlinkWorkaround false)'
 test_expect_success '"bar" is an empty file' 'test_must_be_empty y/bar'
 test_expect_success 'get "bar" => symlink fix from svn' \
-		'(cd y && git svn rebase)'
+		'(cd y && shit svn rebase)'
 test_expect_success '"bar" does not become a symlink' '! test -L y/bar'
 
 # svn.brokenSymlinkWorkaround is unset
-test_expect_success 'clone using git svn' 'git svn clone -r1 "$svnrepo" z'
+test_expect_success 'clone using shit svn' 'shit svn clone -r1 "$svnrepo" z'
 test_expect_success '"bar" is an empty file' 'test_must_be_empty z/bar'
 test_expect_success 'get "bar" => symlink fix from svn' \
-		'(cd z && git svn rebase)'
+		'(cd z && shit svn rebase)'
 test_expect_success '"bar" does not become a symlink' '! test -L z/bar'
 
 

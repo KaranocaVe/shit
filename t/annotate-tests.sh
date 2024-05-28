@@ -63,9 +63,9 @@ get_progress_result () {
 test_expect_success 'setup A lines' '
 	echo "1A quick brown fox jumps over the" >file &&
 	echo "lazy dog" >>file &&
-	git add file &&
-	GIT_AUTHOR_NAME="A" GIT_AUTHOR_EMAIL="A@test.git" \
-	git commit -a -m "Initial."
+	shit add file &&
+	shit_AUTHOR_NAME="A" shit_AUTHOR_EMAIL="A@test.shit" \
+	shit commit -a -m "Initial."
 '
 
 test_expect_success 'blame 1 author' '
@@ -73,7 +73,7 @@ test_expect_success 'blame 1 author' '
 '
 
 test_expect_success 'blame working copy' '
-	test_when_finished "git restore file" &&
+	test_when_finished "shit restore file" &&
 	echo "1A quick brown fox jumps over the" >file &&
 	echo "another lazy dog" >>file &&
 	check_count A 1 "Not Committed Yet" 1
@@ -84,9 +84,9 @@ test_expect_success 'blame with --contents' '
 '
 
 test_expect_success 'blame with --contents in a bare repo' '
-	git clone --bare . bare-contents.git &&
+	shit clone --bare . bare-contents.shit &&
 	(
-		cd bare-contents.git &&
+		cd bare-contents.shit &&
 		echo "1A quick brown fox jumps over the" >contents &&
 		check_count --contents=contents A 1
 	)
@@ -99,16 +99,16 @@ test_expect_success 'blame with --contents changed' '
 '
 
 test_expect_success 'blame in a bare repo without starting commit' '
-	git clone --bare . bare.git &&
+	shit clone --bare . bare.shit &&
 	(
-		cd bare.git &&
+		cd bare.shit &&
 		check_count A 2
 	)
 '
 
 test_expect_success 'blame by tag objects' '
-	git tag -m "test tag" testTag &&
-	git tag -m "test tag #2" testTag2 testTag &&
+	shit tag -m "test tag" testTag &&
+	shit tag -m "test tag #2" testTag2 testTag &&
 	check_count -h testTag A 2 &&
 	check_count -h testTag2 A 2
 '
@@ -116,8 +116,8 @@ test_expect_success 'blame by tag objects' '
 test_expect_success 'setup B lines' '
 	echo "2A quick brown fox jumps over the" >>file &&
 	echo "lazy dog" >>file &&
-	GIT_AUTHOR_NAME="B" GIT_AUTHOR_EMAIL="B@test.git" \
-	git commit -a -m "Second."
+	shit_AUTHOR_NAME="B" shit_AUTHOR_EMAIL="B@test.shit" \
+	shit commit -a -m "Second."
 '
 
 test_expect_success 'blame 2 authors' '
@@ -129,11 +129,11 @@ test_expect_success 'blame with --contents and revision' '
 '
 
 test_expect_success 'setup B1 lines (branch1)' '
-	git checkout -b branch1 main &&
+	shit checkout -b branch1 main &&
 	echo "3A slow green fox jumps into the" >>file &&
 	echo "well." >>file &&
-	GIT_AUTHOR_NAME="B1" GIT_AUTHOR_EMAIL="B1@test.git" \
-	git commit -a -m "Branch1-1"
+	shit_AUTHOR_NAME="B1" shit_AUTHOR_EMAIL="B1@test.shit" \
+	shit commit -a -m "Branch1-1"
 '
 
 test_expect_success 'blame 2 authors + 1 branch1 author' '
@@ -141,11 +141,11 @@ test_expect_success 'blame 2 authors + 1 branch1 author' '
 '
 
 test_expect_success 'setup B2 lines (branch2)' '
-	git checkout -b branch2 main &&
+	shit checkout -b branch2 main &&
 	sed -e "s/2A quick brown/4A quick brown lazy dog/" <file >file.new &&
 	mv file.new file &&
-	GIT_AUTHOR_NAME="B2" GIT_AUTHOR_EMAIL="B2@test.git" \
-	git commit -a -m "Branch2-1"
+	shit_AUTHOR_NAME="B2" shit_AUTHOR_EMAIL="B2@test.shit" \
+	shit commit -a -m "Branch2-1"
 '
 
 test_expect_success 'blame 2 authors + 1 branch2 author' '
@@ -153,7 +153,7 @@ test_expect_success 'blame 2 authors + 1 branch2 author' '
 '
 
 test_expect_success 'merge branch1 & branch2' '
-	git merge branch1
+	shit merge branch1
 '
 
 test_expect_success 'blame 2 authors + 2 merged-in authors' '
@@ -174,7 +174,7 @@ test_expect_success 'blame great-ancestor' '
 
 test_expect_success 'setup evil merge' '
 	echo "evil merge." >>file &&
-	git commit -a --amend
+	shit commit -a --amend
 '
 
 test_expect_success 'blame evil merge' '
@@ -182,31 +182,31 @@ test_expect_success 'blame evil merge' '
 '
 
 test_expect_success 'blame huge graft' '
-	test_when_finished "git checkout branch2" &&
-	test_when_finished "rm -rf .git/info" &&
+	test_when_finished "shit checkout branch2" &&
+	test_when_finished "rm -rf .shit/info" &&
 	graft= &&
 	for i in 0 1 2
 	do
 		for j in 0 1 2 3 4 5 6 7 8 9
 		do
-			git checkout --orphan "$i$j" &&
+			shit checkout --orphan "$i$j" &&
 			printf "%s\n" "$i" "$j" >file &&
 			test_tick &&
-			GIT_AUTHOR_NAME=$i$j GIT_AUTHOR_EMAIL=$i$j@test.git \
-			git commit -a -m "$i$j" &&
-			commit=$(git rev-parse --verify HEAD) &&
+			shit_AUTHOR_NAME=$i$j shit_AUTHOR_EMAIL=$i$j@test.shit \
+			shit commit -a -m "$i$j" &&
+			commit=$(shit rev-parse --verify HEAD) &&
 			graft="$graft$commit " || return 1
 		done
 	done &&
-	mkdir .git/info &&
-	printf "%s " $graft >.git/info/grafts &&
+	mkdir .shit/info &&
+	printf "%s " $graft >.shit/info/grafts &&
 	check_count -h 00 01 1 10 1
 '
 
 test_expect_success 'setup incomplete line' '
 	echo "incomplete" | tr -d "\\012" >>file &&
-	GIT_AUTHOR_NAME="C" GIT_AUTHOR_EMAIL="C@test.git" \
-	git commit -a -m "Incomplete"
+	shit_AUTHOR_NAME="C" shit_AUTHOR_EMAIL="C@test.shit" \
+	shit commit -a -m "Incomplete"
 '
 
 test_expect_success 'blame incomplete line' '
@@ -220,8 +220,8 @@ test_expect_success 'setup edits' '
 		echo
 	} | sed -e "s/^3A/99/" -e "/^1A/d" -e "/^incomplete/d" >file &&
 	echo "incomplete" | tr -d "\\012" >>file &&
-	GIT_AUTHOR_NAME="D" GIT_AUTHOR_EMAIL="D@test.git" \
-	git commit -a -m "edit"
+	shit_AUTHOR_NAME="D" shit_AUTHOR_EMAIL="D@test.shit" \
+	shit commit -a -m "edit"
 '
 
 test_expect_success 'blame edits' '
@@ -232,8 +232,8 @@ test_expect_success 'setup obfuscated email' '
 	echo "No robots allowed" >file.new &&
 	cat file >>file.new &&
 	mv file.new file &&
-	GIT_AUTHOR_NAME="E" GIT_AUTHOR_EMAIL="E at test dot git" \
-	git commit -a -m "norobots"
+	shit_AUTHOR_NAME="E" shit_AUTHOR_EMAIL="E at test dot shit" \
+	shit commit -a -m "norobots"
 '
 
 test_expect_success 'blame obfuscated email' '
@@ -341,7 +341,7 @@ test_expect_success 'blame -L /RE/,-N' '
 '
 
 # 'file' ends with an incomplete line, so 'wc' reports one fewer lines than
-# git-blame sees, hence the last line is actually $(wc...)+1.
+# shit-blame sees, hence the last line is actually $(wc...)+1.
 test_expect_success 'blame -L X (X == nlines)' '
 	n=$(expr $(wc -l <file) + 1) &&
 	check_count -L$n C 1
@@ -446,15 +446,15 @@ test_expect_success 'setup -L :regex' '
 	Qputs("hello");
 	}
 	EOF
-	git add hello.c &&
-	GIT_AUTHOR_NAME="F" GIT_AUTHOR_EMAIL="F@test.git" \
-	git commit -m "hello" &&
+	shit add hello.c &&
+	shit_AUTHOR_NAME="F" shit_AUTHOR_EMAIL="F@test.shit" \
+	shit commit -m "hello" &&
 
 	mv hello.c hello.orig &&
 	sed -e "/}/ {x; s/$/Qputs(\"goodbye\");/; G;}" <hello.orig |
 	tr Q "\\t" >hello.c &&
-	GIT_AUTHOR_NAME="G" GIT_AUTHOR_EMAIL="G@test.git" \
-	git commit -a -m "goodbye" &&
+	shit_AUTHOR_NAME="G" shit_AUTHOR_EMAIL="G@test.shit" \
+	shit commit -a -m "goodbye" &&
 
 	mv hello.c hello.orig &&
 	echo "#include <stdio.h>" >hello.c &&
@@ -465,8 +465,8 @@ test_expect_success 'setup -L :regex' '
 	Qputs("mail");
 	}
 	EOF
-	GIT_AUTHOR_NAME="H" GIT_AUTHOR_EMAIL="H@test.git" \
-	git commit -a -m "mail"
+	shit_AUTHOR_NAME="H" shit_AUTHOR_EMAIL="H@test.shit" \
+	shit commit -a -m "mail"
 '
 
 test_expect_success 'blame -L :literal' '
@@ -524,13 +524,13 @@ test_expect_success 'blame -L :funcname with userdiff driver' '
 	EOF
 
 	fortran_file=file.f03 &&
-	test_when_finished "rm .gitattributes" &&
-	echo "$fortran_file diff=fortran" >.gitattributes &&
+	test_when_finished "rm .shitattributes" &&
+	echo "$fortran_file diff=fortran" >.shitattributes &&
 
-	test_commit --author "A <A@test.git>" \
+	test_commit --author "A <A@test.shit>" \
 		"add" "$fortran_file" \
 		"$(cat file.template)" &&
-	test_commit --author "B <B@test.git>" \
+	test_commit --author "B <B@test.shit>" \
 		"change" "$fortran_file" \
 		"$(sed -e s/ChangeMe/IWasChanged/ file.template)" &&
 	check_count -f "$fortran_file" -L:RIGHT A 3 B 1
@@ -538,17 +538,17 @@ test_expect_success 'blame -L :funcname with userdiff driver' '
 
 test_expect_success 'setup incremental' '
 	(
-	GIT_AUTHOR_NAME=I &&
-	export GIT_AUTHOR_NAME &&
-	GIT_AUTHOR_EMAIL=I@test.git &&
-	export GIT_AUTHOR_EMAIL &&
+	shit_AUTHOR_NAME=I &&
+	export shit_AUTHOR_NAME &&
+	shit_AUTHOR_EMAIL=I@test.shit &&
+	export shit_AUTHOR_EMAIL &&
 	>incremental &&
-	git add incremental &&
-	git commit -m "step 0" &&
+	shit add incremental &&
+	shit commit -m "step 0" &&
 	printf "partial" >>incremental &&
-	git commit -a -m "step 0.5" &&
+	shit commit -a -m "step 0.5" &&
 	echo >>incremental &&
-	git commit -a -m "step 1"
+	shit commit -a -m "step 1"
 	)
 '
 
@@ -645,8 +645,8 @@ test_expect_success 'blame progress on a full file' '
 	Blaming lines: 100% (10/10), done.
 	EOF
 
-	GIT_PROGRESS_DELAY=0 \
-	git blame --progress hello.c 2>stderr &&
+	shit_PROGRESS_DELAY=0 \
+	shit blame --progress hello.c 2>stderr &&
 
 	get_progress_result <stderr >actual &&
 	test_cmp expect actual
@@ -657,8 +657,8 @@ test_expect_success 'blame progress on a single range' '
 	Blaming lines: 100% (4/4), done.
 	EOF
 
-	GIT_PROGRESS_DELAY=0 \
-	git blame --progress -L 3,6 hello.c 2>stderr &&
+	shit_PROGRESS_DELAY=0 \
+	shit blame --progress -L 3,6 hello.c 2>stderr &&
 
 	get_progress_result <stderr >actual &&
 	test_cmp expect actual
@@ -669,8 +669,8 @@ test_expect_success 'blame progress on multiple ranges' '
 	Blaming lines: 100% (7/7), done.
 	EOF
 
-	GIT_PROGRESS_DELAY=0 \
-	git blame --progress -L 3,6 -L 8,10 hello.c 2>stderr &&
+	shit_PROGRESS_DELAY=0 \
+	shit blame --progress -L 3,6 -L 8,10 hello.c 2>stderr &&
 
 	get_progress_result <stderr >actual &&
 	test_cmp expect actual

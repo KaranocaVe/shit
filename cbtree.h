@@ -2,7 +2,7 @@
  * crit-bit tree implementation, does no allocations internally
  * For more information on crit-bit trees: https://cr.yp.to/critbit.html
  * Based on Adam Langley's adaptation of Dan Bernstein's public domain code
- * git clone https://github.com/agl/critbit.git
+ * shit clone https://shithub.com/agl/critbit.shit
  *
  * This is adapted to store arbitrary data (not just NUL-terminated C strings
  * and allocates no memory internally.  The user needs to allocate

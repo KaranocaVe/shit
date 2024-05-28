@@ -7,14 +7,14 @@ test_description='Test export of commits to CVS'
 . ./test-lib.sh
 
 if ! test_have_prereq PERL; then
-	skip_all='skipping git cvsexportcommit tests, perl not available'
+	skip_all='skipping shit cvsexportcommit tests, perl not available'
 	test_done
 fi
 
 cvs >/dev/null 2>&1
 if test $? -ne 1
 then
-    skip_all='skipping git cvsexportcommit tests, cvs not found'
+    skip_all='skipping shit cvsexportcommit tests, cvs not found'
     test_done
 fi
 
@@ -25,8 +25,8 @@ fi
 
 CVSROOT=$PWD/tmpcvsroot
 CVSWORK=$PWD/cvswork
-GIT_DIR=$PWD/.git
-export CVSROOT CVSWORK GIT_DIR
+shit_DIR=$PWD/.shit
+export CVSROOT CVSWORK shit_DIR
 
 rm -rf "$CVSROOT" "$CVSWORK"
 
@@ -34,8 +34,8 @@ cvs init &&
 test -d "$CVSROOT" &&
 cvs -Q co -d "$CVSWORK" . &&
 echo >empty &&
-git add empty &&
-git commit -q -a -m "Initial" 2>/dev/null ||
+shit add empty &&
+shit commit -q -a -m "Initial" 2>/dev/null ||
 exit 1
 
 check_entries () {
@@ -56,14 +56,14 @@ test_expect_success 'New file' '
 	echo hello2 >B/newfile2.txt &&
 	cp "$TEST_DIRECTORY"/test-binary-1.png C/newfile3.png &&
 	cp "$TEST_DIRECTORY"/test-binary-1.png D/newfile4.png &&
-	git add A/newfile1.txt &&
-	git add B/newfile2.txt &&
-	git add C/newfile3.png &&
-	git add D/newfile4.png &&
-	git commit -a -m "Test: New file" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit add A/newfile1.txt &&
+	shit add B/newfile2.txt &&
+	shit add C/newfile3.png &&
+	shit add D/newfile4.png &&
+	shit commit -a -m "Test: New file" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -c $id &&
+	shit cvsexportcommit -c $id &&
 	check_entries A "newfile1.txt/1.1/" &&
 	check_entries B "newfile2.txt/1.1/" &&
 	check_entries C "newfile3.png/1.1/-kb" &&
@@ -82,12 +82,12 @@ test_expect_success 'Remove two files, add two and update two' '
 	echo Hello5  >E/newfile5.txt &&
 	cp "$TEST_DIRECTORY"/test-binary-2.png D/newfile4.png &&
 	cp "$TEST_DIRECTORY"/test-binary-1.png F/newfile6.png &&
-	git add E/newfile5.txt &&
-	git add F/newfile6.png &&
-	git commit -a -m "Test: Remove, add and update" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit add E/newfile5.txt &&
+	shit add F/newfile6.png &&
+	shit commit -a -m "Test: Remove, add and update" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -c $id &&
+	shit cvsexportcommit -c $id &&
 	check_entries A "newfile1.txt/1.2/" &&
 	check_entries B "" &&
 	check_entries C "" &&
@@ -101,28 +101,28 @@ test_expect_success 'Remove two files, add two and update two' '
 	)
 '
 
-# Should fail (but only on the git cvsexportcommit stage)
+# Should fail (but only on the shit cvsexportcommit stage)
 test_expect_success \
     'Fail to change binary more than one generation old' \
     'cat F/newfile6.png >>D/newfile4.png &&
-     git commit -a -m "generatiion 1" &&
+     shit commit -a -m "generatiion 1" &&
      cat F/newfile6.png >>D/newfile4.png &&
-     git commit -a -m "generation 2" &&
-     id=$(git rev-list --max-count=1 HEAD) &&
+     shit commit -a -m "generation 2" &&
+     id=$(shit rev-list --max-count=1 HEAD) &&
      (cd "$CVSWORK" &&
-     test_must_fail git cvsexportcommit -c $id
+     test_must_fail shit cvsexportcommit -c $id
      )'
 
 #test_expect_success \
 #    'Fail to remove binary file more than one generation old' \
-#    'git reset --hard HEAD^ &&
+#    'shit reset --hard HEAD^ &&
 #     cat F/newfile6.png >>D/newfile4.png &&
-#     git commit -a -m "generation 2 (again)" &&
+#     shit commit -a -m "generation 2 (again)" &&
 #     rm -f D/newfile4.png &&
-#     git commit -a -m "generation 3" &&
-#     id=$(git rev-list --max-count=1 HEAD) &&
+#     shit commit -a -m "generation 3" &&
+#     id=$(shit rev-list --max-count=1 HEAD) &&
 #     (cd "$CVSWORK" &&
-#     test_must_fail git cvsexportcommit -c $id
+#     test_must_fail shit cvsexportcommit -c $id
 #     )'
 
 # We reuse the state from two tests back here
@@ -130,12 +130,12 @@ test_expect_success \
 # This test is here because a patch for only binary files will
 # fail with gnu patch, so cvsexportcommit must handle that.
 test_expect_success 'Remove only binary files' '
-	git reset --hard HEAD^^ &&
+	shit reset --hard HEAD^^ &&
 	rm -f D/newfile4.png &&
-	git commit -a -m "test: remove only a binary file" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit commit -a -m "test: remove only a binary file" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -c $id &&
+	shit cvsexportcommit -c $id &&
 	check_entries A "newfile1.txt/1.2/" &&
 	check_entries B "" &&
 	check_entries C "" &&
@@ -150,10 +150,10 @@ test_expect_success 'Remove only binary files' '
 
 test_expect_success 'Remove only a text file' '
 	rm -f A/newfile1.txt &&
-	git commit -a -m "test: remove only a binary file" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit commit -a -m "test: remove only a binary file" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -c $id &&
+	shit cvsexportcommit -c $id &&
 	check_entries A "" &&
 	check_entries B "" &&
 	check_entries C "" &&
@@ -168,13 +168,13 @@ test_expect_success 'Remove only a text file' '
 test_expect_success 'New file with spaces in file name' '
 	mkdir "G g" &&
 	echo ok then >"G g/with spaces.txt" &&
-	git add "G g/with spaces.txt" && \
+	shit add "G g/with spaces.txt" && \
 	cp "$TEST_DIRECTORY"/test-binary-1.png "G g/with spaces.png" && \
-	git add "G g/with spaces.png" &&
-	git commit -a -m "With spaces" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit add "G g/with spaces.png" &&
+	shit commit -a -m "With spaces" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -c $id &&
+	shit cvsexportcommit -c $id &&
 	check_entries "G g" "with spaces.png/1.1/-kb|with spaces.txt/1.1/"
 	)
 '
@@ -182,11 +182,11 @@ test_expect_success 'New file with spaces in file name' '
 test_expect_success 'Update file with spaces in file name' '
 	echo Ok then >>"G g/with spaces.txt" &&
 	cat "$TEST_DIRECTORY"/test-binary-1.png >>"G g/with spaces.png" && \
-	git add "G g/with spaces.png" &&
-	git commit -a -m "Update with spaces" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit add "G g/with spaces.png" &&
+	shit commit -a -m "Update with spaces" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -c $id &&
+	shit cvsexportcommit -c $id &&
 	check_entries "G g" "with spaces.png/1.2/-kb|with spaces.txt/1.2/"
 	)
 '
@@ -205,13 +205,13 @@ then
 test_expect_success !MINGW 'File with non-ascii file name' '
 	mkdir -p Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö &&
 	echo Foo >Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö/gårdetsågårdet.txt &&
-	git add Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö/gårdetsågårdet.txt &&
+	shit add Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö/gårdetsågårdet.txt &&
 	cp "$TEST_DIRECTORY"/test-binary-1.png Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö/gårdetsågårdet.png &&
-	git add Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö/gårdetsågårdet.png &&
-	git commit -a -m "Går det så går det" && \
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit add Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö/gårdetsågårdet.png &&
+	shit commit -a -m "Går det så går det" && \
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -v -c $id &&
+	shit cvsexportcommit -v -c $id &&
 	check_entries \
 	"Å/goo/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z/å/ä/ö" \
 	"gårdetsågårdet.png/1.1/-kb|gårdetsågårdet.txt/1.1/"
@@ -224,14 +224,14 @@ rm -fr tst
 
 test_expect_success 'Mismatching patch should fail' '
 	date >>"E/newfile5.txt" &&
-	git add "E/newfile5.txt" &&
-	git commit -a -m "Update one" &&
+	shit add "E/newfile5.txt" &&
+	shit commit -a -m "Update one" &&
 	date >>"E/newfile5.txt" &&
-	git add "E/newfile5.txt" &&
-	git commit -a -m "Update two" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
+	shit add "E/newfile5.txt" &&
+	shit commit -a -m "Update two" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
 	(cd "$CVSWORK" &&
-	test_must_fail git cvsexportcommit -c $id
+	test_must_fail shit cvsexportcommit -c $id
 	)
 '
 
@@ -240,26 +240,26 @@ test_expect_success FILEMODE 'Retain execute bit' '
 	echo executeon >G/on &&
 	chmod +x G/on &&
 	echo executeoff >G/off &&
-	git add G/on &&
-	git add G/off &&
-	git commit -a -m "Execute test" &&
+	shit add G/on &&
+	shit add G/off &&
+	shit commit -a -m "Execute test" &&
 	(cd "$CVSWORK" &&
-	git cvsexportcommit -c HEAD &&
+	shit cvsexportcommit -c HEAD &&
 	test -x G/on &&
 	! test -x G/off
 	)
 '
 
-test_expect_success '-w option should work with relative GIT_DIR' '
+test_expect_success '-w option should work with relative shit_DIR' '
 	mkdir W &&
 	echo foobar >W/file1.txt &&
 	echo bazzle >W/file2.txt &&
-	git add W/file1.txt &&
-	git add W/file2.txt &&
-	git commit -m "More updates" &&
-	id=$(git rev-list --max-count=1 HEAD) &&
-	(cd "$GIT_DIR" &&
-	GIT_DIR=. git cvsexportcommit -w "$CVSWORK" -c $id &&
+	shit add W/file1.txt &&
+	shit add W/file2.txt &&
+	shit commit -m "More updates" &&
+	id=$(shit rev-list --max-count=1 HEAD) &&
+	(cd "$shit_DIR" &&
+	shit_DIR=. shit cvsexportcommit -w "$CVSWORK" -c $id &&
 	check_entries "$CVSWORK/W" "file1.txt/1.1/|file2.txt/1.1/" &&
 	test_cmp "$CVSWORK/W/file1.txt" ../W/file1.txt &&
 	test_cmp "$CVSWORK/W/file2.txt" ../W/file2.txt
@@ -269,18 +269,18 @@ test_expect_success '-w option should work with relative GIT_DIR' '
 test_expect_success 'check files before directories' '
 
 	echo Notes > release-notes &&
-	git add release-notes &&
-	git commit -m "Add release notes" release-notes &&
-	id=$(git rev-parse HEAD) &&
-	git cvsexportcommit -w "$CVSWORK" -c $id &&
+	shit add release-notes &&
+	shit commit -m "Add release notes" release-notes &&
+	id=$(shit rev-parse HEAD) &&
+	shit cvsexportcommit -w "$CVSWORK" -c $id &&
 
 	echo new > DS &&
 	echo new > E/DS &&
 	echo modified > release-notes &&
-	git add DS E/DS release-notes &&
-	git commit -m "Add two files with the same basename" &&
-	id=$(git rev-parse HEAD) &&
-	git cvsexportcommit -w "$CVSWORK" -c $id &&
+	shit add DS E/DS release-notes &&
+	shit commit -m "Add two files with the same basename" &&
+	id=$(shit rev-parse HEAD) &&
+	shit cvsexportcommit -w "$CVSWORK" -c $id &&
 	check_entries "$CVSWORK/E" "DS/1.1/|newfile5.txt/1.1/" &&
 	check_entries "$CVSWORK" "DS/1.1/|release-notes/1.2/" &&
 	test_cmp "$CVSWORK/DS" DS &&
@@ -299,9 +299,9 @@ test_expect_success 're-commit a removed filename which remains in CVS attic' '
 	cvs -Q ci -m "removed attic_gremlin") &&
 
 	echo > attic_gremlin &&
-	git add attic_gremlin &&
-	git commit -m "Added attic_gremlin" &&
-	git cvsexportcommit -w "$CVSWORK" -c HEAD &&
+	shit add attic_gremlin &&
+	shit commit -m "Added attic_gremlin" &&
+	shit cvsexportcommit -w "$CVSWORK" -c HEAD &&
 	(cd "$CVSWORK" && cvs -Q update -d) &&
 	test -f "$CVSWORK/attic_gremlin"
 '
@@ -312,29 +312,29 @@ test_expect_success 're-commit a removed filename which remains in CVS attic' '
 test_expect_success 'commit a file with leading spaces in the name' '
 
 	echo space > " space" &&
-	git add " space" &&
-	git commit -m "Add a file with a leading space" &&
-	id=$(git rev-parse HEAD) &&
-	git cvsexportcommit -w "$CVSWORK" -c $id &&
+	shit add " space" &&
+	shit commit -m "Add a file with a leading space" &&
+	id=$(shit rev-parse HEAD) &&
+	shit cvsexportcommit -w "$CVSWORK" -c $id &&
 	check_entries "$CVSWORK" " space/1.1/|DS/1.1/|attic_gremlin/1.3/|release-notes/1.2/" &&
 	test_cmp "$CVSWORK/ space" " space"
 
 '
 
-test_expect_success 'use the same checkout for Git and CVS' '
+test_expect_success 'use the same checkout for shit and CVS' '
 
 	(mkdir shared &&
 	 cd shared &&
-	 sane_unset GIT_DIR &&
+	 sane_unset shit_DIR &&
 	 cvs co . &&
-	 git init &&
-	 git add " space" &&
-	 git commit -m "fake initial commit" &&
+	 shit init &&
+	 shit add " space" &&
+	 shit commit -m "fake initial commit" &&
 	 echo Hello >> " space" &&
-	 git commit -m "Another change" " space" &&
-	 git cvsexportcommit -W -p -u -c HEAD &&
+	 shit commit -m "Another change" " space" &&
+	 shit cvsexportcommit -W -p -u -c HEAD &&
 	 grep Hello " space" &&
-	 git diff-files)
+	 shit diff-files)
 
 '
 

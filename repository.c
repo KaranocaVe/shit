@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "repository.h"
 #include "object-store-ll.h"
@@ -32,8 +32,8 @@ void initialize_repository(struct repository *repo)
 	 *
 	 *   - Not setting up the hash algorithm for `the_repository` leads to
 	 *     crashes because `the_hash_algo` is a macro that expands to
-	 *     `the_repository->hash_algo`. So if Git commands try to access
-	 *     `the_hash_algo` without a Git directory we crash.
+	 *     `the_repository->hash_algo`. So if shit commands try to access
+	 *     `the_hash_algo` without a shit directory we crash.
 	 *
 	 *   - Setting up the hash algorithm to be SHA1 by default breaks other
 	 *     commands when running with SHA256.
@@ -45,7 +45,7 @@ void initialize_repository(struct repository *repo)
 	 * work.
 	 */
 	if (repo == the_repository)
-		repo_set_hash_algo(repo, GIT_HASH_SHA1);
+		repo_set_hash_algo(repo, shit_HASH_SHA1);
 }
 
 static void expand_base_dir(char **out, const char *in,
@@ -71,24 +71,24 @@ static void repo_set_commondir(struct repository *repo,
 		return;
 	}
 
-	repo->different_commondir = get_common_dir_noenv(&sb, repo->gitdir);
+	repo->different_commondir = get_common_dir_noenv(&sb, repo->shitdir);
 	repo->commondir = strbuf_detach(&sb, NULL);
 }
 
-void repo_set_gitdir(struct repository *repo,
+void repo_set_shitdir(struct repository *repo,
 		     const char *root,
-		     const struct set_gitdir_args *o)
+		     const struct set_shitdir_args *o)
 {
-	const char *gitfile = read_gitfile(root);
+	const char *shitfile = read_shitfile(root);
 	/*
-	 * repo->gitdir is saved because the caller could pass "root"
-	 * that also points to repo->gitdir. We want to keep it alive
+	 * repo->shitdir is saved because the caller could pass "root"
+	 * that also points to repo->shitdir. We want to keep it alive
 	 * until after xstrdup(root). Then we can free it.
 	 */
-	char *old_gitdir = repo->gitdir;
+	char *old_shitdir = repo->shitdir;
 
-	repo->gitdir = xstrdup(gitfile ? gitfile : root);
-	free(old_gitdir);
+	repo->shitdir = xstrdup(shitfile ? shitfile : root);
+	free(old_shitdir);
 
 	repo_set_commondir(repo, o->commondir);
 
@@ -106,7 +106,7 @@ void repo_set_gitdir(struct repository *repo,
 	expand_base_dir(&repo->graft_file, o->graft_file,
 			repo->commondir, "info/grafts");
 	expand_base_dir(&repo->index_file, o->index_file,
-			repo->gitdir, "index");
+			repo->shitdir, "index");
 }
 
 void repo_set_hash_algo(struct repository *repo, int hash_algo)
@@ -129,31 +129,31 @@ void repo_set_ref_storage_format(struct repository *repo, unsigned int format)
 }
 
 /*
- * Attempt to resolve and set the provided 'gitdir' for repository 'repo'.
+ * Attempt to resolve and set the provided 'shitdir' for repository 'repo'.
  * Return 0 upon success and a non-zero value upon failure.
  */
-static int repo_init_gitdir(struct repository *repo, const char *gitdir)
+static int repo_init_shitdir(struct repository *repo, const char *shitdir)
 {
 	int ret = 0;
 	int error = 0;
 	char *abspath = NULL;
-	const char *resolved_gitdir;
-	struct set_gitdir_args args = { NULL };
+	const char *resolved_shitdir;
+	struct set_shitdir_args args = { NULL };
 
-	abspath = real_pathdup(gitdir, 0);
+	abspath = real_pathdup(shitdir, 0);
 	if (!abspath) {
 		ret = -1;
 		goto out;
 	}
 
-	/* 'gitdir' must reference the gitdir directly */
-	resolved_gitdir = resolve_gitdir_gently(abspath, &error);
-	if (!resolved_gitdir) {
+	/* 'shitdir' must reference the shitdir directly */
+	resolved_shitdir = resolve_shitdir_gently(abspath, &error);
+	if (!resolved_shitdir) {
 		ret = -1;
 		goto out;
 	}
 
-	repo_set_gitdir(repo, resolved_gitdir, &args);
+	repo_set_shitdir(repo, resolved_shitdir, &args);
 
 out:
 	free(abspath);
@@ -187,11 +187,11 @@ static int read_and_verify_repository_format(struct repository_format *format,
 }
 
 /*
- * Initialize 'repo' based on the provided 'gitdir'.
+ * Initialize 'repo' based on the provided 'shitdir'.
  * Return 0 upon success and a non-zero value upon failure.
  */
 int repo_init(struct repository *repo,
-	      const char *gitdir,
+	      const char *shitdir,
 	      const char *worktree)
 {
 	struct repository_format format = REPOSITORY_FORMAT_INIT;
@@ -199,7 +199,7 @@ int repo_init(struct repository *repo,
 
 	initialize_repository(repo);
 
-	if (repo_init_gitdir(repo, gitdir))
+	if (repo_init_shitdir(repo, shitdir))
 		goto error;
 
 	if (read_and_verify_repository_format(&format, repo->commondir))
@@ -233,18 +233,18 @@ int repo_submodule_init(struct repository *subrepo,
 			const char *path,
 			const struct object_id *treeish_name)
 {
-	struct strbuf gitdir = STRBUF_INIT;
+	struct strbuf shitdir = STRBUF_INIT;
 	struct strbuf worktree = STRBUF_INIT;
 	int ret = 0;
 
-	strbuf_repo_worktree_path(&gitdir, superproject, "%s/.git", path);
+	strbuf_repo_worktree_path(&shitdir, superproject, "%s/.shit", path);
 	strbuf_repo_worktree_path(&worktree, superproject, "%s", path);
 
-	if (repo_init(subrepo, gitdir.buf, worktree.buf)) {
+	if (repo_init(subrepo, shitdir.buf, worktree.buf)) {
 		/*
 		 * If initialization fails then it may be due to the submodule
 		 * not being populated in the superproject's worktree.  Instead
-		 * we can try to initialize the submodule by finding it's gitdir
+		 * we can try to initialize the submodule by finding it's shitdir
 		 * in the superproject's 'modules' directory.  In this case the
 		 * submodule would not have a worktree.
 		 */
@@ -255,10 +255,10 @@ int repo_submodule_init(struct repository *subrepo,
 			goto out;
 		}
 
-		strbuf_reset(&gitdir);
-		submodule_name_to_gitdir(&gitdir, superproject, sub->name);
+		strbuf_reset(&shitdir);
+		submodule_name_to_shitdir(&shitdir, superproject, sub->name);
 
-		if (repo_init(subrepo, gitdir.buf, NULL)) {
+		if (repo_init(subrepo, shitdir.buf, NULL)) {
 			ret = -1;
 			goto out;
 		}
@@ -270,7 +270,7 @@ int repo_submodule_init(struct repository *subrepo,
 					    "", path);
 
 out:
-	strbuf_release(&gitdir);
+	strbuf_release(&shitdir);
 	strbuf_release(&worktree);
 	return ret;
 }
@@ -289,7 +289,7 @@ static void repo_clear_path_cache(struct repo_path_cache *cache)
 
 void repo_clear(struct repository *repo)
 {
-	FREE_AND_NULL(repo->gitdir);
+	FREE_AND_NULL(repo->shitdir);
 	FREE_AND_NULL(repo->commondir);
 	FREE_AND_NULL(repo->graft_file);
 	FREE_AND_NULL(repo->index_file);
@@ -305,7 +305,7 @@ void repo_clear(struct repository *repo)
 	FREE_AND_NULL(repo->settings.fsmonitor);
 
 	if (repo->config) {
-		git_configset_clear(repo->config);
+		shit_configset_clear(repo->config);
 		FREE_AND_NULL(repo->config);
 	}
 
@@ -344,7 +344,7 @@ int repo_read_index(struct repository *repo)
 		BUG("repo's index should point back at itself");
 	}
 
-	res = read_index_from(repo->index, repo->index_file, repo->gitdir);
+	res = read_index_from(repo->index, repo->index_file, repo->shitdir);
 
 	prepare_repo_settings(repo);
 	if (repo->settings.command_requires_full_index)

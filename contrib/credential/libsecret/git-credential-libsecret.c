@@ -30,7 +30,7 @@
 #include <libsecret/secret.h>
 
 /*
- * This credential struct and API is simplified from git's credential.{h,c}
+ * This credential struct and API is simplified from shit's credential.{h,c}
  */
 struct credential {
 	char *protocol;
@@ -59,7 +59,7 @@ static void credential_clear(struct credential *c);
 /* ----------------- Secret Service functions ----------------- */
 
 static const SecretSchema schema = {
-	"org.git.Password",
+	"org.shit.Password",
 	/* Ignore schema name during search for backwards compatibility */
 	SECRET_SCHEMA_DONT_MATCH_NAME,
 	{
@@ -80,10 +80,10 @@ static const SecretSchema schema = {
 static char *make_label(struct credential *c)
 {
 	if (c->port)
-		return g_strdup_printf("Git: %s://%s:%hu/%s",
+		return g_strdup_printf("shit: %s://%s:%hu/%s",
 					c->protocol, c->host, c->port, c->path ? c->path : "");
 	else
-		return g_strdup_printf("Git: %s://%s/%s",
+		return g_strdup_printf("shit: %s://%s/%s",
 					c->protocol, c->host, c->path ? c->path : "");
 }
 
@@ -374,7 +374,7 @@ static int credential_read(struct credential *c)
 		}
 		/*
 		 * Ignore other lines; we don't know what they mean, but
-		 * this future-proofs us when later versions of git do
+		 * this future-proofs us when later versions of shit do
 		 * learn new lines, and the helpers are updated to match.
 		 */
 	}
@@ -429,7 +429,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	g_set_application_name("Git Credential Helper");
+	g_set_application_name("shit Credential Helper");
 
 	/* lookup operation callback */
 	while (try_op->name && strcmp(argv[1], try_op->name))

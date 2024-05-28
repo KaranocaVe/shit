@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git-status with core.ignorecase=true'
+test_description='shit-status with core.ignorecase=true'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -12,10 +12,10 @@ test_expect_success 'status with hash collisions' '
 	mkdir V/XQANY &&
 	mkdir WURZAUP &&
 	touch V/XQANY/test &&
-	git config core.ignorecase true &&
-	git add . &&
-	# test is successful if git status completes (no endless loop)
-	git status
+	shit config core.ignorecase true &&
+	shit add . &&
+	# test is successful if shit status completes (no endless loop)
+	shit status
 '
 
 test_done

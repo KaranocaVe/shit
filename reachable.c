@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "hex.h"
 #include "refs.h"
@@ -64,7 +64,7 @@ static void add_rebase_files(struct rev_info *revs)
 
 	for (struct worktree **wt = worktrees; *wt; wt++) {
 		strbuf_reset(&buf);
-		strbuf_addstr(&buf, get_worktree_git_dir(*wt));
+		strbuf_addstr(&buf, get_worktree_shit_dir(*wt));
 		strbuf_complete(&buf, '/');
 		len = buf.len;
 		for (size_t i = 0; i < ARRAY_SIZE(path); i++) {
@@ -131,7 +131,7 @@ static int run_one_gc_recent_objects_hook(struct oidset *set,
 	cmd.use_shell = 1;
 	cmd.out = -1;
 
-	strvec_push(&cmd.args, args);
+	strvec_defecate(&cmd.args, args);
 
 	if (start_command(&cmd))
 		return -1;
@@ -164,7 +164,7 @@ static void load_gc_recent_objects(struct recent_data *data)
 
 	data->extra_recent_oids_loaded = 1;
 
-	if (git_config_get_string_multi("gc.recentobjectshook", &programs))
+	if (shit_config_get_string_multi("gc.recentobjectshook", &programs))
 		return;
 
 	for (i = 0; i < programs->nr; i++) {
@@ -187,7 +187,7 @@ static int obj_is_recent(const struct object_id *oid, timestamp_t mtime,
 }
 
 static void add_recent_object(const struct object_id *oid,
-			      struct packed_git *pack,
+			      struct packed_shit *pack,
 			      off_t offset,
 			      timestamp_t mtime,
 			      struct recent_data *data)
@@ -273,7 +273,7 @@ static int add_recent_loose(const struct object_id *oid,
 }
 
 static int add_recent_packed(const struct object_id *oid,
-			     struct packed_git *p,
+			     struct packed_shit *p,
 			     uint32_t pos,
 			     void *data)
 {
@@ -334,7 +334,7 @@ static int mark_object_seen(const struct object_id *oid,
 			     enum object_type type,
 			     int exclude UNUSED,
 			     uint32_t name_hash UNUSED,
-			     struct packed_git *found_pack UNUSED,
+			     struct packed_shit *found_pack UNUSED,
 			     off_t found_offset UNUSED)
 {
 	struct object *obj = lookup_object_by_type(the_repository, oid, type);
@@ -349,7 +349,7 @@ void mark_reachable_objects(struct rev_info *revs, int mark_reflog,
 			    timestamp_t mark_recent, struct progress *progress)
 {
 	struct connectivity_progress cp;
-	struct bitmap_index *bitmap_git;
+	struct bitmap_index *bitmap_shit;
 
 	/*
 	 * Set up revision parsing, and mark us as being interested
@@ -380,10 +380,10 @@ void mark_reachable_objects(struct rev_info *revs, int mark_reflog,
 	cp.progress = progress;
 	cp.count = 0;
 
-	bitmap_git = prepare_bitmap_walk(revs, 0);
-	if (bitmap_git) {
-		traverse_bitmap_commit_list(bitmap_git, revs, mark_object_seen);
-		free_bitmap_index(bitmap_git);
+	bitmap_shit = prepare_bitmap_walk(revs, 0);
+	if (bitmap_shit) {
+		traverse_bitmap_commit_list(bitmap_shit, revs, mark_object_seen);
+		free_bitmap_index(bitmap_shit);
 	} else {
 		if (prepare_revision_walk(revs))
 			die("revision walk setup failed");

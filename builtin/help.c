@@ -91,12 +91,12 @@ static struct option builtin_help_options[] = {
 };
 
 static const char * const builtin_help_usage[] = {
-	"git help [-a|--all] [--[no-]verbose] [--[no-]external-commands] [--[no-]aliases]",
-	N_("git help [[-i|--info] [-m|--man] [-w|--web]] [<command>|<doc>]"),
-	"git help [-g|--guides]",
-	"git help [-c|--config]",
-	"git help [--user-interfaces]",
-	"git help [--developer-interfaces]",
+	"shit help [-a|--all] [--[no-]verbose] [--[no-]external-commands] [--[no-]aliases]",
+	N_("shit help [[-i|--info] [-m|--man] [-w|--web]] [<command>|<doc>]"),
+	"shit help [-g|--guides]",
+	"shit help [-c|--config]",
+	"shit help [--user-interfaces]",
+	"shit help [--developer-interfaces]",
 	NULL
 };
 
@@ -208,7 +208,7 @@ static enum help_format parse_help_format(const char *format)
 	if (!strcmp(format, "web") || !strcmp(format, "html"))
 		return HELP_FORMAT_WEB;
 	/*
-	 * Please update _git_config() in git-completion.bash when you
+	 * Please update _shit_config() in shit-completion.bash when you
 	 * add new help formats.
 	 */
 	die(_("unrecognized help format '%s'"), format);
@@ -233,7 +233,7 @@ static int check_emacsclient_version(void)
 	int version;
 
 	/* emacsclient prints its version number on stderr */
-	strvec_pushl(&ec_process.args, "emacsclient", "--version", NULL);
+	strvec_defecatel(&ec_process.args, "emacsclient", "--version", NULL);
 	ec_process.err = -1;
 	ec_process.stdout_to_stderr = 1;
 	if (start_command(&ec_process))
@@ -397,7 +397,7 @@ static int add_man_viewer_info(const char *var, const char *value)
 	return 0;
 }
 
-static int git_help_config(const char *var, const char *value,
+static int shit_help_config(const char *var, const char *value,
 			   const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "help.format")) {
@@ -421,51 +421,51 @@ static int git_help_config(const char *var, const char *value,
 	if (starts_with(var, "man."))
 		return add_man_viewer_info(var, value);
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static struct cmdnames main_cmds, other_cmds;
 
-static int is_git_command(const char *s)
+static int is_shit_command(const char *s)
 {
 	if (is_builtin(s))
 		return 1;
 
-	load_command_list("git-", &main_cmds, &other_cmds);
+	load_command_list("shit-", &main_cmds, &other_cmds);
 	return is_in_cmdlist(&main_cmds, s) ||
 		is_in_cmdlist(&other_cmds, s);
 }
 
-static const char *cmd_to_page(const char *git_cmd)
+static const char *cmd_to_page(const char *shit_cmd)
 {
-	if (!git_cmd)
-		return "git";
-	else if (starts_with(git_cmd, "git"))
-		return git_cmd;
-	else if (is_git_command(git_cmd))
-		return xstrfmt("git-%s", git_cmd);
-	else if (!strcmp("scalar", git_cmd))
-		return xstrdup(git_cmd);
+	if (!shit_cmd)
+		return "shit";
+	else if (starts_with(shit_cmd, "shit"))
+		return shit_cmd;
+	else if (is_shit_command(shit_cmd))
+		return xstrfmt("shit-%s", shit_cmd);
+	else if (!strcmp("scalar", shit_cmd))
+		return xstrdup(shit_cmd);
 	else
-		return xstrfmt("git%s", git_cmd);
+		return xstrfmt("shit%s", shit_cmd);
 }
 
 static void setup_man_path(void)
 {
 	struct strbuf new_path = STRBUF_INIT;
 	const char *old_path = getenv("MANPATH");
-	char *git_man_path = system_path(GIT_MAN_PATH);
+	char *shit_man_path = system_path(shit_MAN_PATH);
 
 	/* We should always put ':' after our path. If there is no
 	 * old_path, the ':' at the end will let 'man' to try
 	 * system-wide paths after ours to find the manual page. If
 	 * there is old_path, we need ':' as delimiter. */
-	strbuf_addstr(&new_path, git_man_path);
+	strbuf_addstr(&new_path, shit_man_path);
 	strbuf_addch(&new_path, ':');
 	if (old_path)
 		strbuf_addstr(&new_path, old_path);
 
-	free(git_man_path);
+	free(shit_man_path);
 	setenv("MANPATH", new_path.buf, 1);
 
 	strbuf_release(&new_path);
@@ -490,7 +490,7 @@ static void exec_viewer(const char *name, const char *page)
 static void show_man_page(const char *page)
 {
 	struct man_viewer_list *viewer;
-	const char *fallback = getenv("GIT_MAN_VIEWER");
+	const char *fallback = getenv("shit_MAN_VIEWER");
 
 	setup_man_path();
 	for (viewer = man_viewer_list; viewer; viewer = viewer->next)
@@ -505,8 +505,8 @@ static void show_man_page(const char *page)
 
 static void show_info_page(const char *page)
 {
-	setenv("INFOPATH", system_path(GIT_INFO_PATH), 1);
-	execlp("info", "info", "gitman", page, (char *)NULL);
+	setenv("INFOPATH", system_path(shit_INFO_PATH), 1);
+	execlp("info", "info", "shitman", page, (char *)NULL);
 	die(_("no info viewer handled the request"));
 }
 
@@ -516,7 +516,7 @@ static void get_html_page_path(struct strbuf *page_path, const char *page)
 	char *to_free = NULL;
 
 	if (!html_path)
-		html_path = to_free = system_path(GIT_HTML_PATH);
+		html_path = to_free = system_path(shit_HTML_PATH);
 
 	/*
 	 * Check that the page we're looking for exists.
@@ -535,7 +535,7 @@ static void get_html_page_path(struct strbuf *page_path, const char *page)
 
 static void open_html(const char *path)
 {
-	execl_git_cmd("web--browse", "-c", "help.browser", path, (char *)NULL);
+	execl_shit_cmd("web--browse", "-c", "help.browser", path, (char *)NULL);
 }
 
 static void show_html_page(const char *page)
@@ -547,11 +547,11 @@ static void show_html_page(const char *page)
 	open_html(page_path.buf);
 }
 
-static const char *check_git_cmd(const char* cmd)
+static const char *check_shit_cmd(const char* cmd)
 {
 	char *alias;
 
-	if (is_git_command(cmd))
+	if (is_shit_command(cmd))
 		return cmd;
 
 	alias = alias_lookup(cmd);
@@ -560,10 +560,10 @@ static const char *check_git_cmd(const char* cmd)
 		int count;
 
 		/*
-		 * handle_builtin() in git.c rewrites "git cmd --help"
-		 * to "git help --exclude-guides cmd", so we can use
-		 * exclude_guides to distinguish "git cmd --help" from
-		 * "git help cmd". In the latter case, or if cmd is an
+		 * handle_builtin() in shit.c rewrites "shit cmd --help"
+		 * to "shit help --exclude-guides cmd", so we can use
+		 * exclude_guides to distinguish "shit cmd --help" from
+		 * "shit help cmd". In the latter case, or if cmd is an
 		 * alias for a shell command, just print the alias
 		 * definition.
 		 */
@@ -573,7 +573,7 @@ static const char *check_git_cmd(const char* cmd)
 			exit(0);
 		}
 		/*
-		 * Otherwise, we pretend that the command was "git
+		 * Otherwise, we pretend that the command was "shit
 		 * word0 --help". We use split_cmdline() to get the
 		 * first word of the alias, to ensure that we use the
 		 * same rules as when the alias is actually
@@ -633,7 +633,7 @@ static void opt_mode_usage(int argc, const char *opt_mode,
 
 int cmd_help(int argc, const char **argv, const char *prefix)
 {
-	int nongit;
+	int nonshit;
 	enum help_format parsed_help_format;
 	const char *page;
 
@@ -656,15 +656,15 @@ int cmd_help(int argc, const char **argv, const char *prefix)
 					   show_aliases);
 			return 0;
 		}
-		printf(_("usage: %s%s"), _(git_usage_string), "\n\n");
-		load_command_list("git-", &main_cmds, &other_cmds);
+		printf(_("usage: %s%s"), _(shit_usage_string), "\n\n");
+		load_command_list("shit-", &main_cmds, &other_cmds);
 		list_commands(&main_cmds, &other_cmds);
-		printf("%s\n", _(git_more_info_string));
+		printf("%s\n", _(shit_more_info_string));
 		break;
 	case HELP_ACTION_GUIDES:
 		opt_mode_usage(argc, "--guides", help_format);
 		list_guides_help();
-		printf("%s\n", _(git_more_info_string));
+		printf("%s\n", _(shit_more_info_string));
 		return 0;
 	case HELP_ACTION_CONFIG_FOR_COMPLETION:
 		opt_mode_usage(argc, "--config-for-completion", help_format);
@@ -687,26 +687,26 @@ int cmd_help(int argc, const char **argv, const char *prefix)
 		opt_mode_usage(argc, "--config", help_format);
 		setup_pager();
 		list_config_help(SHOW_CONFIG_HUMAN);
-		printf("\n%s\n", _("'git help config' for more information"));
+		printf("\n%s\n", _("'shit help config' for more information"));
 		return 0;
 	}
 
 	if (!argv[0]) {
-		printf(_("usage: %s%s"), _(git_usage_string), "\n\n");
+		printf(_("usage: %s%s"), _(shit_usage_string), "\n\n");
 		list_common_cmds_help();
-		printf("\n%s\n", _(git_more_info_string));
+		printf("\n%s\n", _(shit_more_info_string));
 		return 0;
 	}
 
-	setup_git_directory_gently(&nongit);
-	git_config(git_help_config, NULL);
+	setup_shit_directory_gently(&nonshit);
+	shit_config(shit_help_config, NULL);
 
 	if (parsed_help_format != HELP_FORMAT_NONE)
 		help_format = parsed_help_format;
 	if (help_format == HELP_FORMAT_NONE)
 		help_format = parse_help_format(DEFAULT_HELP_FORMAT);
 
-	argv[0] = check_git_cmd(argv[0]);
+	argv[0] = check_shit_cmd(argv[0]);
 
 	page = cmd_to_page(argv[0]);
 	switch (help_format) {

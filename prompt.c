@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "parse.h"
 #include "environment.h"
 #include "run-command.h"
@@ -12,8 +12,8 @@ static char *do_askpass(const char *cmd, const char *prompt)
 	static struct strbuf buffer = STRBUF_INIT;
 	int err = 0;
 
-	strvec_push(&pass.args, cmd);
-	strvec_push(&pass.args, prompt);
+	strvec_defecate(&pass.args, cmd);
+	strvec_defecate(&pass.args, prompt);
 
 	pass.out = -1;
 
@@ -40,14 +40,14 @@ static char *do_askpass(const char *cmd, const char *prompt)
 	return buffer.buf;
 }
 
-char *git_prompt(const char *prompt, int flags)
+char *shit_prompt(const char *prompt, int flags)
 {
 	char *r = NULL;
 
 	if (flags & PROMPT_ASKPASS) {
 		const char *askpass;
 
-		askpass = getenv("GIT_ASKPASS");
+		askpass = getenv("shit_ASKPASS");
 		if (!askpass)
 			askpass = askpass_program;
 		if (!askpass)
@@ -59,8 +59,8 @@ char *git_prompt(const char *prompt, int flags)
 	if (!r) {
 		const char *err;
 
-		if (git_env_bool("GIT_TERMINAL_PROMPT", 1)) {
-			r = git_terminal_prompt(prompt, flags & PROMPT_ECHO);
+		if (shit_env_bool("shit_TERMINAL_PROMPT", 1)) {
+			r = shit_terminal_prompt(prompt, flags & PROMPT_ECHO);
 			err = strerror(errno);
 		} else {
 			err = "terminal prompts disabled";
@@ -73,7 +73,7 @@ char *git_prompt(const char *prompt, int flags)
 	return r;
 }
 
-int git_read_line_interactively(struct strbuf *line)
+int shit_read_line_interactively(struct strbuf *line)
 {
 	int ret;
 

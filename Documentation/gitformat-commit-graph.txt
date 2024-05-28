@@ -1,20 +1,20 @@
-gitformat-commit-graph(5)
+shitformat-commit-graph(5)
 =========================
 
 NAME
 ----
-gitformat-commit-graph - Git commit-graph format
+shitformat-commit-graph - shit commit-graph format
 
 SYNOPSIS
 --------
 [verse]
-$GIT_DIR/objects/info/commit-graph
-$GIT_DIR/objects/info/commit-graphs/*
+$shit_DIR/objects/info/commit-graph
+$shit_DIR/objects/info/commit-graphs/*
 
 DESCRIPTION
 -----------
 
-The Git commit-graph stores a list of commit OIDs and some associated
+The shit commit-graph stores a list of commit OIDs and some associated
 metadata, including:
 
 - The generation number of the commit.
@@ -75,7 +75,7 @@ All multi-byte numbers are in network byte order.
       ID appears at most once.
 
   The CHUNK LOOKUP matches the table of contents from
-  the chunk-based file format, see linkgit:gitformat-chunk[5]
+  the chunk-based file format, see linkshit:shitformat-chunk[5]
 
   The remaining data in the body is described one chunk at a time, and
   these chunks may be given in any order. Chunks are required unless
@@ -114,7 +114,7 @@ All multi-byte numbers are in network byte order.
       the position of corrected commit date into the Generation Data Overflow
       chunk.
     * Generation Data chunk is present only when commit-graph file is written
-      by compatible versions of Git and in case of split commit-graph chains,
+      by compatible versions of shit and in case of split commit-graph chains,
       the topmost layer also has Generation Data chunk.
 
 ==== Generation Data Overflow (ID: {'G', 'D', 'O', '2' }) [Optional]
@@ -173,11 +173,11 @@ All multi-byte numbers are in network byte order.
 == Historical Notes:
 
 The Generation Data (GDA2) and Generation Data Overflow (GDO2) chunks have
-the number '2' in their chunk IDs because a previous version of Git wrote
+the number '2' in their chunk IDs because a previous version of shit wrote
 possibly erroneous data in these chunks with the IDs "GDAT" and "GDOV". By
-changing the IDs, newer versions of Git will silently ignore those older
+changing the IDs, newer versions of shit will silently ignore those older
 chunks and write the new information without trusting the incorrect data.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

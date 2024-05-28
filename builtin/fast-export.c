@@ -1,5 +1,5 @@
 /*
- * "git fast-export" builtin command
+ * "shit fast-export" builtin command
  *
  * Copyright (C) 2007 Johannes E. Schindelin
  */
@@ -27,7 +27,7 @@
 #include "blob.h"
 
 static const char *fast_export_usage[] = {
-	N_("git fast-export [<rev-list-opts>]"),
+	N_("shit fast-export [<rev-list-opts>]"),
 	NULL
 };
 
@@ -95,7 +95,7 @@ static int parse_opt_reencode_mode(const struct option *opt,
 		return 0;
 	}
 
-	switch (git_parse_maybe_bool(arg)) {
+	switch (shit_parse_maybe_bool(arg)) {
 	case 0:
 		*val = REENCODE_NO;
 		break;
@@ -413,7 +413,7 @@ static char *generate_fake_oid(void)
 	static uint32_t counter = 1; /* avoid null oid */
 	const unsigned hashsz = the_hash_algo->rawsz;
 	struct object_id oid;
-	char *hex = xmallocz(GIT_MAX_HEXSZ);
+	char *hex = xmallocz(shit_MAX_HEXSZ);
 
 	oidclr(&oid);
 	put_be32(oid.hash + hashsz - 4, counter++);
@@ -481,7 +481,7 @@ static void show_filemodify(struct diff_queue_struct *q,
 			 * Links refer to objects in another repositories;
 			 * output the SHA-1 verbatim.
 			 */
-			if (no_data || S_ISGITLINK(spec->mode))
+			if (no_data || S_ISshitLINK(spec->mode))
 				printf("M %06o %s ", spec->mode,
 				       anonymize ?
 				       anonymize_oid(oid_to_hex(&spec->oid)) :
@@ -669,7 +669,7 @@ static void handle_commit(struct commit *commit, struct rev_info *rev,
 
 	/* Export the referenced blobs, and remember the marks. */
 	for (i = 0; i < diff_queued_diff.nr; i++)
-		if (!S_ISGITLINK(diff_queued_diff.queue[i]->two->mode))
+		if (!S_ISshitLINK(diff_queued_diff.queue[i]->two->mode))
 			export_blob(&diff_queued_diff.queue[i]->two->oid);
 
 	refname = *revision_sources_at(&revision_sources, commit);
@@ -1230,7 +1230,7 @@ int cmd_fast_export(int argc, const char **argv, const char *prefix)
 		usage_with_options (fast_export_usage, options);
 
 	/* we handle encodings */
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	repo_init_revisions(the_repository, &revs, prefix);
 	init_revision_sources(&revision_sources);

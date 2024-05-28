@@ -1,5 +1,5 @@
 /*
- * "git mv" builtin command
+ * "shit mv" builtin command
  *
  * Copyright (C) 2006 Johannes Schindelin
  */
@@ -24,7 +24,7 @@
 #include "entry.h"
 
 static const char * const builtin_mv_usage[] = {
-	N_("git mv [<options>] <source>... <destination>"),
+	N_("shit mv [<options>] <source>... <destination>"),
 	NULL
 };
 
@@ -89,23 +89,23 @@ static const char *add_slash(const char *path)
 	return path;
 }
 
-#define SUBMODULE_WITH_GITDIR ((const char *)1)
+#define SUBMODULE_WITH_shitDIR ((const char *)1)
 
 static void prepare_move_submodule(const char *src, int first,
-				   const char **submodule_gitfile)
+				   const char **submodule_shitfile)
 {
-	struct strbuf submodule_dotgit = STRBUF_INIT;
-	if (!S_ISGITLINK(the_repository->index->cache[first]->ce_mode))
+	struct strbuf submodule_dotshit = STRBUF_INIT;
+	if (!S_ISshitLINK(the_repository->index->cache[first]->ce_mode))
 		die(_("Directory %s is in index and no submodule?"), src);
-	if (!is_staging_gitmodules_ok(the_repository->index))
-		die(_("Please stage your changes to .gitmodules or stash them to proceed"));
-	strbuf_addf(&submodule_dotgit, "%s/.git", src);
-	*submodule_gitfile = read_gitfile(submodule_dotgit.buf);
-	if (*submodule_gitfile)
-		*submodule_gitfile = xstrdup(*submodule_gitfile);
+	if (!is_staging_shitmodules_ok(the_repository->index))
+		die(_("Please stage your changes to .shitmodules or stash them to proceed"));
+	strbuf_addf(&submodule_dotshit, "%s/.shit", src);
+	*submodule_shitfile = read_shitfile(submodule_dotshit.buf);
+	if (*submodule_shitfile)
+		*submodule_shitfile = xstrdup(*submodule_shitfile);
 	else
-		*submodule_gitfile = SUBMODULE_WITH_GITDIR;
-	strbuf_release(&submodule_dotgit);
+		*submodule_shitfile = SUBMODULE_WITH_shitDIR;
+	strbuf_release(&submodule_dotshit);
 }
 
 static int index_range_of_same_dir(const char *src, int length,
@@ -166,7 +166,7 @@ free_return:
 
 int cmd_mv(int argc, const char **argv, const char *prefix)
 {
-	int i, flags, gitmodules_modified = 0;
+	int i, flags, shitmodules_modified = 0;
 	int verbose = 0, show_only = 0, force = 0, ignore_errors = 0, ignore_sparse = 0;
 	struct option builtin_mv_options[] = {
 		OPT__VERBOSE(&verbose, N_("be verbose")),
@@ -177,7 +177,7 @@ int cmd_mv(int argc, const char **argv, const char *prefix)
 		OPT_BOOL(0, "sparse", &ignore_sparse, N_("allow updating entries outside of the sparse-checkout cone")),
 		OPT_END(),
 	};
-	const char **source, **destination, **dest_path, **submodule_gitfile;
+	const char **source, **destination, **dest_path, **submodule_shitfile;
 	const char *dst_w_slash;
 	const char **src_dir = NULL;
 	int src_dir_nr = 0, src_dir_alloc = 0;
@@ -190,7 +190,7 @@ int cmd_mv(int argc, const char **argv, const char *prefix)
 	struct string_list only_match_skip_worktree = STRING_LIST_INIT_NODUP;
 	struct string_list dirty_paths = STRING_LIST_INIT_NODUP;
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, builtin_mv_options,
 			     builtin_mv_usage, 0);
@@ -206,15 +206,15 @@ int cmd_mv(int argc, const char **argv, const char *prefix)
 
 	/*
 	 * Keep trailing slash, needed to let
-	 * "git mv file no-such-dir/" error out, except in the case
-	 * "git mv directory no-such-dir/".
+	 * "shit mv file no-such-dir/" error out, except in the case
+	 * "shit mv directory no-such-dir/".
 	 */
 	flags = KEEP_TRAILING_SLASH;
 	if (argc == 1 && is_directory(argv[0]) && !is_directory(argv[1]))
 		flags = 0;
 	dest_path = internal_prefix_pathspec(prefix, argv + argc, 1, flags);
 	dst_w_slash = add_slash(dest_path[0]);
-	submodule_gitfile = xcalloc(argc, sizeof(char *));
+	submodule_shitfile = xcalloc(argc, sizeof(char *));
 
 	if (dest_path[0][0] == '\0')
 		/* special case: "." was normalized to "" */
@@ -315,7 +315,7 @@ dir_check:
 
 			if (first >= 0) {
 				prepare_move_submodule(src, first,
-						       submodule_gitfile + i);
+						       submodule_shitfile + i);
 				goto act_on_entry;
 			} else if (index_range_of_same_dir(src, length,
 							   &first, &last) < 1) {
@@ -333,7 +333,7 @@ dir_check:
 			REALLOC_ARRAY(source, n);
 			REALLOC_ARRAY(destination, n);
 			REALLOC_ARRAY(modes, n);
-			REALLOC_ARRAY(submodule_gitfile, n);
+			REALLOC_ARRAY(submodule_shitfile, n);
 
 			dst = add_slash(dst);
 			dst_len = strlen(dst);
@@ -346,7 +346,7 @@ dir_check:
 					prefix_path(dst, dst_len, path + length + 1);
 				memset(modes + argc + j, 0, sizeof(enum update_mode));
 				modes[argc + j] |= ce_skip_worktree(ce) ? SPARSE : INDEX;
-				submodule_gitfile[argc + j] = NULL;
+				submodule_shitfile[argc + j] = NULL;
 			}
 			argc += last - first;
 			goto act_on_entry;
@@ -431,8 +431,8 @@ remove_entry:
 			MOVE_ARRAY(source + i, source + i + 1, n);
 			MOVE_ARRAY(destination + i, destination + i + 1, n);
 			MOVE_ARRAY(modes + i, modes + i + 1, n);
-			MOVE_ARRAY(submodule_gitfile + i,
-				   submodule_gitfile + i + 1, n);
+			MOVE_ARRAY(submodule_shitfile + i,
+				   submodule_shitfile + i + 1, n);
 			i--;
 		}
 	}
@@ -464,12 +464,12 @@ remove_entry:
 				continue;
 			die_errno(_("renaming '%s' failed"), src);
 		}
-		if (submodule_gitfile[i]) {
-			if (!update_path_in_gitmodules(src, dst))
-				gitmodules_modified = 1;
-			if (submodule_gitfile[i] != SUBMODULE_WITH_GITDIR)
-				connect_work_tree_and_git_dir(dst,
-							      submodule_gitfile[i],
+		if (submodule_shitfile[i]) {
+			if (!update_path_in_shitmodules(src, dst))
+				shitmodules_modified = 1;
+			if (submodule_shitfile[i] != SUBMODULE_WITH_shitDIR)
+				connect_work_tree_and_shit_dir(dst,
+							      submodule_shitfile[i],
 							      1);
 		}
 
@@ -558,8 +558,8 @@ remove_entry:
 	if (dirty_paths.nr)
 		advise_on_moving_dirty_path(&dirty_paths);
 
-	if (gitmodules_modified)
-		stage_updated_gitmodules(the_repository->index);
+	if (shitmodules_modified)
+		stage_updated_shitmodules(the_repository->index);
 
 	if (write_locked_index(the_repository->index, &lock_file,
 			       COMMIT_LOCK | SKIP_IF_UNCHANGED))
@@ -569,7 +569,7 @@ remove_entry:
 	string_list_clear(&dirty_paths, 0);
 	UNLEAK(source);
 	UNLEAK(dest_path);
-	free(submodule_gitfile);
+	free(submodule_shitfile);
 	free(modes);
 	return 0;
 }

@@ -5,7 +5,7 @@ use warnings;
 
 use Getopt::Long;
 use File::Basename;
-use Git;
+use shit;
 
 my $VERSION = "0.2";
 
@@ -32,18 +32,18 @@ foreach (values %{$options{tmap}}) {
 	$options{tmap}->{$_} = $_;
 }
 
-# Now, $options{tmap} has a mapping from the netrc format to the Git credential
+# Now, $options{tmap} has a mapping from the netrc format to the shit credential
 # helper protocol.
 
 # Next, we build the reverse token map.
 
-# When $rmap{foo} contains 'bar', that means that what the Git credential helper
+# When $rmap{foo} contains 'bar', that means that what the shit credential helper
 # protocol calls 'bar' is found as 'foo' in the netrc/authinfo file.  Keys in
 # %rmap are what we expect to read from the netrc/authinfo file.
 
 my %rmap;
 foreach my $k (keys %{$options{tmap}}) {
-	push @{$rmap{$options{tmap}->{$k}}}, $k;
+	defecate @{$rmap{$options{tmap}->{$k}}}, $k;
 }
 
 Getopt::Long::Configure("bundling");
@@ -60,7 +60,7 @@ GetOptions(\%options,
 
 if ($options{help}) {
 	my $shortname = basename($0);
-	$shortname =~ s/git-credential-//;
+	$shortname =~ s/shit-credential-//;
 
 	print <<EOHIPPUS;
 
@@ -81,7 +81,7 @@ Options:
                         used in this order.
 
   -g|--gpg <program>  : specify the program for GPG. By default, this is the
-                        value of gpg.program in the git repository or global
+                        value of gpg.program in the shit repository or global
                         option or gpg.
 
   -k|--insecure       : ignore bad file ownership or permissions
@@ -92,18 +92,18 @@ Options:
 
 To enable this credential helper:
 
-  git config credential.helper '$shortname -f AUTHFILE1 -f AUTHFILE2'
+  shit config credential.helper '$shortname -f AUTHFILE1 -f AUTHFILE2'
 
-(Note that Git will prepend "git-credential-" to the helper name and look for it
+(Note that shit will prepend "shit-credential-" to the helper name and look for it
 in the path.)
 
 ...and if you want lots of debugging info:
 
-  git config credential.helper '$shortname -f AUTHFILE -d'
+  shit config credential.helper '$shortname -f AUTHFILE -d'
 
 ...or to see the files opened and data found:
 
-  git config credential.helper '$shortname -f AUTHFILE -v'
+  shit config credential.helper '$shortname -f AUTHFILE -v'
 
 Only "get" mode is supported by this credential helper.  It opens every
 <authfile> and looks for the first entry that matches the requested search
@@ -123,24 +123,24 @@ criteria:
 
 Thus, when we get this query on STDIN:
 
-host=github.com
+host=shithub.com
 protocol=https
 username=tzz
 
 this credential helper will look for the first entry in every <authfile> that
 matches
 
-machine github.com port https login tzz
+machine shithub.com port https login tzz
 
 OR
 
-machine github.com protocol https login tzz
+machine shithub.com protocol https login tzz
 
 OR... etc. acceptable tokens as listed above.  Any unknown tokens are
 simply ignored.
 
 Then, the helper will print out whatever tokens it got from the entry, including
-"password" tokens, mapping back to Git's helper protocol; e.g. "port" is mapped
+"password" tokens, mapping back to shit's helper protocol; e.g. "port" is mapped
 back to "protocol".  Any redundant entry tokens (part of the original query) are
 skipped.
 
@@ -281,7 +281,7 @@ sub load_netrc {
 			$entry{host} = join(':', $entry{host}, $num_port);
 		}
 
-		push @entries, \%entry;
+		defecate @entries, \%entry;
 	}
 
 	return @entries;
@@ -305,7 +305,7 @@ sub net_netrc_loader {
 
 		while (length && s/^("((?:[^"]+|\\.)*)"|((?:[^\\\s]+|\\.)*))\s*//) {
 			(my $tok = $+) =~ s/\\(.)/$1/g;
-			push(@tok, $tok);
+			defecate(@tok, $tok);
 		}
 
 	    TOKEN:
@@ -321,7 +321,7 @@ sub net_netrc_loader {
 			if ($tok eq "machine") {
 				my $host = shift @tok;
 				$mach = { machine => $host };
-				push @entries, $mach;
+				defecate @entries, $mach;
 			} elsif (exists $options{tmap}->{$tok}) {
 				unless ($mach) {
 					log_debug("Skipping token $tok because no machine was given");
@@ -410,23 +410,23 @@ sub print_credential_data {
 
 	log_debug("entry has passed all the search checks");
  TOKEN:
-	foreach my $git_token (sort keys %$entry) {
-		log_debug("looking for useful token $git_token");
+	foreach my $shit_token (sort keys %$entry) {
+		log_debug("looking for useful token $shit_token");
 		# don't print unknown (to the credential helper protocol) tokens
-		next TOKEN unless exists $query->{$git_token};
+		next TOKEN unless exists $query->{$shit_token};
 
 		# don't print things asked in the query (the entry matches them)
-		next TOKEN if defined $query->{$git_token};
+		next TOKEN if defined $query->{$shit_token};
 
-		log_debug("FOUND: $git_token=$entry->{$git_token}");
-		printf "%s=%s\n", $git_token, $entry->{$git_token};
+		log_debug("FOUND: $shit_token=$entry->{$shit_token}");
+		printf "%s=%s\n", $shit_token, $entry->{$shit_token};
 	}
 }
 sub load_config {
-	# load settings from git config
+	# load settings from shit config
 	my $options = shift;
 	# set from command argument, gpg.program option, or default to gpg
-	$options->{'gpg'} //= Git::config('gpg.program')
+	$options->{'gpg'} //= shit::config('gpg.program')
 	                  // 'gpg';
 	log_verbose("using $options{'gpg'} for GPG operations");
 }

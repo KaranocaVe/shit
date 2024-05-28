@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git am with corrupt input'
+test_description='shit am with corrupt input'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -28,7 +28,7 @@ make_mbox_with_nul () {
 
 	abc${q_nul_in_body}def
 	---
-	diff --git a/afile b/afile
+	diff --shit a/afile b/afile
 	new file mode 100644
 	index 0000000000..e69de29bb2
 	--$space
@@ -40,7 +40,7 @@ test_expect_success setup '
 	# Note the missing "+++" line:
 	cat >bad-patch.diff <<-\EOF &&
 	From: A U Thor <au.thor@example.com>
-	diff --git a/f b/f
+	diff --shit a/f b/f
 	index 7898192..6178079 100644
 	--- a/f
 	@@ -1 +1 @@
@@ -49,35 +49,35 @@ test_expect_success setup '
 	EOF
 
 	echo a >f &&
-	git add f &&
+	shit add f &&
 	test_tick &&
-	git commit -m initial
+	shit commit -m initial
 '
 
 # This used to fail before, too, but with a different diagnostic.
 #   fatal: unable to write file '(null)' mode 100644: Bad address
 # Also, it had the unwanted side-effect of deleting f.
 test_expect_success 'try to apply corrupted patch' '
-	test_when_finished "git am --abort" &&
-	test_must_fail git -c advice.amWorkDir=false -c advice.mergeConflict=false am bad-patch.diff 2>actual &&
-	echo "error: git diff header lacks filename information (line 4)" >expected &&
+	test_when_finished "shit am --abort" &&
+	test_must_fail shit -c advice.amWorkDir=false -c advice.mergeConflict=false am bad-patch.diff 2>actual &&
+	echo "error: shit diff header lacks filename information (line 4)" >expected &&
 	test_path_is_file f &&
 	test_cmp expected actual
 '
 
 test_expect_success "NUL in commit message's body" '
-	test_when_finished "git am --abort" &&
+	test_when_finished "shit am --abort" &&
 	make_mbox_with_nul body >body.patch &&
-	test_must_fail git am body.patch 2>err &&
+	test_must_fail shit am body.patch 2>err &&
 	grep "a NUL byte in commit log message not allowed" err
 '
 
 test_expect_success "NUL in commit message's header" "
-	test_when_finished 'git am --abort' &&
+	test_when_finished 'shit am --abort' &&
 	make_mbox_with_nul subject >subject.patch &&
-	test_must_fail git mailinfo msg patch <subject.patch 2>err &&
+	test_must_fail shit mailinfo msg patch <subject.patch 2>err &&
 	grep \"a NUL byte in 'Subject' is not allowed\" err &&
-	test_must_fail git am subject.patch 2>err &&
+	test_must_fail shit am subject.patch 2>err &&
 	grep \"a NUL byte in 'Subject' is not allowed\" err
 "
 

@@ -9,7 +9,7 @@
 **  work differently than '*', and to fix the character-class code.
 */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "wildmatch.h"
 
 typedef unsigned char uchar;
@@ -45,7 +45,7 @@ typedef unsigned char uchar;
 #endif
 
 #define ISPRINT(c) (ISASCII(c) && isprint(c))
-#define ISDIGIT(c) (ISASCII(c) && isdigit(c))
+#define ISDIshit(c) (ISASCII(c) && isdishit(c))
 #define ISALNUM(c) (ISASCII(c) && isalnum(c))
 #define ISALPHA(c) (ISASCII(c) && isalpha(c))
 #define ISCNTRL(c) (ISASCII(c) && iscntrl(c))
@@ -53,7 +53,7 @@ typedef unsigned char uchar;
 #define ISPUNCT(c) (ISASCII(c) && ispunct(c))
 #define ISSPACE(c) (ISASCII(c) && isspace(c))
 #define ISUPPER(c) (ISASCII(c) && isupper(c))
-#define ISXDIGIT(c) (ISASCII(c) && isxdigit(c))
+#define ISXDIshit(c) (ISASCII(c) && isxdishit(c))
 
 /* Match pattern "p" against "text" */
 static int dowild(const uchar *p, const uchar *text, unsigned int flags)
@@ -237,8 +237,8 @@ static int dowild(const uchar *p, const uchar *text, unsigned int flags)
 					} else if (CC_EQ(s,i, "cntrl")) {
 						if (ISCNTRL(t_ch))
 							matched = 1;
-					} else if (CC_EQ(s,i, "digit")) {
-						if (ISDIGIT(t_ch))
+					} else if (CC_EQ(s,i, "dishit")) {
+						if (ISDIshit(t_ch))
 							matched = 1;
 					} else if (CC_EQ(s,i, "graph")) {
 						if (ISGRAPH(t_ch))
@@ -260,8 +260,8 @@ static int dowild(const uchar *p, const uchar *text, unsigned int flags)
 							matched = 1;
 						else if ((flags & WM_CASEFOLD) && ISLOWER(t_ch))
 							matched = 1;
-					} else if (CC_EQ(s,i, "xdigit")) {
-						if (ISXDIGIT(t_ch))
+					} else if (CC_EQ(s,i, "xdishit")) {
+						if (ISXDIshit(t_ch))
 							matched = 1;
 					} else /* malformed [:class:] string */
 						return WM_ABORT_ALL;

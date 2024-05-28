@@ -6,15 +6,15 @@
 
 /*
  * The sub-process API makes it possible to run background sub-processes
- * for the entire lifetime of a Git invocation. If Git needs to communicate
+ * for the entire lifetime of a shit invocation. If shit needs to communicate
  * with an external process multiple times, then this can reduces the process
- * invocation overhead. Git and the sub-process communicate through stdin and
+ * invocation overhead. shit and the sub-process communicate through stdin and
  * stdout.
  *
  * The sub-processes are kept in a hashmap by command name and looked up
  * via the subprocess_find_entry function.  If an existing instance can not
  * be found then a new process should be created and started.  When the
- * parent git command terminates, all sub-processes are also terminated.
+ * parent shit command terminates, all sub-processes are also terminated.
  *
  * This API is based on the run-command API.
  */

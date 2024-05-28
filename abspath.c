@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "strbuf.h"
 
@@ -57,7 +57,7 @@ static void get_root_part(struct strbuf *resolved, struct strbuf *remaining)
 
 	strbuf_reset(resolved);
 	strbuf_add(resolved, remaining->buf, offset);
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 	convert_slashes(resolved->buf);
 #endif
 	strbuf_remove(remaining, 0, offset);
@@ -277,7 +277,7 @@ char *prefix_filename(const char *pfx, const char *arg)
 		strbuf_add(&path, pfx, pfx_len);
 
 	strbuf_addstr(&path, arg);
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 	convert_slashes(path.buf + pfx_len);
 #endif
 	return strbuf_detach(&path, NULL);

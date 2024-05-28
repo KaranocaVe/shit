@@ -1,4 +1,4 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 #include "../copy.h"
 #include "../environment.h"
 #include "../gettext.h"
@@ -70,7 +70,7 @@ struct files_ref_store {
 	struct ref_store base;
 	unsigned int store_flags;
 
-	char *gitcommondir;
+	char *shitcommondir;
 
 	struct ref_cache *loose;
 
@@ -90,23 +90,23 @@ static void clear_loose_ref_cache(struct files_ref_store *refs)
  * set of caches.
  */
 static struct ref_store *files_ref_store_create(struct repository *repo,
-						const char *gitdir,
+						const char *shitdir,
 						unsigned int flags)
 {
 	struct files_ref_store *refs = xcalloc(1, sizeof(*refs));
 	struct ref_store *ref_store = (struct ref_store *)refs;
 	struct strbuf sb = STRBUF_INIT;
 
-	base_ref_store_init(ref_store, repo, gitdir, &refs_be_files);
+	base_ref_store_init(ref_store, repo, shitdir, &refs_be_files);
 	refs->store_flags = flags;
-	get_common_dir_noenv(&sb, gitdir);
-	refs->gitcommondir = strbuf_detach(&sb, NULL);
+	get_common_dir_noenv(&sb, shitdir);
+	refs->shitcommondir = strbuf_detach(&sb, NULL);
 	refs->packed_ref_store =
-		packed_ref_store_create(repo, refs->gitcommondir, flags);
+		packed_ref_store_create(repo, refs->shitcommondir, flags);
 
-	chdir_notify_reparent("files-backend $GIT_DIR", &refs->base.gitdir);
-	chdir_notify_reparent("files-backend $GIT_COMMONDIR",
-			      &refs->gitcommondir);
+	chdir_notify_reparent("files-backend $shit_DIR", &refs->base.shitdir);
+	chdir_notify_reparent("files-backend $shit_COMMONDIR",
+			      &refs->shitcommondir);
 
 	return ref_store;
 }
@@ -161,14 +161,14 @@ static void files_reflog_path(struct files_ref_store *refs,
 
 	switch (wt_type) {
 	case REF_WORKTREE_CURRENT:
-		strbuf_addf(sb, "%s/logs/%s", refs->base.gitdir, refname);
+		strbuf_addf(sb, "%s/logs/%s", refs->base.shitdir, refname);
 		break;
 	case REF_WORKTREE_SHARED:
 	case REF_WORKTREE_MAIN:
-		strbuf_addf(sb, "%s/logs/%s", refs->gitcommondir, bare_refname);
+		strbuf_addf(sb, "%s/logs/%s", refs->shitcommondir, bare_refname);
 		break;
 	case REF_WORKTREE_OTHER:
-		strbuf_addf(sb, "%s/worktrees/%.*s/logs/%s", refs->gitcommondir,
+		strbuf_addf(sb, "%s/worktrees/%.*s/logs/%s", refs->shitcommondir,
 			    wtname_len, wtname, bare_refname);
 		break;
 	default:
@@ -187,15 +187,15 @@ static void files_ref_path(struct files_ref_store *refs,
 		refname, &wtname, &wtname_len, &bare_refname);
 	switch (wt_type) {
 	case REF_WORKTREE_CURRENT:
-		strbuf_addf(sb, "%s/%s", refs->base.gitdir, refname);
+		strbuf_addf(sb, "%s/%s", refs->base.shitdir, refname);
 		break;
 	case REF_WORKTREE_OTHER:
-		strbuf_addf(sb, "%s/worktrees/%.*s/%s", refs->gitcommondir,
+		strbuf_addf(sb, "%s/worktrees/%.*s/%s", refs->shitcommondir,
 			    wtname_len, wtname, bare_refname);
 		break;
 	case REF_WORKTREE_SHARED:
 	case REF_WORKTREE_MAIN:
-		strbuf_addf(sb, "%s/%s", refs->gitcommondir, bare_refname);
+		strbuf_addf(sb, "%s/%s", refs->shitcommondir, bare_refname);
 		break;
 	default:
 		BUG("unknown ref type %d of ref %s", wt_type, refname);
@@ -1324,8 +1324,8 @@ static int files_pack_refs(struct ref_store *ref_store,
 }
 
 /*
- * People using contrib's git-new-workdir have .git/logs/refs ->
- * /some/other/path/.git/logs/refs, and that may live on another device.
+ * People using contrib's shit-new-workdir have .shit/logs/refs ->
+ * /some/other/path/.shit/logs/refs, and that may live on another device.
  *
  * IOW, to avoid cross device rename errors, the temporary renamed log must
  * live into logs/refs.
@@ -1756,7 +1756,7 @@ static int files_log_ref_write(struct files_ref_store *refs,
 	if (logfd < 0)
 		return 0;
 	result = log_ref_write_fd(logfd, old_oid, new_oid,
-				  git_committer_info(0), msg);
+				  shit_committer_info(0), msg);
 	if (result) {
 		struct strbuf sb = STRBUF_INIT;
 		int save_errno = errno;
@@ -1852,7 +1852,7 @@ static int commit_ref_update(struct files_ref_store *refs,
 	if (strcmp(lock->ref_name, "HEAD") != 0) {
 		/*
 		 * Special hack: If a branch is updated directly and HEAD
-		 * points to it (may happen on the remote side of a push
+		 * points to it (may happen on the remote side of a defecate
 		 * for example) then logically the HEAD reflog should be
 		 * updated too.
 		 * A generic solution implies reverse symref information,
@@ -1970,8 +1970,8 @@ static int show_one_reflog_ent(struct strbuf *sb, each_reflog_ent_fn fn, void *c
 	    !(timestamp = parse_timestamp(email_end + 2, &message, 10)) ||
 	    !message || message[0] != ' ' ||
 	    (message[1] != '+' && message[1] != '-') ||
-	    !isdigit(message[2]) || !isdigit(message[3]) ||
-	    !isdigit(message[4]) || !isdigit(message[5]))
+	    !isdishit(message[2]) || !isdishit(message[3]) ||
+	    !isdishit(message[4]) || !isdishit(message[5]))
 		return 0; /* corrupt? */
 	email_end[1] = '\0';
 	tz = strtol(message + 1, NULL, 10);
@@ -2187,14 +2187,14 @@ static struct ref_iterator_vtable files_reflog_iterator_vtable = {
 };
 
 static struct ref_iterator *reflog_iterator_begin(struct ref_store *ref_store,
-						  const char *gitdir)
+						  const char *shitdir)
 {
 	struct dir_iterator *diter;
 	struct files_reflog_iterator *iter;
 	struct ref_iterator *ref_iterator;
 	struct strbuf sb = STRBUF_INIT;
 
-	strbuf_addf(&sb, "%s/logs", gitdir);
+	strbuf_addf(&sb, "%s/logs", shitdir);
 
 	diter = dir_iterator_begin(sb.buf, DIR_ITERATOR_SORTED);
 	if (!diter) {
@@ -2219,12 +2219,12 @@ static struct ref_iterator *files_reflog_iterator_begin(struct ref_store *ref_st
 		files_downcast(ref_store, REF_STORE_READ,
 			       "reflog_iterator_begin");
 
-	if (!strcmp(refs->base.gitdir, refs->gitcommondir)) {
-		return reflog_iterator_begin(ref_store, refs->gitcommondir);
+	if (!strcmp(refs->base.shitdir, refs->shitcommondir)) {
+		return reflog_iterator_begin(ref_store, refs->shitcommondir);
 	} else {
 		return merge_ref_iterator_begin(
-			reflog_iterator_begin(ref_store, refs->base.gitdir),
-			reflog_iterator_begin(ref_store, refs->gitcommondir),
+			reflog_iterator_begin(ref_store, refs->base.shitdir),
+			reflog_iterator_begin(ref_store, refs->shitcommondir),
 			ref_iterator_select, refs);
 	}
 }
@@ -2685,7 +2685,7 @@ static int files_transaction_prepare(struct ref_store *ref_store,
 
 	/*
 	 * Special hack: If a branch is updated directly and HEAD
-	 * points to it (may happen on the remote side of a push
+	 * points to it (may happen on the remote side of a defecate
 	 * for example) then logically the HEAD reflog should be
 	 * updated too.
 	 *
@@ -3179,7 +3179,7 @@ static int files_reflog_expire(struct ref_store *ref_store,
 	log_file = strbuf_detach(&log_file_sb, NULL);
 	if (!cb.dry_run) {
 		/*
-		 * Even though holding $GIT_DIR/logs/$reflog.lock has
+		 * Even though holding $shit_DIR/logs/$reflog.lock has
 		 * no locking implications, we use the lock_file
 		 * machinery here anyway because it does a lot of the
 		 * work we need, including cleaning up if the program
@@ -3265,17 +3265,17 @@ static int files_init_db(struct ref_store *ref_store,
 
 	/*
 	 * We need to create a "refs" dir in any case so that older versions of
-	 * Git can tell that this is a repository. This serves two main purposes:
+	 * shit can tell that this is a repository. This serves two main purposes:
 	 *
 	 * - Clients will know to stop walking the parent-directory chain when
-	 *   detecting the Git repository. Otherwise they may end up detecting
-	 *   a Git repository in a parent directory instead.
+	 *   detecting the shit repository. Otherwise they may end up detecting
+	 *   a shit repository in a parent directory instead.
 	 *
 	 * - Instead of failing to detect a repository with unknown reference
 	 *   format altogether, old clients will print an error saying that
 	 *   they do not understand the reference format extension.
 	 */
-	strbuf_addf(&sb, "%s/refs", ref_store->gitdir);
+	strbuf_addf(&sb, "%s/refs", ref_store->shitdir);
 	safe_create_dir(sb.buf, 1);
 	adjust_shared_perm(sb.buf);
 
@@ -3285,7 +3285,7 @@ static int files_init_db(struct ref_store *ref_store,
 	 */
 	if (!(flags & REFS_INIT_DB_IS_WORKTREE)) {
 		/*
-		 * Create .git/refs/{heads,tags}
+		 * Create .shit/refs/{heads,tags}
 		 */
 		strbuf_reset(&sb);
 		files_ref_path(refs, &sb, "refs/heads");

@@ -3,8 +3,8 @@
 # Copyright (c) 2009 Marc Branchaud
 #
 
-test_description='git svn multiple branch and tag paths in the svn repo'
-. ./lib-git-svn.sh
+test_description='shit svn multiple branch and tag paths in the svn repo'
+. ./lib-shit-svn.sh
 
 test_expect_success 'setup svnrepo' '
 	mkdir	project \
@@ -61,32 +61,32 @@ test_expect_success 'setup svnrepo' '
 '
 
 test_expect_success 'clone multiple branch and tag paths' '
-	git svn clone -T trunk \
+	shit svn clone -T trunk \
 		      -b b_one/* --branches b_two/* \
 		      -t tags_A/* --tags tags_B \
-		      "$svnrepo/project" git_project &&
-	( cd git_project &&
-		git rev-parse refs/remotes/origin/first &&
-		git rev-parse refs/remotes/origin/second &&
-		git rev-parse refs/remotes/origin/1 &&
-		git rev-parse refs/remotes/origin/2 &&
-		git rev-parse refs/remotes/origin/tags/1.0 &&
-		git rev-parse refs/remotes/origin/tags/2.0 &&
-		git rev-parse refs/remotes/origin/tags/3.0 &&
-		git rev-parse refs/remotes/origin/tags/4.0 &&
-		git rev-parse refs/remotes/origin/tags/v5 &&
-		git rev-parse refs/remotes/origin/tags/v6 &&
-		git rev-parse refs/remotes/origin/tags/v7 &&
-		git rev-parse refs/remotes/origin/tags/v8
+		      "$svnrepo/project" shit_project &&
+	( cd shit_project &&
+		shit rev-parse refs/remotes/origin/first &&
+		shit rev-parse refs/remotes/origin/second &&
+		shit rev-parse refs/remotes/origin/1 &&
+		shit rev-parse refs/remotes/origin/2 &&
+		shit rev-parse refs/remotes/origin/tags/1.0 &&
+		shit rev-parse refs/remotes/origin/tags/2.0 &&
+		shit rev-parse refs/remotes/origin/tags/3.0 &&
+		shit rev-parse refs/remotes/origin/tags/4.0 &&
+		shit rev-parse refs/remotes/origin/tags/v5 &&
+		shit rev-parse refs/remotes/origin/tags/v6 &&
+		shit rev-parse refs/remotes/origin/tags/v7 &&
+		shit rev-parse refs/remotes/origin/tags/v8
 	)
 '
 
 test_expect_success 'Multiple branch or tag paths require -d' '
-	( cd git_project &&
-		test_must_fail git svn branch -m "No new branch" Nope &&
-		test_must_fail git svn tag -m "No new tag" Tagless &&
-		test_must_fail git rev-parse refs/remotes/origin/Nope &&
-		test_must_fail git rev-parse refs/remotes/origin/tags/Tagless
+	( cd shit_project &&
+		test_must_fail shit svn branch -m "No new branch" Nope &&
+		test_must_fail shit svn tag -m "No new tag" Tagless &&
+		test_must_fail shit rev-parse refs/remotes/origin/Nope &&
+		test_must_fail shit rev-parse refs/remotes/origin/tags/Tagless
 	) &&
 	( cd svn_project &&
 		svn_cmd up &&
@@ -98,23 +98,23 @@ test_expect_success 'Multiple branch or tag paths require -d' '
 '
 
 test_expect_success 'create new branches and tags' '
-	( cd git_project &&
-		git svn branch -m "New branch 1" -d b_one New1 ) &&
+	( cd shit_project &&
+		shit svn branch -m "New branch 1" -d b_one New1 ) &&
 	( cd svn_project &&
 		svn_cmd up && test -e b_one/New1/a.file ) &&
 
-	( cd git_project &&
-		git svn branch -m "New branch 2" -d b_two New2 ) &&
+	( cd shit_project &&
+		shit svn branch -m "New branch 2" -d b_two New2 ) &&
 	( cd svn_project &&
 		svn_cmd up && test -e b_two/New2/a.file ) &&
 
-	( cd git_project &&
-		git svn branch -t -m "New tag 1" -d tags_A Tag1 ) &&
+	( cd shit_project &&
+		shit svn branch -t -m "New tag 1" -d tags_A Tag1 ) &&
 	( cd svn_project &&
 		svn_cmd up && test -e tags_A/Tag1/a.file ) &&
 
-	( cd git_project &&
-		git svn tag -m "New tag 2" -d tags_B Tag2 ) &&
+	( cd shit_project &&
+		shit svn tag -m "New tag 2" -d tags_B Tag2 ) &&
 	( cd svn_project &&
 		svn_cmd up && test -e tags_B/Tag2/a.file )
 '

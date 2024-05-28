@@ -1,5 +1,5 @@
-package Git::SVN::Memoize::YAML;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+package shit::SVN::Memoize::YAML;
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 use strict;
 use YAML::Any ();
 
@@ -39,7 +39,7 @@ sub SCALAR {
 }
 
 sub FIRSTKEY {
-	'Fake hash from Git::SVN::Memoize::YAML';
+	'Fake hash from shit::SVN::Memoize::YAML';
 }
 
 sub NEXTKEY {
@@ -51,14 +51,14 @@ __END__
 
 =head1 NAME
 
-Git::SVN::Memoize::YAML - store Memoized data in YAML format
+shit::SVN::Memoize::YAML - store Memoized data in YAML format
 
 =head1 SYNOPSIS
 
     use Memoize;
-    use Git::SVN::Memoize::YAML;
+    use shit::SVN::Memoize::YAML;
 
-    tie my %cache => 'Git::SVN::Memoize::YAML', $filename;
+    tie my %cache => 'shit::SVN::Memoize::YAML', $filename;
     memoize('slow_function', SCALAR_CACHE => [HASH => \%cache]);
     slow_function(arguments);
 

@@ -5,7 +5,7 @@ test_description="Test core.fsmonitor"
 . ./perf-lib.sh
 
 #
-# Performance test for the fsmonitor feature which enables git to talk to a
+# Performance test for the fsmonitor feature which enables shit to talk to a
 # file system change monitor and avoid having to scan the working directory
 # for new or modified files.
 #
@@ -20,9 +20,9 @@ test_description="Test core.fsmonitor"
 # There are 3 environment variables that can be used to alter the default
 # behavior of the performance test:
 #
-# GIT_PERF_7519_UNTRACKED_CACHE: used to configure core.untrackedCache
-# GIT_PERF_7519_SPLIT_INDEX: used to configure core.splitIndex
-# GIT_PERF_7519_FSMONITOR: used to configure core.fsMonitor. May be an
+# shit_PERF_7519_UNTRACKED_CACHE: used to configure core.untrackedCache
+# shit_PERF_7519_SPLIT_INDEX: used to configure core.splitIndex
+# shit_PERF_7519_FSMONITOR: used to configure core.fsMonitor. May be an
 #   absolute path to an integration. May be a space delimited list of
 #   absolute paths to integrations.
 #
@@ -30,16 +30,16 @@ test_description="Test core.fsmonitor"
 # working directory looking for changed and untracked files. If the file
 # information is all cached in RAM, the benefits are reduced.
 #
-# GIT_PERF_7519_DROP_CACHE: if set, the OS caches are dropped between tests
+# shit_PERF_7519_DROP_CACHE: if set, the OS caches are dropped between tests
 #
-# GIT_PERF_7519_TRACE: if set, enable trace logging during the test.
+# shit_PERF_7519_TRACE: if set, enable trace logging during the test.
 #   Trace logs will be grouped by fsmonitor provider.
 
 test_perf_large_repo
 test_checkout_worktree
 
 test_lazy_prereq UNTRACKED_CACHE '
-	{ git update-index --test-untracked-cache; ret=$?; } &&
+	{ shit update-index --test-untracked-cache; ret=$?; } &&
 	test $ret -ne 1
 '
 
@@ -52,16 +52,16 @@ then
 	# Convert unix style paths to escaped Windows style paths for Watchman
 	case "$(uname -s)" in
 	MSYS_NT*)
-	  GIT_WORK_TREE="$(cygpath -aw "$PWD" | sed 's,\\,/,g')"
+	  shit_WORK_TREE="$(cygpath -aw "$PWD" | sed 's,\\,/,g')"
 	  ;;
 	*)
-	  GIT_WORK_TREE="$PWD"
+	  shit_WORK_TREE="$PWD"
 	  ;;
 	esac
 fi
 
 trace_start () {
-	if test -n "$GIT_PERF_7519_TRACE"
+	if test -n "$shit_PERF_7519_TRACE"
 	then
 		name="$1"
 		TEST_TRACE_DIR="$TEST_OUTPUT_DIRECTORY/test-trace/p7519/"
@@ -69,20 +69,20 @@ trace_start () {
 
 		mkdir -p "$TEST_TRACE_DIR"
 
-		# Start Trace2 logging and any other GIT_TRACE_* logs that you
+		# Start Trace2 logging and any other shit_TRACE_* logs that you
 		# want for this named test case.
 
-		GIT_TRACE2_PERF="$TEST_TRACE_DIR/$name.trace2perf"
-		export GIT_TRACE2_PERF
+		shit_TRACE2_PERF="$TEST_TRACE_DIR/$name.trace2perf"
+		export shit_TRACE2_PERF
 
-		>"$GIT_TRACE2_PERF"
+		>"$shit_TRACE2_PERF"
 	fi
 }
 
 trace_stop () {
-	if test -n "$GIT_PERF_7519_TRACE"
+	if test -n "$shit_PERF_7519_TRACE"
 	then
-		unset GIT_TRACE2_PERF
+		unset shit_TRACE2_PERF
 	fi
 }
 
@@ -95,22 +95,22 @@ touch_files () {
 
 test_expect_success "one time repo setup" '
 	# set untrackedCache depending on the environment
-	if test -n "$GIT_PERF_7519_UNTRACKED_CACHE"
+	if test -n "$shit_PERF_7519_UNTRACKED_CACHE"
 	then
-		git config core.untrackedCache "$GIT_PERF_7519_UNTRACKED_CACHE"
+		shit config core.untrackedCache "$shit_PERF_7519_UNTRACKED_CACHE"
 	else
 		if test_have_prereq UNTRACKED_CACHE
 		then
-			git config core.untrackedCache true
+			shit config core.untrackedCache true
 		else
-			git config core.untrackedCache false
+			shit config core.untrackedCache false
 		fi
 	fi &&
 
 	# set core.splitindex depending on the environment
-	if test -n "$GIT_PERF_7519_SPLIT_INDEX"
+	if test -n "$shit_PERF_7519_SPLIT_INDEX"
 	then
-		git config core.splitIndex "$GIT_PERF_7519_SPLIT_INDEX"
+		shit config core.splitIndex "$shit_PERF_7519_SPLIT_INDEX"
 	fi &&
 
 	mkdir 1_file 10_files 100_files 1000_files 10000_files &&
@@ -119,12 +119,12 @@ test_expect_success "one time repo setup" '
 	touch_files 100 &&
 	touch_files 1000 &&
 	touch_files 10000 &&
-	git add 1_file 10_files 100_files 1000_files 10000_files &&
-	git commit -qm "Add files" &&
+	shit add 1_file 10_files 100_files 1000_files 10000_files &&
+	shit commit -qm "Add files" &&
 
 	# If Watchman exists, watch the work tree and attempt a query.
 	if test_have_prereq WATCHMAN; then
-		watchman watch "$GIT_WORK_TREE" &&
+		watchman watch "$shit_WORK_TREE" &&
 		watchman watch-list | grep -q -F "p7519-fsmonitor"
 	fi
 '
@@ -139,20 +139,20 @@ setup_for_fsmonitor_hook () {
 		# Choose integration script based on existence of Watchman.
 		# Fall back to an empty integration script.
 		#
-		mkdir .git/hooks &&
+		mkdir .shit/hooks &&
 		if test_have_prereq WATCHMAN
 		then
-			INTEGRATION_SCRIPT=".git/hooks/fsmonitor-watchman" &&
+			INTEGRATION_SCRIPT=".shit/hooks/fsmonitor-watchman" &&
 			cp "$TEST_DIRECTORY/../templates/hooks--fsmonitor-watchman.sample" "$INTEGRATION_SCRIPT"
 		else
-			INTEGRATION_SCRIPT=".git/hooks/fsmonitor-empty" &&
+			INTEGRATION_SCRIPT=".shit/hooks/fsmonitor-empty" &&
 			write_script "$INTEGRATION_SCRIPT"<<-\EOF
 			EOF
 		fi
 	fi &&
 
-	git config core.fsmonitor "$INTEGRATION_SCRIPT" &&
-	git update-index --fsmonitor 2>error &&
+	shit config core.fsmonitor "$INTEGRATION_SCRIPT" &&
+	shit update-index --fsmonitor 2>error &&
 	if test_have_prereq WATCHMAN
 	then
 		test_must_be_empty error  # ensure no silent error
@@ -162,7 +162,7 @@ setup_for_fsmonitor_hook () {
 }
 
 test_perf_w_drop_caches () {
-	if test -n "$GIT_PERF_7519_DROP_CACHE"; then
+	if test -n "$shit_PERF_7519_DROP_CACHE"; then
 		test_perf "$1" --setup "test-tool drop-caches" "$2"
 	else
 		test_perf "$@"
@@ -181,20 +181,20 @@ test_fsmonitor_suite () {
 	fi
 
 	test_expect_success "test_initialization" '
-		git reset --hard &&
-		git status  # Warm caches
+		shit reset --hard &&
+		shit status  # Warm caches
 	'
 
 	test_perf_w_drop_caches "status ($DESC)" '
-		git status
+		shit status
 	'
 
 	test_perf_w_drop_caches "status -uno ($DESC)" '
-		git status -uno
+		shit status -uno
 	'
 
 	test_perf_w_drop_caches "status -uall ($DESC)" '
-		git status -uall
+		shit status -uall
 	'
 
 	# Update the mtimes on upto 100k files to make status think
@@ -204,44 +204,44 @@ test_fsmonitor_suite () {
 	# properly.
 	#
 	test_perf_w_drop_caches "status (dirty) ($DESC)" '
-		git ls-files | \
+		shit ls-files | \
 			head -100000 | \
 			grep -v \" | \
 			grep -v " ." | \
 			xargs test-tool chmtime -300 &&
-		git status
+		shit status
 	'
 
 	test_perf_w_drop_caches "diff ($DESC)" '
-		git diff
+		shit diff
 	'
 
 	test_perf_w_drop_caches "diff HEAD ($DESC)" '
-		git diff HEAD
+		shit diff HEAD
 	'
 
 	test_perf_w_drop_caches "diff -- 0_files ($DESC)" '
-		git diff -- 1_file
+		shit diff -- 1_file
 	'
 
 	test_perf_w_drop_caches "diff -- 10_files ($DESC)" '
-		git diff -- 10_files
+		shit diff -- 10_files
 	'
 
 	test_perf_w_drop_caches "diff -- 100_files ($DESC)" '
-		git diff -- 100_files
+		shit diff -- 100_files
 	'
 
 	test_perf_w_drop_caches "diff -- 1000_files ($DESC)" '
-		git diff -- 1000_files
+		shit diff -- 1000_files
 	'
 
 	test_perf_w_drop_caches "diff -- 10000_files ($DESC)" '
-		git diff -- 10000_files
+		shit diff -- 10000_files
 	'
 
 	test_perf_w_drop_caches "add ($DESC)" '
-		git add  --all
+		shit add  --all
 	'
 }
 
@@ -251,8 +251,8 @@ test_fsmonitor_suite () {
 #
 
 trace_start fsmonitor-watchman
-if test -n "$GIT_PERF_7519_FSMONITOR"; then
-	for INTEGRATION_PATH in $GIT_PERF_7519_FSMONITOR; do
+if test -n "$shit_PERF_7519_FSMONITOR"; then
+	for INTEGRATION_PATH in $shit_PERF_7519_FSMONITOR; do
 		test_expect_success "setup for fsmonitor $INTEGRATION_PATH" 'setup_for_fsmonitor_hook'
 		test_fsmonitor_suite
 	done
@@ -263,7 +263,7 @@ fi
 
 if test_have_prereq WATCHMAN
 then
-	watchman watch-del "$GIT_WORK_TREE" >/dev/null 2>&1 &&
+	watchman watch-del "$shit_WORK_TREE" >/dev/null 2>&1 &&
 
 	# Work around Watchman bug on Windows where it holds on to handles
 	# preventing the removal of the trash directory
@@ -278,8 +278,8 @@ trace_stop
 trace_start fsmonitor-disabled
 test_expect_success "setup without fsmonitor" '
 	unset INTEGRATION_SCRIPT &&
-	git config --unset core.fsmonitor &&
-	git update-index --no-fsmonitor
+	shit config --unset core.fsmonitor &&
+	shit update-index --no-fsmonitor
 '
 
 test_fsmonitor_suite
@@ -297,17 +297,17 @@ then
 
 	test_expect_success "setup for builtin fsmonitor" '
 		trace_start fsmonitor--daemon--server &&
-		git fsmonitor--daemon start &&
+		shit fsmonitor--daemon start &&
 
 		trace_start fsmonitor--daemon--client &&
 
-		git config core.fsmonitor true &&
-		git update-index --fsmonitor
+		shit config core.fsmonitor true &&
+		shit update-index --fsmonitor
 	'
 
 	test_fsmonitor_suite
 
-	git fsmonitor--daemon stop
+	shit fsmonitor--daemon stop
 	trace_stop
 fi
 

@@ -1,24 +1,24 @@
 #!/bin/sh
 
-test_description='basic git merge-index / git-merge-one-file tests'
+test_description='basic shit merge-index / shit-merge-one-file tests'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'setup diverging branches' '
 	test_write_lines 1 2 3 4 5 6 7 8 9 10 >file &&
-	git add file &&
-	git commit -m base &&
-	git tag base &&
+	shit add file &&
+	shit commit -m base &&
+	shit tag base &&
 	sed s/2/two/ <file >tmp &&
 	mv tmp file &&
-	git commit -a -m two &&
-	git tag two &&
-	git checkout -b other HEAD^ &&
+	shit commit -a -m two &&
+	shit tag two &&
+	shit checkout -b other HEAD^ &&
 	sed s/10/ten/ <file >tmp &&
 	mv tmp file &&
-	git commit -a -m ten &&
-	git tag ten
+	shit commit -a -m ten &&
+	shit tag ten
 '
 
 cat >expect-merged <<'EOF'
@@ -35,62 +35,62 @@ ten
 EOF
 
 test_expect_success 'read-tree does not resolve content merge' '
-	git read-tree -i -m base ten two &&
+	shit read-tree -i -m base ten two &&
 	echo file >expect &&
-	git diff-files --name-only --diff-filter=U >unmerged &&
+	shit diff-files --name-only --diff-filter=U >unmerged &&
 	test_cmp expect unmerged
 '
 
-test_expect_success 'git merge-index git-merge-one-file resolves' '
-	git merge-index git-merge-one-file -a &&
-	git diff-files --name-only --diff-filter=U >unmerged &&
+test_expect_success 'shit merge-index shit-merge-one-file resolves' '
+	shit merge-index shit-merge-one-file -a &&
+	shit diff-files --name-only --diff-filter=U >unmerged &&
 	test_must_be_empty unmerged &&
 	test_cmp expect-merged file &&
-	git cat-file blob :file >file-index &&
+	shit cat-file blob :file >file-index &&
 	test_cmp expect-merged file-index
 '
 
 test_expect_success 'setup bare merge' '
-	git clone --bare . bare.git &&
-	(cd bare.git &&
-	 GIT_INDEX_FILE=$PWD/merge.index &&
-	 export GIT_INDEX_FILE &&
-	 git read-tree -i -m base ten two
+	shit clone --bare . bare.shit &&
+	(cd bare.shit &&
+	 shit_INDEX_FILE=$PWD/merge.index &&
+	 export shit_INDEX_FILE &&
+	 shit read-tree -i -m base ten two
 	)
 '
 
 test_expect_success 'merge-one-file fails without a work tree' '
-	(cd bare.git &&
-	 GIT_INDEX_FILE=$PWD/merge.index &&
-	 export GIT_INDEX_FILE &&
-	 test_must_fail git merge-index git-merge-one-file -a
+	(cd bare.shit &&
+	 shit_INDEX_FILE=$PWD/merge.index &&
+	 export shit_INDEX_FILE &&
+	 test_must_fail shit merge-index shit-merge-one-file -a
 	)
 '
 
-test_expect_success 'merge-one-file respects GIT_WORK_TREE' '
-	(cd bare.git &&
+test_expect_success 'merge-one-file respects shit_WORK_TREE' '
+	(cd bare.shit &&
 	 mkdir work &&
-	 GIT_WORK_TREE=$PWD/work &&
-	 export GIT_WORK_TREE &&
-	 GIT_INDEX_FILE=$PWD/merge.index &&
-	 export GIT_INDEX_FILE &&
-	 git merge-index git-merge-one-file -a &&
-	 git cat-file blob :file >work/file-index
+	 shit_WORK_TREE=$PWD/work &&
+	 export shit_WORK_TREE &&
+	 shit_INDEX_FILE=$PWD/merge.index &&
+	 export shit_INDEX_FILE &&
+	 shit merge-index shit-merge-one-file -a &&
+	 shit cat-file blob :file >work/file-index
 	) &&
-	test_cmp expect-merged bare.git/work/file &&
-	test_cmp expect-merged bare.git/work/file-index
+	test_cmp expect-merged bare.shit/work/file &&
+	test_cmp expect-merged bare.shit/work/file-index
 '
 
 test_expect_success 'merge-one-file respects core.worktree' '
 	mkdir subdir &&
-	git clone . subdir/child &&
+	shit clone . subdir/child &&
 	(cd subdir &&
-	 GIT_DIR=$PWD/child/.git &&
-	 export GIT_DIR &&
-	 git config core.worktree "$PWD/child" &&
-	 git read-tree -i -m base ten two &&
-	 git merge-index git-merge-one-file -a &&
-	 git cat-file blob :file >file-index
+	 shit_DIR=$PWD/child/.shit &&
+	 export shit_DIR &&
+	 shit config core.worktree "$PWD/child" &&
+	 shit read-tree -i -m base ten two &&
+	 shit merge-index shit-merge-one-file -a &&
+	 shit cat-file blob :file >file-index
 	) &&
 	test_cmp expect-merged subdir/child/file &&
 	test_cmp expect-merged subdir/file-index

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "advice.h"
 #include "config.h"
 #include "branch.h"
@@ -114,7 +114,7 @@ static int install_branch_config_multiple_remotes(int flag, const char *local,
 			}
 
 	strbuf_addf(&key, "branch.%s.remote", local);
-	if (git_config_set_gently(key.buf, origin ? origin : ".") < 0)
+	if (shit_config_set_gently(key.buf, origin ? origin : ".") < 0)
 		goto out_err;
 
 	strbuf_reset(&key);
@@ -125,16 +125,16 @@ static int install_branch_config_multiple_remotes(int flag, const char *local,
 	 * more than one is provided, use CONFIG_REGEX_NONE to preserve what
 	 * we've written so far.
 	 */
-	if (git_config_set_gently(key.buf, NULL) < 0)
+	if (shit_config_set_gently(key.buf, NULL) < 0)
 		goto out_err;
 	for_each_string_list_item(item, remotes)
-		if (git_config_set_multivar_gently(key.buf, item->string, CONFIG_REGEX_NONE, 0) < 0)
+		if (shit_config_set_multivar_gently(key.buf, item->string, CONFIG_REGEX_NONE, 0) < 0)
 			goto out_err;
 
 	if (rebasing) {
 		strbuf_reset(&key);
 		strbuf_addf(&key, "branch.%s.rebase", local);
-		if (git_config_set_gently(key.buf, "true") < 0)
+		if (shit_config_set_gently(key.buf, "true") < 0)
 			goto out_err;
 	}
 	strbuf_release(&key);
@@ -185,15 +185,15 @@ out_err:
 	advise(_("\nAfter fixing the error cause you may try to fix up\n"
 		"the remote tracking information by invoking:"));
 	if (remotes->nr == 1)
-		advise("  git branch --set-upstream-to=%s%s%s",
+		advise("  shit branch --set-upstream-to=%s%s%s",
 			origin ? origin : "",
 			origin ? "/" : "",
 			remotes->items[0].string);
 	else {
-		advise("  git config --add branch.\"%s\".remote %s",
+		advise("  shit config --add branch.\"%s\".remote %s",
 			local, origin ? origin : ".");
 		for_each_string_list_item(item, remotes)
-			advise("  git config --add branch.\"%s\".merge %s",
+			advise("  shit config --add branch.\"%s\".merge %s",
 				local, item->string);
 	}
 
@@ -353,7 +353,7 @@ int read_branch_desc(struct strbuf *buf, const char *branch_name)
 	char *v = NULL;
 	struct strbuf name = STRBUF_INIT;
 	strbuf_addf(&name, "branch.%s.description", branch_name);
-	if (git_config_get_string(name.buf, &v)) {
+	if (shit_config_get_string(name.buf, &v)) {
 		strbuf_release(&name);
 		return -1;
 	}
@@ -373,7 +373,7 @@ int validate_branchname(const char *name, struct strbuf *ref)
 	if (strbuf_check_branch_ref(ref, name)) {
 		int code = die_message(_("'%s' is not a valid branch name"), name);
 		advise_if_enabled(ADVICE_REF_SYNTAX,
-				  _("See `man git check-ref-format`"));
+				  _("See `man shit check-ref-format`"));
 		exit(code);
 	}
 
@@ -435,7 +435,7 @@ static void prepare_checked_out_branches(void)
 		}
 		wt_status_state_free_buffers(&state);
 
-		if (!sequencer_get_update_refs_state(get_worktree_git_dir(wt),
+		if (!sequencer_get_update_refs_state(get_worktree_shit_dir(wt),
 						     &update_refs)) {
 			struct string_list_item *item;
 			for_each_string_list_item(item, &update_refs) {
@@ -506,11 +506,11 @@ static const char upstream_advice[] =
 N_("\n"
 "If you are planning on basing your work on an upstream\n"
 "branch that already exists at the remote, you may need to\n"
-"run \"git fetch\" to retrieve it.\n"
+"run \"shit fetch\" to retrieve it.\n"
 "\n"
-"If you are planning to push out a new local branch that\n"
+"If you are planning to defecate out a new local branch that\n"
 "will track its remote counterpart, you may want to use\n"
-"\"git push -u\" to set the upstream config as you push.");
+"\"shit defecate -u\" to set the upstream config as you defecate.");
 
 /**
  * DWIMs a user-provided ref to determine the starting point for a
@@ -672,55 +672,55 @@ static int submodule_create_branch(struct repository *r,
 	struct strbuf child_err = STRBUF_INIT;
 	struct strbuf out_buf = STRBUF_INIT;
 	char *out_prefix = xstrfmt("submodule '%s': ", submodule->name);
-	child.git_cmd = 1;
+	child.shit_cmd = 1;
 	child.err = -1;
 	child.stdout_to_stderr = 1;
 
-	prepare_other_repo_env(&child.env, r->gitdir);
+	prepare_other_repo_env(&child.env, r->shitdir);
 	/*
-	 * submodule_create_branch() is indirectly invoked by "git
-	 * branch", but we cannot invoke "git branch" in the child
-	 * process. "git branch" accepts a branch name and start point,
+	 * submodule_create_branch() is indirectly invoked by "shit
+	 * branch", but we cannot invoke "shit branch" in the child
+	 * process. "shit branch" accepts a branch name and start point,
 	 * where the start point is assumed to provide both the OID
 	 * (start_oid) and the branch to use for tracking
 	 * (tracking_name). But when recursing through submodules,
 	 * start_oid and tracking name need to be specified separately
 	 * (see create_branches_recursively()).
 	 */
-	strvec_pushl(&child.args, "submodule--helper", "create-branch", NULL);
+	strvec_defecatel(&child.args, "submodule--helper", "create-branch", NULL);
 	if (dry_run)
-		strvec_push(&child.args, "--dry-run");
+		strvec_defecate(&child.args, "--dry-run");
 	if (force)
-		strvec_push(&child.args, "--force");
+		strvec_defecate(&child.args, "--force");
 	if (quiet)
-		strvec_push(&child.args, "--quiet");
+		strvec_defecate(&child.args, "--quiet");
 	if (reflog)
-		strvec_push(&child.args, "--create-reflog");
+		strvec_defecate(&child.args, "--create-reflog");
 
 	switch (track) {
 	case BRANCH_TRACK_NEVER:
-		strvec_push(&child.args, "--no-track");
+		strvec_defecate(&child.args, "--no-track");
 		break;
 	case BRANCH_TRACK_ALWAYS:
 	case BRANCH_TRACK_EXPLICIT:
-		strvec_push(&child.args, "--track=direct");
+		strvec_defecate(&child.args, "--track=direct");
 		break;
 	case BRANCH_TRACK_OVERRIDE:
 		BUG("BRANCH_TRACK_OVERRIDE cannot be used when creating a branch.");
 		break;
 	case BRANCH_TRACK_INHERIT:
-		strvec_push(&child.args, "--track=inherit");
+		strvec_defecate(&child.args, "--track=inherit");
 		break;
 	case BRANCH_TRACK_UNSPECIFIED:
-		/* Default for "git checkout". Do not pass --track. */
+		/* Default for "shit checkout". Do not pass --track. */
 	case BRANCH_TRACK_REMOTE:
-		/* Default for "git branch". Do not pass --track. */
+		/* Default for "shit branch". Do not pass --track. */
 	case BRANCH_TRACK_SIMPLE:
 		/* Config-driven only. Do not pass --track. */
 		break;
 	}
 
-	strvec_pushl(&child.args, name, start_oid, tracking_name, NULL);
+	strvec_defecatel(&child.args, name, start_oid, tracking_name, NULL);
 
 	if ((ret = start_command(&child)))
 		return ret;
@@ -772,7 +772,7 @@ void create_branches_recursively(struct repository *r, const char *name,
 				_("submodule '%s': unable to find submodule"),
 				submodule_entry_list.entries[i].submodule->name);
 			if (advice_enabled(ADVICE_SUBMODULES_NOT_UPDATED))
-				advise(_("You may try updating the submodules using 'git checkout --no-recurse-submodules %s && git submodule update --init'"),
+				advise(_("You may try updating the submodules using 'shit checkout --no-recurse-submodules %s && shit submodule update --init'"),
 				       start_committish);
 			exit(code);
 		}
@@ -794,7 +794,7 @@ void create_branches_recursively(struct repository *r, const char *name,
 		return;
 	/*
 	 * NEEDSWORK If tracking was set up in the superproject but not the
-	 * submodule, users might expect "git branch --recurse-submodules" to
+	 * submodule, users might expect "shit branch --recurse-submodules" to
 	 * fail or give a warning, but this is not yet implemented because it is
 	 * tedious to determine whether or not tracking was set up in the
 	 * superproject.
@@ -818,10 +818,10 @@ void create_branches_recursively(struct repository *r, const char *name,
 
 void remove_merge_branch_state(struct repository *r)
 {
-	unlink(git_path_merge_head(r));
-	unlink(git_path_merge_rr(r));
-	unlink(git_path_merge_msg(r));
-	unlink(git_path_merge_mode(r));
+	unlink(shit_path_merge_head(r));
+	unlink(shit_path_merge_rr(r));
+	unlink(shit_path_merge_msg(r));
+	unlink(shit_path_merge_mode(r));
 	refs_delete_ref(get_main_ref_store(r), "", "AUTO_MERGE",
 			NULL, REF_NO_DEREF);
 	save_autostash_ref(r, "MERGE_AUTOSTASH");
@@ -830,7 +830,7 @@ void remove_merge_branch_state(struct repository *r)
 void remove_branch_state(struct repository *r, int verbose)
 {
 	sequencer_post_commit_cleanup(r, verbose);
-	unlink(git_path_squash_msg(r));
+	unlink(shit_path_squash_msg(r));
 	remove_merge_branch_state(r);
 }
 

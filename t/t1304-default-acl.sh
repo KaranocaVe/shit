@@ -39,7 +39,7 @@ check_perms_and_acl () {
 	grep -q "group::---" actual || false
 }
 
-dirs_to_set="./ .git/ .git/objects/ .git/objects/pack/"
+dirs_to_set="./ .shit/ .shit/objects/ .shit/objects/pack/"
 
 test_expect_success SETFACL 'Setup test repo' '
 	setfacl -m d:u::rwx,d:g::---,d:o:---,d:m:rwx $dirs_to_set &&
@@ -49,18 +49,18 @@ test_expect_success SETFACL 'Setup test repo' '
 	setfacl -m d:u:root:rwx        $dirs_to_set &&
 
 	touch file.txt &&
-	git add file.txt &&
-	git commit -m "init"
+	shit add file.txt &&
+	shit commit -m "init"
 '
 
 test_expect_success SETFACL 'Objects creation does not break ACLs with restrictive umask' '
 	# SHA1 for empty blob
-	check_perms_and_acl .git/objects/$(echo $EMPTY_BLOB | sed -e "s,^\(..\),\1/,")
+	check_perms_and_acl .shit/objects/$(echo $EMPTY_BLOB | sed -e "s,^\(..\),\1/,")
 '
 
-test_expect_success SETFACL 'git gc does not break ACLs with restrictive umask' '
-	git gc &&
-	check_perms_and_acl .git/objects/pack/*.pack
+test_expect_success SETFACL 'shit gc does not break ACLs with restrictive umask' '
+	shit gc &&
+	check_perms_and_acl .shit/objects/pack/*.pack
 '
 
 test_done

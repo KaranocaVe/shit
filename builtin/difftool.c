@@ -1,13 +1,13 @@
 /*
- * "git difftool" builtin command
+ * "shit difftool" builtin command
  *
- * This is a wrapper around the GIT_EXTERNAL_DIFF-compatible
- * git-difftool--helper script.
+ * This is a wrapper around the shit_EXTERNAL_DIFF-compatible
+ * shit-difftool--helper script.
  *
- * This script exports GIT_EXTERNAL_DIFF and GIT_PAGER for use by git.
- * The GIT_DIFF* variables are exported for use by git-difftool--helper.
+ * This script exports shit_EXTERNAL_DIFF and shit_PAGER for use by shit.
+ * The shit_DIFF* variables are exported for use by shit-difftool--helper.
  *
- * Any arguments that are unknown to this script are forwarded to 'git diff'.
+ * Any arguments that are unknown to this script are forwarded to 'shit diff'.
  *
  * Copyright (C) 2016 Johannes Schindelin
  */
@@ -35,7 +35,7 @@
 static int trust_exit_code;
 
 static const char *const builtin_difftool_usage[] = {
-	N_("git difftool [<options>] [<commit> [<commit>]] [--] [<path>...]"),
+	N_("shit difftool [<options>] [<commit> [<commit>]] [--] [<path>...]"),
 	NULL
 };
 
@@ -43,19 +43,19 @@ static int difftool_config(const char *var, const char *value,
 			   const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "difftool.trustexitcode")) {
-		trust_exit_code = git_config_bool(var, value);
+		trust_exit_code = shit_config_bool(var, value);
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static int print_tool_help(void)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	cmd.git_cmd = 1;
-	strvec_pushl(&cmd.args, "mergetool", "--tool-help=diff", NULL);
+	cmd.shit_cmd = 1;
+	strvec_defecatel(&cmd.args, "mergetool", "--tool-help=diff", NULL);
 	return run_command(&cmd);
 }
 
@@ -82,7 +82,7 @@ static int parse_index_info(char *p, int *mode1, int *mode2,
 	*status = *++p;
 	if (!*status)
 		return error("missing status");
-	if (p[1] && !isdigit(p[1]))
+	if (p[1] && !isdishit(p[1]))
 		return error("unexpected trailer: '%s'", p + 1);
 	return 0;
 }
@@ -214,34 +214,34 @@ static void changed_files(struct hashmap *result, const char *index_path,
 	struct child_process update_index = CHILD_PROCESS_INIT;
 	struct child_process diff_files = CHILD_PROCESS_INIT;
 	struct strbuf buf = STRBUF_INIT;
-	const char *git_dir = absolute_path(get_git_dir());
+	const char *shit_dir = absolute_path(get_shit_dir());
 	FILE *fp;
 
-	strvec_pushl(&update_index.args,
-		     "--git-dir", git_dir, "--work-tree", workdir,
+	strvec_defecatel(&update_index.args,
+		     "--shit-dir", shit_dir, "--work-tree", workdir,
 		     "update-index", "--really-refresh", "-q",
 		     "--unmerged", NULL);
 	update_index.no_stdin = 1;
 	update_index.no_stdout = 1;
 	update_index.no_stderr = 1;
-	update_index.git_cmd = 1;
+	update_index.shit_cmd = 1;
 	update_index.use_shell = 0;
 	update_index.clean_on_exit = 1;
 	update_index.dir = workdir;
-	strvec_pushf(&update_index.env, "GIT_INDEX_FILE=%s", index_path);
+	strvec_defecatef(&update_index.env, "shit_INDEX_FILE=%s", index_path);
 	/* Ignore any errors of update-index */
 	run_command(&update_index);
 
-	strvec_pushl(&diff_files.args,
-		     "--git-dir", git_dir, "--work-tree", workdir,
+	strvec_defecatel(&diff_files.args,
+		     "--shit-dir", shit_dir, "--work-tree", workdir,
 		     "diff-files", "--name-only", "-z", NULL);
 	diff_files.no_stdin = 1;
-	diff_files.git_cmd = 1;
+	diff_files.shit_cmd = 1;
 	diff_files.use_shell = 0;
 	diff_files.clean_on_exit = 1;
 	diff_files.out = -1;
 	diff_files.dir = workdir;
-	strvec_pushf(&diff_files.env, "GIT_INDEX_FILE=%s", index_path);
+	strvec_defecatef(&diff_files.env, "shit_INDEX_FILE=%s", index_path);
 	if (start_command(&diff_files))
 		die("could not obtain raw diff");
 	fp = xfdopen(diff_files.out, "r");
@@ -271,15 +271,15 @@ static int ensure_leading_directories(char *path)
 
 /*
  * Unconditional writing of a plain regular file is what
- * "git difftool --dir-diff" wants to do for symlinks.  We are preparing two
- * temporary directories to be fed to a Git-unaware tool that knows how to
+ * "shit difftool --dir-diff" wants to do for symlinks.  We are preparing two
+ * temporary directories to be fed to a shit-unaware tool that knows how to
  * show a diff of two directories (e.g. "diff -r A B").
  *
- * Because the tool is Git-unaware, if a symbolic link appears in either of
+ * Because the tool is shit-unaware, if a symbolic link appears in either of
  * these temporary directories, it will try to dereference and show the
  * difference of the target of the symbolic link, which is not what we want,
  * as the goal of the dir-diff mode is to produce an output that is logically
- * equivalent to what "git diff" produces.
+ * equivalent to what "shit diff" produces.
  *
  * Most importantly, we want to get textual comparison of the result of the
  * readlink(2).  get_symlink() provides that---it returns the contents of
@@ -291,7 +291,7 @@ static char *get_symlink(const struct object_id *oid, const char *path)
 {
 	char *data;
 	if (is_null_oid(oid)) {
-		/* The symlink is unknown to Git so read from the filesystem */
+		/* The symlink is unknown to shit so read from the filesystem */
 		struct strbuf link = STRBUF_INIT;
 		if (has_symlinks) {
 			if (strbuf_readlink(&link, path, strlen(path)))
@@ -338,7 +338,7 @@ static void write_file_in_directory(struct strbuf *dir, size_t dir_len,
 /* Write the file contents for the left and right sides of the difftool
  * dir-diff representation for submodules and symlinks. Symlinks and submodules
  * are written as regular text files so that external diff tools can diff them
- * as text files, resulting in behavior that is analogous to to what "git diff"
+ * as text files, resulting in behavior that is analogous to to what "shit diff"
  * displays for symlink and submodule diffs.
  */
 static void write_standin_files(struct pair_entry *entry,
@@ -377,13 +377,13 @@ static int run_dir_diff(const char *extcmd, int symlinks, const char *prefix,
 	struct hashmap wt_modified, tmp_modified;
 	int indices_loaded = 0;
 
-	workdir = get_git_work_tree();
+	workdir = get_shit_work_tree();
 
 	/* Setup temp directories */
 	tmp = getenv("TMPDIR");
 	strbuf_add_absolute_path(&tmpdir, tmp ? tmp : "/tmp");
 	strbuf_trim_trailing_dir_sep(&tmpdir);
-	strbuf_addstr(&tmpdir, "/git-difftool.XXXXXX");
+	strbuf_addstr(&tmpdir, "/shit-difftool.XXXXXX");
 	if (!mkdtemp(tmpdir.buf)) {
 		ret = error("could not create '%s'", tmpdir.buf);
 		goto finish;
@@ -410,7 +410,7 @@ static int run_dir_diff(const char *extcmd, int symlinks, const char *prefix,
 	wtdir_len = wtdir.len;
 
 	child->no_stdin = 1;
-	child->git_cmd = 1;
+	child->shit_cmd = 1;
 	child->use_shell = 0;
 	child->clean_on_exit = 1;
 	child->dir = prefix;
@@ -448,7 +448,7 @@ static int run_dir_diff(const char *extcmd, int symlinks, const char *prefix,
 			dst_path = rpath.buf;
 		}
 
-		if (S_ISGITLINK(lmode) || S_ISGITLINK(rmode)) {
+		if (S_ISshitLINK(lmode) || S_ISshitLINK(rmode)) {
 			strbuf_reset(&buf);
 			strbuf_addf(&buf, "Subproject commit %s",
 				    oid_to_hex(&loid));
@@ -562,7 +562,7 @@ static int run_dir_diff(const char *extcmd, int symlinks, const char *prefix,
 	}
 
 	/*
-	 * Symbolic links require special treatment. The standard "git diff"
+	 * Symbolic links require special treatment. The standard "shit diff"
 	 * shows only the link itself, not the contents of the link target.
 	 * This loop replicates that behavior.
 	 */
@@ -576,13 +576,13 @@ static int run_dir_diff(const char *extcmd, int symlinks, const char *prefix,
 	strbuf_setlen(&rdir, rdir_len);
 
 	if (extcmd) {
-		strvec_push(&cmd.args, extcmd);
+		strvec_defecate(&cmd.args, extcmd);
 	} else {
-		strvec_push(&cmd.args, "difftool--helper");
-		cmd.git_cmd = 1;
-		setenv("GIT_DIFFTOOL_DIRDIFF", "true", 1);
+		strvec_defecate(&cmd.args, "difftool--helper");
+		cmd.shit_cmd = 1;
+		setenv("shit_DIFFTOOL_DIRDIFF", "true", 1);
 	}
-	strvec_pushl(&cmd.args, ldir.buf, rdir.buf, NULL);
+	strvec_defecatel(&cmd.args, ldir.buf, rdir.buf, NULL);
 	ret = run_command(&cmd);
 
 	/* TODO: audit for interaction with sparse-index. */
@@ -675,18 +675,18 @@ static int run_file_diff(int prompt, const char *prefix,
 			 struct child_process *child)
 {
 	const char *env[] = {
-		"GIT_PAGER=", "GIT_EXTERNAL_DIFF=git-difftool--helper", NULL,
+		"shit_PAGER=", "shit_EXTERNAL_DIFF=shit-difftool--helper", NULL,
 		NULL
 	};
 
 	if (prompt > 0)
-		env[2] = "GIT_DIFFTOOL_PROMPT=true";
+		env[2] = "shit_DIFFTOOL_PROMPT=true";
 	else if (!prompt)
-		env[2] = "GIT_DIFFTOOL_NO_PROMPT=true";
+		env[2] = "shit_DIFFTOOL_NO_PROMPT=true";
 
-	child->git_cmd = 1;
+	child->shit_cmd = 1;
 	child->dir = prefix;
-	strvec_pushv(&child->env, env);
+	strvec_defecatev(&child->env, env);
 
 	return run_command(child);
 }
@@ -714,7 +714,7 @@ int cmd_difftool(int argc, const char **argv, const char *prefix)
 			 N_("print a list of diff tools that may be used with "
 			    "`--tool`")),
 		OPT_BOOL(0, "trust-exit-code", &trust_exit_code,
-			 N_("make 'git-difftool' exit when an invoked diff "
+			 N_("make 'shit-difftool' exit when an invoked diff "
 			    "tool returns a non-zero exit code")),
 		OPT_STRING('x', "extcmd", &extcmd, N_("command"),
 			   N_("specify a custom command for viewing diffs")),
@@ -723,7 +723,7 @@ int cmd_difftool(int argc, const char **argv, const char *prefix)
 	};
 	struct child_process child = CHILD_PROCESS_INIT;
 
-	git_config(difftool_config, NULL);
+	shit_config(difftool_config, NULL);
 	symlinks = has_symlinks;
 
 	argc = parse_options(argc, argv, prefix, builtin_difftool_options,
@@ -738,8 +738,8 @@ int cmd_difftool(int argc, const char **argv, const char *prefix)
 
 	if (!no_index){
 		setup_work_tree();
-		setenv(GIT_DIR_ENVIRONMENT, absolute_path(get_git_dir()), 1);
-		setenv(GIT_WORK_TREE_ENVIRONMENT, absolute_path(get_git_work_tree()), 1);
+		setenv(shit_DIR_ENVIRONMENT, absolute_path(get_shit_dir()), 1);
+		setenv(shit_WORK_TREE_ENVIRONMENT, absolute_path(get_shit_work_tree()), 1);
 	} else if (dir_diff)
 		die(_("options '%s' and '%s' cannot be used together"), "--dir-diff", "--no-index");
 
@@ -748,44 +748,44 @@ int cmd_difftool(int argc, const char **argv, const char *prefix)
 				  !!extcmd, "--extcmd");
 
 	/*
-	 * Explicitly specified GUI option is forwarded to git-mergetool--lib.sh;
+	 * Explicitly specified GUI option is forwarded to shit-mergetool--lib.sh;
 	 * empty or unset means "use the difftool.guiDefault config or default to
 	 * false".
 	 */
 	if (use_gui_tool == 1)
-		setenv("GIT_MERGETOOL_GUI", "true", 1);
+		setenv("shit_MERGETOOL_GUI", "true", 1);
 	else if (use_gui_tool == 0)
-		setenv("GIT_MERGETOOL_GUI", "false", 1);
+		setenv("shit_MERGETOOL_GUI", "false", 1);
 
 	if (difftool_cmd) {
 		if (*difftool_cmd)
-			setenv("GIT_DIFF_TOOL", difftool_cmd, 1);
+			setenv("shit_DIFF_TOOL", difftool_cmd, 1);
 		else
 			die(_("no <tool> given for --tool=<tool>"));
 	}
 
 	if (extcmd) {
 		if (*extcmd)
-			setenv("GIT_DIFFTOOL_EXTCMD", extcmd, 1);
+			setenv("shit_DIFFTOOL_EXTCMD", extcmd, 1);
 		else
 			die(_("no <cmd> given for --extcmd=<cmd>"));
 	}
 
-	setenv("GIT_DIFFTOOL_TRUST_EXIT_CODE",
+	setenv("shit_DIFFTOOL_TRUST_EXIT_CODE",
 	       trust_exit_code ? "true" : "false", 1);
 
 	/*
-	 * In directory diff mode, 'git-difftool--helper' is called once
-	 * to compare the a / b directories. In file diff mode, 'git diff'
-	 * will invoke a separate instance of 'git-difftool--helper' for
+	 * In directory diff mode, 'shit-difftool--helper' is called once
+	 * to compare the a / b directories. In file diff mode, 'shit diff'
+	 * will invoke a separate instance of 'shit-difftool--helper' for
 	 * each file that changed.
 	 */
-	strvec_push(&child.args, "diff");
+	strvec_defecate(&child.args, "diff");
 	if (no_index)
-		strvec_push(&child.args, "--no-index");
+		strvec_defecate(&child.args, "--no-index");
 	if (dir_diff)
-		strvec_pushl(&child.args, "--raw", "--no-abbrev", "-z", NULL);
-	strvec_pushv(&child.args, argv);
+		strvec_defecatel(&child.args, "--raw", "--no-abbrev", "-z", NULL);
+	strvec_defecatev(&child.args, argv);
 
 	if (dir_diff)
 		return run_dir_diff(extcmd, symlinks, prefix, &child);

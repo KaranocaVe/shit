@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "strvec.h"
 #include "strbuf.h"
 
@@ -10,7 +10,7 @@ void strvec_init(struct strvec *array)
 	memcpy(array, &blank, sizeof(*array));
 }
 
-static void strvec_push_nodup(struct strvec *array, const char *value)
+static void strvec_defecate_nodup(struct strvec *array, const char *value)
 {
 	if (array->v == empty_strvec)
 		array->v = NULL;
@@ -20,13 +20,13 @@ static void strvec_push_nodup(struct strvec *array, const char *value)
 	array->v[array->nr] = NULL;
 }
 
-const char *strvec_push(struct strvec *array, const char *value)
+const char *strvec_defecate(struct strvec *array, const char *value)
 {
-	strvec_push_nodup(array, xstrdup(value));
+	strvec_defecate_nodup(array, xstrdup(value));
 	return array->v[array->nr - 1];
 }
 
-const char *strvec_pushf(struct strvec *array, const char *fmt, ...)
+const char *strvec_defecatef(struct strvec *array, const char *fmt, ...)
 {
 	va_list ap;
 	struct strbuf v = STRBUF_INIT;
@@ -35,25 +35,25 @@ const char *strvec_pushf(struct strvec *array, const char *fmt, ...)
 	strbuf_vaddf(&v, fmt, ap);
 	va_end(ap);
 
-	strvec_push_nodup(array, strbuf_detach(&v, NULL));
+	strvec_defecate_nodup(array, strbuf_detach(&v, NULL));
 	return array->v[array->nr - 1];
 }
 
-void strvec_pushl(struct strvec *array, ...)
+void strvec_defecatel(struct strvec *array, ...)
 {
 	va_list ap;
 	const char *arg;
 
 	va_start(ap, array);
 	while ((arg = va_arg(ap, const char *)))
-		strvec_push(array, arg);
+		strvec_defecate(array, arg);
 	va_end(ap);
 }
 
-void strvec_pushv(struct strvec *array, const char **items)
+void strvec_defecatev(struct strvec *array, const char **items)
 {
 	for (; *items; items++)
-		strvec_push(array, *items);
+		strvec_defecate(array, *items);
 }
 
 void strvec_pop(struct strvec *array)
@@ -77,7 +77,7 @@ void strvec_split(struct strvec *array, const char *to_split)
 
 		while (*p && !isspace(*p))
 			p++;
-		strvec_push_nodup(array, xstrndup(to_split, p - to_split));
+		strvec_defecate_nodup(array, xstrndup(to_split, p - to_split));
 
 		while (isspace(*p))
 			p++;

@@ -10,14 +10,14 @@
 #include "parse-options.h"
 
 static const char * const show_ref_usage[] = {
-	N_("git show-ref [--head] [-d | --dereference]\n"
+	N_("shit show-ref [--head] [-d | --dereference]\n"
 	   "             [-s | --hash[=<n>]] [--abbrev[=<n>]] [--tags]\n"
 	   "             [--heads] [--] [<pattern>...]"),
-	N_("git show-ref --verify [-q | --quiet] [-d | --dereference]\n"
+	N_("shit show-ref --verify [-q | --quiet] [-d | --dereference]\n"
 	   "             [-s | --hash[=<n>]] [--abbrev[=<n>]]\n"
 	   "             [--] [<ref>...]"),
-	N_("git show-ref --exclude-existing[=<pattern>]"),
-	N_("git show-ref --exists <ref>"),
+	N_("shit show-ref --exclude-existing[=<pattern>]"),
+	N_("shit show-ref --exists <ref>"),
 	NULL
 };
 
@@ -35,7 +35,7 @@ static void show_one(const struct show_one_options *opts,
 	struct object_id peeled;
 
 	if (!repo_has_object_file(the_repository, oid))
-		die("git show-ref: bad ref %s (%s)", refname,
+		die("shit show-ref: bad ref %s (%s)", refname,
 		    oid_to_hex(oid));
 
 	if (opts->quiet)
@@ -305,7 +305,7 @@ int cmd_show_ref(int argc, const char **argv, const char *prefix)
 		OPT_BOOL('d', "dereference", &show_one_opts.deref_tags,
 			    N_("dereference tags into object IDs")),
 		OPT_CALLBACK_F('s', "hash", &show_one_opts, N_("n"),
-			       N_("only show SHA1 hash using <n> digits"),
+			       N_("only show SHA1 hash using <n> dishits"),
 			       PARSE_OPT_OPTARG, &hash_callback),
 		OPT__ABBREV(&show_one_opts.abbrev),
 		OPT__QUIET(&show_one_opts.quiet,
@@ -316,7 +316,7 @@ int cmd_show_ref(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, show_ref_options,
 			     show_ref_usage, 0);

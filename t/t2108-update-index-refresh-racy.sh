@@ -13,9 +13,9 @@ reset_files () {
 }
 
 update_assert_changed () {
-	test_set_magic_mtime .git/index &&
-	test_might_fail git update-index "$1" &&
-	! test_is_magic_mtime .git/index
+	test_set_magic_mtime .shit/index &&
+	test_might_fail shit update-index "$1" &&
+	! test_is_magic_mtime .shit/index
 }
 
 test_expect_success 'setup' '
@@ -23,18 +23,18 @@ test_expect_success 'setup' '
 	# we are calling reset_files() a couple of times during tests;
 	# test-tool chmtime does not change the ctime; to not weaken
 	# or even break our tests, disable ctime-checks entirely
-	git config core.trustctime false &&
-	git add file other &&
-	git commit -m "initial import"
+	shit config core.trustctime false &&
+	shit add file other &&
+	shit commit -m "initial import"
 '
 
 test_expect_success '--refresh has no racy timestamps to fix' '
 	reset_files &&
 	# set the index time far enough to the future;
 	# it must be at least 3 seconds for VFAT
-	test_set_magic_mtime .git/index +60 &&
-	git update-index --refresh &&
-	test_is_magic_mtime .git/index +60
+	test_set_magic_mtime .shit/index +60 &&
+	shit update-index --refresh &&
+	test_is_magic_mtime .shit/index +60
 '
 
 test_expect_success '--refresh should fix racy timestamp' '

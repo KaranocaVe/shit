@@ -1,6 +1,6 @@
 /*
  * test-fsmonitor-client.c: client code to send commands/requests to
- * a `git fsmonitor--daemon` daemon.
+ * a `shit fsmonitor--daemon` daemon.
  */
 
 #include "test-tool.h"
@@ -20,7 +20,7 @@ int cmd__fsmonitor_client(int argc UNUSED, const char **argv UNUSED)
 #else
 
 /*
- * Read the `.git/index` to get the last token written to the
+ * Read the `.shit/index` to get the last token written to the
  * FSMonitor Index Extension.
  */
 static const char *get_token_from_index(void)
@@ -36,7 +36,7 @@ static const char *get_token_from_index(void)
 }
 
 /*
- * Send an IPC query to a `git-fsmonitor--daemon` daemon and
+ * Send an IPC query to a `shit-fsmonitor--daemon` daemon and
  * ask for the changes since the given token or from the last
  * token in the index extension.
  *
@@ -62,7 +62,7 @@ static int do_send_query(const char *token)
 }
 
 /*
- * Send a "flush" command to the `git-fsmonitor--daemon` (if running)
+ * Send a "flush" command to the `shit-fsmonitor--daemon` (if running)
  * and tell it to flush its cache.
  *
  * This feature is primarily used by the test suite to simulate a loss of
@@ -208,7 +208,7 @@ int cmd__fsmonitor_client(int argc, const char **argv)
 
 	subcmd = argv[0];
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (!strcmp(subcmd, "query"))
 		return !!do_send_query(token);

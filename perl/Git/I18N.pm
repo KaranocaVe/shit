@@ -1,7 +1,7 @@
-package Git::I18N;
+package shit::I18N;
 use 5.008001;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 BEGIN {
 	require Exporter;
 	if ($] < 5.008003) {
@@ -16,7 +16,7 @@ BEGIN {
 our @EXPORT = qw(__ __n N__);
 our @EXPORT_OK = @EXPORT;
 
-# See Git::LoadCPAN's NO_PERL_CPAN_FALLBACKS_STR for a description of
+# See shit::LoadCPAN's NO_PERL_CPAN_FALLBACKS_STR for a description of
 # this "'@@' [...] '@@'" pattern.
 use constant NO_GETTEXT_STR => '@@' . 'NO_GETTEXT' . '@@';
 use constant NO_GETTEXT => (
@@ -26,8 +26,8 @@ use constant NO_GETTEXT => (
 );
 
 sub __bootstrap_locale_messages {
-	our $TEXTDOMAIN = 'git';
-	our $TEXTDOMAINDIR ||= $ENV{GIT_TEXTDOMAINDIR} || '@@LOCALEDIR@@';
+	our $TEXTDOMAIN = 'shit';
+	our $TEXTDOMAINDIR ||= $ENV{shit_TEXTDOMAINDIR} || '@@LOCALEDIR@@';
 	die "NO_GETTEXT=" . NO_GETTEXT_STR if NO_GETTEXT;
 
 	require POSIX;
@@ -58,7 +58,7 @@ BEGIN
 		1;
 	} or do {
 		# Tell test.pl that we couldn't load the gettext library.
-		$Git::I18N::__HAS_LIBRARY = 0;
+		$shit::I18N::__HAS_LIBRARY = 0;
 
 		# Just a fall-through no-op
 		*__ = sub ($) { $_[0] };
@@ -74,13 +74,13 @@ __END__
 
 =head1 NAME
 
-Git::I18N - Perl interface to Git's Gettext localizations
+shit::I18N - Perl interface to shit's Gettext localizations
 
 =head1 SYNOPSIS
 
-	use Git::I18N;
+	use shit::I18N;
 
-	print __("Welcome to Git!\n");
+	print __("Welcome to shit!\n");
 
 	printf __("The following error occurred: %s\n"), $error;
 
@@ -89,7 +89,7 @@ Git::I18N - Perl interface to Git's Gettext localizations
 
 =head1 DESCRIPTION
 
-Git's internal Perl interface to gettext via L<Locale::Messages>. If
+shit's internal Perl interface to gettext via L<Locale::Messages>. If
 L<Locale::Messages> can't be loaded (it's not a core module) we
 provide stub passthrough fallbacks.
 

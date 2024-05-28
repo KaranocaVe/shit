@@ -2,7 +2,7 @@
 
 test_description="Tests pathological globbing performance
 
-Shows how Git's globbing performance performs when given the sort of
+Shows how shit's globbing performance performs when given the sort of
 pathological patterns described in at https://research.swtch.com/glob
 "
 
@@ -29,14 +29,14 @@ test_expect_success 'setup' '
 for i in $test_globs_small
 do
 	test_perf "refglob((a*)^nb) against tag (a^100).t; n = $i" '
-		git for-each-ref "refs/tags/$(cat refglob.'$i')b"
+		shit for-each-ref "refs/tags/$(cat refglob.'$i')b"
 	'
 done
 
 for i in $test_globs_small
 do
 	test_perf "fileglob((a*)^nb) against file (a^100).t; n = $i" '
-		git ls-files "$(cat refglob.'$i')b"
+		shit ls-files "$(cat refglob.'$i')b"
 	'
 done
 

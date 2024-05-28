@@ -6,14 +6,14 @@ use warnings;
 use Test::More 'no_plan';
 
 BEGIN {
-	# Override exit at BEGIN time before Git::SVN::Utils is loaded
+	# Override exit at BEGIN time before shit::SVN::Utils is loaded
 	# so it will see our local exit later.
 	*CORE::GLOBAL::exit = sub(;$) {
 	return @_ ? CORE::exit($_[0]) : CORE::exit();
 	};
 }
 
-use Git::SVN::Utils qw(fatal);
+use shit::SVN::Utils qw(fatal);
 
 # fatal()
 {

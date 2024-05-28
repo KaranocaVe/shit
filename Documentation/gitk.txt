@@ -1,14 +1,14 @@
-gitk(1)
+shitk(1)
 =======
 
 NAME
 ----
-gitk - The Git repository browser
+shitk - The shit repository browser
 
 SYNOPSIS
 --------
 [verse]
-'gitk' [<options>] [<revision-range>] [--] [<path>...]
+'shitk' [<options>] [<revision-range>] [--] [<path>...]
 
 DESCRIPTION
 -----------
@@ -19,21 +19,21 @@ the files in the trees of each revision.
 OPTIONS
 -------
 
-To control which revisions to show, gitk supports most options
-applicable to the 'git rev-list' command.  It also supports a few
-options applicable to the 'git diff-*' commands to control how the
+To control which revisions to show, shitk supports most options
+applicable to the 'shit rev-list' command.  It also supports a few
+options applicable to the 'shit diff-*' commands to control how the
 changes each commit introduces are shown.  Finally, it supports some
-gitk-specific options.
+shitk-specific options.
 
-gitk generally only understands options with arguments in the
-'stuck' form (see linkgit:gitcli[7]) due to limitations in the
+shitk generally only understands options with arguments in the
+'stuck' form (see linkshit:shitcli[7]) due to limitations in the
 command-line parser.
 
 rev-list options and arguments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This manual page describes only the most frequently used options.  See
-linkgit:git-rev-list[1] for a complete list.
+linkshit:shit-rev-list[1] for a complete list.
 
 --all::
 
@@ -77,7 +77,7 @@ linkgit:git-rev-list[1] for a complete list.
 --full-history::
 
 	When filtering history with '<path>...', does not prune some
-	history.  (See "History simplification" in linkgit:git-log[1]
+	history.  (See "History simplification" in linkshit:shit-log[1]
 	for a more detailed explanation.)
 
 --simplify-merges::
@@ -85,7 +85,7 @@ linkgit:git-rev-list[1] for a complete list.
 	Additional option to `--full-history` to remove some needless
 	merges from the resulting history, as there are no selected
 	commits contributing to this merge.  (See "History
-	simplification" in linkgit:git-log[1] for a more detailed
+	simplification" in linkshit:shit-log[1] for a more detailed
 	explanation.)
 
 --ancestry-path::
@@ -95,7 +95,7 @@ linkgit:git-rev-list[1] for a complete list.
 	display commits that exist directly on the ancestry chain
 	between the 'commit1' and 'commit2', i.e. commits that are
 	both descendants of 'commit1', and ancestors of 'commit2'.
-	(See "History simplification" in linkgit:git-log[1] for a more
+	(See "History simplification" in linkshit:shit-log[1] for a more
 	detailed explanation.)
 
 include::line-range-options.txt[]
@@ -107,7 +107,7 @@ include::line-range-options.txt[]
 	the form "'<from>'..'<to>'" to show all revisions between '<from>' and
 	back to '<to>'. Note, more advanced revision selection can be applied.
 	For a more complete list of ways to spell object names, see
-	linkgit:gitrevisions[7].
+	linkshit:shitrevisions[7].
 
 <path>...::
 
@@ -115,12 +115,12 @@ include::line-range-options.txt[]
 	avoid ambiguity with respect to revision names use "--" to separate the paths
 	from any preceding options.
 
-gitk-specific options
+shitk-specific options
 ~~~~~~~~~~~~~~~~~~~~~
 
 --argscmd=<command>::
 
-	Command to be run each time gitk has to determine the revision
+	Command to be run each time shitk has to determine the revision
 	range to show.  The command is expected to print on its
 	standard output a list of additional revisions to be shown,
 	one per line.  Use this instead of explicitly specifying a
@@ -134,18 +134,18 @@ gitk-specific options
 
 Examples
 --------
-gitk v2.6.12.. include/scsi drivers/scsi::
+shitk v2.6.12.. include/scsi drivers/scsi::
 
 	Show the changes since version 'v2.6.12' that changed any
 	file in the include/scsi or drivers/scsi subdirectories
 
-gitk --since="2 weeks ago" \-- gitk::
+shitk --since="2 weeks ago" \-- shitk::
 
-	Show the changes during the last two weeks to the file 'gitk'.
+	Show the changes during the last two weeks to the file 'shitk'.
 	The "--" is necessary to avoid confusion with the *branch* named
-	'gitk'
+	'shitk'
 
-gitk --max-count=100 --all \-- Makefile::
+shitk --max-count=100 --all \-- Makefile::
 
 	Show at most 100 changes made to the file 'Makefile'. Instead of only
 	looking for changes in the current branch look in all branches.
@@ -154,35 +154,35 @@ Files
 -----
 User configuration and preferences are stored at:
 
-* `$XDG_CONFIG_HOME/git/gitk` if it exists, otherwise
-* `$HOME/.gitk` if it exists
+* `$XDG_CONFIG_HOME/shit/shitk` if it exists, otherwise
+* `$HOME/.shitk` if it exists
 
-If neither of the above exist then `$XDG_CONFIG_HOME/git/gitk` is created and
+If neither of the above exist then `$XDG_CONFIG_HOME/shit/shitk` is created and
 used by default. If '$XDG_CONFIG_HOME' is not set it defaults to
 `$HOME/.config` in all cases.
 
 History
 -------
-Gitk was the first graphical repository browser. It's written in
+shitk was the first graphical repository browser. It's written in
 tcl/tk.
 
-'gitk' is actually maintained as an independent project, but stable
-versions are distributed as part of the Git suite for the convenience
+'shitk' is actually maintained as an independent project, but stable
+versions are distributed as part of the shit suite for the convenience
 of end users.
 
-gitk-git/ comes from Paul Mackerras's gitk project:
+shitk-shit/ comes from Paul Mackerras's shitk project:
 
-	git://ozlabs.org/~paulus/gitk
+	shit://ozlabs.org/~paulus/shitk
 
 SEE ALSO
 --------
-'qgit(1)'::
+'qshit(1)'::
 	A repository browser written in C++ using Qt.
 
 'tig(1)'::
-	A minimal repository browser and Git tool output highlighter written
+	A minimal repository browser and shit tool output highlighter written
 	in C using Ncurses.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

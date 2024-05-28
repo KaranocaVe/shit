@@ -14,46 +14,46 @@ Initial setup:
     5 - 6          second
 '
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 compare_msg () {
 	iconv -f "$2" -t "$3" "$TEST_DIRECTORY/t3434/$1" >expect &&
-	git cat-file commit HEAD >raw &&
+	shit cat-file commit HEAD >raw &&
 	sed "1,/^$/d" raw >actual &&
 	test_cmp expect actual
 }
 
 test_expect_success setup '
 	test_commit one &&
-	git branch first &&
+	shit branch first &&
 	test_commit two &&
-	git switch first &&
+	shit switch first &&
 	test_commit three &&
-	git branch second &&
+	shit branch second &&
 	test_commit four &&
-	git switch second &&
+	shit switch second &&
 	test_commit five &&
 	test_commit six
 '
 
 test_expect_success 'rebase --rebase-merges update encoding eucJP to UTF-8' '
-	git switch -c merge-eucJP-UTF-8 first &&
-	git config i18n.commitencoding eucJP &&
-	git merge -F "$TEST_DIRECTORY/t3434/eucJP.txt" second &&
-	git config i18n.commitencoding UTF-8 &&
-	git rebase --rebase-merges main &&
+	shit switch -c merge-eucJP-UTF-8 first &&
+	shit config i18n.commitencoding eucJP &&
+	shit merge -F "$TEST_DIRECTORY/t3434/eucJP.txt" second &&
+	shit config i18n.commitencoding UTF-8 &&
+	shit rebase --rebase-merges main &&
 	compare_msg eucJP.txt eucJP UTF-8
 '
 
 test_expect_success 'rebase --rebase-merges update encoding eucJP to ISO-2022-JP' '
-	git switch -c merge-eucJP-ISO-2022-JP first &&
-	git config i18n.commitencoding eucJP &&
-	git merge -F "$TEST_DIRECTORY/t3434/eucJP.txt" second &&
-	git config i18n.commitencoding ISO-2022-JP &&
-	git rebase --rebase-merges main &&
+	shit switch -c merge-eucJP-ISO-2022-JP first &&
+	shit config i18n.commitencoding eucJP &&
+	shit merge -F "$TEST_DIRECTORY/t3434/eucJP.txt" second &&
+	shit config i18n.commitencoding ISO-2022-JP &&
+	shit rebase --rebase-merges main &&
 	compare_msg eucJP.txt eucJP ISO-2022-JP
 '
 
@@ -62,20 +62,20 @@ test_rebase_continue_update_encode () {
 	new=$2
 	msgfile=$3
 	test_expect_success "rebase --continue update from $old to $new" '
-		(git rebase --abort || : abort current git-rebase failure) &&
-		git switch -c conflict-$old-$new one &&
+		(shit rebase --abort || : abort current shit-rebase failure) &&
+		shit switch -c conflict-$old-$new one &&
 		echo for-conflict >two.t &&
-		git add two.t &&
-		git config i18n.commitencoding $old &&
-		git commit -F "$TEST_DIRECTORY/t3434/$msgfile" &&
-		git config i18n.commitencoding $new &&
-		test_must_fail git rebase -m main &&
-		test -f .git/rebase-merge/message &&
-		git stripspace -s <.git/rebase-merge/message >two.t &&
-		git add two.t &&
-		git rebase --continue &&
+		shit add two.t &&
+		shit config i18n.commitencoding $old &&
+		shit commit -F "$TEST_DIRECTORY/t3434/$msgfile" &&
+		shit config i18n.commitencoding $new &&
+		test_must_fail shit rebase -m main &&
+		test -f .shit/rebase-merge/message &&
+		shit stripspace -s <.shit/rebase-merge/message >two.t &&
+		shit add two.t &&
+		shit rebase --continue &&
 		compare_msg $msgfile $old $new &&
-		: git-commit assume invalid utf-8 is latin1 &&
+		: shit-commit assume invalid utf-8 is latin1 &&
 		test_cmp expect two.t
 	'
 }

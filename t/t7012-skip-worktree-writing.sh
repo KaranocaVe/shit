@@ -11,65 +11,65 @@ test_expect_success 'setup' '
 	test_commit init &&
 	echo modified >> init.t &&
 	touch added &&
-	git add init.t added &&
-	git commit -m "modified and added" &&
-	git tag top
+	shit add init.t added &&
+	shit commit -m "modified and added" &&
+	shit tag top
 '
 
 test_expect_success 'read-tree updates worktree, absent case' '
-	git checkout -f top &&
-	git update-index --skip-worktree init.t &&
+	shit checkout -f top &&
+	shit update-index --skip-worktree init.t &&
 	rm init.t &&
-	git read-tree -m -u HEAD^ &&
+	shit read-tree -m -u HEAD^ &&
 	echo init > expected &&
 	test_cmp expected init.t
 '
 
 test_expect_success 'read-tree updates worktree, dirty case' '
-	git checkout -f top &&
-	git update-index --skip-worktree init.t &&
+	shit checkout -f top &&
+	shit update-index --skip-worktree init.t &&
 	echo dirty >> init.t &&
-	test_must_fail git read-tree -m -u HEAD^ &&
+	test_must_fail shit read-tree -m -u HEAD^ &&
 	grep -q dirty init.t &&
-	test "$(git ls-files -t init.t)" = "S init.t" &&
-	git update-index --no-skip-worktree init.t
+	test "$(shit ls-files -t init.t)" = "S init.t" &&
+	shit update-index --no-skip-worktree init.t
 '
 
 test_expect_success 'read-tree removes worktree, absent case' '
-	git checkout -f top &&
-	git update-index --skip-worktree added &&
+	shit checkout -f top &&
+	shit update-index --skip-worktree added &&
 	rm added &&
-	git read-tree -m -u HEAD^ &&
+	shit read-tree -m -u HEAD^ &&
 	test ! -f added
 '
 
 test_expect_success 'read-tree removes worktree, dirty case' '
-	git checkout -f top &&
-	git update-index --skip-worktree added &&
+	shit checkout -f top &&
+	shit update-index --skip-worktree added &&
 	echo dirty >> added &&
-	test_must_fail git read-tree -m -u HEAD^ &&
+	test_must_fail shit read-tree -m -u HEAD^ &&
 	grep -q dirty added &&
-	test "$(git ls-files -t added)" = "S added" &&
-	git update-index --no-skip-worktree added
+	test "$(shit ls-files -t added)" = "S added" &&
+	shit update-index --no-skip-worktree added
 '
 
 setup_absent() {
 	test -f 1 && rm 1
-	git update-index --remove 1 &&
-	git update-index --add --cacheinfo 100644 $EMPTY_BLOB 1 &&
-	git update-index --skip-worktree 1
+	shit update-index --remove 1 &&
+	shit update-index --add --cacheinfo 100644 $EMPTY_BLOB 1 &&
+	shit update-index --skip-worktree 1
 }
 
 setup_dirty() {
-	git update-index --force-remove 1 &&
+	shit update-index --force-remove 1 &&
 	echo dirty > 1 &&
-	git update-index --add --cacheinfo 100644 $EMPTY_BLOB 1 &&
-	git update-index --skip-worktree 1
+	shit update-index --add --cacheinfo 100644 $EMPTY_BLOB 1 &&
+	shit update-index --skip-worktree 1
 }
 
 test_dirty() {
 	echo "100644 $EMPTY_BLOB 0	1" > expected &&
-	git ls-files --stage 1 > result &&
+	shit ls-files --stage 1 > result &&
 	test_cmp expected result &&
 	echo dirty > expected
 	test_cmp expected 1
@@ -84,18 +84,18 @@ H sub/2
 EOF
 
 test_expect_success 'index setup' '
-	git checkout -f init &&
+	shit checkout -f init &&
 	mkdir sub &&
 	touch ./1 ./2 sub/1 sub/2 &&
-	git add 1 2 sub/1 sub/2 &&
-	git update-index --skip-worktree 1 sub/1 &&
-	git ls-files -t > result &&
+	shit add 1 2 sub/1 sub/2 &&
+	shit update-index --skip-worktree 1 sub/1 &&
+	shit ls-files -t > result &&
 	test_cmp expected result
 '
 
-test_expect_success 'git-rm fails if worktree is dirty' '
+test_expect_success 'shit-rm fails if worktree is dirty' '
 	setup_dirty &&
-	test_must_fail git rm 1 &&
+	test_must_fail shit rm 1 &&
 	test_dirty
 '
 
@@ -103,30 +103,30 @@ cat >expected <<EOF
 Would remove expected
 Would remove result
 EOF
-test_expect_success 'git-clean, absent case' '
+test_expect_success 'shit-clean, absent case' '
 	setup_absent &&
-	git clean -n > result &&
+	shit clean -n > result &&
 	test_cmp expected result
 '
 
-test_expect_success 'git-clean, dirty case' '
+test_expect_success 'shit-clean, dirty case' '
 	setup_dirty &&
-	git clean -n > result &&
+	shit clean -n > result &&
 	test_cmp expected result
 '
 
 test_expect_success '--ignore-skip-worktree-entries leaves worktree alone' '
 	test_commit keep-me &&
-	git update-index --skip-worktree keep-me.t &&
+	shit update-index --skip-worktree keep-me.t &&
 	rm keep-me.t &&
 
 	: ignoring the worktree &&
-	git update-index --remove --ignore-skip-worktree-entries keep-me.t &&
-	git diff-index --cached --exit-code HEAD &&
+	shit update-index --remove --ignore-skip-worktree-entries keep-me.t &&
+	shit diff-index --cached --exit-code HEAD &&
 
 	: not ignoring the worktree, a deletion is staged &&
-	git update-index --remove keep-me.t &&
-	test_must_fail git diff-index --cached --exit-code HEAD \
+	shit update-index --remove keep-me.t &&
+	test_must_fail shit diff-index --cached --exit-code HEAD \
 		--diff-filter=D -- keep-me.t
 '
 
@@ -140,18 +140,18 @@ test_expect_success 'stash restore in sparse checkout' '
 		echo untouched >untouched &&
 		echo removeme >removeme &&
 		echo modified >modified &&
-		git add . &&
-		git commit -m Initial &&
+		shit add . &&
+		shit commit -m Initial &&
 
 		echo AA >>subdir/A &&
 		echo addme >addme &&
 		echo tweaked >>modified &&
 		rm removeme &&
-		git add addme &&
+		shit add addme &&
 
-		git stash push &&
+		shit stash defecate &&
 
-		git sparse-checkout set --no-cone subdir &&
+		shit sparse-checkout set --no-cone subdir &&
 
 		# Ensure after sparse-checkout we only have expected files
 		cat >expect <<-EOF &&
@@ -160,7 +160,7 @@ test_expect_success 'stash restore in sparse checkout' '
 		H subdir/A
 		S untouched
 		EOF
-		git ls-files -t >actual &&
+		shit ls-files -t >actual &&
 		test_cmp expect actual &&
 
 		test_path_is_missing addme &&
@@ -171,13 +171,13 @@ test_expect_success 'stash restore in sparse checkout' '
 
 		# Put a file in the working directory in the way
 		echo in the way >modified &&
-		test_must_fail git stash apply 2>error&&
+		test_must_fail shit stash apply 2>error&&
 
 		grep "changes.*would be overwritten by merge" error &&
 
 		echo in the way >expect &&
 		test_cmp expect modified &&
-		git diff --quiet HEAD ":!modified" &&
+		shit diff --quiet HEAD ":!modified" &&
 
 		# ...and that working directory reflects the files correctly
 		test_path_is_missing addme &&
@@ -188,11 +188,11 @@ test_expect_success 'stash restore in sparse checkout' '
 	)
 '
 
-#TODO test_expect_failure 'git-apply adds file' false
-#TODO test_expect_failure 'git-apply updates file' false
-#TODO test_expect_failure 'git-apply removes file' false
-#TODO test_expect_failure 'git-mv to skip-worktree' false
-#TODO test_expect_failure 'git-mv from skip-worktree' false
-#TODO test_expect_failure 'git-checkout' false
+#TODO test_expect_failure 'shit-apply adds file' false
+#TODO test_expect_failure 'shit-apply updates file' false
+#TODO test_expect_failure 'shit-apply removes file' false
+#TODO test_expect_failure 'shit-mv to skip-worktree' false
+#TODO test_expect_failure 'shit-mv from skip-worktree' false
+#TODO test_expect_failure 'shit-checkout' false
 
 test_done

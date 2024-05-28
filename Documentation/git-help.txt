@@ -1,48 +1,48 @@
-git-help(1)
+shit-help(1)
 ===========
 
 NAME
 ----
-git-help - Display help information about Git
+shit-help - Display help information about shit
 
 SYNOPSIS
 --------
 [verse]
-'git help' [-a|--all] [--[no-]verbose] [--[no-]external-commands] [--[no-]aliases]
-'git help' [[-i|--info] [-m|--man] [-w|--web]] [<command>|<doc>]
-'git help' [-g|--guides]
-'git help' [-c|--config]
-'git help' [--user-interfaces]
-'git help' [--developer-interfaces]
+'shit help' [-a|--all] [--[no-]verbose] [--[no-]external-commands] [--[no-]aliases]
+'shit help' [[-i|--info] [-m|--man] [-w|--web]] [<command>|<doc>]
+'shit help' [-g|--guides]
+'shit help' [-c|--config]
+'shit help' [--user-interfaces]
+'shit help' [--developer-interfaces]
 
 DESCRIPTION
 -----------
 
-With no options and no '<command>' or '<doc>' given, the synopsis of the 'git'
-command and a list of the most commonly used Git commands are printed
+With no options and no '<command>' or '<doc>' given, the synopsis of the 'shit'
+command and a list of the most commonly used shit commands are printed
 on the standard output.
 
 If the option `--all` or `-a` is given, all available commands are
 printed on the standard output.
 
 If the option `--guides` or `-g` is given, a list of the
-Git concept guides is also printed on the standard output.
+shit concept guides is also printed on the standard output.
 
 If a command or other documentation is given, the relevant manual page
 will be brought up. The 'man' program is used by default for this
 purpose, but this can be overridden by other options or configuration
 variables.
 
-If an alias is given, git shows the definition of the alias on
+If an alias is given, shit shows the definition of the alias on
 standard output. To get the manual page for the aliased command, use
-`git <command> --help`.
+`shit <command> --help`.
 
-Note that `git --help ...` is identical to `git help ...` because the
+Note that `shit --help ...` is identical to `shit help ...` because the
 former is internally converted into the latter.
 
-To display the linkgit:git[1] man page, use `git help git`.
+To display the linkshit:shit[1] man page, use `shit help shit`.
 
-This page can be displayed with 'git help help' or `git help --help`.
+This page can be displayed with 'shit help help' or `shit help --help`.
 
 OPTIONS
 -------
@@ -51,7 +51,7 @@ OPTIONS
 	Print all the available commands on the standard output.
 
 --no-external-commands::
-	When used with `--all`, exclude the listing of external "git-*"
+	When used with `--all`, exclude the listing of external "shit-*"
 	commands found in the `$PATH`.
 
 --no-aliases::
@@ -65,24 +65,24 @@ OPTIONS
 -c::
 --config::
 	List all available configuration variables. This is a short
-	summary of the list in linkgit:git-config[1].
+	summary of the list in linkshit:shit-config[1].
 
 -g::
 --guides::
-	Print a list of the Git concept guides on the standard output.
+	Print a list of the shit concept guides on the standard output.
 
 --user-interfaces::
 	Print a list of the repository, command and file interfaces
 	documentation on the standard output.
 +
-In-repository file interfaces such as `.git/info/exclude` are
-documented here (see linkgit:gitrepository-layout[5]), as well as
-in-tree configuration such as `.mailmap` (see linkgit:gitmailmap[5]).
+In-repository file interfaces such as `.shit/info/exclude` are
+documented here (see linkshit:shitrepository-layout[5]), as well as
+in-tree configuration such as `.mailmap` (see linkshit:shitmailmap[5]).
 +
 This section of the documentation also covers general or widespread
-user-interface conventions (e.g. linkgit:gitcli[7]), and
-pseudo-configuration such as the file-based `.git/hooks/*` interface
-described in linkgit:githooks[5].
+user-interface conventions (e.g. linkshit:shitcli[7]), and
+pseudo-configuration such as the file-based `.shit/hooks/*` interface
+described in linkshit:shithooks[5].
 
 --developer-interfaces::
 	Print a list of file formats, protocols and other developer
@@ -110,9 +110,9 @@ other display programs (see below).
 +
 The web browser can be specified using the configuration variable
 `help.browser`, or `web.browser` if the former is not set. If neither of
-these config variables is set, the 'git web{litdd}browse' helper script
-(called by 'git help') will pick a suitable default. See
-linkgit:git-web{litdd}browse[1] for more information about this.
+these config variables is set, the 'shit web{litdd}browse' helper script
+(called by 'shit help') will pick a suitable default. See
+linkshit:shit-web{litdd}browse[1] for more information about this.
 
 CONFIGURATION VARIABLES
 -----------------------
@@ -122,7 +122,7 @@ help.format
 
 If no command-line option is passed, the `help.format` configuration
 variable will be checked. The following values are supported for this
-variable; they make 'git help' behave as their corresponding command-
+variable; they make 'shit help' behave as their corresponding command-
 line option:
 
 * "man" corresponds to '-m|--man',
@@ -135,7 +135,7 @@ help.browser, web.browser, and browser.<tool>.path
 The `help.browser`, `web.browser` and `browser.<tool>.path` will also
 be checked if the 'web' format is chosen (either by command-line
 option or configuration variable). See '-w|--web' in the OPTIONS
-section above and linkgit:git-web{litdd}browse[1].
+section above and linkshit:shit-web{litdd}browse[1].
 
 man.viewer
 ~~~~~~~~~~
@@ -168,7 +168,7 @@ will try to use konqueror first. But this may fail (for example, if
 DISPLAY is not set) and in that case emacs' woman mode will be tried.
 
 If everything fails, or if no viewer is configured, the viewer specified
-in the `GIT_MAN_VIEWER` environment variable will be tried.  If that
+in the `shit_MAN_VIEWER` environment variable will be tried.  If that
 fails too, the 'man' program will be tried anyway.
 
 man.<tool>.path
@@ -177,7 +177,7 @@ man.<tool>.path
 You can explicitly provide a full path to your preferred man viewer by
 setting the configuration variable `man.<tool>.path`. For example, you
 can configure the absolute path to konqueror by setting
-'man.konqueror.path'. Otherwise, 'git help' assumes the tool is
+'man.konqueror.path'. Otherwise, 'shit help' assumes the tool is
 available in PATH.
 
 man.<tool>.cmd
@@ -212,20 +212,20 @@ the following:
 		cmd = A_PATH_TO/konqueror
 ------------------------------------------------
 
-Note about git config --global
+Note about shit config --global
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Note that all these configuration variables should probably be set
 using the `--global` flag, for example like this:
 
 ------------------------------------------------
-$ git config --global help.format web
-$ git config --global web.browser firefox
+$ shit config --global help.format web
+$ shit config --global web.browser firefox
 ------------------------------------------------
 
 as they are probably more user specific than repository specific.
-See linkgit:git-config[1] for more information about this.
+See linkshit:shit-config[1] for more information about this.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

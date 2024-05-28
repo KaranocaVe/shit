@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "hex.h"
 #include "lockfile.h"
@@ -388,7 +388,7 @@ static int update_one(struct cache_tree *it,
 			i++;
 		}
 
-		ce_missing_ok = mode == S_IFGITLINK || missing_ok ||
+		ce_missing_ok = mode == S_IFshitLINK || missing_ok ||
 			!must_check_existence(ce);
 		if (is_null_oid(oid) ||
 		    (!ce_missing_ok && !repo_has_object_file(the_repository, oid))) {
@@ -722,7 +722,7 @@ int write_index_as_tree(struct object_id *oid, struct index_state *index_state, 
 
 	hold_lock_file_for_update(&lock_file, index_path, LOCK_DIE_ON_ERROR);
 
-	entries = read_index_from(index_state, index_path, get_git_dir());
+	entries = read_index_from(index_state, index_path, get_shit_dir());
 	if (entries < 0) {
 		ret = WRITE_TREE_UNREADABLE_INDEX;
 		goto out;

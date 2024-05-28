@@ -1,21 +1,21 @@
-git-show-ref(1)
+shit-show-ref(1)
 ===============
 
 NAME
 ----
-git-show-ref - List references in a local repository
+shit-show-ref - List references in a local repository
 
 SYNOPSIS
 --------
 [verse]
-'git show-ref' [--head] [-d | --dereference]
+'shit show-ref' [--head] [-d | --dereference]
 	     [-s | --hash[=<n>]] [--abbrev[=<n>]] [--tags]
 	     [--heads] [--] [<pattern>...]
-'git show-ref' --verify [-q | --quiet] [-d | --dereference]
+'shit show-ref' --verify [-q | --quiet] [-d | --dereference]
 	     [-s | --hash[=<n>]] [--abbrev[=<n>]]
 	     [--] [<ref>...]
-'git show-ref' --exclude-existing[=<pattern>]
-'git show-ref' --exists <ref>
+'shit show-ref' --exclude-existing[=<pattern>]
+'shit show-ref' --exists <ref>
 
 DESCRIPTION
 -----------
@@ -36,7 +36,7 @@ references. This form does not verify whether the reference resolves to an
 actual object.
 
 Use of this utility is encouraged in favor of directly accessing files under
-the `.git` directory.
+the `.shit` directory.
 
 OPTIONS
 -------
@@ -89,7 +89,7 @@ OPTIONS
 
 --exclude-existing[=<pattern>]::
 
-	Make `git show-ref` act as a filter that reads refs from stdin of the
+	Make `shit show-ref` act as a filter that reads refs from stdin of the
 	form `^(?:<anything>\s)?<refname>(?:\^{})?$`
 	and performs the following actions on each:
 	(1) strip `^{}` at the end of line if any;
@@ -119,7 +119,7 @@ The output is in the format:
 For example,
 
 -----------------------------------------------------------------------------
-$ git show-ref --head --dereference
+$ shit show-ref --head --dereference
 832e76a9899f560a90ffd62ae2ce83bbeff58f54 HEAD
 832e76a9899f560a90ffd62ae2ce83bbeff58f54 refs/heads/master
 832e76a9899f560a90ffd62ae2ce83bbeff58f54 refs/heads/origin
@@ -139,7 +139,7 @@ When using `--hash` (and not `--dereference`), the output is in the format:
 For example,
 
 -----------------------------------------------------------------------------
-$ git show-ref --heads --hash
+$ shit show-ref --heads --hash
 2e3ba0114a1f52b47df29743d6915d056be13278
 185008ae97960c8d551adcd9e23565194651b5d1
 03adf42c988195b50e1a1935ba5fcbc39b2b029b
@@ -154,7 +154,7 @@ else, and regardless of how deep in the reference naming hierarchy they are,
 use:
 
 -----------------------------------------------------------------------------
-	git show-ref master
+	shit show-ref master
 -----------------------------------------------------------------------------
 
 This will show "refs/heads/master" but also "refs/remote/other-repo/master",
@@ -163,19 +163,19 @@ if such references exist.
 When using the `--verify` flag, the command requires an exact path:
 
 -----------------------------------------------------------------------------
-	git show-ref --verify refs/heads/master
+	shit show-ref --verify refs/heads/master
 -----------------------------------------------------------------------------
 
 will only match the exact branch called "master".
 
-If nothing matches, `git show-ref` will return an error code of 1,
+If nothing matches, `shit show-ref` will return an error code of 1,
 and in the case of verification, it will show an error message.
 
 For scripting, you can ask it to be quiet with the `--quiet` flag, which
 allows you to do things like
 
 -----------------------------------------------------------------------------
-	git show-ref --quiet --verify -- "refs/heads/$headname" ||
+	shit show-ref --quiet --verify -- "refs/heads/$headname" ||
 		echo "$headname is not a valid branch"
 -----------------------------------------------------------------------------
 
@@ -191,22 +191,22 @@ To do automatic tag object dereferencing, use the `-d` or `--dereference`
 flag, so you can do
 
 -----------------------------------------------------------------------------
-	git show-ref --tags --dereference
+	shit show-ref --tags --dereference
 -----------------------------------------------------------------------------
 
 to get a listing of all tags together with what they dereference.
 
 FILES
 -----
-`.git/refs/*`, `.git/packed-refs`
+`.shit/refs/*`, `.shit/packed-refs`
 
 SEE ALSO
 --------
-linkgit:git-for-each-ref[1],
-linkgit:git-ls-remote[1],
-linkgit:git-update-ref[1],
-linkgit:gitrepository-layout[5]
+linkshit:shit-for-each-ref[1],
+linkshit:shit-ls-remote[1],
+linkshit:shit-update-ref[1],
+linkshit:shitrepository-layout[5]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "parse.h"
 #include "run-command.h"
 #include "write-or-die.h"
@@ -22,7 +22,7 @@ void maybe_flush_or_die(FILE *f, const char *desc)
 		static int force_flush_stdout = -1;
 
 		if (force_flush_stdout < 0) {
-			force_flush_stdout = git_env_bool("GIT_FLUSH", -1);
+			force_flush_stdout = shit_env_bool("shit_FLUSH", -1);
 			if (force_flush_stdout < 0) {
 				struct stat st;
 				if (fstat(fileno(stdout), &st))
@@ -58,15 +58,15 @@ void fprintf_or_die(FILE *f, const char *fmt, ...)
 static int maybe_fsync(int fd)
 {
 	if (use_fsync < 0)
-		use_fsync = git_env_bool("GIT_TEST_FSYNC", 1);
+		use_fsync = shit_env_bool("shit_TEST_FSYNC", 1);
 	if (!use_fsync)
 		return 0;
 
 	if (fsync_method == FSYNC_METHOD_WRITEOUT_ONLY &&
-	    git_fsync(fd, FSYNC_WRITEOUT_ONLY) >= 0)
+	    shit_fsync(fd, FSYNC_WRITEOUT_ONLY) >= 0)
 		return 0;
 
-	return git_fsync(fd, FSYNC_HARDWARE_FLUSH);
+	return shit_fsync(fd, FSYNC_HARDWARE_FLUSH);
 }
 
 void fsync_or_die(int fd, const char *msg)

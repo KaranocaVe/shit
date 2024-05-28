@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "dir.h"
 #include "environment.h"
@@ -39,7 +39,7 @@ static int fsmonitor_hook_version(void)
 {
 	int hook_version;
 
-	if (git_config_get_int("core.fsmonitorhookversion", &hook_version))
+	if (shit_config_get_int("core.fsmonitorhookversion", &hook_version))
 		return -1;
 
 	if (hook_version == HOOK_INTERFACE_VERSION1 ||
@@ -163,11 +163,11 @@ static int query_fsmonitor_hook(struct repository *r,
 	if (fsm_settings__get_mode(r) != FSMONITOR_MODE_HOOK)
 		return -1;
 
-	strvec_push(&cp.args, fsm_settings__get_hook_path(r));
-	strvec_pushf(&cp.args, "%d", version);
-	strvec_pushf(&cp.args, "%s", last_update);
+	strvec_defecate(&cp.args, fsm_settings__get_hook_path(r));
+	strvec_defecatef(&cp.args, "%d", version);
+	strvec_defecatef(&cp.args, "%s", last_update);
 	cp.use_shell = 1;
-	cp.dir = get_git_work_tree();
+	cp.dir = get_shit_work_tree();
 
 	trace2_region_enter("fsm_hook", "query", NULL);
 
@@ -474,7 +474,7 @@ static void fsmonitor_refresh_callback(struct index_state *istate, char *name)
  * paths) that will not update any flag bits.  And thus not force the
  * index to be updated.  (This is fine and normal.)  It also means
  * that the token will not be updated in the FSMonitor index
- * extension.  So the next Git command will find the same token in the
+ * extension.  So the next shit command will find the same token in the
  * index, make the same token-relative request, and receive the same
  * response (plus any newly changed paths).  If this response is large
  * (and continues to grow), performance could be impacted.
@@ -482,7 +482,7 @@ static void fsmonitor_refresh_callback(struct index_state *istate, char *name)
  * For example, if the user runs a build and it writes 100K object
  * files but doesn't modify any source files, the index would not need
  * to be updated.  The FSMonitor response (after the build and
- * relative to a pre-build token) might be 5MB.  Each subsequent Git
+ * relative to a pre-build token) might be 5MB.  Each subsequent shit
  * command will receive that same 100K/5MB response until something
  * causes the index to be updated.  And `refresh_fsmonitor()` will
  * have to iterate over those 100K paths each time.
@@ -494,7 +494,7 @@ static void fsmonitor_refresh_callback(struct index_state *istate, char *name)
  *
  * The value chosen here does not need to be precise.  The index
  * will be updated automatically the first time the user touches
- * a tracked file and causes a command like `git status` to
+ * a tracked file and causes a command like `shit status` to
  * update an mtime to be updated and/or set a flag bit.
  */
 static int fsmonitor_force_update_threshold = 100;
@@ -795,7 +795,7 @@ void tweak_fsmonitor(struct index_state *istate)
 		if (fsmonitor_enabled) {
 			/* Mark all entries valid */
 			for (i = 0; i < istate->cache_nr; i++) {
-				if (S_ISGITLINK(istate->cache[i]->ce_mode))
+				if (S_ISshitLINK(istate->cache[i]->ce_mode))
 					continue;
 				istate->cache[i]->ce_flags |= CE_FSMONITOR_VALID;
 			}

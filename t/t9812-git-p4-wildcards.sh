@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git p4 wildcards'
+test_description='shit p4 wildcards'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 test_expect_success 'start p4d' '
 	start_p4d
@@ -25,11 +25,11 @@ test_expect_success 'add p4 files with wildcards in the names' '
 	)
 '
 
-test_expect_success 'wildcard files git p4 clone' '
-	git p4 clone --dest="$git" //depot &&
-	test_when_finished cleanup_git &&
+test_expect_success 'wildcard files shit p4 clone' '
+	shit p4 clone --dest="$shit" //depot &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
+		cd "$shit" &&
 		test -f file-wild#hash &&
 		if test_have_prereq !MINGW,!CYGWIN
 		then
@@ -41,123 +41,123 @@ test_expect_success 'wildcard files git p4 clone' '
 '
 
 test_expect_success 'wildcard files submit back to p4, add' '
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		echo git-wild-hash >git-wild#hash &&
+		cd "$shit" &&
+		echo shit-wild-hash >shit-wild#hash &&
 		if test_have_prereq !MINGW,!CYGWIN
 		then
-			echo git-wild-star >git-wild\*star
+			echo shit-wild-star >shit-wild\*star
 		fi &&
-		echo git-wild-at >git-wild@at &&
-		echo git-wild-percent >git-wild%percent &&
-		git add git-wild* &&
-		git commit -m "add some wildcard filenames" &&
-		git config git-p4.skipSubmitEdit true &&
-		git p4 submit
+		echo shit-wild-at >shit-wild@at &&
+		echo shit-wild-percent >shit-wild%percent &&
+		shit add shit-wild* &&
+		shit commit -m "add some wildcard filenames" &&
+		shit config shit-p4.skipSubmitEdit true &&
+		shit p4 submit
 	) &&
 	(
 		cd "$cli" &&
-		test_path_is_file git-wild#hash &&
+		test_path_is_file shit-wild#hash &&
 		if test_have_prereq !MINGW,!CYGWIN
 		then
-			test_path_is_file git-wild\*star
+			test_path_is_file shit-wild\*star
 		fi &&
-		test_path_is_file git-wild@at &&
-		test_path_is_file git-wild%percent
+		test_path_is_file shit-wild@at &&
+		test_path_is_file shit-wild%percent
 	)
 '
 
 test_expect_success 'wildcard files submit back to p4, modify' '
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		echo new-line >>git-wild#hash &&
+		cd "$shit" &&
+		echo new-line >>shit-wild#hash &&
 		if test_have_prereq !MINGW,!CYGWIN
 		then
-			echo new-line >>git-wild\*star
+			echo new-line >>shit-wild\*star
 		fi &&
-		echo new-line >>git-wild@at &&
-		echo new-line >>git-wild%percent &&
-		git add git-wild* &&
-		git commit -m "modify the wildcard files" &&
-		git config git-p4.skipSubmitEdit true &&
-		git p4 submit
+		echo new-line >>shit-wild@at &&
+		echo new-line >>shit-wild%percent &&
+		shit add shit-wild* &&
+		shit commit -m "modify the wildcard files" &&
+		shit config shit-p4.skipSubmitEdit true &&
+		shit p4 submit
 	) &&
 	(
 		cd "$cli" &&
-		test_line_count = 2 git-wild#hash &&
+		test_line_count = 2 shit-wild#hash &&
 		if test_have_prereq !MINGW,!CYGWIN
 		then
-			test_line_count = 2 git-wild\*star
+			test_line_count = 2 shit-wild\*star
 		fi &&
-		test_line_count = 2 git-wild@at &&
-		test_line_count = 2 git-wild%percent
+		test_line_count = 2 shit-wild@at &&
+		test_line_count = 2 shit-wild%percent
 	)
 '
 
 test_expect_success 'wildcard files submit back to p4, copy' '
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		cp file2 git-wild-cp#hash &&
-		git add git-wild-cp#hash &&
-		cp git-wild#hash file-wild-3 &&
-		git add file-wild-3 &&
-		git commit -m "wildcard copies" &&
-		git config git-p4.detectCopies true &&
-		git config git-p4.detectCopiesHarder true &&
-		git config git-p4.skipSubmitEdit true &&
-		git p4 submit
+		cd "$shit" &&
+		cp file2 shit-wild-cp#hash &&
+		shit add shit-wild-cp#hash &&
+		cp shit-wild#hash file-wild-3 &&
+		shit add file-wild-3 &&
+		shit commit -m "wildcard copies" &&
+		shit config shit-p4.detectCopies true &&
+		shit config shit-p4.detectCopiesHarder true &&
+		shit config shit-p4.skipSubmitEdit true &&
+		shit p4 submit
 	) &&
 	(
 		cd "$cli" &&
-		test_path_is_file git-wild-cp#hash &&
+		test_path_is_file shit-wild-cp#hash &&
 		test_path_is_file file-wild-3
 	)
 '
 
 test_expect_success 'wildcard files submit back to p4, rename' '
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		git mv git-wild@at file-wild-4 &&
-		git mv file-wild-3 git-wild-cp%percent &&
-		git commit -m "wildcard renames" &&
-		git config git-p4.detectRenames true &&
-		git config git-p4.skipSubmitEdit true &&
-		git p4 submit
+		cd "$shit" &&
+		shit mv shit-wild@at file-wild-4 &&
+		shit mv file-wild-3 shit-wild-cp%percent &&
+		shit commit -m "wildcard renames" &&
+		shit config shit-p4.detectRenames true &&
+		shit config shit-p4.skipSubmitEdit true &&
+		shit p4 submit
 	) &&
 	(
 		cd "$cli" &&
-		test_path_is_missing git-wild@at &&
-		test_path_is_file git-wild-cp%percent
+		test_path_is_missing shit-wild@at &&
+		test_path_is_file shit-wild-cp%percent
 	)
 '
 
 test_expect_success 'wildcard files submit back to p4, delete' '
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		git rm git-wild* &&
-		git commit -m "delete the wildcard files" &&
-		git config git-p4.skipSubmitEdit true &&
-		git p4 submit
+		cd "$shit" &&
+		shit rm shit-wild* &&
+		shit commit -m "delete the wildcard files" &&
+		shit config shit-p4.skipSubmitEdit true &&
+		shit p4 submit
 	) &&
 	(
 		cd "$cli" &&
-		test_path_is_missing git-wild#hash &&
+		test_path_is_missing shit-wild#hash &&
 		if test_have_prereq !MINGW,!CYGWIN
 		then
-			test_path_is_missing git-wild\*star
+			test_path_is_missing shit-wild\*star
 		fi &&
-		test_path_is_missing git-wild@at &&
-		test_path_is_missing git-wild%percent
+		test_path_is_missing shit-wild@at &&
+		test_path_is_missing shit-wild%percent
 	)
 '
 
@@ -168,10 +168,10 @@ test_expect_success 'p4 deleted a wildcard file' '
 		p4 add -f wild@delete &&
 		p4 submit -d "add wild@delete"
 	) &&
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
+		cd "$shit" &&
 		test_path_is_file wild@delete
 	) &&
 	(
@@ -181,9 +181,9 @@ test_expect_success 'p4 deleted a wildcard file' '
 		p4 submit -d "delete wild@delete"
 	) &&
 	(
-		cd "$git" &&
-		git p4 sync &&
-		git merge --ff-only p4/master &&
+		cd "$shit" &&
+		shit p4 sync &&
+		shit merge --ff-only p4/master &&
 		test_path_is_missing wild@delete
 	)
 '
@@ -198,16 +198,16 @@ test_expect_success 'wildcard files requiring keyword scrub' '
 		p4 add -t text+k -f scrub@wild &&
 		p4 submit -d "scrub at wild"
 	) &&
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		git config git-p4.skipSubmitEdit true &&
-		git config git-p4.attemptRCSCleanup true &&
+		cd "$shit" &&
+		shit config shit-p4.skipSubmitEdit true &&
+		shit config shit-p4.attemptRCSCleanup true &&
 		sed "s/^line2/line2 edit/" <scrub@wild >scrub@wild.tmp &&
 		mv -f scrub@wild.tmp scrub@wild &&
-		git commit -m "scrub at wild line2 edit" scrub@wild &&
-		git p4 submit
+		shit commit -m "scrub at wild line2 edit" scrub@wild &&
+		shit p4 submit
 	)
 '
 

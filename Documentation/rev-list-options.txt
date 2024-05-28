@@ -34,11 +34,11 @@ ordering and formatting options, such as `--reverse`.
 --before=<date>::
 	Show commits older than a specific date.
 
-ifdef::git-rev-list[]
+ifdef::shit-rev-list[]
 --max-age=<timestamp>::
 --min-age=<timestamp>::
 	Limit the commits output to specified time range.
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 --author=<pattern>::
 --committer=<pattern>::
@@ -61,11 +61,11 @@ endif::git-rev-list[]
 	more than one `--grep=<pattern>`, commits whose message
 	matches any of the given patterns are chosen (but see
 	`--all-match`).
-ifndef::git-rev-list[]
+ifndef::shit-rev-list[]
 +
 When `--notes` is in effect, the message from the notes is
 matched as if it were part of the log message.
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 --all-match::
 	Limit the commits output to ones that match all given `--grep`,
@@ -100,7 +100,7 @@ endif::git-rev-list[]
 	expressions.
 +
 Support for these types of regular expressions is an optional
-compile-time dependency. If Git wasn't compiled with support for them
+compile-time dependency. If shit wasn't compiled with support for them
 providing this option will cause it to die.
 
 --remove-empty::
@@ -135,11 +135,11 @@ parents) and `--max-parents=-1` (negative numbers denote no upper limit).
 	from time to time, and this option allows you to ignore
 	the individual commits brought in to your history by such
 	a merge.
-ifdef::git-log[]
+ifdef::shit-log[]
 +
 This option also changes default diff format for merge commits
 to `first-parent`, see `--diff-merges=first-parent` for details.
-endif::git-log[]
+endif::shit-log[]
 
 --exclude-first-parent-only::
 	When finding commits to exclude (with a '{caret}'), follow only
@@ -200,11 +200,11 @@ or `--all`. If a trailing '/{asterisk}' is intended, it must be given
 explicitly.
 
 --exclude-hidden=[fetch|receive|uploadpack]::
-	Do not include refs that would be hidden by `git-fetch`,
-	`git-receive-pack` or `git-upload-pack` by consulting the appropriate
+	Do not include refs that would be hidden by `shit-fetch`,
+	`shit-receive-pack` or `shit-upload-pack` by consulting the appropriate
 	`fetch.hideRefs`, `receive.hideRefs` or `uploadpack.hideRefs`
 	configuration along with `transfer.hideRefs` (see
-	linkgit:git-config[1]). This option affects the next pseudo-ref option
+	linkshit:shit-config[1]). This option affects the next pseudo-ref option
 	`--all` or `--glob` and is cleared after processing them.
 
 --reflog::
@@ -217,12 +217,12 @@ explicitly.
 	repository is any repository whose object directory is specified
 	in `objects/info/alternates`.  The set of included objects may
 	be modified by `core.alternateRefsCommand`, etc. See
-	linkgit:git-config[1].
+	linkshit:shit-config[1].
 
 --single-worktree::
 	By default, all working trees will be examined by the
 	following options when there are more than one (see
-	linkgit:git-worktree[1]): `--all`, `--reflog` and
+	linkshit:shit-worktree[1]): `--all`, `--reflog` and
 	`--indexed-objects`.
 	This option forces them to examine the current working tree
 	only.
@@ -231,13 +231,13 @@ explicitly.
 	Upon seeing an invalid object name in the input, pretend as if
 	the bad input was not given.
 
-ifndef::git-rev-list[]
+ifndef::shit-rev-list[]
 --bisect::
 	Pretend as if the bad bisection ref `refs/bisect/bad`
 	was listed and as if it was followed by `--not` and the good
 	bisection refs `refs/bisect/good-*` on the command
 	line.
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 --stdin::
 	In addition to getting arguments from the command line, read
@@ -248,7 +248,7 @@ endif::git-rev-list[]
 	are only respected for arguments passed in the same way and will not
 	influence any subsequent command line arguments.
 
-ifdef::git-rev-list[]
+ifdef::shit-rev-list[]
 --quiet::
 	Don't print anything to standard output.  This form
 	is primarily meant to allow the caller to
@@ -260,14 +260,14 @@ ifdef::git-rev-list[]
 --disk-usage=human::
 	Suppress normal output; instead, print the sum of the bytes used
 	for on-disk storage by the selected commits or objects. This is
-	equivalent to piping the output into `git cat-file
+	equivalent to piping the output into `shit cat-file
 	--batch-check='%(objectsize:disk)'`, except that it runs much
 	faster (especially with `--use-bitmap-index`). See the `CAVEATS`
-	section in linkgit:git-cat-file[1] for the limitations of what
+	section in linkshit:shit-cat-file[1] for the limitations of what
 	"on-disk storage" means.
 	With the optional value `human`, on-disk storage size is shown
 	in human-readable string(e.g. 12.24 Kib, 3.50 Mib).
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 --cherry-mark::
 	Like `--cherry-pick` (see below) but mark equivalent commits
@@ -294,7 +294,7 @@ excluded from the output.
 +
 For example, `--cherry-pick --right-only A...B` omits those
 commits from `B` which are in `A` or are patch-equivalent to a commit in
-`A`. In other words, this lists the `+` commits from `git cherry A B`.
+`A`. In other words, this lists the `+` commits from `shit cherry A B`.
 More precisely, `--cherry-pick --right-only --no-merges` gives the exact
 list.
 
@@ -302,8 +302,8 @@ list.
 	A synonym for `--right-only --cherry-mark --no-merges`; useful to
 	limit the output to the commits on our side and mark those that
 	have been applied to the other side of a forked history with
-	`git log --cherry upstream...mybranch`, similar to
-	`git cherry upstream mybranch`.
+	`shit log --cherry upstream...mybranch`, similar to
+	`shit cherry upstream mybranch`.
 
 -g::
 --walk-reflogs::
@@ -336,7 +336,7 @@ depending on a few rules:
 Under `--pretty=oneline`, the commit message is
 prefixed with this information on the same line.
 This option cannot be combined with `--reverse`.
-See also linkgit:git-reflog[1].
+See also linkshit:shit-reflog[1].
 +
 Under `--pretty=reference`, this information will not be shown at all.
 
@@ -351,7 +351,7 @@ Under `--pretty=reference`, this information will not be shown at all.
 	Output excluded boundary commits. Boundary commits are
 	prefixed with `-`.
 
-ifdef::git-rev-list[]
+ifdef::shit-rev-list[]
 --use-bitmap-index::
 
 	Try to speed up the traversal using the pack bitmap index (if
@@ -361,7 +361,7 @@ ifdef::git-rev-list[]
 --progress=<header>::
 	Show progress reports on stderr as objects are considered. The
 	`<header>` text will be printed with each progress update.
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 History Simplification
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -389,7 +389,7 @@ Default mode::
 	branches if the end result is the same (i.e. merging branches
 	with the same content)
 
---show-pulls::
+--show-poops::
 	Include all commits from the default mode, but also any merge
 	commits that are not TREESAME to the first parent but are
 	TREESAME to a later parent. This mode is helpful for showing
@@ -650,7 +650,7 @@ Whereas `--ancestry-path=K D..M` would result in
 		K---------------L--M
 -----------------------------------------------------------------------
 
-Before discussing another option, `--show-pulls`, we need to
+Before discussing another option, `--show-poops`, we need to
 create a new example history.
 
 A common problem users face when looking at simplified history is that a
@@ -687,7 +687,7 @@ graph is:
 	I---X
 -----------------------------------------------------------------------
 
-When using `--full-history`, Git walks every edge. This will discover
+When using `--full-history`, shit walks every edge. This will discover
 the commits `A` and `B` and the merge `M`, but also will reveal the
 merge commits `O` and `P`. With parent rewriting, the resulting graph is:
 
@@ -743,26 +743,26 @@ into the important branch. This commit may have information about why
 the change `X` came to override the changes from `A` and `B` in its
 commit message.
 
---show-pulls::
+--show-poops::
 	In addition to the commits shown in the default history, show
 	each merge commit that is not TREESAME to its first parent but
 	is TREESAME to a later parent.
 +
-When a merge commit is included by `--show-pulls`, the merge is
-treated as if it "pulled" the change from another branch. When using
-`--show-pulls` on this example (and no other options) the resulting
+When a merge commit is included by `--show-poops`, the merge is
+treated as if it "pooped" the change from another branch. When using
+`--show-poops` on this example (and no other options) the resulting
 graph is:
 +
 -----------------------------------------------------------------------
 	I---X---R---N
 -----------------------------------------------------------------------
 +
-Here, the merge commits `R` and `N` are included because they pulled
+Here, the merge commits `R` and `N` are included because they pooped
 the commits `X` and `R` into the base branch, respectively. These
 merges are the reason the commits `A` and `B` do not appear in the
 default history.
 +
-When `--show-pulls` is paired with `--simplify-merges`, the
+When `--show-poops` is paired with `--simplify-merges`, the
 graph includes all of the necessary information:
 +
 -----------------------------------------------------------------------
@@ -776,7 +776,7 @@ graph includes all of the necessary information:
 +
 Notice that since `M` is reachable from `R`, the edge from `N` to `M`
 was simplified away. However, `N` still appears in the history as an
-important commit because it "pulled" the change `R` into the main
+important commit because it "pooped" the change `R` into the main
 branch.
 
 The `--simplify-by-decoration` option allows you to view only the
@@ -787,8 +787,8 @@ above) if (1) they are referenced by tags, or (2) they change the
 contents of the paths given on the command line.  All other
 commits are marked as TREESAME (subject to be simplified away).
 
-ifndef::git-shortlog[]
-ifdef::git-rev-list[]
+ifndef::shit-shortlog[]
+ifdef::shit-rev-list[]
 Bisection Helpers
 ~~~~~~~~~~~~~~~~~
 
@@ -801,14 +801,14 @@ Bisection Helpers
 	are no refs in `refs/bisect/`, if
 +
 -----------------------------------------------------------------------
-	$ git rev-list --bisect foo ^bar ^baz
+	$ shit rev-list --bisect foo ^bar ^baz
 -----------------------------------------------------------------------
 +
 outputs 'midpoint', the output of the two commands
 +
 -----------------------------------------------------------------------
-	$ git rev-list foo ^midpoint
-	$ git rev-list midpoint ^bar ^baz
+	$ shit rev-list foo ^midpoint
+	$ shit rev-list midpoint ^bar ^baz
 -----------------------------------------------------------------------
 +
 would be of roughly the same length.  Finding the change which
@@ -842,10 +842,10 @@ may not compile for example).
 This option can be used along with `--bisect-vars`, in this case,
 after all the sorted commit objects, there will be the same text as if
 `--bisect-vars` had been used alone.
-endif::git-rev-list[]
-endif::git-shortlog[]
+endif::shit-rev-list[]
+endif::shit-shortlog[]
 
-ifndef::git-shortlog[]
+ifndef::shit-shortlog[]
 Commit Ordering
 ~~~~~~~~~~~~~~~
 
@@ -874,7 +874,7 @@ For example, in a commit history like this:
 
 ----------------------------------------------------------------
 +
-where the numbers denote the order of commit timestamps, `git
+where the numbers denote the order of commit timestamps, `shit
 rev-list` and friends with `--date-order` show the commits in the
 timestamp order: 8 7 6 5 4 3 2 1.
 +
@@ -887,15 +887,15 @@ together.
 	Output the commits chosen to be shown (see Commit Limiting
 	section above) in reverse order. Cannot be combined with
 	`--walk-reflogs`.
-endif::git-shortlog[]
+endif::shit-shortlog[]
 
-ifndef::git-shortlog[]
+ifndef::shit-shortlog[]
 Object Traversal
 ~~~~~~~~~~~~~~~~
 
-These options are mostly targeted for packing of Git repositories.
+These options are mostly targeted for packing of shit repositories.
 
-ifdef::git-rev-list[]
+ifdef::shit-rev-list[]
 --objects::
 	Print the object IDs of any object referenced by the listed
 	commits.  `--objects foo ^bar` thus means ``send me
@@ -910,7 +910,7 @@ ifdef::git-rev-list[]
 --objects-edge::
 	Similar to `--objects`, but also print the IDs of excluded
 	commits prefixed with a ``-'' character.  This is used by
-	linkgit:git-pack-objects[1] to build a ``thin'' pack, which records
+	linkshit:shit-pack-objects[1] to build a ``thin'' pack, which records
 	objects in deltified form based on objects contained in these
 	excluded commits to reduce network traffic.
 
@@ -941,7 +941,7 @@ ifdef::git-rev-list[]
 	Only useful with `--objects`; does not print the names of the object
 	IDs that are found. This inverts `--object-names`. This flag allows
 	the output to be more easily parsed by commands such as
-	linkgit:git-cat-file[1].
+	linkshit:shit-cat-file[1].
 
 --filter=<filter-spec>::
 	Only useful with one of the `--objects*`; omits objects (usually
@@ -1033,7 +1033,7 @@ we cannot get their Object ID though, an error will be raised.
 	stronger than `--missing=allow-promisor` because it limits the
 	traversal, rather than just silencing errors about missing
 	objects.
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 --no-walk[=(sorted|unsorted)]::
 	Only show the given commits, but do not traverse their ancestors.
@@ -1046,17 +1046,17 @@ endif::git-rev-list[]
 
 --do-walk::
 	Overrides a previous `--no-walk`.
-endif::git-shortlog[]
+endif::shit-shortlog[]
 
-ifndef::git-shortlog[]
+ifndef::shit-shortlog[]
 Commit Formatting
 ~~~~~~~~~~~~~~~~~
 
-ifdef::git-rev-list[]
-Using these options, linkgit:git-rev-list[1] will act similar to the
-more specialized family of commit log tools: linkgit:git-log[1],
-linkgit:git-show[1], and linkgit:git-whatchanged[1]
-endif::git-rev-list[]
+ifdef::shit-rev-list[]
+Using these options, linkshit:shit-rev-list[1] will act similar to the
+more specialized family of commit log tools: linkshit:shit-log[1],
+linkshit:shit-show[1], and linkshit:shit-whatchanged[1]
+endif::shit-rev-list[]
 
 include::pretty-options.txt[]
 
@@ -1095,7 +1095,7 @@ format, often found in email messages.
 
 `--date=raw` shows the date as seconds since the epoch (1970-01-01
 00:00:00 UTC), followed by a space, and then the timezone as an offset
-from UTC (a `+` or `-` with four digits; the first two are hours, and
+from UTC (a `+` or `-` with four dishits; the first two are hours, and
 the second two are minutes). I.e., as if the timestamp were formatted
 with `strftime("%s %z")`).
 Note that the `-local` option does not affect the seconds-since-epoch
@@ -1123,11 +1123,11 @@ format placeholders. When using `-local`, the correct syntax is
 `--date=default` is the default format, and is based on ctime(3)
 output.  It shows a single line with three-letter day of the week,
 three-letter month, day-of-month, hour-minute-seconds in "HH:MM:SS"
-format, followed by 4-digit year, plus timezone information, unless
+format, followed by 4-dishit year, plus timezone information, unless
 the local time zone is used, e.g. `Thu Jan 1 00:00:00 1970 +0000`.
 --
 
-ifdef::git-rev-list[]
+ifdef::shit-rev-list[]
 --header::
 	Print the contents of the commit in raw-format; each record is
 	separated with a NUL character.
@@ -1139,7 +1139,7 @@ ifdef::git-rev-list[]
 
 --commit-header::
 	Overrides a previous `--no-commit-header`.
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 --parents::
 	Print also the parents of the commit (in the form "commit parent...").
@@ -1149,10 +1149,10 @@ endif::git-rev-list[]
 	Print also the children of the commit (in the form "commit child...").
 	Also enables parent rewriting, see 'History Simplification' above.
 
-ifdef::git-rev-list[]
+ifdef::shit-rev-list[]
 --timestamp::
 	Print the raw commit timestamp.
-endif::git-rev-list[]
+endif::shit-rev-list[]
 
 --left-right::
 	Mark which side of a symmetric difference a commit is reachable from.
@@ -1173,7 +1173,7 @@ For example, if you have this topology:
 you would get an output like this:
 +
 -----------------------------------------------------------------------
-	$ git rev-list --left-right --boundary --pretty=oneline A...B
+	$ shit rev-list --left-right --boundary --pretty=oneline A...B
 
 	>bbbbbbb... 3rd on b
 	>bbbbbbb... 2nd on b
@@ -1202,7 +1202,7 @@ This implies the `--topo-order` option by default, but the
 	in between them in that case. If `<barrier>` is specified, it
 	is the string that will be shown instead of the default one.
 
-ifdef::git-rev-list[]
+ifdef::shit-rev-list[]
 --count::
 	Print a number stating how many commits would have been
 	listed, and suppress all other output.  When used together
@@ -1211,5 +1211,5 @@ ifdef::git-rev-list[]
 	`--cherry-mark`, omit patch equivalent commits from these
 	counts and print the count for equivalent commits separated
 	by a tab.
-endif::git-rev-list[]
-endif::git-shortlog[]
+endif::shit-rev-list[]
+endif::shit-shortlog[]

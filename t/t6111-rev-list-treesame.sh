@@ -13,60 +13,60 @@
 
 test_description='TREESAME and limiting'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 note () {
-	git tag "$1"
+	shit tag "$1"
 }
 
 unnote () {
-	git name-rev --tags --annotate-stdin | \
+	shit name-rev --tags --annotate-stdin | \
 	sed -e "s|$OID_REGEX (tags/\([^)]*\))\([ 	]\)|\1\2|g"
 }
 
 test_expect_success setup '
 	test_commit "Initial file" file "Hi there" A &&
-	git branch other-branch &&
+	shit branch other-branch &&
 
 	test_commit "file=Hello" file "Hello" B &&
-	git branch third-branch &&
+	shit branch third-branch &&
 
-	git checkout other-branch &&
+	shit checkout other-branch &&
 	test_commit "Added other" other "Hello" C &&
 
-	git checkout main &&
+	shit checkout main &&
 	test_merge D other-branch &&
 
-	git checkout third-branch &&
+	shit checkout third-branch &&
 	test_commit "Third file" third "Nothing" E &&
 
-	git checkout main &&
+	shit checkout main &&
 	test_commit "file=Blah" file "Blah" F &&
 
-	test_tick && git merge --no-commit third-branch &&
-	git checkout third-branch file &&
-	git commit &&
+	test_tick && shit merge --no-commit third-branch &&
+	shit checkout third-branch file &&
+	shit commit &&
 	note G &&
-	git branch fiddler-branch &&
+	shit branch fiddler-branch &&
 
-	git checkout -b part2-branch &&
+	shit checkout -b part2-branch &&
 	test_commit "file=Part 2" file "Part 2" H &&
 
-	git checkout fiddler-branch &&
+	shit checkout fiddler-branch &&
 	test_commit "Bad commit" file "Silly" I &&
 
-	test_tick && git revert I && note J &&
+	test_tick && shit revert I && note J &&
 
-	git checkout main &&
-	test_tick && git merge --no-ff fiddler-branch &&
+	shit checkout main &&
+	test_tick && shit merge --no-ff fiddler-branch &&
 	note K &&
 
 	test_commit "file=Part 1" file "Part 1" L &&
 
-	test_tick && test_must_fail git merge part2-branch &&
+	test_tick && test_must_fail shit merge part2-branch &&
 	test_commit M file "Parts 1+2"
 '
 
@@ -93,7 +93,7 @@ check_outcome () {
 
 	param="$*" &&
 	test_expect_$outcome "log $param" '
-		git log --format="$FMT" $param |
+		shit log --format="$FMT" $param |
 		unnote >actual &&
 		sed -e "$munge_actual" <actual >check &&
 		test_cmp expect check

@@ -2,8 +2,8 @@
 
 test_description='commit-msg hook'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,8 +11,8 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success 'with no hook' '
 
 	echo "foo" > file &&
-	git add file &&
-	git commit -m "first"
+	shit add file &&
+	shit commit -m "first"
 
 '
 
@@ -32,26 +32,26 @@ export FAKE_EDITOR
 test_expect_success 'with no hook (editor)' '
 
 	echo "more foo" >> file &&
-	git add file &&
+	shit add file &&
 	echo "more foo" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit
 
 '
 
 test_expect_success '--no-verify with no hook' '
 
 	echo "bar" > file &&
-	git add file &&
-	git commit --no-verify -m "bar"
+	shit add file &&
+	shit commit --no-verify -m "bar"
 
 '
 
 test_expect_success '--no-verify with no hook (editor)' '
 
 	echo "more bar" > file &&
-	git add file &&
+	shit add file &&
 	echo "more bar" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit --no-verify
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit --no-verify
 
 '
 
@@ -64,34 +64,34 @@ test_expect_success 'setup: commit-msg hook that always succeeds' '
 test_expect_success 'with succeeding hook' '
 
 	echo "more" >> file &&
-	git add file &&
-	git commit -m "more"
+	shit add file &&
+	shit commit -m "more"
 
 '
 
 test_expect_success 'with succeeding hook (editor)' '
 
 	echo "more more" >> file &&
-	git add file &&
+	shit add file &&
 	echo "more more" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit
 
 '
 
 test_expect_success '--no-verify with succeeding hook' '
 
 	echo "even more" >> file &&
-	git add file &&
-	git commit --no-verify -m "even more"
+	shit add file &&
+	shit commit --no-verify -m "even more"
 
 '
 
 test_expect_success '--no-verify with succeeding hook (editor)' '
 
 	echo "even more more" >> file &&
-	git add file &&
+	shit add file &&
 	echo "even more more" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit --no-verify
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit --no-verify
 
 '
 
@@ -103,115 +103,115 @@ test_expect_success 'setup: commit-msg hook that always fails' '
 
 commit_msg_is () {
 	printf "%s" "$1" >expect &&
-	git log --pretty=format:%s%b -1 >actual &&
+	shit log --pretty=format:%s%b -1 >actual &&
 	test_cmp expect actual
 }
 
 test_expect_success 'with failing hook' '
 
 	echo "another" >> file &&
-	git add file &&
-	test_must_fail git commit -m "another"
+	shit add file &&
+	test_must_fail shit commit -m "another"
 
 '
 
 test_expect_success 'with failing hook (editor)' '
 
 	echo "more another" >> file &&
-	git add file &&
+	shit add file &&
 	echo "more another" > FAKE_MSG &&
-	! (GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit)
+	! (shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit)
 
 '
 
 test_expect_success '--no-verify with failing hook' '
 
 	echo "stuff" >> file &&
-	git add file &&
-	git commit --no-verify -m "stuff"
+	shit add file &&
+	shit commit --no-verify -m "stuff"
 
 '
 
 test_expect_success '-n followed by --verify with failing hook' '
 
 	echo "even more" >> file &&
-	git add file &&
-	test_must_fail git commit -n --verify -m "even more"
+	shit add file &&
+	test_must_fail shit commit -n --verify -m "even more"
 
 '
 
 test_expect_success '--no-verify with failing hook (editor)' '
 
 	echo "more stuff" >> file &&
-	git add file &&
+	shit add file &&
 	echo "more stuff" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit --no-verify
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit --no-verify
 
 '
 
 test_expect_success 'merge fails with failing hook' '
 
-	test_when_finished "git branch -D newbranch" &&
-	test_when_finished "git checkout -f main" &&
-	git checkout --orphan newbranch &&
+	test_when_finished "shit branch -D newbranch" &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout --orphan newbranch &&
 	: >file2 &&
-	git add file2 &&
-	git commit --no-verify file2 -m in-side-branch &&
-	test_must_fail git merge --allow-unrelated-histories main &&
+	shit add file2 &&
+	shit commit --no-verify file2 -m in-side-branch &&
+	test_must_fail shit merge --allow-unrelated-histories main &&
 	commit_msg_is "in-side-branch" # HEAD before merge
 
 '
 
 test_expect_success 'merge bypasses failing hook with --no-verify' '
 
-	test_when_finished "git branch -D newbranch" &&
-	test_when_finished "git checkout -f main" &&
-	git checkout --orphan newbranch &&
-	git rm -f file &&
+	test_when_finished "shit branch -D newbranch" &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout --orphan newbranch &&
+	shit rm -f file &&
 	: >file2 &&
-	git add file2 &&
-	git commit --no-verify file2 -m in-side-branch &&
-	git merge --no-verify --allow-unrelated-histories main &&
+	shit add file2 &&
+	shit commit --no-verify file2 -m in-side-branch &&
+	shit merge --no-verify --allow-unrelated-histories main &&
 	commit_msg_is "Merge branch '\''main'\'' into newbranch"
 '
 
 test_expect_success 'setup: commit-msg hook made non-executable' '
-	git_dir="$(git rev-parse --git-dir)" &&
-	chmod -x "$git_dir/hooks/commit-msg"
+	shit_dir="$(shit rev-parse --shit-dir)" &&
+	chmod -x "$shit_dir/hooks/commit-msg"
 '
 
 
 test_expect_success POSIXPERM 'with non-executable hook' '
 
 	echo "content" >file &&
-	git add file &&
-	git commit -m "content"
+	shit add file &&
+	shit commit -m "content"
 
 '
 
 test_expect_success POSIXPERM 'with non-executable hook (editor)' '
 
 	echo "content again" >> file &&
-	git add file &&
+	shit add file &&
 	echo "content again" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit -m "content again"
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit -m "content again"
 
 '
 
 test_expect_success POSIXPERM '--no-verify with non-executable hook' '
 
 	echo "more content" >> file &&
-	git add file &&
-	git commit --no-verify -m "more content"
+	shit add file &&
+	shit commit --no-verify -m "more content"
 
 '
 
 test_expect_success POSIXPERM '--no-verify with non-executable hook (editor)' '
 
 	echo "even more content" >> file &&
-	git add file &&
+	shit add file &&
 	echo "even more content" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit --no-verify
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit --no-verify
 
 '
 
@@ -225,8 +225,8 @@ test_expect_success 'setup: commit-msg hook that edits the commit message' '
 test_expect_success 'hook edits commit message' '
 
 	echo "additional" >> file &&
-	git add file &&
-	git commit -m "additional" &&
+	shit add file &&
+	shit commit -m "additional" &&
 	commit_msg_is "new message"
 
 '
@@ -234,9 +234,9 @@ test_expect_success 'hook edits commit message' '
 test_expect_success 'hook edits commit message (editor)' '
 
 	echo "additional content" >> file &&
-	git add file &&
+	shit add file &&
 	echo "additional content" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit &&
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit &&
 	commit_msg_is "new message"
 
 '
@@ -244,8 +244,8 @@ test_expect_success 'hook edits commit message (editor)' '
 test_expect_success "hook doesn't edit commit message" '
 
 	echo "plus" >> file &&
-	git add file &&
-	git commit --no-verify -m "plus" &&
+	shit add file &&
+	shit commit --no-verify -m "plus" &&
 	commit_msg_is "plus"
 
 '
@@ -253,40 +253,40 @@ test_expect_success "hook doesn't edit commit message" '
 test_expect_success "hook doesn't edit commit message (editor)" '
 
 	echo "more plus" >> file &&
-	git add file &&
+	shit add file &&
 	echo "more plus" > FAKE_MSG &&
-	GIT_EDITOR="\"\$FAKE_EDITOR\"" git commit --no-verify &&
+	shit_EDITOR="\"\$FAKE_EDITOR\"" shit commit --no-verify &&
 	commit_msg_is "more plus"
 '
 
-test_expect_success 'hook called in git-merge picks up commit message' '
-	test_when_finished "git branch -D newbranch" &&
-	test_when_finished "git checkout -f main" &&
-	git checkout --orphan newbranch &&
-	git rm -f file &&
+test_expect_success 'hook called in shit-merge picks up commit message' '
+	test_when_finished "shit branch -D newbranch" &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout --orphan newbranch &&
+	shit rm -f file &&
 	: >file2 &&
-	git add file2 &&
-	git commit --no-verify file2 -m in-side-branch &&
-	git merge --allow-unrelated-histories main &&
+	shit add file2 &&
+	shit commit --no-verify file2 -m in-side-branch &&
+	shit merge --allow-unrelated-histories main &&
 	commit_msg_is "new message"
 '
 
 test_expect_failure 'merge --continue remembers --no-verify' '
-	test_when_finished "git branch -D newbranch" &&
-	test_when_finished "git checkout -f main" &&
-	git checkout main &&
+	test_when_finished "shit branch -D newbranch" &&
+	test_when_finished "shit checkout -f main" &&
+	shit checkout main &&
 	echo a >file2 &&
-	git add file2 &&
-	git commit --no-verify -m "add file2 to main" &&
-	git checkout -b newbranch main^ &&
+	shit add file2 &&
+	shit commit --no-verify -m "add file2 to main" &&
+	shit checkout -b newbranch main^ &&
 	echo b >file2 &&
-	git add file2 &&
-	git commit --no-verify file2 -m in-side-branch &&
-	git merge --no-verify -m not-rewritten-by-hook main &&
+	shit add file2 &&
+	shit commit --no-verify file2 -m in-side-branch &&
+	shit merge --no-verify -m not-rewritten-by-hook main &&
 	# resolve conflict:
 	echo c >file2 &&
-	git add file2 &&
-	git merge --continue &&
+	shit add file2 &&
+	shit merge --continue &&
 	commit_msg_is not-rewritten-by-hook
 '
 
@@ -302,7 +302,7 @@ export REWORD_EDITOR
 
 test_expect_success 'hook is called for reword during `rebase -i`' '
 
-	GIT_SEQUENCE_EDITOR="\"$REWORD_EDITOR\"" git rebase -i HEAD^ &&
+	shit_SEQUENCE_EDITOR="\"$REWORD_EDITOR\"" shit rebase -i HEAD^ &&
 	commit_msg_is "new message"
 
 '

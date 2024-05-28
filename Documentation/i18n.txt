@@ -1,4 +1,4 @@
-Git is to some extent character encoding agnostic.
+shit is to some extent character encoding agnostic.
 
  - The contents of the blob objects are uninterpreted sequences
    of bytes.  There is no encoding translation at the core
@@ -7,18 +7,18 @@ Git is to some extent character encoding agnostic.
  - Path names are encoded in UTF-8 normalization form C. This
    applies to tree objects, the index file, ref names, as well as
    path names in command line arguments, environment variables
-   and config files (`.git/config` (see linkgit:git-config[1]),
-   linkgit:gitignore[5], linkgit:gitattributes[5] and
-   linkgit:gitmodules[5]).
+   and config files (`.shit/config` (see linkshit:shit-config[1]),
+   linkshit:shitignore[5], linkshit:shitattributes[5] and
+   linkshit:shitmodules[5]).
 +
-Note that Git at the core level treats path names simply as
+Note that shit at the core level treats path names simply as
 sequences of non-NUL bytes, there are no path name encoding
 conversions (except on Mac and Windows). Therefore, using
 non-ASCII path names will mostly work even on platforms and file
 systems that use legacy extended ASCII encodings. However,
 repositories created on such systems will not work properly on
 UTF-8-based systems (e.g. Linux, Mac, Windows) and vice versa.
-Additionally, many Git-based tools simply assume path names to
+Additionally, many shit-based tools simply assume path names to
 be UTF-8 and will fail to display other encodings correctly.
 
  - Commit log messages are typically encoded in UTF-8, but other
@@ -28,17 +28,17 @@ be UTF-8 and will fail to display other encodings correctly.
    EUC-x, CP9xx etc.).
 
 Although we encourage that the commit log messages are encoded
-in UTF-8, both the core and Git Porcelain are designed not to
+in UTF-8, both the core and shit Porcelain are designed not to
 force UTF-8 on projects.  If all participants of a particular
-project find it more convenient to use legacy encodings, Git
+project find it more convenient to use legacy encodings, shit
 does not forbid it.  However, there are a few things to keep in
 mind.
 
-. 'git commit' and 'git commit-tree' issue
+. 'shit commit' and 'shit commit-tree' issue
   a warning if the commit log message given to it does not look
   like a valid UTF-8 string, unless you explicitly say your
   project uses a legacy encoding.  The way to say this is to
-  have `i18n.commitEncoding` in `.git/config` file, like this:
+  have `i18n.commitEncoding` in `.shit/config` file, like this:
 +
 ------------
 [i18n]
@@ -50,11 +50,11 @@ of `i18n.commitEncoding` in their `encoding` header.  This is to
 help other people who look at them later.  Lack of this header
 implies that the commit log message is encoded in UTF-8.
 
-. 'git log', 'git show', 'git blame' and friends look at the
+. 'shit log', 'shit show', 'shit blame' and friends look at the
   `encoding` header of a commit object, and try to re-code the
   log message into UTF-8 unless otherwise specified.  You can
   specify the desired output encoding with
-  `i18n.logOutputEncoding` in `.git/config` file, like this:
+  `i18n.logOutputEncoding` in `.shit/config` file, like this:
 +
 ------------
 [i18n]

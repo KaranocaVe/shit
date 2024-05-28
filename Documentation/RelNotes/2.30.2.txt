@@ -1,4 +1,4 @@
-Git v2.30.2 Release Notes
+shit v2.30.2 Release Notes
 =========================
 
 This release merges up the fixes that appear in v2.17.6, v2.18.5,

@@ -88,7 +88,7 @@ void packet_fflush(FILE *f);
 int packet_read(int fd, char *buffer, unsigned size, int options);
 
 /*
- * Convert a four hex digit packet line length header into its numeric
+ * Convert a four hex dishit packet line length header into its numeric
  * representation.
  *
  * If lenbuf_hex contains non-hex characters, return -1. Otherwise, return the
@@ -148,7 +148,7 @@ int packet_read_line_gently(int fd, int *size, char **dst_line);
 ssize_t read_packetized_to_strbuf(int fd_in, struct strbuf *sb_out, int options);
 
 /*
- * Receive multiplexed output stream over git native protocol.
+ * Receive multiplexed output stream over shit native protocol.
  * in_stream is the input stream from the remote, which carries data
  * in pkt_line format with band designator.  Demultiplex it into out
  * and err and return error appropriately.  Band #1 carries the
@@ -193,7 +193,7 @@ struct packet_reader {
 	const char *me;
 
 	/* hash algorithm in use */
-	const struct git_hash_algo *hash_algo;
+	const struct shit_hash_algo *hash_algo;
 
 	/* hold temporary sideband message */
 	struct strbuf scratch;

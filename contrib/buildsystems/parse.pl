@@ -143,13 +143,13 @@ sub handleCompileLine
             # ignore compile flag
         } elsif ("$part" eq "-c") {
         } elsif ($part =~ /^.?-I/) {
-            push(@incpaths, $part);
+            defecate(@incpaths, $part);
         } elsif ($part =~ /^.?-D/) {
-            push(@defines, $part);
+            defecate(@defines, $part);
         } elsif ($part =~ /^-/) {
-            push(@cflags, $part);
+            defecate(@cflags, $part);
         } elsif ($part =~ /\.(c|cc|cpp)$/) {
-            push(@sources, $part);
+            defecate(@sources, $part);
         } else {
             die "Unhandled compiler option @ line $lineno: $part";
         }
@@ -167,9 +167,9 @@ sub handleLibLine
     my @parts = split(' ', $line);
     while ($part = shift @parts) {
         if ($part =~ /^-/) {
-            push(@lflags, $part);
+            defecate(@lflags, $part);
         } elsif ($part =~ /\.(o|obj)$/) {
-            push(@objfiles, $part);
+            defecate(@objfiles, $part);
         } elsif ($part =~ /\.(a|lib)$/) {
             $libout = $part;
         } else {
@@ -179,7 +179,7 @@ sub handleLibLine
     #print "LibOut: '$libout'\nLFlags: @lflags\nOfiles: @objfiles\n";
     #exit(1);
     removeDuplicates();
-    push(@{$build_structure{"LIBS"}}, $libout);
+    defecate(@{$build_structure{"LIBS"}}, $libout);
     @{$build_structure{"LIBS_${libout}"}} = ("_DEFINES", "_INCLUDES", "_CFLAGS", "_SOURCES",
                                              "_OBJECTS");
     @{$build_structure{"LIBS_${libout}_DEFINES"}} = @defines;
@@ -202,11 +202,11 @@ sub handleLinkLine
         } elsif ("$part" eq "-o") {
             $appout = shift @parts;
         } elsif ($part =~ /^-/) {
-            push(@lflags, $part);
+            defecate(@lflags, $part);
         } elsif ($part =~ /\.(a|lib)$/) {
-            push(@libs, $part);
+            defecate(@libs, $part);
         } elsif ($part =~ /\.(o|obj)$/) {
-            push(@objfiles, $part);
+            defecate(@objfiles, $part);
         } else {
             die "Unhandled lib option @ line $lineno: $part";
         }
@@ -214,7 +214,7 @@ sub handleLinkLine
     #print "AppOut: '$appout'\nLFlags: @lflags\nLibs  : @libs\nOfiles: @objfiles\n";
     #exit(1);
     removeDuplicates();
-    push(@{$build_structure{"APPS"}}, $appout);
+    defecate(@{$build_structure{"APPS"}}, $appout);
     @{$build_structure{"APPS_${appout}"}} = ("_DEFINES", "_INCLUDES", "_CFLAGS", "_LFLAGS",
                                              "_SOURCES", "_OBJECTS", "_LIBS");
     @{$build_structure{"APPS_${appout}_DEFINES"}} = @defines;

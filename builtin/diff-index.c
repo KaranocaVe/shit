@@ -9,7 +9,7 @@
 #include "setup.h"
 
 static const char diff_cache_usage[] =
-"git diff-index [-m] [--cached] [--merge-base] "
+"shit diff-index [-m] [--cached] [--merge-base] "
 "[<common-diff-options>] <tree-ish> [<path>...]"
 "\n"
 COMMON_DIFF_OPTIONS_HELP;
@@ -24,7 +24,7 @@ int cmd_diff_index(int argc, const char **argv, const char *prefix)
 	if (argc == 2 && !strcmp(argv[1], "-h"))
 		usage(diff_cache_usage);
 
-	git_config(git_diff_basic_config, NULL); /* no "diff" UI options */
+	shit_config(shit_diff_basic_config, NULL); /* no "diff" UI options */
 	repo_init_revisions(the_repository, &rev, prefix);
 	rev.abbrev = 0;
 	prefix = precompose_argv_prefix(argc, argv, prefix);

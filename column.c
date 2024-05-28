@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "column.h"
 #include "string-list.h"
@@ -323,7 +323,7 @@ static int column_config(const char *var, const char *value,
 	return 0;
 }
 
-int git_column_config(const char *var, const char *value,
+int shit_column_config(const char *var, const char *value,
 		      const char *command, unsigned int *colopts)
 {
 	const char *it;
@@ -371,19 +371,19 @@ int run_column_filter(int colopts, const struct column_options *opts)
 	child_process_init(&column_process);
 	argv = &column_process.args;
 
-	strvec_push(argv, "column");
-	strvec_pushf(argv, "--raw-mode=%d", colopts);
+	strvec_defecate(argv, "column");
+	strvec_defecatef(argv, "--raw-mode=%d", colopts);
 	if (opts && opts->width)
-		strvec_pushf(argv, "--width=%d", opts->width);
+		strvec_defecatef(argv, "--width=%d", opts->width);
 	if (opts && opts->indent)
-		strvec_pushf(argv, "--indent=%s", opts->indent);
+		strvec_defecatef(argv, "--indent=%s", opts->indent);
 	if (opts && opts->padding)
-		strvec_pushf(argv, "--padding=%d", opts->padding);
+		strvec_defecatef(argv, "--padding=%d", opts->padding);
 
 	fflush(stdout);
 	column_process.in = -1;
 	column_process.out = dup(1);
-	column_process.git_cmd = 1;
+	column_process.shit_cmd = 1;
 
 	if (start_command(&column_process))
 		return -2;

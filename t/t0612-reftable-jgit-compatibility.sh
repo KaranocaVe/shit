@@ -1,59 +1,59 @@
 #!/bin/sh
 
-test_description='reftables are compatible with JGit'
+test_description='reftables are compatible with Jshit'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
-GIT_TEST_DEFAULT_REF_FORMAT=reftable
-export GIT_TEST_DEFAULT_REF_FORMAT
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_REF_FORMAT=reftable
+export shit_TEST_DEFAULT_REF_FORMAT
 
-# JGit does not support the 'link' DIRC extension.
-GIT_TEST_SPLIT_INDEX=0
-export GIT_TEST_SPLIT_INDEX
+# Jshit does not support the 'link' DIRC extension.
+shit_TEST_SPLIT_INDEX=0
+export shit_TEST_SPLIT_INDEX
 
 . ./test-lib.sh
 
-if ! test_have_prereq JGIT
+if ! test_have_prereq Jshit
 then
-	skip_all='skipping reftable JGit tests; JGit is not present in PATH'
+	skip_all='skipping reftable Jshit tests; Jshit is not present in PATH'
 	test_done
 fi
 
 if ! test_have_prereq SHA1
 then
-	skip_all='skipping reftable JGit tests; JGit does not support SHA256 reftables'
+	skip_all='skipping reftable Jshit tests; Jshit does not support SHA256 reftables'
 	test_done
 fi
 
-test_commit_jgit () {
+test_commit_jshit () {
 	touch "$1" &&
-	jgit add "$1" &&
-	jgit commit -m "$1"
+	jshit add "$1" &&
+	jshit commit -m "$1"
 }
 
 test_same_refs () {
-	git show-ref --head >cgit.actual &&
-	jgit show-ref >jgit-tabs.actual &&
-	tr "\t" " " <jgit-tabs.actual >jgit.actual &&
-	test_cmp cgit.actual jgit.actual
+	shit show-ref --head >cshit.actual &&
+	jshit show-ref >jshit-tabs.actual &&
+	tr "\t" " " <jshit-tabs.actual >jshit.actual &&
+	test_cmp cshit.actual jshit.actual
 }
 
 test_same_ref () {
-	git rev-parse "$1" >cgit.actual &&
-	jgit rev-parse "$1" >jgit.actual &&
-	test_cmp cgit.actual jgit.actual
+	shit rev-parse "$1" >cshit.actual &&
+	jshit rev-parse "$1" >jshit.actual &&
+	test_cmp cshit.actual jshit.actual
 }
 
 test_same_reflog () {
-	git reflog "$*" >cgit.actual &&
-	jgit reflog "$*" >jgit-newline.actual &&
-	sed '/^$/d' <jgit-newline.actual >jgit.actual &&
-	test_cmp cgit.actual jgit.actual
+	shit reflog "$*" >cshit.actual &&
+	jshit reflog "$*" >jshit-newline.actual &&
+	sed '/^$/d' <jshit-newline.actual >jshit.actual &&
+	test_cmp cshit.actual jshit.actual
 }
 
-test_expect_success 'CGit repository can be read by JGit' '
+test_expect_success 'Cshit repository can be read by Jshit' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 		test_commit A &&
@@ -63,41 +63,41 @@ test_expect_success 'CGit repository can be read by JGit' '
 	)
 '
 
-test_expect_success 'JGit repository can be read by CGit' '
+test_expect_success 'Jshit repository can be read by Cshit' '
 	test_when_finished "rm -rf repo" &&
-	jgit init repo &&
+	jshit init repo &&
 	(
 		cd repo &&
 
 		touch file &&
-		jgit add file &&
-		jgit commit -m "initial commit" &&
+		jshit add file &&
+		jshit commit -m "initial commit" &&
 
 		# Note that we must convert the ref storage after we have
-		# written the default branch. Otherwise JGit will end up with
+		# written the default branch. Otherwise Jshit will end up with
 		# no HEAD at all.
-		jgit convert-ref-storage --format=reftable &&
+		jshit convert-ref-storage --format=reftable &&
 
 		test_same_refs &&
 		test_same_ref HEAD &&
-		# Interestingly, JGit cannot read its own reflog here. CGit can
+		# Interestingly, Jshit cannot read its own reflog here. Cshit can
 		# though.
-		printf "%s HEAD@{0}: commit (initial): initial commit" "$(git rev-parse --short HEAD)" >expect &&
-		git reflog HEAD >actual &&
+		printf "%s HEAD@{0}: commit (initial): initial commit" "$(shit rev-parse --short HEAD)" >expect &&
+		shit reflog HEAD >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'mixed writes from JGit and CGit' '
+test_expect_success 'mixed writes from Jshit and Cshit' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 
 		test_commit A &&
-		test_commit_jgit B &&
+		test_commit_jshit B &&
 		test_commit C &&
-		test_commit_jgit D &&
+		test_commit_jshit D &&
 
 		test_same_refs &&
 		test_same_ref HEAD &&
@@ -105,9 +105,9 @@ test_expect_success 'mixed writes from JGit and CGit' '
 	)
 '
 
-test_expect_success 'JGit can read multi-level index' '
+test_expect_success 'Jshit can read multi-level index' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 
@@ -120,7 +120,7 @@ test_expect_success 'JGit can read multi-level index' '
 			print \"commit\";
 		    }
 		" >input &&
-		git update-ref --stdin <input &&
+		shit update-ref --stdin <input &&
 
 		test_same_refs &&
 		test_same_ref refs/heads/branch-1 &&

@@ -34,14 +34,14 @@ EOF
 
 test_expect_success 'setup' '
 
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial file
+	shit commit -m initial file
 
 '
 
 cat > expected-patch << EOF
-diff --git a/file b/file
+diff --shit a/file b/file
 --- a/file
 +++ b/file
 @@ -1,11 +1,6 @@
@@ -65,7 +65,7 @@ diff --git a/file b/file
 EOF
 
 cat > patch << EOF
-diff --git a/file b/file
+diff --shit a/file b/file
 index b9834b5..ef6e94c 100644
 --- a/file
 +++ b/file
@@ -80,7 +80,7 @@ index b9834b5..ef6e94c 100644
 EOF
 
 cat > expected << EOF
-diff --git a/file b/file
+diff --shit a/file b/file
 --- a/file
 +++ b/file
 @@ -1,10 +1,12 @@
@@ -110,20 +110,20 @@ chmod a+x fake-editor.sh
 test_expect_success 'add -e' '
 
 	cp second-part file &&
-	git add -e &&
+	shit add -e &&
 	test_cmp second-part file &&
 	test_cmp expected-patch orig-patch &&
-	git diff --cached >actual &&
+	shit diff --cached >actual &&
 	grep -v index actual >out &&
 	test_cmp expected out
 
 '
 
 test_expect_success 'add -e notices editor failure' '
-	git reset --hard &&
+	shit reset --hard &&
 	echo change >>file &&
-	test_must_fail env GIT_EDITOR=false git add -e &&
-	test_expect_code 1 git diff --exit-code
+	test_must_fail env shit_EDITOR=false shit add -e &&
+	test_expect_code 1 shit diff --exit-code
 '
 
 test_done

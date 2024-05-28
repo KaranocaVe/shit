@@ -141,8 +141,8 @@ struct patch {
 	struct fragment *fragments;
 	char *result;
 	size_t resultsize;
-	char old_oid_prefix[GIT_MAX_HEXSZ + 1];
-	char new_oid_prefix[GIT_MAX_HEXSZ + 1];
+	char old_oid_prefix[shit_MAX_HEXSZ + 1];
+	char new_oid_prefix[shit_MAX_HEXSZ + 1];
 	struct patch *next;
 
 	/* three-way fallback result */
@@ -160,12 +160,12 @@ void clear_apply_state(struct apply_state *state);
 int check_apply_state(struct apply_state *state, int force_apply);
 
 /*
- * Parse a git diff header, starting at line.  Fills the relevant
+ * Parse a shit diff header, starting at line.  Fills the relevant
  * metadata information in 'struct patch'.
  *
  * Returns -1 on failure, the length of the parsed header otherwise.
  */
-int parse_git_diff_header(struct strbuf *root,
+int parse_shit_diff_header(struct strbuf *root,
 			  int *linenr,
 			  int p_value,
 			  const char *line,

@@ -7,20 +7,20 @@ test_expect_success "setup proc-receive hook (unknown version, $PROTOCOL)" '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic(A)
+# shit defecate         :                       refs/for/main/topic(A)
 test_expect_success "proc-receive: bad protocol (unknown version, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
 	make_user_friendly_and_stable_output <out-$test_count >actual &&
 
-	# Check status report for git-push
+	# Check status report for shit-defecate
 	sed -n \
 		-e "/^To / { p; }" \
 		-e "/^ ! / { p; }" \
 		<actual >actual-report &&
 	cat >expect <<-EOF &&
-	To <URL/of/upstream.git>
+	To <URL/of/upstream.shit>
 	 ! [remote rejected] HEAD -> refs/for/main/topic (fail to run proc-receive hook)
 	EOF
 	test_cmp expect actual-report &&
@@ -48,9 +48,9 @@ test_expect_success "setup proc-receive hook (hook --die-read-version, $PROTOCOL
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic(A)
+# shit defecate         :                       refs/for/main/topic(A)
 test_expect_success "proc-receive: bad protocol (hook --die-read-version, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
 	filter_out_user_friendly_and_stable_output \
@@ -58,7 +58,7 @@ test_expect_success "proc-receive: bad protocol (hook --die-read-version, $PROTO
 		-e "/^ ! / { p; }" \
 		<out-$test_count >actual &&
 	cat >expect <<-EOF &&
-	To <URL/of/upstream.git>
+	To <URL/of/upstream.shit>
 	 ! [remote rejected] HEAD -> refs/for/main/topic (fail to run proc-receive hook)
 	EOF
 	test_cmp expect actual &&
@@ -79,9 +79,9 @@ test_expect_success "setup proc-receive hook (hook --die-write-version, $PROTOCO
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic(A)
+# shit defecate         :                       refs/for/main/topic(A)
 test_expect_success "proc-receive: bad protocol (hook --die-write-version, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
 	filter_out_user_friendly_and_stable_output \
@@ -89,7 +89,7 @@ test_expect_success "proc-receive: bad protocol (hook --die-write-version, $PROT
 		-e "/^ ! / { p; }" \
 		<out-$test_count >actual &&
 	cat >expect <<-EOF &&
-	To <URL/of/upstream.git>
+	To <URL/of/upstream.shit>
 	 ! [remote rejected] HEAD -> refs/for/main/topic (fail to run proc-receive hook)
 	EOF
 	test_cmp expect actual &&
@@ -110,9 +110,9 @@ test_expect_success "setup proc-receive hook (hook --die-read-commands, $PROTOCO
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic(A)
+# shit defecate         :                       refs/for/main/topic(A)
 test_expect_success "proc-receive: bad protocol (hook --die-read-commands, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
 	filter_out_user_friendly_and_stable_output \
@@ -120,7 +120,7 @@ test_expect_success "proc-receive: bad protocol (hook --die-read-commands, $PROT
 		-e "/^ ! / { p; }" \
 		<out-$test_count >actual &&
 	cat >expect <<-EOF &&
-	To <URL/of/upstream.git>
+	To <URL/of/upstream.shit>
 	 ! [remote rejected] HEAD -> refs/for/main/topic (fail to run proc-receive hook)
 	EOF
 	test_cmp expect actual &&
@@ -131,19 +131,19 @@ test_expect_success "proc-receive: bad protocol (hook --die-read-commands, $PROT
 	EOF
 '
 
-test_expect_success "setup proc-receive hook (hook --die-read-push-options, $PROTOCOL)" '
+test_expect_success "setup proc-receive hook (hook --die-read-defecate-options, $PROTOCOL)" '
 	test_hook -C "$upstream" --clobber proc-receive <<-\EOF
 	printf >&2 "# proc-receive hook\n"
-	test-tool proc-receive -v --die-read-push-options
+	test-tool proc-receive -v --die-read-defecate-options
 	EOF
 '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic(A)
-test_expect_success "proc-receive: bad protocol (hook --die-read-push-options, $PROTOCOL)" '
-	git -C "$upstream" config receive.advertisePushOptions true &&
-	test_must_fail git -C workbench push origin \
+# shit defecate         :                       refs/for/main/topic(A)
+test_expect_success "proc-receive: bad protocol (hook --die-read-defecate-options, $PROTOCOL)" '
+	shit -C "$upstream" config receive.advertisedefecateOptions true &&
+	test_must_fail shit -C workbench defecate origin \
 		-o reviewers=user1,user2 \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
@@ -152,11 +152,11 @@ test_expect_success "proc-receive: bad protocol (hook --die-read-push-options, $
 		-e "/^ ! / { p; }" \
 		<out-$test_count >actual &&
 	cat >expect <<-EOF &&
-	To <URL/of/upstream.git>
+	To <URL/of/upstream.shit>
 	 ! [remote rejected] HEAD -> refs/for/main/topic (fail to run proc-receive hook)
 	EOF
 	test_cmp expect actual &&
-	grep "remote: fatal: die with the --die-read-push-options option" out-$test_count &&
+	grep "remote: fatal: die with the --die-read-defecate-options option" out-$test_count &&
 
 	test_cmp_refs -C "$upstream" <<-EOF
 	<COMMIT-A> refs/heads/main
@@ -172,9 +172,9 @@ test_expect_success "setup proc-receive hook (hook --die-write-report, $PROTOCOL
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic(A)
+# shit defecate         :                       refs/for/main/topic(A)
 test_expect_success "proc-receive: bad protocol (hook --die-write-report, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
 	filter_out_user_friendly_and_stable_output \
@@ -182,7 +182,7 @@ test_expect_success "proc-receive: bad protocol (hook --die-write-report, $PROTO
 		-e "/^ ! / { p; }" \
 		<out-$test_count >actual &&
 	cat >expect <<-EOF &&
-	To <URL/of/upstream.git>
+	To <URL/of/upstream.shit>
 	 ! [remote rejected] HEAD -> refs/for/main/topic (fail to run proc-receive hook)
 	EOF
 	test_cmp expect actual &&
@@ -202,9 +202,9 @@ test_expect_success "setup proc-receive hook (no report, $PROTOCOL)" '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       next(A)  refs/for/main/topic(A)
+# shit defecate         :                       next(A)  refs/for/main/topic(A)
 test_expect_success "proc-receive: bad protocol (no report, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 		HEAD:refs/heads/next \
 		HEAD:refs/for/main/topic >out-$test_count 2>&1 &&
 	make_user_friendly_and_stable_output <out-$test_count >actual &&
@@ -216,7 +216,7 @@ test_expect_success "proc-receive: bad protocol (no report, $PROTOCOL)" '
 	> remote: proc-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  * [new branch]      HEAD -> next
 	>  ! [remote rejected] HEAD -> refs/for/main/topic (proc-receive failed to report status)
 	EOF
@@ -231,7 +231,7 @@ test_expect_success "proc-receive: bad protocol (no report, $PROTOCOL)" '
 # Refs of upstream : main(A)             next(A)
 # Refs of workbench: main(A)  tags/v123
 test_expect_success "cleanup ($PROTOCOL)" '
-	git -C "$upstream" update-ref -d refs/heads/next
+	shit -C "$upstream" update-ref -d refs/heads/next
 
 '
 
@@ -245,9 +245,9 @@ test_expect_success "setup proc-receive hook (no ref, $PROTOCOL)" '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic
+# shit defecate         :                       refs/for/main/topic
 test_expect_success "proc-receive: bad protocol (no ref, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 		HEAD:refs/for/main/topic\
 		>out-$test_count 2>&1 &&
 	make_user_friendly_and_stable_output <out-$test_count >actual &&
@@ -258,7 +258,7 @@ test_expect_success "proc-receive: bad protocol (no ref, $PROTOCOL)" '
 	> remote: proc-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
 	> remote: proc-receive> ok        Z
 	> remote: error: proc-receive reported incomplete status line: "ok"        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  ! [remote rejected] HEAD -> refs/for/main/topic (proc-receive failed to report status)
 	EOF
 	test_cmp expect actual &&
@@ -278,9 +278,9 @@ test_expect_success "setup proc-receive hook (unknown status, $PROTOCOL)" '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic
+# shit defecate         :                       refs/for/main/topic
 test_expect_success "proc-receive: bad protocol (unknown status, $PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+	test_must_fail shit -C workbench defecate origin \
 			HEAD:refs/for/main/topic \
 			>out-$test_count 2>&1 &&
 	make_user_friendly_and_stable_output <out-$test_count >actual &&
@@ -291,7 +291,7 @@ test_expect_success "proc-receive: bad protocol (unknown status, $PROTOCOL)" '
 	> remote: proc-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
 	> remote: proc-receive> xx refs/for/main/topic        Z
 	> remote: error: proc-receive reported bad status "xx" on ref "refs/for/main/topic"        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  ! [remote rejected] HEAD -> refs/for/main/topic (proc-receive failed to report status)
 	EOF
 	test_cmp expect actual &&

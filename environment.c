@@ -1,13 +1,13 @@
 /*
- * We put all the git config variables in this same object
+ * We put all the shit config variables in this same object
  * file, so that programs can link against the config parser
- * without having to link against all the rest of git.
+ * without having to link against all the rest of shit.
  *
  * In particular, no need to bring in libz etc unless needed,
- * even if you might want to know where the git directory etc
+ * even if you might want to know where the shit directory etc
  * are.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "branch.h"
 #include "convert.h"
@@ -42,20 +42,20 @@ int is_bare_repository_cfg = -1; /* unspecified */
 int warn_ambiguous_refs = 1;
 int warn_on_object_refname_ambiguity = 1;
 int repository_format_precious_objects;
-const char *git_commit_encoding;
-const char *git_log_output_encoding;
+const char *shit_commit_encoding;
+const char *shit_log_output_encoding;
 char *apply_default_whitespace;
 char *apply_default_ignorewhitespace;
-const char *git_attributes_file;
-const char *git_hooks_path;
+const char *shit_attributes_file;
+const char *shit_hooks_path;
 int zlib_compression_level = Z_BEST_SPEED;
 int pack_compression_level = Z_DEFAULT_COMPRESSION;
 int fsync_object_files = -1;
 int use_fsync = -1;
 enum fsync_method fsync_method = FSYNC_METHOD_DEFAULT;
 enum fsync_component fsync_components = FSYNC_COMPONENTS_DEFAULT;
-size_t packed_git_window_size = DEFAULT_PACKED_GIT_WINDOW_SIZE;
-size_t packed_git_limit = DEFAULT_PACKED_GIT_LIMIT;
+size_t packed_shit_window_size = DEFAULT_PACKED_shit_WINDOW_SIZE;
+size_t packed_shit_limit = DEFAULT_PACKED_shit_LIMIT;
 size_t delta_base_cache_limit = 96 * 1024 * 1024;
 unsigned long big_file_threshold = 512 * 1024 * 1024;
 const char *editor_program;
@@ -65,9 +65,9 @@ enum auto_crlf auto_crlf = AUTO_CRLF_FALSE;
 enum eol core_eol = EOL_UNSET;
 int global_conv_flags_eol = CONV_EOL_RNDTRP_WARN;
 const char *check_roundtrip_encoding = "SHIFT-JIS";
-enum branch_track git_branch_track = BRANCH_TRACK_REMOTE;
+enum branch_track shit_branch_track = BRANCH_TRACK_REMOTE;
 enum rebase_setup_type autorebase = AUTOREBASE_NEVER;
-enum push_default_type push_default = PUSH_DEFAULT_UNSPECIFIED;
+enum defecate_default_type defecate_default = defecate_DEFAULT_UNSPECIFIED;
 #ifndef OBJECT_CREATION_MODE
 #define OBJECT_CREATION_MODE OBJECT_CREATION_USES_HARDLINKS
 #endif
@@ -84,11 +84,11 @@ enum log_refs_config log_all_ref_updates = LOG_REFS_UNSET;
 int max_allowed_tree_depth =
 #ifdef _MSC_VER
 	/*
-	 * When traversing into too-deep trees, Visual C-compiled Git seems to
+	 * When traversing into too-deep trees, Visual C-compiled shit seems to
 	 * run into some internal stack overflow detection in the
 	 * `RtlpAllocateHeap()` function that is called from within
-	 * `git_inflate_init()`'s call tree. The following value seems to be
-	 * low enough to avoid that by letting Git exit with an error before
+	 * `shit_inflate_init()`'s call tree. The following value seems to be
+	 * low enough to avoid that by letting shit exit with an error before
 	 * the stack overflow can occur.
 	 */
 	512;
@@ -116,13 +116,13 @@ int auto_comment_line_char;
 /* Parallel index stat data preload? */
 int core_preload_index = 1;
 
-/* This is set by setup_git_dir_gently() and/or git_default_config() */
-char *git_work_tree_cfg;
+/* This is set by setup_shit_dir_gently() and/or shit_default_config() */
+char *shit_work_tree_cfg;
 
-static char *git_namespace;
+static char *shit_namespace;
 
 /*
- * Repository-local GIT_* environment variables; see environment.h for details.
+ * Repository-local shit_* environment variables; see environment.h for details.
  */
 const char * const local_repo_env[] = {
 	ALTERNATE_DB_ENVIRONMENT,
@@ -130,16 +130,16 @@ const char * const local_repo_env[] = {
 	CONFIG_DATA_ENVIRONMENT,
 	CONFIG_COUNT_ENVIRONMENT,
 	DB_ENVIRONMENT,
-	GIT_DIR_ENVIRONMENT,
-	GIT_WORK_TREE_ENVIRONMENT,
-	GIT_IMPLICIT_WORK_TREE_ENVIRONMENT,
+	shit_DIR_ENVIRONMENT,
+	shit_WORK_TREE_ENVIRONMENT,
+	shit_IMPLICIT_WORK_TREE_ENVIRONMENT,
 	GRAFT_ENVIRONMENT,
 	INDEX_ENVIRONMENT,
 	NO_REPLACE_OBJECTS_ENVIRONMENT,
-	GIT_REPLACE_REF_BASE_ENVIRONMENT,
-	GIT_PREFIX_ENVIRONMENT,
-	GIT_SHALLOW_FILE_ENVIRONMENT,
-	GIT_COMMON_DIR_ENVIRONMENT,
+	shit_REPLACE_REF_BASE_ENVIRONMENT,
+	shit_PREFIX_ENVIRONMENT,
+	shit_SHALLOW_FILE_ENVIRONMENT,
+	shit_COMMON_DIR_ENVIRONMENT,
 	NULL
 };
 
@@ -159,7 +159,7 @@ static char *expand_namespace(const char *raw_namespace)
 			strbuf_addf(&buf, "refs/namespaces/%s", (*c)->buf);
 	strbuf_list_free(components);
 	if (check_refname_format(buf.buf, 0))
-		die(_("bad git namespace path \"%s\""), raw_namespace);
+		die(_("bad shit namespace path \"%s\""), raw_namespace);
 	strbuf_addch(&buf, '/');
 	return strbuf_detach(&buf, NULL);
 }
@@ -171,98 +171,98 @@ const char *getenv_safe(struct strvec *argv, const char *name)
 	if (!value)
 		return NULL;
 
-	strvec_push(argv, value);
+	strvec_defecate(argv, value);
 	return argv->v[argv->nr - 1];
 }
 
-void setup_git_env(const char *git_dir)
+void setup_shit_env(const char *shit_dir)
 {
-	char *git_replace_ref_base;
+	char *shit_replace_ref_base;
 	const char *shallow_file;
 	const char *replace_ref_base;
-	struct set_gitdir_args args = { NULL };
+	struct set_shitdir_args args = { NULL };
 	struct strvec to_free = STRVEC_INIT;
 
-	args.commondir = getenv_safe(&to_free, GIT_COMMON_DIR_ENVIRONMENT);
+	args.commondir = getenv_safe(&to_free, shit_COMMON_DIR_ENVIRONMENT);
 	args.object_dir = getenv_safe(&to_free, DB_ENVIRONMENT);
 	args.graft_file = getenv_safe(&to_free, GRAFT_ENVIRONMENT);
 	args.index_file = getenv_safe(&to_free, INDEX_ENVIRONMENT);
 	args.alternate_db = getenv_safe(&to_free, ALTERNATE_DB_ENVIRONMENT);
-	if (getenv(GIT_QUARANTINE_ENVIRONMENT)) {
+	if (getenv(shit_QUARANTINE_ENVIRONMENT)) {
 		args.disable_ref_updates = 1;
 	}
 
-	repo_set_gitdir(the_repository, git_dir, &args);
+	repo_set_shitdir(the_repository, shit_dir, &args);
 	strvec_clear(&to_free);
 
 	if (getenv(NO_REPLACE_OBJECTS_ENVIRONMENT))
 		disable_replace_refs();
-	replace_ref_base = getenv(GIT_REPLACE_REF_BASE_ENVIRONMENT);
-	git_replace_ref_base = xstrdup(replace_ref_base ? replace_ref_base
+	replace_ref_base = getenv(shit_REPLACE_REF_BASE_ENVIRONMENT);
+	shit_replace_ref_base = xstrdup(replace_ref_base ? replace_ref_base
 							  : "refs/replace/");
-	update_ref_namespace(NAMESPACE_REPLACE, git_replace_ref_base);
+	update_ref_namespace(NAMESPACE_REPLACE, shit_replace_ref_base);
 
-	free(git_namespace);
-	git_namespace = expand_namespace(getenv(GIT_NAMESPACE_ENVIRONMENT));
-	shallow_file = getenv(GIT_SHALLOW_FILE_ENVIRONMENT);
+	free(shit_namespace);
+	shit_namespace = expand_namespace(getenv(shit_NAMESPACE_ENVIRONMENT));
+	shallow_file = getenv(shit_SHALLOW_FILE_ENVIRONMENT);
 	if (shallow_file)
 		set_alternate_shallow_file(the_repository, shallow_file, 0);
 
-	if (git_env_bool(NO_LAZY_FETCH_ENVIRONMENT, 0))
+	if (shit_env_bool(NO_LAZY_FETCH_ENVIRONMENT, 0))
 		fetch_if_missing = 0;
 }
 
 int is_bare_repository(void)
 {
 	/* if core.bare is not 'false', let's see if there is a work tree */
-	return is_bare_repository_cfg && !get_git_work_tree();
+	return is_bare_repository_cfg && !get_shit_work_tree();
 }
 
-int have_git_dir(void)
+int have_shit_dir(void)
 {
 	return startup_info->have_repository
-		|| the_repository->gitdir;
+		|| the_repository->shitdir;
 }
 
-const char *get_git_dir(void)
+const char *get_shit_dir(void)
 {
-	if (!the_repository->gitdir)
-		BUG("git environment hasn't been setup");
-	return the_repository->gitdir;
+	if (!the_repository->shitdir)
+		BUG("shit environment hasn't been setup");
+	return the_repository->shitdir;
 }
 
-const char *get_git_common_dir(void)
+const char *get_shit_common_dir(void)
 {
 	if (!the_repository->commondir)
-		BUG("git environment hasn't been setup");
+		BUG("shit environment hasn't been setup");
 	return the_repository->commondir;
 }
 
-const char *get_git_namespace(void)
+const char *get_shit_namespace(void)
 {
-	if (!git_namespace)
-		BUG("git environment hasn't been setup");
-	return git_namespace;
+	if (!shit_namespace)
+		BUG("shit environment hasn't been setup");
+	return shit_namespace;
 }
 
 const char *strip_namespace(const char *namespaced_ref)
 {
 	const char *out;
-	if (skip_prefix(namespaced_ref, get_git_namespace(), &out))
+	if (skip_prefix(namespaced_ref, get_shit_namespace(), &out))
 		return out;
 	return NULL;
 }
 
-static int git_work_tree_initialized;
+static int shit_work_tree_initialized;
 
 /*
  * Note.  This works only before you used a work tree.  This was added
- * primarily to support git-clone to work in a new repository it just
+ * primarily to support shit-clone to work in a new repository it just
  * created, and is not meant to flip between different work trees.
  */
-void set_git_work_tree(const char *new_work_tree)
+void set_shit_work_tree(const char *new_work_tree)
 {
-	if (git_work_tree_initialized) {
+	if (shit_work_tree_initialized) {
 		struct strbuf realpath = STRBUF_INIT;
 
 		strbuf_realpath(&realpath, new_work_tree, 1);
@@ -274,11 +274,11 @@ void set_git_work_tree(const char *new_work_tree)
 		strbuf_release(&realpath);
 		return;
 	}
-	git_work_tree_initialized = 1;
+	shit_work_tree_initialized = 1;
 	repo_set_worktree(the_repository, new_work_tree);
 }
 
-const char *get_git_work_tree(void)
+const char *get_shit_work_tree(void)
 {
 	return the_repository->worktree;
 }
@@ -286,7 +286,7 @@ const char *get_git_work_tree(void)
 const char *get_object_directory(void)
 {
 	if (!the_repository->objects->odb)
-		BUG("git environment hasn't been setup");
+		BUG("shit environment hasn't been setup");
 	return the_repository->objects->odb->path;
 }
 
@@ -298,14 +298,14 @@ int odb_mkstemp(struct strbuf *temp_filename, const char *pattern)
 	 * restrictive except to remove write permission.
 	 */
 	int mode = 0444;
-	git_path_buf(temp_filename, "objects/%s", pattern);
-	fd = git_mkstemp_mode(temp_filename->buf, mode);
+	shit_path_buf(temp_filename, "objects/%s", pattern);
+	fd = shit_mkstemp_mode(temp_filename->buf, mode);
 	if (0 <= fd)
 		return fd;
 
 	/* slow path */
 	/* some mkstemp implementations erase temp_filename on failure */
-	git_path_buf(temp_filename, "objects/%s", pattern);
+	shit_path_buf(temp_filename, "objects/%s", pattern);
 	safe_create_leading_directories(temp_filename->buf);
 	return xmkstemp_mode(temp_filename->buf, mode);
 }
@@ -326,41 +326,41 @@ int odb_pack_keep(const char *name)
 char *get_index_file(void)
 {
 	if (!the_repository->index_file)
-		BUG("git environment hasn't been setup");
+		BUG("shit environment hasn't been setup");
 	return the_repository->index_file;
 }
 
 char *get_graft_file(struct repository *r)
 {
 	if (!r->graft_file)
-		BUG("git environment hasn't been setup");
+		BUG("shit environment hasn't been setup");
 	return r->graft_file;
 }
 
-static void set_git_dir_1(const char *path)
+static void set_shit_dir_1(const char *path)
 {
-	xsetenv(GIT_DIR_ENVIRONMENT, path, 1);
-	setup_git_env(path);
+	xsetenv(shit_DIR_ENVIRONMENT, path, 1);
+	setup_shit_env(path);
 }
 
-static void update_relative_gitdir(const char *name UNUSED,
+static void update_relative_shitdir(const char *name UNUSED,
 				   const char *old_cwd,
 				   const char *new_cwd,
 				   void *data UNUSED)
 {
-	char *path = reparent_relative_path(old_cwd, new_cwd, get_git_dir());
+	char *path = reparent_relative_path(old_cwd, new_cwd, get_shit_dir());
 	struct tmp_objdir *tmp_objdir = tmp_objdir_unapply_primary_odb();
 
 	trace_printf_key(&trace_setup_key,
-			 "setup: move $GIT_DIR to '%s'",
+			 "setup: move $shit_DIR to '%s'",
 			 path);
-	set_git_dir_1(path);
+	set_shit_dir_1(path);
 	if (tmp_objdir)
 		tmp_objdir_reapply_primary_odb(tmp_objdir, old_cwd, new_cwd);
 	free(path);
 }
 
-void set_git_dir(const char *path, int make_realpath)
+void set_shit_dir(const char *path, int make_realpath)
 {
 	struct strbuf realpath = STRBUF_INIT;
 
@@ -369,22 +369,22 @@ void set_git_dir(const char *path, int make_realpath)
 		path = realpath.buf;
 	}
 
-	set_git_dir_1(path);
+	set_shit_dir_1(path);
 	if (!is_absolute_path(path))
-		chdir_notify_register(NULL, update_relative_gitdir, NULL);
+		chdir_notify_register(NULL, update_relative_shitdir, NULL);
 
 	strbuf_release(&realpath);
 }
 
 const char *get_log_output_encoding(void)
 {
-	return git_log_output_encoding ? git_log_output_encoding
+	return shit_log_output_encoding ? shit_log_output_encoding
 		: get_commit_output_encoding();
 }
 
 const char *get_commit_output_encoding(void)
 {
-	return git_commit_encoding ? git_commit_encoding : "UTF-8";
+	return shit_commit_encoding ? shit_commit_encoding : "UTF-8";
 }
 
 static int the_shared_repository = PERM_UMASK;
@@ -401,8 +401,8 @@ int get_shared_repository(void)
 	if (need_shared_repository_from_config) {
 		const char *var = "core.sharedrepository";
 		const char *value;
-		if (!git_config_get_value(var, &value))
-			the_shared_repository = git_config_perm(var, value);
+		if (!shit_config_get_value(var, &value))
+			the_shared_repository = shit_config_perm(var, value);
 		need_shared_repository_from_config = 0;
 	}
 	return the_shared_repository;
@@ -415,19 +415,19 @@ void reset_shared_repository(void)
 
 int use_optional_locks(void)
 {
-	return git_env_bool(GIT_OPTIONAL_LOCKS_ENVIRONMENT, 1);
+	return shit_env_bool(shit_OPTIONAL_LOCKS_ENVIRONMENT, 1);
 }
 
 int print_sha1_ellipsis(void)
 {
 	/*
 	 * Determine if the calling environment contains the variable
-	 * GIT_PRINT_SHA1_ELLIPSIS set to "yes".
+	 * shit_PRINT_SHA1_ELLIPSIS set to "yes".
 	 */
 	static int cached_result = -1; /* unknown */
 
 	if (cached_result < 0) {
-		const char *v = getenv("GIT_PRINT_SHA1_ELLIPSIS");
+		const char *v = getenv("shit_PRINT_SHA1_ELLIPSIS");
 		cached_result = (v && !strcasecmp(v, "yes"));
 	}
 	return cached_result;

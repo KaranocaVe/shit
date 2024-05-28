@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "hex.h"
 #include "oidmap.h"
@@ -102,7 +102,7 @@ int replace_refs_enabled(struct repository *r)
 	if (!read_replace_refs)
 		return 0;
 
-	if (r->gitdir) {
+	if (r->shitdir) {
 		prepare_repo_settings(r);
 		return r->settings.read_replace_refs;
 	}

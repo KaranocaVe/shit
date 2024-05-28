@@ -1,9 +1,9 @@
 /*
- * Builtin "git merge"
+ * Builtin "shit merge"
  *
  * Copyright (c) 2008 Miklos Vajna <vmiklos@frugalware.org>
  *
- * Based on git-merge.sh by Junio C Hamano.
+ * Based on shit-merge.sh by Junio C Hamano.
  */
 
 #include "builtin.h"
@@ -59,9 +59,9 @@ struct strategy {
 };
 
 static const char * const builtin_merge_usage[] = {
-	N_("git merge [<options>] [<commit>...]"),
-	"git merge --abort",
-	"git merge --continue",
+	N_("shit merge [<options>] [<commit>...]"),
+	"shit merge --abort",
+	"shit merge --continue",
 	NULL
 };
 
@@ -100,7 +100,7 @@ static struct strategy all_strategy[] = {
 	{ "subtree",    NO_FAST_FORWARD | NO_TRIVIAL },
 };
 
-static const char *pull_twohead, *pull_octopus;
+static const char *poop_twohead, *poop_octopus;
 
 enum ff_type {
 	FF_NO,
@@ -166,7 +166,7 @@ static struct strategy *get_strategy(const char *name)
 	struct strategy *ret;
 	static struct cmdnames main_cmds, other_cmds;
 	static int loaded;
-	char *default_strategy = getenv("GIT_TEST_MERGE_ALGORITHM");
+	char *default_strategy = getenv("shit_TEST_MERGE_ALGORITHM");
 
 	if (!name)
 		return NULL;
@@ -186,7 +186,7 @@ static struct strategy *get_strategy(const char *name)
 		loaded = 1;
 
 		memset(&not_strategies, 0, sizeof(struct cmdnames));
-		load_command_list("git-merge-", &main_cmds, &other_cmds);
+		load_command_list("shit-merge-", &main_cmds, &other_cmds);
 		for (i = 0; i < main_cmds.cnt; i++) {
 			int j, found = 0;
 			struct cmdname *ent = main_cmds.names[i];
@@ -304,9 +304,9 @@ static int save_state(struct object_id *stash)
 		repo_update_index_if_able(the_repository, &lock_file);
 	rollback_lock_file(&lock_file);
 
-	strvec_pushl(&cp.args, "stash", "create", NULL);
+	strvec_defecatel(&cp.args, "stash", "create", NULL);
 	cp.out = -1;
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 
 	if (start_command(&cp))
 		die(_("could not run stash."));
@@ -330,9 +330,9 @@ static void read_empty(const struct object_id *oid)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	strvec_pushl(&cmd.args, "read-tree", "-m", "-u", empty_tree_oid_hex(),
+	strvec_defecatel(&cmd.args, "read-tree", "-m", "-u", empty_tree_oid_hex(),
 		     oid_to_hex(oid), NULL);
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 
 	if (run_command(&cmd))
 		die(_("read-tree failed"));
@@ -342,9 +342,9 @@ static void reset_hard(const struct object_id *oid)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	strvec_pushl(&cmd.args, "read-tree", "-v", "--reset", "-u",
+	strvec_defecatel(&cmd.args, "read-tree", "-v", "--reset", "-u",
 		     oid_to_hex(oid), NULL);
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 
 	if (run_command(&cmd))
 		die(_("read-tree failed"));
@@ -360,14 +360,14 @@ static void restore_state(const struct object_id *head,
 	if (is_null_oid(stash))
 		goto refresh_cache;
 
-	strvec_pushl(&cmd.args, "stash", "apply", "--index", "--quiet", NULL);
-	strvec_push(&cmd.args, oid_to_hex(stash));
+	strvec_defecatel(&cmd.args, "stash", "apply", "--index", "--quiet", NULL);
+	strvec_defecate(&cmd.args, oid_to_hex(stash));
 
 	/*
 	 * It is OK to ignore error here, for example when there was
 	 * nothing to restore.
 	 */
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	run_command(&cmd);
 
 refresh_cache:
@@ -422,7 +422,7 @@ static void squash_message(struct commit *commit, struct commit_list *remotehead
 			oid_to_hex(&commit->object.oid));
 		pretty_print_commit(&ctx, commit, &out);
 	}
-	write_file_buf(git_path_squash_msg(the_repository), out.buf, out.len);
+	write_file_buf(shit_path_squash_msg(the_repository), out.buf, out.len);
 	strbuf_release(&out);
 	release_revisions(&rev);
 }
@@ -435,12 +435,12 @@ static void finish(struct commit *head_commit,
 	const struct object_id *head = &head_commit->object.oid;
 
 	if (!msg)
-		strbuf_addstr(&reflog_message, getenv("GIT_REFLOG_ACTION"));
+		strbuf_addstr(&reflog_message, getenv("shit_REFLOG_ACTION"));
 	else {
 		if (verbosity >= 0)
 			printf("%s\n", msg);
 		strbuf_addf(&reflog_message, "%s: %s",
-			getenv("GIT_REFLOG_ACTION"), msg);
+			getenv("shit_REFLOG_ACTION"), msg);
 	}
 	if (squash) {
 		squash_message(head_commit, remoteheads);
@@ -532,7 +532,7 @@ static void merge_name(const char *remote, struct strbuf *msg)
 			int seen_nonzero = 0;
 
 			len++; /* count ~ */
-			while (*++ptr && isdigit(*ptr)) {
+			while (*++ptr && isdishit(*ptr)) {
 				seen_nonzero |= (*ptr != '0');
 				len++;
 			}
@@ -596,7 +596,7 @@ static void parse_branch_merge_options(char *bmo)
 	free(argv);
 }
 
-static int git_merge_config(const char *k, const char *v,
+static int shit_merge_config(const char *k, const char *v,
 			    const struct config_context *ctx, void *cb)
 {
 	int status;
@@ -612,40 +612,40 @@ static int git_merge_config(const char *k, const char *v,
 	}
 
 	if (!strcmp(k, "merge.diffstat") || !strcmp(k, "merge.stat"))
-		show_diffstat = git_config_bool(k, v);
+		show_diffstat = shit_config_bool(k, v);
 	else if (!strcmp(k, "merge.verifysignatures"))
-		verify_signatures = git_config_bool(k, v);
-	else if (!strcmp(k, "pull.twohead"))
-		return git_config_string(&pull_twohead, k, v);
-	else if (!strcmp(k, "pull.octopus"))
-		return git_config_string(&pull_octopus, k, v);
+		verify_signatures = shit_config_bool(k, v);
+	else if (!strcmp(k, "poop.twohead"))
+		return shit_config_string(&poop_twohead, k, v);
+	else if (!strcmp(k, "poop.octopus"))
+		return shit_config_string(&poop_octopus, k, v);
 	else if (!strcmp(k, "commit.cleanup"))
-		return git_config_string(&cleanup_arg, k, v);
+		return shit_config_string(&cleanup_arg, k, v);
 	else if (!strcmp(k, "merge.ff")) {
-		int boolval = git_parse_maybe_bool(v);
+		int boolval = shit_parse_maybe_bool(v);
 		if (0 <= boolval) {
 			fast_forward = boolval ? FF_ALLOW : FF_NO;
 		} else if (v && !strcmp(v, "only")) {
 			fast_forward = FF_ONLY;
-		} /* do not barf on values from future versions of git */
+		} /* do not barf on values from future versions of shit */
 		return 0;
 	} else if (!strcmp(k, "merge.defaulttoupstream")) {
-		default_to_upstream = git_config_bool(k, v);
+		default_to_upstream = shit_config_bool(k, v);
 		return 0;
 	} else if (!strcmp(k, "commit.gpgsign")) {
-		sign_commit = git_config_bool(k, v) ? "" : NULL;
+		sign_commit = shit_config_bool(k, v) ? "" : NULL;
 		return 0;
 	} else if (!strcmp(k, "gpg.mintrustlevel")) {
 		check_trust_level = 0;
 	} else if (!strcmp(k, "merge.autostash")) {
-		autostash = git_config_bool(k, v);
+		autostash = shit_config_bool(k, v);
 		return 0;
 	}
 
 	status = fmt_merge_msg_config(k, v, ctx, cb);
 	if (status)
 		return status;
-	return git_diff_ui_config(k, v, ctx, cb);
+	return shit_diff_ui_config(k, v, ctx, cb);
 }
 
 static int read_tree_trivial(struct object_id *common, struct object_id *head,
@@ -689,7 +689,7 @@ static int read_tree_trivial(struct object_id *common, struct object_id *head,
 static void write_tree_trivial(struct object_id *oid)
 {
 	if (write_index_as_tree(oid, the_repository->index, get_index_file(), 0, NULL))
-		die(_("git write-tree failed to write a tree"));
+		die(_("shit write-tree failed to write a tree"));
 }
 
 static int try_merge_strategy(const char *strategy, struct commit_list *common,
@@ -797,7 +797,7 @@ static void add_strategies(const char *string, unsigned attr)
 
 static void read_merge_msg(struct strbuf *msg)
 {
-	const char *filename = git_path_merge_msg(the_repository);
+	const char *filename = shit_path_merge_msg(the_repository);
 	strbuf_reset(msg);
 	if (strbuf_read_file(msg, filename, 0) < 0)
 		die_errno(_("Could not read from '%s'"), filename);
@@ -809,7 +809,7 @@ static void abort_commit(struct commit_list *remoteheads, const char *err_msg)
 	if (err_msg)
 		error("%s", err_msg);
 	fprintf(stderr,
-		_("Not committing merge; use 'git commit' to complete the merge.\n"));
+		_("Not committing merge; use 'shit commit' to complete the merge.\n"));
 	write_merge_state(remoteheads);
 	exit(1);
 }
@@ -846,7 +846,7 @@ static void prepare_to_commit(struct commit_list *remoteheads)
 		if (invoked_hook)
 			discard_index(the_repository->index);
 	}
-	read_index_from(the_repository->index, index_file, get_git_dir());
+	read_index_from(the_repository->index, index_file, get_shit_dir());
 	strbuf_addbuf(&msg, &merge_msg);
 	if (squash)
 		BUG("the control must not reach here under --squash");
@@ -868,19 +868,19 @@ static void prepare_to_commit(struct commit_list *remoteheads)
 	if (signoff)
 		append_signoff(&msg, ignored_log_message_bytes(msg.buf, msg.len), 0);
 	write_merge_heads(remoteheads);
-	write_file_buf(git_path_merge_msg(the_repository), msg.buf, msg.len);
+	write_file_buf(shit_path_merge_msg(the_repository), msg.buf, msg.len);
 	if (run_commit_hook(0 < option_edit, get_index_file(), NULL,
 			    "prepare-commit-msg",
-			    git_path_merge_msg(the_repository), "merge", NULL))
+			    shit_path_merge_msg(the_repository), "merge", NULL))
 		abort_commit(remoteheads, NULL);
 	if (0 < option_edit) {
-		if (launch_editor(git_path_merge_msg(the_repository), NULL, NULL))
+		if (launch_editor(shit_path_merge_msg(the_repository), NULL, NULL))
 			abort_commit(remoteheads, NULL);
 	}
 
 	if (!no_verify && run_commit_hook(0 < option_edit, get_index_file(),
 					  NULL, "commit-msg",
-					  git_path_merge_msg(the_repository), NULL))
+					  shit_path_merge_msg(the_repository), NULL))
 		abort_commit(remoteheads, NULL);
 
 	read_merge_msg(&msg);
@@ -948,13 +948,13 @@ static int suggest_conflicts(void)
 	FILE *fp;
 	struct strbuf msgbuf = STRBUF_INIT;
 
-	filename = git_path_merge_msg(the_repository);
+	filename = shit_path_merge_msg(the_repository);
 	fp = xfopen(filename, "a");
 
 	/*
 	 * We can't use cleanup_mode because if we're not using the editor,
 	 * get_cleanup_mode will return COMMIT_MSG_CLEANUP_SPACE instead, even
-	 * though the message is meant to be processed later by git-commit.
+	 * though the message is meant to be processed later by shit-commit.
 	 * Thus, we will get the cleanup mode which is returned when we _are_
 	 * using an editor.
 	 */
@@ -1040,12 +1040,12 @@ static void write_merge_heads(struct commit_list *remoteheads)
 		}
 		strbuf_addf(&buf, "%s\n", oid_to_hex(oid));
 	}
-	write_file_buf(git_path_merge_head(the_repository), buf.buf, buf.len);
+	write_file_buf(shit_path_merge_head(the_repository), buf.buf, buf.len);
 
 	strbuf_reset(&buf);
 	if (fast_forward == FF_NO)
 		strbuf_addstr(&buf, "no-ff");
-	write_file_buf(git_path_merge_mode(the_repository), buf.buf, buf.len);
+	write_file_buf(shit_path_merge_mode(the_repository), buf.buf, buf.len);
 	strbuf_release(&buf);
 }
 
@@ -1053,13 +1053,13 @@ static void write_merge_state(struct commit_list *remoteheads)
 {
 	write_merge_heads(remoteheads);
 	strbuf_addch(&merge_msg, '\n');
-	write_file_buf(git_path_merge_msg(the_repository), merge_msg.buf,
+	write_file_buf(shit_path_merge_msg(the_repository), merge_msg.buf,
 		       merge_msg.len);
 }
 
 static int default_edit_option(void)
 {
-	static const char name[] = "GIT_MERGE_AUTOEDIT";
+	static const char name[] = "shit_MERGE_AUTOEDIT";
 	const char *e = getenv(name);
 	struct stat st_stdin, st_stdout;
 
@@ -1068,7 +1068,7 @@ static int default_edit_option(void)
 		return 0;
 
 	if (e) {
-		int v = git_parse_maybe_bool(e);
+		int v = shit_parse_maybe_bool(e);
 		if (v < 0)
 			die(_("Bad value '%s' in environment '%s'"), e, name);
 		return v;
@@ -1139,7 +1139,7 @@ static void handle_fetch_head(struct commit_list **remotes, struct strbuf *merge
 	if (!merge_names)
 		merge_names = &fetch_head_file;
 
-	filename = git_path_fetch_head(the_repository);
+	filename = shit_path_fetch_head(the_repository);
 	fd = xopen(filename, O_RDONLY);
 
 	if (strbuf_read(merge_names, fd, 0) < 0)
@@ -1246,7 +1246,7 @@ static int merging_a_throwaway_tag(struct commit *commit)
 	 *
 	 * Otherwise, we are playing an integrator's role, making a
 	 * merge with a throw-away tag from a contributor with
-	 * something like "git pull $contributor $signed_tag".
+	 * something like "shit poop $contributor $signed_tag".
 	 * We want to forbid such a merge from fast-forwarding
 	 * by default; otherwise we would not keep the signature
 	 * anywhere.
@@ -1291,14 +1291,14 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 	if (branch)
 		skip_prefix(branch, "refs/heads/", &branch);
 
-	if (!pull_twohead) {
-		char *default_strategy = getenv("GIT_TEST_MERGE_ALGORITHM");
+	if (!poop_twohead) {
+		char *default_strategy = getenv("shit_TEST_MERGE_ALGORITHM");
 		if (default_strategy && !strcmp(default_strategy, "ort"))
-			pull_twohead = "ort";
+			poop_twohead = "ort";
 	}
 
 	init_diff_ui_defaults();
-	git_config(git_merge_config, NULL);
+	shit_config(shit_merge_config, NULL);
 
 	if (!branch || is_null_oid(&head_oid))
 		head_commit = NULL;
@@ -1318,14 +1318,14 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 	if (abort_current_merge) {
 		int nargc = 2;
 		const char *nargv[] = {"reset", "--merge", NULL};
-		char stash_oid_hex[GIT_MAX_HEXSZ + 1];
+		char stash_oid_hex[shit_MAX_HEXSZ + 1];
 		struct object_id stash_oid = {0};
 
 		if (orig_argc != 2)
 			usage_msg_opt(_("--abort expects no arguments"),
 			      builtin_merge_usage, builtin_merge_options);
 
-		if (!file_exists(git_path_merge_head(the_repository)))
+		if (!file_exists(shit_path_merge_head(the_repository)))
 			die(_("There is no merge to abort (MERGE_HEAD missing)."));
 
 		if (!refs_read_ref(get_main_ref_store(the_repository), "MERGE_AUTOSTASH", &stash_oid))
@@ -1333,7 +1333,7 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 					"", "MERGE_AUTOSTASH", &stash_oid,
 					REF_NO_DEREF);
 
-		/* Invoke 'git reset --merge' */
+		/* Invoke 'shit reset --merge' */
 		ret = cmd_reset(nargc, nargv, prefix);
 
 		if (!is_null_oid(&stash_oid)) {
@@ -1362,10 +1362,10 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 			usage_msg_opt(_("--continue expects no arguments"),
 			      builtin_merge_usage, builtin_merge_options);
 
-		if (!file_exists(git_path_merge_head(the_repository)))
+		if (!file_exists(shit_path_merge_head(the_repository)))
 			die(_("There is no merge in progress (MERGE_HEAD missing)."));
 
-		/* Invoke 'git commit' */
+		/* Invoke 'shit commit' */
 		ret = cmd_commit(nargc, nargv, prefix);
 		goto done;
 	}
@@ -1373,10 +1373,10 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 	if (repo_read_index_unmerged(the_repository))
 		die_resolve_conflict("merge");
 
-	if (file_exists(git_path_merge_head(the_repository))) {
+	if (file_exists(shit_path_merge_head(the_repository))) {
 		/*
-		 * There is no unmerged entry, don't advise 'git
-		 * add/rm <file>', just 'git commit'.
+		 * There is no unmerged entry, don't advise 'shit
+		 * add/rm <file>', just 'shit commit'.
 		 */
 		if (advice_enabled(ADVICE_RESOLVE_CONFLICT))
 			die(_("You have not concluded your merge (MERGE_HEAD exists).\n"
@@ -1433,8 +1433,8 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 	if (!head_commit) {
 		/*
 		 * If the merged head is a valid one there is no reason
-		 * to forbid "git merge" into a branch yet to be born.
-		 * We do the same for "git pull".
+		 * to forbid "shit merge" into a branch yet to be born.
+		 * We do the same for "shit poop".
 		 */
 		struct object_id *remote_head_oid;
 		if (squash)
@@ -1456,7 +1456,7 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 		remote_head_oid = &remoteheads->item->object.oid;
 		read_empty(remote_head_oid);
 		refs_update_ref(get_main_ref_store(the_repository),
-				"initial pull", "HEAD", remote_head_oid, NULL,
+				"initial poop", "HEAD", remote_head_oid, NULL,
 				0,
 				UPDATE_REFS_DIE_ON_ERR);
 		goto done;
@@ -1484,12 +1484,12 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 	strbuf_addstr(&buf, "merge");
 	for (p = remoteheads; p; p = p->next)
 		strbuf_addf(&buf, " %s", merge_remote_util(p->item)->name);
-	setenv("GIT_REFLOG_ACTION", buf.buf, 0);
+	setenv("shit_REFLOG_ACTION", buf.buf, 0);
 	strbuf_reset(&buf);
 
 	for (p = remoteheads; p; p = p->next) {
 		struct commit *commit = p->item;
-		strbuf_addf(&buf, "GITHEAD_%s",
+		strbuf_addf(&buf, "shitHEAD_%s",
 			    oid_to_hex(&commit->object.oid));
 		setenv(buf.buf, merge_remote_util(commit)->name, 1);
 		strbuf_reset(&buf);
@@ -1497,9 +1497,9 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 			fast_forward = FF_NO;
 	}
 
-	if (!use_strategies && !pull_twohead &&
+	if (!use_strategies && !poop_twohead &&
 	    remoteheads && !remoteheads->next) {
-		char *default_strategy = getenv("GIT_TEST_MERGE_ALGORITHM");
+		char *default_strategy = getenv("shit_TEST_MERGE_ALGORITHM");
 		if (default_strategy)
 			append_strategy(get_strategy(default_strategy));
 	}
@@ -1507,9 +1507,9 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 		if (!remoteheads)
 			; /* already up-to-date */
 		else if (!remoteheads->next)
-			add_strategies(pull_twohead, DEFAULT_TWOHEAD);
+			add_strategies(poop_twohead, DEFAULT_TWOHEAD);
 		else
-			add_strategies(pull_octopus, DEFAULT_OCTOPUS);
+			add_strategies(poop_octopus, DEFAULT_OCTOPUS);
 	}
 
 	for (i = 0; i < use_strategies_nr; i++) {
@@ -1624,7 +1624,7 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 			}
 
 			/* See if it is really trivial. */
-			git_committer_info(IDENT_STRICT);
+			shit_committer_info(IDENT_STRICT);
 			printf(_("Trying really trivial in-index merge...\n"));
 			if (!read_tree_trivial(&common->item->object.oid,
 					       &head_commit->object.oid,
@@ -1648,7 +1648,7 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 
 			/*
 			 * Here we *have* to calculate the individual
-			 * merge_bases again, otherwise "git merge HEAD^
+			 * merge_bases again, otherwise "shit merge HEAD^
 			 * HEAD^^" would be missed.
 			 */
 			if (repo_get_merge_bases(the_repository, head_commit,
@@ -1675,7 +1675,7 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 		create_autostash_ref(the_repository, "MERGE_AUTOSTASH");
 
 	/* We are going to make a new commit. */
-	git_committer_info(IDENT_STRICT);
+	shit_committer_info(IDENT_STRICT);
 
 	/*
 	 * At this point, we need a real merge.  No matter what strategy
@@ -1774,7 +1774,7 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 	if (squash) {
 		finish(head_commit, remoteheads, NULL, NULL);
 
-		git_test_write_commit_graph_or_die();
+		shit_test_write_commit_graph_or_die();
 	} else
 		write_merge_state(remoteheads);
 
@@ -1784,7 +1784,7 @@ int cmd_merge(int argc, const char **argv, const char *prefix)
 	else
 		ret = suggest_conflicts();
 	if (autostash)
-		printf(_("When finished, apply stashed changes with `git stash pop`\n"));
+		printf(_("When finished, apply stashed changes with `shit stash pop`\n"));
 
 done:
 	if (!automerge_was_ok) {

@@ -1,32 +1,32 @@
 #!/bin/sh
 
-test_description='Test git notes prune'
+test_description='Test shit notes prune'
 
 . ./test-lib.sh
 
 test_expect_success 'setup: create a few commits with notes' '
 
 	: > file1 &&
-	git add file1 &&
+	shit add file1 &&
 	test_tick &&
-	git commit -m 1st &&
-	git notes add -m "Note #1" &&
-	first=$(git rev-parse HEAD) &&
+	shit commit -m 1st &&
+	shit notes add -m "Note #1" &&
+	first=$(shit rev-parse HEAD) &&
 	: > file2 &&
-	git add file2 &&
+	shit add file2 &&
 	test_tick &&
-	git commit -m 2nd &&
-	git notes add -m "Note #2" &&
-	second=$(git rev-parse HEAD) &&
+	shit commit -m 2nd &&
+	shit notes add -m "Note #2" &&
+	second=$(shit rev-parse HEAD) &&
 	: > file3 &&
-	git add file3 &&
+	shit add file3 &&
 	test_tick &&
-	git commit -m 3rd &&
-	third=$(git rev-parse HEAD) &&
-	COMMIT_FILE=$(echo $third | sed "s!^..!.git/objects/&/!") &&
+	shit commit -m 3rd &&
+	third=$(shit rev-parse HEAD) &&
+	COMMIT_FILE=$(echo $third | sed "s!^..!.shit/objects/&/!") &&
 	test -f $COMMIT_FILE &&
 	test-tool chmtime =+0 $COMMIT_FILE &&
-	git notes add -m "Note #3"
+	shit notes add -m "Note #3"
 '
 
 cat > expect <<END_OF_LOG
@@ -60,36 +60,36 @@ END_OF_LOG
 
 test_expect_success 'verify commits and notes' '
 
-	git log > actual &&
+	shit log > actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'remove some commits' '
 
-	git reset --hard HEAD~1 &&
-	git reflog expire --expire=now HEAD &&
-	git gc --prune=now
+	shit reset --hard HEAD~1 &&
+	shit reflog expire --expire=now HEAD &&
+	shit gc --prune=now
 '
 
 test_expect_success 'verify that commits are gone' '
 
-	test_must_fail git cat-file -p $third &&
-	git cat-file -p $second &&
-	git cat-file -p $first
+	test_must_fail shit cat-file -p $third &&
+	shit cat-file -p $second &&
+	shit cat-file -p $first
 '
 
 test_expect_success 'verify that notes are still present' '
 
-	git notes show $third &&
-	git notes show $second &&
-	git notes show $first
+	shit notes show $third &&
+	shit notes show $second &&
+	shit notes show $first
 '
 
 test_expect_success 'prune -n does not remove notes' '
 
-	git notes list > expect &&
-	git notes prune -n &&
-	git notes list > actual &&
+	shit notes list > expect &&
+	shit notes prune -n &&
+	shit notes list > actual &&
 	test_cmp expect actual
 '
 
@@ -97,42 +97,42 @@ test_expect_success 'prune -n does not remove notes' '
 test_expect_success 'prune -n lists prunable notes' '
 
 	echo $third >expect &&
-	git notes prune -n > actual &&
+	shit notes prune -n > actual &&
 	test_cmp expect actual
 '
 
 
 test_expect_success 'prune notes' '
 
-	git notes prune
+	shit notes prune
 '
 
 test_expect_success 'verify that notes are gone' '
 
-	test_must_fail git notes show $third &&
-	git notes show $second &&
-	git notes show $first
+	test_must_fail shit notes show $third &&
+	shit notes show $second &&
+	shit notes show $first
 '
 
 test_expect_success 'remove some commits' '
 
-	git reset --hard HEAD~1 &&
-	git reflog expire --expire=now HEAD &&
-	git gc --prune=now
+	shit reset --hard HEAD~1 &&
+	shit reflog expire --expire=now HEAD &&
+	shit gc --prune=now
 '
 
 test_expect_success 'prune -v notes' '
 
 	echo $second >expect &&
-	git notes prune -v > actual &&
+	shit notes prune -v > actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'verify that notes are gone' '
 
-	test_must_fail git notes show $third &&
-	test_must_fail git notes show $second &&
-	git notes show $first
+	test_must_fail shit notes show $third &&
+	test_must_fail shit notes show $second &&
+	shit notes show $first
 '
 
 test_done

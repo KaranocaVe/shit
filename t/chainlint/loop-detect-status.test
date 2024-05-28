@@ -15,5 +15,5 @@
  echo "data 5" &&
  echo ">2gb" &&
  cat commit) |
-git fast-import --big-file-threshold=2 &&
+shit fast-import --big-file-threshold=2 &&
 test ! -f exit-status

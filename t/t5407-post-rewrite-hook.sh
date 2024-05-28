@@ -4,8 +4,8 @@
 #
 
 test_description='Test the post-rewrite hook.'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -14,16 +14,16 @@ test_expect_success 'setup' '
 	test_commit B foo B &&
 	test_commit C foo C &&
 	test_commit D foo D &&
-	git checkout A^0 &&
+	shit checkout A^0 &&
 	test_commit E bar E &&
 	test_commit F foo F &&
-	git checkout B &&
-	git merge E &&
-	git tag merge-E &&
+	shit checkout B &&
+	shit merge E &&
+	shit tag merge-E &&
 	test_commit G G &&
 	test_commit H H &&
 	test_commit I I &&
-	git checkout main &&
+	shit checkout main &&
 
 	test_hook --setup post-rewrite <<-EOF
 	echo \$@ > "$TRASH_DIRECTORY"/post-rewrite.args
@@ -40,126 +40,126 @@ verify_hook_input () {
 	test_cmp expected.data "$TRASH_DIRECTORY"/post-rewrite.data
 }
 
-test_expect_success 'git commit --amend' '
+test_expect_success 'shit commit --amend' '
 	clear_hook_input &&
 	echo "D new message" > newmsg &&
-	oldsha=$(git rev-parse HEAD^0) &&
-	git commit -Fnewmsg --amend &&
+	oldsha=$(shit rev-parse HEAD^0) &&
+	shit commit -Fnewmsg --amend &&
 	echo amend > expected.args &&
-	echo $oldsha $(git rev-parse HEAD^0) > expected.data &&
+	echo $oldsha $(shit rev-parse HEAD^0) > expected.data &&
 	verify_hook_input
 '
 
-test_expect_success 'git commit --amend --no-post-rewrite' '
+test_expect_success 'shit commit --amend --no-post-rewrite' '
 	clear_hook_input &&
 	echo "D new message again" > newmsg &&
-	git commit --no-post-rewrite -Fnewmsg --amend &&
+	shit commit --no-post-rewrite -Fnewmsg --amend &&
 	test ! -f post-rewrite.args &&
 	test ! -f post-rewrite.data
 '
 
-test_expect_success 'git rebase --apply' '
-	git reset --hard D &&
+test_expect_success 'shit rebase --apply' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	test_must_fail git rebase --apply --onto A B &&
+	test_must_fail shit rebase --apply --onto A B &&
 	echo C > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase --apply --skip' '
-	git reset --hard D &&
+test_expect_success 'shit rebase --apply --skip' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	test_must_fail git rebase --apply --onto A B &&
-	test_must_fail git rebase --skip &&
+	test_must_fail shit rebase --apply --onto A B &&
+	test_must_fail shit rebase --skip &&
 	echo D > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase --apply --skip the last one' '
-	git reset --hard F &&
+test_expect_success 'shit rebase --apply --skip the last one' '
+	shit reset --hard F &&
 	clear_hook_input &&
-	test_must_fail git rebase --apply --onto D A &&
-	git rebase --skip &&
+	test_must_fail shit rebase --apply --onto D A &&
+	shit rebase --skip &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse E) $(git rev-parse HEAD)
-	$(git rev-parse F) $(git rev-parse HEAD)
+	$(shit rev-parse E) $(shit rev-parse HEAD)
+	$(shit rev-parse F) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -m' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -m' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	test_must_fail git rebase -m --onto A B &&
+	test_must_fail shit rebase -m --onto A B &&
 	echo C > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -m --skip' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -m --skip' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	test_must_fail git rebase -m --onto A B &&
-	test_must_fail git rebase --skip &&
+	test_must_fail shit rebase -m --onto A B &&
+	test_must_fail shit rebase --skip &&
 	echo D > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase with implicit use of merge backend' '
-	git reset --hard D &&
+test_expect_success 'shit rebase with implicit use of merge backend' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	test_must_fail git rebase --keep-empty --onto A B &&
+	test_must_fail shit rebase --keep-empty --onto A B &&
 	echo C > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase --skip with implicit use of merge backend' '
-	git reset --hard D &&
+test_expect_success 'shit rebase --skip with implicit use of merge backend' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	test_must_fail git rebase --keep-empty --onto A B &&
-	test_must_fail git rebase --skip &&
+	test_must_fail shit rebase --keep-empty --onto A B &&
+	test_must_fail shit rebase --skip &&
 	echo D > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
@@ -175,11 +175,11 @@ test_fail_interactive_rebase () {
 		FAKE_LINES="$1" &&
 		shift &&
 		export FAKE_LINES &&
-		test_must_fail git rebase -i "$@"
+		test_must_fail shit rebase -i "$@"
 	)
 }
 
-test_expect_success 'git rebase with failed pick' '
+test_expect_success 'shit rebase with failed pick' '
 	clear_hook_input &&
 	cat >todo <<-\EOF &&
 	exec >bar
@@ -193,119 +193,119 @@ test_expect_success 'git rebase with failed pick' '
 
 	(
 		set_replace_editor todo &&
-		test_must_fail git rebase -i D D 2>err
+		test_must_fail shit rebase -i D D 2>err
 	) &&
 	grep "would be overwritten" err &&
 	rm bar &&
 
-	test_must_fail git rebase --continue 2>err &&
+	test_must_fail shit rebase --continue 2>err &&
 	grep "would be overwritten" err &&
 	rm G &&
 
-	test_must_fail git rebase --continue 2>err &&
+	test_must_fail shit rebase --continue 2>err &&
 	grep "would be overwritten" err &&
 	rm H &&
 
-	test_must_fail git rebase --continue 2>err &&
+	test_must_fail shit rebase --continue 2>err &&
 	grep "would be overwritten" err &&
 	rm I &&
 
-	git rebase --continue &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse merge-E) $(git rev-parse HEAD~2)
-	$(git rev-parse G) $(git rev-parse HEAD~1)
-	$(git rev-parse H) $(git rev-parse HEAD)
-	$(git rev-parse I) $(git rev-parse HEAD)
+	$(shit rev-parse merge-E) $(shit rev-parse HEAD~2)
+	$(shit rev-parse G) $(shit rev-parse HEAD~1)
+	$(shit rev-parse H) $(shit rev-parse HEAD)
+	$(shit rev-parse I) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -i (unchanged)' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -i (unchanged)' '
+	shit reset --hard D &&
 	clear_hook_input &&
 	test_fail_interactive_rebase "1 2" --onto A B &&
 	echo C > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -i (skip)' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -i (skip)' '
+	shit reset --hard D &&
 	clear_hook_input &&
 	test_fail_interactive_rebase "2" --onto A B &&
 	echo D > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -i (squash)' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -i (squash)' '
+	shit reset --hard D &&
 	clear_hook_input &&
 	test_fail_interactive_rebase "1 squash 2" --onto A B &&
 	echo C > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -i (fixup without conflict)' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -i (fixup without conflict)' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	FAKE_LINES="1 fixup 2" git rebase -i B &&
+	FAKE_LINES="1 fixup 2" shit rebase -i B &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -i (double edit)' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -i (double edit)' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	FAKE_LINES="edit 1 edit 2" git rebase -i B &&
-	git rebase --continue &&
+	FAKE_LINES="edit 1 edit 2" shit rebase -i B &&
+	shit rebase --continue &&
 	echo something > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '
 
-test_expect_success 'git rebase -i (exec)' '
-	git reset --hard D &&
+test_expect_success 'shit rebase -i (exec)' '
+	shit reset --hard D &&
 	clear_hook_input &&
-	FAKE_LINES="edit 1 exec_false 2" git rebase -i B &&
+	FAKE_LINES="edit 1 exec_false 2" shit rebase -i B &&
 	echo something >bar &&
-	git add bar &&
+	shit add bar &&
 	# Fails because of exec false
-	test_must_fail git rebase --continue &&
-	git rebase --continue &&
+	test_must_fail shit rebase --continue &&
+	shit rebase --continue &&
 	echo rebase >expected.args &&
 	cat >expected.data <<-EOF &&
-	$(git rev-parse C) $(git rev-parse HEAD^)
-	$(git rev-parse D) $(git rev-parse HEAD)
+	$(shit rev-parse C) $(shit rev-parse HEAD^)
+	$(shit rev-parse D) $(shit rev-parse HEAD)
 	EOF
 	verify_hook_input
 '

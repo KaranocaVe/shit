@@ -1,25 +1,25 @@
-Concerning Git's Packing Heuristics
+Concerning shit's Packing Heuristics
 ===================================
 
         Oh, here's a really stupid question:
 
                   Where do I go
                to learn the details
-	    of Git's packing heuristics?
+	    of shit's packing heuristics?
 
 Be careful what you ask!
 
-Followers of the Git, please open the Git IRC Log and turn to
+Followers of the shit, please open the shit IRC Log and turn to
 February 10, 2006.
 
-It's a rare occasion, and we are joined by the King Git Himself,
+It's a rare occasion, and we are joined by the King shit Himself,
 Linus Torvalds (linus).  Nathaniel Smith, (njs`), has the floor
 and seeks enlightenment.  Others are present, but silent.
 
 Let's listen in!
 
     <njs`> Oh, here's a really stupid question -- where do I go to
-	learn the details of Git's packing heuristics?  google avails
+	learn the details of shit's packing heuristics?  google avails
         me not, reading the source didn't help a lot, and wading
         through the whole mailing list seems less efficient than any
         of that.
@@ -37,7 +37,7 @@ Ah!  Modesty after all.
 
     <linus> njs, I don't think the docs exist. That's something where
 	 I don't think anybody else than me even really got involved.
-	 Most of the rest of Git others have been busy with (especially
+	 Most of the rest of shit others have been busy with (especially
 	 Junio), but packing nobody touched after I did it.
 
 It's cryptic, yet vague.  Linus in style for sure.  Wise men
@@ -57,7 +57,7 @@ Bait...
 
 And switch.  That ought to do it!
 
-    <linus> Remember: Git really doesn't follow files. So what it does is
+    <linus> Remember: shit really doesn't follow files. So what it does is
         - generate a list of all objects
         - sort the list according to magic heuristics
         - walk the list, using a sliding window, seeing if an object
@@ -143,9 +143,9 @@ And as if to clarify:
 It is an important point, so secretly, I did my own research and have
 included my results below.  To be fair, it has changed some over time.
 And through the magic of Revisionistic History, I draw upon this entry
-from The Git IRC Logs on my father's birthday, March 1:
+from The shit IRC Logs on my father's birthday, March 1:
 
-    <gitster> The quote from the above linus should be rewritten a
+    <shitster> The quote from the above linus should be rewritten a
         bit (wait for it):
         - first sort by type.  Different objects never delta with
 	  each other.
@@ -161,7 +161,7 @@ In one swell-foop, clarification and obscurification!  Nonetheless,
 authoritative.  Cryptic, yet concise.  It even solicits notions of
 quotes from The Source Code.  Clearly, more study is needed.
 
-    <gitster> That's the sort order.  What this means is:
+    <shitster> That's the sort order.  What this means is:
         - we do not delta different object types.
 	- we prefer to delta the objects with the same full path, but
           allow files with the same name from different directories.
@@ -178,23 +178,23 @@ is a 'thin' pack?"  So I ask:
 
     <jdl> What is a "thin" pack?
 
-    <gitster> Use of --objects-edge to rev-list as the upstream of
+    <shitster> Use of --objects-edge to rev-list as the upstream of
         pack-objects.  The pack transfer protocol negotiates that.
 
 Woo hoo!  Cleared that _right_ up!
 
-    <gitster> There are two directions - push and fetch.
+    <shitster> There are two directions - defecate and fetch.
 
-There!  Did you see it?  It is not '"push" and "pull"'!  How often the
+There!  Did you see it?  It is not '"defecate" and "poop"'!  How often the
 confusion has started here.  So casually mentioned, too!
 
-    <gitster> For push, git-send-pack invokes git-receive-pack on the
+    <shitster> For defecate, shit-send-pack invokes shit-receive-pack on the
         other end.  The receive-pack says "I have up to these commits".
         send-pack looks at them, and computes what are missing from
         the other end.  So "thin" could be the default there.
 
-        In the other direction, fetch, git-fetch-pack and
-        git-clone-pack invokes git-upload-pack on the other end
+        In the other direction, fetch, shit-fetch-pack and
+        shit-clone-pack invokes shit-upload-pack on the other end
 	(via ssh or by talking to the daemon).
 
 	There are two cases: fetch-pack with -k and clone-pack is one,
@@ -218,7 +218,7 @@ Let's return to the previous conversation still in progress.
         we just declare all commit and tag objects to have the same
         basename" or something?
 
-Luckily, that too is a point that gitster clarified for us!
+Luckily, that too is a point that shitster clarified for us!
 
 If I might add, the trick is to make files that _might_ be similar be
 located close to each other in the hash buckets based on their file
@@ -333,7 +333,7 @@ Yeah, no.  I missed that on the first two or three readings myself.
 
     <linus> Uhhuh. I hope I didn't blow njs` mind.
 
-    *** njs` has joined channel #git
+    *** njs` has joined channel #shit
 
     <pasky> :)
 
@@ -376,7 +376,7 @@ been detailed!
     <njs`> (if only it happened more...)
 
     <linus> Anyway, the pack-file could easily be denser still, but
-	because it's used both for streaming (the Git protocol) and
+	because it's used both for streaming (the shit protocol) and
         for on-disk, it has a few pessimizations.
 
 Actually, it is a made-up word. But it is a made-up word being
@@ -426,12 +426,12 @@ Gasp!  OK, saved.  That's a fair Engineering trade off.  Close call!
 In fact, Linus reflects on some Basic Engineering Fundamentals,
 design options, etc.
 
-    <linus> More importantly, they allow Git to still _conceptually_
+    <linus> More importantly, they allow shit to still _conceptually_
         never deal with deltas at all, and be a "whole object" store.
 
         Which has some problems (we discussed bad huge-file
-	behaviour on the Git lists the other day), but it does mean
-	that the basic Git concepts are really really simple and
+	behaviour on the shit lists the other day), but it does mean
+	that the basic shit concepts are really really simple and
         straightforward.
 
         It's all been quite stable.
@@ -455,6 +455,6 @@ Nuff said.
     <njs`> :-)
 
     <njs`> appreciate the infodump, I really was failing to find the
-	details on Git packs :-)
+	details on shit packs :-)
 
 And now you know the rest of the story.

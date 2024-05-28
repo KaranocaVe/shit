@@ -36,11 +36,11 @@ test_expect_success 'setup' '
 
 	mkdir "$FN" &&
 	for_each_name "echo initial >\"\$name\"" &&
-	git add . &&
-	git commit -q -m Initial &&
+	shit add . &&
+	shit commit -q -m Initial &&
 
 	for_each_name "echo second >\"\$name\"" &&
-	git commit -a -m Second &&
+	shit commit -a -m Second &&
 
 	for_each_name "echo modified >\"\$name\""
 
@@ -78,74 +78,74 @@ EOF
 
 test_expect_success 'check fully quoted output from ls-files' '
 
-	git ls-files >current && test_cmp expect.quoted current
+	shit ls-files >current && test_cmp expect.quoted current
 
 '
 
 test_expect_success 'check fully quoted output from diff-files' '
 
-	git diff --name-only >current &&
+	shit diff --name-only >current &&
 	test_cmp expect.quoted current
 
 '
 
 test_expect_success 'check fully quoted output from diff-index' '
 
-	git diff --name-only HEAD >current &&
+	shit diff --name-only HEAD >current &&
 	test_cmp expect.quoted current
 
 '
 
 test_expect_success 'check fully quoted output from diff-tree' '
 
-	git diff --name-only HEAD^ HEAD >current &&
+	shit diff --name-only HEAD^ HEAD >current &&
 	test_cmp expect.quoted current
 
 '
 
 test_expect_success 'check fully quoted output from ls-tree' '
 
-	git ls-tree --name-only -r HEAD >current &&
+	shit ls-tree --name-only -r HEAD >current &&
 	test_cmp expect.quoted current
 
 '
 
 test_expect_success 'setting core.quotepath' '
 
-	git config --bool core.quotepath false
+	shit config --bool core.quotepath false
 
 '
 
 test_expect_success 'check fully quoted output from ls-files' '
 
-	git ls-files >current && test_cmp expect.raw current
+	shit ls-files >current && test_cmp expect.raw current
 
 '
 
 test_expect_success 'check fully quoted output from diff-files' '
 
-	git diff --name-only >current &&
+	shit diff --name-only >current &&
 	test_cmp expect.raw current
 
 '
 
 test_expect_success 'check fully quoted output from diff-index' '
 
-	git diff --name-only HEAD >current &&
+	shit diff --name-only HEAD >current &&
 	test_cmp expect.raw current
 
 '
 
 test_expect_success 'check fully quoted output from diff-tree' '
 
-	git diff --name-only HEAD^ HEAD >current &&
+	shit diff --name-only HEAD^ HEAD >current &&
 	test_cmp expect.raw current
 
 '
 
 test_expect_success 'check fully quoted output from ls-tree' '
 
-	git ls-tree --name-only -r HEAD >current &&
+	shit ls-tree --name-only -r HEAD >current &&
 	test_cmp expect.raw current
 
 '

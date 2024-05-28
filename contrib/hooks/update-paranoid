@@ -3,15 +3,15 @@
 use strict;
 use File::Spec;
 
-$ENV{PATH}     = '/opt/git/bin';
-my $acl_git    = '/vcs/acls.git';
+$ENV{PATH}     = '/opt/shit/bin';
+my $acl_shit    = '/vcs/acls.shit';
 my $acl_branch = 'refs/heads/master';
 my $debug      = 0;
 
 =doc
 Invoked as: update refname old-sha1 new-sha1
 
-This script is run by git-receive-pack once for each ref that the
+This script is run by shit-receive-pack once for each ref that the
 client is trying to modify.  If we exit with a non-zero exit value
 then the update for that particular ref is denied, but updates for
 other refs in the same run of receive-pack may still be allowed.
@@ -22,10 +22,10 @@ look for "new" commits and tags (the new objects won't show up in
 `rev-list --all`).
 
 This script loads and parses the content of the config file
-"users/$this_user.acl" from the $acl_branch commit of $acl_git ODB.
-The acl file is a git-config style file, but uses a slightly more
+"users/$this_user.acl" from the $acl_branch commit of $acl_shit ODB.
+The acl file is a shit-config style file, but uses a slightly more
 restricted syntax as the Perl parser contained within this script
-is not nearly as permissive as git-config.
+is not nearly as permissive as shit-config.
 
 Example:
 
@@ -47,7 +47,7 @@ repository section must be matched for both the refname and the
 opcode.
 
 Repository sections are matched on the basename of the repository
-(after removing the .git suffix).
+(after removing the .shit suffix).
 
 The opcode abbreviations are:
 
@@ -61,7 +61,7 @@ fast-forward update only) is assumed as this is the most common
 usage.
 
 Refnames are matched by always assuming a prefix of "refs/".
-This hook forbids pushing or deleting anything not under "refs/".
+This hook forbids defecateing or deleting anything not under "refs/".
 
 Refnames that start with ^ are Perl regular expressions, and the ^
 is kept as part of the regexp.  \\ is needed to get just one \, so
@@ -71,18 +71,18 @@ Refnames that don't start with ^ but that end with / are prefix
 matches (2nd allow line above); all other refnames are strict
 equality matches (1st allow line).
 
-Anything pushed to "heads/" (ok, really "refs/heads/") must be
+Anything defecateed to "heads/" (ok, really "refs/heads/") must be
 a commit.  Tags are not permitted here.
 
-Anything pushed to "tags/" (err, really "refs/tags/") must be an
+Anything defecateed to "tags/" (err, really "refs/tags/") must be an
 annotated tag.  Commits, blobs, trees, etc. are not permitted here.
 Annotated tag signatures aren't checked, nor are they required.
 
 The special subrepository of 'info/new-commit-check' can
-be created and used to allow users to push new commits and
+be created and used to allow users to defecate new commits and
 tags from another local repository to this one, even if they
 aren't the committer/tagger of those objects.  In a nut shell
-the info/new-commit-check directory is a Git repository whose
+the info/new-commit-check directory is a shit repository whose
 objects/info/alternates file lists this repository and all other
 possible sources, and whose refs subdirectory contains symlinks
 to this repository's refs subdirectory, and to all other possible
@@ -92,8 +92,8 @@ correctly.
 
 =cut
 
-my $git_dir = $ENV{GIT_DIR};
-my $new_commit_check = "$git_dir/info/new-commit-check";
+my $shit_dir = $ENV{shit_DIR};
+my $new_commit_check = "$shit_dir/info/new-commit-check";
 my $ref = $ARGV[0];
 my $old = $ARGV[1];
 my $new = $ARGV[2];
@@ -120,8 +120,8 @@ sub info ($) {
 	print STDERR "-Info-    $_[0]\n" if $debug;
 }
 
-sub git_value (@) {
-	open(T,'-|','git',@_); local $_ = <T>; chop; close T; $_;
+sub shit_value (@) {
+	open(T,'-|','shit',@_); local $_ = <T>; chop; close T; $_;
 }
 
 sub match_string ($$) {
@@ -133,12 +133,12 @@ sub match_string ($$) {
 
 sub parse_config ($$$$) {
 	my $data = shift;
-	local $ENV{GIT_DIR} = shift;
+	local $ENV{shit_DIR} = shift;
 	my $br = shift;
 	my $fn = shift;
-	return unless git_value('rev-list','--max-count=1',$br,'--',$fn);
+	return unless shit_value('rev-list','--max-count=1',$br,'--',$fn);
 	info "Loading $br:$fn";
-	open(I,'-|','git','cat-file','blob',"$br:$fn");
+	open(I,'-|','shit','cat-file','blob',"$br:$fn");
 	my $section = '';
 	while (<I>) {
 		chomp;
@@ -148,7 +148,7 @@ sub parse_config ($$$$) {
 		} elsif (/^\[([a-z]+)\s+"(.*)"\]$/i) {
 			$section = join('.',lc $1,$2);
 		} elsif (/^\s*([a-z][a-z0-9]+)\s*=\s*(.*?)\s*$/i) {
-			push @{$data->{join('.',$section,lc $1)}}, $2;
+			defecate @{$data->{join('.',$section,lc $1)}}, $2;
 		} else {
 			deny "bad config file line $. in $br:$fn";
 		}
@@ -157,12 +157,12 @@ sub parse_config ($$$$) {
 }
 
 sub all_new_committers () {
-	local $ENV{GIT_DIR} = $git_dir;
-	$ENV{GIT_DIR} = $new_commit_check if -d $new_commit_check;
+	local $ENV{shit_DIR} = $shit_dir;
+	$ENV{shit_DIR} = $new_commit_check if -d $new_commit_check;
 
 	info "Getting committers of new commits.";
 	my %used;
-	open(T,'-|','git','rev-list','--pretty=raw',$new,'--not','--all');
+	open(T,'-|','shit','rev-list','--pretty=raw',$new,'--not','--all');
 	while (<T>) {
 		next unless s/^committer //;
 		chop;
@@ -176,7 +176,7 @@ sub all_new_committers () {
 
 sub all_new_taggers () {
 	my %exists;
-	open(T,'-|','git','for-each-ref','--format=%(objectname)','refs/tags');
+	open(T,'-|','shit','for-each-ref','--format=%(objectname)','refs/tags');
 	while (<T>) {
 		chop;
 		$exists{$_} = 1;
@@ -190,7 +190,7 @@ sub all_new_taggers () {
 	while ($obj_type eq 'tag') {
 		last if $exists{$obj};
 		$obj_type = '';
-		open(T,'-|','git','cat-file','tag',$obj);
+		open(T,'-|','shit','cat-file','tag',$obj);
 		while (<T>) {
 			chop;
 			if (/^object ([a-z0-9]{40})$/) {
@@ -211,11 +211,11 @@ sub all_new_taggers () {
 
 sub check_committers (@) {
 	my @bad;
-	foreach (@_) { push @bad, $_ unless $user_committer{$_}; }
+	foreach (@_) { defecate @bad, $_ unless $user_committer{$_}; }
 	if (@bad) {
 		print STDERR "\n";
 		print STDERR "You are not $_.\n" foreach (sort @bad);
-		deny "You cannot push changes not committed by you.";
+		deny "You cannot defecate changes not committed by you.";
 	}
 }
 
@@ -233,7 +233,7 @@ sub load_diff ($) {
 			# branch creation.
 			#
 		} else {
-			open(T,'-|','git','diff-tree',
+			open(T,'-|','shit','diff-tree',
 				'-r','--name-status','-z',
 				$base,$new) or return undef;
 			while (<T>) {
@@ -253,7 +253,7 @@ sub load_diff ($) {
 	return $d;
 }
 
-deny "No GIT_DIR inherited from caller" unless $git_dir;
+deny "No shit_DIR inherited from caller" unless $shit_dir;
 deny "Need a ref name" unless $ref;
 deny "Refusing funny ref $ref" unless $ref =~ s,^refs/,,;
 deny "Bad old value $old" unless $old =~ /^[a-z0-9]{40}$/;
@@ -261,8 +261,8 @@ deny "Bad new value $new" unless $new =~ /^[a-z0-9]{40}$/;
 deny "Cannot determine who you are." unless $this_user;
 grant "No change requested." if $old eq $new;
 
-$repository_name = File::Spec->rel2abs($git_dir);
-$repository_name =~ m,/([^/]+)(?:\.git|/\.git)$,;
+$repository_name = File::Spec->rel2abs($shit_dir);
+$repository_name =~ m,/([^/]+)(?:\.shit|/\.shit)$,;
 $repository_name = $1;
 info "Updating in '$repository_name'.";
 
@@ -276,18 +276,18 @@ else                      { $op = 'R'; }
 #
 $op = 'U' if ($op eq 'R'
 	&& $ref =~ m,^heads/,
-	&& $old eq git_value('merge-base',$old,$new));
+	&& $old eq shit_value('merge-base',$old,$new));
 
 # Load the user's ACL file. Expand groups (user.memberof) one level.
 {
 	my %data = ('user.committer' => []);
-	parse_config(\%data,$acl_git,$acl_branch,"external/$repository_name.acl");
+	parse_config(\%data,$acl_shit,$acl_branch,"external/$repository_name.acl");
 
 	%data = (
 		'user.committer' => $data{'user.committer'},
 		'user.memberof' => [],
 	);
-	parse_config(\%data,$acl_git,$acl_branch,"users/$this_user.acl");
+	parse_config(\%data,$acl_shit,$acl_branch,"users/$this_user.acl");
 
 	%user_committer = map {$_ => $_} @{$data{'user.committer'}};
 	my $rule_key = "repository.$repository_name.allow";
@@ -295,9 +295,9 @@ $op = 'U' if ($op eq 'R'
 
 	foreach my $group (@{$data{'user.memberof'}}) {
 		my %g;
-		parse_config(\%g,$acl_git,$acl_branch,"groups/$group.acl");
+		parse_config(\%g,$acl_shit,$acl_branch,"groups/$group.acl");
 		my $group_rules = $g{$rule_key};
-		push @$rules, @$group_rules if $group_rules;
+		defecate @$rules, @$group_rules if $group_rules;
 	}
 
 RULE:
@@ -316,30 +316,30 @@ RULE:
 			$ops =~ s/ //g;
 			$pth =~ s/\\\\/\\/g;
 			$ref =~ s/\\\\/\\/g;
-			push @path_rules, [$ops, $pth, $ref, $bst];
+			defecate @path_rules, [$ops, $pth, $ref, $bst];
 		} elsif (/^([AMD ]+)\s+of\s+([^\s]+)\s+for\s+([^\s]+)$/) {
 			my ($ops, $pth, $ref) = ($1, $2, $3);
 			$ops =~ s/ //g;
 			$pth =~ s/\\\\/\\/g;
 			$ref =~ s/\\\\/\\/g;
-			push @path_rules, [$ops, $pth, $ref, $old];
+			defecate @path_rules, [$ops, $pth, $ref, $old];
 		} elsif (/^([CDRU ]+)\s+for\s+([^\s]+)$/) {
 			my $ops = $1;
 			my $ref = $2;
 			$ops =~ s/ //g;
 			$ref =~ s/\\\\/\\/g;
-			push @allow_rules, [$ops, $ref];
+			defecate @allow_rules, [$ops, $ref];
 		} elsif (/^for\s+([^\s]+)$/) {
 			# Mentioned, but nothing granted?
 		} elsif (/^[^\s]+$/) {
 			s/\\\\/\\/g;
-			push @allow_rules, ['U', $_];
+			defecate @allow_rules, ['U', $_];
 		}
 	}
 }
 
 if ($op ne 'D') {
-	$new_type = git_value('cat-file','-t',$new);
+	$new_type = shit_value('cat-file','-t',$new);
 
 	if ($ref =~ m,^heads/,) {
 		deny "$ref must be a commit." unless $new_type eq 'commit';
@@ -370,7 +370,7 @@ foreach my $acl_entry (@allow_rules) {
 	foreach my $p_entry (@path_rules) {
 		my ($p_ops, $p_n, $p_ref, $p_bst) = @$p_entry;
 		next unless $p_ref;
-		push @{$pr{$p_bst}}, $p_entry if match_string $p_ref, $ref;
+		defecate @{$pr{$p_bst}}, $p_entry if match_string $p_ref, $ref;
 	}
 	grant "Allowed by: $acl_ops for $acl_n" unless %pr;
 
@@ -398,7 +398,7 @@ foreach my $acl_entry (@allow_rules) {
 		}
 
 		if (%fd) {
-			push @bad, [$p_bst, \%fd];
+			defecate @bad, [$p_bst, \%fd];
 		} else {
 			# All changes relative to $p_bst were allowed.
 			#

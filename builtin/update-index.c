@@ -1,5 +1,5 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
@@ -34,7 +34,7 @@
  * Default to not allowing changes to the list of files. The
  * tool doesn't actually care, but this makes it harder to add
  * files to the revision control by mistake by doing something
- * like "git update-index *" and suddenly having all the object
+ * like "shit update-index *" and suddenly having all the object
  * files be revision controlled.
  */
 static int allow_add;
@@ -318,7 +318,7 @@ static int add_one_path(const struct cache_entry *old, const char *path, int len
 /*
  * Handle a path that was a directory. Four cases:
  *
- *  - it's already a gitlink in the index, and we keep it that
+ *  - it's already a shitlink in the index, and we keep it that
  *    way, and update it if we can (if we cannot find the HEAD,
  *    we're going to keep it unchanged in the index!)
  *
@@ -336,20 +336,20 @@ static int add_one_path(const struct cache_entry *old, const char *path, int len
  *    to try to update it as a directory.
  *
  *  - it doesn't exist at all in the index, but it is a valid
- *    git directory, and it should be *added* as a gitlink.
+ *    shit directory, and it should be *added* as a shitlink.
  */
 static int process_directory(const char *path, int len, struct stat *st)
 {
 	struct object_id oid;
 	int pos = index_name_pos(the_repository->index, path, len);
 
-	/* Exact match: file or existing gitlink */
+	/* Exact match: file or existing shitlink */
 	if (pos >= 0) {
 		const struct cache_entry *ce = the_repository->index->cache[pos];
-		if (S_ISGITLINK(ce->ce_mode)) {
+		if (S_ISshitLINK(ce->ce_mode)) {
 
 			/* Do nothing to the index if there is no HEAD! */
-			if (resolve_gitlink_ref(path, "HEAD", &oid) < 0)
+			if (resolve_shitlink_ref(path, "HEAD", &oid) < 0)
 				return 0;
 
 			return add_one_path(ce, path, len, st);
@@ -374,8 +374,8 @@ static int process_directory(const char *path, int len, struct stat *st)
 		return error("%s: is a directory - add individual files instead", path);
 	}
 
-	/* No match - should we add it as a gitlink? */
-	if (!resolve_gitlink_ref(path, "HEAD", &oid))
+	/* No match - should we add it as a shitlink? */
+	if (!resolve_shitlink_ref(path, "HEAD", &oid))
 		return add_one_path(NULL, path, len, st);
 
 	/* Error out. */
@@ -461,7 +461,7 @@ static void chmod_path(char flip, const char *path)
 	report("chmod %cx '%s'", flip, path);
 	return;
  fail:
-	die("git update-index: cannot chmod %cx '%s'", flip, path);
+	die("shit update-index: cannot chmod %cx '%s'", flip, path);
 }
 
 static void update_one(const char *path)
@@ -499,7 +499,7 @@ static void update_one(const char *path)
 
 	if (force_remove) {
 		if (remove_file_from_index(the_repository->index, path))
-			die("git update-index: unable to remove %s", path);
+			die("shit update-index: unable to remove %s", path);
 		report("remove '%s'", path);
 		return;
 	}
@@ -527,18 +527,18 @@ static void read_index_info(int nul_term_line)
 		/* This reads lines formatted in one of three formats:
 		 *
 		 * (1) mode         SP sha1          TAB path
-		 * The first format is what "git apply --index-info"
+		 * The first format is what "shit apply --index-info"
 		 * reports, and used to reconstruct a partial tree
 		 * that is used for phony merge base tree when falling
 		 * back on 3-way merge.
 		 *
 		 * (2) mode SP type SP sha1          TAB path
-		 * The second format is to stuff "git ls-tree" output
+		 * The second format is to stuff "shit ls-tree" output
 		 * into the index file.
 		 *
 		 * (3) mode         SP sha1 SP stage TAB path
 		 * This format is to put higher order stages into the
-		 * index file and matches "git ls-files --stage" output.
+		 * index file and matches "shit ls-files --stage" output.
 		 */
 		errno = 0;
 		ul = strtoul(buf.buf, &ptr, 8);
@@ -569,7 +569,7 @@ static void read_index_info(int nul_term_line)
 		if (!nul_term_line && path_name[0] == '"') {
 			strbuf_reset(&uq);
 			if (unquote_c_style(&uq, path_name, NULL)) {
-				die("git update-index: bad quoting of path name");
+				die("shit update-index: bad quoting of path name");
 			}
 			path_name = uq.buf;
 		}
@@ -582,7 +582,7 @@ static void read_index_info(int nul_term_line)
 		if (!mode) {
 			/* mode == 0 means there is no such path -- remove */
 			if (remove_file_from_index(the_repository->index, path_name))
-				die("git update-index: unable to remove %s",
+				die("shit update-index: unable to remove %s",
 				    ptr);
 		}
 		else {
@@ -592,7 +592,7 @@ static void read_index_info(int nul_term_line)
 			 */
 			ptr[-(hexsz + 2)] = ptr[-1] = 0;
 			if (add_cacheinfo(mode, &oid, path_name, stage))
-				die("git update-index: unable to update %s",
+				die("shit update-index: unable to update %s",
 				    path_name);
 		}
 		continue;
@@ -605,7 +605,7 @@ static void read_index_info(int nul_term_line)
 }
 
 static const char * const update_index_usage[] = {
-	N_("git update-index [<options>] [--] [<file>...]"),
+	N_("shit update-index [<options>] [--] [<file>...]"),
 	NULL
 };
 
@@ -828,7 +828,7 @@ static enum parse_opt_result cacheinfo_callback(
 
 	if (!parse_new_style_cacheinfo(ctx->argv[1], &mode, &oid, &path)) {
 		if (add_cacheinfo(mode, &oid, path, 0))
-			die("git update-index: --cacheinfo cannot add %s", path);
+			die("shit update-index: --cacheinfo cannot add %s", path);
 		ctx->argv++;
 		ctx->argc--;
 		return 0;
@@ -838,7 +838,7 @@ static enum parse_opt_result cacheinfo_callback(
 	if (strtoul_ui(*++ctx->argv, 8, &mode) ||
 	    get_oid_hex(*++ctx->argv, &oid) ||
 	    add_cacheinfo(mode, &oid, *++ctx->argv, 0))
-		die("git update-index: --cacheinfo cannot add %s", *ctx->argv);
+		die("shit update-index: --cacheinfo cannot add %s", *ctx->argv);
 	ctx->argc -= 3;
 	return 0;
 }
@@ -1042,7 +1042,7 @@ int cmd_update_index(int argc, const char **argv, const char *prefix)
 	if (argc == 2 && !strcmp(argv[1], "-h"))
 		usage_with_options(update_index_usage, options);
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	prepare_repo_settings(r);
 	the_repository->settings.command_requires_full_index = 0;
@@ -1155,7 +1155,7 @@ int cmd_update_index(int argc, const char **argv, const char *prefix)
 	end_odb_transaction();
 
 	if (split_index > 0) {
-		if (git_config_get_split_index() == 0)
+		if (shit_config_get_split_index() == 0)
 			warning(_("core.splitIndex is set to false; "
 				  "remove or change it, if you really want to "
 				  "enable split index"));
@@ -1164,7 +1164,7 @@ int cmd_update_index(int argc, const char **argv, const char *prefix)
 		else
 			add_split_index(the_repository->index);
 	} else if (!split_index) {
-		if (git_config_get_split_index() == 1)
+		if (shit_config_get_split_index() == 1)
 			warning(_("core.splitIndex is set to true; "
 				  "remove or change it, if you really want to "
 				  "disable split index"));
@@ -1193,7 +1193,7 @@ int cmd_update_index(int argc, const char **argv, const char *prefix)
 				  "remove or change it, if you really want to "
 				  "enable the untracked cache"));
 		add_untracked_cache(the_repository->index);
-		report(_("Untracked cache enabled for '%s'"), get_git_work_tree());
+		report(_("Untracked cache enabled for '%s'"), get_shit_work_tree());
 		break;
 	default:
 		BUG("bad untracked_cache value: %d", untracked_cache);

@@ -65,10 +65,10 @@ extern struct notes_tree {
  * is passed to init_notes().
  *
  * This the first of the following to be defined:
- * 1. The '--ref' option to 'git notes', if given
- * 2. The $GIT_NOTES_REF environment variable, if set
+ * 1. The '--ref' option to 'shit notes', if given
+ * 2. The $shit_NOTES_REF environment variable, if set
  * 3. The value of the core.notesRef config variable, if set
- * 4. GIT_NOTES_DEFAULT_REF (i.e. "refs/notes/commits")
+ * 4. shit_NOTES_DEFAULT_REF (i.e. "refs/notes/commits")
  */
 const char *default_notes_ref(void);
 
@@ -89,7 +89,7 @@ const char *default_notes_ref(void);
 
 /*
  * Initialize the given notes_tree with the notes tree structure at the given
- * ref. If given ref is NULL, the value of the $GIT_NOTES_REF environment
+ * ref. If given ref is NULL, the value of the $shit_NOTES_REF environment
  * variable is used, and if that is missing, the default notes ref is used
  * ("refs/notes/commits").
  *
@@ -323,7 +323,7 @@ void string_list_add_refs_by_glob(struct string_list *list, const char *glob);
 /*
  * Add all refs from a colon-separated glob list 'globs' to the end of
  * 'list'.  Empty components are ignored.  This helper is used to
- * parse GIT_NOTES_DISPLAY_REF style environment variables.
+ * parse shit_NOTES_DISPLAY_REF style environment variables.
  */
 void string_list_add_refs_from_colon_sep(struct string_list *list,
 					 const char *globs);

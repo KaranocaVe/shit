@@ -38,155 +38,155 @@
 #
 
 create_lib_submodule_repo () {
-	git init submodule_update_sub1 &&
+	shit init submodule_update_sub1 &&
 	(
 		cd submodule_update_sub1 &&
-		echo "expect" >>.gitignore &&
-		echo "actual" >>.gitignore &&
+		echo "expect" >>.shitignore &&
+		echo "actual" >>.shitignore &&
 		echo "x" >file1 &&
 		echo "y" >file2 &&
-		git add .gitignore file1 file2 &&
-		git commit -m "Base inside first submodule" &&
-		git branch "no_submodule"
+		shit add .shitignore file1 file2 &&
+		shit commit -m "Base inside first submodule" &&
+		shit branch "no_submodule"
 	) &&
-	git init submodule_update_sub2 &&
+	shit init submodule_update_sub2 &&
 	(
 		cd submodule_update_sub2
-		echo "expect" >>.gitignore &&
-		echo "actual" >>.gitignore &&
+		echo "expect" >>.shitignore &&
+		echo "actual" >>.shitignore &&
 		echo "x" >file1 &&
 		echo "y" >file2 &&
-		git add .gitignore file1 file2 &&
-		git commit -m "nested submodule base" &&
-		git branch "no_submodule"
+		shit add .shitignore file1 file2 &&
+		shit commit -m "nested submodule base" &&
+		shit branch "no_submodule"
 	) &&
-	git init submodule_update_repo &&
+	shit init submodule_update_repo &&
 	(
 		cd submodule_update_repo &&
-		branch=$(git symbolic-ref --short HEAD) &&
-		echo "expect" >>.gitignore &&
-		echo "actual" >>.gitignore &&
+		branch=$(shit symbolic-ref --short HEAD) &&
+		echo "expect" >>.shitignore &&
+		echo "actual" >>.shitignore &&
 		echo "x" >file1 &&
 		echo "y" >file2 &&
-		git add .gitignore file1 file2 &&
-		git commit -m "Base" &&
-		git branch "no_submodule" &&
+		shit add .shitignore file1 file2 &&
+		shit commit -m "Base" &&
+		shit branch "no_submodule" &&
 
-		git checkout -b "add_sub1" &&
-		git submodule add ../submodule_update_sub1 sub1 &&
-		git submodule add ../submodule_update_sub1 uninitialized_sub &&
-		git config -f .gitmodules submodule.sub1.ignore all &&
-		git config submodule.sub1.ignore all &&
-		git add .gitmodules &&
-		git commit -m "Add sub1" &&
+		shit checkout -b "add_sub1" &&
+		shit submodule add ../submodule_update_sub1 sub1 &&
+		shit submodule add ../submodule_update_sub1 uninitialized_sub &&
+		shit config -f .shitmodules submodule.sub1.ignore all &&
+		shit config submodule.sub1.ignore all &&
+		shit add .shitmodules &&
+		shit commit -m "Add sub1" &&
 
-		git checkout -b remove_sub1 add_sub1 &&
-		git revert HEAD &&
+		shit checkout -b remove_sub1 add_sub1 &&
+		shit revert HEAD &&
 
-		git checkout -b modify_sub1 add_sub1 &&
-		git submodule update &&
+		shit checkout -b modify_sub1 add_sub1 &&
+		shit submodule update &&
 		(
 			cd sub1 &&
-			git fetch &&
-			git checkout -b "modifications" &&
+			shit fetch &&
+			shit checkout -b "modifications" &&
 			echo "z" >file2 &&
 			echo "x" >file3 &&
-			git add file2 file3 &&
-			git commit -m "modified file2 and added file3" &&
-			git push origin modifications
+			shit add file2 file3 &&
+			shit commit -m "modified file2 and added file3" &&
+			shit defecate origin modifications
 		) &&
-		git add sub1 &&
-		git commit -m "Modify sub1" &&
+		shit add sub1 &&
+		shit commit -m "Modify sub1" &&
 
-		git checkout -b add_nested_sub modify_sub1 &&
-		git -C sub1 checkout -b "add_nested_sub" &&
-		git -C sub1 submodule add --branch no_submodule ../submodule_update_sub2 sub2 &&
-		git -C sub1 commit -a -m "add a nested submodule" &&
-		git add sub1 &&
-		git commit -a -m "update submodule, that updates a nested submodule" &&
-		git checkout -b modify_sub1_recursively &&
-		git -C sub1 checkout -b modify_sub1_recursively &&
-		git -C sub1/sub2 checkout -b modify_sub1_recursively &&
+		shit checkout -b add_nested_sub modify_sub1 &&
+		shit -C sub1 checkout -b "add_nested_sub" &&
+		shit -C sub1 submodule add --branch no_submodule ../submodule_update_sub2 sub2 &&
+		shit -C sub1 commit -a -m "add a nested submodule" &&
+		shit add sub1 &&
+		shit commit -a -m "update submodule, that updates a nested submodule" &&
+		shit checkout -b modify_sub1_recursively &&
+		shit -C sub1 checkout -b modify_sub1_recursively &&
+		shit -C sub1/sub2 checkout -b modify_sub1_recursively &&
 		echo change >sub1/sub2/file3 &&
-		git -C sub1/sub2 add file3 &&
-		git -C sub1/sub2 commit -m "make a change in nested sub" &&
-		git -C sub1 add sub2 &&
-		git -C sub1 commit -m "update nested sub" &&
-		git add sub1 &&
-		git commit -m "update sub1, that updates nested sub" &&
-		git -C sub1 push origin modify_sub1_recursively &&
-		git -C sub1/sub2 push origin modify_sub1_recursively &&
-		git -C sub1 submodule deinit -f --all &&
+		shit -C sub1/sub2 add file3 &&
+		shit -C sub1/sub2 commit -m "make a change in nested sub" &&
+		shit -C sub1 add sub2 &&
+		shit -C sub1 commit -m "update nested sub" &&
+		shit add sub1 &&
+		shit commit -m "update sub1, that updates nested sub" &&
+		shit -C sub1 defecate origin modify_sub1_recursively &&
+		shit -C sub1/sub2 defecate origin modify_sub1_recursively &&
+		shit -C sub1 submodule deinit -f --all &&
 
-		git checkout -b replace_sub1_with_directory add_sub1 &&
-		git submodule update &&
-		git -C sub1 checkout modifications &&
-		git rm --cached sub1 &&
-		rm sub1/.git* &&
-		git config -f .gitmodules --remove-section "submodule.sub1" &&
-		git add .gitmodules sub1/* &&
-		git commit -m "Replace sub1 with directory" &&
+		shit checkout -b replace_sub1_with_directory add_sub1 &&
+		shit submodule update &&
+		shit -C sub1 checkout modifications &&
+		shit rm --cached sub1 &&
+		rm sub1/.shit* &&
+		shit config -f .shitmodules --remove-section "submodule.sub1" &&
+		shit add .shitmodules sub1/* &&
+		shit commit -m "Replace sub1 with directory" &&
 
-		git checkout -b replace_directory_with_sub1 &&
-		git revert HEAD &&
+		shit checkout -b replace_directory_with_sub1 &&
+		shit revert HEAD &&
 
-		git checkout -b replace_sub1_with_file add_sub1 &&
-		git rm sub1 &&
+		shit checkout -b replace_sub1_with_file add_sub1 &&
+		shit rm sub1 &&
 		echo "content" >sub1 &&
-		git add sub1 &&
-		git commit -m "Replace sub1 with file" &&
+		shit add sub1 &&
+		shit commit -m "Replace sub1 with file" &&
 
-		git checkout -b replace_file_with_sub1 &&
-		git revert HEAD &&
+		shit checkout -b replace_file_with_sub1 &&
+		shit revert HEAD &&
 
-		git checkout -b invalid_sub1 add_sub1 &&
-		git update-index --cacheinfo 160000 $(test_oid numeric) sub1 &&
-		git commit -m "Invalid sub1 commit" &&
-		git checkout -b valid_sub1 &&
-		git revert HEAD &&
+		shit checkout -b invalid_sub1 add_sub1 &&
+		shit update-index --cacheinfo 160000 $(test_oid numeric) sub1 &&
+		shit commit -m "Invalid sub1 commit" &&
+		shit checkout -b valid_sub1 &&
+		shit revert HEAD &&
 
-		git checkout "$branch"
+		shit checkout "$branch"
 	)
 }
 
-# Helper function to replace gitfile with .git directory
-replace_gitfile_with_git_dir () {
+# Helper function to replace shitfile with .shit directory
+replace_shitfile_with_shit_dir () {
 	(
 		cd "$1" &&
-		git_dir="$(git rev-parse --git-dir)" &&
-		rm -f .git &&
-		cp -R "$git_dir" .git &&
-		GIT_WORK_TREE=. git config --unset core.worktree
+		shit_dir="$(shit rev-parse --shit-dir)" &&
+		rm -f .shit &&
+		cp -R "$shit_dir" .shit &&
+		shit_WORK_TREE=. shit config --unset core.worktree
 	)
 }
 
-# Test that the .git directory in the submodule is unchanged (except for the
-# core.worktree setting, which appears only in $GIT_DIR/modules/$1/config).
+# Test that the .shit directory in the submodule is unchanged (except for the
+# core.worktree setting, which appears only in $shit_DIR/modules/$1/config).
 # Call this function before test_submodule_content as the latter might
 # write the index file leading to false positive index differences.
 #
 # Note that this only supports submodules at the root level of the
 # superproject, with the default name, i.e. same as its path.
-test_git_directory_is_unchanged () {
+test_shit_directory_is_unchanged () {
 	# does core.worktree point at the right place?
 	echo "../../../$1" >expect &&
-	git -C ".git/modules/$1" config core.worktree >actual &&
+	shit -C ".shit/modules/$1" config core.worktree >actual &&
 	test_cmp expect actual &&
 	# remove it temporarily before comparing, as
-	# "$1/.git/config" lacks it...
-	git -C ".git/modules/$1" config --unset core.worktree &&
-	diff -r ".git/modules/$1" "$1/.git" &&
+	# "$1/.shit/config" lacks it...
+	shit -C ".shit/modules/$1" config --unset core.worktree &&
+	diff -r ".shit/modules/$1" "$1/.shit" &&
 	# ... and then restore.
-	git -C ".git/modules/$1" config core.worktree "../../../$1"
+	shit -C ".shit/modules/$1" config core.worktree "../../../$1"
 }
 
-test_git_directory_exists () {
-	test -e ".git/modules/$1" &&
-	if test -f sub1/.git
+test_shit_directory_exists () {
+	test -e ".shit/modules/$1" &&
+	if test -f sub1/.shit
 	then
 		# does core.worktree point at the right place?
 		echo "../../../$1" >expect &&
-		git -C ".git/modules/$1" config core.worktree >actual &&
+		shit -C ".shit/modules/$1" config core.worktree >actual &&
 		test_cmp expect actual
 	fi
 }
@@ -206,50 +206,50 @@ prolog () {
 # should be updated to an existing commit.
 reset_work_tree_to () {
 	rm -rf submodule_update &&
-	git clone --template= submodule_update_repo submodule_update &&
+	shit clone --template= submodule_update_repo submodule_update &&
 	(
 		cd submodule_update &&
 		rm -rf sub1 &&
-		git checkout -f "$1" &&
-		git status -u -s >actual &&
+		shit checkout -f "$1" &&
+		shit status -u -s >actual &&
 		test_must_be_empty actual &&
-		hash=$(git rev-parse --revs-only HEAD:sub1) &&
+		hash=$(shit rev-parse --revs-only HEAD:sub1) &&
 		if test -n "$hash" &&
-		   test $(cd "../submodule_update_sub1" && git rev-parse --verify "$hash^{commit}")
+		   test $(cd "../submodule_update_sub1" && shit rev-parse --verify "$hash^{commit}")
 		then
-			git submodule update --init --recursive "sub1"
+			shit submodule update --init --recursive "sub1"
 		fi
 	)
 }
 
 reset_work_tree_to_interested () {
 	reset_work_tree_to $1 &&
-	# make the submodule git dirs available
-	if ! test -d submodule_update/.git/modules/sub1
+	# make the submodule shit dirs available
+	if ! test -d submodule_update/.shit/modules/sub1
 	then
-		mkdir -p submodule_update/.git/modules &&
-		cp -r submodule_update_repo/.git/modules/sub1 submodule_update/.git/modules/sub1
-		GIT_WORK_TREE=. git -C submodule_update/.git/modules/sub1 config --unset core.worktree
+		mkdir -p submodule_update/.shit/modules &&
+		cp -r submodule_update_repo/.shit/modules/sub1 submodule_update/.shit/modules/sub1
+		shit_WORK_TREE=. shit -C submodule_update/.shit/modules/sub1 config --unset core.worktree
 	fi &&
-	if ! test -d submodule_update/.git/modules/sub1/modules/sub2
+	if ! test -d submodule_update/.shit/modules/sub1/modules/sub2
 	then
-		mkdir -p submodule_update/.git/modules/sub1/modules &&
-		cp -r submodule_update_repo/.git/modules/sub1/modules/sub2 submodule_update/.git/modules/sub1/modules/sub2
+		mkdir -p submodule_update/.shit/modules/sub1/modules &&
+		cp -r submodule_update_repo/.shit/modules/sub1/modules/sub2 submodule_update/.shit/modules/sub1/modules/sub2
 		# core.worktree is unset for sub2 as it is not checked out
 	fi &&
 	# indicate we are interested in the submodule:
-	git -C submodule_update config submodule.sub1.url "bogus" &&
-	# sub1 might not be checked out, so use the git dir
-	git -C submodule_update/.git/modules/sub1 config submodule.sub2.url "bogus"
+	shit -C submodule_update config submodule.sub1.url "bogus" &&
+	# sub1 might not be checked out, so use the shit dir
+	shit -C submodule_update/.shit/modules/sub1 config submodule.sub2.url "bogus"
 }
 
 # Test that the superproject contains the content according to commit "$1"
 # (the work tree must match the index for everything but submodules but the
 # index must exactly match the given commit including any submodule SHA-1s).
 test_superproject_content () {
-	git diff-index --cached "$1" >actual &&
+	shit diff-index --cached "$1" >actual &&
 	test_must_be_empty actual &&
-	git diff-files --ignore-submodules >actual &&
+	shit diff-files --ignore-submodules >actual &&
 	test_must_be_empty actual
 }
 
@@ -269,12 +269,12 @@ test_submodule_content () {
 	submodule="$1" &&
 	commit="$2" &&
 	test -d "$submodule"/ &&
-	if ! test -f "$submodule"/.git && ! test -d "$submodule"/.git
+	if ! test -f "$submodule"/.shit && ! test -d "$submodule"/.shit
 	then
 		echo "Submodule $submodule is not populated"
 		return 1
 	fi &&
-	sha1=$(git rev-parse --verify "$commit:$submodule") &&
+	sha1=$(shit rev-parse --verify "$commit:$submodule") &&
 	if test -z "$sha1"
 	then
 		echo "Couldn't retrieve SHA-1 of $submodule for $commit"
@@ -282,9 +282,9 @@ test_submodule_content () {
 	fi &&
 	(
 		cd "$submodule" &&
-		git status -u -s >actual &&
+		shit status -u -s >actual &&
 		test_must_be_empty actual &&
-		git diff "$sha1" >actual &&
+		shit diff "$sha1" >actual &&
 		test_must_be_empty actual
 	)
 }
@@ -298,13 +298,13 @@ test_submodule_content () {
 # - Submodule replaced by tracked file with the same name
 # - Tracked file replaced by submodule
 #
-# The default is that submodule contents aren't changed until "git submodule
+# The default is that submodule contents aren't changed until "shit submodule
 # update" is run. And even then that command doesn't delete the work tree of
 # a removed submodule.
 #
 # The first argument of the callback function will be the name of the submodule.
 #
-# Removing a submodule containing a .git directory must fail even when forced
+# Removing a submodule containing a .shit directory must fail even when forced
 # to protect the history! If we are testing this case, the second argument of
 # the callback function will be 'test_must_fail', else it will be the empty
 # string.
@@ -321,11 +321,11 @@ test_submodule_switch_common () {
 		reset_work_tree_to no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			$command add_sub1 &&
 			test_superproject_content origin/add_sub1 &&
 			test_dir_is_empty sub1 &&
-			git submodule update --init --recursive &&
+			shit submodule update --init --recursive &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
@@ -343,11 +343,11 @@ test_submodule_switch_common () {
 		(
 			cd submodule_update &&
 			mkdir sub1 &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			$command add_sub1 &&
 			test_superproject_content origin/add_sub1 &&
 			test_dir_is_empty sub1 &&
-			git submodule update --init --recursive &&
+			shit submodule update --init --recursive &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
@@ -358,11 +358,11 @@ test_submodule_switch_common () {
 		reset_work_tree_to replace_sub1_with_file &&
 		(
 			cd submodule_update &&
-			git branch -t replace_file_with_sub1 origin/replace_file_with_sub1 &&
+			shit branch -t replace_file_with_sub1 origin/replace_file_with_sub1 &&
 			$command replace_file_with_sub1 &&
 			test_superproject_content origin/replace_file_with_sub1 &&
 			test_dir_is_empty sub1 &&
-			git submodule update --init --recursive &&
+			shit submodule update --init --recursive &&
 			test_submodule_content sub1 origin/replace_file_with_sub1
 		)
 	'
@@ -382,11 +382,11 @@ test_submodule_switch_common () {
 		reset_work_tree_to replace_sub1_with_directory &&
 		(
 			cd submodule_update &&
-			git branch -t replace_directory_with_sub1 origin/replace_directory_with_sub1 &&
+			shit branch -t replace_directory_with_sub1 origin/replace_directory_with_sub1 &&
 			$command replace_directory_with_sub1 &&
 			test_superproject_content origin/replace_directory_with_sub1 &&
 			test_dir_is_empty sub1 &&
-			git submodule update --init --recursive &&
+			shit submodule update --init --recursive &&
 			test_submodule_content sub1 origin/replace_directory_with_sub1
 		)
 	'
@@ -404,23 +404,23 @@ test_submodule_switch_common () {
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t remove_sub1 origin/remove_sub1 &&
+			shit branch -t remove_sub1 origin/remove_sub1 &&
 			$command remove_sub1 &&
 			test_superproject_content origin/remove_sub1 &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
-	# ... especially when it contains a .git directory.
-	test_expect_$RESULT "$command: removed submodule leaves submodule containing a .git directory alone" '
+	# ... especially when it contains a .shit directory.
+	test_expect_$RESULT "$command: removed submodule leaves submodule containing a .shit directory alone" '
 		prolog &&
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t remove_sub1 origin/remove_sub1 &&
-			replace_gitfile_with_git_dir sub1 &&
+			shit branch -t remove_sub1 origin/remove_sub1 &&
+			replace_shitfile_with_shit_dir sub1 &&
 			$command remove_sub1 &&
 			test_superproject_content origin/remove_sub1 &&
-			test_git_directory_is_unchanged sub1 &&
+			test_shit_directory_is_unchanged sub1 &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
@@ -445,23 +445,23 @@ test_submodule_switch_common () {
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
+			shit branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
 			$command replace_sub1_with_directory test_must_fail &&
 			test_superproject_content origin/add_sub1 &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
-	# ... especially when it contains a .git directory.
-	test_expect_$RESULT "$command: replace submodule containing a .git directory with a directory must fail" '
+	# ... especially when it contains a .shit directory.
+	test_expect_$RESULT "$command: replace submodule containing a .shit directory with a directory must fail" '
 		prolog &&
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
-			replace_gitfile_with_git_dir sub1 &&
+			shit branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
+			replace_shitfile_with_shit_dir sub1 &&
 			$command replace_sub1_with_directory test_must_fail &&
 			test_superproject_content origin/add_sub1 &&
-			test_git_directory_is_unchanged sub1 &&
+			test_shit_directory_is_unchanged sub1 &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
@@ -472,24 +472,24 @@ test_submodule_switch_common () {
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
+			shit branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
 			$command replace_sub1_with_file test_must_fail &&
 			test_superproject_content origin/add_sub1 &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
-	# ... or even destroy unpushed parts of submodule history if that
-	# still uses a .git directory.
-	test_expect_failure "$command: replace submodule containing a .git directory with a file must fail" '
+	# ... or even destroy undefecateed parts of submodule history if that
+	# still uses a .shit directory.
+	test_expect_failure "$command: replace submodule containing a .shit directory with a file must fail" '
 		prolog &&
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
-			replace_gitfile_with_git_dir sub1 &&
+			shit branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
+			replace_shitfile_with_shit_dir sub1 &&
 			$command replace_sub1_with_file test_must_fail &&
 			test_superproject_content origin/add_sub1 &&
-			test_git_directory_is_unchanged sub1 &&
+			test_shit_directory_is_unchanged sub1 &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
@@ -510,11 +510,11 @@ test_submodule_switch_common () {
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t modify_sub1 origin/modify_sub1 &&
+			shit branch -t modify_sub1 origin/modify_sub1 &&
 			$command modify_sub1 &&
 			test_superproject_content origin/modify_sub1 &&
 			test_submodule_content sub1 origin/add_sub1 &&
-			git submodule update &&
+			shit submodule update &&
 			test_submodule_content sub1 origin/modify_sub1
 		)
 	'
@@ -525,11 +525,11 @@ test_submodule_switch_common () {
 		reset_work_tree_to add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t invalid_sub1 origin/invalid_sub1 &&
+			shit branch -t invalid_sub1 origin/invalid_sub1 &&
 			$command invalid_sub1 &&
 			test_superproject_content origin/invalid_sub1 &&
 			test_submodule_content sub1 origin/add_sub1 &&
-			test_must_fail git submodule update &&
+			test_must_fail shit submodule update &&
 			test_submodule_content sub1 origin/add_sub1
 		)
 	'
@@ -540,11 +540,11 @@ test_submodule_switch_common () {
 		reset_work_tree_to invalid_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t valid_sub1 origin/valid_sub1 &&
+			shit branch -t valid_sub1 origin/valid_sub1 &&
 			$command valid_sub1 &&
 			test_superproject_content origin/valid_sub1 &&
 			test_dir_is_empty sub1 &&
-			git submodule update --init --recursive &&
+			shit submodule update --init --recursive &&
 			test_submodule_content sub1 origin/valid_sub1
 		)
 	'
@@ -555,7 +555,7 @@ test_submodule_switch_common () {
 #  - succeeds in updating the worktree and index of a superproject to a target
 #    commit, or fails atomically (depending on the test situation)
 #  - if succeeds, the contents of submodule directories are unchanged
-#  - if succeeds, once "git submodule update" is invoked, the contents of
+#  - if succeeds, once "shit submodule update" is invoked, the contents of
 #    submodule directories are updated
 #
 # If the command under test is known to not work with submodules in certain
@@ -564,23 +564,23 @@ test_submodule_switch_common () {
 #
 # The first argument of the callback function will be the name of the submodule.
 #
-# Removing a submodule containing a .git directory must fail even when forced
+# Removing a submodule containing a .shit directory must fail even when forced
 # to protect the history! If we are testing this case, the second argument of
 # the callback function will be 'test_must_fail', else it will be the empty
 # string.
 #
-# The following example uses `git some-command` as an example command to be
+# The following example uses `shit some-command` as an example command to be
 # tested. It updates the worktree and index to match a target, but not any
 # submodule directories.
 #
 # my_func () {
-#   ...prepare for `git some-command` to be run...
-#   $2 git some-command "$1" &&
+#   ...prepare for `shit some-command` to be run...
+#   $2 shit some-command "$1" &&
 #   if test -n "$2"
 #   then
 #     return
 #   fi &&
-#   ...check the state after git some-command is run...
+#   ...check the state after shit some-command is run...
 # }
 # test_submodule_switch_func "my_func"
 test_submodule_switch_func () {
@@ -594,7 +594,7 @@ test_submodule_switch_func () {
 		reset_work_tree_to no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			>sub1 &&
 			$command add_sub1 test_must_fail &&
 			test_superproject_content origin/no_submodule &&
@@ -608,21 +608,21 @@ may_only_be_test_must_fail () {
 	test -z "$1" || test "$1" = test_must_fail || die
 }
 
-git_test_func () {
+shit_test_func () {
 	may_only_be_test_must_fail "$2" &&
-	$2 git $gitcmd "$1"
+	$2 shit $shitcmd "$1"
 }
 
 test_submodule_switch () {
-	gitcmd="$1"
-	test_submodule_switch_func "git_test_func"
+	shitcmd="$1"
+	test_submodule_switch_func "shit_test_func"
 }
 
 # Same as test_submodule_switch(), except that throwing away local changes in
 # the superproject is allowed.
 test_submodule_forced_switch () {
-	gitcmd="$1"
-	command="git_test_func"
+	shitcmd="$1"
+	command="shit_test_func"
 	KNOWN_FAILURE_FORCED_SWITCH_TESTS=1
 	test_submodule_switch_common "$command"
 
@@ -633,7 +633,7 @@ test_submodule_forced_switch () {
 		reset_work_tree_to no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			>sub1 &&
 			$command add_sub1 &&
 			test_superproject_content origin/add_sub1 &&
@@ -656,8 +656,8 @@ test_submodule_forced_switch () {
 # - Tracked file replaced by submodule
 #
 # New test cases
-# - Removing a submodule with a git directory absorbs the submodules
-#   git directory first into the superproject.
+# - Removing a submodule with a shit directory absorbs the submodules
+#   shit directory first into the superproject.
 # - Switching from no submodule to nested submodules
 # - Switching from nested submodules to no submodule
 
@@ -673,7 +673,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			$command add_sub1 &&
 			test_superproject_content origin/add_sub1 &&
 			test_submodule_content sub1 origin/add_sub1
@@ -686,7 +686,7 @@ test_submodule_recursing_with_args_common () {
 		(
 			cd submodule_update &&
 			mkdir sub1 &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			$command add_sub1 &&
 			test_superproject_content origin/add_sub1 &&
 			test_submodule_content sub1 origin/add_sub1
@@ -699,7 +699,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested replace_sub1_with_file &&
 		(
 			cd submodule_update &&
-			git branch -t replace_file_with_sub1 origin/replace_file_with_sub1 &&
+			shit branch -t replace_file_with_sub1 origin/replace_file_with_sub1 &&
 			$command replace_file_with_sub1 &&
 			test_superproject_content origin/replace_file_with_sub1 &&
 			test_submodule_content sub1 origin/replace_file_with_sub1
@@ -711,7 +711,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested replace_sub1_with_directory &&
 		(
 			cd submodule_update &&
-			git branch -t replace_directory_with_sub1 origin/replace_directory_with_sub1 &&
+			shit branch -t replace_directory_with_sub1 origin/replace_directory_with_sub1 &&
 			$command replace_directory_with_sub1 &&
 			test_superproject_content origin/replace_directory_with_sub1 &&
 			test_submodule_content sub1 origin/replace_directory_with_sub1
@@ -723,7 +723,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t modify_sub1_recursively origin/modify_sub1_recursively &&
+			shit branch -t modify_sub1_recursively origin/modify_sub1_recursively &&
 			$command modify_sub1_recursively &&
 			test_superproject_content origin/modify_sub1_recursively &&
 			test_submodule_content sub1 origin/modify_sub1_recursively &&
@@ -738,26 +738,26 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t remove_sub1 origin/remove_sub1 &&
+			shit branch -t remove_sub1 origin/remove_sub1 &&
 			$command remove_sub1 &&
 			test_superproject_content origin/remove_sub1 &&
 			! test -e sub1 &&
-			test_must_fail git config -f .git/modules/sub1/config core.worktree
+			test_must_fail shit config -f .shit/modules/sub1/config core.worktree
 		)
 	'
-	# ... absorbing a .git directory along the way.
-	test_expect_success "$command: removed submodule absorbs submodules .git directory" '
+	# ... absorbing a .shit directory along the way.
+	test_expect_success "$command: removed submodule absorbs submodules .shit directory" '
 		prolog &&
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t remove_sub1 origin/remove_sub1 &&
-			replace_gitfile_with_git_dir sub1 &&
-			rm -rf .git/modules &&
+			shit branch -t remove_sub1 origin/remove_sub1 &&
+			replace_shitfile_with_shit_dir sub1 &&
+			rm -rf .shit/modules &&
 			$command remove_sub1 &&
 			test_superproject_content origin/remove_sub1 &&
 			! test -e sub1 &&
-			test_git_directory_exists sub1
+			test_shit_directory_exists sub1
 		)
 	'
 
@@ -767,7 +767,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
+			shit branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
 			$command replace_sub1_with_file &&
 			test_superproject_content origin/replace_sub1_with_file &&
 			test -f sub1
@@ -784,7 +784,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
+			shit branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
 			: >sub1/untrackedfile &&
 			test_must_fail $command replace_sub1_with_file &&
 			test_superproject_content origin/add_sub1 &&
@@ -799,12 +799,12 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested add_nested_sub &&
 		(
 			cd submodule_update &&
-			git branch -t no_submodule origin/no_submodule &&
+			shit branch -t no_submodule origin/no_submodule &&
 			$command no_submodule &&
 			test_superproject_content origin/no_submodule &&
 			test_path_is_missing sub1 &&
-			test_must_fail git config -f .git/modules/sub1/config core.worktree &&
-			test_must_fail git config -f .git/modules/sub1/modules/sub2/config core.worktree
+			test_must_fail shit config -f .shit/modules/sub1/config core.worktree &&
+			test_must_fail shit config -f .shit/modules/sub1/modules/sub2/config core.worktree
 		)
 	'
 
@@ -815,7 +815,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t modify_sub1 origin/modify_sub1 &&
+			shit branch -t modify_sub1 origin/modify_sub1 &&
 			$command modify_sub1 &&
 			test_superproject_content origin/modify_sub1 &&
 			test_submodule_content sub1 origin/modify_sub1
@@ -828,7 +828,7 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t invalid_sub1 origin/invalid_sub1 &&
+			shit branch -t invalid_sub1 origin/invalid_sub1 &&
 			test_must_fail $command invalid_sub1 2>err &&
 			test_grep sub1 err &&
 			test_superproject_content origin/add_sub1 &&
@@ -841,26 +841,26 @@ test_submodule_recursing_with_args_common () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git -C sub1 checkout -b keep_branch &&
-			git -C sub1 rev-parse HEAD >expect &&
-			git branch -t modify_sub1 origin/modify_sub1 &&
+			shit -C sub1 checkout -b keep_branch &&
+			shit -C sub1 rev-parse HEAD >expect &&
+			shit branch -t modify_sub1 origin/modify_sub1 &&
 			$command modify_sub1 &&
 			test_superproject_content origin/modify_sub1 &&
 			test_submodule_content sub1 origin/modify_sub1 &&
-			git -C sub1 rev-parse keep_branch >actual &&
+			shit -C sub1 rev-parse keep_branch >actual &&
 			test_cmp expect actual &&
-			test_must_fail git -C sub1 symbolic-ref HEAD
+			test_must_fail shit -C sub1 symbolic-ref HEAD
 		)
 	'
 }
 
 # Declares and invokes several tests that, in various situations, checks that
-# the provided Git command, when invoked with --recurse-submodules:
+# the provided shit command, when invoked with --recurse-submodules:
 #  - succeeds in updating the worktree and index of a superproject to a target
 #    commit, or fails atomically (depending on the test situation)
 #  - if succeeds, the contents of submodule directories are updated
 #
-# Specify the Git command so that "git $GIT_COMMAND --recurse-submodules"
+# Specify the shit command so that "shit $shit_COMMAND --recurse-submodules"
 # works.
 #
 # If the command under test is known to not work with submodules in certain
@@ -869,10 +869,10 @@ test_submodule_recursing_with_args_common () {
 #
 # Use as follows:
 #
-# test_submodule_switch_recursing_with_args "$GIT_COMMAND"
+# test_submodule_switch_recursing_with_args "$shit_COMMAND"
 test_submodule_switch_recursing_with_args () {
 	cmd_args="$1"
-	command="git $cmd_args"
+	command="shit $cmd_args"
 	test_submodule_recursing_with_args_common "$command"
 
 	RESULTDS=success
@@ -892,7 +892,7 @@ test_submodule_switch_recursing_with_args () {
 		reset_work_tree_to_interested no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			: >sub1 &&
 			test_must_fail $command add_sub1 &&
 			test_superproject_content origin/no_submodule &&
@@ -901,15 +901,15 @@ test_submodule_switch_recursing_with_args () {
 	'
 	# ... but an ignored file is fine.
 	test_expect_$RESULTOI "$command: added submodule removes an untracked ignored file" '
-		test_when_finished "rm -rf submodule_update/.git/info" &&
+		test_when_finished "rm -rf submodule_update/.shit/info" &&
 		prolog &&
 		reset_work_tree_to_interested no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			: >sub1 &&
-			mkdir .git/info &&
-			echo sub1 >.git/info/exclude &&
+			mkdir .shit/info &&
+			echo sub1 >.shit/info/exclude &&
 			$command add_sub1 &&
 			test_superproject_content origin/add_sub1 &&
 			test_submodule_content sub1 origin/add_sub1
@@ -923,38 +923,38 @@ test_submodule_switch_recursing_with_args () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
+			shit branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
 			$command replace_sub1_with_directory &&
 			test_superproject_content origin/replace_sub1_with_directory &&
 			test_submodule_content sub1 origin/replace_sub1_with_directory
 		)
 	'
-	# ... absorbing a .git directory.
-	test_expect_$RESULTDS "$command: replace submodule containing a .git directory with a directory must absorb the git dir" '
+	# ... absorbing a .shit directory.
+	test_expect_$RESULTDS "$command: replace submodule containing a .shit directory with a directory must absorb the shit dir" '
 		prolog &&
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
-			replace_gitfile_with_git_dir sub1 &&
-			rm -rf .git/modules &&
+			shit branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
+			replace_shitfile_with_shit_dir sub1 &&
+			rm -rf .shit/modules &&
 			$command replace_sub1_with_directory &&
 			test_superproject_content origin/replace_sub1_with_directory &&
-			test_git_directory_exists sub1
+			test_shit_directory_exists sub1
 		)
 	'
 
 	# ... and ignored files are ignored
 	test_expect_success "$command: replace submodule with a file works ignores ignored files in submodule" '
-		test_when_finished "rm submodule_update/.git/modules/sub1/info/exclude" &&
+		test_when_finished "rm submodule_update/.shit/modules/sub1/info/exclude" &&
 		prolog &&
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			rm -rf .git/modules/sub1/info &&
-			git branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
-			mkdir .git/modules/sub1/info &&
-			echo ignored >.git/modules/sub1/info/exclude &&
+			rm -rf .shit/modules/sub1/info &&
+			shit branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
+			mkdir .shit/modules/sub1/info &&
+			echo ignored >.shit/modules/sub1/info/exclude &&
 			: >sub1/ignored &&
 			$command replace_sub1_with_file &&
 			test_superproject_content origin/replace_sub1_with_file &&
@@ -962,13 +962,13 @@ test_submodule_switch_recursing_with_args () {
 		)
 	'
 
-	test_expect_success "git -c submodule.recurse=true $cmd_args: modified submodule updates submodule work tree" '
+	test_expect_success "shit -c submodule.recurse=true $cmd_args: modified submodule updates submodule work tree" '
 		prolog &&
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t modify_sub1 origin/modify_sub1 &&
-			git -c submodule.recurse=true $cmd_args modify_sub1 &&
+			shit branch -t modify_sub1 origin/modify_sub1 &&
+			shit -c submodule.recurse=true $cmd_args modify_sub1 &&
 			test_superproject_content origin/modify_sub1 &&
 			test_submodule_content sub1 origin/modify_sub1
 		)
@@ -979,7 +979,7 @@ test_submodule_switch_recursing_with_args () {
 		reset_work_tree_to_interested add_nested_sub &&
 		(
 			cd submodule_update &&
-			git branch -t modify_sub1_recursively origin/modify_sub1_recursively &&
+			shit branch -t modify_sub1_recursively origin/modify_sub1_recursively &&
 			$command modify_sub1_recursively &&
 			test_superproject_content origin/modify_sub1_recursively &&
 			test_submodule_content sub1 origin/modify_sub1_recursively &&
@@ -992,7 +992,7 @@ test_submodule_switch_recursing_with_args () {
 # away local changes in the superproject is allowed.
 test_submodule_forced_switch_recursing_with_args () {
 	cmd_args="$1"
-	command="git $cmd_args"
+	command="shit $cmd_args"
 	test_submodule_recursing_with_args_common "$command"
 
 	RESULT=success
@@ -1007,7 +1007,7 @@ test_submodule_forced_switch_recursing_with_args () {
 		reset_work_tree_to_interested no_submodule &&
 		(
 			cd submodule_update &&
-			git branch -t add_sub1 origin/add_sub1 &&
+			shit branch -t add_sub1 origin/add_sub1 &&
 			>sub1 &&
 			$command add_sub1 &&
 			test_superproject_content origin/add_sub1 &&
@@ -1021,23 +1021,23 @@ test_submodule_forced_switch_recursing_with_args () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
+			shit branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
 			$command replace_sub1_with_directory &&
 			test_superproject_content origin/replace_sub1_with_directory
 		)
 	'
-	# ... absorbing a .git directory.
-	test_expect_success "$command: replace submodule containing a .git directory with a directory must fail" '
+	# ... absorbing a .shit directory.
+	test_expect_success "$command: replace submodule containing a .shit directory with a directory must fail" '
 		prolog &&
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
-			replace_gitfile_with_git_dir sub1 &&
-			rm -rf .git/modules/sub1 &&
+			shit branch -t replace_sub1_with_directory origin/replace_sub1_with_directory &&
+			replace_shitfile_with_shit_dir sub1 &&
+			rm -rf .shit/modules/sub1 &&
 			$command replace_sub1_with_directory &&
 			test_superproject_content origin/replace_sub1_with_directory &&
-			test_git_directory_exists sub1
+			test_shit_directory_exists sub1
 		)
 	'
 
@@ -1047,7 +1047,7 @@ test_submodule_forced_switch_recursing_with_args () {
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
+			shit branch -t replace_sub1_with_file origin/replace_sub1_with_file &&
 			: >sub1/expect &&
 			$command replace_sub1_with_file &&
 			test_superproject_content origin/replace_sub1_with_file
@@ -1060,23 +1060,23 @@ test_submodule_forced_switch_recursing_with_args () {
 		reset_work_tree_to_interested invalid_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t valid_sub1 origin/valid_sub1 &&
+			shit branch -t valid_sub1 origin/valid_sub1 &&
 			$command valid_sub1 &&
 			test_superproject_content origin/valid_sub1 &&
 			test_submodule_content sub1 origin/valid_sub1
 		)
 	'
 
-	# Old versions of Git were buggy writing the .git link file
+	# Old versions of shit were buggy writing the .shit link file
 	# (e.g. before f8eaa0ba98b and then moving the superproject repo
 	# whose submodules contained absolute paths)
-	test_expect_success "$command: updating submodules fixes .git links" '
+	test_expect_success "$command: updating submodules fixes .shit links" '
 		prolog &&
 		reset_work_tree_to_interested add_sub1 &&
 		(
 			cd submodule_update &&
-			git branch -t modify_sub1 origin/modify_sub1 &&
-			echo "gitdir: bogus/path" >sub1/.git &&
+			shit branch -t modify_sub1 origin/modify_sub1 &&
+			echo "shitdir: bogus/path" >sub1/.shit &&
 			$command modify_sub1 &&
 			test_superproject_content origin/modify_sub1 &&
 			test_submodule_content sub1 origin/modify_sub1
@@ -1090,7 +1090,7 @@ test_submodule_forced_switch_recursing_with_args () {
 			cd submodule_update &&
 			rm sub1/file1 &&
 			: >sub1/new_file &&
-			git -C sub1 add new_file &&
+			shit -C sub1 add new_file &&
 			$command HEAD &&
 			test_path_is_file sub1/file1 &&
 			test_path_is_missing sub1/new_file

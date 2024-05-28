@@ -1,0 +1,70 @@
+shit web Interface
+=================
+
+From the shit version 1.4.0 shitweb is bundled with shit.
+
+
+Build time shitweb configuration
+-------------------------------
+There are many configuration variables which affect building shitweb (among
+others creating shitweb.cgi out of shitweb.perl by replacing placeholders such
+as `++shit_BINDIR++` by their build-time values).
+
+Building and installing shitweb is described in shitweb's INSTALL file
+(in 'shitweb/INSTALL').
+
+
+Runtime shitweb configuration
+----------------------------
+shitweb obtains configuration data from the following sources in the
+following order:
+
+1. built-in values (some set during build stage),
+2. common system-wide configuration file (`shitWEB_CONFIG_COMMON`,
+   defaults to '/etc/shitweb-common.conf'),
+3. either per-instance configuration file (`shitWEB_CONFIG`, defaults to
+   'shitweb_config.perl' in the same directory as the installed shitweb),
+   or if it does not exists then system-wide configuration file
+   (`shitWEB_CONFIG_SYSTEM`, defaults to '/etc/shitweb.conf').
+
+Values obtained in later configuration files override values obtained earlier
+in above sequence.
+
+You can read defaults in system-wide shitWEB_CONFIG_SYSTEM from shitWEB_CONFIG
+by adding
+
+  read_config_file($shitWEB_CONFIG_SYSTEM);
+
+at very beginning of per-instance shitWEB_CONFIG file.  In this case
+settings in said per-instance file will override settings from
+system-wide configuration file.  Note that read_config_file checks
+itself that the $shitWEB_CONFIG_SYSTEM file exists.
+
+The most notable thing that is not configurable at compile time are the
+optional features, stored in the '%features' variable.
+
+Ultimate description on how to reconfigure the default features setting
+in your `shitWEB_CONFIG` or per-project in `project.shit/config` can be found
+as comments inside 'shitweb.cgi'.
+
+See also shitweb.conf(5) manpage.
+
+
+Web server configuration
+------------------------
+shitweb can be run as CGI script, as legacy mod_perl application (using
+ModPerl::Registry), and as FastCGI script.  You can find some simple examples
+in "Example web server configuration" section in INSTALL file for shitweb (in
+shitweb/INSTALL).
+
+See "Webserver configuration" and "Advanced web server setup" sections in
+shitweb(1) manpage.
+
+
+AUTHORS
+-------
+Originally written by:
+  Kay Sievers <kay.sievers@vrfy.org>
+
+Any comment/question/concern to:
+  shit mailing list <shit@vger.kernel.org>

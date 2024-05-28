@@ -1,15 +1,15 @@
-git-mailinfo(1)
+shit-mailinfo(1)
 ===============
 
 NAME
 ----
-git-mailinfo - Extracts patch and authorship from a single e-mail message
+shit-mailinfo - Extracts patch and authorship from a single e-mail message
 
 
 SYNOPSIS
 --------
 [verse]
-'git mailinfo' [-k|-b] [-u | --encoding=<encoding> | -n]
+'shit mailinfo' [-k|-b] [-u | --encoding=<encoding> | -n]
 	       [--[no-]scissors] [--quoted-cr=<action>]
 	       <msg> <patch>
 
@@ -19,9 +19,9 @@ DESCRIPTION
 Reads a single e-mail message from the standard input, and
 writes the commit log message in <msg> file, and the patches in
 <patch> file.  The author name, e-mail and e-mail subject are
-written out to the standard output to be used by 'git am'
+written out to the standard output to be used by 'shit am'
 to create a commit.  It is usually not necessary to use this
-command directly.  See linkgit:git-am[1] instead.
+command directly.  See linkshit:shit-am[1] instead.
 
 
 OPTIONS
@@ -30,7 +30,7 @@ OPTIONS
 	Usually the program removes email cruft from the Subject:
 	header line to extract the title line for the commit log
 	message.  This option prevents this munging, and is most
-	useful when used to read back 'git format-patch -k' output.
+	useful when used to read back 'shit format-patch -k' output.
 +
 Specifically, the following are removed until none of them remain:
 +
@@ -99,10 +99,10 @@ This can be enabled by default with the configuration option mailinfo.scissors.
 The valid actions are:
 +
 --
-*	`nowarn`: Git will do nothing when such a CRLF is found.
-*	`warn`: Git will issue a warning for each message if such a CRLF is
+*	`nowarn`: shit will do nothing when such a CRLF is found.
+*	`warn`: shit will issue a warning for each message if such a CRLF is
 	found.
-*	`strip`: Git will convert those CRLF to LF.
+*	`strip`: shit will convert those CRLF to LF.
 --
 +
 The default action could be set by configuration option `mailinfo.quotedCR`.
@@ -122,6 +122,6 @@ include::includes/cmd-config-section-all.txt[]
 
 include::config/mailinfo.txt[]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

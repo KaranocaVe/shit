@@ -46,52 +46,52 @@
 `fullPathname`::
 	(WARN) A path contains the full path starting with "/".
 
-`gitattributesBlob`::
-	(ERROR) A non-blob found at `.gitattributes`.
+`shitattributesBlob`::
+	(ERROR) A non-blob found at `.shitattributes`.
 
-`gitattributesLarge`::
-	(ERROR) The `.gitattributes` blob is too large.
+`shitattributesLarge`::
+	(ERROR) The `.shitattributes` blob is too large.
 
-`gitattributesLineLength`::
-	(ERROR) The `.gitattributes` blob contains too long lines.
+`shitattributesLineLength`::
+	(ERROR) The `.shitattributes` blob contains too long lines.
 
-`gitattributesMissing`::
-	(ERROR) Unable to read `.gitattributes` blob.
+`shitattributesMissing`::
+	(ERROR) Unable to read `.shitattributes` blob.
 
-`gitattributesSymlink`::
-	(INFO) `.gitattributes` is a symlink.
+`shitattributesSymlink`::
+	(INFO) `.shitattributes` is a symlink.
 
-`gitignoreSymlink`::
-	(INFO) `.gitignore` is a symlink.
+`shitignoreSymlink`::
+	(INFO) `.shitignore` is a symlink.
 
-`gitmodulesBlob`::
-	(ERROR) A non-blob found at `.gitmodules`.
+`shitmodulesBlob`::
+	(ERROR) A non-blob found at `.shitmodules`.
 
-`gitmodulesLarge`::
-	(ERROR) The `.gitmodules` file is too large to parse.
+`shitmodulesLarge`::
+	(ERROR) The `.shitmodules` file is too large to parse.
 
-`gitmodulesMissing`::
-	(ERROR) Unable to read `.gitmodules` blob.
+`shitmodulesMissing`::
+	(ERROR) Unable to read `.shitmodules` blob.
 
-`gitmodulesName`::
+`shitmodulesName`::
 	(ERROR) A submodule name is invalid.
 
-`gitmodulesParse`::
-	(INFO) Could not parse `.gitmodules` blob.
+`shitmodulesParse`::
+	(INFO) Could not parse `.shitmodules` blob.
 
-`gitmodulesLarge`;
-	(ERROR) `.gitmodules` blob is too large to parse.
+`shitmodulesLarge`;
+	(ERROR) `.shitmodules` blob is too large to parse.
 
-`gitmodulesPath`::
-	(ERROR) `.gitmodules` path is invalid.
+`shitmodulesPath`::
+	(ERROR) `.shitmodules` path is invalid.
 
-`gitmodulesSymlink`::
-	(ERROR) `.gitmodules` is a symlink.
+`shitmodulesSymlink`::
+	(ERROR) `.shitmodules` is a symlink.
 
-`gitmodulesUpdate`::
+`shitmodulesUpdate`::
 	(ERROR) Found an invalid submodule update setting.
 
-`gitmodulesUrl`::
+`shitmodulesUrl`::
 	(ERROR) Found an invalid submodule url.
 
 `hasDot`::
@@ -100,8 +100,8 @@
 `hasDotdot`::
 	(WARN) A tree contains an entry named `..`.
 
-`hasDotgit`::
-	(WARN) A tree contains an entry named `.git`.
+`hasDotshit`::
+	(WARN) A tree contains an entry named `.shit`.
 
 `largePathname`::
 	(WARN) A tree contains an entry with a very long path name. If
@@ -164,8 +164,8 @@
 `nullSha1`::
 	(WARN) Tree contains entries pointing to a null sha1.
 
-`symlinkPointsToGitDir`::
-	(WARN) Symbolic link points inside a gitdir.
+`symlinkPointsToshitDir`::
+	(WARN) Symbolic link points inside a shitdir.
 
 `symlinkTargetBlob`::
 	(ERROR) A non-blob found instead of a symbolic link's target.

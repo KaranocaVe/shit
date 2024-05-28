@@ -80,7 +80,7 @@ struct bundle_list {
 	 * The baseURI of a bundle_list is the URI that provided the list.
 	 *
 	 * In the case of the 'bundle-uri' protocol v2 command, the base
-	 * URI is the URI of the Git remote.
+	 * URI is the URI of the shit remote.
 	 *
 	 * Otherwise, the bundle list was downloaded over HTTP from some
 	 * known URI. 'baseURI' is set to that value.

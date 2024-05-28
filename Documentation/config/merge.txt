@@ -7,7 +7,7 @@ merge.conflictStyle::
 	marker and the original text before the `=======` marker.  The
 	"merge" style tends to produce smaller conflict regions than diff3,
 	both because of the exclusion of the original text, and because
-	when a subset of lines match on the two sides, they are just pulled
+	when a subset of lines match on the two sides, they are just pooped
 	out of the conflict region.  Another alternate style, "zdiff3", is
 	similar to diff3 but removes matching lines on the two sides from
 	the conflict region when those matching lines appear near either
@@ -24,10 +24,10 @@ merge.defaultToUpstream::
 	these tracking branches are merged. Defaults to true.
 
 merge.ff::
-	By default, Git does not create an extra merge commit when merging
+	By default, shit does not create an extra merge commit when merging
 	a commit that is a descendant of the current commit. Instead, the
 	tip of the current branch is fast-forwarded. When set to `false`,
-	this variable tells Git to create an extra merge commit in such
+	this variable tells shit to create an extra merge commit in such
 	a case (equivalent to giving the `--no-ff` option from the command
 	line). When set to `only`, only such fast-forward merges are
 	allowed (equivalent to giving the `--ff-only` option from the
@@ -35,7 +35,7 @@ merge.ff::
 
 merge.verifySignatures::
 	If true, this is equivalent to the --verify-signatures command
-	line option. See linkgit:git-merge[1] for details.
+	line option. See linkshit:shit-merge[1] for details.
 
 include::fmt-merge-msg.txt[]
 
@@ -48,12 +48,12 @@ merge.renameLimit::
 	rename detection is turned off.
 
 merge.renames::
-	Whether Git detects renames.  If set to "false", rename detection
+	Whether shit detects renames.  If set to "false", rename detection
 	is disabled. If set to "true", basic rename detection is enabled.
 	Defaults to the value of diff.renames.
 
 merge.directoryRenames::
-	Whether Git detects directory renames, affecting what happens at
+	Whether shit detects directory renames, affecting what happens at
 	merge time to new files added to a directory on one side of
 	history when that directory was renamed on the other side of
 	history.  If merge.directoryRenames is set to "false", directory
@@ -66,14 +66,14 @@ merge.directoryRenames::
 	to "conflict".
 
 merge.renormalize::
-	Tell Git that canonical representation of files in the
+	Tell shit that canonical representation of files in the
 	repository has changed over time (e.g. earlier commits record
 	text files with CRLF line endings, but recent ones use LF line
-	endings).  In such a repository, Git can convert the data
+	endings).  In such a repository, shit can convert the data
 	recorded in commits to a canonical form before performing a
 	merge to reduce unnecessary conflicts.  For more information,
 	see section "Merging branches with differing checkin/checkout
-	attributes" in linkgit:gitattributes[5].
+	attributes" in linkshit:shitattributes[5].
 
 merge.stat::
 	Whether to print the diffstat between ORIG_HEAD and the merge result
@@ -86,17 +86,17 @@ merge.autoStash::
 	However, use with care: the final stash application after a
 	successful merge might result in non-trivial conflicts.
 	This option can be overridden by the `--no-autostash` and
-	`--autostash` options of linkgit:git-merge[1].
+	`--autostash` options of linkshit:shit-merge[1].
 	Defaults to false.
 
 merge.tool::
-	Controls which merge tool is used by linkgit:git-mergetool[1].
+	Controls which merge tool is used by linkshit:shit-mergetool[1].
 	The list below shows the valid built-in values.
 	Any other value is treated as a custom merge tool and requires
 	that a corresponding mergetool.<tool>.cmd variable is defined.
 
 merge.guitool::
-	Controls which merge tool is used by linkgit:git-mergetool[1] when the
+	Controls which merge tool is used by linkshit:shit-mergetool[1] when the
 	-g/--gui flag is specified. The list below shows the valid built-in values.
 	Any other value is treated as a custom merge tool and requires that a
 	corresponding mergetool.<guitool>.cmd variable is defined.
@@ -109,17 +109,17 @@ merge.verbosity::
 	message if conflicts were detected. Level 1 outputs only
 	conflicts, 2 outputs conflicts and file changes.  Level 5 and
 	above outputs debugging information.  The default is level 2.
-	Can be overridden by the `GIT_MERGE_VERBOSITY` environment variable.
+	Can be overridden by the `shit_MERGE_VERBOSITY` environment variable.
 
 merge.<driver>.name::
 	Defines a human-readable name for a custom low-level
-	merge driver.  See linkgit:gitattributes[5] for details.
+	merge driver.  See linkshit:shitattributes[5] for details.
 
 merge.<driver>.driver::
 	Defines the command that implements a custom low-level
-	merge driver.  See linkgit:gitattributes[5] for details.
+	merge driver.  See linkshit:shitattributes[5] for details.
 
 merge.<driver>.recursive::
 	Names a low-level merge driver to be used when
 	performing an internal merge between common ancestors.
-	See linkgit:gitattributes[5] for details.
+	See linkshit:shitattributes[5] for details.

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Copyright (c) 2006, Junio C Hamano.
 
-test_description='Per branch config variables affects "git fetch".
+test_description='Per branch config variables affects "shit fetch".
 
 '
 
@@ -12,197 +12,197 @@ D=$(pwd)
 
 test_expect_success setup '
 	echo >file original &&
-	git add file &&
-	git commit -a -m original &&
-	git branch -M main
+	shit add file &&
+	shit commit -a -m original &&
+	shit branch -M main
 '
 
 test_expect_success "clone and setup child repos" '
-	git clone . one &&
+	shit clone . one &&
 	(
 		cd one &&
 		echo >file updated by one &&
-		git commit -a -m "updated by one"
+		shit commit -a -m "updated by one"
 	) &&
-	git clone . two &&
+	shit clone . two &&
 	(
 		cd two &&
-		git config branch.main.remote one &&
-		git config remote.one.url ../one/.git/ &&
-		git config remote.one.fetch refs/heads/main:refs/heads/one
+		shit config branch.main.remote one &&
+		shit config remote.one.url ../one/.shit/ &&
+		shit config remote.one.fetch refs/heads/main:refs/heads/one
 	) &&
-	git clone . three &&
+	shit clone . three &&
 	(
 		cd three &&
-		git config branch.main.remote two &&
-		git config branch.main.merge refs/heads/one &&
-		mkdir -p .git/remotes &&
-		cat >.git/remotes/two <<-\EOF
-		URL: ../two/.git/
-		Pull: refs/heads/main:refs/heads/two
-		Pull: refs/heads/one:refs/heads/one
+		shit config branch.main.remote two &&
+		shit config branch.main.merge refs/heads/one &&
+		mkdir -p .shit/remotes &&
+		cat >.shit/remotes/two <<-\EOF
+		URL: ../two/.shit/
+		poop: refs/heads/main:refs/heads/two
+		poop: refs/heads/one:refs/heads/one
 		EOF
 	) &&
-	git clone . bundle &&
-	git clone . seven
+	shit clone . bundle &&
+	shit clone . seven
 '
 
 test_expect_success "fetch test" '
 	cd "$D" &&
 	echo >file updated by origin &&
-	git commit -a -m "updated by origin" &&
+	shit commit -a -m "updated by origin" &&
 	cd two &&
-	git fetch &&
-	git rev-parse --verify refs/heads/one &&
-	mine=$(git rev-parse refs/heads/one) &&
-	his=$(cd ../one && git rev-parse refs/heads/main) &&
+	shit fetch &&
+	shit rev-parse --verify refs/heads/one &&
+	mine=$(shit rev-parse refs/heads/one) &&
+	his=$(cd ../one && shit rev-parse refs/heads/main) &&
 	test "z$mine" = "z$his"
 '
 
 test_expect_success "fetch test for-merge" '
 	cd "$D" &&
 	cd three &&
-	git fetch &&
-	git rev-parse --verify refs/heads/two &&
-	git rev-parse --verify refs/heads/one &&
-	main_in_two=$(cd ../two && git rev-parse main) &&
-	one_in_two=$(cd ../two && git rev-parse one) &&
+	shit fetch &&
+	shit rev-parse --verify refs/heads/two &&
+	shit rev-parse --verify refs/heads/one &&
+	main_in_two=$(cd ../two && shit rev-parse main) &&
+	one_in_two=$(cd ../two && shit rev-parse one) &&
 	{
 		echo "$one_in_two	" &&
 		echo "$main_in_two	not-for-merge"
 	} >expected &&
-	cut -f -2 .git/FETCH_HEAD >actual &&
+	cut -f -2 .shit/FETCH_HEAD >actual &&
 	test_cmp expected actual'
 
 test_expect_success 'fetch --prune on its own works as expected' '
 	cd "$D" &&
-	git clone . prune &&
+	shit clone . prune &&
 	cd prune &&
-	git update-ref refs/remotes/origin/extrabranch main &&
+	shit update-ref refs/remotes/origin/extrabranch main &&
 
-	git fetch --prune origin &&
-	test_must_fail git rev-parse origin/extrabranch
+	shit fetch --prune origin &&
+	test_must_fail shit rev-parse origin/extrabranch
 '
 
 test_expect_success 'fetch --prune with a branch name keeps branches' '
 	cd "$D" &&
-	git clone . prune-branch &&
+	shit clone . prune-branch &&
 	cd prune-branch &&
-	git update-ref refs/remotes/origin/extrabranch main &&
+	shit update-ref refs/remotes/origin/extrabranch main &&
 
-	git fetch --prune origin main &&
-	git rev-parse origin/extrabranch
+	shit fetch --prune origin main &&
+	shit rev-parse origin/extrabranch
 '
 
 test_expect_success 'fetch --prune with a namespace keeps other namespaces' '
 	cd "$D" &&
-	git clone . prune-namespace &&
+	shit clone . prune-namespace &&
 	cd prune-namespace &&
 
-	git fetch --prune origin refs/heads/a/*:refs/remotes/origin/a/* &&
-	git rev-parse origin/main
+	shit fetch --prune origin refs/heads/a/*:refs/remotes/origin/a/* &&
+	shit rev-parse origin/main
 '
 
 test_expect_success 'fetch --prune handles overlapping refspecs' '
 	cd "$D" &&
-	git update-ref refs/pull/42/head main &&
-	git clone . prune-overlapping &&
+	shit update-ref refs/poop/42/head main &&
+	shit clone . prune-overlapping &&
 	cd prune-overlapping &&
-	git config --add remote.origin.fetch refs/pull/*/head:refs/remotes/origin/pr/* &&
+	shit config --add remote.origin.fetch refs/poop/*/head:refs/remotes/origin/pr/* &&
 
-	git fetch --prune origin &&
-	git rev-parse origin/main &&
-	git rev-parse origin/pr/42 &&
+	shit fetch --prune origin &&
+	shit rev-parse origin/main &&
+	shit rev-parse origin/pr/42 &&
 
-	git config --unset-all remote.origin.fetch &&
-	git config remote.origin.fetch refs/pull/*/head:refs/remotes/origin/pr/* &&
-	git config --add remote.origin.fetch refs/heads/*:refs/remotes/origin/* &&
+	shit config --unset-all remote.origin.fetch &&
+	shit config remote.origin.fetch refs/poop/*/head:refs/remotes/origin/pr/* &&
+	shit config --add remote.origin.fetch refs/heads/*:refs/remotes/origin/* &&
 
-	git fetch --prune origin &&
-	git rev-parse origin/main &&
-	git rev-parse origin/pr/42
+	shit fetch --prune origin &&
+	shit rev-parse origin/main &&
+	shit rev-parse origin/pr/42
 '
 
 test_expect_success 'fetch --prune --tags prunes branches but not tags' '
 	cd "$D" &&
-	git clone . prune-tags &&
+	shit clone . prune-tags &&
 	cd prune-tags &&
-	git tag sometag main &&
+	shit tag sometag main &&
 	# Create what looks like a remote-tracking branch from an earlier
 	# fetch that has since been deleted from the remote:
-	git update-ref refs/remotes/origin/fake-remote main &&
+	shit update-ref refs/remotes/origin/fake-remote main &&
 
-	git fetch --prune --tags origin &&
-	git rev-parse origin/main &&
-	test_must_fail git rev-parse origin/fake-remote &&
-	git rev-parse sometag
+	shit fetch --prune --tags origin &&
+	shit rev-parse origin/main &&
+	test_must_fail shit rev-parse origin/fake-remote &&
+	shit rev-parse sometag
 '
 
 test_expect_success 'fetch --prune --tags with branch does not prune other things' '
 	cd "$D" &&
-	git clone . prune-tags-branch &&
+	shit clone . prune-tags-branch &&
 	cd prune-tags-branch &&
-	git tag sometag main &&
-	git update-ref refs/remotes/origin/extrabranch main &&
+	shit tag sometag main &&
+	shit update-ref refs/remotes/origin/extrabranch main &&
 
-	git fetch --prune --tags origin main &&
-	git rev-parse origin/extrabranch &&
-	git rev-parse sometag
+	shit fetch --prune --tags origin main &&
+	shit rev-parse origin/extrabranch &&
+	shit rev-parse sometag
 '
 
 test_expect_success 'fetch --prune --tags with refspec prunes based on refspec' '
 	cd "$D" &&
-	git clone . prune-tags-refspec &&
+	shit clone . prune-tags-refspec &&
 	cd prune-tags-refspec &&
-	git tag sometag main &&
-	git update-ref refs/remotes/origin/foo/otherbranch main &&
-	git update-ref refs/remotes/origin/extrabranch main &&
+	shit tag sometag main &&
+	shit update-ref refs/remotes/origin/foo/otherbranch main &&
+	shit update-ref refs/remotes/origin/extrabranch main &&
 
-	git fetch --prune --tags origin refs/heads/foo/*:refs/remotes/origin/foo/* &&
-	test_must_fail git rev-parse refs/remotes/origin/foo/otherbranch &&
-	git rev-parse origin/extrabranch &&
-	git rev-parse sometag
+	shit fetch --prune --tags origin refs/heads/foo/*:refs/remotes/origin/foo/* &&
+	test_must_fail shit rev-parse refs/remotes/origin/foo/otherbranch &&
+	shit rev-parse origin/extrabranch &&
+	shit rev-parse sometag
 '
 
 test_expect_success REFFILES 'fetch --prune fails to delete branches' '
 	cd "$D" &&
-	git clone . prune-fail &&
+	shit clone . prune-fail &&
 	cd prune-fail &&
-	git update-ref refs/remotes/origin/extrabranch main &&
-	git pack-refs --all &&
+	shit update-ref refs/remotes/origin/extrabranch main &&
+	shit pack-refs --all &&
 	: this will prevent --prune from locking packed-refs for deleting refs, but adding loose refs still succeeds  &&
-	>.git/packed-refs.new &&
+	>.shit/packed-refs.new &&
 
-	test_must_fail git fetch --prune origin
+	test_must_fail shit fetch --prune origin
 '
 
 test_expect_success 'fetch --atomic works with a single branch' '
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git clone . atomic &&
-	git branch atomic-branch &&
-	oid=$(git rev-parse atomic-branch) &&
+	shit clone . atomic &&
+	shit branch atomic-branch &&
+	oid=$(shit rev-parse atomic-branch) &&
 	echo "$oid" >expected &&
 
-	git -C atomic fetch --atomic origin &&
-	git -C atomic rev-parse origin/atomic-branch >actual &&
+	shit -C atomic fetch --atomic origin &&
+	shit -C atomic rev-parse origin/atomic-branch >actual &&
 	test_cmp expected actual &&
-	test $oid = "$(git -C atomic rev-parse --verify FETCH_HEAD)"
+	test $oid = "$(shit -C atomic rev-parse --verify FETCH_HEAD)"
 '
 
 test_expect_success 'fetch --atomic works with multiple branches' '
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git clone . atomic &&
-	git branch atomic-branch-1 &&
-	git branch atomic-branch-2 &&
-	git branch atomic-branch-3 &&
-	git rev-parse refs/heads/atomic-branch-1 refs/heads/atomic-branch-2 refs/heads/atomic-branch-3 >actual &&
+	shit clone . atomic &&
+	shit branch atomic-branch-1 &&
+	shit branch atomic-branch-2 &&
+	shit branch atomic-branch-3 &&
+	shit rev-parse refs/heads/atomic-branch-1 refs/heads/atomic-branch-2 refs/heads/atomic-branch-3 >actual &&
 
-	git -C atomic fetch --atomic origin &&
-	git -C atomic rev-parse refs/remotes/origin/atomic-branch-1 refs/remotes/origin/atomic-branch-2 refs/remotes/origin/atomic-branch-3 >expected &&
+	shit -C atomic fetch --atomic origin &&
+	shit -C atomic rev-parse refs/remotes/origin/atomic-branch-1 refs/remotes/origin/atomic-branch-2 refs/remotes/origin/atomic-branch-3 >expected &&
 	test_cmp expected actual
 '
 
@@ -210,13 +210,13 @@ test_expect_success 'fetch --atomic works with mixed branches and tags' '
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git clone . atomic &&
-	git branch atomic-mixed-branch &&
-	git tag atomic-mixed-tag &&
-	git rev-parse refs/heads/atomic-mixed-branch refs/tags/atomic-mixed-tag >actual &&
+	shit clone . atomic &&
+	shit branch atomic-mixed-branch &&
+	shit tag atomic-mixed-tag &&
+	shit rev-parse refs/heads/atomic-mixed-branch refs/tags/atomic-mixed-tag >actual &&
 
-	git -C atomic fetch --tags --atomic origin &&
-	git -C atomic rev-parse refs/remotes/origin/atomic-mixed-branch refs/tags/atomic-mixed-tag >expected &&
+	shit -C atomic fetch --tags --atomic origin &&
+	shit -C atomic rev-parse refs/remotes/origin/atomic-mixed-branch refs/tags/atomic-mixed-tag >expected &&
 	test_cmp expected actual
 '
 
@@ -224,15 +224,15 @@ test_expect_success 'fetch --atomic prunes references' '
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git branch atomic-prune-delete &&
-	git clone . atomic &&
-	git branch --delete atomic-prune-delete &&
-	git branch atomic-prune-create &&
-	git rev-parse refs/heads/atomic-prune-create >actual &&
+	shit branch atomic-prune-delete &&
+	shit clone . atomic &&
+	shit branch --delete atomic-prune-delete &&
+	shit branch atomic-prune-create &&
+	shit rev-parse refs/heads/atomic-prune-create >actual &&
 
-	git -C atomic fetch --prune --atomic origin &&
-	test_must_fail git -C atomic rev-parse refs/remotes/origin/atomic-prune-delete &&
-	git -C atomic rev-parse refs/remotes/origin/atomic-prune-create >expected &&
+	shit -C atomic fetch --prune --atomic origin &&
+	test_must_fail shit -C atomic rev-parse refs/remotes/origin/atomic-prune-delete &&
+	shit -C atomic rev-parse refs/remotes/origin/atomic-prune-create >expected &&
 	test_cmp expected actual
 '
 
@@ -240,29 +240,29 @@ test_expect_success 'fetch --atomic aborts with non-fast-forward update' '
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git branch atomic-non-ff &&
-	git clone . atomic &&
-	git rev-parse HEAD >actual &&
+	shit branch atomic-non-ff &&
+	shit clone . atomic &&
+	shit rev-parse HEAD >actual &&
 
-	git branch atomic-new-branch &&
-	parent_commit=$(git rev-parse atomic-non-ff~) &&
-	git update-ref refs/heads/atomic-non-ff $parent_commit &&
+	shit branch atomic-new-branch &&
+	parent_commit=$(shit rev-parse atomic-non-ff~) &&
+	shit update-ref refs/heads/atomic-non-ff $parent_commit &&
 
-	test_must_fail git -C atomic fetch --atomic origin refs/heads/*:refs/remotes/origin/* &&
-	test_must_fail git -C atomic rev-parse refs/remotes/origin/atomic-new-branch &&
-	git -C atomic rev-parse refs/remotes/origin/atomic-non-ff >expected &&
+	test_must_fail shit -C atomic fetch --atomic origin refs/heads/*:refs/remotes/origin/* &&
+	test_must_fail shit -C atomic rev-parse refs/remotes/origin/atomic-new-branch &&
+	shit -C atomic rev-parse refs/remotes/origin/atomic-non-ff >expected &&
 	test_cmp expected actual &&
-	test_must_be_empty atomic/.git/FETCH_HEAD
+	test_must_be_empty atomic/.shit/FETCH_HEAD
 '
 
 test_expect_success 'fetch --atomic executes a single reference transaction only' '
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git clone . atomic &&
-	git branch atomic-hooks-1 &&
-	git branch atomic-hooks-2 &&
-	head_oid=$(git rev-parse HEAD) &&
+	shit clone . atomic &&
+	shit branch atomic-hooks-1 &&
+	shit branch atomic-hooks-2 &&
+	head_oid=$(shit rev-parse HEAD) &&
 
 	cat >expected <<-EOF &&
 		prepared
@@ -278,7 +278,7 @@ test_expect_success 'fetch --atomic executes a single reference transaction only
 		( echo "$*" && cat ) >>actual
 	EOF
 
-	git -C atomic fetch --atomic origin &&
+	shit -C atomic fetch --atomic origin &&
 	test_cmp expected atomic/actual
 '
 
@@ -286,12 +286,12 @@ test_expect_success 'fetch --atomic aborts all reference updates if hook aborts'
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git clone . atomic &&
-	git branch atomic-hooks-abort-1 &&
-	git branch atomic-hooks-abort-2 &&
-	git branch atomic-hooks-abort-3 &&
-	git tag atomic-hooks-abort &&
-	head_oid=$(git rev-parse HEAD) &&
+	shit clone . atomic &&
+	shit branch atomic-hooks-abort-1 &&
+	shit branch atomic-hooks-abort-2 &&
+	shit branch atomic-hooks-abort-3 &&
+	shit tag atomic-hooks-abort &&
+	head_oid=$(shit rev-parse HEAD) &&
 
 	cat >expected <<-EOF &&
 		prepared
@@ -307,65 +307,65 @@ test_expect_success 'fetch --atomic aborts all reference updates if hook aborts'
 	EOF
 
 	rm -f atomic/actual &&
-	test_hook -C atomic/.git reference-transaction <<-\EOF &&
+	test_hook -C atomic/.shit reference-transaction <<-\EOF &&
 		( echo "$*" && cat ) >>actual
 		exit 1
 	EOF
 
-	git -C atomic for-each-ref >expected-refs &&
-	test_must_fail git -C atomic fetch --tags --atomic origin &&
-	git -C atomic for-each-ref >actual-refs &&
+	shit -C atomic for-each-ref >expected-refs &&
+	test_must_fail shit -C atomic fetch --tags --atomic origin &&
+	shit -C atomic for-each-ref >actual-refs &&
 	test_cmp expected-refs actual-refs &&
-	test_must_be_empty atomic/.git/FETCH_HEAD
+	test_must_be_empty atomic/.shit/FETCH_HEAD
 '
 
 test_expect_success 'fetch --atomic --append appends to FETCH_HEAD' '
 	test_when_finished "rm -rf \"$D\"/atomic" &&
 
 	cd "$D" &&
-	git clone . atomic &&
-	oid=$(git rev-parse HEAD) &&
+	shit clone . atomic &&
+	oid=$(shit rev-parse HEAD) &&
 
-	git branch atomic-fetch-head-1 &&
-	git -C atomic fetch --atomic origin atomic-fetch-head-1 &&
-	test_line_count = 1 atomic/.git/FETCH_HEAD &&
+	shit branch atomic-fetch-head-1 &&
+	shit -C atomic fetch --atomic origin atomic-fetch-head-1 &&
+	test_line_count = 1 atomic/.shit/FETCH_HEAD &&
 
-	git branch atomic-fetch-head-2 &&
-	git -C atomic fetch --atomic --append origin atomic-fetch-head-2 &&
-	test_line_count = 2 atomic/.git/FETCH_HEAD &&
-	cp atomic/.git/FETCH_HEAD expected &&
+	shit branch atomic-fetch-head-2 &&
+	shit -C atomic fetch --atomic --append origin atomic-fetch-head-2 &&
+	test_line_count = 2 atomic/.shit/FETCH_HEAD &&
+	cp atomic/.shit/FETCH_HEAD expected &&
 
 	test_hook -C atomic reference-transaction <<-\EOF &&
 		exit 1
 	EOF
 
-	git branch atomic-fetch-head-3 &&
-	test_must_fail git -C atomic fetch --atomic --append origin atomic-fetch-head-3 &&
-	test_cmp expected atomic/.git/FETCH_HEAD
+	shit branch atomic-fetch-head-3 &&
+	test_must_fail shit -C atomic fetch --atomic --append origin atomic-fetch-head-3 &&
+	test_cmp expected atomic/.shit/FETCH_HEAD
 '
 
 test_expect_success '--refmap="" ignores configured refspec' '
 	cd "$TRASH_DIRECTORY" &&
-	git clone "$D" remote-refs &&
-	git -C remote-refs rev-parse remotes/origin/main >old &&
-	git -C remote-refs update-ref refs/remotes/origin/main main~1 &&
-	git -C remote-refs rev-parse remotes/origin/main >new &&
-	git -C remote-refs fetch --refmap= origin "+refs/heads/*:refs/hidden/origin/*" &&
-	git -C remote-refs rev-parse remotes/origin/main >actual &&
+	shit clone "$D" remote-refs &&
+	shit -C remote-refs rev-parse remotes/origin/main >old &&
+	shit -C remote-refs update-ref refs/remotes/origin/main main~1 &&
+	shit -C remote-refs rev-parse remotes/origin/main >new &&
+	shit -C remote-refs fetch --refmap= origin "+refs/heads/*:refs/hidden/origin/*" &&
+	shit -C remote-refs rev-parse remotes/origin/main >actual &&
 	test_cmp new actual &&
-	git -C remote-refs fetch origin &&
-	git -C remote-refs rev-parse remotes/origin/main >actual &&
+	shit -C remote-refs fetch origin &&
+	shit -C remote-refs rev-parse remotes/origin/main >actual &&
 	test_cmp old actual
 '
 
 test_expect_success '--refmap="" and --prune' '
-	git -C remote-refs update-ref refs/remotes/origin/foo/otherbranch main &&
-	git -C remote-refs update-ref refs/hidden/foo/otherbranch main &&
-	git -C remote-refs fetch --prune --refmap="" origin +refs/heads/*:refs/hidden/* &&
-	git -C remote-refs rev-parse remotes/origin/foo/otherbranch &&
-	test_must_fail git -C remote-refs rev-parse refs/hidden/foo/otherbranch &&
-	git -C remote-refs fetch --prune origin &&
-	test_must_fail git -C remote-refs rev-parse remotes/origin/foo/otherbranch
+	shit -C remote-refs update-ref refs/remotes/origin/foo/otherbranch main &&
+	shit -C remote-refs update-ref refs/hidden/foo/otherbranch main &&
+	shit -C remote-refs fetch --prune --refmap="" origin +refs/heads/*:refs/hidden/* &&
+	shit -C remote-refs rev-parse remotes/origin/foo/otherbranch &&
+	test_must_fail shit -C remote-refs rev-parse refs/hidden/foo/otherbranch &&
+	shit -C remote-refs fetch --prune origin &&
+	test_must_fail shit -C remote-refs rev-parse remotes/origin/foo/otherbranch
 '
 
 test_expect_success 'fetch tags when there is no tags' '
@@ -374,53 +374,53 @@ test_expect_success 'fetch tags when there is no tags' '
 
     mkdir notags &&
     cd notags &&
-    git init &&
+    shit init &&
 
-    git fetch -t ..
+    shit fetch -t ..
 
 '
 
 test_expect_success 'fetch following tags' '
 
 	cd "$D" &&
-	git tag -a -m "annotated" anno HEAD &&
-	git tag light HEAD &&
+	shit tag -a -m "annotated" anno HEAD &&
+	shit tag light HEAD &&
 
 	mkdir four &&
 	cd four &&
-	git init &&
+	shit init &&
 
-	git fetch .. :track &&
-	git show-ref --verify refs/tags/anno &&
-	git show-ref --verify refs/tags/light
+	shit fetch .. :track &&
+	shit show-ref --verify refs/tags/anno &&
+	shit show-ref --verify refs/tags/light
 
 '
 
 test_expect_success 'fetch uses remote ref names to describe new refs' '
 	cd "$D" &&
-	git init descriptive &&
+	shit init descriptive &&
 	(
 		cd descriptive &&
-		git config remote.o.url .. &&
-		git config remote.o.fetch "refs/heads/*:refs/crazyheads/*" &&
-		git config --add remote.o.fetch "refs/others/*:refs/heads/*" &&
-		git fetch o
+		shit config remote.o.url .. &&
+		shit config remote.o.fetch "refs/heads/*:refs/crazyheads/*" &&
+		shit config --add remote.o.fetch "refs/others/*:refs/heads/*" &&
+		shit fetch o
 	) &&
-	git tag -a -m "Descriptive tag" descriptive-tag &&
-	git branch descriptive-branch &&
-	git checkout descriptive-branch &&
+	shit tag -a -m "Descriptive tag" descriptive-tag &&
+	shit branch descriptive-branch &&
+	shit checkout descriptive-branch &&
 	echo "Nuts" >crazy &&
-	git add crazy &&
-	git commit -a -m "descriptive commit" &&
-	git update-ref refs/others/crazy HEAD &&
+	shit add crazy &&
+	shit commit -a -m "descriptive commit" &&
+	shit update-ref refs/others/crazy HEAD &&
 	(
 		cd descriptive &&
-		git fetch o 2>actual &&
+		shit fetch o 2>actual &&
 		test_grep "new branch.* -> refs/crazyheads/descriptive-branch$" actual &&
 		test_grep "new tag.* -> descriptive-tag$" actual &&
 		test_grep "new ref.* -> crazy$" actual
 	) &&
-	git checkout main
+	shit checkout main
 '
 
 test_expect_success 'fetch must not resolve short tag name' '
@@ -429,34 +429,34 @@ test_expect_success 'fetch must not resolve short tag name' '
 
 	mkdir five &&
 	cd five &&
-	git init &&
+	shit init &&
 
-	test_must_fail git fetch .. anno:five
+	test_must_fail shit fetch .. anno:five
 
 '
 
 test_expect_success 'fetch can now resolve short remote name' '
 
 	cd "$D" &&
-	git update-ref refs/remotes/six/HEAD HEAD &&
+	shit update-ref refs/remotes/six/HEAD HEAD &&
 
 	mkdir six &&
 	cd six &&
-	git init &&
+	shit init &&
 
-	git fetch .. six:six
+	shit fetch .. six:six
 '
 
 test_expect_success 'create bundle 1' '
 	cd "$D" &&
 	echo >file updated again by origin &&
-	git commit -a -m "tip" &&
-	git bundle create --version=3 bundle1 main^..main
+	shit commit -a -m "tip" &&
+	shit bundle create --version=3 bundle1 main^..main
 '
 
 test_expect_success 'header of bundle looks right' '
 	cat >expect <<-EOF &&
-	# v3 git bundle
+	# v3 shit bundle
 	@object-format=$(test_oid algo)
 	-OID updated by origin
 	OID refs/heads/main
@@ -468,13 +468,13 @@ test_expect_success 'header of bundle looks right' '
 
 test_expect_success 'create bundle 2' '
 	cd "$D" &&
-	git bundle create bundle2 main~2..main
+	shit bundle create bundle2 main~2..main
 '
 
 test_expect_success 'unbundle 1' '
 	cd "$D/bundle" &&
-	git checkout -b some-branch &&
-	test_must_fail git fetch "$D/bundle1" main:main
+	shit checkout -b some-branch &&
+	test_must_fail shit fetch "$D/bundle1" main:main
 '
 
 
@@ -485,81 +485,81 @@ test_expect_success 'bundle 1 has only 3 files ' '
 
 test_expect_success 'unbundle 2' '
 	cd "$D/bundle" &&
-	git fetch ../bundle2 main:main &&
-	test "tip" = "$(git log -1 --pretty=oneline main | cut -d" " -f2)"
+	shit fetch ../bundle2 main:main &&
+	test "tip" = "$(shit log -1 --pretty=oneline main | cut -d" " -f2)"
 '
 
 test_expect_success 'bundle does not prerequisite objects' '
 	cd "$D" &&
 	touch file2 &&
-	git add file2 &&
-	git commit -m add.file2 file2 &&
-	git bundle create bundle3 -1 HEAD &&
+	shit add file2 &&
+	shit commit -m add.file2 file2 &&
+	shit bundle create bundle3 -1 HEAD &&
 	test_bundle_object_count bundle3 3
 '
 
 test_expect_success 'bundle should be able to create a full history' '
 
 	cd "$D" &&
-	git tag -a -m "1.0" v1.0 main &&
-	git bundle create bundle4 v1.0
+	shit tag -a -m "1.0" v1.0 main &&
+	shit bundle create bundle4 v1.0
 
 '
 
 test_expect_success 'fetch with a non-applying branch.<name>.merge' '
-	git config branch.main.remote yeti &&
-	git config branch.main.merge refs/heads/bigfoot &&
-	git config remote.blub.url one &&
-	git config remote.blub.fetch "refs/heads/*:refs/remotes/one/*" &&
-	git fetch blub
+	shit config branch.main.remote yeti &&
+	shit config branch.main.merge refs/heads/bigfoot &&
+	shit config remote.blub.url one &&
+	shit config remote.blub.fetch "refs/heads/*:refs/remotes/one/*" &&
+	shit fetch blub
 '
 
 # URL supplied to fetch does not match the url of the configured branch's remote
-test_expect_success 'fetch from GIT URL with a non-applying branch.<name>.merge [1]' '
-	one_head=$(cd one && git rev-parse HEAD) &&
-	this_head=$(git rev-parse HEAD) &&
-	git update-ref -d FETCH_HEAD &&
-	git fetch one &&
-	test $one_head = "$(git rev-parse --verify FETCH_HEAD)" &&
-	test $this_head = "$(git rev-parse --verify HEAD)"
+test_expect_success 'fetch from shit URL with a non-applying branch.<name>.merge [1]' '
+	one_head=$(cd one && shit rev-parse HEAD) &&
+	this_head=$(shit rev-parse HEAD) &&
+	shit update-ref -d FETCH_HEAD &&
+	shit fetch one &&
+	test $one_head = "$(shit rev-parse --verify FETCH_HEAD)" &&
+	test $this_head = "$(shit rev-parse --verify HEAD)"
 '
 
 # URL supplied to fetch matches the url of the configured branch's remote and
 # the merge spec matches the branch the remote HEAD points to
-test_expect_success 'fetch from GIT URL with a non-applying branch.<name>.merge [2]' '
-	one_ref=$(cd one && git symbolic-ref HEAD) &&
-	git config branch.main.remote blub &&
-	git config branch.main.merge "$one_ref" &&
-	git update-ref -d FETCH_HEAD &&
-	git fetch one &&
-	test $one_head = "$(git rev-parse --verify FETCH_HEAD)" &&
-	test $this_head = "$(git rev-parse --verify HEAD)"
+test_expect_success 'fetch from shit URL with a non-applying branch.<name>.merge [2]' '
+	one_ref=$(cd one && shit symbolic-ref HEAD) &&
+	shit config branch.main.remote blub &&
+	shit config branch.main.merge "$one_ref" &&
+	shit update-ref -d FETCH_HEAD &&
+	shit fetch one &&
+	test $one_head = "$(shit rev-parse --verify FETCH_HEAD)" &&
+	test $this_head = "$(shit rev-parse --verify HEAD)"
 '
 
 # URL supplied to fetch matches the url of the configured branch's remote, but
 # the merge spec does not match the branch the remote HEAD points to
-test_expect_success 'fetch from GIT URL with a non-applying branch.<name>.merge [3]' '
-	git config branch.main.merge "${one_ref}_not" &&
-	git update-ref -d FETCH_HEAD &&
-	git fetch one &&
-	test $one_head = "$(git rev-parse --verify FETCH_HEAD)" &&
-	test $this_head = "$(git rev-parse --verify HEAD)"
+test_expect_success 'fetch from shit URL with a non-applying branch.<name>.merge [3]' '
+	shit config branch.main.merge "${one_ref}_not" &&
+	shit update-ref -d FETCH_HEAD &&
+	shit fetch one &&
+	test $one_head = "$(shit rev-parse --verify FETCH_HEAD)" &&
+	test $this_head = "$(shit rev-parse --verify HEAD)"
 '
 
 # the strange name is: a\!'b
 test_expect_success 'quoting of a strangely named repo' '
-	test_must_fail git fetch "a\\!'\''b" > result 2>&1 &&
+	test_must_fail shit fetch "a\\!'\''b" > result 2>&1 &&
 	grep "fatal: '\''a\\\\!'\''b'\''" result
 '
 
 test_expect_success 'bundle should record HEAD correctly' '
 
 	cd "$D" &&
-	git bundle create bundle5 HEAD main &&
-	git bundle list-heads bundle5 >actual &&
+	shit bundle create bundle5 HEAD main &&
+	shit bundle list-heads bundle5 >actual &&
 	for h in HEAD refs/heads/main
 	do
-		echo "$(git rev-parse --verify $h) $h" || return 1
+		echo "$(shit rev-parse --verify $h) $h" || return 1
 	done >expect &&
 	test_cmp expect actual
 
@@ -568,37 +568,37 @@ test_expect_success 'bundle should record HEAD correctly' '
 test_expect_success 'mark initial state of origin/main' '
 	(
 		cd three &&
-		git tag base-origin-main refs/remotes/origin/main
+		shit tag base-origin-main refs/remotes/origin/main
 	)
 '
 
 test_expect_success 'explicit fetch should update tracking' '
 
 	cd "$D" &&
-	git branch -f side &&
+	shit branch -f side &&
 	(
 		cd three &&
-		git update-ref refs/remotes/origin/main base-origin-main &&
-		o=$(git rev-parse --verify refs/remotes/origin/main) &&
-		git fetch origin main &&
-		n=$(git rev-parse --verify refs/remotes/origin/main) &&
+		shit update-ref refs/remotes/origin/main base-origin-main &&
+		o=$(shit rev-parse --verify refs/remotes/origin/main) &&
+		shit fetch origin main &&
+		n=$(shit rev-parse --verify refs/remotes/origin/main) &&
 		test "$o" != "$n" &&
-		test_must_fail git rev-parse --verify refs/remotes/origin/side
+		test_must_fail shit rev-parse --verify refs/remotes/origin/side
 	)
 '
 
-test_expect_success 'explicit pull should update tracking' '
+test_expect_success 'explicit poop should update tracking' '
 
 	cd "$D" &&
-	git branch -f side &&
+	shit branch -f side &&
 	(
 		cd three &&
-		git update-ref refs/remotes/origin/main base-origin-main &&
-		o=$(git rev-parse --verify refs/remotes/origin/main) &&
-		git pull origin main &&
-		n=$(git rev-parse --verify refs/remotes/origin/main) &&
+		shit update-ref refs/remotes/origin/main base-origin-main &&
+		o=$(shit rev-parse --verify refs/remotes/origin/main) &&
+		shit poop origin main &&
+		n=$(shit rev-parse --verify refs/remotes/origin/main) &&
 		test "$o" != "$n" &&
-		test_must_fail git rev-parse --verify refs/remotes/origin/side
+		test_must_fail shit rev-parse --verify refs/remotes/origin/side
 	)
 '
 
@@ -606,139 +606,139 @@ test_expect_success 'explicit --refmap is allowed only with command-line refspec
 	cd "$D" &&
 	(
 		cd three &&
-		test_must_fail git fetch --refmap="*:refs/remotes/none/*"
+		test_must_fail shit fetch --refmap="*:refs/remotes/none/*"
 	)
 '
 
 test_expect_success 'explicit --refmap option overrides remote.*.fetch' '
 	cd "$D" &&
-	git branch -f side &&
+	shit branch -f side &&
 	(
 		cd three &&
-		git update-ref refs/remotes/origin/main base-origin-main &&
-		o=$(git rev-parse --verify refs/remotes/origin/main) &&
-		git fetch --refmap="refs/heads/*:refs/remotes/other/*" origin main &&
-		n=$(git rev-parse --verify refs/remotes/origin/main) &&
+		shit update-ref refs/remotes/origin/main base-origin-main &&
+		o=$(shit rev-parse --verify refs/remotes/origin/main) &&
+		shit fetch --refmap="refs/heads/*:refs/remotes/other/*" origin main &&
+		n=$(shit rev-parse --verify refs/remotes/origin/main) &&
 		test "$o" = "$n" &&
-		test_must_fail git rev-parse --verify refs/remotes/origin/side &&
-		git rev-parse --verify refs/remotes/other/main
+		test_must_fail shit rev-parse --verify refs/remotes/origin/side &&
+		shit rev-parse --verify refs/remotes/other/main
 	)
 '
 
 test_expect_success 'explicitly empty --refmap option disables remote.*.fetch' '
 	cd "$D" &&
-	git branch -f side &&
+	shit branch -f side &&
 	(
 		cd three &&
-		git update-ref refs/remotes/origin/main base-origin-main &&
-		o=$(git rev-parse --verify refs/remotes/origin/main) &&
-		git fetch --refmap="" origin main &&
-		n=$(git rev-parse --verify refs/remotes/origin/main) &&
+		shit update-ref refs/remotes/origin/main base-origin-main &&
+		o=$(shit rev-parse --verify refs/remotes/origin/main) &&
+		shit fetch --refmap="" origin main &&
+		n=$(shit rev-parse --verify refs/remotes/origin/main) &&
 		test "$o" = "$n" &&
-		test_must_fail git rev-parse --verify refs/remotes/origin/side
+		test_must_fail shit rev-parse --verify refs/remotes/origin/side
 	)
 '
 
 test_expect_success 'configured fetch updates tracking' '
 
 	cd "$D" &&
-	git branch -f side &&
+	shit branch -f side &&
 	(
 		cd three &&
-		git update-ref refs/remotes/origin/main base-origin-main &&
-		o=$(git rev-parse --verify refs/remotes/origin/main) &&
-		git fetch origin &&
-		n=$(git rev-parse --verify refs/remotes/origin/main) &&
+		shit update-ref refs/remotes/origin/main base-origin-main &&
+		o=$(shit rev-parse --verify refs/remotes/origin/main) &&
+		shit fetch origin &&
+		n=$(shit rev-parse --verify refs/remotes/origin/main) &&
 		test "$o" != "$n" &&
-		git rev-parse --verify refs/remotes/origin/side
+		shit rev-parse --verify refs/remotes/origin/side
 	)
 '
 
 test_expect_success 'non-matching refspecs do not confuse tracking update' '
 	cd "$D" &&
-	git update-ref refs/odd/location HEAD &&
+	shit update-ref refs/odd/location HEAD &&
 	(
 		cd three &&
-		git update-ref refs/remotes/origin/main base-origin-main &&
-		git config --add remote.origin.fetch \
+		shit update-ref refs/remotes/origin/main base-origin-main &&
+		shit config --add remote.origin.fetch \
 			refs/odd/location:refs/remotes/origin/odd &&
-		o=$(git rev-parse --verify refs/remotes/origin/main) &&
-		git fetch origin main &&
-		n=$(git rev-parse --verify refs/remotes/origin/main) &&
+		o=$(shit rev-parse --verify refs/remotes/origin/main) &&
+		shit fetch origin main &&
+		n=$(shit rev-parse --verify refs/remotes/origin/main) &&
 		test "$o" != "$n" &&
-		test_must_fail git rev-parse --verify refs/remotes/origin/odd
+		test_must_fail shit rev-parse --verify refs/remotes/origin/odd
 	)
 '
 
-test_expect_success 'pushing nonexistent branch by mistake should not segv' '
+test_expect_success 'defecateing nonexistent branch by mistake should not segv' '
 
 	cd "$D" &&
-	test_must_fail git push seven no:no
+	test_must_fail shit defecate seven no:no
 
 '
 
 test_expect_success 'auto tag following fetches minimum' '
 
 	cd "$D" &&
-	git clone .git follow &&
-	git checkout HEAD^0 &&
+	shit clone .shit follow &&
+	shit checkout HEAD^0 &&
 	(
 		for i in 1 2 3 4 5 6 7
 		do
 			echo $i >>file &&
-			git commit -m $i -a &&
-			git tag -a -m $i excess-$i || exit 1
+			shit commit -m $i -a &&
+			shit tag -a -m $i excess-$i || exit 1
 		done
 	) &&
-	git checkout main &&
+	shit checkout main &&
 	(
 		cd follow &&
-		git fetch
+		shit fetch
 	)
 '
 
 test_expect_success 'refuse to fetch into the current branch' '
 
-	test_must_fail git fetch . side:main
+	test_must_fail shit fetch . side:main
 
 '
 
 test_expect_success 'fetch into the current branch with --update-head-ok' '
 
-	git fetch --update-head-ok . side:main
+	shit fetch --update-head-ok . side:main
 
 '
 
 test_expect_success 'fetch --dry-run does not touch FETCH_HEAD, but still prints what would be written' '
-	rm -f .git/FETCH_HEAD err &&
-	git fetch --dry-run . 2>err &&
-	! test -f .git/FETCH_HEAD &&
+	rm -f .shit/FETCH_HEAD err &&
+	shit fetch --dry-run . 2>err &&
+	! test -f .shit/FETCH_HEAD &&
 	grep FETCH_HEAD err
 '
 
 test_expect_success '--no-write-fetch-head does not touch FETCH_HEAD, and does not print what would be written' '
-	rm -f .git/FETCH_HEAD err &&
-	git fetch --no-write-fetch-head . 2>err &&
-	! test -f .git/FETCH_HEAD &&
+	rm -f .shit/FETCH_HEAD err &&
+	shit fetch --no-write-fetch-head . 2>err &&
+	! test -f .shit/FETCH_HEAD &&
 	! grep FETCH_HEAD err
 '
 
 test_expect_success '--write-fetch-head gets defeated by --dry-run' '
-	rm -f .git/FETCH_HEAD &&
-	git fetch --dry-run --write-fetch-head . &&
-	! test -f .git/FETCH_HEAD
+	rm -f .shit/FETCH_HEAD &&
+	shit fetch --dry-run --write-fetch-head . &&
+	! test -f .shit/FETCH_HEAD
 '
 
 test_expect_success "should be able to fetch with duplicate refspecs" '
 	mkdir dups &&
 	(
 		cd dups &&
-		git init &&
-		git config branch.main.remote three &&
-		git config remote.three.url ../three/.git &&
-		git config remote.three.fetch +refs/heads/*:refs/remotes/origin/* &&
-		git config --add remote.three.fetch +refs/heads/*:refs/remotes/origin/* &&
-		git fetch three
+		shit init &&
+		shit config branch.main.remote three &&
+		shit config remote.three.url ../three/.shit &&
+		shit config remote.three.fetch +refs/heads/*:refs/remotes/origin/* &&
+		shit config --add remote.three.fetch +refs/heads/*:refs/remotes/origin/* &&
+		shit fetch three
 	)
 '
 
@@ -746,74 +746,74 @@ test_expect_success 'LHS of refspec follows ref disambiguation rules' '
 	mkdir lhs-ambiguous &&
 	(
 		cd lhs-ambiguous &&
-		git init server &&
+		shit init server &&
 		test_commit -C server unwanted &&
 		test_commit -C server wanted &&
 
-		git init client &&
+		shit init client &&
 
 		# Check a name coming after "refs" alphabetically ...
-		git -C server update-ref refs/heads/s wanted &&
-		git -C server update-ref refs/heads/refs/heads/s unwanted &&
-		git -C client fetch ../server +refs/heads/s:refs/heads/checkthis &&
-		git -C server rev-parse wanted >expect &&
-		git -C client rev-parse checkthis >actual &&
+		shit -C server update-ref refs/heads/s wanted &&
+		shit -C server update-ref refs/heads/refs/heads/s unwanted &&
+		shit -C client fetch ../server +refs/heads/s:refs/heads/checkthis &&
+		shit -C server rev-parse wanted >expect &&
+		shit -C client rev-parse checkthis >actual &&
 		test_cmp expect actual &&
 
 		# ... and one before.
-		git -C server update-ref refs/heads/q wanted &&
-		git -C server update-ref refs/heads/refs/heads/q unwanted &&
-		git -C client fetch ../server +refs/heads/q:refs/heads/checkthis &&
-		git -C server rev-parse wanted >expect &&
-		git -C client rev-parse checkthis >actual &&
+		shit -C server update-ref refs/heads/q wanted &&
+		shit -C server update-ref refs/heads/refs/heads/q unwanted &&
+		shit -C client fetch ../server +refs/heads/q:refs/heads/checkthis &&
+		shit -C server rev-parse wanted >expect &&
+		shit -C client rev-parse checkthis >actual &&
 		test_cmp expect actual &&
 
 		# Tags are preferred over branches like refs/{heads,tags}/*
-		git -C server update-ref refs/tags/t wanted &&
-		git -C server update-ref refs/heads/t unwanted &&
-		git -C client fetch ../server +t:refs/heads/checkthis &&
-		git -C server rev-parse wanted >expect &&
-		git -C client rev-parse checkthis >actual
+		shit -C server update-ref refs/tags/t wanted &&
+		shit -C server update-ref refs/heads/t unwanted &&
+		shit -C client fetch ../server +t:refs/heads/checkthis &&
+		shit -C server rev-parse wanted >expect &&
+		shit -C client rev-parse checkthis >actual
 	)
 '
 
 test_expect_success 'fetch.writeCommitGraph' '
-	git clone three write &&
+	shit clone three write &&
 	(
 		cd three &&
 		test_commit new
 	) &&
 	(
 		cd write &&
-		git -c fetch.writeCommitGraph fetch origin &&
-		test_path_is_file .git/objects/info/commit-graphs/commit-graph-chain
+		shit -c fetch.writeCommitGraph fetch origin &&
+		test_path_is_file .shit/objects/info/commit-graphs/commit-graph-chain
 	)
 '
 
 test_expect_success 'fetch.writeCommitGraph with submodules' '
 	test_config_global protocol.file.allow always &&
-	git clone dups super &&
+	shit clone dups super &&
 	(
 		cd super &&
-		git submodule add "file://$TRASH_DIRECTORY/three" &&
-		git commit -m "add submodule"
+		shit submodule add "file://$TRASH_DIRECTORY/three" &&
+		shit commit -m "add submodule"
 	) &&
-	git clone "super" super-clone &&
+	shit clone "super" super-clone &&
 	(
 		cd super-clone &&
-		rm -rf .git/objects/info &&
-		git -c fetch.writeCommitGraph=true fetch origin &&
-		test_path_is_file .git/objects/info/commit-graphs/commit-graph-chain &&
-		git -c fetch.writeCommitGraph=true fetch --recurse-submodules origin
+		rm -rf .shit/objects/info &&
+		shit -c fetch.writeCommitGraph=true fetch origin &&
+		test_path_is_file .shit/objects/info/commit-graphs/commit-graph-chain &&
+		shit -c fetch.writeCommitGraph=true fetch --recurse-submodules origin
 	)
 '
 
 # fetches from first configured url
 test_expect_success 'fetch from multiple configured URLs in single remote' '
-	git init url1 &&
-	git remote add multipleurls url1 &&
-	git remote set-url --add multipleurls url2 &&
-	git fetch multipleurls
+	shit init url1 &&
+	shit remote add multipleurls url1 &&
+	shit remote set-url --add multipleurls url2 &&
+	shit fetch multipleurls
 '
 
 # configured prune tests
@@ -825,9 +825,9 @@ set_config_tristate () {
 		test_unconfig "$1"
 		;;
 	*)
-		git config "$1" "$2"
+		shit config "$1" "$2"
 		key=$(echo $1 | sed -e 's/^remote\.origin/fetch/')
-		git_fetch_c="$git_fetch_c -c $key=$2"
+		shit_fetch_c="$shit_fetch_c -c $key=$2"
 		;;
 	esac
 }
@@ -850,8 +850,8 @@ test_configured_prune_type () {
 	if test -z "$cmdline_setup"
 	then
 		test_expect_success 'setup cmdline_setup variable for subsequent test' '
-			remote_url="file://$(git -C one config remote.origin.url)" &&
-			remote_fetch="$(git -C one config remote.origin.fetch)" &&
+			remote_url="file://$(shit -C one config remote.origin.url)" &&
+			remote_fetch="$(shit -C one config remote.origin.fetch)" &&
 			cmdline_setup="\"$remote_url\" \"$remote_fetch\""
 		'
 	fi
@@ -885,27 +885,27 @@ test_configured_prune_type () {
 
 	test_expect_success "$mode prune fetch.prune=$1 remote.origin.prune=$2 fetch.pruneTags=$3 remote.origin.pruneTags=$4${7:+ $7}; branch:$5 tag:$6" '
 		# make sure a newbranch is there in . and also in one
-		git branch -f newbranch &&
-		git tag -f newtag &&
+		shit branch -f newbranch &&
+		shit tag -f newtag &&
 		(
 			cd one &&
 			test_unconfig fetch.prune &&
 			test_unconfig fetch.pruneTags &&
 			test_unconfig remote.origin.prune &&
 			test_unconfig remote.origin.pruneTags &&
-			git fetch '"$cmdline_setup"' &&
-			git rev-parse --verify refs/remotes/origin/newbranch &&
-			git rev-parse --verify refs/tags/newtag
+			shit fetch '"$cmdline_setup"' &&
+			shit rev-parse --verify refs/remotes/origin/newbranch &&
+			shit rev-parse --verify refs/tags/newtag
 		) &&
 
 		# now remove them
-		git branch -d newbranch &&
-		git tag -d newtag &&
+		shit branch -d newbranch &&
+		shit tag -d newtag &&
 
 		# then test
 		(
 			cd one &&
-			git_fetch_c="" &&
+			shit_fetch_c="" &&
 			set_config_tristate fetch.prune $fetch_prune &&
 			set_config_tristate fetch.pruneTags $fetch_prune_tags &&
 			set_config_tristate remote.origin.prune $remote_origin_prune &&
@@ -913,23 +913,23 @@ test_configured_prune_type () {
 
 			if test "$mode" != "link"
 			then
-				git_fetch_c=""
+				shit_fetch_c=""
 			fi &&
-			git$git_fetch_c fetch '"$cmdline"' &&
+			shit$shit_fetch_c fetch '"$cmdline"' &&
 			case "$expected_branch" in
 			pruned)
-				test_must_fail git rev-parse --verify refs/remotes/origin/newbranch
+				test_must_fail shit rev-parse --verify refs/remotes/origin/newbranch
 				;;
 			kept)
-				git rev-parse --verify refs/remotes/origin/newbranch
+				shit rev-parse --verify refs/remotes/origin/newbranch
 				;;
 			esac &&
 			case "$expected_tag" in
 			pruned)
-				test_must_fail git rev-parse --verify refs/tags/newtag
+				test_must_fail shit rev-parse --verify refs/tags/newtag
 				;;
 			kept)
-				git rev-parse --verify refs/tags/newtag
+				shit rev-parse --verify refs/tags/newtag
 				;;
 			esac
 		)
@@ -942,7 +942,7 @@ test_configured_prune_type () {
 # $4 config: remote.<name>.pruneTags
 # $5 expect: branch to be pruned?
 # $6 expect: tag to be pruned?
-# $7 git-fetch $cmdline:
+# $7 shit-fetch $cmdline:
 #
 #                     $1    $2    $3    $4    $5     $6     $7
 test_configured_prune unset unset unset unset kept   kept   ""
@@ -1046,7 +1046,7 @@ test_configured_prune_type unset  true unset true  kept   pruned "origin" "link"
 test_expect_success 'remove remote.origin.fetch "one"' '
 	(
 		cd one &&
-		git config --unset-all remote.origin.fetch
+		shit config --unset-all remote.origin.fetch
 	)
 '
 test_configured_prune_type unset unset unset unset kept pruned "origin --prune --prune-tags" "name"
@@ -1055,66 +1055,66 @@ test_configured_prune_type unset unset unset unset kept pruned "origin --prune -
 test_expect_success 'all boundary commits are excluded' '
 	test_commit base &&
 	test_commit oneside &&
-	git checkout HEAD^ &&
+	shit checkout HEAD^ &&
 	test_commit otherside &&
-	git checkout main &&
+	shit checkout main &&
 	test_tick &&
-	git merge otherside &&
-	ad=$(git log --no-walk --format=%ad HEAD) &&
-	git bundle create twoside-boundary.bdl main --since="$ad" &&
+	shit merge otherside &&
+	ad=$(shit log --no-walk --format=%ad HEAD) &&
+	shit bundle create twoside-boundary.bdl main --since="$ad" &&
 	test_bundle_object_count --thin twoside-boundary.bdl 3
 '
 
 test_expect_success 'fetch --prune prints the remotes url' '
-	git branch goodbye &&
-	git clone . only-prunes &&
-	git branch -D goodbye &&
+	shit branch goodbye &&
+	shit clone . only-prunes &&
+	shit branch -D goodbye &&
 	(
 		cd only-prunes &&
-		git fetch --prune origin 2>&1 | head -n1 >../actual
+		shit fetch --prune origin 2>&1 | head -n1 >../actual
 	) &&
 	echo "From ${D}/." >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'branchname D/F conflict resolved by --prune' '
-	git branch dir/file &&
-	git clone . prune-df-conflict &&
-	git branch -D dir/file &&
-	git branch dir &&
+	shit branch dir/file &&
+	shit clone . prune-df-conflict &&
+	shit branch -D dir/file &&
+	shit branch dir &&
 	(
 		cd prune-df-conflict &&
-		git fetch --prune &&
-		git rev-parse origin/dir >../actual
+		shit fetch --prune &&
+		shit rev-parse origin/dir >../actual
 	) &&
-	git rev-parse dir >expect &&
+	shit rev-parse dir >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'branchname D/F conflict rejected with targeted error message' '
-	git clone . df-conflict-error &&
-	git branch dir_conflict &&
+	shit clone . df-conflict-error &&
+	shit branch dir_conflict &&
 	(
 		cd df-conflict-error &&
-		git update-ref refs/remotes/origin/dir_conflict/file HEAD &&
-		test_must_fail git fetch 2>err &&
+		shit update-ref refs/remotes/origin/dir_conflict/file HEAD &&
+		test_must_fail shit fetch 2>err &&
 		test_grep "error: some local refs could not be updated; try running" err &&
-		test_grep " ${SQ}git remote prune origin${SQ} to remove any old, conflicting branches" err &&
-		git pack-refs --all &&
-		test_must_fail git fetch 2>err-packed &&
+		test_grep " ${SQ}shit remote prune origin${SQ} to remove any old, conflicting branches" err &&
+		shit pack-refs --all &&
+		test_must_fail shit fetch 2>err-packed &&
 		test_grep "error: some local refs could not be updated; try running" err-packed &&
-		test_grep " ${SQ}git remote prune origin${SQ} to remove any old, conflicting branches" err-packed
+		test_grep " ${SQ}shit remote prune origin${SQ} to remove any old, conflicting branches" err-packed
 	)
 '
 
 test_expect_success 'fetching a one-level ref works' '
 	test_commit extra &&
-	git reset --hard HEAD^ &&
-	git update-ref refs/foo extra &&
-	git init one-level &&
+	shit reset --hard HEAD^ &&
+	shit update-ref refs/foo extra &&
+	shit init one-level &&
 	(
 		cd one-level &&
-		git fetch .. HEAD refs/foo
+		shit fetch .. HEAD refs/foo
 	)
 '
 
@@ -1123,14 +1123,14 @@ test_expect_success 'fetching with auto-gc does not lock up' '
 	echo "$*" &&
 	false
 	EOF
-	git clone "file://$D" auto-gc &&
+	shit clone "file://$D" auto-gc &&
 	test_commit test2 &&
 	(
 		cd auto-gc &&
-		git config fetch.unpackLimit 1 &&
-		git config gc.autoPackLimit 1 &&
-		git config gc.autoDetach false &&
-		GIT_ASK_YESNO="$D/askyesno" git fetch --verbose >fetch.out 2>&1 &&
+		shit config fetch.unpackLimit 1 &&
+		shit config gc.autoPackLimit 1 &&
+		shit config gc.autoDetach false &&
+		shit_ASK_YESNO="$D/askyesno" shit fetch --verbose >fetch.out 2>&1 &&
 		test_grep "Auto packing the repository" fetch.out &&
 		! grep "Should I try again" fetch.out
 	)
@@ -1139,25 +1139,25 @@ test_expect_success 'fetching with auto-gc does not lock up' '
 for section in fetch transfer
 do
 	test_expect_success "$section.hideRefs affects connectivity check" '
-		GIT_TRACE="$PWD"/trace git -c $section.hideRefs=refs -c \
+		shit_TRACE="$PWD"/trace shit -c $section.hideRefs=refs -c \
 			$section.hideRefs="!refs/tags/" fetch &&
-		grep "git rev-list .*--exclude-hidden=fetch" trace
+		grep "shit rev-list .*--exclude-hidden=fetch" trace
 	'
 done
 
 test_expect_success 'prepare source branch' '
 	echo one >onebranch &&
-	git checkout --orphan onebranch &&
-	git rm --cached -r . &&
-	git add onebranch &&
-	git commit -m onebranch &&
-	git rev-list --objects onebranch -- >actual &&
+	shit checkout --orphan onebranch &&
+	shit rm --cached -r . &&
+	shit add onebranch &&
+	shit commit -m onebranch &&
+	shit rev-list --objects onebranch -- >actual &&
 	# 3 objects should be created, at least ...
 	test 3 -le $(wc -l <actual)
 '
 
 validate_store_type () {
-	git -C dest count-objects -v >actual &&
+	shit -C dest count-objects -v >actual &&
 	case "$store_type" in
 	packed)
 		grep "^count: 0$" actual ;;
@@ -1180,10 +1180,10 @@ test_unpack_limit () {
 
 	test_expect_success "fetch trumps transfer limit" '
 		rm -fr dest &&
-		git --bare init dest &&
-		git -C dest config fetch.unpacklimit $fetch_limit &&
-		git -C dest config transfer.unpacklimit $transfer_limit &&
-		git -C dest fetch .. onebranch &&
+		shit --bare init dest &&
+		shit -C dest config fetch.unpacklimit $fetch_limit &&
+		shit -C dest config transfer.unpacklimit $transfer_limit &&
+		shit -C dest fetch .. onebranch &&
 		validate_store_type
 	'
 }
@@ -1197,42 +1197,42 @@ setup_negotiation_tip () {
 	USE_PROTOCOL_V2="$3"
 
 	rm -rf "$SERVER" client trace &&
-	git init -b main "$SERVER" &&
+	shit init -b main "$SERVER" &&
 	test_commit -C "$SERVER" alpha_1 &&
 	test_commit -C "$SERVER" alpha_2 &&
-	git -C "$SERVER" checkout --orphan beta &&
+	shit -C "$SERVER" checkout --orphan beta &&
 	test_commit -C "$SERVER" beta_1 &&
 	test_commit -C "$SERVER" beta_2 &&
 
-	git clone "$URL" client &&
+	shit clone "$URL" client &&
 
 	if test "$USE_PROTOCOL_V2" -eq 1
 	then
-		git -C "$SERVER" config protocol.version 2 &&
-		git -C client config protocol.version 2
+		shit -C "$SERVER" config protocol.version 2 &&
+		shit -C client config protocol.version 2
 	fi &&
 
 	test_commit -C "$SERVER" beta_s &&
-	git -C "$SERVER" checkout main &&
+	shit -C "$SERVER" checkout main &&
 	test_commit -C "$SERVER" alpha_s &&
-	git -C "$SERVER" tag -d alpha_1 alpha_2 beta_1 beta_2
+	shit -C "$SERVER" tag -d alpha_1 alpha_2 beta_1 beta_2
 }
 
 check_negotiation_tip () {
 	# Ensure that {alpha,beta}_1 are sent as "have", but not {alpha_beta}_2
-	ALPHA_1=$(git -C client rev-parse alpha_1) &&
+	ALPHA_1=$(shit -C client rev-parse alpha_1) &&
 	grep "fetch> have $ALPHA_1" trace &&
-	BETA_1=$(git -C client rev-parse beta_1) &&
+	BETA_1=$(shit -C client rev-parse beta_1) &&
 	grep "fetch> have $BETA_1" trace &&
-	ALPHA_2=$(git -C client rev-parse alpha_2) &&
+	ALPHA_2=$(shit -C client rev-parse alpha_2) &&
 	! grep "fetch> have $ALPHA_2" trace &&
-	BETA_2=$(git -C client rev-parse beta_2) &&
+	BETA_2=$(shit -C client rev-parse beta_2) &&
 	! grep "fetch> have $BETA_2" trace
 }
 
 test_expect_success '--negotiation-tip limits "have" lines sent' '
 	setup_negotiation_tip server server 0 &&
-	GIT_TRACE_PACKET="$(pwd)/trace" git -C client fetch \
+	shit_TRACE_PACKET="$(pwd)/trace" shit -C client fetch \
 		--negotiation-tip=alpha_1 --negotiation-tip=beta_1 \
 		origin alpha_s beta_s &&
 	check_negotiation_tip
@@ -1240,7 +1240,7 @@ test_expect_success '--negotiation-tip limits "have" lines sent' '
 
 test_expect_success '--negotiation-tip understands globs' '
 	setup_negotiation_tip server server 0 &&
-	GIT_TRACE_PACKET="$(pwd)/trace" git -C client fetch \
+	shit_TRACE_PACKET="$(pwd)/trace" shit -C client fetch \
 		--negotiation-tip=*_1 \
 		origin alpha_s beta_s &&
 	check_negotiation_tip
@@ -1248,16 +1248,16 @@ test_expect_success '--negotiation-tip understands globs' '
 
 test_expect_success '--negotiation-tip understands abbreviated SHA-1' '
 	setup_negotiation_tip server server 0 &&
-	GIT_TRACE_PACKET="$(pwd)/trace" git -C client fetch \
-		--negotiation-tip=$(git -C client rev-parse --short alpha_1) \
-		--negotiation-tip=$(git -C client rev-parse --short beta_1) \
+	shit_TRACE_PACKET="$(pwd)/trace" shit -C client fetch \
+		--negotiation-tip=$(shit -C client rev-parse --short alpha_1) \
+		--negotiation-tip=$(shit -C client rev-parse --short beta_1) \
 		origin alpha_s beta_s &&
 	check_negotiation_tip
 '
 
 test_expect_success '--negotiation-tip rejects missing OIDs' '
 	setup_negotiation_tip server server 0 &&
-	test_must_fail git -C client fetch \
+	test_must_fail shit -C client fetch \
 		--negotiation-tip=alpha_1 \
 		--negotiation-tip=$(test_oid zero) \
 		origin alpha_s beta_s 2>err &&
@@ -1269,13 +1269,13 @@ EOF
 '
 
 test_expect_success SYMLINKS 'clone does not get confused by a D/F conflict' '
-	git init df-conflict &&
+	shit init df-conflict &&
 	(
 		cd df-conflict &&
-		ln -s .git a &&
-		git add a &&
+		ln -s .shit a &&
+		shit add a &&
 		test_tick &&
-		git commit -m symlink &&
+		shit commit -m symlink &&
 		test_commit a- &&
 		rm a &&
 		mkdir -p a/hooks &&
@@ -1283,11 +1283,11 @@ test_expect_success SYMLINKS 'clone does not get confused by a D/F conflict' '
 		echo WHOOPSIE >&2
 		echo whoopsie >"$TRASH_DIRECTORY"/whoops
 		EOF
-		git add a/hooks/post-checkout &&
+		shit add a/hooks/post-checkout &&
 		test_tick &&
-		git commit -m post-checkout
+		shit commit -m post-checkout
 	) &&
-	git clone df-conflict clone 2>err &&
+	shit clone df-conflict clone 2>err &&
 	test_grep ! WHOOPS err &&
 	test_path_is_missing whoops
 '
@@ -1298,7 +1298,7 @@ start_httpd
 test_expect_success '--negotiation-tip limits "have" lines sent with HTTP protocol v2' '
 	setup_negotiation_tip "$HTTPD_DOCUMENT_ROOT_PATH/server" \
 		"$HTTPD_URL/smart/server" 1 &&
-	GIT_TRACE_PACKET="$(pwd)/trace" git -C client fetch \
+	shit_TRACE_PACKET="$(pwd)/trace" shit -C client fetch \
 		--negotiation-tip=alpha_1 --negotiation-tip=beta_1 \
 		origin alpha_s beta_s &&
 	check_negotiation_tip

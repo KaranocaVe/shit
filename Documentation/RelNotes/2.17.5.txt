@@ -1,4 +1,4 @@
-Git v2.17.5 Release Notes
+shit v2.17.5 Release Notes
 =========================
 
 This release is to address a security issue: CVE-2020-11008

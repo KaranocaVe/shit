@@ -1,23 +1,23 @@
-git-commit-tree(1)
+shit-commit-tree(1)
 ==================
 
 NAME
 ----
-git-commit-tree - Create a new commit object
+shit-commit-tree - Create a new commit object
 
 
 SYNOPSIS
 --------
 [verse]
-'git commit-tree' <tree> [(-p <parent>)...]
-'git commit-tree' [(-p <parent>)...] [-S[<keyid>]] [(-m <message>)...]
+'shit commit-tree' <tree> [(-p <parent>)...]
+'shit commit-tree' [(-p <parent>)...] [-S[<keyid>]] [(-m <message>)...]
 		  [(-F <file>)...] <tree>
 
 
 DESCRIPTION
 -----------
 This is usually not what an end user wants to run directly.  See
-linkgit:git-commit[1] instead.
+linkshit:shit-commit[1] instead.
 
 Creates a new commit object based on the provided tree object and
 emits the new commit object id on stdout. The log message is read
@@ -36,10 +36,10 @@ While a tree represents a particular directory state of a working
 directory, a commit represents that state in "time", and explains how
 to get there.
 
-Normally a commit would identify a new "HEAD" state, and while Git
+Normally a commit would identify a new "HEAD" state, and while shit
 doesn't care where you save the note about that state, in practice we
 tend to just write the result to the file that is pointed at by
-`.git/HEAD`, so that we can always see what the last committed
+`.shit/HEAD`, so that we can always see what the last committed
 state was.
 
 OPTIONS
@@ -77,7 +77,7 @@ A commit encapsulates:
 - committer name and email and the commit time.
 
 A commit comment is read from stdin. If a changelog
-entry is not provided via "<" redirection, 'git commit-tree' will just wait
+entry is not provided via "<" redirection, 'shit commit-tree' will just wait
 for one to be entered and terminated with ^D.
 
 include::date-formats.txt[]
@@ -93,9 +93,9 @@ FILES
 
 SEE ALSO
 --------
-linkgit:git-write-tree[1]
-linkgit:git-commit[1]
+linkshit:shit-write-tree[1]
+linkshit:shit-commit[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

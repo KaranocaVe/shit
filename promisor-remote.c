@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "hex.h"
 #include "object-store-ll.h"
@@ -24,7 +24,7 @@ static int fetch_objects(struct repository *repo,
 	int i;
 	FILE *child_in;
 
-	if (git_env_bool(NO_LAZY_FETCH_ENVIRONMENT, 0)) {
+	if (shit_env_bool(NO_LAZY_FETCH_ENVIRONMENT, 0)) {
 		static int warning_shown;
 		if (!warning_shown) {
 			warning_shown = 1;
@@ -33,11 +33,11 @@ static int fetch_objects(struct repository *repo,
 		return -1;
 	}
 
-	child.git_cmd = 1;
+	child.shit_cmd = 1;
 	child.in = -1;
 	if (repo != the_repository)
-		prepare_other_repo_env(&child.env, repo->gitdir);
-	strvec_pushl(&child.args, "-c", "fetch.negotiationAlgorithm=noop",
+		prepare_other_repo_env(&child.env, repo->shitdir);
+	strvec_defecatel(&child.args, "-c", "fetch.negotiationAlgorithm=noop",
 		     "fetch", remote_name, "--no-tags",
 		     "--no-write-fetch-head", "--recurse-submodules=no",
 		     "--filter=blob:none", "--stdin", NULL);
@@ -125,7 +125,7 @@ static int promisor_remote_config(const char *var, const char *value,
 	if (!strcmp(subkey, "promisor")) {
 		char *remote_name;
 
-		if (!git_config_bool(var, value))
+		if (!shit_config_bool(var, value))
 			return 0;
 
 		remote_name = xmemdupz(name, namelen);
@@ -149,7 +149,7 @@ static int promisor_remote_config(const char *var, const char *value,
 		if (!r)
 			return 0;
 
-		return git_config_string(&r->partial_clone_filter, var, value);
+		return shit_config_string(&r->partial_clone_filter, var, value);
 	}
 
 	return 0;

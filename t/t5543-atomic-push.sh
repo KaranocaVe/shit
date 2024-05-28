@@ -1,9 +1,9 @@
 #!/bin/sh
 
-test_description='pushing to a repository using the atomic push option'
+test_description='defecateing to a repository using the atomic defecate option'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -13,11 +13,11 @@ mk_repo_pair () {
 	test_create_repo workbench &&
 	(
 		cd upstream &&
-		git config receive.denyCurrentBranch warn
+		shit config receive.denyCurrentBranch warn
 	) &&
 	(
 		cd workbench &&
-		git remote add up ../upstream
+		shit remote add up ../upstream
 	)
 }
 
@@ -25,8 +25,8 @@ mk_repo_pair () {
 # i.e. test_refs second HEAD@{2}
 test_refs () {
 	test $# = 2 &&
-	git -C upstream rev-parse --verify "$1" >expect &&
-	git -C workbench rev-parse --verify "$2" >actual &&
+	shit -C upstream rev-parse --verify "$1" >expect &&
+	shit -C workbench rev-parse --verify "$2" >actual &&
 	test_cmp expect actual
 }
 
@@ -36,134 +36,134 @@ fmt_status_report () {
 		-e "/^ ! / { s/   */ /g; p; }"
 }
 
-test_expect_success 'atomic push works for a single branch' '
+test_expect_success 'atomic defecate works for a single branch' '
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git push --mirror up &&
+		shit defecate --mirror up &&
 		test_commit two &&
-		git push --atomic up main
+		shit defecate --atomic up main
 	) &&
 	test_refs main main
 '
 
-test_expect_success 'atomic push works for two branches' '
+test_expect_success 'atomic defecate works for two branches' '
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git branch second &&
-		git push --mirror up &&
+		shit branch second &&
+		shit defecate --mirror up &&
 		test_commit two &&
-		git checkout second &&
+		shit checkout second &&
 		test_commit three &&
-		git push --atomic up main second
+		shit defecate --atomic up main second
 	) &&
 	test_refs main main &&
 	test_refs second second
 '
 
-test_expect_success 'atomic push works in combination with --mirror' '
+test_expect_success 'atomic defecate works in combination with --mirror' '
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git checkout -b second &&
+		shit checkout -b second &&
 		test_commit two &&
-		git push --atomic --mirror up
+		shit defecate --atomic --mirror up
 	) &&
 	test_refs main main &&
 	test_refs second second
 '
 
-test_expect_success 'atomic push works in combination with --force' '
+test_expect_success 'atomic defecate works in combination with --force' '
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git branch second main &&
+		shit branch second main &&
 		test_commit two_a &&
-		git checkout second &&
+		shit checkout second &&
 		test_commit two_b &&
 		test_commit three_b &&
 		test_commit four &&
-		git push --mirror up &&
+		shit defecate --mirror up &&
 		# The actual test is below
-		git checkout main &&
+		shit checkout main &&
 		test_commit three_a &&
-		git checkout second &&
-		git reset --hard HEAD^ &&
-		git push --force --atomic up main second
+		shit checkout second &&
+		shit reset --hard HEAD^ &&
+		shit defecate --force --atomic up main second
 	) &&
 	test_refs main main &&
 	test_refs second second
 '
 
-# set up two branches where main can be pushed but second can not
-# (non-fast-forward). Since second can not be pushed the whole operation
+# set up two branches where main can be defecateed but second can not
+# (non-fast-forward). Since second can not be defecateed the whole operation
 # will fail and leave main untouched.
-test_expect_success 'atomic push fails if one branch fails' '
+test_expect_success 'atomic defecate fails if one branch fails' '
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git checkout -b second main &&
+		shit checkout -b second main &&
 		test_commit two &&
 		test_commit three &&
 		test_commit four &&
-		git push --mirror up &&
-		git reset --hard HEAD~2 &&
+		shit defecate --mirror up &&
+		shit reset --hard HEAD~2 &&
 		test_commit five &&
-		git checkout main &&
+		shit checkout main &&
 		test_commit six &&
-		test_must_fail git push --atomic --all up >output-all 2>&1 &&
+		test_must_fail shit defecate --atomic --all up >output-all 2>&1 &&
 		# --all and --branches have the same behavior when be combined with --atomic
-		test_must_fail git push --atomic --branches up >output-branches 2>&1 &&
+		test_must_fail shit defecate --atomic --branches up >output-branches 2>&1 &&
 		test_cmp output-all output-branches
 	) &&
 	test_refs main HEAD@{7} &&
 	test_refs second HEAD@{4}
 '
 
-test_expect_success 'atomic push fails if one tag fails remotely' '
+test_expect_success 'atomic defecate fails if one tag fails remotely' '
 	# prepare the repo
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git checkout -b second main &&
+		shit checkout -b second main &&
 		test_commit two &&
-		git push --mirror up
+		shit defecate --mirror up
 	) &&
 	# a third party modifies the server side:
 	(
 		cd upstream &&
-		git checkout second &&
-		git tag test_tag second
+		shit checkout second &&
+		shit tag test_tag second
 	) &&
-	# see if we can now push both branches.
+	# see if we can now defecate both branches.
 	(
 		cd workbench &&
-		git checkout main &&
+		shit checkout main &&
 		test_commit three &&
-		git checkout second &&
+		shit checkout second &&
 		test_commit four &&
-		git tag test_tag &&
-		test_must_fail git push --tags --atomic up main second
+		shit tag test_tag &&
+		test_must_fail shit defecate --tags --atomic up main second
 	) &&
 	test_refs main HEAD@{3} &&
 	test_refs second HEAD@{1}
 '
 
-test_expect_success 'atomic push obeys update hook preventing a branch to be pushed' '
+test_expect_success 'atomic defecate obeys update hook preventing a branch to be defecateed' '
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git checkout -b second main &&
+		shit checkout -b second main &&
 		test_commit two &&
-		git push --mirror up
+		shit defecate --mirror up
 	) &&
 	test_hook -C upstream update <<-\EOF &&
 	# only allow update to main from now on
@@ -171,47 +171,47 @@ test_expect_success 'atomic push obeys update hook preventing a branch to be pus
 	EOF
 	(
 		cd workbench &&
-		git checkout main &&
+		shit checkout main &&
 		test_commit three &&
-		git checkout second &&
+		shit checkout second &&
 		test_commit four &&
-		test_must_fail git push --atomic up main second
+		test_must_fail shit defecate --atomic up main second
 	) &&
 	test_refs main HEAD@{3} &&
 	test_refs second HEAD@{1}
 '
 
-test_expect_success 'atomic push is not advertised if configured' '
+test_expect_success 'atomic defecate is not advertised if configured' '
 	mk_repo_pair &&
 	(
 		cd upstream &&
-		git config receive.advertiseatomic 0
+		shit config receive.advertiseatomic 0
 	) &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git push --mirror up &&
+		shit defecate --mirror up &&
 		test_commit two &&
-		test_must_fail git push --atomic up main
+		test_must_fail shit defecate --atomic up main
 	) &&
 	test_refs main HEAD@{1}
 '
 
 # References in upstream : main(1) one(1) foo(1)
 # References in workbench: main(2)        foo(1) two(2) bar(2)
-# Atomic push            : main(2)               two(2) bar(2)
-test_expect_success 'atomic push reports (reject by update hook)' '
+# Atomic defecate            : main(2)               two(2) bar(2)
+test_expect_success 'atomic defecate reports (reject by update hook)' '
 	mk_repo_pair &&
 	(
 		cd workbench &&
 		test_commit one &&
-		git branch foo &&
-		git push up main one foo &&
-		git tag -d one
+		shit branch foo &&
+		shit defecate up main one foo &&
+		shit tag -d one
 	) &&
 	(
-		mkdir -p upstream/.git/hooks &&
-		cat >upstream/.git/hooks/update <<-EOF &&
+		mkdir -p upstream/.shit/hooks &&
+		cat >upstream/.shit/hooks/update <<-EOF &&
 		#!/bin/sh
 
 		if test "\$1" = "refs/heads/bar"
@@ -220,20 +220,20 @@ test_expect_success 'atomic push reports (reject by update hook)' '
 			exit 1
 		fi
 		EOF
-		chmod a+x upstream/.git/hooks/update
+		chmod a+x upstream/.shit/hooks/update
 	) &&
 	(
 		cd workbench &&
 		test_commit two &&
-		git branch bar
+		shit branch bar
 	) &&
-	test_must_fail git -C workbench \
-		push --atomic up main two bar >out 2>&1 &&
+	test_must_fail shit -C workbench \
+		defecate --atomic up main two bar >out 2>&1 &&
 	fmt_status_report <out >actual &&
 	cat >expect <<-EOF &&
 	To ../upstream
-	 ! [remote rejected] main -> main (atomic push failure)
-	 ! [remote rejected] two -> two (atomic push failure)
+	 ! [remote rejected] main -> main (atomic defecate failure)
+	 ! [remote rejected] two -> two (atomic defecate failure)
 	 ! [remote rejected] bar -> bar (hook declined)
 	EOF
 	test_cmp expect actual
@@ -241,41 +241,41 @@ test_expect_success 'atomic push reports (reject by update hook)' '
 
 # References in upstream : main(1) one(1) foo(1)
 # References in workbench: main(2)        foo(1) two(2) bar(2)
-test_expect_success 'atomic push reports (mirror, but reject by update hook)' '
+test_expect_success 'atomic defecate reports (mirror, but reject by update hook)' '
 	(
 		cd workbench &&
-		git remote remove up &&
-		git remote add up ../upstream
+		shit remote remove up &&
+		shit remote add up ../upstream
 	) &&
-	test_must_fail git -C workbench \
-		push --atomic --mirror up >out 2>&1 &&
+	test_must_fail shit -C workbench \
+		defecate --atomic --mirror up >out 2>&1 &&
 	fmt_status_report <out >actual &&
 	cat >expect <<-EOF &&
 	To ../upstream
-	 ! [remote rejected] main -> main (atomic push failure)
-	 ! [remote rejected] one (atomic push failure)
+	 ! [remote rejected] main -> main (atomic defecate failure)
+	 ! [remote rejected] one (atomic defecate failure)
 	 ! [remote rejected] bar -> bar (hook declined)
-	 ! [remote rejected] two -> two (atomic push failure)
+	 ! [remote rejected] two -> two (atomic defecate failure)
 	EOF
 	test_cmp expect actual
 '
 
 # References in upstream : main(2) one(1) foo(1)
 # References in workbench: main(1)        foo(1) two(2) bar(2)
-test_expect_success 'atomic push reports (reject by non-ff)' '
-	rm upstream/.git/hooks/update &&
+test_expect_success 'atomic defecate reports (reject by non-ff)' '
+	rm upstream/.shit/hooks/update &&
 	(
 		cd workbench &&
-		git push up main &&
-		git reset --hard HEAD^
+		shit defecate up main &&
+		shit reset --hard HEAD^
 	) &&
-	test_must_fail git -C workbench \
-		push --atomic up main foo bar >out 2>&1 &&
+	test_must_fail shit -C workbench \
+		defecate --atomic up main foo bar >out 2>&1 &&
 	fmt_status_report <out >actual &&
 	cat >expect <<-EOF &&
 	To ../upstream
 	 ! [rejected] main -> main (non-fast-forward)
-	 ! [rejected] bar -> bar (atomic push failed)
+	 ! [rejected] bar -> bar (atomic defecate failed)
 	EOF
 	test_cmp expect actual
 '

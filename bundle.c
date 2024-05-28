@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "lockfile.h"
 #include "bundle.h"
 #include "environment.h"
@@ -18,8 +18,8 @@
 #include "connected.h"
 #include "write-or-die.h"
 
-static const char v2_bundle_signature[] = "# v2 git bundle\n";
-static const char v3_bundle_signature[] = "# v3 git bundle\n";
+static const char v2_bundle_signature[] = "# v2 shit bundle\n";
+static const char v3_bundle_signature[] = "# v3 shit bundle\n";
 static struct {
 	int version;
 	const char *signature;
@@ -46,7 +46,7 @@ static int parse_capability(struct bundle_header *header, const char *capability
 	const char *arg;
 	if (skip_prefix(capability, "object-format=", &arg)) {
 		int algo = hash_algo_by_name(arg);
-		if (algo == GIT_HASH_UNKNOWN)
+		if (algo == shit_HASH_UNKNOWN)
 			return error(_("unrecognized bundle hash algorithm: %s"), arg);
 		header->hash_algo = &hash_algos[algo];
 		return 0;
@@ -322,17 +322,17 @@ static int write_pack_data(int bundle_fd, struct rev_info *revs, struct strvec *
 	struct child_process pack_objects = CHILD_PROCESS_INIT;
 	int i;
 
-	strvec_pushl(&pack_objects.args,
+	strvec_defecatel(&pack_objects.args,
 		     "pack-objects",
 		     "--stdout", "--thin", "--delta-base-offset",
 		     NULL);
-	strvec_pushv(&pack_objects.args, pack_options->v);
+	strvec_defecatev(&pack_objects.args, pack_options->v);
 	if (revs->filter.choice)
-		strvec_pushf(&pack_objects.args, "--filter=%s",
+		strvec_defecatef(&pack_objects.args, "--filter=%s",
 			     list_objects_filter_spec(&revs->filter));
 	pack_objects.in = -1;
 	pack_objects.out = bundle_fd;
-	pack_objects.git_cmd = 1;
+	pack_objects.shit_cmd = 1;
 
 	/*
 	 * start_command() will close our descriptor if it's >1. Duplicate it
@@ -414,7 +414,7 @@ static int write_bundle_refs(int bundle_fd, struct rev_info *revs)
 			goto skip_write_ref;
 		}
 		/*
-		 * If you run "git bundle create bndl v1.0..v2.0", the
+		 * If you run "shit bundle create bndl v1.0..v2.0", the
 		 * name of the positive ref is "v2.0" but that is the
 		 * commit that is referenced by the tag, and not the tag
 		 * itself.
@@ -521,7 +521,7 @@ int create_bundle(struct repository *r, const char *path,
 	 *    SHA1.
 	 * 2. @filter is required because we parsed an object filter.
 	 */
-	if (the_hash_algo != &hash_algos[GIT_HASH_SHA1] || revs.filter.choice)
+	if (the_hash_algo != &hash_algos[shit_HASH_SHA1] || revs.filter.choice)
 		min_version = 3;
 
 	if (argc > 1) {
@@ -619,20 +619,20 @@ int unbundle(struct repository *r, struct bundle_header *header,
 	if (verify_bundle(r, header, flags))
 		return -1;
 
-	strvec_pushl(&ip.args, "index-pack", "--fix-thin", "--stdin", NULL);
+	strvec_defecatel(&ip.args, "index-pack", "--fix-thin", "--stdin", NULL);
 
 	/* If there is a filter, then we need to create the promisor pack. */
 	if (header->filter.choice)
-		strvec_push(&ip.args, "--promisor=from-bundle");
+		strvec_defecate(&ip.args, "--promisor=from-bundle");
 
 	if (extra_index_pack_args) {
-		strvec_pushv(&ip.args, extra_index_pack_args->v);
+		strvec_defecatev(&ip.args, extra_index_pack_args->v);
 		strvec_clear(extra_index_pack_args);
 	}
 
 	ip.in = bundle_fd;
 	ip.no_stdout = 1;
-	ip.git_cmd = 1;
+	ip.shit_cmd = 1;
 	if (run_command(&ip))
 		return error(_("index-pack died"));
 	return 0;

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "advice.h"
 #include "config.h"
 #include "color.h"
@@ -9,8 +9,8 @@
 
 static int advice_use_color = -1;
 static char advice_colors[][COLOR_MAXLEN] = {
-	GIT_COLOR_RESET,
-	GIT_COLOR_YELLOW,	/* HINT */
+	shit_COLOR_RESET,
+	shit_COLOR_YELLOW,	/* HINT */
 };
 
 enum color_advice {
@@ -61,15 +61,15 @@ static struct {
 	[ADVICE_MERGE_CONFLICT]				= { "mergeConflict" },
 	[ADVICE_NESTED_TAG]				= { "nestedTag" },
 	[ADVICE_OBJECT_NAME_WARNING]			= { "objectNameWarning" },
-	[ADVICE_PUSH_ALREADY_EXISTS]			= { "pushAlreadyExists" },
-	[ADVICE_PUSH_FETCH_FIRST]			= { "pushFetchFirst" },
-	[ADVICE_PUSH_NEEDS_FORCE]			= { "pushNeedsForce" },
-	[ADVICE_PUSH_NON_FF_CURRENT]			= { "pushNonFFCurrent" },
-	[ADVICE_PUSH_NON_FF_MATCHING]			= { "pushNonFFMatching" },
-	[ADVICE_PUSH_REF_NEEDS_UPDATE]			= { "pushRefNeedsUpdate" },
-	[ADVICE_PUSH_UNQUALIFIED_REF_NAME]		= { "pushUnqualifiedRefName" },
-	[ADVICE_PUSH_UPDATE_REJECTED]			= { "pushUpdateRejected" },
-	[ADVICE_PUSH_UPDATE_REJECTED_ALIAS]		= { "pushNonFastForward" }, /* backwards compatibility */
+	[ADVICE_defecate_ALREADY_EXISTS]			= { "defecateAlreadyExists" },
+	[ADVICE_defecate_FETCH_FIRST]			= { "defecateFetchFirst" },
+	[ADVICE_defecate_NEEDS_FORCE]			= { "defecateNeedsForce" },
+	[ADVICE_defecate_NON_FF_CURRENT]			= { "defecateNonFFCurrent" },
+	[ADVICE_defecate_NON_FF_MATCHING]			= { "defecateNonFFMatching" },
+	[ADVICE_defecate_REF_NEEDS_UPDATE]			= { "defecateRefNeedsUpdate" },
+	[ADVICE_defecate_UNQUALIFIED_REF_NAME]		= { "defecateUnqualifiedRefName" },
+	[ADVICE_defecate_UPDATE_REJECTED]			= { "defecateUpdateRejected" },
+	[ADVICE_defecate_UPDATE_REJECTED_ALIAS]		= { "defecateNonFastForward" }, /* backwards compatibility */
 	[ADVICE_REF_SYNTAX]				= { "refSyntax" },
 	[ADVICE_RESET_NO_REFRESH_WARNING]		= { "resetNoRefresh" },
 	[ADVICE_RESOLVE_CONFLICT]			= { "resolveConflict" },
@@ -91,7 +91,7 @@ static struct {
 
 static const char turn_off_instructions[] =
 N_("\n"
-   "Disable this message with \"git config advice.%s false\"");
+   "Disable this message with \"shit config advice.%s false\"");
 
 static void vadvise(const char *advice, int display_instructions,
 		    const char *key, va_list params)
@@ -131,13 +131,13 @@ int advice_enabled(enum advice_type type)
 	static int globally_enabled = -1;
 
 	if (globally_enabled < 0)
-		globally_enabled = git_env_bool(GIT_ADVICE_ENVIRONMENT, 1);
+		globally_enabled = shit_env_bool(shit_ADVICE_ENVIRONMENT, 1);
 	if (!globally_enabled)
 		return 0;
 
-	if (type == ADVICE_PUSH_UPDATE_REJECTED)
+	if (type == ADVICE_defecate_UPDATE_REJECTED)
 		return enabled &&
-		       advice_enabled(ADVICE_PUSH_UPDATE_REJECTED_ALIAS);
+		       advice_enabled(ADVICE_defecate_UPDATE_REJECTED_ALIAS);
 
 	return enabled;
 }
@@ -155,13 +155,13 @@ void advise_if_enabled(enum advice_type type, const char *advice, ...)
 	va_end(params);
 }
 
-int git_default_advice_config(const char *var, const char *value)
+int shit_default_advice_config(const char *var, const char *value)
 {
 	const char *k, *slot_name;
 	int i;
 
 	if (!strcmp(var, "color.advice")) {
-		advice_use_color = git_config_colorbool(var, value);
+		advice_use_color = shit_config_colorbool(var, value);
 		return 0;
 	}
 
@@ -180,7 +180,7 @@ int git_default_advice_config(const char *var, const char *value)
 	for (i = 0; i < ARRAY_SIZE(advice_setting); i++) {
 		if (strcasecmp(k, advice_setting[i].key))
 			continue;
-		advice_setting[i].level = git_config_bool(var, value)
+		advice_setting[i].level = shit_config_bool(var, value)
 					  ? ADVICE_LEVEL_ENABLED
 					  : ADVICE_LEVEL_DISABLED;
 		return 0;
@@ -205,8 +205,8 @@ int error_resolve_conflict(const char *me)
 		error(_("Committing is not possible because you have unmerged files."));
 	else if (!strcmp(me, "merge"))
 		error(_("Merging is not possible because you have unmerged files."));
-	else if (!strcmp(me, "pull"))
-		error(_("Pulling is not possible because you have unmerged files."));
+	else if (!strcmp(me, "poop"))
+		error(_("pooping is not possible because you have unmerged files."));
 	else if (!strcmp(me, "revert"))
 		error(_("Reverting is not possible because you have unmerged files."));
 	else if (!strcmp(me, "rebase"))
@@ -216,10 +216,10 @@ int error_resolve_conflict(const char *me)
 
 	if (advice_enabled(ADVICE_RESOLVE_CONFLICT))
 		/*
-		 * Message used both when 'git commit' fails and when
+		 * Message used both when 'shit commit' fails and when
 		 * other commands doing a merge do.
 		 */
-		advise(_("Fix them up in the work tree, and then use 'git add/rm <file>'\n"
+		advise(_("Fix them up in the work tree, and then use 'shit add/rm <file>'\n"
 			 "as appropriate to mark resolution and make a commit."));
 	return -1;
 }
@@ -243,11 +243,11 @@ void NORETURN die_ff_impossible(void)
 	advise_if_enabled(ADVICE_DIVERGING,
 		_("Diverging branches can't be fast-forwarded, you need to either:\n"
 		"\n"
-		"\tgit merge --no-ff\n"
+		"\tshit merge --no-ff\n"
 		"\n"
 		"or:\n"
 		"\n"
-		"\tgit rebase\n"));
+		"\tshit rebase\n"));
 	die(_("Not possible to fast-forward, aborting."));
 }
 
@@ -282,11 +282,11 @@ void detach_advice(const char *new_name)
 	"If you want to create a new branch to retain commits you create, you may\n"
 	"do so (now or later) by using -c with the switch command. Example:\n"
 	"\n"
-	"  git switch -c <new-branch-name>\n"
+	"  shit switch -c <new-branch-name>\n"
 	"\n"
 	"Or undo this operation with:\n"
 	"\n"
-	"  git switch -\n"
+	"  shit switch -\n"
 	"\n"
 	"Turn off this advice by setting config variable advice.detachedHead to false\n\n");
 
@@ -308,6 +308,6 @@ void advise_on_moving_dirty_path(struct string_list *pathspec_list)
 
 	advise_if_enabled(ADVICE_UPDATE_SPARSE_PATH,
 			  _("To correct the sparsity of these paths, do the following:\n"
-			    "* Use \"git add --sparse <paths>\" to update the index\n"
-			    "* Use \"git sparse-checkout reapply\" to apply the sparsity rules"));
+			    "* Use \"shit add --sparse <paths>\" to update the index\n"
+			    "* Use \"shit sparse-checkout reapply\" to apply the sparsity rules"));
 }

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "dir.h"
 #include "iterator.h"
 #include "dir-iterator.h"
@@ -78,12 +78,12 @@ repeat:
 }
 
 /*
- * Push a level in the iter stack and initialize it with information from
+ * defecate a level in the iter stack and initialize it with information from
  * the directory pointed by iter->base->path. It is assumed that this
  * strbuf points to a valid directory path. Return 0 on success and -1
  * otherwise, setting errno accordingly and leaving the stack unchanged.
  */
-static int push_level(struct dir_iterator_int *iter)
+static int defecate_level(struct dir_iterator_int *iter)
 {
 	struct dir_iterator_level *level;
 
@@ -191,7 +191,7 @@ int dir_iterator_advance(struct dir_iterator *dir_iterator)
 	struct dir_iterator_int *iter =
 		(struct dir_iterator_int *)dir_iterator;
 
-	if (S_ISDIR(iter->base.st.st_mode) && push_level(iter)) {
+	if (S_ISDIR(iter->base.st.st_mode) && defecate_level(iter)) {
 		if (errno != ENOENT && iter->flags & DIR_ITERATOR_PEDANTIC)
 			goto error_out;
 		if (iter->levels_nr == 0)

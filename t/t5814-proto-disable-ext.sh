@@ -9,10 +9,10 @@ setup_ext_wrapper
 test_expect_success 'setup repository to clone' '
 	test_commit one &&
 	mkdir remote &&
-	git init --bare remote/repo.git &&
-	git push remote/repo.git HEAD
+	shit init --bare remote/repo.shit &&
+	shit defecate remote/repo.shit HEAD
 '
 
-test_proto "remote-helper" ext "ext::fake-remote %S repo.git"
+test_proto "remote-helper" ext "ext::fake-remote %S repo.shit"
 
 test_done

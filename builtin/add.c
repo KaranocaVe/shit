@@ -1,5 +1,5 @@
 /*
- * "git add" builtin command
+ * "shit add" builtin command
  *
  * Copyright (C) 2006 Linus Torvalds
  */
@@ -26,7 +26,7 @@
 #include "add-interactive.h"
 
 static const char * const builtin_add_usage[] = {
-	N_("git add [<options>] [--] <pathspec>..."),
+	N_("shit add [<options>] [--] <pathspec>..."),
 	NULL
 };
 static int patch_interactive, add_interactive, edit_interactive;
@@ -152,9 +152,9 @@ int interactive_add(const char **argv, const char *prefix, int patch)
 	struct pathspec pathspec;
 	int unused, ret;
 
-	if (!git_config_get_bool("add.interactive.usebuiltin", &unused))
+	if (!shit_config_get_bool("add.interactive.usebuiltin", &unused))
 		warning(_("the add.interactive.useBuiltin setting has been removed!\n"
-			  "See its entry in 'git help config' for details."));
+			  "See its entry in 'shit help config' for details."));
 
 	parse_pathspec(&pathspec, 0,
 		       PATHSPEC_PREFER_FULL |
@@ -173,13 +173,13 @@ int interactive_add(const char **argv, const char *prefix, int patch)
 
 static int edit_patch(int argc, const char **argv, const char *prefix)
 {
-	char *file = git_pathdup("ADD_EDIT.patch");
+	char *file = shit_pathdup("ADD_EDIT.patch");
 	struct child_process child = CHILD_PROCESS_INIT;
 	struct rev_info rev;
 	int out;
 	struct stat st;
 
-	git_config(git_diff_basic_config, NULL); /* no "diff" UI options */
+	shit_config(shit_diff_basic_config, NULL); /* no "diff" UI options */
 
 	if (repo_read_index(the_repository) < 0)
 		die(_("could not read the index"));
@@ -204,8 +204,8 @@ static int edit_patch(int argc, const char **argv, const char *prefix)
 	if (!st.st_size)
 		die(_("empty patch. aborted"));
 
-	child.git_cmd = 1;
-	strvec_pushl(&child.args, "apply", "--recount", "--cached", file,
+	child.shit_cmd = 1;
+	strvec_defecatel(&child.args, "apply", "--recount", "--cached", file,
 		     NULL);
 	if (run_command(&child))
 		die(_("could not apply '%s'"), file);
@@ -217,7 +217,7 @@ static int edit_patch(int argc, const char **argv, const char *prefix)
 }
 
 static const char ignore_error[] =
-N_("The following paths are ignored by one of your .gitignore files:\n");
+N_("The following paths are ignored by one of your .shitignore files:\n");
 
 static int verbose, show_only, ignored_too, refresh_only;
 static int ignore_add_errors, intent_to_add, ignore_missing;
@@ -272,30 +272,30 @@ static int add_config(const char *var, const char *value,
 {
 	if (!strcmp(var, "add.ignoreerrors") ||
 	    !strcmp(var, "add.ignore-errors")) {
-		ignore_add_errors = git_config_bool(var, value);
+		ignore_add_errors = shit_config_bool(var, value);
 		return 0;
 	}
 
-	if (git_color_config(var, value, cb) < 0)
+	if (shit_color_config(var, value, cb) < 0)
 		return -1;
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static const char embedded_advice[] = N_(
-"You've added another git repository inside your current repository.\n"
+"You've added another shit repository inside your current repository.\n"
 "Clones of the outer repository will not contain the contents of\n"
 "the embedded repository and will not know how to obtain it.\n"
 "If you meant to add a submodule, use:\n"
 "\n"
-"	git submodule add <url> %s\n"
+"	shit submodule add <url> %s\n"
 "\n"
 "If you added this path by mistake, you can remove it from the\n"
 "index with:\n"
 "\n"
-"	git rm --cached %s\n"
+"	shit rm --cached %s\n"
 "\n"
-"See \"git help submodule\" for more information."
+"See \"shit help submodule\" for more information."
 );
 
 static void check_embedded_repo(const char *path)
@@ -312,7 +312,7 @@ static void check_embedded_repo(const char *path)
 	strbuf_addstr(&name, path);
 	strbuf_strip_suffix(&name, "/");
 
-	warning(_("adding embedded git repository: %s"), name.buf);
+	warning(_("adding embedded shit repository: %s"), name.buf);
 	if (!adviced_on_embedded_repo) {
 		advise_if_enabled(ADVICE_ADD_EMBEDDED_REPO,
 				  embedded_advice, name.buf, name.buf);
@@ -374,7 +374,7 @@ int cmd_add(int argc, const char **argv, const char *prefix)
 	char *ps_matched = NULL;
 	struct lock_file lock_file = LOCK_INIT;
 
-	git_config(add_config, NULL);
+	shit_config(add_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, builtin_add_options,
 			  builtin_add_usage, PARSE_OPT_KEEP_ARGV0);
@@ -443,12 +443,12 @@ int cmd_add(int argc, const char **argv, const char *prefix)
 	if (require_pathspec && pathspec.nr == 0) {
 		fprintf(stderr, _("Nothing specified, nothing added.\n"));
 		advise_if_enabled(ADVICE_ADD_EMPTY_PATHSPEC,
-				  _("Maybe you wanted to say 'git add .'?"));
+				  _("Maybe you wanted to say 'shit add .'?"));
 		return 0;
 	}
 
 	if (!take_worktree_changes && addremove_explicit < 0 && pathspec.nr)
-		/* Turn "git add pathspec..." to "git add -A pathspec..." */
+		/* Turn "shit add pathspec..." to "shit add -A pathspec..." */
 		addremove = 1;
 
 	flags = ((verbose ? ADD_CACHE_VERBOSE : 0) |
@@ -467,7 +467,7 @@ int cmd_add(int argc, const char **argv, const char *prefix)
 	if (add_new_files) {
 		int baselen;
 
-		/* Set up the default git porcelain excludes */
+		/* Set up the default shit porcelain excludes */
 		if (!ignored_too) {
 			dir.flags |= DIR_COLLECT_IGNORED;
 			setup_standard_excludes(&dir);
@@ -519,7 +519,7 @@ int cmd_add(int argc, const char **argv, const char *prefix)
 				continue;
 			}
 
-			/* Don't complain at 'git add .' on empty repo */
+			/* Don't complain at 'shit add .' on empty repo */
 			if (!path[0])
 				continue;
 

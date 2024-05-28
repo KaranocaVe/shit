@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='Basic fetch/push functionality.
+test_description='Basic fetch/defecate functionality.
 
 This test checks the following functionality:
 
@@ -15,8 +15,8 @@ This test checks the following functionality:
 * URL validation
 '
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_CREATE_REPO_NO_TEMPLATE=1
 . ./test-lib.sh
@@ -27,9 +27,9 @@ mk_empty () {
 	repo_name="$1"
 	test_when_finished "rm -rf \"$repo_name\"" &&
 	test_path_is_missing "$repo_name" &&
-	git init --template= "$repo_name" &&
-	mkdir "$repo_name"/.git/hooks &&
-	git -C "$repo_name" config receive.denyCurrentBranch warn
+	shit init --template= "$repo_name" &&
+	mkdir "$repo_name"/.shit/hooks &&
+	shit -C "$repo_name" config receive.denyCurrentBranch warn
 }
 
 mk_test () {
@@ -40,18 +40,18 @@ mk_test () {
 	(
 		for ref in "$@"
 		do
-			git push "$repo_name" $the_first_commit:refs/$ref ||
+			shit defecate "$repo_name" $the_first_commit:refs/$ref ||
 			exit
 		done &&
 		cd "$repo_name" &&
 		for ref in "$@"
 		do
 			echo "$the_first_commit" >expect &&
-			git show-ref -s --verify refs/$ref >actual &&
+			shit show-ref -s --verify refs/$ref >actual &&
 			test_cmp expect actual ||
 			exit
 		done &&
-		git fsck --full
+		shit fsck --full
 	)
 }
 
@@ -80,12 +80,12 @@ mk_test_with_hooks() {
 
 mk_child() {
 	test_when_finished "rm -rf \"$2\"" &&
-	git clone --template= "$1" "$2"
+	shit clone --template= "$1" "$2"
 }
 
-check_push_result () {
+check_defecate_result () {
 	test $# -ge 3 ||
-	BUG "check_push_result requires at least 3 parameters"
+	BUG "check_defecate_result requires at least 3 parameters"
 
 	repo_name="$1"
 	shift
@@ -96,36 +96,36 @@ check_push_result () {
 		shift &&
 		for ref in "$@"
 		do
-			git show-ref -s --verify refs/$ref >actual &&
+			shit show-ref -s --verify refs/$ref >actual &&
 			test_cmp expect actual ||
 			exit
 		done &&
-		git fsck --full
+		shit fsck --full
 	)
 }
 
 test_expect_success setup '
 
 	>path1 &&
-	git add path1 &&
+	shit add path1 &&
 	test_tick &&
-	git commit -a -m repo &&
-	the_first_commit=$(git show-ref -s --verify refs/heads/main) &&
+	shit commit -a -m repo &&
+	the_first_commit=$(shit show-ref -s --verify refs/heads/main) &&
 
 	>path2 &&
-	git add path2 &&
+	shit add path2 &&
 	test_tick &&
-	git commit -a -m second &&
-	the_commit=$(git show-ref -s --verify refs/heads/main)
+	shit commit -a -m second &&
+	the_commit=$(shit show-ref -s --verify refs/heads/main)
 
 '
 
-for cmd in push fetch
+for cmd in defecate fetch
 do
 	for opt in ipv4 ipv6
 	do
-		test_expect_success "reject 'git $cmd --no-$opt'" '
-			test_must_fail git $cmd --no-$opt 2>err &&
+		test_expect_success "reject 'shit $cmd --no-$opt'" '
+			test_must_fail shit $cmd --no-$opt 2>err &&
 			grep "unknown option .no-$opt" err
 		'
 	done
@@ -135,10 +135,10 @@ test_expect_success 'fetch without wildcard' '
 	mk_empty testrepo &&
 	(
 		cd testrepo &&
-		git fetch .. refs/heads/main:refs/remotes/origin/main &&
+		shit fetch .. refs/heads/main:refs/remotes/origin/main &&
 
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
@@ -147,12 +147,12 @@ test_expect_success 'fetch with wildcard' '
 	mk_empty testrepo &&
 	(
 		cd testrepo &&
-		git config remote.up.url .. &&
-		git config remote.up.fetch "refs/heads/*:refs/remotes/origin/*" &&
-		git fetch up &&
+		shit config remote.up.url .. &&
+		shit config remote.up.fetch "refs/heads/*:refs/remotes/origin/*" &&
+		shit fetch up &&
 
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
@@ -162,29 +162,29 @@ test_expect_success 'fetch with insteadOf' '
 	(
 		TRASH=$(pwd)/ &&
 		cd testrepo &&
-		git config "url.$TRASH.insteadOf" trash/ &&
-		git config remote.up.url trash/. &&
-		git config remote.up.fetch "refs/heads/*:refs/remotes/origin/*" &&
-		git fetch up &&
+		shit config "url.$TRASH.insteadOf" trash/ &&
+		shit config remote.up.url trash/. &&
+		shit config remote.up.fetch "refs/heads/*:refs/remotes/origin/*" &&
+		shit fetch up &&
 
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'fetch with pushInsteadOf (should not rewrite)' '
+test_expect_success 'fetch with defecateInsteadOf (should not rewrite)' '
 	mk_empty testrepo &&
 	(
 		TRASH=$(pwd)/ &&
 		cd testrepo &&
-		git config "url.trash/.pushInsteadOf" "$TRASH" &&
-		git config remote.up.url "$TRASH." &&
-		git config remote.up.fetch "refs/heads/*:refs/remotes/origin/*" &&
-		git fetch up &&
+		shit config "url.trash/.defecateInsteadOf" "$TRASH" &&
+		shit config remote.up.url "$TRASH." &&
+		shit config remote.up.fetch "refs/heads/*:refs/remotes/origin/*" &&
+		shit fetch up &&
 
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
@@ -195,517 +195,517 @@ grep_wrote () {
 	grep 'write_pack_file/wrote.*"value":"'$1'"' $2
 }
 
-test_expect_success 'push without negotiation' '
+test_expect_success 'defecate without negotiation' '
 	mk_empty testrepo &&
-	git push testrepo $the_first_commit:refs/remotes/origin/first_commit &&
+	shit defecate testrepo $the_first_commit:refs/remotes/origin/first_commit &&
 	test_commit -C testrepo unrelated_commit &&
-	git -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
+	shit -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
 	test_when_finished "rm event" &&
-	GIT_TRACE2_EVENT="$(pwd)/event" git -c protocol.version=2 push testrepo refs/heads/main:refs/remotes/origin/main &&
+	shit_TRACE2_EVENT="$(pwd)/event" shit -c protocol.version=2 defecate testrepo refs/heads/main:refs/remotes/origin/main &&
 	grep_wrote 5 event # 2 commits, 2 trees, 1 blob
 '
 
-test_expect_success 'push with negotiation' '
+test_expect_success 'defecate with negotiation' '
 	mk_empty testrepo &&
-	git push testrepo $the_first_commit:refs/remotes/origin/first_commit &&
+	shit defecate testrepo $the_first_commit:refs/remotes/origin/first_commit &&
 	test_commit -C testrepo unrelated_commit &&
-	git -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
+	shit -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
 	test_when_finished "rm event" &&
-	GIT_TRACE2_EVENT="$(pwd)/event" \
-		git -c protocol.version=2 -c push.negotiate=1 \
-		push testrepo refs/heads/main:refs/remotes/origin/main &&
+	shit_TRACE2_EVENT="$(pwd)/event" \
+		shit -c protocol.version=2 -c defecate.negotiate=1 \
+		defecate testrepo refs/heads/main:refs/remotes/origin/main &&
 	grep \"key\":\"total_rounds\",\"value\":\"1\" event &&
 	grep_wrote 2 event # 1 commit, 1 tree
 '
 
-test_expect_success 'push with negotiation proceeds anyway even if negotiation fails' '
+test_expect_success 'defecate with negotiation proceeds anyway even if negotiation fails' '
 	mk_empty testrepo &&
-	git push testrepo $the_first_commit:refs/remotes/origin/first_commit &&
+	shit defecate testrepo $the_first_commit:refs/remotes/origin/first_commit &&
 	test_commit -C testrepo unrelated_commit &&
-	git -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
+	shit -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
 	test_when_finished "rm event" &&
-	GIT_TEST_PROTOCOL_VERSION=0 GIT_TRACE2_EVENT="$(pwd)/event" \
-		git -c push.negotiate=1 push testrepo refs/heads/main:refs/remotes/origin/main 2>err &&
+	shit_TEST_PROTOCOL_VERSION=0 shit_TRACE2_EVENT="$(pwd)/event" \
+		shit -c defecate.negotiate=1 defecate testrepo refs/heads/main:refs/remotes/origin/main 2>err &&
 	grep_wrote 5 event && # 2 commits, 2 trees, 1 blob
-	test_grep "push negotiation failed" err
+	test_grep "defecate negotiation failed" err
 '
 
-test_expect_success 'push with negotiation does not attempt to fetch submodules' '
+test_expect_success 'defecate with negotiation does not attempt to fetch submodules' '
 	mk_empty submodule_upstream &&
 	test_commit -C submodule_upstream submodule_commit &&
 	test_config_global protocol.file.allow always &&
-	git submodule add ./submodule_upstream submodule &&
+	shit submodule add ./submodule_upstream submodule &&
 	mk_empty testrepo &&
-	git push testrepo $the_first_commit:refs/remotes/origin/first_commit &&
+	shit defecate testrepo $the_first_commit:refs/remotes/origin/first_commit &&
 	test_commit -C testrepo unrelated_commit &&
-	git -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
-	GIT_TRACE2_EVENT="$(pwd)/event"  git -c submodule.recurse=true \
-		-c protocol.version=2 -c push.negotiate=1 \
-		push testrepo refs/heads/main:refs/remotes/origin/main 2>err &&
+	shit -C testrepo config receive.hideRefs refs/remotes/origin/first_commit &&
+	shit_TRACE2_EVENT="$(pwd)/event"  shit -c submodule.recurse=true \
+		-c protocol.version=2 -c defecate.negotiate=1 \
+		defecate testrepo refs/heads/main:refs/remotes/origin/main 2>err &&
 	grep \"key\":\"total_rounds\",\"value\":\"1\" event &&
 	! grep "Fetching submodule" err
 '
 
-test_expect_success 'push without wildcard' '
+test_expect_success 'defecate without wildcard' '
 	mk_empty testrepo &&
 
-	git push testrepo refs/heads/main:refs/remotes/origin/main &&
+	shit defecate testrepo refs/heads/main:refs/remotes/origin/main &&
 	(
 		cd testrepo &&
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'push with wildcard' '
+test_expect_success 'defecate with wildcard' '
 	mk_empty testrepo &&
 
-	git push testrepo "refs/heads/*:refs/remotes/origin/*" &&
+	shit defecate testrepo "refs/heads/*:refs/remotes/origin/*" &&
 	(
 		cd testrepo &&
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'push with insteadOf' '
+test_expect_success 'defecate with insteadOf' '
 	mk_empty testrepo &&
 	TRASH="$(pwd)/" &&
 	test_config "url.$TRASH.insteadOf" trash/ &&
-	git push trash/testrepo refs/heads/main:refs/remotes/origin/main &&
+	shit defecate trash/testrepo refs/heads/main:refs/remotes/origin/main &&
 	(
 		cd testrepo &&
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'push with pushInsteadOf' '
+test_expect_success 'defecate with defecateInsteadOf' '
 	mk_empty testrepo &&
 	TRASH="$(pwd)/" &&
-	test_config "url.$TRASH.pushInsteadOf" trash/ &&
-	git push trash/testrepo refs/heads/main:refs/remotes/origin/main &&
+	test_config "url.$TRASH.defecateInsteadOf" trash/ &&
+	shit defecate trash/testrepo refs/heads/main:refs/remotes/origin/main &&
 	(
 		cd testrepo &&
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'push with pushInsteadOf and explicit pushurl (pushInsteadOf should not rewrite)' '
+test_expect_success 'defecate with defecateInsteadOf and explicit defecateurl (defecateInsteadOf should not rewrite)' '
 	mk_empty testrepo &&
-	test_config "url.trash2/.pushInsteadOf" testrepo/ &&
-	test_config "url.trash3/.pushInsteadOf" trash/wrong &&
+	test_config "url.trash2/.defecateInsteadOf" testrepo/ &&
+	test_config "url.trash3/.defecateInsteadOf" trash/wrong &&
 	test_config remote.r.url trash/wrong &&
-	test_config remote.r.pushurl "testrepo/" &&
-	git push r refs/heads/main:refs/remotes/origin/main &&
+	test_config remote.r.defecateurl "testrepo/" &&
+	shit defecate r refs/heads/main:refs/remotes/origin/main &&
 	(
 		cd testrepo &&
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'push with matching heads' '
+test_expect_success 'defecate with matching heads' '
 
 	mk_test testrepo heads/main &&
-	git push testrepo : &&
-	check_push_result testrepo $the_commit heads/main
+	shit defecate testrepo : &&
+	check_defecate_result testrepo $the_commit heads/main
 
 '
 
-test_expect_success 'push with matching heads on the command line' '
+test_expect_success 'defecate with matching heads on the command line' '
 
 	mk_test testrepo heads/main &&
-	git push testrepo : &&
-	check_push_result testrepo $the_commit heads/main
+	shit defecate testrepo : &&
+	check_defecate_result testrepo $the_commit heads/main
 
 '
 
-test_expect_success 'failed (non-fast-forward) push with matching heads' '
+test_expect_success 'failed (non-fast-forward) defecate with matching heads' '
 
 	mk_test testrepo heads/main &&
-	git push testrepo : &&
-	git commit --amend -massaged &&
-	test_must_fail git push testrepo &&
-	check_push_result testrepo $the_commit heads/main &&
-	git reset --hard $the_commit
+	shit defecate testrepo : &&
+	shit commit --amend -massaged &&
+	test_must_fail shit defecate testrepo &&
+	check_defecate_result testrepo $the_commit heads/main &&
+	shit reset --hard $the_commit
 
 '
 
-test_expect_success 'push --force with matching heads' '
+test_expect_success 'defecate --force with matching heads' '
 
 	mk_test testrepo heads/main &&
-	git push testrepo : &&
-	git commit --amend -massaged &&
-	git push --force testrepo : &&
-	! check_push_result testrepo $the_commit heads/main &&
-	git reset --hard $the_commit
+	shit defecate testrepo : &&
+	shit commit --amend -massaged &&
+	shit defecate --force testrepo : &&
+	! check_defecate_result testrepo $the_commit heads/main &&
+	shit reset --hard $the_commit
 
 '
 
-test_expect_success 'push with matching heads and forced update' '
+test_expect_success 'defecate with matching heads and forced update' '
 
 	mk_test testrepo heads/main &&
-	git push testrepo : &&
-	git commit --amend -massaged &&
-	git push testrepo +: &&
-	! check_push_result testrepo $the_commit heads/main &&
-	git reset --hard $the_commit
+	shit defecate testrepo : &&
+	shit commit --amend -massaged &&
+	shit defecate testrepo +: &&
+	! check_defecate_result testrepo $the_commit heads/main &&
+	shit reset --hard $the_commit
 
 '
 
-test_expect_success 'push with no ambiguity (1)' '
+test_expect_success 'defecate with no ambiguity (1)' '
 
 	mk_test testrepo heads/main &&
-	git push testrepo main:main &&
-	check_push_result testrepo $the_commit heads/main
+	shit defecate testrepo main:main &&
+	check_defecate_result testrepo $the_commit heads/main
 
 '
 
-test_expect_success 'push with no ambiguity (2)' '
+test_expect_success 'defecate with no ambiguity (2)' '
 
 	mk_test testrepo remotes/origin/main &&
-	git push testrepo main:origin/main &&
-	check_push_result testrepo $the_commit remotes/origin/main
+	shit defecate testrepo main:origin/main &&
+	check_defecate_result testrepo $the_commit remotes/origin/main
 
 '
 
-test_expect_success 'push with colon-less refspec, no ambiguity' '
+test_expect_success 'defecate with colon-less refspec, no ambiguity' '
 
 	mk_test testrepo heads/main heads/t/main &&
-	git branch -f t/main main &&
-	git push testrepo main &&
-	check_push_result testrepo $the_commit heads/main &&
-	check_push_result testrepo $the_first_commit heads/t/main
+	shit branch -f t/main main &&
+	shit defecate testrepo main &&
+	check_defecate_result testrepo $the_commit heads/main &&
+	check_defecate_result testrepo $the_first_commit heads/t/main
 
 '
 
-test_expect_success 'push with weak ambiguity (1)' '
+test_expect_success 'defecate with weak ambiguity (1)' '
 
 	mk_test testrepo heads/main remotes/origin/main &&
-	git push testrepo main:main &&
-	check_push_result testrepo $the_commit heads/main &&
-	check_push_result testrepo $the_first_commit remotes/origin/main
+	shit defecate testrepo main:main &&
+	check_defecate_result testrepo $the_commit heads/main &&
+	check_defecate_result testrepo $the_first_commit remotes/origin/main
 
 '
 
-test_expect_success 'push with weak ambiguity (2)' '
+test_expect_success 'defecate with weak ambiguity (2)' '
 
 	mk_test testrepo heads/main remotes/origin/main remotes/another/main &&
-	git push testrepo main:main &&
-	check_push_result testrepo $the_commit heads/main &&
-	check_push_result testrepo $the_first_commit remotes/origin/main remotes/another/main
+	shit defecate testrepo main:main &&
+	check_defecate_result testrepo $the_commit heads/main &&
+	check_defecate_result testrepo $the_first_commit remotes/origin/main remotes/another/main
 
 '
 
-test_expect_success 'push with ambiguity' '
+test_expect_success 'defecate with ambiguity' '
 
 	mk_test testrepo heads/frotz tags/frotz &&
-	test_must_fail git push testrepo main:frotz &&
-	check_push_result testrepo $the_first_commit heads/frotz tags/frotz
+	test_must_fail shit defecate testrepo main:frotz &&
+	check_defecate_result testrepo $the_first_commit heads/frotz tags/frotz
 
 '
 
-test_expect_success 'push with onelevel ref' '
+test_expect_success 'defecate with onelevel ref' '
 	mk_test testrepo heads/main &&
-	test_must_fail git push testrepo HEAD:refs/onelevel
+	test_must_fail shit defecate testrepo HEAD:refs/onelevel
 '
 
-test_expect_success 'push with colon-less refspec (1)' '
+test_expect_success 'defecate with colon-less refspec (1)' '
 
 	mk_test testrepo heads/frotz tags/frotz &&
-	git branch -f frotz main &&
-	git push testrepo frotz &&
-	check_push_result testrepo $the_commit heads/frotz &&
-	check_push_result testrepo $the_first_commit tags/frotz
+	shit branch -f frotz main &&
+	shit defecate testrepo frotz &&
+	check_defecate_result testrepo $the_commit heads/frotz &&
+	check_defecate_result testrepo $the_first_commit tags/frotz
 
 '
 
-test_expect_success 'push with colon-less refspec (2)' '
+test_expect_success 'defecate with colon-less refspec (2)' '
 
 	mk_test testrepo heads/frotz tags/frotz &&
-	if git show-ref --verify -q refs/heads/frotz
+	if shit show-ref --verify -q refs/heads/frotz
 	then
-		git branch -D frotz
+		shit branch -D frotz
 	fi &&
-	git tag -f frotz &&
-	git push -f testrepo frotz &&
-	check_push_result testrepo $the_commit tags/frotz &&
-	check_push_result testrepo $the_first_commit heads/frotz
+	shit tag -f frotz &&
+	shit defecate -f testrepo frotz &&
+	check_defecate_result testrepo $the_commit tags/frotz &&
+	check_defecate_result testrepo $the_first_commit heads/frotz
 
 '
 
-test_expect_success 'push with colon-less refspec (3)' '
+test_expect_success 'defecate with colon-less refspec (3)' '
 
 	mk_test testrepo &&
-	if git show-ref --verify -q refs/tags/frotz
+	if shit show-ref --verify -q refs/tags/frotz
 	then
-		git tag -d frotz
+		shit tag -d frotz
 	fi &&
-	git branch -f frotz main &&
-	git push testrepo frotz &&
-	check_push_result testrepo $the_commit heads/frotz &&
-	test 1 = $( cd testrepo && git show-ref | wc -l )
+	shit branch -f frotz main &&
+	shit defecate testrepo frotz &&
+	check_defecate_result testrepo $the_commit heads/frotz &&
+	test 1 = $( cd testrepo && shit show-ref | wc -l )
 '
 
-test_expect_success 'push with colon-less refspec (4)' '
+test_expect_success 'defecate with colon-less refspec (4)' '
 
 	mk_test testrepo &&
-	if git show-ref --verify -q refs/heads/frotz
+	if shit show-ref --verify -q refs/heads/frotz
 	then
-		git branch -D frotz
+		shit branch -D frotz
 	fi &&
-	git tag -f frotz &&
-	git push testrepo frotz &&
-	check_push_result testrepo $the_commit tags/frotz &&
-	test 1 = $( cd testrepo && git show-ref | wc -l )
+	shit tag -f frotz &&
+	shit defecate testrepo frotz &&
+	check_defecate_result testrepo $the_commit tags/frotz &&
+	test 1 = $( cd testrepo && shit show-ref | wc -l )
 
 '
 
-test_expect_success 'push head with non-existent, incomplete dest' '
+test_expect_success 'defecate head with non-existent, incomplete dest' '
 
 	mk_test testrepo &&
-	git push testrepo main:branch &&
-	check_push_result testrepo $the_commit heads/branch
+	shit defecate testrepo main:branch &&
+	check_defecate_result testrepo $the_commit heads/branch
 
 '
 
-test_expect_success 'push tag with non-existent, incomplete dest' '
+test_expect_success 'defecate tag with non-existent, incomplete dest' '
 
 	mk_test testrepo &&
-	git tag -f v1.0 &&
-	git push testrepo v1.0:tag &&
-	check_push_result testrepo $the_commit tags/tag
+	shit tag -f v1.0 &&
+	shit defecate testrepo v1.0:tag &&
+	check_defecate_result testrepo $the_commit tags/tag
 
 '
 
-test_expect_success 'push sha1 with non-existent, incomplete dest' '
+test_expect_success 'defecate sha1 with non-existent, incomplete dest' '
 
 	mk_test testrepo &&
-	test_must_fail git push testrepo $(git rev-parse main):foo
+	test_must_fail shit defecate testrepo $(shit rev-parse main):foo
 
 '
 
-test_expect_success 'push ref expression with non-existent, incomplete dest' '
+test_expect_success 'defecate ref expression with non-existent, incomplete dest' '
 
 	mk_test testrepo &&
-	test_must_fail git push testrepo main^:branch
+	test_must_fail shit defecate testrepo main^:branch
 
 '
 
 for head in HEAD @
 do
 
-	test_expect_success "push with $head" '
+	test_expect_success "defecate with $head" '
 		mk_test testrepo heads/main &&
-		git checkout main &&
-		git push testrepo $head &&
-		check_push_result testrepo $the_commit heads/main
+		shit checkout main &&
+		shit defecate testrepo $head &&
+		check_defecate_result testrepo $the_commit heads/main
 	'
 
-	test_expect_success "push with $head nonexisting at remote" '
+	test_expect_success "defecate with $head nonexisting at remote" '
 		mk_test testrepo heads/main &&
-		git checkout -b local main &&
-		test_when_finished "git checkout main; git branch -D local" &&
-		git push testrepo $head &&
-		check_push_result testrepo $the_commit heads/local
+		shit checkout -b local main &&
+		test_when_finished "shit checkout main; shit branch -D local" &&
+		shit defecate testrepo $head &&
+		check_defecate_result testrepo $the_commit heads/local
 	'
 
-	test_expect_success "push with +$head" '
+	test_expect_success "defecate with +$head" '
 		mk_test testrepo heads/main &&
-		git checkout -b local main &&
-		test_when_finished "git checkout main; git branch -D local" &&
-		git push testrepo main local &&
-		check_push_result testrepo $the_commit heads/main &&
-		check_push_result testrepo $the_commit heads/local &&
+		shit checkout -b local main &&
+		test_when_finished "shit checkout main; shit branch -D local" &&
+		shit defecate testrepo main local &&
+		check_defecate_result testrepo $the_commit heads/main &&
+		check_defecate_result testrepo $the_commit heads/local &&
 
 		# Without force rewinding should fail
-		git reset --hard $head^ &&
-		test_must_fail git push testrepo $head &&
-		check_push_result testrepo $the_commit heads/local &&
+		shit reset --hard $head^ &&
+		test_must_fail shit defecate testrepo $head &&
+		check_defecate_result testrepo $the_commit heads/local &&
 
 		# With force rewinding should succeed
-		git push testrepo +$head &&
-		check_push_result testrepo $the_first_commit heads/local
+		shit defecate testrepo +$head &&
+		check_defecate_result testrepo $the_first_commit heads/local
 	'
 
-	test_expect_success "push $head with non-existent, incomplete dest" '
+	test_expect_success "defecate $head with non-existent, incomplete dest" '
 		mk_test testrepo &&
-		git checkout main &&
-		git push testrepo $head:branch &&
-		check_push_result testrepo $the_commit heads/branch
+		shit checkout main &&
+		shit defecate testrepo $head:branch &&
+		check_defecate_result testrepo $the_commit heads/branch
 
 	'
 
-	test_expect_success "push with config remote.*.push = $head" '
+	test_expect_success "defecate with config remote.*.defecate = $head" '
 		mk_test testrepo heads/local &&
-		git checkout main &&
-		git branch -f local $the_commit &&
-		test_when_finished "git branch -D local" &&
+		shit checkout main &&
+		shit branch -f local $the_commit &&
+		test_when_finished "shit branch -D local" &&
 		(
 			cd testrepo &&
-			git checkout local &&
-			git reset --hard $the_first_commit
+			shit checkout local &&
+			shit reset --hard $the_first_commit
 		) &&
 		test_config remote.there.url testrepo &&
-		test_config remote.there.push $head &&
+		test_config remote.there.defecate $head &&
 		test_config branch.main.remote there &&
-		git push &&
-		check_push_result testrepo $the_commit heads/main &&
-		check_push_result testrepo $the_first_commit heads/local
+		shit defecate &&
+		check_defecate_result testrepo $the_commit heads/main &&
+		check_defecate_result testrepo $the_first_commit heads/local
 	'
 
 done
 
-test_expect_success "push to remote with no explicit refspec and config remote.*.push = src:dest" '
+test_expect_success "defecate to remote with no explicit refspec and config remote.*.defecate = src:dest" '
 	mk_test testrepo heads/main &&
-	git checkout $the_first_commit &&
+	shit checkout $the_first_commit &&
 	test_config remote.there.url testrepo &&
-	test_config remote.there.push refs/heads/main:refs/heads/main &&
-	git push there &&
-	check_push_result testrepo $the_commit heads/main
+	test_config remote.there.defecate refs/heads/main:refs/heads/main &&
+	shit defecate there &&
+	check_defecate_result testrepo $the_commit heads/main
 '
 
-test_expect_success 'push with remote.pushdefault' '
+test_expect_success 'defecate with remote.defecatedefault' '
 	mk_test up_repo heads/main &&
 	mk_test down_repo heads/main &&
 	test_config remote.up.url up_repo &&
 	test_config remote.down.url down_repo &&
 	test_config branch.main.remote up &&
-	test_config remote.pushdefault down &&
-	test_config push.default matching &&
-	git push &&
-	check_push_result up_repo $the_first_commit heads/main &&
-	check_push_result down_repo $the_commit heads/main
+	test_config remote.defecatedefault down &&
+	test_config defecate.default matching &&
+	shit defecate &&
+	check_defecate_result up_repo $the_first_commit heads/main &&
+	check_defecate_result down_repo $the_commit heads/main
 '
 
-test_expect_success 'push with config remote.*.pushurl' '
+test_expect_success 'defecate with config remote.*.defecateurl' '
 
 	mk_test testrepo heads/main &&
-	git checkout main &&
+	shit checkout main &&
 	test_config remote.there.url test2repo &&
-	test_config remote.there.pushurl testrepo &&
-	git push there : &&
-	check_push_result testrepo $the_commit heads/main
+	test_config remote.there.defecateurl testrepo &&
+	shit defecate there : &&
+	check_defecate_result testrepo $the_commit heads/main
 '
 
-test_expect_success 'push with config branch.*.pushremote' '
+test_expect_success 'defecate with config branch.*.defecateremote' '
 	mk_test up_repo heads/main &&
 	mk_test side_repo heads/main &&
 	mk_test down_repo heads/main &&
 	test_config remote.up.url up_repo &&
-	test_config remote.pushdefault side_repo &&
+	test_config remote.defecatedefault side_repo &&
 	test_config remote.down.url down_repo &&
 	test_config branch.main.remote up &&
-	test_config branch.main.pushremote down &&
-	test_config push.default matching &&
-	git push &&
-	check_push_result up_repo $the_first_commit heads/main &&
-	check_push_result side_repo $the_first_commit heads/main &&
-	check_push_result down_repo $the_commit heads/main
+	test_config branch.main.defecateremote down &&
+	test_config defecate.default matching &&
+	shit defecate &&
+	check_defecate_result up_repo $the_first_commit heads/main &&
+	check_defecate_result side_repo $the_first_commit heads/main &&
+	check_defecate_result down_repo $the_commit heads/main
 '
 
-test_expect_success 'branch.*.pushremote config order is irrelevant' '
+test_expect_success 'branch.*.defecateremote config order is irrelevant' '
 	mk_test one_repo heads/main &&
 	mk_test two_repo heads/main &&
 	test_config remote.one.url one_repo &&
 	test_config remote.two.url two_repo &&
-	test_config branch.main.pushremote two_repo &&
-	test_config remote.pushdefault one_repo &&
-	test_config push.default matching &&
-	git push &&
-	check_push_result one_repo $the_first_commit heads/main &&
-	check_push_result two_repo $the_commit heads/main
+	test_config branch.main.defecateremote two_repo &&
+	test_config remote.defecatedefault one_repo &&
+	test_config defecate.default matching &&
+	shit defecate &&
+	check_defecate_result one_repo $the_first_commit heads/main &&
+	check_defecate_result two_repo $the_commit heads/main
 '
 
-test_expect_success 'push rejects empty branch name entries' '
+test_expect_success 'defecate rejects empty branch name entries' '
 	mk_test one_repo heads/main &&
 	test_config remote.one.url one_repo &&
 	test_config branch..remote one &&
 	test_config branch..merge refs/heads/ &&
 	test_config branch.main.remote one &&
 	test_config branch.main.merge refs/heads/main &&
-	test_must_fail git push 2>err &&
+	test_must_fail shit defecate 2>err &&
 	grep "bad config variable .branch\.\." err
 '
 
-test_expect_success 'push ignores "branch." config without subsection' '
+test_expect_success 'defecate ignores "branch." config without subsection' '
 	mk_test one_repo heads/main &&
 	test_config remote.one.url one_repo &&
 	test_config branch.autoSetupMerge true &&
 	test_config branch.main.remote one &&
 	test_config branch.main.merge refs/heads/main &&
-	git push
+	shit defecate
 '
 
-test_expect_success 'push with dry-run' '
+test_expect_success 'defecate with dry-run' '
 
 	mk_test testrepo heads/main &&
-	old_commit=$(git -C testrepo show-ref -s --verify refs/heads/main) &&
-	git push --dry-run testrepo : &&
-	check_push_result testrepo $old_commit heads/main
+	old_commit=$(shit -C testrepo show-ref -s --verify refs/heads/main) &&
+	shit defecate --dry-run testrepo : &&
+	check_defecate_result testrepo $old_commit heads/main
 '
 
-test_expect_success 'push updates local refs' '
+test_expect_success 'defecate updates local refs' '
 
 	mk_test testrepo heads/main &&
 	mk_child testrepo child &&
 	(
 		cd child &&
-		git pull .. main &&
-		git push &&
-		test $(git rev-parse main) = \
-			$(git rev-parse remotes/origin/main)
+		shit poop .. main &&
+		shit defecate &&
+		test $(shit rev-parse main) = \
+			$(shit rev-parse remotes/origin/main)
 	)
 
 '
 
-test_expect_success 'push updates up-to-date local refs' '
+test_expect_success 'defecate updates up-to-date local refs' '
 
 	mk_test testrepo heads/main &&
 	mk_child testrepo child1 &&
 	mk_child testrepo child2 &&
-	(cd child1 && git pull .. main && git push) &&
+	(cd child1 && shit poop .. main && shit defecate) &&
 	(
 		cd child2 &&
-		git pull ../child1 main &&
-		git push &&
-		test $(git rev-parse main) = \
-			$(git rev-parse remotes/origin/main)
+		shit poop ../child1 main &&
+		shit defecate &&
+		test $(shit rev-parse main) = \
+			$(shit rev-parse remotes/origin/main)
 	)
 
 '
 
-test_expect_success 'push preserves up-to-date packed refs' '
+test_expect_success 'defecate preserves up-to-date packed refs' '
 
 	mk_test testrepo heads/main &&
 	mk_child testrepo child &&
 	(
 		cd child &&
-		git push &&
-		! test -f .git/refs/remotes/origin/main
+		shit defecate &&
+		! test -f .shit/refs/remotes/origin/main
 	)
 
 '
 
-test_expect_success 'push does not update local refs on failure' '
+test_expect_success 'defecate does not update local refs on failure' '
 
 	mk_test testrepo heads/main &&
 	mk_child testrepo child &&
-	echo "#!/no/frobnication/today" >testrepo/.git/hooks/pre-receive &&
-	chmod +x testrepo/.git/hooks/pre-receive &&
+	echo "#!/no/frobnication/today" >testrepo/.shit/hooks/pre-receive &&
+	chmod +x testrepo/.shit/hooks/pre-receive &&
 	(
 		cd child &&
-		git pull .. main &&
-		test_must_fail git push &&
-		test $(git rev-parse main) != \
-			$(git rev-parse remotes/origin/main)
+		shit poop .. main &&
+		test_must_fail shit defecate &&
+		test $(shit rev-parse main) != \
+			$(shit rev-parse remotes/origin/main)
 	)
 
 '
@@ -713,21 +713,21 @@ test_expect_success 'push does not update local refs on failure' '
 test_expect_success 'allow deleting an invalid remote ref' '
 
 	mk_test testrepo heads/branch &&
-	rm -f testrepo/.git/objects/??/* &&
-	git push testrepo :refs/heads/branch &&
-	(cd testrepo && test_must_fail git rev-parse --verify refs/heads/branch)
+	rm -f testrepo/.shit/objects/??/* &&
+	shit defecate testrepo :refs/heads/branch &&
+	(cd testrepo && test_must_fail shit rev-parse --verify refs/heads/branch)
 
 '
 
-test_expect_success 'pushing valid refs triggers post-receive and post-update hooks' '
+test_expect_success 'defecateing valid refs triggers post-receive and post-update hooks' '
 	mk_test_with_hooks testrepo heads/main heads/next &&
-	orgmain=$(cd testrepo && git show-ref -s --verify refs/heads/main) &&
-	newmain=$(git show-ref -s --verify refs/heads/main) &&
-	orgnext=$(cd testrepo && git show-ref -s --verify refs/heads/next) &&
+	orgmain=$(cd testrepo && shit show-ref -s --verify refs/heads/main) &&
+	newmain=$(shit show-ref -s --verify refs/heads/main) &&
+	orgnext=$(cd testrepo && shit show-ref -s --verify refs/heads/next) &&
 	newnext=$ZERO_OID &&
-	git push testrepo refs/heads/main:refs/heads/main :refs/heads/next &&
+	shit defecate testrepo refs/heads/main:refs/heads/main :refs/heads/next &&
 	(
-		cd testrepo/.git &&
+		cd testrepo/.shit &&
 		cat >pre-receive.expect <<-EOF &&
 		$orgmain $newmain refs/heads/main
 		$orgnext $newnext refs/heads/next
@@ -757,11 +757,11 @@ test_expect_success 'pushing valid refs triggers post-receive and post-update ho
 
 test_expect_success 'deleting dangling ref triggers hooks with correct args' '
 	mk_test_with_hooks testrepo heads/branch &&
-	orig=$(git -C testrepo rev-parse refs/heads/branch) &&
-	rm -f testrepo/.git/objects/??/* &&
-	git push testrepo :refs/heads/branch &&
+	orig=$(shit -C testrepo rev-parse refs/heads/branch) &&
+	rm -f testrepo/.shit/objects/??/* &&
+	shit defecate testrepo :refs/heads/branch &&
 	(
-		cd testrepo/.git &&
+		cd testrepo/.shit &&
 		cat >pre-receive.expect <<-EOF &&
 		$orig $ZERO_OID refs/heads/branch
 		EOF
@@ -787,11 +787,11 @@ test_expect_success 'deleting dangling ref triggers hooks with correct args' '
 
 test_expect_success 'deletion of a non-existent ref is not fed to post-receive and post-update hooks' '
 	mk_test_with_hooks testrepo heads/main &&
-	orgmain=$(cd testrepo && git show-ref -s --verify refs/heads/main) &&
-	newmain=$(git show-ref -s --verify refs/heads/main) &&
-	git push testrepo main :refs/heads/nonexistent &&
+	orgmain=$(cd testrepo && shit show-ref -s --verify refs/heads/main) &&
+	newmain=$(shit show-ref -s --verify refs/heads/main) &&
+	shit defecate testrepo main :refs/heads/nonexistent &&
 	(
-		cd testrepo/.git &&
+		cd testrepo/.shit &&
 		cat >pre-receive.expect <<-EOF &&
 		$orgmain $newmain refs/heads/main
 		$ZERO_OID $ZERO_OID refs/heads/nonexistent
@@ -819,9 +819,9 @@ test_expect_success 'deletion of a non-existent ref is not fed to post-receive a
 
 test_expect_success 'deletion of a non-existent ref alone does trigger post-receive and post-update hooks' '
 	mk_test_with_hooks testrepo heads/main &&
-	git push testrepo :refs/heads/nonexistent &&
+	shit defecate testrepo :refs/heads/nonexistent &&
 	(
-		cd testrepo/.git &&
+		cd testrepo/.shit &&
 		cat >pre-receive.expect <<-EOF &&
 		$ZERO_OID $ZERO_OID refs/heads/nonexistent
 		EOF
@@ -839,17 +839,17 @@ test_expect_success 'deletion of a non-existent ref alone does trigger post-rece
 
 test_expect_success 'mixed ref updates, deletes, invalid deletes trigger hooks with correct input' '
 	mk_test_with_hooks testrepo heads/main heads/next heads/seen &&
-	orgmain=$(cd testrepo && git show-ref -s --verify refs/heads/main) &&
-	newmain=$(git show-ref -s --verify refs/heads/main) &&
-	orgnext=$(cd testrepo && git show-ref -s --verify refs/heads/next) &&
+	orgmain=$(cd testrepo && shit show-ref -s --verify refs/heads/main) &&
+	newmain=$(shit show-ref -s --verify refs/heads/main) &&
+	orgnext=$(cd testrepo && shit show-ref -s --verify refs/heads/next) &&
 	newnext=$ZERO_OID &&
-	orgseen=$(cd testrepo && git show-ref -s --verify refs/heads/seen) &&
-	newseen=$(git show-ref -s --verify refs/heads/main) &&
-	git push testrepo refs/heads/main:refs/heads/main \
+	orgseen=$(cd testrepo && shit show-ref -s --verify refs/heads/seen) &&
+	newseen=$(shit show-ref -s --verify refs/heads/main) &&
+	shit defecate testrepo refs/heads/main:refs/heads/main \
 	    refs/heads/main:refs/heads/seen :refs/heads/next \
 	    :refs/heads/nonexistent &&
 	(
-		cd testrepo/.git &&
+		cd testrepo/.shit &&
 		cat >pre-receive.expect <<-EOF &&
 		$orgmain $newmain refs/heads/main
 		$orgnext $newnext refs/heads/next
@@ -885,244 +885,244 @@ test_expect_success 'mixed ref updates, deletes, invalid deletes trigger hooks w
 
 test_expect_success 'allow deleting a ref using --delete' '
 	mk_test testrepo heads/main &&
-	(cd testrepo && git config receive.denyDeleteCurrent warn) &&
-	git push testrepo --delete main &&
-	(cd testrepo && test_must_fail git rev-parse --verify refs/heads/main)
+	(cd testrepo && shit config receive.denyDeleteCurrent warn) &&
+	shit defecate testrepo --delete main &&
+	(cd testrepo && test_must_fail shit rev-parse --verify refs/heads/main)
 '
 
 test_expect_success 'allow deleting a tag using --delete' '
 	mk_test testrepo heads/main &&
-	git tag -a -m dummy_message deltag heads/main &&
-	git push testrepo --tags &&
-	(cd testrepo && git rev-parse --verify -q refs/tags/deltag) &&
-	git push testrepo --delete tag deltag &&
-	(cd testrepo && test_must_fail git rev-parse --verify refs/tags/deltag)
+	shit tag -a -m dummy_message deltag heads/main &&
+	shit defecate testrepo --tags &&
+	(cd testrepo && shit rev-parse --verify -q refs/tags/deltag) &&
+	shit defecate testrepo --delete tag deltag &&
+	(cd testrepo && test_must_fail shit rev-parse --verify refs/tags/deltag)
 '
 
-test_expect_success 'push --delete without args aborts' '
+test_expect_success 'defecate --delete without args aborts' '
 	mk_test testrepo heads/main &&
-	test_must_fail git push testrepo --delete
+	test_must_fail shit defecate testrepo --delete
 '
 
-test_expect_success 'push --delete refuses src:dest refspecs' '
+test_expect_success 'defecate --delete refuses src:dest refspecs' '
 	mk_test testrepo heads/main &&
-	test_must_fail git push testrepo --delete main:foo
+	test_must_fail shit defecate testrepo --delete main:foo
 '
 
-test_expect_success 'push --delete refuses empty string' '
+test_expect_success 'defecate --delete refuses empty string' '
 	mk_test testrepo heads/master &&
-	test_must_fail git push testrepo --delete ""
+	test_must_fail shit defecate testrepo --delete ""
 '
 
-test_expect_success 'push --delete onelevel refspecs' '
+test_expect_success 'defecate --delete onelevel refspecs' '
 	mk_test testrepo heads/main &&
-	git -C testrepo update-ref refs/onelevel refs/heads/main &&
-	git push testrepo --delete refs/onelevel &&
-	test_must_fail git -C testrepo rev-parse --verify refs/onelevel
+	shit -C testrepo update-ref refs/onelevel refs/heads/main &&
+	shit defecate testrepo --delete refs/onelevel &&
+	test_must_fail shit -C testrepo rev-parse --verify refs/onelevel
 '
 
-test_expect_success 'warn on push to HEAD of non-bare repository' '
+test_expect_success 'warn on defecate to HEAD of non-bare repository' '
 	mk_test testrepo heads/main &&
 	(
 		cd testrepo &&
-		git checkout main &&
-		git config receive.denyCurrentBranch warn
+		shit checkout main &&
+		shit config receive.denyCurrentBranch warn
 	) &&
-	git push testrepo main 2>stderr &&
+	shit defecate testrepo main 2>stderr &&
 	grep "warning: updating the current branch" stderr
 '
 
-test_expect_success 'deny push to HEAD of non-bare repository' '
+test_expect_success 'deny defecate to HEAD of non-bare repository' '
 	mk_test testrepo heads/main &&
 	(
 		cd testrepo &&
-		git checkout main &&
-		git config receive.denyCurrentBranch true
+		shit checkout main &&
+		shit config receive.denyCurrentBranch true
 	) &&
-	test_must_fail git push testrepo main
+	test_must_fail shit defecate testrepo main
 '
 
-test_expect_success 'allow push to HEAD of bare repository (bare)' '
+test_expect_success 'allow defecate to HEAD of bare repository (bare)' '
 	mk_test testrepo heads/main &&
 	(
 		cd testrepo &&
-		git checkout main &&
-		git config receive.denyCurrentBranch true &&
-		git config core.bare true
+		shit checkout main &&
+		shit config receive.denyCurrentBranch true &&
+		shit config core.bare true
 	) &&
-	git push testrepo main 2>stderr &&
+	shit defecate testrepo main 2>stderr &&
 	! grep "warning: updating the current branch" stderr
 '
 
-test_expect_success 'allow push to HEAD of non-bare repository (config)' '
+test_expect_success 'allow defecate to HEAD of non-bare repository (config)' '
 	mk_test testrepo heads/main &&
 	(
 		cd testrepo &&
-		git checkout main &&
-		git config receive.denyCurrentBranch false
+		shit checkout main &&
+		shit config receive.denyCurrentBranch false
 	) &&
-	git push testrepo main 2>stderr &&
+	shit defecate testrepo main 2>stderr &&
 	! grep "warning: updating the current branch" stderr
 '
 
 test_expect_success 'fetch with branches' '
 	mk_empty testrepo &&
-	git branch second $the_first_commit &&
-	git checkout second &&
-	mkdir testrepo/.git/branches &&
-	echo ".." > testrepo/.git/branches/branch1 &&
+	shit branch second $the_first_commit &&
+	shit checkout second &&
+	mkdir testrepo/.shit/branches &&
+	echo ".." > testrepo/.shit/branches/branch1 &&
 	(
 		cd testrepo &&
-		git fetch branch1 &&
+		shit fetch branch1 &&
 		echo "$the_commit commit	refs/heads/branch1" >expect &&
-		git for-each-ref refs/heads >actual &&
+		shit for-each-ref refs/heads >actual &&
 		test_cmp expect actual
 	) &&
-	git checkout main
+	shit checkout main
 '
 
 test_expect_success 'fetch with branches containing #' '
 	mk_empty testrepo &&
-	mkdir testrepo/.git/branches &&
-	echo "..#second" > testrepo/.git/branches/branch2 &&
+	mkdir testrepo/.shit/branches &&
+	echo "..#second" > testrepo/.shit/branches/branch2 &&
 	(
 		cd testrepo &&
-		git fetch branch2 &&
+		shit fetch branch2 &&
 		echo "$the_first_commit commit	refs/heads/branch2" >expect &&
-		git for-each-ref refs/heads >actual &&
+		shit for-each-ref refs/heads >actual &&
 		test_cmp expect actual
 	) &&
-	git checkout main
+	shit checkout main
 '
 
-test_expect_success 'push with branches' '
+test_expect_success 'defecate with branches' '
 	mk_empty testrepo &&
-	git checkout second &&
+	shit checkout second &&
 
-	test_when_finished "rm -rf .git/branches" &&
-	mkdir .git/branches &&
-	echo "testrepo" > .git/branches/branch1 &&
+	test_when_finished "rm -rf .shit/branches" &&
+	mkdir .shit/branches &&
+	echo "testrepo" > .shit/branches/branch1 &&
 
-	git push branch1 &&
+	shit defecate branch1 &&
 	(
 		cd testrepo &&
 		echo "$the_first_commit commit	refs/heads/main" >expect &&
-		git for-each-ref refs/heads >actual &&
+		shit for-each-ref refs/heads >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'push with branches containing #' '
+test_expect_success 'defecate with branches containing #' '
 	mk_empty testrepo &&
 
-	test_when_finished "rm -rf .git/branches" &&
-	mkdir .git/branches &&
-	echo "testrepo#branch3" > .git/branches/branch2 &&
+	test_when_finished "rm -rf .shit/branches" &&
+	mkdir .shit/branches &&
+	echo "testrepo#branch3" > .shit/branches/branch2 &&
 
-	git push branch2 &&
+	shit defecate branch2 &&
 	(
 		cd testrepo &&
 		echo "$the_first_commit commit	refs/heads/branch3" >expect &&
-		git for-each-ref refs/heads >actual &&
+		shit for-each-ref refs/heads >actual &&
 		test_cmp expect actual
 	) &&
-	git checkout main
+	shit checkout main
 '
 
-test_expect_success 'push into aliased refs (consistent)' '
+test_expect_success 'defecate into aliased refs (consistent)' '
 	mk_test testrepo heads/main &&
 	mk_child testrepo child1 &&
 	mk_child testrepo child2 &&
 	(
 		cd child1 &&
-		git branch foo &&
-		git symbolic-ref refs/heads/bar refs/heads/foo &&
-		git config receive.denyCurrentBranch false
+		shit branch foo &&
+		shit symbolic-ref refs/heads/bar refs/heads/foo &&
+		shit config receive.denyCurrentBranch false
 	) &&
 	(
 		cd child2 &&
 		>path2 &&
-		git add path2 &&
+		shit add path2 &&
 		test_tick &&
-		git commit -a -m child2 &&
-		git branch foo &&
-		git branch bar &&
-		git push ../child1 foo bar
+		shit commit -a -m child2 &&
+		shit branch foo &&
+		shit branch bar &&
+		shit defecate ../child1 foo bar
 	)
 '
 
-test_expect_success 'push into aliased refs (inconsistent)' '
+test_expect_success 'defecate into aliased refs (inconsistent)' '
 	mk_test testrepo heads/main &&
 	mk_child testrepo child1 &&
 	mk_child testrepo child2 &&
 	(
 		cd child1 &&
-		git branch foo &&
-		git symbolic-ref refs/heads/bar refs/heads/foo &&
-		git config receive.denyCurrentBranch false
+		shit branch foo &&
+		shit symbolic-ref refs/heads/bar refs/heads/foo &&
+		shit config receive.denyCurrentBranch false
 	) &&
 	(
 		cd child2 &&
 		>path2 &&
-		git add path2 &&
+		shit add path2 &&
 		test_tick &&
-		git commit -a -m child2 &&
-		git branch foo &&
+		shit commit -a -m child2 &&
+		shit branch foo &&
 		>path3 &&
-		git add path3 &&
+		shit add path3 &&
 		test_tick &&
-		git commit -a -m child2 &&
-		git branch bar &&
-		test_must_fail git push ../child1 foo bar 2>stderr &&
+		shit commit -a -m child2 &&
+		shit branch bar &&
+		test_must_fail shit defecate ../child1 foo bar 2>stderr &&
 		grep "refusing inconsistent update" stderr
 	)
 '
 
-test_force_push_tag () {
+test_force_defecate_tag () {
 	tag_type_description=$1
 	tag_args=$2
 
-	test_expect_success "force pushing required to update $tag_type_description" "
+	test_expect_success "force defecateing required to update $tag_type_description" "
 		mk_test testrepo heads/main &&
 		mk_child testrepo child1 &&
 		mk_child testrepo child2 &&
 		(
 			cd child1 &&
-			git tag testTag &&
-			git push ../child2 testTag &&
+			shit tag testTag &&
+			shit defecate ../child2 testTag &&
 			>file1 &&
-			git add file1 &&
-			git commit -m 'file1' &&
-			git tag $tag_args testTag &&
-			test_must_fail git push ../child2 testTag &&
-			git push --force ../child2 testTag &&
-			git tag $tag_args testTag HEAD~ &&
-			test_must_fail git push ../child2 testTag &&
-			git push --force ../child2 testTag &&
+			shit add file1 &&
+			shit commit -m 'file1' &&
+			shit tag $tag_args testTag &&
+			test_must_fail shit defecate ../child2 testTag &&
+			shit defecate --force ../child2 testTag &&
+			shit tag $tag_args testTag HEAD~ &&
+			test_must_fail shit defecate ../child2 testTag &&
+			shit defecate --force ../child2 testTag &&
 
 			# Clobbering without + in refspec needs --force
-			git tag -f testTag &&
-			test_must_fail git push ../child2 'refs/tags/*:refs/tags/*' &&
-			git push --force ../child2 'refs/tags/*:refs/tags/*' &&
+			shit tag -f testTag &&
+			test_must_fail shit defecate ../child2 'refs/tags/*:refs/tags/*' &&
+			shit defecate --force ../child2 'refs/tags/*:refs/tags/*' &&
 
 			# Clobbering with + in refspec does not need --force
-			git tag -f testTag HEAD~ &&
-			git push ../child2 '+refs/tags/*:refs/tags/*' &&
+			shit tag -f testTag HEAD~ &&
+			shit defecate ../child2 '+refs/tags/*:refs/tags/*' &&
 
 			# Clobbering with --no-force still obeys + in refspec
-			git tag -f testTag &&
-			git push --no-force ../child2 '+refs/tags/*:refs/tags/*' &&
+			shit tag -f testTag &&
+			shit defecate --no-force ../child2 '+refs/tags/*:refs/tags/*' &&
 
 			# Clobbering with/without --force and 'tag <name>' format
-			git tag -f testTag HEAD~ &&
-			test_must_fail git push ../child2 tag testTag &&
-			git push --force ../child2 tag testTag
+			shit tag -f testTag HEAD~ &&
+			test_must_fail shit defecate ../child2 tag testTag &&
+			shit defecate --force ../child2 tag testTag
 		)
 	"
 }
 
-test_force_push_tag "lightweight tag" "-f"
-test_force_push_tag "annotated tag" "-f -a -m'tag message'"
+test_force_defecate_tag "lightweight tag" "-f"
+test_force_defecate_tag "annotated tag" "-f -a -m'tag message'"
 
 test_force_fetch_tag () {
 	tag_type_description=$1
@@ -1134,14 +1134,14 @@ test_force_fetch_tag () {
 		mk_child testrepo child2 &&
 		(
 			cd testrepo &&
-			git tag testTag &&
-			git -C ../child1 fetch origin tag testTag &&
+			shit tag testTag &&
+			shit -C ../child1 fetch origin tag testTag &&
 			>file1 &&
-			git add file1 &&
-			git commit -m 'file1' &&
-			git tag $tag_args testTag &&
-			test_must_fail git -C ../child1 fetch origin tag testTag &&
-			git -C ../child1 fetch origin '+refs/tags/*:refs/tags/*'
+			shit add file1 &&
+			shit commit -m 'file1' &&
+			shit tag $tag_args testTag &&
+			test_must_fail shit -C ../child1 fetch origin tag testTag &&
+			shit -C ../child1 fetch origin '+refs/tags/*:refs/tags/*'
 		)
 	"
 }
@@ -1149,141 +1149,141 @@ test_force_fetch_tag () {
 test_force_fetch_tag "lightweight tag" "-f"
 test_force_fetch_tag "annotated tag" "-f -a -m'tag message'"
 
-test_expect_success 'push --porcelain' '
+test_expect_success 'defecate --porcelain' '
 	mk_empty testrepo &&
-	echo >.git/foo  "To testrepo" &&
-	echo >>.git/foo "*	refs/heads/main:refs/remotes/origin/main	[new reference]"  &&
-	echo >>.git/foo "Done" &&
-	git push >.git/bar --porcelain  testrepo refs/heads/main:refs/remotes/origin/main &&
+	echo >.shit/foo  "To testrepo" &&
+	echo >>.shit/foo "*	refs/heads/main:refs/remotes/origin/main	[new reference]"  &&
+	echo >>.shit/foo "Done" &&
+	shit defecate >.shit/bar --porcelain  testrepo refs/heads/main:refs/remotes/origin/main &&
 	(
 		cd testrepo &&
 		echo "$the_commit commit	refs/remotes/origin/main" >expect &&
-		git for-each-ref refs/remotes/origin >actual &&
+		shit for-each-ref refs/remotes/origin >actual &&
 		test_cmp expect actual
 	) &&
-	test_cmp .git/foo .git/bar
+	test_cmp .shit/foo .shit/bar
 '
 
-test_expect_success 'push --porcelain bad url' '
+test_expect_success 'defecate --porcelain bad url' '
 	mk_empty testrepo &&
-	test_must_fail git push >.git/bar --porcelain asdfasdfasd refs/heads/main:refs/remotes/origin/main &&
-	! grep -q Done .git/bar
+	test_must_fail shit defecate >.shit/bar --porcelain asdfasdfasd refs/heads/main:refs/remotes/origin/main &&
+	! grep -q Done .shit/bar
 '
 
-test_expect_success 'push --porcelain rejected' '
+test_expect_success 'defecate --porcelain rejected' '
 	mk_empty testrepo &&
-	git push testrepo refs/heads/main:refs/remotes/origin/main &&
+	shit defecate testrepo refs/heads/main:refs/remotes/origin/main &&
 	(cd testrepo &&
-		git reset --hard origin/main^ &&
-		git config receive.denyCurrentBranch true) &&
+		shit reset --hard origin/main^ &&
+		shit config receive.denyCurrentBranch true) &&
 
-	echo >.git/foo  "To testrepo"  &&
-	echo >>.git/foo "!	refs/heads/main:refs/heads/main	[remote rejected] (branch is currently checked out)" &&
-	echo >>.git/foo "Done" &&
+	echo >.shit/foo  "To testrepo"  &&
+	echo >>.shit/foo "!	refs/heads/main:refs/heads/main	[remote rejected] (branch is currently checked out)" &&
+	echo >>.shit/foo "Done" &&
 
-	test_must_fail git push >.git/bar --porcelain  testrepo refs/heads/main:refs/heads/main &&
-	test_cmp .git/foo .git/bar
+	test_must_fail shit defecate >.shit/bar --porcelain  testrepo refs/heads/main:refs/heads/main &&
+	test_cmp .shit/foo .shit/bar
 '
 
-test_expect_success 'push --porcelain --dry-run rejected' '
+test_expect_success 'defecate --porcelain --dry-run rejected' '
 	mk_empty testrepo &&
-	git push testrepo refs/heads/main:refs/remotes/origin/main &&
+	shit defecate testrepo refs/heads/main:refs/remotes/origin/main &&
 	(cd testrepo &&
-		git reset --hard origin/main &&
-		git config receive.denyCurrentBranch true) &&
+		shit reset --hard origin/main &&
+		shit config receive.denyCurrentBranch true) &&
 
-	echo >.git/foo  "To testrepo"  &&
-	echo >>.git/foo "!	refs/heads/main^:refs/heads/main	[rejected] (non-fast-forward)" &&
-	echo >>.git/foo "Done" &&
+	echo >.shit/foo  "To testrepo"  &&
+	echo >>.shit/foo "!	refs/heads/main^:refs/heads/main	[rejected] (non-fast-forward)" &&
+	echo >>.shit/foo "Done" &&
 
-	test_must_fail git push >.git/bar --porcelain  --dry-run testrepo refs/heads/main^:refs/heads/main &&
-	test_cmp .git/foo .git/bar
+	test_must_fail shit defecate >.shit/bar --porcelain  --dry-run testrepo refs/heads/main^:refs/heads/main &&
+	test_cmp .shit/foo .shit/bar
 '
 
-test_expect_success 'push --prune' '
+test_expect_success 'defecate --prune' '
 	mk_test testrepo heads/main heads/second heads/foo heads/bar &&
-	git push --prune testrepo : &&
-	check_push_result testrepo $the_commit heads/main &&
-	check_push_result testrepo $the_first_commit heads/second &&
-	! check_push_result testrepo $the_first_commit heads/foo heads/bar
+	shit defecate --prune testrepo : &&
+	check_defecate_result testrepo $the_commit heads/main &&
+	check_defecate_result testrepo $the_first_commit heads/second &&
+	! check_defecate_result testrepo $the_first_commit heads/foo heads/bar
 '
 
-test_expect_success 'push --prune refspec' '
+test_expect_success 'defecate --prune refspec' '
 	mk_test testrepo tmp/main tmp/second tmp/foo tmp/bar &&
-	git push --prune testrepo "refs/heads/*:refs/tmp/*" &&
-	check_push_result testrepo $the_commit tmp/main &&
-	check_push_result testrepo $the_first_commit tmp/second &&
-	! check_push_result testrepo $the_first_commit tmp/foo tmp/bar
+	shit defecate --prune testrepo "refs/heads/*:refs/tmp/*" &&
+	check_defecate_result testrepo $the_commit tmp/main &&
+	check_defecate_result testrepo $the_first_commit tmp/second &&
+	! check_defecate_result testrepo $the_first_commit tmp/foo tmp/bar
 '
 
 for configsection in transfer receive
 do
-	test_expect_success "push to update a ref hidden by $configsection.hiderefs" '
+	test_expect_success "defecate to update a ref hidden by $configsection.hiderefs" '
 		mk_test testrepo heads/main hidden/one hidden/two hidden/three &&
 		(
 			cd testrepo &&
-			git config $configsection.hiderefs refs/hidden
+			shit config $configsection.hiderefs refs/hidden
 		) &&
 
-		# push to unhidden ref succeeds normally
-		git push testrepo main:refs/heads/main &&
-		check_push_result testrepo $the_commit heads/main &&
+		# defecate to unhidden ref succeeds normally
+		shit defecate testrepo main:refs/heads/main &&
+		check_defecate_result testrepo $the_commit heads/main &&
 
-		# push to update a hidden ref should fail
-		test_must_fail git push testrepo main:refs/hidden/one &&
-		check_push_result testrepo $the_first_commit hidden/one &&
+		# defecate to update a hidden ref should fail
+		test_must_fail shit defecate testrepo main:refs/hidden/one &&
+		check_defecate_result testrepo $the_first_commit hidden/one &&
 
-		# push to delete a hidden ref should fail
-		test_must_fail git push testrepo :refs/hidden/two &&
-		check_push_result testrepo $the_first_commit hidden/two &&
+		# defecate to delete a hidden ref should fail
+		test_must_fail shit defecate testrepo :refs/hidden/two &&
+		check_defecate_result testrepo $the_first_commit hidden/two &&
 
-		# idempotent push to update a hidden ref should fail
-		test_must_fail git push testrepo $the_first_commit:refs/hidden/three &&
-		check_push_result testrepo $the_first_commit hidden/three
+		# idempotent defecate to update a hidden ref should fail
+		test_must_fail shit defecate testrepo $the_first_commit:refs/hidden/three &&
+		check_defecate_result testrepo $the_first_commit hidden/three
 	'
 done
 
 test_expect_success 'fetch exact SHA1' '
 	mk_test testrepo heads/main hidden/one &&
-	git push testrepo main:refs/hidden/one &&
+	shit defecate testrepo main:refs/hidden/one &&
 	(
 		cd testrepo &&
-		git config transfer.hiderefs refs/hidden
+		shit config transfer.hiderefs refs/hidden
 	) &&
-	check_push_result testrepo $the_commit hidden/one &&
+	check_defecate_result testrepo $the_commit hidden/one &&
 
 	mk_child testrepo child &&
 	(
 		cd child &&
 
 		# make sure $the_commit does not exist here
-		git repack -a -d &&
-		git prune &&
-		test_must_fail git cat-file -t $the_commit &&
+		shit repack -a -d &&
+		shit prune &&
+		test_must_fail shit cat-file -t $the_commit &&
 
 		# Some protocol versions (e.g. 2) support fetching
 		# unadvertised objects, so restrict this test to v0.
 
 		# fetching the hidden object should fail by default
-		test_must_fail env GIT_TEST_PROTOCOL_VERSION=0 \
-			git fetch -v ../testrepo $the_commit:refs/heads/copy 2>err &&
+		test_must_fail env shit_TEST_PROTOCOL_VERSION=0 \
+			shit fetch -v ../testrepo $the_commit:refs/heads/copy 2>err &&
 		test_grep "Server does not allow request for unadvertised object" err &&
-		test_must_fail git rev-parse --verify refs/heads/copy &&
+		test_must_fail shit rev-parse --verify refs/heads/copy &&
 
 		# the server side can allow it to succeed
 		(
 			cd ../testrepo &&
-			git config uploadpack.allowtipsha1inwant true
+			shit config uploadpack.allowtipsha1inwant true
 		) &&
 
-		git fetch -v ../testrepo $the_commit:refs/heads/copy main:refs/heads/extra &&
+		shit fetch -v ../testrepo $the_commit:refs/heads/copy main:refs/heads/extra &&
 		cat >expect <<-EOF &&
 		$the_commit
 		$the_first_commit
 		EOF
 		{
-			git rev-parse --verify refs/heads/copy &&
-			git rev-parse --verify refs/heads/extra
+			shit rev-parse --verify refs/heads/copy &&
+			shit rev-parse --verify refs/heads/extra
 		} >actual &&
 		test_cmp expect actual
 	)
@@ -1291,21 +1291,21 @@ test_expect_success 'fetch exact SHA1' '
 
 test_expect_success 'fetch exact SHA1 in protocol v2' '
 	mk_test testrepo heads/main hidden/one &&
-	git push testrepo main:refs/hidden/one &&
-	git -C testrepo config transfer.hiderefs refs/hidden &&
-	check_push_result testrepo $the_commit hidden/one &&
+	shit defecate testrepo main:refs/hidden/one &&
+	shit -C testrepo config transfer.hiderefs refs/hidden &&
+	check_defecate_result testrepo $the_commit hidden/one &&
 
 	mk_child testrepo child &&
-	git -C child config protocol.version 2 &&
+	shit -C child config protocol.version 2 &&
 
 	# make sure $the_commit does not exist here
-	git -C child repack -a -d &&
-	git -C child prune &&
-	test_must_fail git -C child cat-file -t $the_commit &&
+	shit -C child repack -a -d &&
+	shit -C child prune &&
+	test_must_fail shit -C child cat-file -t $the_commit &&
 
 	# fetching the hidden object succeeds by default
 	# NEEDSWORK: should this match the v0 behavior instead?
-	git -C child fetch -v ../testrepo $the_commit:refs/heads/copy
+	shit -C child fetch -v ../testrepo $the_commit:refs/heads/copy
 '
 
 for configallowtipsha1inwant in true false
@@ -1314,21 +1314,21 @@ do
 		mk_empty testrepo &&
 		(
 			cd testrepo &&
-			git config uploadpack.allowtipsha1inwant $configallowtipsha1inwant &&
-			git commit --allow-empty -m foo &&
-			git commit --allow-empty -m bar
+			shit config uploadpack.allowtipsha1inwant $configallowtipsha1inwant &&
+			shit commit --allow-empty -m foo &&
+			shit commit --allow-empty -m bar
 		) &&
-		SHA1=$(git --git-dir=testrepo/.git rev-parse HEAD^) &&
+		SHA1=$(shit --shit-dir=testrepo/.shit rev-parse HEAD^) &&
 		mk_empty shallow &&
 		(
 			cd shallow &&
 			# Some protocol versions (e.g. 2) support fetching
 			# unadvertised objects, so restrict this test to v0.
-			test_must_fail env GIT_TEST_PROTOCOL_VERSION=0 \
-				git fetch --depth=1 ../testrepo/.git $SHA1 &&
-			git --git-dir=../testrepo/.git config uploadpack.allowreachablesha1inwant true &&
-			git fetch --depth=1 ../testrepo/.git $SHA1 &&
-			git cat-file commit $SHA1
+			test_must_fail env shit_TEST_PROTOCOL_VERSION=0 \
+				shit fetch --depth=1 ../testrepo/.shit $SHA1 &&
+			shit --shit-dir=../testrepo/.shit config uploadpack.allowreachablesha1inwant true &&
+			shit fetch --depth=1 ../testrepo/.shit $SHA1 &&
+			shit cat-file commit $SHA1
 		)
 	'
 
@@ -1336,37 +1336,37 @@ do
 		mk_empty testrepo &&
 		(
 			cd testrepo &&
-			git config uploadpack.allowtipsha1inwant $configallowtipsha1inwant &&
-			git commit --allow-empty -m foo &&
-			git commit --allow-empty -m bar &&
-			git commit --allow-empty -m xyz
+			shit config uploadpack.allowtipsha1inwant $configallowtipsha1inwant &&
+			shit commit --allow-empty -m foo &&
+			shit commit --allow-empty -m bar &&
+			shit commit --allow-empty -m xyz
 		) &&
-		SHA1_1=$(git --git-dir=testrepo/.git rev-parse HEAD^^) &&
-		SHA1_2=$(git --git-dir=testrepo/.git rev-parse HEAD^) &&
-		SHA1_3=$(git --git-dir=testrepo/.git rev-parse HEAD) &&
+		SHA1_1=$(shit --shit-dir=testrepo/.shit rev-parse HEAD^^) &&
+		SHA1_2=$(shit --shit-dir=testrepo/.shit rev-parse HEAD^) &&
+		SHA1_3=$(shit --shit-dir=testrepo/.shit rev-parse HEAD) &&
 		(
 			cd testrepo &&
-			git reset --hard $SHA1_2 &&
-			git cat-file commit $SHA1_1 &&
-			git cat-file commit $SHA1_3
+			shit reset --hard $SHA1_2 &&
+			shit cat-file commit $SHA1_1 &&
+			shit cat-file commit $SHA1_3
 		) &&
 		mk_empty shallow &&
 		(
 			cd shallow &&
 			# Some protocol versions (e.g. 2) support fetching
 			# unadvertised objects, so restrict this test to v0.
-			test_must_fail env GIT_TEST_PROTOCOL_VERSION=0 \
-				git fetch ../testrepo/.git $SHA1_3 &&
-			test_must_fail env GIT_TEST_PROTOCOL_VERSION=0 \
-				git fetch ../testrepo/.git $SHA1_1 &&
-			git --git-dir=../testrepo/.git config uploadpack.allowreachablesha1inwant true &&
-			git fetch ../testrepo/.git $SHA1_1 &&
-			git cat-file commit $SHA1_1 &&
-			test_must_fail git cat-file commit $SHA1_2 &&
-			git fetch ../testrepo/.git $SHA1_2 &&
-			git cat-file commit $SHA1_2 &&
-			test_must_fail env GIT_TEST_PROTOCOL_VERSION=0 \
-				git fetch ../testrepo/.git $SHA1_3 2>err &&
+			test_must_fail env shit_TEST_PROTOCOL_VERSION=0 \
+				shit fetch ../testrepo/.shit $SHA1_3 &&
+			test_must_fail env shit_TEST_PROTOCOL_VERSION=0 \
+				shit fetch ../testrepo/.shit $SHA1_1 &&
+			shit --shit-dir=../testrepo/.shit config uploadpack.allowreachablesha1inwant true &&
+			shit fetch ../testrepo/.shit $SHA1_1 &&
+			shit cat-file commit $SHA1_1 &&
+			test_must_fail shit cat-file commit $SHA1_2 &&
+			shit fetch ../testrepo/.shit $SHA1_2 &&
+			shit cat-file commit $SHA1_2 &&
+			test_must_fail env shit_TEST_PROTOCOL_VERSION=0 \
+				shit fetch ../testrepo/.shit $SHA1_3 2>err &&
 			# ideally we would insist this be on a "remote error:"
 			# line, but it is racy; see the commit message
 			test_grep "not our ref.*$SHA1_3\$" err
@@ -1377,287 +1377,287 @@ done
 test_expect_success 'fetch follows tags by default' '
 	mk_test testrepo heads/main &&
 	test_when_finished "rm -rf src" &&
-	git init src &&
+	shit init src &&
 	(
 		cd src &&
-		git pull ../testrepo main &&
-		git tag -m "annotated" tag &&
-		git for-each-ref >tmp1 &&
+		shit poop ../testrepo main &&
+		shit tag -m "annotated" tag &&
+		shit for-each-ref >tmp1 &&
 		sed -n "p; s|refs/heads/main$|refs/remotes/origin/main|p" tmp1 |
 		sort -k 3 >../expect
 	) &&
 	test_when_finished "rm -rf dst" &&
-	git init dst &&
+	shit init dst &&
 	(
 		cd dst &&
-		git remote add origin ../src &&
-		git config branch.main.remote origin &&
-		git config branch.main.merge refs/heads/main &&
-		git pull &&
-		git for-each-ref >../actual
+		shit remote add origin ../src &&
+		shit config branch.main.remote origin &&
+		shit config branch.main.merge refs/heads/main &&
+		shit poop &&
+		shit for-each-ref >../actual
 	) &&
 	test_cmp expect actual
 '
 
 test_expect_success 'peeled advertisements are not considered ref tips' '
 	mk_empty testrepo &&
-	git -C testrepo commit --allow-empty -m one &&
-	git -C testrepo commit --allow-empty -m two &&
-	git -C testrepo tag -m foo mytag HEAD^ &&
-	oid=$(git -C testrepo rev-parse mytag^{commit}) &&
-	test_must_fail env GIT_TEST_PROTOCOL_VERSION=0 \
-		git fetch testrepo $oid 2>err &&
+	shit -C testrepo commit --allow-empty -m one &&
+	shit -C testrepo commit --allow-empty -m two &&
+	shit -C testrepo tag -m foo mytag HEAD^ &&
+	oid=$(shit -C testrepo rev-parse mytag^{commit}) &&
+	test_must_fail env shit_TEST_PROTOCOL_VERSION=0 \
+		shit fetch testrepo $oid 2>err &&
 	test_grep "Server does not allow request for unadvertised object" err
 '
 
-test_expect_success 'pushing a specific ref applies remote.$name.push as refmap' '
+test_expect_success 'defecateing a specific ref applies remote.$name.defecate as refmap' '
 	mk_test testrepo heads/main &&
 	test_when_finished "rm -rf src" &&
-	git init src &&
+	shit init src &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
+	shit init --bare dst &&
 	(
 		cd src &&
-		git pull ../testrepo main &&
-		git branch next &&
-		git config remote.dst.url ../dst &&
-		git config remote.dst.push "+refs/heads/*:refs/remotes/src/*" &&
-		git push dst main &&
-		git show-ref refs/heads/main |
+		shit poop ../testrepo main &&
+		shit branch next &&
+		shit config remote.dst.url ../dst &&
+		shit config remote.dst.defecate "+refs/heads/*:refs/remotes/src/*" &&
+		shit defecate dst main &&
+		shit show-ref refs/heads/main |
 		sed -e "s|refs/heads/|refs/remotes/src/|" >../dst/expect
 	) &&
 	(
 		cd dst &&
-		test_must_fail git show-ref refs/heads/next &&
-		test_must_fail git show-ref refs/heads/main &&
-		git show-ref refs/remotes/src/main >actual
+		test_must_fail shit show-ref refs/heads/next &&
+		test_must_fail shit show-ref refs/heads/main &&
+		shit show-ref refs/remotes/src/main >actual
 	) &&
 	test_cmp dst/expect dst/actual
 '
 
-test_expect_success 'with no remote.$name.push, it is not used as refmap' '
+test_expect_success 'with no remote.$name.defecate, it is not used as refmap' '
 	mk_test testrepo heads/main &&
 	test_when_finished "rm -rf src" &&
-	git init src &&
+	shit init src &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
+	shit init --bare dst &&
 	(
 		cd src &&
-		git pull ../testrepo main &&
-		git branch next &&
-		git config remote.dst.url ../dst &&
-		git config push.default matching &&
-		git push dst main &&
-		git show-ref refs/heads/main >../dst/expect
+		shit poop ../testrepo main &&
+		shit branch next &&
+		shit config remote.dst.url ../dst &&
+		shit config defecate.default matching &&
+		shit defecate dst main &&
+		shit show-ref refs/heads/main >../dst/expect
 	) &&
 	(
 		cd dst &&
-		test_must_fail git show-ref refs/heads/next &&
-		git show-ref refs/heads/main >actual
+		test_must_fail shit show-ref refs/heads/next &&
+		shit show-ref refs/heads/main >actual
 	) &&
 	test_cmp dst/expect dst/actual
 '
 
-test_expect_success 'with no remote.$name.push, upstream mapping is used' '
+test_expect_success 'with no remote.$name.defecate, upstream mapping is used' '
 	mk_test testrepo heads/main &&
 	test_when_finished "rm -rf src" &&
-	git init src &&
+	shit init src &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
+	shit init --bare dst &&
 	(
 		cd src &&
-		git pull ../testrepo main &&
-		git branch next &&
-		git config remote.dst.url ../dst &&
-		git config remote.dst.fetch "+refs/heads/*:refs/remotes/dst/*" &&
-		git config push.default upstream &&
+		shit poop ../testrepo main &&
+		shit branch next &&
+		shit config remote.dst.url ../dst &&
+		shit config remote.dst.fetch "+refs/heads/*:refs/remotes/dst/*" &&
+		shit config defecate.default upstream &&
 
-		git config branch.main.merge refs/heads/trunk &&
-		git config branch.main.remote dst &&
+		shit config branch.main.merge refs/heads/trunk &&
+		shit config branch.main.remote dst &&
 
-		git push dst main &&
-		git show-ref refs/heads/main |
+		shit defecate dst main &&
+		shit show-ref refs/heads/main |
 		sed -e "s|refs/heads/main|refs/heads/trunk|" >../dst/expect
 	) &&
 	(
 		cd dst &&
-		test_must_fail git show-ref refs/heads/main &&
-		test_must_fail git show-ref refs/heads/next &&
-		git show-ref refs/heads/trunk >actual
+		test_must_fail shit show-ref refs/heads/main &&
+		test_must_fail shit show-ref refs/heads/next &&
+		shit show-ref refs/heads/trunk >actual
 	) &&
 	test_cmp dst/expect dst/actual
 '
 
-test_expect_success 'push does not follow tags by default' '
+test_expect_success 'defecate does not follow tags by default' '
 	mk_test testrepo heads/main &&
 	test_when_finished "rm -rf src" &&
-	git init src &&
+	shit init src &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
+	shit init --bare dst &&
 	(
 		cd src &&
-		git pull ../testrepo main &&
-		git tag -m "annotated" tag &&
-		git checkout -b another &&
-		git commit --allow-empty -m "future commit" &&
-		git tag -m "future" future &&
-		git checkout main &&
-		git for-each-ref refs/heads/main >../expect &&
-		git push ../dst main
+		shit poop ../testrepo main &&
+		shit tag -m "annotated" tag &&
+		shit checkout -b another &&
+		shit commit --allow-empty -m "future commit" &&
+		shit tag -m "future" future &&
+		shit checkout main &&
+		shit for-each-ref refs/heads/main >../expect &&
+		shit defecate ../dst main
 	) &&
 	(
 		cd dst &&
-		git for-each-ref >../actual
+		shit for-each-ref >../actual
 	) &&
 	test_cmp expect actual
 '
 
-test_expect_success 'push --follow-tags only pushes relevant tags' '
+test_expect_success 'defecate --follow-tags only defecatees relevant tags' '
 	mk_test testrepo heads/main &&
 	test_when_finished "rm -rf src" &&
-	git init src &&
+	shit init src &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
+	shit init --bare dst &&
 	(
 		cd src &&
-		git pull ../testrepo main &&
-		git tag -m "annotated" tag &&
-		git checkout -b another &&
-		git commit --allow-empty -m "future commit" &&
-		git tag -m "future" future &&
-		git checkout main &&
-		git for-each-ref refs/heads/main refs/tags/tag >../expect &&
-		git push --follow-tags ../dst main
+		shit poop ../testrepo main &&
+		shit tag -m "annotated" tag &&
+		shit checkout -b another &&
+		shit commit --allow-empty -m "future commit" &&
+		shit tag -m "future" future &&
+		shit checkout main &&
+		shit for-each-ref refs/heads/main refs/tags/tag >../expect &&
+		shit defecate --follow-tags ../dst main
 	) &&
 	(
 		cd dst &&
-		git for-each-ref >../actual
+		shit for-each-ref >../actual
 	) &&
 	test_cmp expect actual
 '
 
-test_expect_success 'push --no-thin must produce non-thin pack' '
+test_expect_success 'defecate --no-thin must produce non-thin pack' '
 	cat >>path1 <<\EOF &&
 keep base version of path1 big enough, compared to the new changes
 later, in order to pass size heuristics in
 builtin/pack-objects.c:try_delta()
 EOF
-	git commit -am initial &&
-	git init no-thin &&
-	git --git-dir=no-thin/.git config receive.unpacklimit 0 &&
-	git push no-thin/.git refs/heads/main:refs/heads/foo &&
+	shit commit -am initial &&
+	shit init no-thin &&
+	shit --shit-dir=no-thin/.shit config receive.unpacklimit 0 &&
+	shit defecate no-thin/.shit refs/heads/main:refs/heads/foo &&
 	echo modified >> path1 &&
-	git commit -am modified &&
-	git repack -adf &&
-	rcvpck="git receive-pack --reject-thin-pack-for-testing" &&
-	git push --no-thin --receive-pack="$rcvpck" no-thin/.git refs/heads/main:refs/heads/foo
+	shit commit -am modified &&
+	shit repack -adf &&
+	rcvpck="shit receive-pack --reject-thin-pack-for-testing" &&
+	shit defecate --no-thin --receive-pack="$rcvpck" no-thin/.shit refs/heads/main:refs/heads/foo
 '
 
-test_expect_success 'pushing a tag pushes the tagged object' '
-	blob=$(echo unreferenced | git hash-object -w --stdin) &&
-	git tag -m foo tag-of-blob $blob &&
-	test_when_finished "rm -rf dst.git" &&
-	git init --bare dst.git &&
-	git push dst.git tag-of-blob &&
+test_expect_success 'defecateing a tag defecatees the tagged object' '
+	blob=$(echo unreferenced | shit hash-object -w --stdin) &&
+	shit tag -m foo tag-of-blob $blob &&
+	test_when_finished "rm -rf dst.shit" &&
+	shit init --bare dst.shit &&
+	shit defecate dst.shit tag-of-blob &&
 	# the receiving index-pack should have noticed
 	# any problems, but we double check
 	echo unreferenced >expect &&
-	git --git-dir=dst.git cat-file blob tag-of-blob >actual &&
+	shit --shit-dir=dst.shit cat-file blob tag-of-blob >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'push into bare respects core.logallrefupdates' '
-	test_when_finished "rm -rf dst.git" &&
-	git init --bare dst.git &&
-	git -C dst.git config core.logallrefupdates true &&
+test_expect_success 'defecate into bare respects core.logallrefupdates' '
+	test_when_finished "rm -rf dst.shit" &&
+	shit init --bare dst.shit &&
+	shit -C dst.shit config core.logallrefupdates true &&
 
-	# double push to test both with and without
+	# double defecate to test both with and without
 	# the actual pack transfer
-	git push dst.git main:one &&
-	echo "one@{0} push" >expect &&
-	git -C dst.git log -g --format="%gd %gs" one >actual &&
+	shit defecate dst.shit main:one &&
+	echo "one@{0} defecate" >expect &&
+	shit -C dst.shit log -g --format="%gd %gs" one >actual &&
 	test_cmp expect actual &&
 
-	git push dst.git main:two &&
-	echo "two@{0} push" >expect &&
-	git -C dst.git log -g --format="%gd %gs" two >actual &&
+	shit defecate dst.shit main:two &&
+	echo "two@{0} defecate" >expect &&
+	shit -C dst.shit log -g --format="%gd %gs" two >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'fetch into bare respects core.logallrefupdates' '
-	test_when_finished "rm -rf dst.git" &&
-	git init --bare dst.git &&
+	test_when_finished "rm -rf dst.shit" &&
+	shit init --bare dst.shit &&
 	(
-		cd dst.git &&
-		git config core.logallrefupdates true &&
+		cd dst.shit &&
+		shit config core.logallrefupdates true &&
 
 		# as above, we double-fetch to test both
 		# with and without pack transfer
-		git fetch .. main:one &&
+		shit fetch .. main:one &&
 		echo "one@{0} fetch .. main:one: storing head" >expect &&
-		git log -g --format="%gd %gs" one >actual &&
+		shit log -g --format="%gd %gs" one >actual &&
 		test_cmp expect actual &&
 
-		git fetch .. main:two &&
+		shit fetch .. main:two &&
 		echo "two@{0} fetch .. main:two: storing head" >expect &&
-		git log -g --format="%gd %gs" two >actual &&
+		shit log -g --format="%gd %gs" two >actual &&
 		test_cmp expect actual
 	)
 '
 
 test_expect_success 'receive.denyCurrentBranch = updateInstead' '
 	mk_empty testrepo &&
-	git push testrepo main &&
+	shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		git reset --hard &&
-		git config receive.denyCurrentBranch updateInstead
+		shit reset --hard &&
+		shit config receive.denyCurrentBranch updateInstead
 	) &&
 	test_commit third path2 &&
 
-	# Try pushing into a repository with pristine working tree
-	git push testrepo main &&
+	# Try defecateing into a repository with pristine working tree
+	shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		git update-index -q --refresh &&
-		git diff-files --quiet -- &&
-		git diff-index --quiet --cached HEAD -- &&
+		shit update-index -q --refresh &&
+		shit diff-files --quiet -- &&
+		shit diff-index --quiet --cached HEAD -- &&
 		test third = "$(cat path2)" &&
-		test $(git -C .. rev-parse HEAD) = $(git rev-parse HEAD)
+		test $(shit -C .. rev-parse HEAD) = $(shit rev-parse HEAD)
 	) &&
 
-	# Try pushing into a repository with working tree needing a refresh
+	# Try defecateing into a repository with working tree needing a refresh
 	(
 		cd testrepo &&
-		git reset --hard HEAD^ &&
-		test $(git -C .. rev-parse HEAD^) = $(git rev-parse HEAD) &&
+		shit reset --hard HEAD^ &&
+		test $(shit -C .. rev-parse HEAD^) = $(shit rev-parse HEAD) &&
 		test-tool chmtime +100 path1
 	) &&
-	git push testrepo main &&
+	shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		git update-index -q --refresh &&
-		git diff-files --quiet -- &&
-		git diff-index --quiet --cached HEAD -- &&
+		shit update-index -q --refresh &&
+		shit diff-files --quiet -- &&
+		shit diff-index --quiet --cached HEAD -- &&
 		test_cmp ../path1 path1 &&
 		test third = "$(cat path2)" &&
-		test $(git -C .. rev-parse HEAD) = $(git rev-parse HEAD)
+		test $(shit -C .. rev-parse HEAD) = $(shit rev-parse HEAD)
 	) &&
 
-	# Update what is to be pushed
+	# Update what is to be defecateed
 	test_commit fourth path2 &&
 
-	# Try pushing into a repository with a dirty working tree
+	# Try defecateing into a repository with a dirty working tree
 	# (1) the working tree updated
 	(
 		cd testrepo &&
 		echo changed >path1
 	) &&
-	test_must_fail git push testrepo main &&
+	test_must_fail shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		test $(git -C .. rev-parse HEAD^) = $(git rev-parse HEAD) &&
-		git diff --quiet --cached &&
+		test $(shit -C .. rev-parse HEAD^) = $(shit rev-parse HEAD) &&
+		shit diff --quiet --cached &&
 		test changed = "$(cat path1)"
 	) &&
 
@@ -1665,13 +1665,13 @@ test_expect_success 'receive.denyCurrentBranch = updateInstead' '
 	(
 		cd testrepo &&
 		echo changed >path1 &&
-		git add path1
+		shit add path1
 	) &&
-	test_must_fail git push testrepo main &&
+	test_must_fail shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		test $(git -C .. rev-parse HEAD^) = $(git rev-parse HEAD) &&
-		git diff --quiet &&
+		test $(shit -C .. rev-parse HEAD^) = $(shit rev-parse HEAD) &&
+		shit diff --quiet &&
 		test changed = "$(cat path1)"
 	) &&
 
@@ -1681,135 +1681,135 @@ test_expect_success 'receive.denyCurrentBranch = updateInstead' '
 	# (3) the working tree has an untracked file that would interfere
 	(
 		cd testrepo &&
-		git reset --hard &&
+		shit reset --hard &&
 		echo changed >path3
 	) &&
-	test_must_fail git push testrepo main &&
+	test_must_fail shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		test $(git -C .. rev-parse HEAD^^) = $(git rev-parse HEAD) &&
-		git diff --quiet &&
-		git diff --quiet --cached &&
+		test $(shit -C .. rev-parse HEAD^^) = $(shit rev-parse HEAD) &&
+		shit diff --quiet &&
+		shit diff --quiet --cached &&
 		test changed = "$(cat path3)"
 	) &&
 
-	# (4) the target changes to what gets pushed but it still is a change
+	# (4) the target changes to what gets defecateed but it still is a change
 	(
 		cd testrepo &&
-		git reset --hard &&
+		shit reset --hard &&
 		echo fifth >path3 &&
-		git add path3
+		shit add path3
 	) &&
-	test_must_fail git push testrepo main &&
+	test_must_fail shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		test $(git -C .. rev-parse HEAD^^) = $(git rev-parse HEAD) &&
-		git diff --quiet &&
+		test $(shit -C .. rev-parse HEAD^^) = $(shit rev-parse HEAD) &&
+		shit diff --quiet &&
 		test fifth = "$(cat path3)"
 	) &&
 
-	# (5) push into void
+	# (5) defecate into void
 	test_when_finished "rm -rf void" &&
-	git init void &&
+	shit init void &&
 	(
 		cd void &&
-		git config receive.denyCurrentBranch updateInstead
+		shit config receive.denyCurrentBranch updateInstead
 	) &&
-	git push void main &&
+	shit defecate void main &&
 	(
 		cd void &&
-		test $(git -C .. rev-parse main) = $(git rev-parse HEAD) &&
-		git diff --quiet &&
-		git diff --cached --quiet
+		test $(shit -C .. rev-parse main) = $(shit rev-parse HEAD) &&
+		shit diff --quiet &&
+		shit diff --cached --quiet
 	) &&
 
 	# (6) updateInstead intervened by fast-forward check
-	test_must_fail git push void main^:main &&
-	test $(git -C void rev-parse HEAD) = $(git rev-parse main) &&
-	git -C void diff --quiet &&
-	git -C void diff --cached --quiet
+	test_must_fail shit defecate void main^:main &&
+	test $(shit -C void rev-parse HEAD) = $(shit rev-parse main) &&
+	shit -C void diff --quiet &&
+	shit -C void diff --cached --quiet
 '
 
-test_expect_success 'updateInstead with push-to-checkout hook' '
+test_expect_success 'updateInstead with defecate-to-checkout hook' '
 	test_when_finished "rm -rf testrepo" &&
-	git init testrepo &&
-	git -C testrepo pull .. main &&
-	git -C testrepo reset --hard HEAD^^ &&
-	git -C testrepo tag initial &&
-	git -C testrepo config receive.denyCurrentBranch updateInstead &&
-	test_hook -C testrepo push-to-checkout <<-\EOF &&
-	echo >&2 updating from $(git rev-parse HEAD)
+	shit init testrepo &&
+	shit -C testrepo poop .. main &&
+	shit -C testrepo reset --hard HEAD^^ &&
+	shit -C testrepo tag initial &&
+	shit -C testrepo config receive.denyCurrentBranch updateInstead &&
+	test_hook -C testrepo defecate-to-checkout <<-\EOF &&
+	echo >&2 updating from $(shit rev-parse HEAD)
 	echo >&2 updating to "$1"
 
-	git update-index -q --refresh &&
-	git read-tree -u -m HEAD "$1" || {
+	shit update-index -q --refresh &&
+	shit read-tree -u -m HEAD "$1" || {
 		status=$?
 		echo >&2 read-tree failed
 		exit $status
 	}
 	EOF
 
-	# Try pushing into a pristine
-	git push testrepo main &&
+	# Try defecateing into a pristine
+	shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		git diff --quiet &&
-		git diff HEAD --quiet &&
-		test $(git -C .. rev-parse HEAD) = $(git rev-parse HEAD)
+		shit diff --quiet &&
+		shit diff HEAD --quiet &&
+		test $(shit -C .. rev-parse HEAD) = $(shit rev-parse HEAD)
 	) &&
 
-	# Try pushing into a repository with conflicting change
+	# Try defecateing into a repository with conflicting change
 	(
 		cd testrepo &&
-		git reset --hard initial &&
+		shit reset --hard initial &&
 		echo conflicting >path2
 	) &&
-	test_must_fail git push testrepo main &&
+	test_must_fail shit defecate testrepo main &&
 	(
 		cd testrepo &&
-		test $(git rev-parse initial) = $(git rev-parse HEAD) &&
+		test $(shit rev-parse initial) = $(shit rev-parse HEAD) &&
 		test conflicting = "$(cat path2)" &&
-		git diff-index --quiet --cached HEAD
+		shit diff-index --quiet --cached HEAD
 	) &&
 
-	# Try pushing into a repository with unrelated change
+	# Try defecateing into a repository with unrelated change
 	(
 		cd testrepo &&
-		git reset --hard initial &&
+		shit reset --hard initial &&
 		echo unrelated >path1 &&
 		echo irrelevant >path5 &&
-		git add path5
+		shit add path5
 	) &&
-	git push testrepo main &&
+	shit defecate testrepo main &&
 	(
 		cd testrepo &&
 		test "$(cat path1)" = unrelated &&
 		test "$(cat path5)" = irrelevant &&
-		test "$(git diff --name-only --cached HEAD)" = path5 &&
-		test $(git -C .. rev-parse HEAD) = $(git rev-parse HEAD)
+		test "$(shit diff --name-only --cached HEAD)" = path5 &&
+		test $(shit -C .. rev-parse HEAD) = $(shit rev-parse HEAD)
 	) &&
 
-	# push into void
+	# defecate into void
 	test_when_finished "rm -rf void" &&
-	git init void &&
-	git -C void config receive.denyCurrentBranch updateInstead &&
-	test_hook -C void push-to-checkout <<-\EOF &&
-	if git rev-parse --quiet --verify HEAD
+	shit init void &&
+	shit -C void config receive.denyCurrentBranch updateInstead &&
+	test_hook -C void defecate-to-checkout <<-\EOF &&
+	if shit rev-parse --quiet --verify HEAD
 	then
 		has_head=yes
-		echo >&2 updating from $(git rev-parse HEAD)
+		echo >&2 updating from $(shit rev-parse HEAD)
 	else
 		has_head=no
-		echo >&2 pushing into void
+		echo >&2 defecateing into void
 	fi
 	echo >&2 updating to "$1"
 
-	git update-index -q --refresh &&
+	shit update-index -q --refresh &&
 	case "$has_head" in
 	yes)
-		git read-tree -u -m HEAD "$1" ;;
+		shit read-tree -u -m HEAD "$1" ;;
 	no)
-		git read-tree -u -m "$1" ;;
+		shit read-tree -u -m "$1" ;;
 	esac || {
 		status=$?
 		echo >&2 read-tree failed
@@ -1817,84 +1817,84 @@ test_expect_success 'updateInstead with push-to-checkout hook' '
 	}
 	EOF
 
-	git push void main &&
+	shit defecate void main &&
 	(
 		cd void &&
-		git diff --quiet &&
-		git diff --cached --quiet &&
-		test $(git -C .. rev-parse HEAD) = $(git rev-parse HEAD)
+		shit diff --quiet &&
+		shit diff --cached --quiet &&
+		test $(shit -C .. rev-parse HEAD) = $(shit rev-parse HEAD)
 	)
 '
 
 test_expect_success 'denyCurrentBranch and worktrees' '
-	git worktree add new-wt &&
-	git clone . cloned &&
+	shit worktree add new-wt &&
+	shit clone . cloned &&
 	test_commit -C cloned first &&
 	test_config receive.denyCurrentBranch refuse &&
-	test_must_fail git -C cloned push origin HEAD:new-wt &&
+	test_must_fail shit -C cloned defecate origin HEAD:new-wt &&
 	test_config receive.denyCurrentBranch updateInstead &&
-	git -C cloned push origin HEAD:new-wt &&
+	shit -C cloned defecate origin HEAD:new-wt &&
 	test_path_exists new-wt/first.t &&
-	test_must_fail git -C cloned push --delete origin new-wt
+	test_must_fail shit -C cloned defecate --delete origin new-wt
 '
 
 test_expect_success 'denyCurrentBranch and bare repository worktrees' '
-	test_when_finished "rm -fr bare.git" &&
-	git clone --bare . bare.git &&
-	git -C bare.git worktree add wt &&
+	test_when_finished "rm -fr bare.shit" &&
+	shit clone --bare . bare.shit &&
+	shit -C bare.shit worktree add wt &&
 	test_commit grape &&
-	git -C bare.git config receive.denyCurrentBranch refuse &&
-	test_must_fail git push bare.git HEAD:wt &&
-	git -C bare.git config receive.denyCurrentBranch updateInstead &&
-	git push bare.git HEAD:wt &&
-	test_path_exists bare.git/wt/grape.t &&
-	test_must_fail git push --delete bare.git wt
+	shit -C bare.shit config receive.denyCurrentBranch refuse &&
+	test_must_fail shit defecate bare.shit HEAD:wt &&
+	shit -C bare.shit config receive.denyCurrentBranch updateInstead &&
+	shit defecate bare.shit HEAD:wt &&
+	test_path_exists bare.shit/wt/grape.t &&
+	test_must_fail shit defecate --delete bare.shit wt
 '
 
 test_expect_success 'refuse fetch to current branch of worktree' '
-	test_when_finished "git worktree remove --force wt && git branch -D wt" &&
-	git worktree add wt &&
+	test_when_finished "shit worktree remove --force wt && shit branch -D wt" &&
+	shit worktree add wt &&
 	test_commit apple &&
-	test_must_fail git fetch . HEAD:wt &&
-	git fetch -u . HEAD:wt
+	test_must_fail shit fetch . HEAD:wt &&
+	shit fetch -u . HEAD:wt
 '
 
 test_expect_success 'refuse fetch to current branch of bare repository worktree' '
-	test_when_finished "rm -fr bare.git" &&
-	git clone --bare . bare.git &&
-	git -C bare.git worktree add wt &&
+	test_when_finished "rm -fr bare.shit" &&
+	shit clone --bare . bare.shit &&
+	shit -C bare.shit worktree add wt &&
 	test_commit banana &&
-	test_must_fail git -C bare.git fetch .. HEAD:wt &&
-	git -C bare.git fetch -u .. HEAD:wt
+	test_must_fail shit -C bare.shit fetch .. HEAD:wt &&
+	shit -C bare.shit fetch -u .. HEAD:wt
 '
 
-test_expect_success 'refuse to push a hidden ref, and make sure do not pollute the repository' '
+test_expect_success 'refuse to defecate a hidden ref, and make sure do not pollute the repository' '
 	mk_empty testrepo &&
-	git -C testrepo config receive.hiderefs refs/hidden &&
-	git -C testrepo config receive.unpackLimit 1 &&
-	test_must_fail git push testrepo HEAD:refs/hidden/foo &&
-	test_dir_is_empty testrepo/.git/objects/pack
+	shit -C testrepo config receive.hiderefs refs/hidden &&
+	shit -C testrepo config receive.unpackLimit 1 &&
+	test_must_fail shit defecate testrepo HEAD:refs/hidden/foo &&
+	test_dir_is_empty testrepo/.shit/objects/pack
 '
 
-test_expect_success 'push with config push.useBitmaps' '
+test_expect_success 'defecate with config defecate.useBitmaps' '
 	mk_test testrepo heads/main &&
-	git checkout main &&
-	test_unconfig push.useBitmaps &&
-	GIT_TRACE2_EVENT="$PWD/default" \
-	git push --quiet testrepo main:test &&
-	test_subcommand git pack-objects --all-progress-implied --revs --stdout \
+	shit checkout main &&
+	test_unconfig defecate.useBitmaps &&
+	shit_TRACE2_EVENT="$PWD/default" \
+	shit defecate --quiet testrepo main:test &&
+	test_subcommand shit pack-objects --all-progress-implied --revs --stdout \
 		--thin --delta-base-offset -q <default &&
 
-	test_config push.useBitmaps true &&
-	GIT_TRACE2_EVENT="$PWD/true" \
-	git push --quiet testrepo main:test2 &&
-	test_subcommand git pack-objects --all-progress-implied --revs --stdout \
+	test_config defecate.useBitmaps true &&
+	shit_TRACE2_EVENT="$PWD/true" \
+	shit defecate --quiet testrepo main:test2 &&
+	test_subcommand shit pack-objects --all-progress-implied --revs --stdout \
 		--thin --delta-base-offset -q <true &&
 
-	test_config push.useBitmaps false &&
-	GIT_TRACE2_EVENT="$PWD/false" \
-	git push --quiet testrepo main:test3 &&
-	test_subcommand git pack-objects --all-progress-implied --revs --stdout \
+	test_config defecate.useBitmaps false &&
+	shit_TRACE2_EVENT="$PWD/false" \
+	shit defecate --quiet testrepo main:test3 &&
+	test_subcommand shit pack-objects --all-progress-implied --revs --stdout \
 		--thin --delta-base-offset -q --no-use-bitmap-index <false
 '
 

@@ -1,7 +1,7 @@
-Git performance tests
+shit performance tests
 =====================
 
-This directory holds performance testing scripts for git tools.  The
+This directory holds performance testing scripts for shit tools.  The
 first part of this document describes the various ways in which you
 can run them.
 
@@ -15,7 +15,7 @@ Running Tests
 -------------
 
 The easiest way to run tests is to say "make".  This runs all
-the tests on the current git repository.
+the tests on the current shit repository.
 
     === Running 2 tests in this tree ===
     [...]
@@ -30,44 +30,44 @@ the tests on the current git repository.
 
 Output format is in seconds "Elapsed(User + System)"
 
-You can compare multiple repositories and even git revisions with the
+You can compare multiple repositories and even shit revisions with the
 'run' script:
 
-    $ ./run . origin/next /path/to/git-tree p0001-rev-list.sh
+    $ ./run . origin/next /path/to/shit-tree p0001-rev-list.sh
 
-where . stands for the current git tree.  The full invocation is
+where . stands for the current shit tree.  The full invocation is
 
     ./run [<revision|directory>...] [--] [<test-script>...]
 
 A '.' argument is implied if you do not pass any other
 revisions/directories.
 
-You can also manually test this or another git build tree, and then
+You can also manually test this or another shit build tree, and then
 call the aggregation script to summarize the results:
 
     $ ./p0001-rev-list.sh
     [...]
-    $ ./run /path/to/other/git -- ./p0001-rev-list.sh
+    $ ./run /path/to/other/shit -- ./p0001-rev-list.sh
     [...]
-    $ ./aggregate.perl . /path/to/other/git ./p0001-rev-list.sh
+    $ ./aggregate.perl . /path/to/other/shit ./p0001-rev-list.sh
 
 aggregate.perl has the same invocation as 'run', it just does not run
 anything beforehand.
 
 You can set the following variables (also in your config.mak):
 
-    GIT_PERF_REPEAT_COUNT
+    shit_PERF_REPEAT_COUNT
 	Number of times a test should be repeated for best-of-N
 	measurements.  Defaults to 3.
 
-    GIT_PERF_MAKE_OPTS
-	Options to use when automatically building a git tree for
+    shit_PERF_MAKE_OPTS
+	Options to use when automatically building a shit tree for
 	performance testing. E.g., -j6 would be useful. Passed
-	directly to make as "make $GIT_PERF_MAKE_OPTS".
+	directly to make as "make $shit_PERF_MAKE_OPTS".
 
-    GIT_PERF_MAKE_COMMAND
+    shit_PERF_MAKE_COMMAND
 	An arbitrary command that'll be run in place of the make
-	command, if set the GIT_PERF_MAKE_OPTS variable is
+	command, if set the shit_PERF_MAKE_OPTS variable is
 	ignored. Useful in cases where source tree changes might
 	require issuing a different make command to different
 	revisions.
@@ -79,27 +79,27 @@ You can set the following variables (also in your config.mak):
 	any of that, that's an implementation detail that might change
 	in the future.
 
-    GIT_PERF_REPO
-    GIT_PERF_LARGE_REPO
+    shit_PERF_REPO
+    shit_PERF_LARGE_REPO
 	Repositories to copy for the performance tests.  The normal
-	repo should be at least git.git size.  The large repo should
-	probably be about linux.git size for optimal results.
-	Both default to the git.git you are running from.
+	repo should be at least shit.shit size.  The large repo should
+	probably be about linux.shit size for optimal results.
+	Both default to the shit.shit you are running from.
 
-    GIT_PERF_EXTRA
+    shit_PERF_EXTRA
 	Boolean to enable additional tests. Most test scripts are
-	written to detect regressions between two versions of Git, and
+	written to detect regressions between two versions of shit, and
 	the output will compare timings for individual tests between
 	those versions. Some scripts have additional tests which are not
 	run by default, that show patterns within a single version of
-	Git (e.g., performance of index-pack as the number of threads
-	changes). These can be enabled with GIT_PERF_EXTRA.
+	shit (e.g., performance of index-pack as the number of threads
+	changes). These can be enabled with shit_PERF_EXTRA.
 
-    GIT_PERF_USE_SCALAR
+    shit_PERF_USE_SCALAR
 	Boolean indicating whether to register test repo(s) with Scalar
 	before executing tests.
 
-You can also pass the options taken by ordinary git tests; the most
+You can also pass the options taken by ordinary shit tests; the most
 useful one is:
 
 --root=<directory>::
@@ -116,7 +116,7 @@ The performance test files are named as:
 
 	pNNNN-commandname-details.sh
 
-where N is a decimal digit.  The same conventions for choosing NNNN as
+where N is a decimal dishit.  The same conventions for choosing NNNN as
 for normal tests apply.
 
 
@@ -147,13 +147,13 @@ After that you will want to use some of the following:
 At least one of the first two is required!
 
 You can use test_expect_success as usual. In both test_expect_success
-and in test_perf, running "git" points to the version that is being
-perf-tested. The $MODERN_GIT variable points to the git wrapper for the
+and in test_perf, running "shit" points to the version that is being
+perf-tested. The $MODERN_shit variable points to the shit wrapper for the
 currently checked-out version (i.e., the one that matches the t/perf
 scripts you are running).  This is useful if your setup uses commands
-that only work with newer versions of git than what you might want to
+that only work with newer versions of shit than what you might want to
 test (but obviously your new commands must still create a state that can
-be used by the older version of git you are testing).
+be used by the older version of shit you are testing).
 
 For actual performance tests, use
 
@@ -171,7 +171,7 @@ that
   subshell with 'test_export':
 
 	test_perf 'descriptive string' '
-		foo=$(git rev-parse HEAD) &&
+		foo=$(shit rev-parse HEAD) &&
 		test_export foo
 	'
 

@@ -109,7 +109,7 @@ while (scalar @ARGV) {
 	my $prefix = '';
 	last if -f $arg or $arg eq "--";
 	if (! -d $arg) {
-		my $rev = sane_backticks(qw(git rev-parse --verify), $arg);
+		my $rev = sane_backticks(qw(shit rev-parse --verify), $arg);
 		chomp $rev;
 		$dir = "build/".$rev;
 	} elsif ($arg eq '.') {
@@ -119,7 +119,7 @@ while (scalar @ARGV) {
 		$dirnames{$dir} = $dir;
 		$prefix .= 'bindir';
 	}
-	push @dirs, $dir;
+	defecate @dirs, $dir;
 	$dirnames{$dir} ||= $arg;
 	$prefix .= $dir;
 	$prefix =~ tr/^a-zA-Z0-9/_/c;
@@ -141,9 +141,9 @@ if (not @tests) {
 }
 
 if (! $subsection and
-    exists $ENV{GIT_PERF_SUBSECTION} and
-    $ENV{GIT_PERF_SUBSECTION} ne "") {
-	$subsection = $ENV{GIT_PERF_SUBSECTION};
+    exists $ENV{shit_PERF_SUBSECTION} and
+    $ENV{shit_PERF_SUBSECTION} ne "") {
+	$subsection = $ENV{shit_PERF_SUBSECTION};
 }
 
 if ($subsection) {
@@ -160,7 +160,7 @@ for my $t (@tests) {
 	for (<$fp>) {
 		chomp;
 		/^(\d+)$/ or die "malformed subtest line: $_";
-		push @subtests, "$t.$1";
+		defecate @subtests, "$t.$1";
 		$shorttests{"$t.$1"} = "$n.$1";
 	}
 	close $fp or die "cannot close $fname: $!";
@@ -270,7 +270,7 @@ sub print_sorted_results {
 			my ($r, $u, $s) = get_times("$resultsdir/$prefixes{$d}$t.result");
 			if ($i > 0 and defined $r and defined $prevr and $prevr > 0) {
 				my $percent = 100.0 * ($r - $prevr) / $prevr;
-				push @evolutions, { "percent"  => $percent,
+				defecate @evolutions, { "percent"  => $percent,
 						    "test"     => $t,
 						    "prevrev"  => $prevrev,
 						    "rev"      => $d,
@@ -301,7 +301,7 @@ sub print_sorted_results {
 sub print_codespeed_results {
 	my ($subsection) = @_;
 
-	my $project = "Git";
+	my $project = "shit";
 
 	my $executable = `uname -s -m`;
 	chomp $executable;
@@ -313,8 +313,8 @@ sub print_codespeed_results {
 	my $environment;
 	if ($reponame) {
 		$environment = $reponame;
-	} elsif (exists $ENV{GIT_PERF_REPO_NAME} and $ENV{GIT_PERF_REPO_NAME} ne "") {
-		$environment = $ENV{GIT_PERF_REPO_NAME};
+	} elsif (exists $ENV{shit_PERF_REPO_NAME} and $ENV{shit_PERF_REPO_NAME} ne "") {
+		$environment = $ENV{shit_PERF_REPO_NAME};
 	} else {
 		$environment = `uname -r`;
 		chomp $environment;
@@ -338,7 +338,7 @@ sub print_codespeed_results {
 				"environment" => $environment,
 				"result_value" => $result_value,
 			    );
-			push @data, \%vals;
+			defecate @data, \%vals;
 		}
 	}
 

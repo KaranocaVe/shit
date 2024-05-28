@@ -3,21 +3,21 @@
 # Copyright (c) 2007 Johannes E. Schindelin
 #
 
-test_description='git status'
+test_description='shit status'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-terminal.sh
 
 test_expect_success 'status -h in broken repository' '
-	git config --global advice.statusuoption false &&
+	shit config --global advice.statusuoption false &&
 	mkdir broken &&
 	test_when_finished "rm -fr broken" &&
 	(
 		cd broken &&
-		git init &&
-		echo "[status] showuntrackedfiles = CORRUPT" >>.git/config &&
-		test_expect_code 129 git status -h >usage 2>&1
+		shit init &&
+		echo "[status] showuntrackedfiles = CORRUPT" >>.shit/config &&
+		test_expect_code 129 shit status -h >usage 2>&1
 	) &&
 	test_grep "[Uu]sage" broken/usage
 '
@@ -27,22 +27,22 @@ test_expect_success 'commit -h in broken repository' '
 	test_when_finished "rm -fr broken" &&
 	(
 		cd broken &&
-		git init &&
-		echo "[status] showuntrackedfiles = CORRUPT" >>.git/config &&
-		test_expect_code 129 git commit -h >usage 2>&1
+		shit init &&
+		echo "[status] showuntrackedfiles = CORRUPT" >>.shit/config &&
+		test_expect_code 129 shit commit -h >usage 2>&1
 	) &&
 	test_grep "[Uu]sage" broken/usage
 '
 
 test_expect_success 'create upstream branch' '
-	git checkout -b upstream &&
+	shit checkout -b upstream &&
 	test_commit upstream1 &&
 	test_commit upstream2 &&
 	# leave the first commit on main as root because several
 	# tests depend on this case; for our upstream we only
 	# care about commit counts anyway, so a totally divergent
 	# history is OK
-	git checkout --orphan main
+	shit checkout --orphan main
 '
 
 test_expect_success 'setup' '
@@ -54,25 +54,25 @@ test_expect_success 'setup' '
 	mkdir dir2 &&
 	: >dir1/tracked &&
 	: >dir1/modified &&
-	git add . &&
+	shit add . &&
 
-	git status >output &&
+	shit status >output &&
 
 	test_tick &&
-	git commit -m initial &&
+	shit commit -m initial &&
 	: >untracked &&
 	: >dir1/untracked &&
 	: >dir2/untracked &&
 	echo 1 >dir1/modified &&
 	echo 2 >dir2/modified &&
 	echo 3 >dir2/added &&
-	git add dir2/added &&
+	shit add dir2/added &&
 
-	git branch --set-upstream-to=upstream
+	shit branch --set-upstream-to=upstream
 '
 
 test_expect_success 'status (1)' '
-	test_grep "use \"git rm --cached <file>\.\.\.\" to unstage" output
+	test_grep "use \"shit rm --cached <file>\.\.\.\" to unstage" output
 '
 
 strip_comments () {
@@ -81,8 +81,8 @@ strip_comments () {
 	rm "$1" && mv "$1".tmp "$1"
 }
 
-cat >.gitignore <<\EOF
-.gitignore
+cat >.shitignore <<\EOF
+.shitignore
 expect*
 output*
 EOF
@@ -92,30 +92,30 @@ test_expect_success 'status --column' '
 # On branch main
 # Your branch and '\''upstream'\'' have diverged,
 # and have 1 and 2 different commits each, respectively.
-#   (use "git pull" if you want to integrate the remote branch with yours)
+#   (use "shit poop" if you want to integrate the remote branch with yours)
 #
 # Changes to be committed:
-#   (use "git restore --staged <file>..." to unstage)
+#   (use "shit restore --staged <file>..." to unstage)
 #	new file:   dir2/added
 #
 # Changes not staged for commit:
-#   (use "git add <file>..." to update what will be committed)
-#   (use "git restore <file>..." to discard changes in working directory)
+#   (use "shit add <file>..." to update what will be committed)
+#   (use "shit restore <file>..." to discard changes in working directory)
 #	modified:   dir1/modified
 #
 # Untracked files:
-#   (use "git add <file>..." to include in what will be committed)
+#   (use "shit add <file>..." to include in what will be committed)
 #	dir1/untracked dir2/untracked
 #	dir2/modified  untracked
 #
 EOF
-	COLUMNS=50 git -c status.displayCommentPrefix=true status --column="column dense" >output &&
+	COLUMNS=50 shit -c status.displayCommentPrefix=true status --column="column dense" >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status --column status.displayCommentPrefix=false' '
 	strip_comments expect &&
-	COLUMNS=49 git -c status.displayCommentPrefix=false status --column="column dense" >output &&
+	COLUMNS=49 shit -c status.displayCommentPrefix=false status --column="column dense" >output &&
 	test_cmp expect output
 '
 
@@ -123,19 +123,19 @@ cat >expect <<\EOF
 # On branch main
 # Your branch and 'upstream' have diverged,
 # and have 1 and 2 different commits each, respectively.
-#   (use "git pull" if you want to integrate the remote branch with yours)
+#   (use "shit poop" if you want to integrate the remote branch with yours)
 #
 # Changes to be committed:
-#   (use "git restore --staged <file>..." to unstage)
+#   (use "shit restore --staged <file>..." to unstage)
 #	new file:   dir2/added
 #
 # Changes not staged for commit:
-#   (use "git add <file>..." to update what will be committed)
-#   (use "git restore <file>..." to discard changes in working directory)
+#   (use "shit add <file>..." to update what will be committed)
+#   (use "shit restore <file>..." to discard changes in working directory)
 #	modified:   dir1/modified
 #
 # Untracked files:
-#   (use "git add <file>..." to include in what will be committed)
+#   (use "shit add <file>..." to include in what will be committed)
 #	dir1/untracked
 #	dir2/modified
 #	dir2/untracked
@@ -144,47 +144,47 @@ cat >expect <<\EOF
 EOF
 
 test_expect_success 'status with status.displayCommentPrefix=true' '
-	git -c status.displayCommentPrefix=true status >output &&
+	shit -c status.displayCommentPrefix=true status >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status with status.displayCommentPrefix=false' '
 	strip_comments expect &&
-	git -c status.displayCommentPrefix=false status >output &&
+	shit -c status.displayCommentPrefix=false status >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status -v' '
-	(cat expect && git diff --cached) >expect-with-v &&
-	git status -v >output &&
+	(cat expect && shit diff --cached) >expect-with-v &&
+	shit status -v >output &&
 	test_cmp expect-with-v output
 '
 
 test_expect_success 'status -v -v' '
 	(cat expect &&
 	 echo "Changes to be committed:" &&
-	 git -c diff.mnemonicprefix=true diff --cached &&
+	 shit -c diff.mnemonicprefix=true diff --cached &&
 	 echo "--------------------------------------------------" &&
 	 echo "Changes not staged for commit:" &&
-	 git -c diff.mnemonicprefix=true diff) >expect-with-v &&
-	git status -v -v >output &&
+	 shit -c diff.mnemonicprefix=true diff) >expect-with-v &&
+	shit status -v -v >output &&
 	test_cmp expect-with-v output
 '
 
 test_expect_success 'setup fake editor' '
-	cat >.git/editor <<-\EOF &&
+	cat >.shit/editor <<-\EOF &&
 	#! /bin/sh
 	cp "$1" output
 EOF
-	chmod 755 .git/editor
+	chmod 755 .shit/editor
 '
 
 commit_template_commented () {
 	(
-		EDITOR=.git/editor &&
+		EDITOR=.shit/editor &&
 		export EDITOR &&
 		# Fails due to empty message
-		test_must_fail git commit
+		test_must_fail shit commit
 	) &&
 	! grep '^[^#]' output
 }
@@ -214,7 +214,7 @@ EOF
 
 test_expect_success 'status (advice.statusHints false)' '
 	test_config advice.statusHints false &&
-	git status >output &&
+	shit status >output &&
 	test_cmp expect output
 
 '
@@ -230,32 +230,32 @@ EOF
 
 test_expect_success 'status -s' '
 
-	git status -s >output &&
+	shit status -s >output &&
 	test_cmp expect output
 
 '
 
-test_expect_success 'status with gitignore' '
+test_expect_success 'status with shitignore' '
 	{
-		echo ".gitignore" &&
+		echo ".shitignore" &&
 		echo "expect*" &&
 		echo "output" &&
 		echo "untracked"
-	} >.gitignore &&
+	} >.shitignore &&
 
 	cat >expect <<-\EOF &&
 	 M dir1/modified
 	A  dir2/added
 	?? dir2/modified
 	EOF
-	git status -s >output &&
+	shit status -s >output &&
 	test_cmp expect output &&
 
 	cat >expect <<-\EOF &&
 	 M dir1/modified
 	A  dir2/added
 	?? dir2/modified
-	!! .gitignore
+	!! .shitignore
 	!! dir1/untracked
 	!! dir2/untracked
 	!! expect
@@ -263,31 +263,31 @@ test_expect_success 'status with gitignore' '
 	!! output
 	!! untracked
 	EOF
-	git status -s --ignored >output &&
+	shit status -s --ignored >output &&
 	test_cmp expect output &&
 
 	cat >expect <<\EOF &&
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir2/modified
 
 Ignored files:
-  (use "git add -f <file>..." to include in what will be committed)
-	.gitignore
+  (use "shit add -f <file>..." to include in what will be committed)
+	.shitignore
 	dir1/untracked
 	dir2/untracked
 	expect
@@ -296,30 +296,30 @@ Ignored files:
 	untracked
 
 EOF
-	git status --ignored >output &&
+	shit status --ignored >output &&
 	test_cmp expect output
 '
 
-test_expect_success 'status with gitignore (nothing untracked)' '
+test_expect_success 'status with shitignore (nothing untracked)' '
 	{
-		echo ".gitignore" &&
+		echo ".shitignore" &&
 		echo "expect*" &&
 		echo "dir2/modified" &&
 		echo "output" &&
 		echo "untracked"
-	} >.gitignore &&
+	} >.shitignore &&
 
 	cat >expect <<-\EOF &&
 	 M dir1/modified
 	A  dir2/added
 	EOF
-	git status -s >output &&
+	shit status -s >output &&
 	test_cmp expect output &&
 
 	cat >expect <<-\EOF &&
 	 M dir1/modified
 	A  dir2/added
-	!! .gitignore
+	!! .shitignore
 	!! dir1/untracked
 	!! dir2/modified
 	!! dir2/untracked
@@ -328,27 +328,27 @@ test_expect_success 'status with gitignore (nothing untracked)' '
 	!! output
 	!! untracked
 	EOF
-	git status -s --ignored >output &&
+	shit status -s --ignored >output &&
 	test_cmp expect output &&
 
 	cat >expect <<\EOF &&
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Ignored files:
-  (use "git add -f <file>..." to include in what will be committed)
-	.gitignore
+  (use "shit add -f <file>..." to include in what will be committed)
+	.shitignore
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
@@ -358,12 +358,12 @@ Ignored files:
 	untracked
 
 EOF
-	git status --ignored >output &&
+	shit status --ignored >output &&
 	test_cmp expect output
 '
 
-cat >.gitignore <<\EOF
-.gitignore
+cat >.shitignore <<\EOF
+.shitignore
 expect*
 output*
 EOF
@@ -380,7 +380,7 @@ EOF
 
 test_expect_success 'status -s -b' '
 
-	git status -s -b >output &&
+	shit status -s -b >output &&
 	test_cmp expect output
 
 '
@@ -388,7 +388,7 @@ test_expect_success 'status -s -b' '
 test_expect_success 'status -s -z -b' '
 	tr "\\n" Q <expect >expect.q &&
 	mv expect.q expect &&
-	git status -s -z -b >output &&
+	shit status -s -z -b >output &&
 	nul_to_q <output >output.q &&
 	mv output.q output &&
 	test_cmp expect output
@@ -405,22 +405,22 @@ test_expect_success 'status -uno' '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files not listed (use -u option to show untracked files)
 EOF
-	git status -uno >output &&
+	shit status -uno >output &&
 	test_cmp expect output &&
-	git status -ufalse >output &&
+	shit status -ufalse >output &&
 	test_cmp expect output
 '
 
@@ -428,7 +428,7 @@ for no in no false 0
 do
 	test_expect_success "status (status.showUntrackedFiles $no)" '
 		test_config status.showuntrackedfiles "$no" &&
-		git status >output &&
+		shit status >output &&
 		test_cmp expect output
 	'
 done
@@ -448,7 +448,7 @@ Changes not staged for commit:
 Untracked files not listed
 EOF
 	test_config advice.statusHints false &&
-	git status -uno >output &&
+	shit status -uno >output &&
 	test_cmp expect output
 '
 
@@ -457,13 +457,13 @@ cat >expect << EOF
 A  dir2/added
 EOF
 test_expect_success 'status -s -uno' '
-	git status -s -uno >output &&
+	shit status -s -uno >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status -s (status.showUntrackedFiles no)' '
-	git config status.showuntrackedfiles no &&
-	git status -s >output &&
+	shit config status.showuntrackedfiles no &&
+	shit status -s >output &&
 	test_cmp expect output
 '
 
@@ -472,19 +472,19 @@ test_expect_success 'status -unormal' '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
@@ -492,11 +492,11 @@ Untracked files:
 	untracked
 
 EOF
-	git status -unormal >output &&
+	shit status -unormal >output &&
 	test_cmp expect output &&
-	git status -utrue >output &&
+	shit status -utrue >output &&
 	test_cmp expect output &&
-	git status -uyes >output &&
+	shit status -uyes >output &&
 	test_cmp expect output
 '
 
@@ -504,7 +504,7 @@ for normal in normal true 1
 do
 	test_expect_success "status (status.showUntrackedFiles $normal)" '
 		test_config status.showuntrackedfiles $normal &&
-		git status >output &&
+		shit status >output &&
 		test_cmp expect output
 	'
 done
@@ -519,13 +519,13 @@ A  dir2/added
 ?? untracked
 EOF
 test_expect_success 'status -s -unormal' '
-	git status -s -unormal >output &&
+	shit status -s -unormal >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status -s (status.showUntrackedFiles normal)' '
-	git config status.showuntrackedfiles normal &&
-	git status -s >output &&
+	shit config status.showuntrackedfiles normal &&
+	shit status -s >output &&
 	test_cmp expect output
 '
 
@@ -534,19 +534,19 @@ test_expect_success 'status -uall' '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
@@ -555,13 +555,13 @@ Untracked files:
 	untracked
 
 EOF
-	git status -uall >output &&
+	shit status -uall >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status (status.showUntrackedFiles all)' '
 	test_config status.showuntrackedfiles all &&
-	git status >output &&
+	shit status >output &&
 	test_cmp expect output
 '
 
@@ -579,12 +579,12 @@ A  dir2/added
 EOF
 test_expect_success 'status -s -uall' '
 	test_unconfig status.showuntrackedfiles &&
-	git status -s -uall >output &&
+	shit status -s -uall >output &&
 	test_cmp expect output
 '
 test_expect_success 'status -s (status.showUntrackedFiles all)' '
 	test_config status.showuntrackedfiles all &&
-	git status -s >output &&
+	shit status -s >output &&
 	rm -rf dir3 &&
 	test_cmp expect output
 '
@@ -594,26 +594,26 @@ test_expect_success 'status with relative paths' '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   ../dir2/added
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	untracked
 	../dir2/modified
 	../dir2/untracked
 	../untracked
 
 EOF
-	(cd dir1 && git status) >output &&
+	(cd dir1 && shit status) >output &&
 	test_cmp expect output
 '
 
@@ -627,7 +627,7 @@ A  ../dir2/added
 EOF
 test_expect_success 'status -s with relative paths' '
 
-	(cd dir1 && git status -s) >output &&
+	(cd dir1 && shit status -s) >output &&
 	test_cmp expect output
 
 '
@@ -643,17 +643,17 @@ EOF
 
 test_expect_success 'status --porcelain ignores relative paths setting' '
 
-	(cd dir1 && git status --porcelain) >output &&
+	(cd dir1 && shit status --porcelain) >output &&
 	test_cmp expect output
 
 '
 
 test_expect_success 'setup unique colors' '
 
-	git config status.color.untracked blue &&
-	git config status.color.branch green &&
-	git config status.color.localBranch yellow &&
-	git config status.color.remoteBranch cyan
+	shit config status.color.untracked blue &&
+	shit config status.color.branch green &&
+	shit config status.color.localBranch yellow &&
+	shit config status.color.remoteBranch cyan
 
 '
 
@@ -662,19 +662,19 @@ test_expect_success TTY 'status with color.ui' '
 On branch <GREEN>main<RESET>
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	<GREEN>new file:   dir2/added<RESET>
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	<RED>modified:   dir1/modified<RESET>
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	<BLUE>dir1/untracked<RESET>
 	<BLUE>dir2/modified<RESET>
 	<BLUE>dir2/untracked<RESET>
@@ -682,13 +682,13 @@ Untracked files:
 
 EOF
 	test_config color.ui auto &&
-	test_terminal git status | test_decode_color >output &&
+	test_terminal shit status | test_decode_color >output &&
 	test_cmp expect output
 '
 
 test_expect_success TTY 'status with color.status' '
 	test_config color.status auto &&
-	test_terminal git status | test_decode_color >output &&
+	test_terminal shit status | test_decode_color >output &&
 	test_cmp expect output
 '
 
@@ -703,17 +703,17 @@ EOF
 
 test_expect_success TTY 'status -s with color.ui' '
 
-	git config color.ui auto &&
-	test_terminal git status -s | test_decode_color >output &&
+	shit config color.ui auto &&
+	test_terminal shit status -s | test_decode_color >output &&
 	test_cmp expect output
 
 '
 
 test_expect_success TTY 'status -s with color.status' '
 
-	git config --unset color.ui &&
-	git config color.status auto &&
-	test_terminal git status -s | test_decode_color >output &&
+	shit config --unset color.ui &&
+	shit config color.status auto &&
+	test_terminal shit status -s | test_decode_color >output &&
 	test_cmp expect output
 
 '
@@ -730,7 +730,7 @@ EOF
 
 test_expect_success TTY 'status -s -b with color.status' '
 
-	test_terminal git status -s -b | test_decode_color >output &&
+	test_terminal shit status -s -b | test_decode_color >output &&
 	test_cmp expect output
 
 '
@@ -746,29 +746,29 @@ EOF
 
 test_expect_success TTY 'status --porcelain ignores color.ui' '
 
-	git config --unset color.status &&
-	git config color.ui auto &&
-	test_terminal git status --porcelain | test_decode_color >output &&
+	shit config --unset color.status &&
+	shit config color.ui auto &&
+	test_terminal shit status --porcelain | test_decode_color >output &&
 	test_cmp expect output
 
 '
 
 test_expect_success TTY 'status --porcelain ignores color.status' '
 
-	git config --unset color.ui &&
-	git config color.status auto &&
-	test_terminal git status --porcelain | test_decode_color >output &&
+	shit config --unset color.ui &&
+	shit config color.status auto &&
+	test_terminal shit status --porcelain | test_decode_color >output &&
 	test_cmp expect output
 
 '
 
 # recover unconditionally from color tests
-git config --unset color.status
-git config --unset color.ui
+shit config --unset color.status
+shit config --unset color.ui
 
 test_expect_success 'status --porcelain respects -b' '
 
-	git status --porcelain -b >output &&
+	shit status --porcelain -b >output &&
 	{
 		echo "## main...upstream [ahead 1, behind 2]" &&
 		cat expect
@@ -785,19 +785,19 @@ test_expect_success 'status without relative paths' '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
@@ -805,7 +805,7 @@ Untracked files:
 
 EOF
 	test_config status.relativePaths false &&
-	(cd dir1 && git status) >output &&
+	(cd dir1 && shit status) >output &&
 	test_cmp expect output
 
 '
@@ -822,7 +822,7 @@ EOF
 test_expect_success 'status -s without relative paths' '
 
 	test_config status.relativePaths false &&
-	(cd dir1 && git status -s) >output &&
+	(cd dir1 && shit status -s) >output &&
 	test_cmp expect output
 
 '
@@ -839,16 +839,16 @@ A  "file with spaces"
 EOF
 
 test_expect_success 'status -s without relative paths' '
-	test_when_finished "git rm --cached \"file with spaces\"; rm -f file*" &&
+	test_when_finished "shit rm --cached \"file with spaces\"; rm -f file*" &&
 	>"file with spaces" &&
 	>"file with spaces 2" &&
 	>"expect with spaces" &&
-	git add "file with spaces" &&
+	shit add "file with spaces" &&
 
-	git status -s >output &&
+	shit status -s >output &&
 	test_cmp expect output &&
 
-	git status -s --ignored >output &&
+	shit status -s --ignored >output &&
 	grep "^!! \"expect with spaces\"$" output &&
 	grep -v "^!! " output >output-wo-ignored &&
 	test_cmp expect output-wo-ignored
@@ -861,17 +861,17 @@ Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/
 	untracked
 
 EOF
-	git commit --dry-run dir1/modified >output &&
+	shit commit --dry-run dir1/modified >output &&
 	test_cmp expect output
 '
 
@@ -880,8 +880,8 @@ cat >expect <<EOF
 EOF
 test_expect_success 'status refreshes the index' '
 	touch dir2/added &&
-	git status &&
-	git diff-files >output &&
+	shit status &&
+	shit diff-files >output &&
 	test_cmp expect output
 '
 
@@ -891,9 +891,9 @@ test_expect_success 'status shows detached HEAD properly after checking out non-
 	test_create_repo upstream &&
 	test_commit -C upstream foo &&
 
-	git clone upstream downstream &&
-	git -C downstream checkout @{u} &&
-	git -C downstream status >actual &&
+	shit clone upstream downstream &&
+	shit -C downstream checkout @{u} &&
+	shit -C downstream status >actual &&
 	grep -E "HEAD detached at [0-9a-f]+" actual
 '
 
@@ -901,10 +901,10 @@ test_expect_success 'setup status submodule summary' '
 	test_create_repo sm && (
 		cd sm &&
 		>foo &&
-		git add foo &&
-		git commit -m "Add foo"
+		shit add foo &&
+		shit commit -m "Add foo"
 	) &&
-	git add sm
+	shit add sm
 '
 
 test_expect_success 'status submodule summary is disabled by default' '
@@ -912,33 +912,33 @@ test_expect_success 'status submodule summary is disabled by default' '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 	new file:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
 EOF
-	git status >output &&
+	shit status >output &&
 	test_cmp expect output
 '
 
 # we expect the same as the previous test
 test_expect_success 'status --untracked-files=all does not show submodule' '
-	git status --untracked-files=all >output &&
+	shit status --untracked-files=all >output &&
 	test_cmp expect output
 '
 
@@ -952,33 +952,33 @@ A  sm
 ?? untracked
 EOF
 test_expect_success 'status -s submodule summary is disabled by default' '
-	git status -s >output &&
+	shit status -s >output &&
 	test_cmp expect output
 '
 
 # we expect the same as the previous test
 test_expect_success 'status -s --untracked-files=all does not show submodule' '
-	git status -s --untracked-files=all >output &&
+	shit status -s --untracked-files=all >output &&
 	test_cmp expect output
 '
 
-head=$(cd sm && git rev-parse --short=7 --verify HEAD)
+head=$(cd sm && shit rev-parse --short=7 --verify HEAD)
 
 test_expect_success 'status submodule summary' '
 	cat >expect <<EOF &&
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 1 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	new file:   dir2/added
 	new file:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Submodule changes to be committed:
@@ -987,21 +987,21 @@ Submodule changes to be committed:
   > Add foo
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
 EOF
-	git config status.submodulesummary 10 &&
-	git status >output &&
+	shit config status.submodulesummary 10 &&
+	shit status >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status submodule summary with status.displayCommentPrefix=false' '
 	strip_comments expect &&
-	git -c status.displayCommentPrefix=false status >output &&
+	shit -c status.displayCommentPrefix=false status >output &&
 	test_cmp expect output
 '
 
@@ -1019,7 +1019,7 @@ A  sm
 ?? untracked
 EOF
 test_expect_success 'status -s submodule summary' '
-	git status -s >output &&
+	shit status -s >output &&
 	test_cmp expect output
 '
 
@@ -1028,28 +1028,28 @@ test_expect_success 'status submodule summary (clean submodule): commit' '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
-no changes added to commit (use "git add" and/or "git commit -a")
+no changes added to commit (use "shit add" and/or "shit commit -a")
 EOF
-	sed "/git pull/d" expect-status > expect-commit &&
-	git commit -m "commit submodule" &&
-	git config status.submodulesummary 10 &&
-	test_must_fail git commit --dry-run >output &&
+	sed "/shit poop/d" expect-status > expect-commit &&
+	shit commit -m "commit submodule" &&
+	shit config status.submodulesummary 10 &&
+	test_must_fail shit commit --dry-run >output &&
 	test_cmp expect-commit output &&
-	git status >output &&
+	shit status >output &&
 	test_cmp expect-status output
 '
 
@@ -1061,14 +1061,14 @@ cat >expect <<EOF
 ?? untracked
 EOF
 test_expect_success 'status -s submodule summary (clean submodule)' '
-	git status -s >output &&
+	shit status -s >output &&
 	test_cmp expect output
 '
 
 test_expect_success 'status -z implies porcelain' '
-	git status --porcelain |
+	shit status --porcelain |
 	perl -pe "s/\012/\000/g" >expect &&
-	git status -z >output &&
+	shit status -z >output &&
 	test_cmp expect output
 '
 
@@ -1079,13 +1079,13 @@ Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
 
 Changes to be committed:
-  (use "git restore --source=HEAD^1 --staged <file>..." to unstage)
+  (use "shit restore --source=HEAD^1 --staged <file>..." to unstage)
 	new file:   dir2/added
 	new file:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Submodule changes to be committed:
@@ -1094,49 +1094,49 @@ Submodule changes to be committed:
   > Add foo
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
+  (use "shit add <file>..." to include in what will be committed)
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
 EOF
-	git config status.submodulesummary 10 &&
-	git commit --dry-run --amend >output &&
+	shit config status.submodulesummary 10 &&
+	shit commit --dry-run --amend >output &&
 	test_cmp expect output
 '
 
 test_expect_success POSIXPERM,SANITY 'status succeeds in a read-only repository' '
-	test_when_finished "chmod 775 .git" &&
+	test_when_finished "chmod 775 .shit" &&
 	(
-		chmod a-w .git &&
+		chmod a-w .shit &&
 		# make dir1/tracked stat-dirty
 		>dir1/tracked1 && mv -f dir1/tracked1 dir1/tracked &&
-		git status -s >output &&
+		shit status -s >output &&
 		! grep dir1/tracked output &&
 		# make sure "status" succeeded without writing index out
-		git diff-files | grep dir1/tracked
+		shit diff-files | grep dir1/tracked
 	)
 '
 
-(cd sm && echo > bar && git add bar && git commit -q -m 'Add bar') && git add sm
-new_head=$(cd sm && git rev-parse --short=7 --verify HEAD)
-touch .gitmodules
+(cd sm && echo > bar && shit add bar && shit commit -q -m 'Add bar') && shit add sm
+new_head=$(cd sm && shit rev-parse --short=7 --verify HEAD)
+touch .shitmodules
 
 test_expect_success '--ignore-submodules=untracked suppresses submodules with untracked content' '
 	cat > expect << EOF &&
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	modified:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Submodule changes to be committed:
@@ -1145,8 +1145,8 @@ Submodule changes to be committed:
   > Add bar
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.gitmodules
+  (use "shit add <file>..." to include in what will be committed)
+	.shitmodules
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
@@ -1154,82 +1154,82 @@ Untracked files:
 
 EOF
 	echo modified  sm/untracked &&
-	git status --ignore-submodules=untracked >output &&
+	shit status --ignore-submodules=untracked >output &&
 	test_cmp expect output
 '
 
-test_expect_success '.gitmodules ignore=untracked suppresses submodules with untracked content' '
+test_expect_success '.shitmodules ignore=untracked suppresses submodules with untracked content' '
 	test_config diff.ignoreSubmodules dirty &&
-	git status >output &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config --add -f .gitmodules submodule.subname.ignore untracked &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git status >output &&
+	shit config --add -f .shitmodules submodule.subname.ignore untracked &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-test_expect_success '.git/config ignore=untracked suppresses submodules with untracked content' '
-	git config --add -f .gitmodules submodule.subname.ignore none &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore untracked &&
-	git config --add submodule.subname.path sm &&
-	git status >output &&
+test_expect_success '.shit/config ignore=untracked suppresses submodules with untracked content' '
+	shit config --add -f .shitmodules submodule.subname.ignore none &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore untracked &&
+	shit config --add submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config --remove-section submodule.subname &&
-	git config --remove-section -f .gitmodules submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config --remove-section -f .shitmodules submodule.subname
 '
 
 test_expect_success '--ignore-submodules=dirty suppresses submodules with untracked content' '
-	git status --ignore-submodules=dirty >output &&
+	shit status --ignore-submodules=dirty >output &&
 	test_cmp expect output
 '
 
-test_expect_success '.gitmodules ignore=dirty suppresses submodules with untracked content' '
+test_expect_success '.shitmodules ignore=dirty suppresses submodules with untracked content' '
 	test_config diff.ignoreSubmodules dirty &&
-	git status >output &&
+	shit status >output &&
 	! test -s actual &&
-	git config --add -f .gitmodules submodule.subname.ignore dirty &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git status >output &&
+	shit config --add -f .shitmodules submodule.subname.ignore dirty &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-test_expect_success '.git/config ignore=dirty suppresses submodules with untracked content' '
-	git config --add -f .gitmodules submodule.subname.ignore none &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore dirty &&
-	git config --add submodule.subname.path sm &&
-	git status >output &&
+test_expect_success '.shit/config ignore=dirty suppresses submodules with untracked content' '
+	shit config --add -f .shitmodules submodule.subname.ignore none &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore dirty &&
+	shit config --add submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config --remove-section submodule.subname &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
 test_expect_success '--ignore-submodules=dirty suppresses submodules with modified content' '
 	echo modified >sm/foo &&
-	git status --ignore-submodules=dirty >output &&
+	shit status --ignore-submodules=dirty >output &&
 	test_cmp expect output
 '
 
-test_expect_success '.gitmodules ignore=dirty suppresses submodules with modified content' '
-	git config --add -f .gitmodules submodule.subname.ignore dirty &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git status >output &&
+test_expect_success '.shitmodules ignore=dirty suppresses submodules with modified content' '
+	shit config --add -f .shitmodules submodule.subname.ignore dirty &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-test_expect_success '.git/config ignore=dirty suppresses submodules with modified content' '
-	git config --add -f .gitmodules submodule.subname.ignore none &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore dirty &&
-	git config --add submodule.subname.path sm &&
-	git status >output &&
+test_expect_success '.shit/config ignore=dirty suppresses submodules with modified content' '
+	shit config --add -f .shitmodules submodule.subname.ignore none &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore dirty &&
+	shit config --add submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config --remove-section submodule.subname &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
 test_expect_success "--ignore-submodules=untracked doesn't suppress submodules with modified content" '
@@ -1237,15 +1237,15 @@ test_expect_success "--ignore-submodules=untracked doesn't suppress submodules w
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	modified:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
   (commit or discard the untracked or modified content in submodules)
 	modified:   dir1/modified
 	modified:   sm (modified content)
@@ -1256,53 +1256,53 @@ Submodule changes to be committed:
   > Add bar
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.gitmodules
+  (use "shit add <file>..." to include in what will be committed)
+	.shitmodules
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
 EOF
-	git status --ignore-submodules=untracked > output &&
+	shit status --ignore-submodules=untracked > output &&
 	test_cmp expect output
 '
 
-test_expect_success ".gitmodules ignore=untracked doesn't suppress submodules with modified content" '
-	git config --add -f .gitmodules submodule.subname.ignore untracked &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git status >output &&
+test_expect_success ".shitmodules ignore=untracked doesn't suppress submodules with modified content" '
+	shit config --add -f .shitmodules submodule.subname.ignore untracked &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-test_expect_success ".git/config ignore=untracked doesn't suppress submodules with modified content" '
-	git config --add -f .gitmodules submodule.subname.ignore none &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore untracked &&
-	git config --add submodule.subname.path sm &&
-	git status >output &&
+test_expect_success ".shit/config ignore=untracked doesn't suppress submodules with modified content" '
+	shit config --add -f .shitmodules submodule.subname.ignore none &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore untracked &&
+	shit config --add submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config --remove-section submodule.subname &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-head2=$(cd sm && git commit -q -m "2nd commit" foo && git rev-parse --short=7 --verify HEAD)
+head2=$(cd sm && shit commit -q -m "2nd commit" foo && shit rev-parse --short=7 --verify HEAD)
 
 test_expect_success "--ignore-submodules=untracked doesn't suppress submodule summary" '
 	cat > expect << EOF &&
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	modified:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 	modified:   sm (new commits)
 
@@ -1317,73 +1317,73 @@ Submodules changed but not updated:
   > 2nd commit
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.gitmodules
+  (use "shit add <file>..." to include in what will be committed)
+	.shitmodules
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
 EOF
-	git status --ignore-submodules=untracked > output &&
+	shit status --ignore-submodules=untracked > output &&
 	test_cmp expect output
 '
 
-test_expect_success ".gitmodules ignore=untracked doesn't suppress submodule summary" '
-	git config --add -f .gitmodules submodule.subname.ignore untracked &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git status >output &&
+test_expect_success ".shitmodules ignore=untracked doesn't suppress submodule summary" '
+	shit config --add -f .shitmodules submodule.subname.ignore untracked &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-test_expect_success ".git/config ignore=untracked doesn't suppress submodule summary" '
-	git config --add -f .gitmodules submodule.subname.ignore none &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore untracked &&
-	git config --add submodule.subname.path sm &&
-	git status >output &&
+test_expect_success ".shit/config ignore=untracked doesn't suppress submodule summary" '
+	shit config --add -f .shitmodules submodule.subname.ignore none &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore untracked &&
+	shit config --add submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config --remove-section submodule.subname &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
 test_expect_success "--ignore-submodules=dirty doesn't suppress submodule summary" '
-	git status --ignore-submodules=dirty > output &&
+	shit status --ignore-submodules=dirty > output &&
 	test_cmp expect output
 '
-test_expect_success ".gitmodules ignore=dirty doesn't suppress submodule summary" '
-	git config --add -f .gitmodules submodule.subname.ignore dirty &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git status >output &&
+test_expect_success ".shitmodules ignore=dirty doesn't suppress submodule summary" '
+	shit config --add -f .shitmodules submodule.subname.ignore dirty &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-test_expect_success ".git/config ignore=dirty doesn't suppress submodule summary" '
-	git config --add -f .gitmodules submodule.subname.ignore none &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore dirty &&
-	git config --add submodule.subname.path sm &&
-	git status >output &&
+test_expect_success ".shit/config ignore=dirty doesn't suppress submodule summary" '
+	shit config --add -f .shitmodules submodule.subname.ignore none &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore dirty &&
+	shit config --add submodule.subname.path sm &&
+	shit status >output &&
 	test_cmp expect output &&
-	git config --remove-section submodule.subname &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
 cat > expect << EOF
 ; On branch main
 ; Your branch and 'upstream' have diverged,
 ; and have 2 and 2 different commits each, respectively.
-;   (use "git pull" if you want to integrate the remote branch with yours)
+;   (use "shit poop" if you want to integrate the remote branch with yours)
 ;
 ; Changes to be committed:
-;   (use "git restore --staged <file>..." to unstage)
+;   (use "shit restore --staged <file>..." to unstage)
 ;	modified:   sm
 ;
 ; Changes not staged for commit:
-;   (use "git add <file>..." to update what will be committed)
-;   (use "git restore <file>..." to discard changes in working directory)
+;   (use "shit add <file>..." to update what will be committed)
+;   (use "shit restore <file>..." to discard changes in working directory)
 ;	modified:   dir1/modified
 ;	modified:   sm (new commits)
 ;
@@ -1398,8 +1398,8 @@ cat > expect << EOF
 ;   > 2nd commit
 ;
 ; Untracked files:
-;   (use "git add <file>..." to include in what will be committed)
-;	.gitmodules
+;   (use "shit add <file>..." to include in what will be committed)
+;	.shitmodules
 ;	dir1/untracked
 ;	dir2/modified
 ;	dir2/untracked
@@ -1409,14 +1409,14 @@ EOF
 
 test_expect_success "status (core.commentchar with submodule summary)" '
 	test_config core.commentchar ";" &&
-	git -c status.displayCommentPrefix=true status >output &&
+	shit -c status.displayCommentPrefix=true status >output &&
 	test_cmp expect output
 '
 
 test_expect_success "status (core.commentchar with two chars with submodule summary)" '
 	test_config core.commentchar ";;" &&
 	sed "s/^/;/" <expect >expect.double &&
-	git -c status.displayCommentPrefix=true status >output &&
+	shit -c status.displayCommentPrefix=true status >output &&
 	test_cmp expect.double output
 '
 
@@ -1425,296 +1425,296 @@ test_expect_success "--ignore-submodules=all suppresses submodule summary" '
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.gitmodules
+  (use "shit add <file>..." to include in what will be committed)
+	.shitmodules
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
-no changes added to commit (use "git add" and/or "git commit -a")
+no changes added to commit (use "shit add" and/or "shit commit -a")
 EOF
-	git status --ignore-submodules=all > output &&
+	shit status --ignore-submodules=all > output &&
 	test_cmp expect output
 '
 
-test_expect_success '.gitmodules ignore=all suppresses unstaged submodule summary' '
+test_expect_success '.shitmodules ignore=all suppresses unstaged submodule summary' '
 	cat > expect << EOF &&
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
-  (use "git pull" if you want to integrate the remote branch with yours)
+  (use "shit poop" if you want to integrate the remote branch with yours)
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	modified:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.gitmodules
+  (use "shit add <file>..." to include in what will be committed)
+	.shitmodules
 	dir1/untracked
 	dir2/modified
 	dir2/untracked
 	untracked
 
 EOF
-	git config --add -f .gitmodules submodule.subname.ignore all &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git status > output &&
+	shit config --add -f .shitmodules submodule.subname.ignore all &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit status > output &&
 	test_cmp expect output &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
-test_expect_success '.git/config ignore=all suppresses unstaged submodule summary' '
-	git config --add -f .gitmodules submodule.subname.ignore none &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore all &&
-	git config --add submodule.subname.path sm &&
-	git status > output &&
+test_expect_success '.shit/config ignore=all suppresses unstaged submodule summary' '
+	shit config --add -f .shitmodules submodule.subname.ignore none &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore all &&
+	shit config --add submodule.subname.path sm &&
+	shit status > output &&
 	test_cmp expect output &&
-	git config --remove-section submodule.subname &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
 test_expect_success 'setup of test environment' '
-	git config status.showUntrackedFiles no &&
-	git status -s >expected_short &&
-	git status --no-short >expected_noshort
+	shit config status.showUntrackedFiles no &&
+	shit status -s >expected_short &&
+	shit status --no-short >expected_noshort
 '
 
 test_expect_success '"status.short=true" same as "-s"' '
-	git -c status.short=true status >actual &&
+	shit -c status.short=true status >actual &&
 	test_cmp expected_short actual
 '
 
 test_expect_success '"status.short=true" weaker than "--no-short"' '
-	git -c status.short=true status --no-short >actual &&
+	shit -c status.short=true status --no-short >actual &&
 	test_cmp expected_noshort actual
 '
 
 test_expect_success '"status.short=false" same as "--no-short"' '
-	git -c status.short=false status >actual &&
+	shit -c status.short=false status >actual &&
 	test_cmp expected_noshort actual
 '
 
 test_expect_success '"status.short=false" weaker than "-s"' '
-	git -c status.short=false status -s >actual &&
+	shit -c status.short=false status -s >actual &&
 	test_cmp expected_short actual
 '
 
 test_expect_success '"status.branch=true" same as "-b"' '
-	git status -sb >expected_branch &&
-	git -c status.branch=true status -s >actual &&
+	shit status -sb >expected_branch &&
+	shit -c status.branch=true status -s >actual &&
 	test_cmp expected_branch actual
 '
 
 test_expect_success '"status.branch=true" different from "--no-branch"' '
-	git status -s --no-branch  >expected_nobranch &&
-	git -c status.branch=true status -s >actual &&
+	shit status -s --no-branch  >expected_nobranch &&
+	shit -c status.branch=true status -s >actual &&
 	! test_cmp expected_nobranch actual
 '
 
 test_expect_success '"status.branch=true" weaker than "--no-branch"' '
-	git -c status.branch=true status -s --no-branch >actual &&
+	shit -c status.branch=true status -s --no-branch >actual &&
 	test_cmp expected_nobranch actual
 '
 
 test_expect_success '"status.branch=true" weaker than "--porcelain"' '
-	git -c status.branch=true status --porcelain >actual &&
+	shit -c status.branch=true status --porcelain >actual &&
 	test_cmp expected_nobranch actual
 '
 
 test_expect_success '"status.branch=false" same as "--no-branch"' '
-	git -c status.branch=false status -s >actual &&
+	shit -c status.branch=false status -s >actual &&
 	test_cmp expected_nobranch actual
 '
 
 test_expect_success '"status.branch=false" weaker than "-b"' '
-	git -c status.branch=false status -sb >actual &&
+	shit -c status.branch=false status -sb >actual &&
 	test_cmp expected_branch actual
 '
 
 test_expect_success 'Restore default test environment' '
-	git config --unset status.showUntrackedFiles
+	shit config --unset status.showUntrackedFiles
 '
 
-test_expect_success 'git commit will commit a staged but ignored submodule' '
-	git config --add -f .gitmodules submodule.subname.ignore all &&
-	git config --add -f .gitmodules submodule.subname.path sm &&
-	git config --add submodule.subname.ignore all &&
-	git status -s --ignore-submodules=dirty >output &&
+test_expect_success 'shit commit will commit a staged but ignored submodule' '
+	shit config --add -f .shitmodules submodule.subname.ignore all &&
+	shit config --add -f .shitmodules submodule.subname.path sm &&
+	shit config --add submodule.subname.ignore all &&
+	shit status -s --ignore-submodules=dirty >output &&
 	test_grep "^M. sm" output &&
-	GIT_EDITOR="echo hello >>\"\$1\"" &&
-	export GIT_EDITOR &&
-	git commit -uno &&
-	git status -s --ignore-submodules=dirty >output &&
+	shit_EDITOR="echo hello >>\"\$1\"" &&
+	export shit_EDITOR &&
+	shit commit -uno &&
+	shit status -s --ignore-submodules=dirty >output &&
 	test_grep ! "^M. sm" output
 '
 
-test_expect_success 'git commit --dry-run will show a staged but ignored submodule' '
-	git reset HEAD^ &&
-	git add sm &&
+test_expect_success 'shit commit --dry-run will show a staged but ignored submodule' '
+	shit reset HEAD^ &&
+	shit add sm &&
 	cat >expect << EOF &&
 On branch main
 Your branch and '\''upstream'\'' have diverged,
 and have 2 and 2 different commits each, respectively.
 
 Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
+  (use "shit restore --staged <file>..." to unstage)
 	modified:   sm
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
+  (use "shit add <file>..." to update what will be committed)
+  (use "shit restore <file>..." to discard changes in working directory)
 	modified:   dir1/modified
 
 Untracked files not listed (use -u option to show untracked files)
 EOF
-	git commit -uno --dry-run >output &&
+	shit commit -uno --dry-run >output &&
 	test_cmp expect output &&
-	git status -s --ignore-submodules=dirty >output &&
+	shit status -s --ignore-submodules=dirty >output &&
 	test_grep "^M. sm" output
 '
 
-test_expect_success 'git commit -m will commit a staged but ignored submodule' '
-	git commit -uno -m message &&
-	git status -s --ignore-submodules=dirty >output &&
+test_expect_success 'shit commit -m will commit a staged but ignored submodule' '
+	shit commit -uno -m message &&
+	shit status -s --ignore-submodules=dirty >output &&
 	test_grep ! "^M. sm" output &&
-	git config --remove-section submodule.subname &&
-	git config -f .gitmodules  --remove-section submodule.subname
+	shit config --remove-section submodule.subname &&
+	shit config -f .shitmodules  --remove-section submodule.subname
 '
 
 test_expect_success 'show stash info with "--show-stash"' '
-	git reset --hard &&
-	git stash clear &&
+	shit reset --hard &&
+	shit stash clear &&
 	echo 1 >file &&
-	git add file &&
-	git stash &&
-	git status >expected_default &&
-	git status --show-stash >expected_with_stash &&
+	shit add file &&
+	shit stash &&
+	shit status >expected_default &&
+	shit status --show-stash >expected_with_stash &&
 	test_grep "^Your stash currently has 1 entry$" expected_with_stash
 '
 
 test_expect_success 'no stash info with "--show-stash --no-show-stash"' '
-	git status --show-stash --no-show-stash >expected_without_stash &&
+	shit status --show-stash --no-show-stash >expected_without_stash &&
 	test_cmp expected_default expected_without_stash
 '
 
 test_expect_success '"status.showStash=false" weaker than "--show-stash"' '
-	git -c status.showStash=false status --show-stash >actual &&
+	shit -c status.showStash=false status --show-stash >actual &&
 	test_cmp expected_with_stash actual
 '
 
 test_expect_success '"status.showStash=true" weaker than "--no-show-stash"' '
-	git -c status.showStash=true status --no-show-stash >actual &&
+	shit -c status.showStash=true status --no-show-stash >actual &&
 	test_cmp expected_without_stash actual
 '
 
 test_expect_success 'no additional info if no stash entries' '
-	git stash clear &&
-	git -c status.showStash=true status >actual &&
+	shit stash clear &&
+	shit -c status.showStash=true status >actual &&
 	test_cmp expected_without_stash actual
 '
 
 test_expect_success '"No commits yet" should be noted in status output' '
-	git checkout --orphan empty-branch-1 &&
-	git status >output &&
+	shit checkout --orphan empty-branch-1 &&
+	shit status >output &&
 	test_grep "No commits yet" output
 '
 
 test_expect_success '"No commits yet" should not be noted in status output' '
-	git checkout --orphan empty-branch-2 &&
+	shit checkout --orphan empty-branch-2 &&
 	test_commit test-commit-1 &&
-	git status >output &&
+	shit status >output &&
 	test_grep ! "No commits yet" output
 '
 
 test_expect_success '"Initial commit" should be noted in commit template' '
-	git checkout --orphan empty-branch-3 &&
+	shit checkout --orphan empty-branch-3 &&
 	touch to_be_committed_1 &&
-	git add to_be_committed_1 &&
-	git commit --dry-run >output &&
+	shit add to_be_committed_1 &&
+	shit commit --dry-run >output &&
 	test_grep "Initial commit" output
 '
 
 test_expect_success '"Initial commit" should not be noted in commit template' '
-	git checkout --orphan empty-branch-4 &&
+	shit checkout --orphan empty-branch-4 &&
 	test_commit test-commit-2 &&
 	touch to_be_committed_2 &&
-	git add to_be_committed_2 &&
-	git commit --dry-run >output &&
+	shit add to_be_committed_2 &&
+	shit commit --dry-run >output &&
 	test_grep ! "Initial commit" output
 '
 
 test_expect_success '--no-optional-locks prevents index update' '
-	test_set_magic_mtime .git/index &&
-	git --no-optional-locks status &&
-	test_is_magic_mtime .git/index &&
-	git status &&
-	! test_is_magic_mtime .git/index
+	test_set_magic_mtime .shit/index &&
+	shit --no-optional-locks status &&
+	test_is_magic_mtime .shit/index &&
+	shit status &&
+	! test_is_magic_mtime .shit/index
 '
 
 test_expect_success 'racy timestamps will be fixed for clean worktree' '
 	echo content >racy-dirty &&
 	echo content >racy-racy &&
-	git add racy* &&
-	git commit -m "racy test files" &&
+	shit add racy* &&
+	shit commit -m "racy test files" &&
 	# let status rewrite the index, if necessary; after that we expect
 	# no more index writes unless caused by racy timestamps; note that
 	# timestamps may already be racy now (depending on previous tests)
-	git status &&
-	test_set_magic_mtime .git/index &&
-	git status &&
-	! test_is_magic_mtime .git/index
+	shit status &&
+	test_set_magic_mtime .shit/index &&
+	shit status &&
+	! test_is_magic_mtime .shit/index
 '
 
 test_expect_success 'racy timestamps will be fixed for dirty worktree' '
 	echo content2 >racy-dirty &&
-	git status &&
-	test_set_magic_mtime .git/index &&
-	git status &&
-	! test_is_magic_mtime .git/index
+	shit status &&
+	test_set_magic_mtime .shit/index &&
+	shit status &&
+	! test_is_magic_mtime .shit/index
 '
 
 test_expect_success 'setup slow status advice' '
-	GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main git init slowstatus &&
+	shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main shit init slowstatus &&
 	(
 		cd slowstatus &&
-		cat >.gitignore <<-\EOF &&
+		cat >.shitignore <<-\EOF &&
 		/actual
 		/expected
 		/out
 		EOF
-		git add .gitignore &&
-		git commit -m "Add .gitignore" &&
-		git config advice.statusuoption true
+		shit add .shitignore &&
+		shit commit -m "Add .shitignore" &&
+		shit config advice.statusuoption true
 	)
 '
 
 test_expect_success 'slow status advice when core.untrackedCache and fsmonitor are unset' '
 	(
 		cd slowstatus &&
-		git config core.untrackedCache false &&
-		git config core.fsmonitor false &&
-		GIT_TEST_UF_DELAY_WARNING=1 git status >actual &&
+		shit config core.untrackedCache false &&
+		shit config core.fsmonitor false &&
+		shit_TEST_UF_DELAY_WARNING=1 shit status >actual &&
 		cat >expected <<-\EOF &&
 		On branch main
 
 		It took 3.25 seconds to enumerate untracked files.
-		See '\''git help status'\'' for information on how to improve this.
+		See '\''shit help status'\'' for information on how to improve this.
 
 		nothing to commit, working tree clean
 		EOF
@@ -1725,14 +1725,14 @@ test_expect_success 'slow status advice when core.untrackedCache and fsmonitor a
 test_expect_success 'slow status advice when core.untrackedCache true, but not fsmonitor' '
 	(
 		cd slowstatus &&
-		git config core.untrackedCache true &&
-		git config core.fsmonitor false &&
-		GIT_TEST_UF_DELAY_WARNING=1 git status >actual &&
+		shit config core.untrackedCache true &&
+		shit config core.fsmonitor false &&
+		shit_TEST_UF_DELAY_WARNING=1 shit status >actual &&
 		cat >expected <<-\EOF &&
 		On branch main
 
 		It took 3.25 seconds to enumerate untracked files.
-		See '\''git help status'\'' for information on how to improve this.
+		See '\''shit help status'\'' for information on how to improve this.
 
 		nothing to commit, working tree clean
 		EOF
@@ -1743,15 +1743,15 @@ test_expect_success 'slow status advice when core.untrackedCache true, but not f
 test_expect_success 'slow status advice when core.untrackedCache true, and fsmonitor' '
 	(
 		cd slowstatus &&
-		git config core.untrackedCache true &&
-		git config core.fsmonitor true &&
-		GIT_TEST_UF_DELAY_WARNING=1 git status >actual &&
+		shit config core.untrackedCache true &&
+		shit config core.fsmonitor true &&
+		shit_TEST_UF_DELAY_WARNING=1 shit status >actual &&
 		cat >expected <<-\EOF &&
 		On branch main
 
 		It took 3.25 seconds to enumerate untracked files,
 		but the results were cached, and subsequent runs may be faster.
-		See '\''git help status'\'' for information on how to improve this.
+		See '\''shit help status'\'' for information on how to improve this.
 
 		nothing to commit, working tree clean
 		EOF
@@ -1768,9 +1768,9 @@ test_expect_success EXPENSIVE 'status does not re-read unchanged 4 or 8 GiB file
 		test-tool truncate file-b 0x100000000 &&
 		test-tool truncate file-c 0x200000000 &&
 		# This will be slow.
-		git add file-a file-b file-c &&
-		git commit -m "add large files" &&
-		git diff-index HEAD file-a file-b file-c >actual &&
+		shit add file-a file-b file-c &&
+		shit commit -m "add large files" &&
+		shit diff-index HEAD file-a file-b file-c >actual &&
 		test_must_be_empty actual
 	)
 '

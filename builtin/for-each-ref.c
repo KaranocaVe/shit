@@ -9,10 +9,10 @@
 #include "strvec.h"
 
 static char const * const for_each_ref_usage[] = {
-	N_("git for-each-ref [<options>] [<pattern>]"),
-	N_("git for-each-ref [--points-at <object>]"),
-	N_("git for-each-ref [--merged [<commit>]] [--no-merged [<commit>]]"),
-	N_("git for-each-ref [--contains [<commit>]] [--no-contains [<commit>]]"),
+	N_("shit for-each-ref [<options>] [<pattern>]"),
+	N_("shit for-each-ref [--points-at <object>]"),
+	N_("shit for-each-ref [--merged [<commit>]] [--no-merged [<commit>]]"),
+	N_("shit for-each-ref [--contains [<commit>]] [--no-contains [<commit>]]"),
 	NULL
 };
 
@@ -59,7 +59,7 @@ int cmd_for_each_ref(int argc, const char **argv, const char *prefix)
 
 	format.format = "%(objectname) %(objecttype)\t%(refname)";
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	/* Set default (refname) sorting */
 	string_list_append(&sorting_options, "refname");
@@ -87,7 +87,7 @@ int cmd_for_each_ref(int argc, const char **argv, const char *prefix)
 			die(_("unknown arguments supplied with --stdin"));
 
 		while (strbuf_getline(&line, stdin) != EOF)
-			strvec_push(&vec, line.buf);
+			strvec_defecate(&vec, line.buf);
 
 		strbuf_release(&line);
 

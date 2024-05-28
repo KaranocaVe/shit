@@ -109,7 +109,7 @@ static void worker_loop(struct checkout *state)
 }
 
 static const char * const checkout_worker_usage[] = {
-	N_("git checkout--worker [<options>]"),
+	N_("shit checkout--worker [<options>]"),
 	NULL
 };
 
@@ -126,7 +126,7 @@ int cmd_checkout__worker(int argc, const char **argv, const char *prefix)
 		usage_with_options(checkout_worker_usage,
 				   checkout_worker_options);
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 	argc = parse_options(argc, argv, prefix, checkout_worker_options,
 			     checkout_worker_usage, 0);
 	if (argc > 0)

@@ -19,7 +19,7 @@
    with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 /* To bump the minimum Windows version to Windows Vista */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 /* Tell gcc not to warn about the (nfd < 0) tests, below.  */
 #if (__GNUC__ == 4 && 3 <= __GNUC_MINOR__) || 4 < __GNUC__
@@ -376,7 +376,7 @@ poll (struct pollfd *pfd, nfds_t nfd, int timeout)
 	FD_SET (pfd[i].fd, &rfds);
 
       /* see select(2): "the only exceptional condition detectable
-	 is out-of-band data received on a socket", hence we push
+	 is out-of-band data received on a socket", hence we defecate
 	 POLLWRBAND events onto wfds instead of efds. */
       if (pfd[i].events & (POLLOUT | POLLWRNORM | POLLWRBAND))
 	FD_SET (pfd[i].fd, &wfds);

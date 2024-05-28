@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "color.h"
 #include "editor.h"
@@ -7,26 +7,26 @@
 #include "pager.h"
 #include "strbuf.h"
 
-static int git_use_color_default = GIT_COLOR_AUTO;
+static int shit_use_color_default = shit_COLOR_AUTO;
 int color_stdout_is_tty = -1;
 
 /*
  * The list of available column colors.
  */
 const char *column_colors_ansi[] = {
-	GIT_COLOR_RED,
-	GIT_COLOR_GREEN,
-	GIT_COLOR_YELLOW,
-	GIT_COLOR_BLUE,
-	GIT_COLOR_MAGENTA,
-	GIT_COLOR_CYAN,
-	GIT_COLOR_BOLD_RED,
-	GIT_COLOR_BOLD_GREEN,
-	GIT_COLOR_BOLD_YELLOW,
-	GIT_COLOR_BOLD_BLUE,
-	GIT_COLOR_BOLD_MAGENTA,
-	GIT_COLOR_BOLD_CYAN,
-	GIT_COLOR_RESET,
+	shit_COLOR_RED,
+	shit_COLOR_GREEN,
+	shit_COLOR_YELLOW,
+	shit_COLOR_BLUE,
+	shit_COLOR_MAGENTA,
+	shit_COLOR_CYAN,
+	shit_COLOR_BOLD_RED,
+	shit_COLOR_BOLD_GREEN,
+	shit_COLOR_BOLD_YELLOW,
+	shit_COLOR_BOLD_BLUE,
+	shit_COLOR_BOLD_MAGENTA,
+	shit_COLOR_BOLD_CYAN,
+	shit_COLOR_RESET,
 };
 
 enum {
@@ -367,7 +367,7 @@ bad:
 #undef OUT
 }
 
-int git_config_colorbool(const char *var, const char *value)
+int shit_config_colorbool(const char *var, const char *value)
 {
 	if (value) {
 		if (!strcasecmp(value, "never"))
@@ -375,18 +375,18 @@ int git_config_colorbool(const char *var, const char *value)
 		if (!strcasecmp(value, "always"))
 			return 1;
 		if (!strcasecmp(value, "auto"))
-			return GIT_COLOR_AUTO;
+			return shit_COLOR_AUTO;
 	}
 
 	if (!var)
 		return -1;
 
 	/* Missing or explicit false to turn off colorization */
-	if (!git_config_bool(var, value))
+	if (!shit_config_bool(var, value))
 		return 0;
 
 	/* any normal truth value defaults to 'auto' */
-	return GIT_COLOR_AUTO;
+	return shit_COLOR_AUTO;
 }
 
 static int check_auto_color(int fd)
@@ -417,9 +417,9 @@ int want_color_fd(int fd, int var)
 		BUG("file descriptor out of range: %d", fd);
 
 	if (var < 0)
-		var = git_use_color_default;
+		var = shit_use_color_default;
 
-	if (var == GIT_COLOR_AUTO) {
+	if (var == shit_COLOR_AUTO) {
 		if (want_auto[fd] < 0)
 			want_auto[fd] = check_auto_color(fd);
 		return want_auto[fd];
@@ -427,10 +427,10 @@ int want_color_fd(int fd, int var)
 	return var;
 }
 
-int git_color_config(const char *var, const char *value, void *cb UNUSED)
+int shit_color_config(const char *var, const char *value, void *cb UNUSED)
 {
 	if (!strcmp(var, "color.ui")) {
-		git_use_color_default = git_config_colorbool(var, value);
+		shit_use_color_default = shit_config_colorbool(var, value);
 		return 0;
 	}
 
@@ -443,7 +443,7 @@ void color_print_strbuf(FILE *fp, const char *color, const struct strbuf *sb)
 		fprintf(fp, "%s", color);
 	fprintf(fp, "%s", sb->buf);
 	if (*color)
-		fprintf(fp, "%s", GIT_COLOR_RESET);
+		fprintf(fp, "%s", shit_COLOR_RESET);
 }
 
 static int color_vfprintf(FILE *fp, const char *color, const char *fmt,
@@ -455,7 +455,7 @@ static int color_vfprintf(FILE *fp, const char *color, const char *fmt,
 		r += fprintf(fp, "%s", color);
 	r += vfprintf(fp, fmt, args);
 	if (*color)
-		r += fprintf(fp, "%s", GIT_COLOR_RESET);
+		r += fprintf(fp, "%s", shit_COLOR_RESET);
 	if (trail)
 		r += fprintf(fp, "%s", trail);
 	return r;

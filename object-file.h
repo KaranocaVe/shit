@@ -1,7 +1,7 @@
 #ifndef OBJECT_FILE_H
 #define OBJECT_FILE_H
 
-#include "git-zlib.h"
+#include "shit-zlib.h"
 #include "object.h"
 
 struct index_state;
@@ -39,7 +39,7 @@ int index_path(struct index_state *istate, struct object_id *oid, const char *pa
  * safe_create_leading_directories_const() doesn't modify path, even
  * temporarily. Both these variants adjust the permissions of the
  * created directories to honor core.sharedRepository, so they are best
- * suited for files inside the git dir. For working tree files, use
+ * suited for files inside the shit dir. For working tree files, use
  * safe_create_leading_directories_no_share() instead, as it ignores
  * the core.sharedRepository setting.
  */
@@ -54,10 +54,10 @@ enum scld_error safe_create_leading_directories(char *path);
 enum scld_error safe_create_leading_directories_const(const char *path);
 enum scld_error safe_create_leading_directories_no_share(char *path);
 
-int mkdir_in_gitdir(const char *path);
+int mkdir_in_shitdir(const char *path);
 
-int git_open_cloexec(const char *name, int flags);
-#define git_open(name) git_open_cloexec(name, O_RDONLY)
+int shit_open_cloexec(const char *name, int flags);
+#define shit_open(name) shit_open_cloexec(name, O_RDONLY)
 
 /**
  * unpack_loose_header() initializes the data stream needed to unpack
@@ -81,7 +81,7 @@ enum unpack_loose_header_result {
 	ULHR_BAD,
 	ULHR_TOO_LONG,
 };
-enum unpack_loose_header_result unpack_loose_header(git_zstream *stream,
+enum unpack_loose_header_result unpack_loose_header(shit_zstream *stream,
 						    unsigned char *map,
 						    unsigned long mapsize,
 						    void *buffer,

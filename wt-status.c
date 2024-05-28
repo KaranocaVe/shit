@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "advice.h"
 #include "wt-status.h"
 #include "object.h"
@@ -39,15 +39,15 @@ static const char cut_line[] =
 "------------------------ >8 ------------------------\n";
 
 static char default_wt_status_colors[][COLOR_MAXLEN] = {
-	GIT_COLOR_NORMAL, /* WT_STATUS_HEADER */
-	GIT_COLOR_GREEN,  /* WT_STATUS_UPDATED */
-	GIT_COLOR_RED,    /* WT_STATUS_CHANGED */
-	GIT_COLOR_RED,    /* WT_STATUS_UNTRACKED */
-	GIT_COLOR_RED,    /* WT_STATUS_NOBRANCH */
-	GIT_COLOR_RED,    /* WT_STATUS_UNMERGED */
-	GIT_COLOR_GREEN,  /* WT_STATUS_LOCAL_BRANCH */
-	GIT_COLOR_RED,    /* WT_STATUS_REMOTE_BRANCH */
-	GIT_COLOR_NIL,    /* WT_STATUS_ONBRANCH */
+	shit_COLOR_NORMAL, /* WT_STATUS_HEADER */
+	shit_COLOR_GREEN,  /* WT_STATUS_UPDATED */
+	shit_COLOR_RED,    /* WT_STATUS_CHANGED */
+	shit_COLOR_RED,    /* WT_STATUS_UNTRACKED */
+	shit_COLOR_RED,    /* WT_STATUS_NOBRANCH */
+	shit_COLOR_RED,    /* WT_STATUS_UNMERGED */
+	shit_COLOR_GREEN,  /* WT_STATUS_LOCAL_BRANCH */
+	shit_COLOR_RED,    /* WT_STATUS_REMOTE_BRANCH */
+	shit_COLOR_NIL,    /* WT_STATUS_ONBRANCH */
 };
 
 static const char *color(int slot, struct wt_status *s)
@@ -199,23 +199,23 @@ static void wt_longstatus_print_unmerged_header(struct wt_status *s)
 	else if (!s->is_initial) {
 		if (!strcmp(s->reference, "HEAD"))
 			status_printf_ln(s, c,
-					 _("  (use \"git restore --staged <file>...\" to unstage)"));
+					 _("  (use \"shit restore --staged <file>...\" to unstage)"));
 		else
 			status_printf_ln(s, c,
-					 _("  (use \"git restore --source=%s --staged <file>...\" to unstage)"),
+					 _("  (use \"shit restore --source=%s --staged <file>...\" to unstage)"),
 					 s->reference);
 	} else
-		status_printf_ln(s, c, _("  (use \"git rm --cached <file>...\" to unstage)"));
+		status_printf_ln(s, c, _("  (use \"shit rm --cached <file>...\" to unstage)"));
 
 	if (!both_deleted) {
 		if (!del_mod_conflict)
-			status_printf_ln(s, c, _("  (use \"git add <file>...\" to mark resolution)"));
+			status_printf_ln(s, c, _("  (use \"shit add <file>...\" to mark resolution)"));
 		else
-			status_printf_ln(s, c, _("  (use \"git add/rm <file>...\" as appropriate to mark resolution)"));
+			status_printf_ln(s, c, _("  (use \"shit add/rm <file>...\" as appropriate to mark resolution)"));
 	} else if (!del_mod_conflict && !not_deleted) {
-		status_printf_ln(s, c, _("  (use \"git rm <file>...\" to mark resolution)"));
+		status_printf_ln(s, c, _("  (use \"shit rm <file>...\" to mark resolution)"));
 	} else {
-		status_printf_ln(s, c, _("  (use \"git add/rm <file>...\" as appropriate to mark resolution)"));
+		status_printf_ln(s, c, _("  (use \"shit add/rm <file>...\" as appropriate to mark resolution)"));
 	}
 }
 
@@ -227,17 +227,17 @@ static void wt_longstatus_print_cached_header(struct wt_status *s)
 	if (!s->hints)
 		return;
 	if (s->whence != FROM_COMMIT)
-		; /* NEEDSWORK: use "git reset --unresolve"??? */
+		; /* NEEDSWORK: use "shit reset --unresolve"??? */
 	else if (!s->is_initial) {
 		if (!strcmp(s->reference, "HEAD"))
 			status_printf_ln(s, c
-					 , _("  (use \"git restore --staged <file>...\" to unstage)"));
+					 , _("  (use \"shit restore --staged <file>...\" to unstage)"));
 		else
 			status_printf_ln(s, c,
-					 _("  (use \"git restore --source=%s --staged <file>...\" to unstage)"),
+					 _("  (use \"shit restore --source=%s --staged <file>...\" to unstage)"),
 					 s->reference);
 	} else
-		status_printf_ln(s, c, _("  (use \"git rm --cached <file>...\" to unstage)"));
+		status_printf_ln(s, c, _("  (use \"shit rm --cached <file>...\" to unstage)"));
 }
 
 static void wt_longstatus_print_dirty_header(struct wt_status *s,
@@ -250,10 +250,10 @@ static void wt_longstatus_print_dirty_header(struct wt_status *s,
 	if (!s->hints)
 		return;
 	if (!has_deleted)
-		status_printf_ln(s, c, _("  (use \"git add <file>...\" to update what will be committed)"));
+		status_printf_ln(s, c, _("  (use \"shit add <file>...\" to update what will be committed)"));
 	else
-		status_printf_ln(s, c, _("  (use \"git add/rm <file>...\" to update what will be committed)"));
-	status_printf_ln(s, c, _("  (use \"git restore <file>...\" to discard changes in working directory)"));
+		status_printf_ln(s, c, _("  (use \"shit add/rm <file>...\" to update what will be committed)"));
+	status_printf_ln(s, c, _("  (use \"shit restore <file>...\" to discard changes in working directory)"));
 	if (has_dirty_submodules)
 		status_printf_ln(s, c, _("  (commit or discard the untracked or modified content in submodules)"));
 }
@@ -266,7 +266,7 @@ static void wt_longstatus_print_other_header(struct wt_status *s,
 	status_printf_ln(s, c, "%s:", what);
 	if (!s->hints)
 		return;
-	status_printf_ln(s, c, _("  (use \"git %s <file>...\" to include in what will be committed)"), how);
+	status_printf_ln(s, c, _("  (use \"shit %s <file>...\" to include in what will be committed)"), how);
 }
 
 static void wt_longstatus_print_trailer(struct wt_status *s)
@@ -436,7 +436,7 @@ static void wt_longstatus_print_change_data(struct wt_status *s,
 		status_printf_more(s, color(WT_STATUS_HEADER, s), "%s", extra.buf);
 		strbuf_release(&extra);
 	}
-	status_printf_more(s, GIT_COLOR_NORMAL, "\n");
+	status_printf_more(s, shit_COLOR_NORMAL, "\n");
 	strbuf_release(&onebuf);
 	strbuf_release(&twobuf);
 }
@@ -476,7 +476,7 @@ static void wt_status_collect_changed_cb(struct diff_queue_struct *q,
 		}
 		if (!d->worktree_status)
 			d->worktree_status = p->status;
-		if (S_ISGITLINK(p->two->mode)) {
+		if (S_ISshitLINK(p->two->mode)) {
 			d->dirty_submodule = p->two->dirty_submodule;
 			d->new_submodule_commits = !oideq(&p->one->oid,
 							  &p->two->oid);
@@ -987,7 +987,7 @@ static void wt_longstatus_print_stash_summary(struct wt_status *s)
 	int stash_count = count_stash_entries();
 
 	if (stash_count > 0)
-		status_printf_ln(s, GIT_COLOR_NORMAL,
+		status_printf_ln(s, shit_COLOR_NORMAL,
 				 Q_("Your stash currently has %d entry",
 				    "Your stash currently has %d entries", stash_count),
 				 stash_count);
@@ -1000,18 +1000,18 @@ static void wt_longstatus_print_submodule_summary(struct wt_status *s, int uncom
 	struct strbuf summary = STRBUF_INIT;
 	char *summary_content;
 
-	strvec_pushf(&sm_summary.env, "GIT_INDEX_FILE=%s", s->index_file);
+	strvec_defecatef(&sm_summary.env, "shit_INDEX_FILE=%s", s->index_file);
 
-	strvec_push(&sm_summary.args, "submodule");
-	strvec_push(&sm_summary.args, "summary");
-	strvec_push(&sm_summary.args, uncommitted ? "--files" : "--cached");
-	strvec_push(&sm_summary.args, "--for-status");
-	strvec_push(&sm_summary.args, "--summary-limit");
-	strvec_pushf(&sm_summary.args, "%d", s->submodule_summary);
+	strvec_defecate(&sm_summary.args, "submodule");
+	strvec_defecate(&sm_summary.args, "summary");
+	strvec_defecate(&sm_summary.args, uncommitted ? "--files" : "--cached");
+	strvec_defecate(&sm_summary.args, "--for-status");
+	strvec_defecate(&sm_summary.args, "--summary-limit");
+	strvec_defecatef(&sm_summary.args, "%d", s->submodule_summary);
 	if (!uncommitted)
-		strvec_push(&sm_summary.args, s->amend ? "HEAD^" : "HEAD");
+		strvec_defecate(&sm_summary.args, s->amend ? "HEAD^" : "HEAD");
 
-	sm_summary.git_cmd = 1;
+	sm_summary.shit_cmd = 1;
 	sm_summary.no_stdin = 1;
 
 	capture_command(&sm_summary, &cmd_stdout, 1024);
@@ -1079,12 +1079,12 @@ static void wt_longstatus_print_other(struct wt_status *s,
 	copts.padding = 1;
 	copts.indent = buf.buf;
 	if (want_color(s->use_color))
-		copts.nl = GIT_COLOR_RESET "\n";
+		copts.nl = shit_COLOR_RESET "\n";
 	print_columns(&output, s->colopts, &copts);
 	string_list_clear(&output, 0);
 	strbuf_release(&buf);
 conclude:
-	status_printf_ln(s, GIT_COLOR_NORMAL, "%s", "");
+	status_printf_ln(s, shit_COLOR_NORMAL, "%s", "");
 }
 
 size_t wt_status_locate_end(const char *s, size_t len)
@@ -1225,7 +1225,7 @@ static void wt_longstatus_print_tracking(struct wt_status *s)
 
 static int uf_was_slow(struct wt_status *s)
 {
-	if (getenv("GIT_TEST_UF_DELAY_WARNING"))
+	if (getenv("shit_TEST_UF_DELAY_WARNING"))
 		s->untracked_in_ms = 3250;
 	return UF_DELAY_WARNING_IN_MS < s->untracked_in_ms;
 }
@@ -1237,16 +1237,16 @@ static void show_merge_in_progress(struct wt_status *s,
 		status_printf_ln(s, color, _("You have unmerged paths."));
 		if (s->hints) {
 			status_printf_ln(s, color,
-					 _("  (fix conflicts and run \"git commit\")"));
+					 _("  (fix conflicts and run \"shit commit\")"));
 			status_printf_ln(s, color,
-					 _("  (use \"git merge --abort\" to abort the merge)"));
+					 _("  (use \"shit merge --abort\" to abort the merge)"));
 		}
 	} else {
 		status_printf_ln(s, color,
 			_("All conflicts fixed but you are still merging."));
 		if (s->hints)
 			status_printf_ln(s, color,
-				_("  (use \"git commit\" to conclude merge)"));
+				_("  (use \"shit commit\" to conclude merge)"));
 	}
 	wt_longstatus_print_trailer(s);
 }
@@ -1265,22 +1265,22 @@ static void show_am_in_progress(struct wt_status *s,
 		am_empty_patch = s->state.am_empty_patch;
 		if (!am_empty_patch)
 			status_printf_ln(s, color,
-				_("  (fix conflicts and then run \"git am --continue\")"));
+				_("  (fix conflicts and then run \"shit am --continue\")"));
 		status_printf_ln(s, color,
-			_("  (use \"git am --skip\" to skip this patch)"));
+			_("  (use \"shit am --skip\" to skip this patch)"));
 		if (am_empty_patch)
 			status_printf_ln(s, color,
-				_("  (use \"git am --allow-empty\" to record this patch as an empty commit)"));
+				_("  (use \"shit am --allow-empty\" to record this patch as an empty commit)"));
 		status_printf_ln(s, color,
-			_("  (use \"git am --abort\" to restore the original branch)"));
+			_("  (use \"shit am --abort\" to restore the original branch)"));
 	}
 	wt_longstatus_print_trailer(s);
 }
 
-static char *read_line_from_git_path(const char *filename)
+static char *read_line_from_shit_path(const char *filename)
 {
 	struct strbuf buf = STRBUF_INIT;
-	FILE *fp = fopen_or_warn(git_path("%s", filename), "r");
+	FILE *fp = fopen_or_warn(shit_path("%s", filename), "r");
 
 	if (!fp) {
 		strbuf_release(&buf);
@@ -1314,8 +1314,8 @@ static int split_commit_in_progress(struct wt_status *s)
 	if (head_flags & REF_ISSYMREF || orig_head_flags & REF_ISSYMREF)
 		return 0;
 
-	rebase_amend = read_line_from_git_path("rebase-merge/amend");
-	rebase_orig_head = read_line_from_git_path("rebase-merge/orig-head");
+	rebase_amend = read_line_from_shit_path("rebase-merge/amend");
+	rebase_orig_head = read_line_from_shit_path("rebase-merge/orig-head");
 
 	if (!rebase_amend || !rebase_orig_head)
 		; /* fall through, no split in progress */
@@ -1375,13 +1375,13 @@ static void abbrev_oid_in_line(struct strbuf *line)
 static int read_rebase_todolist(const char *fname, struct string_list *lines)
 {
 	struct strbuf line = STRBUF_INIT;
-	FILE *f = fopen(git_path("%s", fname), "r");
+	FILE *f = fopen(shit_path("%s", fname), "r");
 
 	if (!f) {
 		if (errno == ENOENT)
 			return -1;
 		die_errno("Could not open file %s for reading",
-			  git_path("%s", fname));
+			  shit_path("%s", fname));
 	}
 	while (!strbuf_getline_lf(&line, f)) {
 		if (starts_with(line.buf, comment_line_str))
@@ -1408,10 +1408,10 @@ static void show_rebase_information(struct wt_status *s,
 		struct string_list yet_to_do = STRING_LIST_INIT_DUP;
 
 		read_rebase_todolist("rebase-merge/done", &have_done);
-		if (read_rebase_todolist("rebase-merge/git-rebase-todo",
+		if (read_rebase_todolist("rebase-merge/shit-rebase-todo",
 					 &yet_to_do))
 			status_printf_ln(s, color,
-				_("git-rebase-todo is missing."));
+				_("shit-rebase-todo is missing."));
 		if (have_done.nr == 0)
 			status_printf_ln(s, color, _("No commands done."));
 		else {
@@ -1427,7 +1427,7 @@ static void show_rebase_information(struct wt_status *s,
 				status_printf_ln(s, color, "   %s", have_done.items[i].string);
 			if (have_done.nr > nr_lines_to_show && s->hints)
 				status_printf_ln(s, color,
-					_("  (see more in file %s)"), git_path("rebase-merge/done"));
+					_("  (see more in file %s)"), shit_path("rebase-merge/done"));
 		}
 
 		if (yet_to_do.nr == 0)
@@ -1443,7 +1443,7 @@ static void show_rebase_information(struct wt_status *s,
 				status_printf_ln(s, color, "   %s", yet_to_do.items[i].string);
 			if (s->hints)
 				status_printf_ln(s, color,
-					_("  (use \"git rebase --edit-todo\" to view and edit)"));
+					_("  (use \"shit rebase --edit-todo\" to view and edit)"));
 		}
 		string_list_clear(&yet_to_do, 0);
 		string_list_clear(&have_done, 0);
@@ -1473,18 +1473,18 @@ static void show_rebase_in_progress(struct wt_status *s,
 		print_rebase_state(s, color);
 		if (s->hints) {
 			status_printf_ln(s, color,
-				_("  (fix conflicts and then run \"git rebase --continue\")"));
+				_("  (fix conflicts and then run \"shit rebase --continue\")"));
 			status_printf_ln(s, color,
-				_("  (use \"git rebase --skip\" to skip this patch)"));
+				_("  (use \"shit rebase --skip\" to skip this patch)"));
 			status_printf_ln(s, color,
-				_("  (use \"git rebase --abort\" to check out the original branch)"));
+				_("  (use \"shit rebase --abort\" to check out the original branch)"));
 		}
 	} else if (s->state.rebase_in_progress ||
-		   !stat(git_path_merge_msg(s->repo), &st)) {
+		   !stat(shit_path_merge_msg(s->repo), &st)) {
 		print_rebase_state(s, color);
 		if (s->hints)
 			status_printf_ln(s, color,
-				_("  (all conflicts fixed: run \"git rebase --continue\")"));
+				_("  (all conflicts fixed: run \"shit rebase --continue\")"));
 	} else if (split_commit_in_progress(s)) {
 		if (s->state.branch)
 			status_printf_ln(s, color,
@@ -1496,7 +1496,7 @@ static void show_rebase_in_progress(struct wt_status *s,
 					 _("You are currently splitting a commit during a rebase."));
 		if (s->hints)
 			status_printf_ln(s, color,
-				_("  (Once your working directory is clean, run \"git rebase --continue\")"));
+				_("  (Once your working directory is clean, run \"shit rebase --continue\")"));
 	} else {
 		if (s->state.branch)
 			status_printf_ln(s, color,
@@ -1508,9 +1508,9 @@ static void show_rebase_in_progress(struct wt_status *s,
 					 _("You are currently editing a commit during a rebase."));
 		if (s->hints && !s->amend) {
 			status_printf_ln(s, color,
-				_("  (use \"git commit --amend\" to amend the current commit)"));
+				_("  (use \"shit commit --amend\" to amend the current commit)"));
 			status_printf_ln(s, color,
-				_("  (use \"git rebase --continue\" once you are satisfied with your changes)"));
+				_("  (use \"shit rebase --continue\" once you are satisfied with your changes)"));
 		}
 	}
 	wt_longstatus_print_trailer(s);
@@ -1531,17 +1531,17 @@ static void show_cherry_pick_in_progress(struct wt_status *s,
 	if (s->hints) {
 		if (has_unmerged(s))
 			status_printf_ln(s, color,
-				_("  (fix conflicts and run \"git cherry-pick --continue\")"));
+				_("  (fix conflicts and run \"shit cherry-pick --continue\")"));
 		else if (is_null_oid(&s->state.cherry_pick_head_oid))
 			status_printf_ln(s, color,
-				_("  (run \"git cherry-pick --continue\" to continue)"));
+				_("  (run \"shit cherry-pick --continue\" to continue)"));
 		else
 			status_printf_ln(s, color,
-				_("  (all conflicts fixed: run \"git cherry-pick --continue\")"));
+				_("  (all conflicts fixed: run \"shit cherry-pick --continue\")"));
 		status_printf_ln(s, color,
-			_("  (use \"git cherry-pick --skip\" to skip this patch)"));
+			_("  (use \"shit cherry-pick --skip\" to skip this patch)"));
 		status_printf_ln(s, color,
-			_("  (use \"git cherry-pick --abort\" to cancel the cherry-pick operation)"));
+			_("  (use \"shit cherry-pick --abort\" to cancel the cherry-pick operation)"));
 	}
 	wt_longstatus_print_trailer(s);
 }
@@ -1560,17 +1560,17 @@ static void show_revert_in_progress(struct wt_status *s,
 	if (s->hints) {
 		if (has_unmerged(s))
 			status_printf_ln(s, color,
-				_("  (fix conflicts and run \"git revert --continue\")"));
+				_("  (fix conflicts and run \"shit revert --continue\")"));
 		else if (is_null_oid(&s->state.revert_head_oid))
 			status_printf_ln(s, color,
-				_("  (run \"git revert --continue\" to continue)"));
+				_("  (run \"shit revert --continue\" to continue)"));
 		else
 			status_printf_ln(s, color,
-				_("  (all conflicts fixed: run \"git revert --continue\")"));
+				_("  (all conflicts fixed: run \"shit revert --continue\")"));
 		status_printf_ln(s, color,
-			_("  (use \"git revert --skip\" to skip this patch)"));
+			_("  (use \"shit revert --skip\" to skip this patch)"));
 		status_printf_ln(s, color,
-			_("  (use \"git revert --abort\" to cancel the revert operation)"));
+			_("  (use \"shit revert --abort\" to cancel the revert operation)"));
 	}
 	wt_longstatus_print_trailer(s);
 }
@@ -1587,7 +1587,7 @@ static void show_bisect_in_progress(struct wt_status *s,
 				 _("You are currently bisecting."));
 	if (s->hints)
 		status_printf_ln(s, color,
-			_("  (use \"git bisect reset\" to get back to the original branch)"));
+			_("  (use \"shit bisect reset\" to get back to the original branch)"));
 	wt_longstatus_print_trailer(s);
 }
 
@@ -1615,7 +1615,7 @@ static char *get_branch(const struct worktree *wt, const char *path)
 	struct object_id oid;
 	const char *branch_name;
 
-	if (strbuf_read_file(&sb, worktree_git_path(wt, "%s", path), 0) <= 0)
+	if (strbuf_read_file(&sb, worktree_shit_path(wt, "%s", path), 0) <= 0)
 		goto got_nothing;
 
 	while (sb.len && sb.buf[sb.len - 1] == '\n')
@@ -1713,18 +1713,18 @@ int wt_status_check_rebase(const struct worktree *wt,
 {
 	struct stat st;
 
-	if (!stat(worktree_git_path(wt, "rebase-apply"), &st)) {
-		if (!stat(worktree_git_path(wt, "rebase-apply/applying"), &st)) {
+	if (!stat(worktree_shit_path(wt, "rebase-apply"), &st)) {
+		if (!stat(worktree_shit_path(wt, "rebase-apply/applying"), &st)) {
 			state->am_in_progress = 1;
-			if (!stat(worktree_git_path(wt, "rebase-apply/patch"), &st) && !st.st_size)
+			if (!stat(worktree_shit_path(wt, "rebase-apply/patch"), &st) && !st.st_size)
 				state->am_empty_patch = 1;
 		} else {
 			state->rebase_in_progress = 1;
 			state->branch = get_branch(wt, "rebase-apply/head-name");
 			state->onto = get_branch(wt, "rebase-apply/onto");
 		}
-	} else if (!stat(worktree_git_path(wt, "rebase-merge"), &st)) {
-		if (!stat(worktree_git_path(wt, "rebase-merge/interactive"), &st))
+	} else if (!stat(worktree_shit_path(wt, "rebase-merge"), &st)) {
+		if (!stat(worktree_shit_path(wt, "rebase-merge/interactive"), &st))
 			state->rebase_interactive_in_progress = 1;
 		else
 			state->rebase_in_progress = 1;
@@ -1740,7 +1740,7 @@ int wt_status_check_bisect(const struct worktree *wt,
 {
 	struct stat st;
 
-	if (!stat(worktree_git_path(wt, "BISECT_LOG"), &st)) {
+	if (!stat(worktree_shit_path(wt, "BISECT_LOG"), &st)) {
 		state->bisect_in_progress = 1;
 		state->bisecting_from = get_branch(wt, "BISECT_START");
 		return 1;
@@ -1786,7 +1786,7 @@ void wt_status_get_state(struct repository *r,
 	struct object_id oid;
 	enum replay_action action;
 
-	if (!stat(git_path_merge_head(r), &st)) {
+	if (!stat(shit_path_merge_head(r), &st)) {
 		wt_status_check_rebase(NULL, state);
 		state->merge_in_progress = 1;
 	} else if (wt_status_check_rebase(NULL, state)) {
@@ -1904,23 +1904,23 @@ static void wt_longstatus_print(struct wt_status *s)
 		if (s->show_ignored_mode)
 			wt_longstatus_print_other(s, &s->ignored, _("Ignored files"), "add -f");
 		if (advice_enabled(ADVICE_STATUS_U_OPTION) && uf_was_slow(s)) {
-			status_printf_ln(s, GIT_COLOR_NORMAL, "%s", "");
+			status_printf_ln(s, shit_COLOR_NORMAL, "%s", "");
 			if (fsm_mode > FSMONITOR_MODE_DISABLED) {
-				status_printf_ln(s, GIT_COLOR_NORMAL,
+				status_printf_ln(s, shit_COLOR_NORMAL,
 						_("It took %.2f seconds to enumerate untracked files,\n"
 						"but the results were cached, and subsequent runs may be faster."),
 						s->untracked_in_ms / 1000.0);
 			} else {
-				status_printf_ln(s, GIT_COLOR_NORMAL,
+				status_printf_ln(s, shit_COLOR_NORMAL,
 						_("It took %.2f seconds to enumerate untracked files."),
 						s->untracked_in_ms / 1000.0);
 			}
-			status_printf_ln(s, GIT_COLOR_NORMAL,
-					_("See 'git help status' for information on how to improve this."));
-			status_printf_ln(s, GIT_COLOR_NORMAL, "%s", "");
+			status_printf_ln(s, shit_COLOR_NORMAL,
+					_("See 'shit help status' for information on how to improve this."));
+			status_printf_ln(s, shit_COLOR_NORMAL, "%s", "");
 		}
 	} else if (s->committable)
-		status_printf_ln(s, GIT_COLOR_NORMAL, _("Untracked files not listed%s"),
+		status_printf_ln(s, shit_COLOR_NORMAL, _("Untracked files not listed%s"),
 			s->hints
 			? _(" (use -u option to show untracked files)") : "");
 
@@ -1928,14 +1928,14 @@ static void wt_longstatus_print(struct wt_status *s)
 		wt_longstatus_print_verbose(s);
 	if (!s->committable) {
 		if (s->amend)
-			status_printf_ln(s, GIT_COLOR_NORMAL, _("No changes"));
+			status_printf_ln(s, shit_COLOR_NORMAL, _("No changes"));
 		else if (s->nowarn)
 			; /* nothing */
 		else if (s->workdir_dirty) {
 			if (s->hints)
 				fprintf(s->fp, _("no changes added to commit "
-						 "(use \"git add\" and/or "
-						 "\"git commit -a\")\n"));
+						 "(use \"shit add\" and/or "
+						 "\"shit commit -a\")\n"));
 			else
 				fprintf(s->fp, _("no changes added to "
 						 "commit\n"));
@@ -1943,14 +1943,14 @@ static void wt_longstatus_print(struct wt_status *s)
 			if (s->hints)
 				fprintf(s->fp, _("nothing added to commit but "
 						 "untracked files present (use "
-						 "\"git add\" to track)\n"));
+						 "\"shit add\" to track)\n"));
 			else
 				fprintf(s->fp, _("nothing added to commit but "
 						 "untracked files present\n"));
 		} else if (s->is_initial) {
 			if (s->hints)
 				fprintf(s->fp, _("nothing to commit (create/"
-						 "copy files and use \"git "
+						 "copy files and use \"shit "
 						 "add\" to track)\n"));
 			else
 				fprintf(s->fp, _("nothing to commit\n"));
@@ -2264,9 +2264,9 @@ static void wt_porcelain_v2_submodule_state(
 	struct wt_status_change_data *d,
 	char sub[5])
 {
-	if (S_ISGITLINK(d->mode_head) ||
-		S_ISGITLINK(d->mode_index) ||
-		S_ISGITLINK(d->mode_worktree)) {
+	if (S_ISshitLINK(d->mode_head) ||
+		S_ISshitLINK(d->mode_index) ||
+		S_ISshitLINK(d->mode_worktree)) {
 		sub[0] = 'S';
 		sub[1] = d->new_submodule_commits ? 'C' : '.';
 		sub[2] = (d->dirty_submodule & DIRTY_SUBMODULE_MODIFIED) ? 'M' : '.';
@@ -2651,7 +2651,7 @@ int require_clean_work_tree(struct repository *r,
 	rollback_lock_file(&lock_file);
 
 	if (has_unstaged_changes(r, ignore_submodules)) {
-		/* TRANSLATORS: the action is e.g. "pull with rebase" */
+		/* TRANSLATORS: the action is e.g. "poop with rebase" */
 		error(_("cannot %s: You have unstaged changes."), _(action));
 		err = 1;
 	}

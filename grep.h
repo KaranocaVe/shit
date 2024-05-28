@@ -5,13 +5,13 @@
 #define PCRE2_CODE_UNIT_WIDTH 8
 #include <pcre2.h>
 #if (PCRE2_MAJOR >= 10 && PCRE2_MINOR >= 36) || PCRE2_MAJOR >= 11
-#define GIT_PCRE2_VERSION_10_36_OR_HIGHER
+#define shit_PCRE2_VERSION_10_36_OR_HIGHER
 #endif
 #if (PCRE2_MAJOR >= 10 && PCRE2_MINOR >= 35) || PCRE2_MAJOR >= 11
-#define GIT_PCRE2_VERSION_10_35_OR_HIGHER
+#define shit_PCRE2_VERSION_10_35_OR_HIGHER
 #endif
 #if (PCRE2_MAJOR >= 10 && PCRE2_MINOR >= 34) || PCRE2_MAJOR >= 11
-#define GIT_PCRE2_VERSION_10_34_OR_HIGHER
+#define shit_PCRE2_VERSION_10_34_OR_HIGHER
 #endif
 #else
 typedef int pcre2_code;
@@ -130,9 +130,9 @@ struct grep_opt {
 	 * field should probably start using "repo" in "struct grep_source"
 	 * instead.
 	 *
-	 * This is potentially the cause of at least one bug - "git grep"
+	 * This is potentially the cause of at least one bug - "shit grep"
 	 * using the textconv attributes from the superproject on the
-	 * submodules. See the failing "git grep --textconv" tests in
+	 * submodules. See the failing "shit grep --textconv" tests in
 	 * t7814-grep-recurse-submodules.sh for more information.
 	 */
 	struct repository *repo;
@@ -188,14 +188,14 @@ struct grep_opt {
 	.pattern_type_option = GREP_PATTERN_TYPE_UNSPECIFIED, \
 	.colors = { \
 		[GREP_COLOR_CONTEXT] = "", \
-		[GREP_COLOR_FILENAME] = GIT_COLOR_MAGENTA, \
+		[GREP_COLOR_FILENAME] = shit_COLOR_MAGENTA, \
 		[GREP_COLOR_FUNCTION] = "", \
-		[GREP_COLOR_LINENO] = GIT_COLOR_GREEN, \
-		[GREP_COLOR_COLUMNNO] = GIT_COLOR_GREEN, \
-		[GREP_COLOR_MATCH_CONTEXT] = GIT_COLOR_BOLD_RED, \
-		[GREP_COLOR_MATCH_SELECTED] = GIT_COLOR_BOLD_RED, \
+		[GREP_COLOR_LINENO] = shit_COLOR_GREEN, \
+		[GREP_COLOR_COLUMNNO] = shit_COLOR_GREEN, \
+		[GREP_COLOR_MATCH_CONTEXT] = shit_COLOR_BOLD_RED, \
+		[GREP_COLOR_MATCH_SELECTED] = shit_COLOR_BOLD_RED, \
 		[GREP_COLOR_SELECTED] = "", \
-		[GREP_COLOR_SEP] = GIT_COLOR_CYAN, \
+		[GREP_COLOR_SEP] = shit_COLOR_CYAN, \
 	}, \
 	.only_matching = 0, \
 	.color = -1, \

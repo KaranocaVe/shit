@@ -12,18 +12,18 @@ test_expect_success setup '
 	echo B >fileB.t &&
 	echo C >fileC.t &&
 	echo D >fileD.t &&
-	git add fileA.t fileB.t fileC.t fileD.t &&
-	git commit -m "files" &&
+	shit add fileA.t fileB.t fileC.t fileD.t &&
+	shit commit -m "files" &&
 
-	git tag checkpoint
+	shit tag checkpoint
 '
 
 restore_checkpoint () {
-	git reset --hard checkpoint
+	shit reset --hard checkpoint
 }
 
 verify_expect () {
-	git status --porcelain --untracked-files=no -- fileA.t fileB.t fileC.t fileD.t >actual &&
+	shit status --porcelain --untracked-files=no -- fileA.t fileB.t fileC.t fileD.t >actual &&
 	test_cmp expect actual
 }
 
@@ -34,7 +34,7 @@ test_expect_success 'simplest' '
 	D  fileA.t
 	EOF
 
-	echo fileA.t | git rm --pathspec-from-file=- &&
+	echo fileA.t | shit rm --pathspec-from-file=- &&
 	verify_expect
 '
 
@@ -46,7 +46,7 @@ test_expect_success '--pathspec-file-nul' '
 	D  fileB.t
 	EOF
 
-	printf "fileA.t\0fileB.t\0" | git rm --pathspec-from-file=- --pathspec-file-nul &&
+	printf "fileA.t\0fileB.t\0" | shit rm --pathspec-from-file=- --pathspec-file-nul &&
 	verify_expect
 '
 
@@ -58,7 +58,7 @@ test_expect_success 'only touches what was listed' '
 	D  fileC.t
 	EOF
 
-	printf "fileB.t\nfileC.t\n" | git rm --pathspec-from-file=- &&
+	printf "fileB.t\nfileC.t\n" | shit rm --pathspec-from-file=- &&
 	verify_expect
 '
 
@@ -66,14 +66,14 @@ test_expect_success 'error conditions' '
 	restore_checkpoint &&
 	echo fileA.t >list &&
 
-	test_must_fail git rm --pathspec-from-file=list -- fileA.t 2>err &&
+	test_must_fail shit rm --pathspec-from-file=list -- fileA.t 2>err &&
 	test_grep -e ".--pathspec-from-file. and pathspec arguments cannot be used together" err &&
 
-	test_must_fail git rm --pathspec-file-nul 2>err &&
+	test_must_fail shit rm --pathspec-file-nul 2>err &&
 	test_grep -e "the option .--pathspec-file-nul. requires .--pathspec-from-file." err &&
 
 	>empty_list &&
-	test_must_fail git rm --pathspec-from-file=empty_list 2>err &&
+	test_must_fail shit rm --pathspec-from-file=empty_list 2>err &&
 	test_grep -e "No pathspec was given. Which files should I remove?" err
 '
 

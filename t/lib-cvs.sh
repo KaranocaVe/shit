@@ -44,33 +44,33 @@ test_cvs_co () {
 	fi
 }
 
-test_git_co () {
-	# Usage: test_git_co BRANCH_NAME
-	(cd module-git && git checkout "$1")
+test_shit_co () {
+	# Usage: test_shit_co BRANCH_NAME
+	(cd module-shit && shit checkout "$1")
 }
 
 test_cmp_branch_file () {
 	# Usage: test_cmp_branch_file BRANCH_NAME PATH
-	# The branch must already be checked out of CVS and git.
-	test_cmp module-cvs-"$1"/"$2" module-git/"$2"
+	# The branch must already be checked out of CVS and shit.
+	test_cmp module-cvs-"$1"/"$2" module-shit/"$2"
 }
 
 test_cmp_branch_tree () {
 	# Usage: test_cmp_branch_tree BRANCH_NAME
-	# Check BRANCH_NAME out of CVS and git and make sure that all
+	# Check BRANCH_NAME out of CVS and shit and make sure that all
 	# of the files and directories are identical.
 
 	test_cvs_co "$1" &&
-	test_git_co "$1" &&
+	test_shit_co "$1" &&
 	(
 		cd module-cvs-"$1"
 		find . -type d -name CVS -prune -o -type f -print
 	) | sort >module-cvs-"$1".list &&
 	(
-		cd module-git
-		find . -type d -name .git -prune -o -type f -print
-	) | sort >module-git-"$1".list &&
-	test_cmp module-cvs-"$1".list module-git-"$1".list &&
+		cd module-shit
+		find . -type d -name .shit -prune -o -type f -print
+	) | sort >module-shit-"$1".list &&
+	test_cmp module-cvs-"$1".list module-shit-"$1".list &&
 	while read f
 	do
 		test_cmp_branch_file "$1" "$f" || return 1

@@ -15,10 +15,10 @@
 #include "trace2.h"
 
 #define BUILTIN_COMMIT_GRAPH_VERIFY_USAGE \
-	N_("git commit-graph verify [--object-dir <dir>] [--shallow] [--[no-]progress]")
+	N_("shit commit-graph verify [--object-dir <dir>] [--shallow] [--[no-]progress]")
 
 #define BUILTIN_COMMIT_GRAPH_WRITE_USAGE \
-	N_("git commit-graph write [--object-dir <dir>] [--append]\n" \
+	N_("shit commit-graph write [--object-dir <dir>] [--append]\n" \
 	   "                       [--split[=<strategy>]] [--reachable | --stdin-packs | --stdin-commits]\n" \
 	   "                       [--changed-paths] [--[no-]max-new-filters <n>] [--[no-]progress]\n" \
 	   "                       <split-options>")
@@ -202,14 +202,14 @@ static int write_option_max_new_filters(const struct option *opt,
 	return 0;
 }
 
-static int git_commit_graph_write_config(const char *var, const char *value,
+static int shit_commit_graph_write_config(const char *var, const char *value,
 					 const struct config_context *ctx,
 					 void *cb UNUSED)
 {
 	if (!strcmp(var, "commitgraph.maxnewfilters"))
-		write_opts.max_new_filters = git_config_int(var, value, ctx->kvi);
+		write_opts.max_new_filters = shit_config_int(var, value, ctx->kvi);
 	/*
-	 * No need to fall-back to 'git_default_config', since this was already
+	 * No need to fall-back to 'shit_default_config', since this was already
 	 * called in 'cmd_commit_graph()'.
 	 */
 	return 0;
@@ -264,7 +264,7 @@ static int graph_write(int argc, const char **argv, const char *prefix)
 
 	trace2_cmd_mode("write");
 
-	git_config(git_commit_graph_write_config, &opts);
+	shit_config(shit_commit_graph_write_config, &opts);
 
 	argc = parse_options(argc, argv, prefix,
 			     options,
@@ -285,7 +285,7 @@ static int graph_write(int argc, const char **argv, const char *prefix)
 	if (!opts.enable_changed_paths)
 		flags |= COMMIT_GRAPH_NO_WRITE_BLOOM_FILTERS;
 	if (opts.enable_changed_paths == 1 ||
-	    git_env_bool(GIT_TEST_COMMIT_GRAPH_CHANGED_PATHS, 0))
+	    shit_env_bool(shit_TEST_COMMIT_GRAPH_CHANGED_PATHS, 0))
 		flags |= COMMIT_GRAPH_WRITE_BLOOM_FILTERS;
 
 	odb = find_odb(the_repository, opts.obj_dir);
@@ -341,7 +341,7 @@ int cmd_commit_graph(int argc, const char **argv, const char *prefix)
 	};
 	struct option *options = parse_options_concat(builtin_commit_graph_options, common_opts);
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	disable_replace_refs();
 	save_commit_buffer = 0;

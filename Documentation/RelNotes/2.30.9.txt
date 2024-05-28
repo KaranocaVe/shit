@@ -1,4 +1,4 @@
-Git v2.30.9 Release Notes
+shit v2.30.9 Release Notes
 =========================
 
 This release addresses the security issues CVE-2023-25652,
@@ -10,14 +10,14 @@ Fixes since v2.30.8
 
  * CVE-2023-25652:
 
-   By feeding specially crafted input to `git apply --reject`, a
+   By feeding specially crafted input to `shit apply --reject`, a
    path outside the working tree can be overwritten with partially
    controlled contents (corresponding to the rejected hunk(s) from
    the given patch).
 
  * CVE-2023-25815:
 
-   When Git is compiled with runtime prefix support and runs without
+   When shit is compiled with runtime prefix support and runs without
    translated messages, it still used the gettext machinery to
    display messages, which subsequently potentially looked for
    translated messages in unexpected places. This allowed for

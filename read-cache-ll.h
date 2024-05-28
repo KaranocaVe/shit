@@ -265,7 +265,7 @@ struct cache_entry *dup_cache_entry(const struct cache_entry *ce, struct index_s
 void validate_cache_entries(const struct index_state *istate);
 
 /*
- * Bulk prefetch all missing cache entries that are not GITLINKs and that match
+ * Bulk prefetch all missing cache entries that are not shitLINKs and that match
  * the given predicate. This function should only be called if
  * repo_has_promisor_remote() returns true.
  */
@@ -278,7 +278,7 @@ struct lock_file;
 int do_read_index(struct index_state *istate, const char *path,
 		  int must_exist); /* for testting only! */
 int read_index_from(struct index_state *, const char *path,
-		    const char *gitdir);
+		    const char *shitdir);
 int is_index_unborn(struct index_state *);
 
 /* For use with `write_locked_index()`. */

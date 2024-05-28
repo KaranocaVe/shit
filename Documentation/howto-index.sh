@@ -1,11 +1,11 @@
 #!/bin/sh
 
 cat <<\EOF
-Git Howto Index
+shit Howto Index
 ===============
 
 Here is a collection of mailing list postings made by various
-people describing how they use Git in their workflow.
+people describing how they use shit in their workflow.
 
 EOF
 

@@ -1,4 +1,4 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 #include "win32.h"
 #include <aclapi.h>
 #include <sddl.h>
@@ -28,8 +28,8 @@ void open_in_gdb(void)
 	static struct child_process cp = CHILD_PROCESS_INIT;
 	extern char *_pgmptr;
 
-	strvec_pushl(&cp.args, "mintty", "gdb", NULL);
-	strvec_pushf(&cp.args, "--pid=%d", getpid());
+	strvec_defecatel(&cp.args, "mintty", "gdb", NULL);
+	strvec_defecatef(&cp.args, "--pid=%d", getpid());
 	cp.clean_on_exit = 1;
 	if (start_command(&cp) < 0)
 		die_errno("Could not start gdb");
@@ -209,11 +209,11 @@ static int ask_yes_no_if_possible(const char *format, ...)
 	vsnprintf(question, sizeof(question), format, args);
 	va_end(args);
 
-	retry_hook = mingw_getenv("GIT_ASK_YESNO");
+	retry_hook = mingw_getenv("shit_ASK_YESNO");
 	if (retry_hook) {
 		struct child_process cmd = CHILD_PROCESS_INIT;
 
-		strvec_pushl(&cmd.args, retry_hook, question, NULL);
+		strvec_defecatel(&cmd.args, retry_hook, question, NULL);
 		return !run_command(&cmd);
 	}
 
@@ -236,21 +236,21 @@ static int ask_yes_no_if_possible(const char *format, ...)
 enum hide_dotfiles_type {
 	HIDE_DOTFILES_FALSE = 0,
 	HIDE_DOTFILES_TRUE,
-	HIDE_DOTFILES_DOTGITONLY
+	HIDE_DOTFILES_DOTshitONLY
 };
 
 static int core_restrict_inherited_handles = -1;
-static enum hide_dotfiles_type hide_dotfiles = HIDE_DOTFILES_DOTGITONLY;
+static enum hide_dotfiles_type hide_dotfiles = HIDE_DOTFILES_DOTshitONLY;
 static char *unset_environment_variables;
 
 int mingw_core_config(const char *var, const char *value,
 		      const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "core.hidedotfiles")) {
-		if (value && !strcasecmp(value, "dotgitonly"))
-			hide_dotfiles = HIDE_DOTFILES_DOTGITONLY;
+		if (value && !strcasecmp(value, "dotshitonly"))
+			hide_dotfiles = HIDE_DOTFILES_DOTshitONLY;
 		else
-			hide_dotfiles = git_config_bool(var, value);
+			hide_dotfiles = shit_config_bool(var, value);
 		return 0;
 	}
 
@@ -267,7 +267,7 @@ int mingw_core_config(const char *var, const char *value,
 			core_restrict_inherited_handles = -1;
 		else
 			core_restrict_inherited_handles =
-				git_config_bool(var, value);
+				shit_config_bool(var, value);
 		return 0;
 	}
 
@@ -436,8 +436,8 @@ static inline int needs_hiding(const char *path)
 	if (hide_dotfiles == HIDE_DOTFILES_TRUE)
 		return *basename == '.';
 
-	assert(hide_dotfiles == HIDE_DOTFILES_DOTGITONLY);
-	return !strncasecmp(".git", basename, 4) &&
+	assert(hide_dotfiles == HIDE_DOTFILES_DOTshitONLY);
+	return !strncasecmp(".shit", basename, 4) &&
 		(!basename[4] || is_dir_sep(basename[4]));
 }
 
@@ -687,7 +687,7 @@ int mingw_fflush(FILE *stream)
 
 	/*
 	 * write() is used behind the scenes of stdio output functions.
-	 * Since git code does not check for errors after each stdio write
+	 * Since shit code does not check for errors after each stdio write
 	 * operation, it can happen that write() is called by a later
 	 * stdio function even if an earlier write() call failed. In the
 	 * case of a pipe whose readable end was closed, only the first
@@ -830,7 +830,7 @@ static int do_lstat(int follow, const char *file_name, struct stat *buf)
 		buf->st_mode = file_attr_to_st_mode(fdata.dwFileAttributes);
 		buf->st_size = fdata.nFileSizeLow |
 			(((off_t)fdata.nFileSizeHigh)<<32);
-		buf->st_dev = buf->st_rdev = 0; /* not used by Git */
+		buf->st_dev = buf->st_rdev = 0; /* not used by shit */
 		filetime_to_timespec(&(fdata.ftLastAccessTime), &(buf->st_atim));
 		filetime_to_timespec(&(fdata.ftLastWriteTime), &(buf->st_mtim));
 		filetime_to_timespec(&(fdata.ftCreationTime), &(buf->st_ctim));
@@ -883,8 +883,8 @@ static int do_lstat(int follow, const char *file_name, struct stat *buf)
 
 /* We provide our own lstat/fstat functions, since the provided
  * lstat/fstat functions are so slow. These stat functions are
- * tailored for Git's usage (read: fast), and are not meant to be
- * complete. Note that Git stat()s are redirected to mingw_lstat()
+ * tailored for shit's usage (read: fast), and are not meant to be
+ * complete. Note that shit stat()s are redirected to mingw_lstat()
  * too, since Windows doesn't really handle symlinks that well.
  */
 static int do_stat_internal(int follow, const char *file_name, struct stat *buf)
@@ -930,7 +930,7 @@ static int get_file_info_by_handle(HANDLE hnd, struct stat *buf)
 	buf->st_mode = file_attr_to_st_mode(fdata.dwFileAttributes);
 	buf->st_size = fdata.nFileSizeLow |
 		(((off_t)fdata.nFileSizeHigh)<<32);
-	buf->st_dev = buf->st_rdev = 0; /* not used by Git */
+	buf->st_dev = buf->st_rdev = 0; /* not used by shit */
 	filetime_to_timespec(&(fdata.ftLastAccessTime), &(buf->st_atim));
 	filetime_to_timespec(&(fdata.ftLastWriteTime), &(buf->st_mtim));
 	filetime_to_timespec(&(fdata.ftCreationTime), &(buf->st_ctim));
@@ -1083,7 +1083,7 @@ char *mingw_mktemp(char *template)
 
 int mkstemp(char *template)
 {
-	return git_mkstemp_mode(template, 0600);
+	return shit_mkstemp_mode(template, 0600);
 }
 
 int gettimeofday(struct timeval *tv, void *tz)
@@ -1428,7 +1428,7 @@ static wchar_t *make_environment_block(char **deltaenv)
 
 	/*
 	 * If there is a deltaenv, let's accumulate all keys into `array`,
-	 * sort them using the stable git_stable_qsort() and then copy,
+	 * sort them using the stable shit_stable_qsort() and then copy,
 	 * skipping duplicate keys
 	 */
 	for (p = wenv; p && *p; ) {
@@ -1452,7 +1452,7 @@ static wchar_t *make_environment_block(char **deltaenv)
 		p += wlen + 1;
 	}
 
-	git_stable_qsort(array, nr, sizeof(*array), wenvcmp);
+	shit_stable_qsort(array, nr, sizeof(*array), wenvcmp);
 	ALLOC_ARRAY(result, size + delta_size);
 
 	for (p = result, i = 0; i < nr; i++) {
@@ -1662,7 +1662,7 @@ static pid_t mingw_spawnve_fd(const char *cmd, const char **argv, char **deltaen
 			free(quoted);
 	}
 
-	strace_env = getenv("GIT_STRACE_COMMANDS");
+	strace_env = getenv("shit_STRACE_COMMANDS");
 	if (strace_env) {
 		char *p = path_lookup("strace.exe", 1);
 		if (!p)
@@ -1753,8 +1753,8 @@ static pid_t mingw_spawnve_fd(const char *cmd, const char **argv, char **deltaen
 					    fl);
 			}
 			strbuf_addstr(&buf, "\nThis is a bug; please report it "
-				      "at\nhttps://github.com/git-for-windows/"
-				      "git/issues/new\n\n"
+				      "at\nhttps://shithub.com/shit-for-windows/"
+				      "shit/issues/new\n\n"
 				      "To suppress this warning, please set "
 				      "the environment variable\n\n"
 				      "\tSUPPRESS_HANDLE_INHERITANCE_WARNING=1"
@@ -1887,7 +1887,7 @@ static int try_shell_exec(const char *cmd, char *const *argv)
 
 int mingw_execv(const char *cmd, char *const *argv)
 {
-	/* check if git_command is a shell script */
+	/* check if shit_command is a shell script */
 	if (!try_shell_exec(cmd, argv)) {
 		int pid, status;
 		int exec_id;
@@ -2211,7 +2211,7 @@ repeat:
 
 /*
  * Note that this doesn't return the actual pagesize, but
- * the allocation granularity. If future Windows specific git code
+ * the allocation granularity. If future Windows specific shit code
  * needs the real getpagesize function, we need to find another solution.
  */
 int mingw_getpagesize(void)
@@ -2632,7 +2632,7 @@ static void setup_windows_environment(void)
 	if (tmp) {
 		/*
 		 * Convert all dir separators to forward slashes,
-		 * to help shell commands called from the Git
+		 * to help shell commands called from the shit
 		 * executable (by not mistaking the dir separators
 		 * for escape characters).
 		 */
@@ -2918,7 +2918,7 @@ not_a_reserved_name:
 			case 'l': case 'L': /* LPT<N> */
 				if (((c = path[++i]) != 'p' && c != 'P') ||
 				    ((c = path[++i]) != 't' && c != 'T') ||
-				    !isdigit(path[++i]))
+				    !isdishit(path[++i]))
 					goto not_a_reserved_name;
 				break;
 			case 'n': case 'N': /* NUL */
@@ -3054,11 +3054,11 @@ static void maybe_redirect_std_handle(const wchar_t *key, DWORD std_id, int fd,
 
 static void maybe_redirect_std_handles(void)
 {
-	maybe_redirect_std_handle(L"GIT_REDIRECT_STDIN", STD_INPUT_HANDLE, 0,
+	maybe_redirect_std_handle(L"shit_REDIRECT_STDIN", STD_INPUT_HANDLE, 0,
 				  GENERIC_READ, FILE_ATTRIBUTE_NORMAL);
-	maybe_redirect_std_handle(L"GIT_REDIRECT_STDOUT", STD_OUTPUT_HANDLE, 1,
+	maybe_redirect_std_handle(L"shit_REDIRECT_STDOUT", STD_OUTPUT_HANDLE, 1,
 				  GENERIC_WRITE, FILE_ATTRIBUTE_NORMAL);
-	maybe_redirect_std_handle(L"GIT_REDIRECT_STDERR", STD_ERROR_HANDLE, 2,
+	maybe_redirect_std_handle(L"shit_REDIRECT_STDERR", STD_ERROR_HANDLE, 2,
 				  GENERIC_WRITE, FILE_FLAG_NO_BUFFERING);
 }
 
@@ -3074,7 +3074,7 @@ static void maybe_redirect_std_handles(void)
  * so that we can handle non-ASCII command-line parameters
  * appropriately.
  *
- * To be more compatible with the core git code, we convert
+ * To be more compatible with the core shit code, we convert
  * argv into UTF8 and pass them directly to main().
  */
 int wmain(int argc, const wchar_t **wargv)

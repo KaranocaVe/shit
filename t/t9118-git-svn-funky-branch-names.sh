@@ -3,8 +3,8 @@
 # Copyright (c) 2007 Eric Wong
 #
 
-test_description='git svn funky branch names'
-. ./lib-git-svn.sh
+test_description='shit svn funky branch names'
+. ./lib-shit-svn.sh
 
 # Abo-Uebernahme (Bug #994)
 scary_uri='Abo-Uebernahme%20%28Bug%20%23994%29'
@@ -41,49 +41,49 @@ test_expect_success 'setup svnrepo' '
 non_reflog=$(svn_cmd ls "$svnrepo/pr ject/branches" | sed -ne '/not-a/ { s/\///; s/@/%40/; p; }')
 
 test_expect_success 'test clone with funky branch names' '
-	git svn clone -s "$svnrepo/pr ject" project &&
+	shit svn clone -s "$svnrepo/pr ject" project &&
 	(
 		cd project &&
-		git rev-parse "refs/remotes/origin/fun%20plugin" &&
-		git rev-parse "refs/remotes/origin/more%20fun%20plugin!" &&
-		git rev-parse "refs/remotes/origin/$scary_ref" &&
-		git rev-parse "refs/remotes/origin/%2Eleading_dot" &&
+		shit rev-parse "refs/remotes/origin/fun%20plugin" &&
+		shit rev-parse "refs/remotes/origin/more%20fun%20plugin!" &&
+		shit rev-parse "refs/remotes/origin/$scary_ref" &&
+		shit rev-parse "refs/remotes/origin/%2Eleading_dot" &&
 		if test_have_prereq !MINGW
 		then
-			git rev-parse "refs/remotes/origin/trailing_dot%2E"
+			shit rev-parse "refs/remotes/origin/trailing_dot%2E"
 		fi &&
-		git rev-parse "refs/remotes/origin/trailing_dotlock%2Elock" &&
-		git rev-parse "refs/remotes/origin/$non_reflog"
+		shit rev-parse "refs/remotes/origin/trailing_dotlock%2Elock" &&
+		shit rev-parse "refs/remotes/origin/$non_reflog"
 	)
 	'
 
 test_expect_success 'test dcommit to funky branch' "
 	(
 		cd project &&
-		git reset --hard 'refs/remotes/origin/more%20fun%20plugin!' &&
+		shit reset --hard 'refs/remotes/origin/more%20fun%20plugin!' &&
 		echo hello >> foo &&
-		git commit -m 'hello' -- foo &&
-		git svn dcommit
+		shit commit -m 'hello' -- foo &&
+		shit svn dcommit
 	)
 	"
 
 test_expect_success 'test dcommit to scary branch' '
 	(
 		cd project &&
-		git reset --hard "refs/remotes/origin/$scary_ref" &&
+		shit reset --hard "refs/remotes/origin/$scary_ref" &&
 		echo urls are scary >> foo &&
-		git commit -m "eep" -- foo &&
-		git svn dcommit
+		shit commit -m "eep" -- foo &&
+		shit svn dcommit
 	)
 	'
 
 test_expect_success 'test dcommit to trailing_dotlock branch' '
 	(
 		cd project &&
-		git reset --hard "refs/remotes/origin/trailing_dotlock%2Elock" &&
+		shit reset --hard "refs/remotes/origin/trailing_dotlock%2Elock" &&
 		echo who names branches like this anyway? >> foo &&
-		git commit -m "bar" -- foo &&
-		git svn dcommit
+		shit commit -m "bar" -- foo &&
+		shit svn dcommit
 	)
 	'
 

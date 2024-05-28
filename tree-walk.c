@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "tree-walk.h"
 #include "dir.h"
 #include "gettext.h"
@@ -632,7 +632,7 @@ int get_tree_entry(struct repository *r,
 
 /*
  * This is Linux's built-in max for the number of symlinks to follow.
- * That limit, of course, does not affect git, but it's a reasonable
+ * That limit, of course, does not affect shit, but it's a reasonable
  * choice.
  */
 #define GET_TREE_ENTRY_FOLLOW_SYMLINKS_MAX_LINKS 40
@@ -895,7 +895,7 @@ static int match_entry(const struct pathspec_item *item,
 		 * uniformly).
 		 */
 		if (!S_ISDIR(entry->mode) &&
-		    (!S_ISGITLINK(entry->mode) || matchlen > pathlen + 1))
+		    (!S_ISshitLINK(entry->mode) || matchlen > pathlen + 1))
 			return 0;
 	}
 
@@ -1088,7 +1088,7 @@ static enum interesting do_match(struct index_state *istate,
 				goto interesting;
 
 			if (item->nowildcard_len < item->len) {
-				if (!git_fnmatch(item, match + baselen, entry->path,
+				if (!shit_fnmatch(item, match + baselen, entry->path,
 						 item->nowildcard_len - baselen))
 					goto interesting;
 
@@ -1107,7 +1107,7 @@ static enum interesting do_match(struct index_state *istate,
 				 * be performed in the submodule itself.
 				 */
 				if (ps->recurse_submodules &&
-				    S_ISGITLINK(entry->mode) &&
+				    S_ISshitLINK(entry->mode) &&
 				    !ps_strncmp(item, match + baselen,
 						entry->path,
 						item->nowildcard_len - baselen))
@@ -1134,7 +1134,7 @@ match_wildcards:
 		 * realloc, it turns out not worth it. Measurement on
 		 * linux-2.6 does not show any clear improvements,
 		 * partly because of the nowildcard_len optimization
-		 * in git_fnmatch(). Avoid micro-optimizations here.
+		 * in shit_fnmatch(). Avoid micro-optimizations here.
 		 *
 		 * [1] if match_wildcard_base() says the base
 		 * directory is already matched, we only need to match
@@ -1143,7 +1143,7 @@ match_wildcards:
 
 		strbuf_add(base, entry->path, pathlen);
 
-		if (!git_fnmatch(item, match, base->buf,
+		if (!shit_fnmatch(item, match, base->buf,
 				 item->nowildcard_len)) {
 			strbuf_setlen(base, baselen);
 			goto interesting;
@@ -1156,7 +1156,7 @@ match_wildcards:
 		 * character.  More accurate matching can then
 		 * be performed in the submodule itself.
 		 */
-		if (ps->recurse_submodules && S_ISGITLINK(entry->mode) &&
+		if (ps->recurse_submodules && S_ISshitLINK(entry->mode) &&
 		    !ps_strncmp(item, match, base->buf,
 				item->nowildcard_len)) {
 			strbuf_setlen(base, baselen);
@@ -1170,7 +1170,7 @@ match_wildcards:
 		 * later on.
 		 * max_depth is ignored but we may consider support it
 		 * in future, see
-		 * https://lore.kernel.org/git/7vmxo5l2g4.fsf@alter.siamese.dyndns.org/
+		 * https://lore.kernel.org/shit/7vmxo5l2g4.fsf@alter.siamese.dyndns.org/
 		 */
 		if (ps->recursive && S_ISDIR(entry->mode))
 			return entry_interesting;

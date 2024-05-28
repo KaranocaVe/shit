@@ -1,5 +1,5 @@
 #include "test-tool.h"
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 /*
  * Truncate a file to the given size.

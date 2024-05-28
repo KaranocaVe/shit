@@ -10,5 +10,5 @@ gettext "TEST: A Shell test string"
 # TRANSLATORS: This is a test. You don't need to translate it.
 eval_gettext "TEST: A Shell test \$variable"
 
-# TRANSLATORS: If you see this, Git has a bug
+# TRANSLATORS: If you see this, shit has a bug
 _("TEST: A Shell string xgettext won't get")

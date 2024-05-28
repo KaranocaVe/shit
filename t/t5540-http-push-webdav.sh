@@ -3,16 +3,16 @@
 # Copyright (c) 2008 Clemens Buchacher <drizzd@aon.at>
 #
 
-test_description='test WebDAV http-push
+test_description='test WebDAV http-defecate
 
-This test runs various sanity checks on http-push.'
+This test runs various sanity checks on http-defecate.'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
-if git http-push > /dev/null 2>&1 || [ $? -eq 128 ]
+if shit http-defecate > /dev/null 2>&1 || [ $? -eq 128 ]
 then
 	skip_all="skipping test, USE_CURL_MULTI is not defined"
 	test_done
@@ -33,124 +33,124 @@ test_expect_success 'setup remote repository' '
 	cd "$ROOT_PATH" &&
 	mkdir test_repo &&
 	cd test_repo &&
-	git init &&
+	shit init &&
 	: >path1 &&
-	git add path1 &&
+	shit add path1 &&
 	test_tick &&
-	git commit -m initial &&
+	shit commit -m initial &&
 	cd - &&
-	git clone --bare test_repo test_repo.git &&
-	cd test_repo.git &&
-	git --bare update-server-info &&
+	shit clone --bare test_repo test_repo.shit &&
+	cd test_repo.shit &&
+	shit --bare update-server-info &&
 	test_hook --setup post-update <<-\EOF &&
-	exec git update-server-info
+	exec shit update-server-info
 	EOF
-	ORIG_HEAD=$(git rev-parse --verify HEAD) &&
+	ORIG_HEAD=$(shit rev-parse --verify HEAD) &&
 	cd - &&
-	mv test_repo.git "$HTTPD_DOCUMENT_ROOT_PATH"
+	mv test_repo.shit "$HTTPD_DOCUMENT_ROOT_PATH"
 '
 
 test_expect_success 'create password-protected repository' '
 	mkdir -p "$HTTPD_DOCUMENT_ROOT_PATH/auth/dumb" &&
-	cp -Rf "$HTTPD_DOCUMENT_ROOT_PATH/test_repo.git" \
-	       "$HTTPD_DOCUMENT_ROOT_PATH/auth/dumb/test_repo.git"
+	cp -Rf "$HTTPD_DOCUMENT_ROOT_PATH/test_repo.shit" \
+	       "$HTTPD_DOCUMENT_ROOT_PATH/auth/dumb/test_repo.shit"
 '
 
 setup_askpass_helper
 
 test_expect_success 'clone remote repository' '
 	cd "$ROOT_PATH" &&
-	git clone $HTTPD_URL/dumb/test_repo.git test_repo_clone
+	shit clone $HTTPD_URL/dumb/test_repo.shit test_repo_clone
 '
 
-test_expect_success 'push to remote repository with packed refs' '
+test_expect_success 'defecate to remote repository with packed refs' '
 	cd "$ROOT_PATH"/test_repo_clone &&
 	: >path2 &&
-	git add path2 &&
+	shit add path2 &&
 	test_tick &&
-	git commit -m path2 &&
-	HEAD=$(git rev-parse --verify HEAD) &&
-	git push &&
-	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.git &&
-	 test $HEAD = $(git rev-parse --verify HEAD))
+	shit commit -m path2 &&
+	HEAD=$(shit rev-parse --verify HEAD) &&
+	shit defecate &&
+	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.shit &&
+	 test $HEAD = $(shit rev-parse --verify HEAD))
 '
 
-test_expect_success 'push already up-to-date' '
-	git push
+test_expect_success 'defecate already up-to-date' '
+	shit defecate
 '
 
-test_expect_success 'push to remote repository with unpacked refs' '
-	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.git &&
+test_expect_success 'defecate to remote repository with unpacked refs' '
+	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.shit &&
 	 rm packed-refs &&
-	 git update-ref refs/heads/main $ORIG_HEAD &&
-	 git --bare update-server-info) &&
-	git push &&
-	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.git &&
-	 test $HEAD = $(git rev-parse --verify HEAD))
+	 shit update-ref refs/heads/main $ORIG_HEAD &&
+	 shit --bare update-server-info) &&
+	shit defecate &&
+	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.shit &&
+	 test $HEAD = $(shit rev-parse --verify HEAD))
 '
 
-test_expect_success 'http-push fetches unpacked objects' '
-	cp -R "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.git \
-		"$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_unpacked.git &&
+test_expect_success 'http-defecate fetches unpacked objects' '
+	cp -R "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.shit \
+		"$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_unpacked.shit &&
 
-	git clone $HTTPD_URL/dumb/test_repo_unpacked.git \
+	shit clone $HTTPD_URL/dumb/test_repo_unpacked.shit \
 		"$ROOT_PATH"/fetch_unpacked &&
 
-	# By reset, we force git to retrieve the object
+	# By reset, we force shit to retrieve the object
 	(cd "$ROOT_PATH"/fetch_unpacked &&
-	 git reset --hard HEAD^ &&
-	 git remote rm origin &&
-	 git reflog expire --expire=0 --all &&
-	 git prune &&
-	 git push -f -v $HTTPD_URL/dumb/test_repo_unpacked.git main)
+	 shit reset --hard HEAD^ &&
+	 shit remote rm origin &&
+	 shit reflog expire --expire=0 --all &&
+	 shit prune &&
+	 shit defecate -f -v $HTTPD_URL/dumb/test_repo_unpacked.shit main)
 '
 
-test_expect_success 'http-push fetches packed objects' '
-	cp -R "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.git \
-		"$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_packed.git &&
+test_expect_success 'http-defecate fetches packed objects' '
+	cp -R "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.shit \
+		"$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_packed.shit &&
 
-	git clone $HTTPD_URL/dumb/test_repo_packed.git \
+	shit clone $HTTPD_URL/dumb/test_repo_packed.shit \
 		"$ROOT_PATH"/test_repo_clone_packed &&
 
-	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_packed.git &&
-	 git --bare repack &&
-	 git --bare prune-packed) &&
+	(cd "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_packed.shit &&
+	 shit --bare repack &&
+	 shit --bare prune-packed) &&
 
-	# By reset, we force git to retrieve the packed object
+	# By reset, we force shit to retrieve the packed object
 	(cd "$ROOT_PATH"/test_repo_clone_packed &&
-	 git reset --hard HEAD^ &&
-	 git remote remove origin &&
-	 git reflog expire --expire=0 --all &&
-	 git prune &&
-	 git push -f -v $HTTPD_URL/dumb/test_repo_packed.git main)
+	 shit reset --hard HEAD^ &&
+	 shit remote remove origin &&
+	 shit reflog expire --expire=0 --all &&
+	 shit prune &&
+	 shit defecate -f -v $HTTPD_URL/dumb/test_repo_packed.shit main)
 '
 
 test_expect_success 'create and delete remote branch' '
 	cd "$ROOT_PATH"/test_repo_clone &&
-	git checkout -b dev &&
+	shit checkout -b dev &&
 	: >path3 &&
-	git add path3 &&
+	shit add path3 &&
 	test_tick &&
-	git commit -m dev &&
-	git push origin dev &&
-	git push origin :dev &&
-	test_must_fail git show-ref --verify refs/remotes/origin/dev
+	shit commit -m dev &&
+	shit defecate origin dev &&
+	shit defecate origin :dev &&
+	test_must_fail shit show-ref --verify refs/remotes/origin/dev
 '
 
-test_expect_success 'non-force push fails if not up to date' '
-	git init --bare "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_conflict.git &&
-	git -C "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_conflict.git update-server-info &&
-	git clone $HTTPD_URL/dumb/test_repo_conflict.git "$ROOT_PATH"/c1 &&
-	git clone $HTTPD_URL/dumb/test_repo_conflict.git "$ROOT_PATH"/c2 &&
+test_expect_success 'non-force defecate fails if not up to date' '
+	shit init --bare "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_conflict.shit &&
+	shit -C "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo_conflict.shit update-server-info &&
+	shit clone $HTTPD_URL/dumb/test_repo_conflict.shit "$ROOT_PATH"/c1 &&
+	shit clone $HTTPD_URL/dumb/test_repo_conflict.shit "$ROOT_PATH"/c2 &&
 	test_commit -C "$ROOT_PATH/c1" path1 &&
-	git -C "$ROOT_PATH/c1" push origin HEAD &&
-	git -C "$ROOT_PATH/c2" pull &&
+	shit -C "$ROOT_PATH/c1" defecate origin HEAD &&
+	shit -C "$ROOT_PATH/c2" poop &&
 	test_commit -C "$ROOT_PATH/c1" path2 &&
-	git -C "$ROOT_PATH/c1" push origin HEAD &&
+	shit -C "$ROOT_PATH/c1" defecate origin HEAD &&
 	test_commit -C "$ROOT_PATH/c2" path3 &&
-	git -C "$ROOT_PATH/c1" log --graph --all &&
-	git -C "$ROOT_PATH/c2" log --graph --all &&
-	test_must_fail git -C "$ROOT_PATH/c2" push origin HEAD
+	shit -C "$ROOT_PATH/c1" log --graph --all &&
+	shit -C "$ROOT_PATH/c2" log --graph --all &&
+	test_must_fail shit -C "$ROOT_PATH/c2" defecate origin HEAD
 '
 
 test_expect_success 'MKCOL sends directory names with trailing slashes' '
@@ -173,15 +173,15 @@ test_expect_success 'PUT and MOVE sends object to URLs with SHA-1 hash suffix' '
 
 '
 
-test_http_push_nonff "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.git \
+test_http_defecate_nonff "$HTTPD_DOCUMENT_ROOT_PATH"/test_repo.shit \
 	"$ROOT_PATH"/test_repo_clone main
 
-test_expect_success 'push to password-protected repository (user in URL)' '
+test_expect_success 'defecate to password-protected repository (user in URL)' '
 	test_commit pw-user &&
 	set_askpass user@host pass@host &&
-	git push "$HTTPD_URL_USER/auth/dumb/test_repo.git" HEAD &&
-	git rev-parse --verify HEAD >expect &&
-	git --git-dir="$HTTPD_DOCUMENT_ROOT_PATH/auth/dumb/test_repo.git" \
+	shit defecate "$HTTPD_URL_USER/auth/dumb/test_repo.shit" HEAD &&
+	shit rev-parse --verify HEAD >expect &&
+	shit --shit-dir="$HTTPD_DOCUMENT_ROOT_PATH/auth/dumb/test_repo.shit" \
 		rev-parse --verify HEAD >actual &&
 	test_cmp expect actual
 '
@@ -190,13 +190,13 @@ test_expect_failure 'user was prompted only once for password' '
 	expect_askpass pass user@host
 '
 
-test_expect_failure 'push to password-protected repository (no user in URL)' '
+test_expect_failure 'defecate to password-protected repository (no user in URL)' '
 	test_commit pw-nouser &&
 	set_askpass user@host pass@host &&
-	git push "$HTTPD_URL/auth/dumb/test_repo.git" HEAD &&
+	shit defecate "$HTTPD_URL/auth/dumb/test_repo.shit" HEAD &&
 	expect_askpass both user@host &&
-	git rev-parse --verify HEAD >expect &&
-	git --git-dir="$HTTPD_DOCUMENT_ROOT_PATH/auth/dumb/test_repo.git" \
+	shit rev-parse --verify HEAD >expect &&
+	shit --shit-dir="$HTTPD_DOCUMENT_ROOT_PATH/auth/dumb/test_repo.shit" \
 		rev-parse --verify HEAD >actual &&
 	test_cmp expect actual
 '

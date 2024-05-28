@@ -1,7 +1,7 @@
 /*
  * Various trivial helper wrappers around standard functions
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "parse.h"
 #include "gettext.h"
@@ -19,7 +19,7 @@ static int memory_limit_check(size_t size, int gentle)
 {
 	static size_t limit = 0;
 	if (!limit) {
-		limit = git_env_ulong("GIT_ALLOC_LIMIT", 0);
+		limit = shit_env_ulong("shit_ALLOC_LIMIT", 0);
 		if (!limit)
 			limit = SIZE_MAX;
 	}
@@ -443,7 +443,7 @@ int xmkstemp(char *filename_template)
 #undef TMP_MAX
 #define TMP_MAX 16384
 
-int git_mkstemps_mode(char *pattern, int suffix_len, int mode)
+int shit_mkstemps_mode(char *pattern, int suffix_len, int mode)
 {
 	static const char letters[] =
 		"abcdefghijklmnopqrstuvwxyz"
@@ -500,10 +500,10 @@ int git_mkstemps_mode(char *pattern, int suffix_len, int mode)
 	return -1;
 }
 
-int git_mkstemp_mode(char *pattern, int mode)
+int shit_mkstemp_mode(char *pattern, int mode)
 {
 	/* mkstemp is just mkstemps with no suffix */
-	return git_mkstemps_mode(pattern, 0, mode);
+	return shit_mkstemps_mode(pattern, 0, mode);
 }
 
 int xmkstemp_mode(char *filename_template, int mode)
@@ -512,7 +512,7 @@ int xmkstemp_mode(char *filename_template, int mode)
 	char origtemplate[PATH_MAX];
 	strlcpy(origtemplate, filename_template, sizeof(origtemplate));
 
-	fd = git_mkstemp_mode(filename_template, mode);
+	fd = shit_mkstemp_mode(filename_template, mode);
 	if (fd < 0) {
 		int saved_errno = errno;
 		const char *nonrelative_template;
@@ -542,7 +542,7 @@ static int fsync_loop(int fd)
 	return err;
 }
 
-int git_fsync(int fd, enum fsync_action action)
+int shit_fsync(int fd, enum fsync_action action)
 {
 	switch (action) {
 	case FSYNC_WRITEOUT_ONLY:
@@ -591,7 +591,7 @@ int git_fsync(int fd, enum fsync_action action)
 		return fsync_loop(fd);
 #endif
 	default:
-		BUG("unexpected git_fsync(%d) call", action);
+		BUG("unexpected shit_fsync(%d) call", action);
 	}
 }
 
@@ -813,7 +813,7 @@ int csprng_bytes(void *buf, size_t len)
 #endif
 }
 
-uint32_t git_rand(void)
+uint32_t shit_rand(void)
 {
 	uint32_t result;
 

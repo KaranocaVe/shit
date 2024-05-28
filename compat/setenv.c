@@ -1,6 +1,6 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
-int gitsetenv(const char *name, const char *value, int replace)
+int shitsetenv(const char *name, const char *value, int replace)
 {
 	int out;
 	size_t namelen, valuelen;

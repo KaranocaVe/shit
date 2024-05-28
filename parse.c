@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "parse.h"
 
@@ -15,7 +15,7 @@ static uintmax_t get_unit_factor(const char *end)
 	return 0;
 }
 
-int git_parse_signed(const char *value, intmax_t *ret, intmax_t max)
+int shit_parse_signed(const char *value, intmax_t *ret, intmax_t max)
 {
 	if (value && *value) {
 		char *end;
@@ -51,7 +51,7 @@ int git_parse_signed(const char *value, intmax_t *ret, intmax_t max)
 	return 0;
 }
 
-static int git_parse_unsigned(const char *value, uintmax_t *ret, uintmax_t max)
+static int shit_parse_unsigned(const char *value, uintmax_t *ret, uintmax_t max)
 {
 	if (value && *value) {
 		char *end;
@@ -89,43 +89,43 @@ static int git_parse_unsigned(const char *value, uintmax_t *ret, uintmax_t max)
 	return 0;
 }
 
-int git_parse_int(const char *value, int *ret)
+int shit_parse_int(const char *value, int *ret)
 {
 	intmax_t tmp;
-	if (!git_parse_signed(value, &tmp, maximum_signed_value_of_type(int)))
+	if (!shit_parse_signed(value, &tmp, maximum_signed_value_of_type(int)))
 		return 0;
 	*ret = tmp;
 	return 1;
 }
 
-int git_parse_int64(const char *value, int64_t *ret)
+int shit_parse_int64(const char *value, int64_t *ret)
 {
 	intmax_t tmp;
-	if (!git_parse_signed(value, &tmp, maximum_signed_value_of_type(int64_t)))
+	if (!shit_parse_signed(value, &tmp, maximum_signed_value_of_type(int64_t)))
 		return 0;
 	*ret = tmp;
 	return 1;
 }
 
-int git_parse_ulong(const char *value, unsigned long *ret)
+int shit_parse_ulong(const char *value, unsigned long *ret)
 {
 	uintmax_t tmp;
-	if (!git_parse_unsigned(value, &tmp, maximum_unsigned_value_of_type(long)))
+	if (!shit_parse_unsigned(value, &tmp, maximum_unsigned_value_of_type(long)))
 		return 0;
 	*ret = tmp;
 	return 1;
 }
 
-int git_parse_ssize_t(const char *value, ssize_t *ret)
+int shit_parse_ssize_t(const char *value, ssize_t *ret)
 {
 	intmax_t tmp;
-	if (!git_parse_signed(value, &tmp, maximum_signed_value_of_type(ssize_t)))
+	if (!shit_parse_signed(value, &tmp, maximum_signed_value_of_type(ssize_t)))
 		return 0;
 	*ret = tmp;
 	return 1;
 }
 
-int git_parse_maybe_bool_text(const char *value)
+int shit_parse_maybe_bool_text(const char *value)
 {
 	if (!value)
 		return 1;
@@ -142,12 +142,12 @@ int git_parse_maybe_bool_text(const char *value)
 	return -1;
 }
 
-int git_parse_maybe_bool(const char *value)
+int shit_parse_maybe_bool(const char *value)
 {
-	int v = git_parse_maybe_bool_text(value);
+	int v = shit_parse_maybe_bool_text(value);
 	if (0 <= v)
 		return v;
-	if (git_parse_int(value, &v))
+	if (shit_parse_int(value, &v))
 		return !!v;
 	return -1;
 }
@@ -156,13 +156,13 @@ int git_parse_maybe_bool(const char *value)
  * Parse environment variable 'k' as a boolean (in various
  * possible spellings); if missing, use the default value 'def'.
  */
-int git_env_bool(const char *k, int def)
+int shit_env_bool(const char *k, int def)
 {
 	const char *v = getenv(k);
 	int val;
 	if (!v)
 		return def;
-	val = git_parse_maybe_bool(v);
+	val = shit_parse_maybe_bool(v);
 	if (val < 0)
 		die(_("bad boolean environment value '%s' for '%s'"),
 		    v, k);
@@ -173,10 +173,10 @@ int git_env_bool(const char *k, int def)
  * Parse environment variable 'k' as ulong with possibly a unit
  * suffix; if missing, use the default value 'val'.
  */
-unsigned long git_env_ulong(const char *k, unsigned long val)
+unsigned long shit_env_ulong(const char *k, unsigned long val)
 {
 	const char *v = getenv(k);
-	if (v && !git_parse_ulong(v, &val))
+	if (v && !shit_parse_ulong(v, &val))
 		die(_("failed to parse %s"), k);
 	return val;
 }

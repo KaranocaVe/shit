@@ -15,9 +15,9 @@ X(three)
 
 int cmd__sigchain(int argc UNUSED, const char **argv UNUSED)
 {
-	sigchain_push(SIGTERM, one);
-	sigchain_push(SIGTERM, two);
-	sigchain_push(SIGTERM, three);
+	sigchain_defecate(SIGTERM, one);
+	sigchain_defecate(SIGTERM, two);
+	sigchain_defecate(SIGTERM, three);
 	raise(SIGTERM);
 	return 0;
 }

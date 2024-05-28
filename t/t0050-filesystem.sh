@@ -2,8 +2,8 @@
 
 test_description='Various filesystem issues'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -33,13 +33,13 @@ test_have_prereq SYMLINKS ||
 if test_have_prereq CASE_INSENSITIVE_FS
 then
 test_expect_success "detection of case insensitive filesystem during repo init" '
-	test $(git config --bool core.ignorecase) = true
+	test $(shit config --bool core.ignorecase) = true
 '
 else
 test_expect_success "detection of case insensitive filesystem during repo init" '
 	{
-		test_must_fail git config --bool core.ignorecase >/dev/null ||
-			test $(git config --bool core.ignorecase) = false
+		test_must_fail shit config --bool core.ignorecase >/dev/null ||
+			test $(shit config --bool core.ignorecase) = false
 	}
 '
 fi
@@ -48,50 +48,50 @@ if test_have_prereq SYMLINKS
 then
 test_expect_success "detection of filesystem w/o symlink support during repo init" '
 	{
-		test_must_fail git config --bool core.symlinks ||
-		test "$(git config --bool core.symlinks)" = true
+		test_must_fail shit config --bool core.symlinks ||
+		test "$(shit config --bool core.symlinks)" = true
 	}
 '
 else
 test_expect_success "detection of filesystem w/o symlink support during repo init" '
-	v=$(git config --bool core.symlinks) &&
+	v=$(shit config --bool core.symlinks) &&
 	test "$v" = false
 '
 fi
 
 test_expect_success "setup case tests" '
-	git config core.ignorecase true &&
+	shit config core.ignorecase true &&
 	touch camelcase &&
-	git add camelcase &&
-	git commit -m "initial" &&
-	git tag initial &&
-	git checkout -b topic &&
-	git mv camelcase tmp &&
-	git mv tmp CamelCase &&
-	git commit -m "rename" &&
-	git checkout -f main
+	shit add camelcase &&
+	shit commit -m "initial" &&
+	shit tag initial &&
+	shit checkout -b topic &&
+	shit mv camelcase tmp &&
+	shit mv tmp CamelCase &&
+	shit commit -m "rename" &&
+	shit checkout -f main
 '
 
 test_expect_success 'rename (case change)' '
-	git mv camelcase CamelCase &&
-	git commit -m "rename"
+	shit mv camelcase CamelCase &&
+	shit commit -m "rename"
 '
 
 test_expect_success 'merge (case change)' '
 	rm -f CamelCase &&
 	rm -f camelcase &&
-	git reset --hard initial &&
-	git merge topic
+	shit reset --hard initial &&
+	shit merge topic
 '
 
 test_expect_success CASE_INSENSITIVE_FS 'add directory (with different case)' '
-	git reset --hard initial &&
+	shit reset --hard initial &&
 	mkdir -p dir1/dir2 &&
 	echo >dir1/dir2/a &&
 	echo >dir1/dir2/b &&
-	git add dir1/dir2/a &&
-	git add dir1/DIR2/b &&
-	git ls-files >actual &&
+	shit add dir1/dir2/a &&
+	shit add dir1/DIR2/b &&
+	shit ls-files >actual &&
 	cat >expected <<-\EOF &&
 		camelcase
 		dir1/dir2/a
@@ -101,58 +101,58 @@ test_expect_success CASE_INSENSITIVE_FS 'add directory (with different case)' '
 '
 
 test_expect_failure CASE_INSENSITIVE_FS 'add (with different case)' '
-	git reset --hard initial &&
+	shit reset --hard initial &&
 	rm camelcase &&
 	echo 1 >CamelCase &&
-	git add CamelCase &&
-	git ls-files >tmp &&
+	shit add CamelCase &&
+	shit ls-files >tmp &&
 	camel=$(grep -i camelcase tmp) &&
 	test $(echo "$camel" | wc -l) = 1 &&
-	test "z$(git cat-file blob :$camel)" = z1
+	test "z$(shit cat-file blob :$camel)" = z1
 '
 
 test_expect_success "setup unicode normalization tests" '
 	test_create_repo unicode &&
 	cd unicode &&
-	git config core.precomposeunicode false &&
+	shit config core.precomposeunicode false &&
 	touch "$aumlcdiar" &&
-	git add "$aumlcdiar" &&
-	git commit -m initial &&
-	git tag initial &&
-	git checkout -b topic &&
-	git mv $aumlcdiar tmp &&
-	git mv tmp "$auml" &&
-	git commit -m rename &&
-	git checkout -f main
+	shit add "$aumlcdiar" &&
+	shit commit -m initial &&
+	shit tag initial &&
+	shit checkout -b topic &&
+	shit mv $aumlcdiar tmp &&
+	shit mv tmp "$auml" &&
+	shit commit -m rename &&
+	shit checkout -f main
 '
 
 $test_unicode 'rename (silent unicode normalization)' '
-	git mv "$aumlcdiar" "$auml" &&
-	git commit -m rename
+	shit mv "$aumlcdiar" "$auml" &&
+	shit commit -m rename
 '
 
 $test_unicode 'merge (silent unicode normalization)' '
-	git reset --hard initial &&
-	git merge topic
+	shit reset --hard initial &&
+	shit merge topic
 '
 
 test_expect_success CASE_INSENSITIVE_FS 'checkout with no pathspec and a case insensitive fs' '
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 
-		>Gitweb &&
-		git add Gitweb &&
-		git commit -m "add Gitweb" &&
+		>shitweb &&
+		shit add shitweb &&
+		shit commit -m "add shitweb" &&
 
-		git checkout --orphan todo &&
-		git reset --hard &&
-		mkdir -p gitweb/subdir &&
-		>gitweb/subdir/file &&
-		git add gitweb &&
-		git commit -m "add gitweb/subdir/file" &&
+		shit checkout --orphan todo &&
+		shit reset --hard &&
+		mkdir -p shitweb/subdir &&
+		>shitweb/subdir/file &&
+		shit add shitweb &&
+		shit commit -m "add shitweb/subdir/file" &&
 
-		git checkout main
+		shit checkout main
 	)
 '
 

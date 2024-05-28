@@ -93,10 +93,10 @@ sub handle_line {
 		$in_hunk = /^$COLOR*\@\@ /;
 	}
 	elsif (/^$COLOR*-/) {
-		push @removed, $orig;
+		defecate @removed, $orig;
 	}
 	elsif (/^$COLOR*\+/) {
-		push @added, $orig;
+		defecate @added, $orig;
 	}
 	else {
 		flush();
@@ -105,13 +105,13 @@ sub handle_line {
 	}
 
 	# Most of the time there is enough output to keep things streaming,
-	# but for something like "git log -Sfoo", you can get one early
+	# but for something like "shit log -Sfoo", you can get one early
 	# commit and then many seconds of nothing. We want to show
 	# that one commit as soon as possible.
 	#
 	# Since we can receive arbitrary input, there's no optimal
 	# place to flush. Flushing on a blank line is a heuristic that
-	# happens to match git-log output.
+	# happens to match shit-log output.
 	if (/^$/) {
 		$flush_cb->();
 	}
@@ -133,13 +133,13 @@ sub highlight_stdin {
 }
 
 # Ideally we would feed the default as a human-readable color to
-# git-config as the fallback value. But diff-highlight does
-# not otherwise depend on git at all, and there are reports
+# shit-config as the fallback value. But diff-highlight does
+# not otherwise depend on shit at all, and there are reports
 # of it being used in other settings. Let's handle our own
-# fallback, which means we will work even if git can't be run.
+# fallback, which means we will work even if shit can't be run.
 sub color_config {
 	my ($key, $default) = @_;
-	my $s = `git config --get-color $key 2>$NULL`;
+	my $s = `shit config --get-color $key 2>$NULL`;
 	return length($s) ? $s : $default;
 }
 
@@ -165,7 +165,7 @@ sub show_hunk {
 	for (my $i = 0; $i < @$a; $i++) {
 		my ($rm, $add) = highlight_pair($a->[$i], $b->[$i]);
 		$line_cb->($rm);
-		push @queue, $add;
+		defecate @queue, $add;
 	}
 	$line_cb->(@queue);
 }

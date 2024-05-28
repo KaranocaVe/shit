@@ -7,86 +7,86 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success setup '
 	>file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial &&
-	git tag c0 &&
+	shit commit -m initial &&
+	shit tag c0 &&
 
 	echo second >file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m second &&
-	git tag c1 &&
-	git branch test &&
+	shit commit -m second &&
+	shit tag c1 &&
+	shit branch test &&
 	echo third >file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m third &&
-	git tag c2
+	shit commit -m third &&
+	shit tag c2
 '
 
 test_expect_success 'merge -s recursive up-to-date' '
 
-	git reset --hard c1 &&
+	shit reset --hard c1 &&
 	test_tick &&
-	git merge -s recursive c0 &&
-	expect=$(git rev-parse c1) &&
-	current=$(git rev-parse HEAD) &&
+	shit merge -s recursive c0 &&
+	expect=$(shit rev-parse c1) &&
+	current=$(shit rev-parse HEAD) &&
 	test "$expect" = "$current"
 
 '
 
 test_expect_success 'merge -s recursive fast-forward' '
 
-	git reset --hard c0 &&
+	shit reset --hard c0 &&
 	test_tick &&
-	git merge -s recursive c1 &&
-	expect=$(git rev-parse c1) &&
-	current=$(git rev-parse HEAD) &&
+	shit merge -s recursive c1 &&
+	expect=$(shit rev-parse c1) &&
+	current=$(shit rev-parse HEAD) &&
 	test "$expect" = "$current"
 
 '
 
 test_expect_success 'merge -s ours up-to-date' '
 
-	git reset --hard c1 &&
+	shit reset --hard c1 &&
 	test_tick &&
-	git merge -s ours c0 &&
-	expect=$(git rev-parse c1) &&
-	current=$(git rev-parse HEAD) &&
+	shit merge -s ours c0 &&
+	expect=$(shit rev-parse c1) &&
+	current=$(shit rev-parse HEAD) &&
 	test "$expect" = "$current"
 
 '
 
 test_expect_success 'merge -s ours fast-forward' '
 
-	git reset --hard c0 &&
+	shit reset --hard c0 &&
 	test_tick &&
-	git merge -s ours c1 &&
-	expect=$(git rev-parse c0^{tree}) &&
-	current=$(git rev-parse HEAD^{tree}) &&
+	shit merge -s ours c1 &&
+	expect=$(shit rev-parse c0^{tree}) &&
+	current=$(shit rev-parse HEAD^{tree}) &&
 	test "$expect" = "$current"
 
 '
 
 test_expect_success 'merge -s subtree up-to-date' '
 
-	git reset --hard c1 &&
+	shit reset --hard c1 &&
 	test_tick &&
-	git merge -s subtree c0 &&
-	expect=$(git rev-parse c1) &&
-	current=$(git rev-parse HEAD) &&
+	shit merge -s subtree c0 &&
+	expect=$(shit rev-parse c1) &&
+	current=$(shit rev-parse HEAD) &&
 	test "$expect" = "$current"
 
 '
 
 test_expect_success 'merge fast-forward octopus' '
 
-	git reset --hard c0 &&
+	shit reset --hard c0 &&
 	test_tick &&
-	git merge c1 c2 &&
-	expect=$(git rev-parse c2) &&
-	current=$(git rev-parse HEAD) &&
+	shit merge c1 c2 &&
+	expect=$(shit rev-parse c2) &&
+	current=$(shit rev-parse HEAD) &&
 	test "$expect" = "$current"
 '
 

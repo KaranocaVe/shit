@@ -9,7 +9,7 @@ static int get_disk_info(struct strbuf *out)
 	struct strbuf buf = STRBUF_INIT;
 	int res = 0;
 
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 	char volume_name[MAX_PATH], fs_name[MAX_PATH];
 	DWORD serial_number, component_length, flags;
 	ULARGE_INTEGER avail2caller, total, avail;

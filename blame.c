@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "refs.h"
 #include "object-store-ll.h"
 #include "cache-tree.h"
@@ -145,19 +145,19 @@ static void append_merge_parents(struct repository *r,
 	int merge_head;
 	struct strbuf line = STRBUF_INIT;
 
-	merge_head = open(git_path_merge_head(r), O_RDONLY);
+	merge_head = open(shit_path_merge_head(r), O_RDONLY);
 	if (merge_head < 0) {
 		if (errno == ENOENT)
 			return;
 		die("cannot open '%s' for reading",
-		    git_path_merge_head(r));
+		    shit_path_merge_head(r));
 	}
 
 	while (!strbuf_getwholeline_fd(&line, merge_head, '\n')) {
 		struct object_id oid;
 		if (get_oid_hex(line.buf, &oid))
 			die("unknown line in '%s': %s",
-			    git_path_merge_head(r), line.buf);
+			    shit_path_merge_head(r), line.buf);
 		tail = append_parent(r, tail, &oid);
 	}
 	close(merge_head);
@@ -271,7 +271,7 @@ static struct commit *fake_working_tree_commit(struct repository *r,
 		if (strbuf_read(&buf, 0, 0) < 0)
 			die_errno("failed to read from stdin");
 	}
-	convert_to_git(r->index, path, buf.buf, buf.len, &buf, 0);
+	convert_to_shit(r->index, path, buf.buf, buf.len, &buf, 0);
 	origin->file.ptr = buf.buf;
 	origin->file.size = buf.len;
 	pretend_object_file(buf.buf, buf.len, OBJ_BLOB, &origin->blob_oid);
@@ -1816,7 +1816,7 @@ static void blame_chunk(struct blame_entry ***dstq, struct blame_entry ***srcq,
 			struct blame_entry *n;
 
 			n = split_blame_at(e, tlno - e->s_lno, e->suspect);
-			/* Push new record to diffp */
+			/* defecate new record to diffp */
 			n->next = diffp;
 			diffp = n;
 		} else
@@ -1873,7 +1873,7 @@ static void blame_chunk(struct blame_entry ***dstq, struct blame_entry ***srcq,
 
 			n = split_blame_at(e, same - e->s_lno,
 					   blame_origin_incref(e->suspect));
-			/* Push new record to samep */
+			/* defecate new record to samep */
 			n->next = samep;
 			samep = n;
 		}
@@ -2284,8 +2284,8 @@ static void find_copy_in_parent(struct blame_scoreboard *sb,
 
 			if (!DIFF_FILE_VALID(p->one))
 				continue; /* does not exist in parent */
-			if (S_ISGITLINK(p->one->mode))
-				continue; /* ignore git links */
+			if (S_ISshitLINK(p->one->mode))
+				continue; /* ignore shit links */
 			if (porigin && !strcmp(p->one->path, porigin->path))
 				/* find_move already dealt with this path */
 				continue;
@@ -2682,8 +2682,8 @@ static struct commit *dwim_reverse_initial(struct rev_info *revs,
 					   const char **name_p)
 {
 	/*
-	 * DWIM "git blame --reverse ONE -- PATH" as
-	 * "git blame --reverse ONE..HEAD -- PATH" but only do so
+	 * DWIM "shit blame --reverse ONE -- PATH" as
+	 * "shit blame --reverse ONE..HEAD -- PATH" but only do so
 	 * when it makes sense.
 	 */
 	struct object *obj;
@@ -2790,11 +2790,11 @@ void setup_scoreboard(struct blame_scoreboard *sb,
 
 		/*
 		 * Build a fake commit at the top of the history, when
-		 * (1) "git blame [^A] --path", i.e. with no positive end
+		 * (1) "shit blame [^A] --path", i.e. with no positive end
 		 *     of the history range, in which case we build such
 		 *     a fake commit on top of the HEAD to blame in-tree
 		 *     modifications.
-		 * (2) "git blame --contents=file [A] -- path", with or
+		 * (2) "shit blame --contents=file [A] -- path", with or
 		 *     without positive end of the history range but with
 		 *     --contents, in which case we pretend that there is
 		 *     a fake commit on top of the positive end (defaulting to

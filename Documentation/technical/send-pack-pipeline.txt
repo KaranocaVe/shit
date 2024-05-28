@@ -1,13 +1,13 @@
-Git-send-pack internals
+shit-send-pack internals
 =======================
 
 Overall operation
 -----------------
 
-. Connects to the remote side and invokes git-receive-pack.
+. Connects to the remote side and invokes shit-receive-pack.
 
 . Learns what refs the remote has and what commit they point at.
-  Matches them to the refspecs we are pushing.
+  Matches them to the refspecs we are defecateing.
 
 . Checks if there are non-fast-forwards.  Unlike fetch-pack,
   the repository send-pack runs in is supposed to be a superset
@@ -29,7 +29,7 @@ Pack_objects pipeline
 
 This function gets one file descriptor (`fd`) which is either a
 socket (over the network) or a pipe (local).  What's written to
-this fd goes to git-receive-pack to be unpacked.
+this fd goes to shit-receive-pack to be unpacked.
 
     send-pack ---> fd ---> receive-pack
 

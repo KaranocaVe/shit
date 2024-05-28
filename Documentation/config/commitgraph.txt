@@ -5,10 +5,10 @@ commitGraph.generationVersion::
 	2.
 
 commitGraph.maxNewFilters::
-	Specifies the default value for the `--max-new-filters` option of `git
-	commit-graph write` (c.f., linkgit:git-commit-graph[1]).
+	Specifies the default value for the `--max-new-filters` option of `shit
+	commit-graph write` (c.f., linkshit:shit-commit-graph[1]).
 
 commitGraph.readChangedPaths::
-	If true, then git will use the changed-path Bloom filters in the
+	If true, then shit will use the changed-path Bloom filters in the
 	commit-graph file (if it exists, and they are present). Defaults to
-	true. See linkgit:git-commit-graph[1] for more information.
+	true. See linkshit:shit-commit-graph[1] for more information.

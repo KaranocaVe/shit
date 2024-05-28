@@ -1,8 +1,8 @@
-package Git::SVN::Log;
+package shit::SVN::Log;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
-use Git::SVN::Utils qw(fatal);
-use Git qw(command
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use shit::SVN::Utils qw(fatal);
+use shit qw(command
            command_oneline
            command_output_pipe
            command_close_pipe
@@ -12,8 +12,8 @@ use constant commit_log_separator => ('-' x 72) . "\n";
 use vars qw/$TZ $limit $color $pager $non_recursive $verbose $oneline
             %rusers $show_commit $incremental/;
 
-# Option set in git-svn
-our $_git_format;
+# Option set in shit-svn
+our $_shit_format;
 
 sub cmt_showable {
 	my ($c) = @_;
@@ -30,48 +30,48 @@ sub cmt_showable {
 		shift @log;
 
 		# TODO: make $c->{l} not have a trailing newline in the future
-		@{$c->{l}} = map { "$_\n" } grep !/^git-svn-id: /, @log;
+		@{$c->{l}} = map { "$_\n" } grep !/^shit-svn-id: /, @log;
 
 		(undef, $c->{r}, undef) = ::extract_metadata(
-				(grep(/^git-svn-id: /, @log))[-1]);
+				(grep(/^shit-svn-id: /, @log))[-1]);
 	}
 	return defined $c->{r};
 }
 
 sub log_use_color {
-	return $color || Git->repository->get_colorbool('color.diff');
+	return $color || shit->repository->get_colorbool('color.diff');
 }
 
-sub git_svn_log_cmd {
+sub shit_svn_log_cmd {
 	my ($r_min, $r_max, @args) = @_;
 	my $head = 'HEAD';
 	my (@files, @log_opts);
 	foreach my $x (@args) {
 		if ($x eq '--' || @files) {
-			push @files, $x;
+			defecate @files, $x;
 		} else {
 			if (::verify_ref("$x^0")) {
 				$head = $x;
 			} else {
-				push @log_opts, $x;
+				defecate @log_opts, $x;
 			}
 		}
 	}
 
 	my ($url, $rev, $uuid, $gs) = ::working_head_info($head);
 
-	require Git::SVN;
-	$gs ||= Git::SVN->_new;
+	require shit::SVN;
+	$gs ||= shit::SVN->_new;
 	my @cmd = (qw/log --abbrev-commit --pretty=raw --default/,
 	           $gs->refname);
-	push @cmd, '-r' unless $non_recursive;
-	push @cmd, qw/--raw --name-status/ if $verbose;
-	push @cmd, '--color' if log_use_color();
-	push @cmd, @log_opts;
+	defecate @cmd, '-r' unless $non_recursive;
+	defecate @cmd, qw/--raw --name-status/ if $verbose;
+	defecate @cmd, '--color' if log_use_color();
+	defecate @cmd, @log_opts;
 	if (defined $r_max && $r_max == $r_min) {
-		push @cmd, '--max-count=1';
+		defecate @cmd, '--max-count=1';
 		if (my $c = $gs->rev_map_get($r_max)) {
-			push @cmd, $c;
+			defecate @cmd, $c;
 		}
 	} elsif (defined $r_max) {
 		if ($r_max < $r_min) {
@@ -84,9 +84,9 @@ sub git_svn_log_cmd {
 		# range, both will be defined.
 		return () if !defined $c_min || !defined $c_max;
 		if ($c_min eq $c_max) {
-			push @cmd, '--max-count=1', $c_min;
+			defecate @cmd, '--max-count=1', $c_min;
 		} else {
-			push @cmd, '--boundary', "$c_min..$c_max";
+			defecate @cmd, '--boundary', "$c_min..$c_max";
 		}
 	}
 	return (@cmd, @files);
@@ -95,15 +95,15 @@ sub git_svn_log_cmd {
 # adapted from pager.c
 sub config_pager {
 	if (! -t *STDOUT) {
-		$ENV{GIT_PAGER_IN_USE} = 'false';
+		$ENV{shit_PAGER_IN_USE} = 'false';
 		$pager = undef;
 		return;
 	}
-	chomp($pager = command_oneline(qw(var GIT_PAGER)));
+	chomp($pager = command_oneline(qw(var shit_PAGER)));
 	if ($pager eq 'cat') {
 		$pager = undef;
 	}
-	$ENV{GIT_PAGER_IN_USE} = defined($pager);
+	$ENV{shit_PAGER_IN_USE} = defined($pager);
 }
 
 sub run_pager {
@@ -123,12 +123,12 @@ sub run_pager {
 
 sub format_svn_date {
 	my $t = shift || time;
-	require Git::SVN;
+	require shit::SVN;
 	my $gmoff = get_tz_offset($t);
 	return strftime("%Y-%m-%d %H:%M:%S $gmoff (%a, %d %b %Y)", localtime($t));
 }
 
-sub parse_git_date {
+sub parse_shit_date {
 	my ($t, $tz) = @_;
 	# Date::Parse isn't in the standard Perl distro :(
 	if ($tz =~ s/^\+//) {
@@ -167,7 +167,7 @@ sub get_author_info {
 	$dest->{t} = $t;
 	$dest->{tz} = $tz;
 	$dest->{a} = $au;
-	$dest->{t_utc} = parse_git_date($t, $tz);
+	$dest->{t_utc} = parse_shit_date($t, $tz);
 }
 
 sub process_commit {
@@ -181,7 +181,7 @@ sub process_commit {
 		if ($r_min < $r_max) {
 			# we need to reverse the print order
 			return 0 if (defined $limit && --$limit < 0);
-			push @$defer, $c;
+			defecate @$defer, $c;
 			return 1;
 		}
 		if ($r_min != $r_max) {
@@ -270,12 +270,12 @@ sub cmd_show_log {
 			$r_min = $r_max = $::_revision;
 		} else {
 			fatal "-r$::_revision is not supported, use ",
-				"standard 'git log' arguments instead";
+				"standard 'shit log' arguments instead";
 		}
 	}
 
 	config_pager();
-	@args = git_svn_log_cmd($r_min, $r_max, @args);
+	@args = shit_svn_log_cmd($r_min, $r_max, @args);
 	if (!@args) {
 		print commit_log_separator unless $incremental || $oneline;
 		return;
@@ -299,28 +299,28 @@ sub cmd_show_log {
 		} elsif (/^${esc_color}(?:tree|parent|committer) /o) {
 			# ignore
 		} elsif (/^${esc_color}:\d{6} \d{6} $::oid_short/o) {
-			push @{$c->{raw}}, $_;
+			defecate @{$c->{raw}}, $_;
 		} elsif (/^${esc_color}[ACRMDT]\t/) {
 			# we could add $SVN->{svn_path} here, but that requires
 			# remote access at the moment (repo_path_split)...
 			s#^(${esc_color})([ACRMDT])\t#$1   $2 #o;
-			push @{$c->{changed}}, $_;
+			defecate @{$c->{changed}}, $_;
 		} elsif (/^${esc_color}diff /o) {
 			$d = 1;
-			push @{$c->{diff}}, $_;
+			defecate @{$c->{diff}}, $_;
 		} elsif ($d) {
-			push @{$c->{diff}}, $_;
+			defecate @{$c->{diff}}, $_;
 		} elsif (/^\ .+\ \|\s*\d+\ $esc_color[\+\-]*
 		          $esc_color*[\+\-]*$esc_color$/x) {
 			$stat = 1;
-			push @{$c->{stat}}, $_;
+			defecate @{$c->{stat}}, $_;
 		} elsif ($stat && /^ \d+ files changed, \d+ insertions/) {
-			push @{$c->{stat}}, $_;
+			defecate @{$c->{stat}}, $_;
 			$stat = undef;
-		} elsif (/^${esc_color}    (git-svn-id:.+)$/o) {
+		} elsif (/^${esc_color}    (shit-svn-id:.+)$/o) {
 			($c->{url}, $c->{r}, undef) = ::extract_metadata($1);
 		} elsif (s/^${esc_color}    //o) {
-			push @{$c->{l}}, $_;
+			defecate @{$c->{l}}, $_;
 		}
 	}
 	if ($c && defined $c->{r} && $c->{r} != $r_last) {
@@ -344,10 +344,10 @@ sub cmd_blame {
 
 	my ($fh, $ctx, $rev);
 
-	if ($_git_format) {
+	if ($_shit_format) {
 		($fh, $ctx) = command_output_pipe('blame', @_, $path);
 		while (my $line = <$fh>) {
-			if ($line =~ /^\^?([[:xdigit:]]+)\s/) {
+			if ($line =~ /^\^?([[:xdishit:]]+)\s/) {
 				# Uncommitted edits show up as a rev ID of
 				# all zeros, which we can't look up with
 				# cmt_metadata
@@ -359,7 +359,7 @@ sub cmd_blame {
 					$rev = '0';
 				}
 				$rev = sprintf('%-10s', $rev);
-				$line =~ s/^\^?[[:xdigit:]]+(\s)/$rev$1/;
+				$line =~ s/^\^?[[:xdishit:]]+(\s)/$rev$1/;
 			}
 			print $line;
 		}
@@ -372,8 +372,8 @@ sub cmd_blame {
 		my %dsha; #distinct sha keys
 
 		while (my $line = <$fh>) {
-			push @buffer, $line;
-			if ($line =~ /^([[:xdigit:]]{40})\s\d+\s\d+/) {
+			defecate @buffer, $line;
+			if ($line =~ /^([[:xdishit:]]{40})\s\d+\s\d+/) {
 				$dsha{$1} = 1;
 			}
 		}
@@ -381,7 +381,7 @@ sub cmd_blame {
 		my $s2r = ::cmt_sha2rev_batch([keys %dsha]);
 
 		foreach my $line (@buffer) {
-			if ($line =~ /^([[:xdigit:]]{40})\s\d+\s\d+/) {
+			if ($line =~ /^([[:xdishit:]]{40})\s\d+\s\d+/) {
 				$rev = $s2r->{$1};
 				$rev = '0' if (!$rev)
 			}

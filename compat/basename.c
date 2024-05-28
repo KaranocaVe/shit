@@ -1,8 +1,8 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 #include "../strbuf.h"
 
 /* Adapted from libiberty's basename.c.  */
-char *gitbasename (char *path)
+char *shitbasename (char *path)
 {
 	const char *base;
 
@@ -27,7 +27,7 @@ char *gitbasename (char *path)
 	return (char *)base;
 }
 
-char *gitdirname(char *path)
+char *shitdirname(char *path)
 {
 	static struct strbuf buf = STRBUF_INIT;
 	char *p = path, *slash = NULL, c;

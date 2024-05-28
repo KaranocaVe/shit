@@ -1,8 +1,8 @@
 #!/bin/sh
 
 test_description='test various @{X} syntax combinations together'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -12,12 +12,12 @@ check() {
 		echo '$3' >expect &&
 		if test '$2' = 'commit'
 		then
-			git log -1 --format=%s '$1' >actual
+			shit log -1 --format=%s '$1' >actual
 		elif test '$2' = 'ref'
 		then
-			git rev-parse --symbolic-full-name '$1' >actual
+			shit rev-parse --symbolic-full-name '$1' >actual
 		else
-			git cat-file -p '$1' >actual
+			shit cat-file -p '$1' >actual
 		fi &&
 		test_cmp expect actual
 	"
@@ -25,7 +25,7 @@ check() {
 
 nonsense() {
 	test_expect_${2:-success} "$1 is nonsensical" "
-		test_must_fail git rev-parse --verify '$1'
+		test_must_fail shit rev-parse --verify '$1'
 	"
 }
 
@@ -36,23 +36,23 @@ fail() {
 test_expect_success 'setup' '
 	test_commit main-one &&
 	test_commit main-two &&
-	git checkout -b upstream-branch &&
+	shit checkout -b upstream-branch &&
 	test_commit upstream-one &&
 	test_commit upstream-two &&
 	if test_have_prereq !MINGW
 	then
-		git checkout -b @/at-test
+		shit checkout -b @/at-test
 	fi &&
-	git checkout -b @@/at-test &&
-	git checkout -b @at-test &&
-	git checkout -b old-branch &&
+	shit checkout -b @@/at-test &&
+	shit checkout -b @at-test &&
+	shit checkout -b old-branch &&
 	test_commit old-one &&
 	test_commit old-two &&
-	git checkout -b new-branch &&
+	shit checkout -b new-branch &&
 	test_commit new-one &&
 	test_commit new-two &&
-	git branch -u main old-branch &&
-	git branch -u upstream-branch new-branch
+	shit branch -u main old-branch &&
+	shit branch -u upstream-branch new-branch
 '
 
 check HEAD ref refs/heads/new-branch
@@ -86,7 +86,7 @@ check "HEAD@{3}" commit old-two
 nonsense "@{3}"
 
 test_expect_success 'switch to old-branch' '
-	git checkout old-branch
+	shit checkout old-branch
 '
 
 check HEAD ref refs/heads/old-branch
@@ -96,23 +96,23 @@ check "@{1}" commit old-one
 test_expect_success 'create path with @' '
 	echo content >normal &&
 	echo content >fun@ny &&
-	git add normal fun@ny &&
-	git commit -m "funny path"
+	shit add normal fun@ny &&
+	shit commit -m "funny path"
 '
 
 check "@:normal" blob content
 check "@:fun@ny" blob content
 
 test_expect_success '@{1} works with only one reflog entry' '
-	git checkout -B newbranch main &&
-	git reflog expire --expire=now refs/heads/newbranch &&
-	git commit --allow-empty -m "first after expiration" &&
+	shit checkout -B newbranch main &&
+	shit reflog expire --expire=now refs/heads/newbranch &&
+	shit commit --allow-empty -m "first after expiration" &&
 	test_cmp_rev newbranch~ newbranch@{1}
 '
 
 test_expect_success '@{0} works with empty reflog' '
-	git checkout -B newbranch main &&
-	git reflog expire --expire=now refs/heads/newbranch &&
+	shit checkout -B newbranch main &&
+	shit reflog expire --expire=now refs/heads/newbranch &&
 	test_cmp_rev newbranch newbranch@{0}
 '
 

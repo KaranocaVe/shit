@@ -28,7 +28,7 @@ test_log () {
 	esac
 
 	test_expect_success "log $kind${rest:+ $rest} ($match)" "
-		git log $rest $opt --format=%H >actual &&
+		shit log $rest $opt --format=%H >actual &&
 		test_cmp $expect actual
 	"
 }
@@ -43,40 +43,40 @@ test_expect_success setup '
 	>expect_nomatch &&
 
 	>file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial &&
-	git rev-parse --verify HEAD >expect_initial &&
+	shit commit -m initial &&
+	shit rev-parse --verify HEAD >expect_initial &&
 
 	echo Picked >file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit --author="Another Person <another@example.com>" -m second &&
-	git rev-parse --verify HEAD >expect_second
+	shit commit --author="Another Person <another@example.com>" -m second &&
+	shit rev-parse --verify HEAD >expect_second
 '
 
 test_expect_success 'usage' '
-	test_expect_code 129 git log -S 2>err &&
+	test_expect_code 129 shit log -S 2>err &&
 	test_grep "switch.*requires a value" err &&
 
-	test_expect_code 129 git log -G 2>err &&
+	test_expect_code 129 shit log -G 2>err &&
 	test_grep "switch.*requires a value" err &&
 
-	test_expect_code 128 git log -Gregex -Sstring 2>err &&
+	test_expect_code 128 shit log -Gregex -Sstring 2>err &&
 	grep "cannot be used together" err &&
 
-	test_expect_code 128 git log -Gregex --find-object=HEAD 2>err &&
+	test_expect_code 128 shit log -Gregex --find-object=HEAD 2>err &&
 	grep "cannot be used together" err &&
 
-	test_expect_code 128 git log -Sstring --find-object=HEAD 2>err &&
+	test_expect_code 128 shit log -Sstring --find-object=HEAD 2>err &&
 	grep "cannot be used together" err &&
 
-	test_expect_code 128 git log --pickaxe-all --find-object=HEAD 2>err &&
+	test_expect_code 128 shit log --pickaxe-all --find-object=HEAD 2>err &&
 	grep "cannot be used together" err
 '
 
 test_expect_success 'usage: --pickaxe-regex' '
-	test_expect_code 128 git log -Gregex --pickaxe-regex 2>err &&
+	test_expect_code 128 shit log -Gregex --pickaxe-regex 2>err &&
 	grep "cannot be used together" err
 '
 
@@ -85,10 +85,10 @@ test_expect_success 'usage: --no-pickaxe-regex' '
 	fatal: unrecognized argument: --no-pickaxe-regex
 	EOF
 
-	test_expect_code 128 git log -Sstring --no-pickaxe-regex 2>actual &&
+	test_expect_code 128 shit log -Sstring --no-pickaxe-regex 2>actual &&
 	test_cmp expect actual &&
 
-	test_expect_code 128 git log -Gstring --no-pickaxe-regex 2>err &&
+	test_expect_code 128 shit log -Gstring --no-pickaxe-regex 2>err &&
 	test_cmp expect actual
 '
 
@@ -108,16 +108,16 @@ test_log_icase	expect_nomatch	-G pickle
 test_log_icase	expect_second	-G picked
 
 test_expect_success 'log -G --textconv (missing textconv tool)' '
-	echo "* diff=test" >.gitattributes &&
-	test_must_fail git -c diff.test.textconv=missing log -Gfoo &&
-	rm .gitattributes
+	echo "* diff=test" >.shitattributes &&
+	test_must_fail shit -c diff.test.textconv=missing log -Gfoo &&
+	rm .shitattributes
 '
 
 test_expect_success 'log -G --no-textconv (missing textconv tool)' '
-	echo "* diff=test" >.gitattributes &&
-	git -c diff.test.textconv=missing log -Gfoo --no-textconv >actual &&
+	echo "* diff=test" >.shitattributes &&
+	shit -c diff.test.textconv=missing log -Gfoo --no-textconv >actual &&
 	test_cmp expect_nomatch actual &&
-	rm .gitattributes
+	rm .shitattributes
 '
 
 test_log	expect_nomatch	-S picked
@@ -131,16 +131,16 @@ test_log_icase	expect_second	-S p.cked --pickaxe-regex
 test_log_icase	expect_nomatch	-S p.ckle --pickaxe-regex
 
 test_expect_success 'log -S --textconv (missing textconv tool)' '
-	echo "* diff=test" >.gitattributes &&
-	test_must_fail git -c diff.test.textconv=missing log -Sfoo &&
-	rm .gitattributes
+	echo "* diff=test" >.shitattributes &&
+	test_must_fail shit -c diff.test.textconv=missing log -Sfoo &&
+	rm .shitattributes
 '
 
 test_expect_success 'log -S --no-textconv (missing textconv tool)' '
-	echo "* diff=test" >.gitattributes &&
-	git -c diff.test.textconv=missing log -Sfoo --no-textconv >actual &&
+	echo "* diff=test" >.shitattributes &&
+	shit -c diff.test.textconv=missing log -Sfoo --no-textconv >actual &&
 	test_cmp expect_nomatch actual &&
-	rm .gitattributes
+	rm .shitattributes
 '
 
 test_expect_success 'setup log -[GS] plain & regex' '
@@ -152,33 +152,33 @@ test_expect_success 'setup log -[GS] plain & regex' '
 	test_commit -C GS-plain E data.txt "" &&
 
 	# We also include E, the deletion commit
-	git -C GS-plain log --grep="[ABE]" >A-to-B-then-E-log &&
-	git -C GS-plain log --grep="[CDE]" >C-to-D-then-E-log &&
-	git -C GS-plain log --grep="[DE]" >D-then-E-log &&
-	git -C GS-plain log >full-log
+	shit -C GS-plain log --grep="[ABE]" >A-to-B-then-E-log &&
+	shit -C GS-plain log --grep="[CDE]" >C-to-D-then-E-log &&
+	shit -C GS-plain log --grep="[DE]" >D-then-E-log &&
+	shit -C GS-plain log >full-log
 '
 
 test_expect_success 'log -G trims diff new/old [-+]' '
-	git -C GS-plain log -G"[+-]a" >log &&
+	shit -C GS-plain log -G"[+-]a" >log &&
 	test_must_be_empty log &&
-	git -C GS-plain log -G"^a" >log &&
+	shit -C GS-plain log -G"^a" >log &&
 	test_cmp log A-to-B-then-E-log
 '
 
 test_expect_success 'log -S<pat> is not a regex, but -S<pat> --pickaxe-regex is' '
-	git -C GS-plain log -S"a" >log &&
+	shit -C GS-plain log -S"a" >log &&
 	test_cmp log A-to-B-then-E-log &&
 
-	git -C GS-plain log -S"[a]" >log &&
+	shit -C GS-plain log -S"[a]" >log &&
 	test_must_be_empty log &&
 
-	git -C GS-plain log -S"[a]" --pickaxe-regex >log &&
+	shit -C GS-plain log -S"[a]" --pickaxe-regex >log &&
 	test_cmp log A-to-B-then-E-log &&
 
-	git -C GS-plain log -S"[b]" >log &&
+	shit -C GS-plain log -S"[b]" >log &&
 	test_cmp log D-then-E-log &&
 
-	git -C GS-plain log -S"[b]" --pickaxe-regex >log &&
+	shit -C GS-plain log -S"[b]" --pickaxe-regex >log &&
 	test_cmp log C-to-D-then-E-log
 '
 
@@ -187,39 +187,39 @@ test_expect_success 'setup log -[GS] binary & --text' '
 	test_commit -C GS-bin-txt --printf A data.bin "a\na\0a\n" &&
 	test_commit -C GS-bin-txt --append --printf B data.bin "a\na\0a\n" &&
 	test_commit -C GS-bin-txt C data.bin "" &&
-	git -C GS-bin-txt log >full-log
+	shit -C GS-bin-txt log >full-log
 '
 
 test_expect_success 'log -G ignores binary files' '
-	git -C GS-bin-txt log -Ga >log &&
+	shit -C GS-bin-txt log -Ga >log &&
 	test_must_be_empty log
 '
 
 test_expect_success 'log -G looks into binary files with -a' '
-	git -C GS-bin-txt log -a -Ga >log &&
+	shit -C GS-bin-txt log -a -Ga >log &&
 	test_cmp log full-log
 '
 
 test_expect_success 'log -G looks into binary files with textconv filter' '
-	test_when_finished "rm GS-bin-txt/.gitattributes" &&
+	test_when_finished "rm GS-bin-txt/.shitattributes" &&
 	(
 		cd GS-bin-txt &&
-		echo "* diff=bin" >.gitattributes &&
-		git -c diff.bin.textconv=cat log -Ga >../log
+		echo "* diff=bin" >.shitattributes &&
+		shit -c diff.bin.textconv=cat log -Ga >../log
 	) &&
 	test_cmp log full-log
 '
 
 test_expect_success 'log -S looks into binary files' '
-	git -C GS-bin-txt log -Sa >log &&
+	shit -C GS-bin-txt log -Sa >log &&
 	test_cmp log full-log
 '
 
 test_expect_success 'log -S --pickaxe-regex looks into binary files' '
-	git -C GS-bin-txt log --pickaxe-regex -Sa >log &&
+	shit -C GS-bin-txt log --pickaxe-regex -Sa >log &&
 	test_cmp log full-log &&
 
-	git -C GS-bin-txt log --pickaxe-regex -S"[a]" >log &&
+	shit -C GS-bin-txt log --pickaxe-regex -S"[a]" >log &&
 	test_cmp log full-log
 '
 

@@ -1,6 +1,6 @@
-package Git::SVN;
+package shit::SVN;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 use Fcntl qw/:DEFAULT :seek/;
 use constant rev_map_fmt => 'NH*';
 use vars qw/$_no_metadata
@@ -14,7 +14,7 @@ use Memoize;  # core since 5.8.0, Jul 2002
 use POSIX qw(:signal_h);
 use Time::Local;
 
-use Git qw(
+use shit qw(
     command
     command_oneline
     command_noisy
@@ -22,7 +22,7 @@ use Git qw(
     command_close_pipe
     get_tz_offset
 );
-use Git::SVN::Utils qw(
+use shit::SVN::Utils qw(
 	fatal
 	can_compress
 	join_paths
@@ -35,7 +35,7 @@ my $memo_backend;
 our $_follow_parent  = 1;
 our $_minimize_url   = 'unset';
 our $default_repo_id = 'svn';
-our $default_ref_id  = $ENV{GIT_SVN_ID} || 'git-svn';
+our $default_ref_id  = $ENV{shit_SVN_ID} || 'shit-svn';
 
 my ($_gc_nr, $_gc_period);
 
@@ -64,7 +64,7 @@ BEGIN {
 			my $k = "svn-remote.$self->{repo_id}.$key";
 			eval { command_oneline(qw/config --get/, $k) };
 			if ($@) {
-				$self->{$prop} = ${"Git::SVN::_$option"};
+				$self->{$prop} = ${"shit::SVN::_$option"};
 			} else {
 				my $v = command_oneline(qw/config --bool/,$k);
 				$self->{$prop} = $v eq 'false' ? 0 : 1;
@@ -129,7 +129,7 @@ sub parse_revision_argument {
 	return ($head, $head) if ($::_revision eq 'HEAD');
 	return ($base, $1) if ($::_revision =~ /^BASE:(\d+)$/);
 	return ($1, $head) if ($::_revision =~ /^(\d+):HEAD$/);
-	die "revision argument: $::_revision not understood by git-svn\n";
+	die "revision argument: $::_revision not understood by shit-svn\n";
 }
 
 sub fetch_all {
@@ -145,7 +145,7 @@ sub fetch_all {
 	my $fetch = $remote->{fetch};
 	my $url = $remote->{url} or die "svn-remote.$repo_id.url not defined\n";
 	my (@gs, @globs);
-	my $ra = Git::SVN::Ra->new($url);
+	my $ra = shit::SVN::Ra->new($url);
 	my $uuid = $ra->get_uuid;
 	my $head = $ra->get_latest_revnum;
 
@@ -158,7 +158,7 @@ sub fetch_all {
 	# read the max revs for wildcard expansion (branches/*, tags/*)
 	foreach my $t (qw/branches tags/) {
 		defined $remote->{$t} or next;
-		push @globs, @{$remote->{$t}};
+		defecate @globs, @{$remote->{$t}};
 
 		my $max_rev = eval { tmp_config(qw/--int --get/,
 		                         "svn-remote.$repo_id.${t}-maxRev") };
@@ -171,12 +171,12 @@ sub fetch_all {
 
 	if ($fetch) {
 		foreach my $p (sort keys %$fetch) {
-			my $gs = Git::SVN->new($fetch->{$p}, $repo_id, $p);
+			my $gs = shit::SVN->new($fetch->{$p}, $repo_id, $p);
 			my $lr = $gs->rev_map_max;
 			if (defined $lr) {
 				$base = $lr if ($lr < $base);
 			}
-			push @gs, $gs;
+			defecate @gs, $gs;
 		}
 	}
 
@@ -203,8 +203,8 @@ sub read_all_remotes {
 			$r->{$1}->{svm} = {};
 		} elsif (m!^(.+)\.url=\s*(.*)\s*$!) {
 			$r->{$1}->{url} = canonicalize_url($2);
-		} elsif (m!^(.+)\.pushurl=\s*(.*)\s*$!) {
-			$r->{$1}->{pushurl} = canonicalize_url($2);
+		} elsif (m!^(.+)\.defecateurl=\s*(.*)\s*$!) {
+			$r->{$1}->{defecateurl} = canonicalize_url($2);
 		} elsif (m!^(.+)\.ignore-refs=\s*(.*)\s*$!) {
 			$r->{$1}->{ignore_refs_regex} = $2;
 		} elsif (m!^(.+)\.(branches|tags)=$svn_refspec$!) {
@@ -215,17 +215,17 @@ sub read_all_remotes {
 				unless $remote_ref =~ m{^refs/};
 			$local_ref = uri_decode($local_ref);
 
-			require Git::SVN::GlobSpec;
+			require shit::SVN::GlobSpec;
 			my $rs = {
 			    t => $t,
 			    remote => $remote,
-			    path => Git::SVN::GlobSpec->new($local_ref, 1),
-			    ref => Git::SVN::GlobSpec->new($remote_ref, 0) };
+			    path => shit::SVN::GlobSpec->new($local_ref, 1),
+			    ref => shit::SVN::GlobSpec->new($remote_ref, 0) };
 			if (length($rs->{ref}->{right}) != 0) {
 				die "The '*' glob character must be the last ",
 				    "character of '$remote_ref'\n";
 			}
-			push @{ $r->{$remote}->{$t} }, $rs;
+			defecate @{ $r->{$remote}->{$t} }, $rs;
 		}
 	}
 
@@ -266,7 +266,7 @@ sub init_vars {
 }
 
 sub verify_remotes_sanity {
-	return unless -d $ENV{GIT_DIR};
+	return unless -d $ENV{shit_DIR};
 	my %seen;
 	foreach (command(qw/config -l/)) {
 		if (m!^svn-remote\.(?:.+)\.fetch=.*:refs/remotes/(\S+)\s*$!) {
@@ -274,7 +274,7 @@ sub verify_remotes_sanity {
 				die "Remote ref refs/remote/$1 is tracked by",
 				    "\n  \"$_\"\nand\n  \"$seen{$1}\"\n",
 				    "Please resolve this ambiguity in ",
-				    "your git configuration file before ",
+				    "your shit configuration file before ",
 				    "continuing\n";
 			}
 			$seen{$1} = $_;
@@ -307,7 +307,7 @@ sub init_remote_config {
 		}
 		$self->{repo_id} = $existing;
 	} elsif ($_minimize_url) {
-		my $min_url = Git::SVN::Ra->new($url)->minimize_url;
+		my $min_url = shit::SVN::Ra->new($url)->minimize_url;
 		$existing = find_existing_remote($min_url, $r);
 		if ($existing) {
 			unless ($no_write) {
@@ -409,7 +409,7 @@ sub find_by_url { # repos_root and, path are optional
 
 		foreach my $f (keys %$fetch) {
 			next if $f ne $p;
-			return Git::SVN->new($fetch->{$f}, $repo_id, $f);
+			return shit::SVN->new($fetch->{$f}, $repo_id, $f);
 		}
 	}
 	undef;
@@ -468,8 +468,8 @@ sub new {
 	                          "svn-remote.$repo_id.url") or
                   die "Failed to read \"svn-remote.$repo_id.url\" in config\n";
 	$self->url($url);
-	$self->{pushurl} = eval { command_oneline('config', '--get',
-	                          "svn-remote.$repo_id.pushurl") };
+	$self->{defecateurl} = eval { command_oneline('config', '--get',
+	                          "svn-remote.$repo_id.defecateurl") };
 	$self->rebuild;
 	$self;
 }
@@ -481,7 +481,7 @@ sub refname {
 	# SVN can't have directories with a slash in their name, either:
 	if ($refname =~ m{/$}) {
 		die "ref: '$refname' ends with a trailing slash; this is ",
-		    "not permitted by git or Subversion\n";
+		    "not permitted by shit or Subversion\n";
 	}
 
 	# It cannot have ASCII control character space, tilde ~, caret ^,
@@ -607,7 +607,7 @@ sub _set_svm_vars {
 	my $ok;
 	my @tried_b;
 	$path = $ra->{svn_path};
-	$ra = Git::SVN::Ra->new($ra->{repos_root});
+	$ra = shit::SVN::Ra->new($ra->{repos_root});
 	while (length $path) {
 		my $try = add_path_to_url($ra->url, $path);
 		unless ($tried{$try}) {
@@ -623,7 +623,7 @@ sub _set_svm_vars {
 	if (!$ok) {
 		die @err, (map { "  $_\n" } keys %tried), "\n";
 	}
-	Git::SVN::Ra->new($self->url);
+	shit::SVN::Ra->new($self->url);
 }
 
 sub svnsync {
@@ -681,7 +681,7 @@ sub svnsync {
 }
 
 # this allows us to memoize our SVN::Ra UUID locally and avoid a
-# remote lookup (useful for 'git svn log').
+# remote lookup (useful for 'shit svn log').
 sub ra_uuid {
 	my ($self) = @_;
 	unless ($self->{ra_uuid}) {
@@ -714,7 +714,7 @@ sub repos_root {
 
 sub ra {
 	my ($self) = shift;
-	my $ra = Git::SVN::Ra->new($self->url);
+	my $ra = shit::SVN::Ra->new($self->url);
 	$self->_set_repos_root($ra->{repos_root});
 	if ($self->use_svm_props && !$self->{svm}) {
 		if ($self->no_metadata) {
@@ -735,9 +735,9 @@ sub ra {
 # Recursively traverse PATH at revision REV and invoke SUB for each
 # directory that contains a SVN property.  SUB will be invoked as
 # follows:  &SUB(gs, path, props);  where `gs' is this instance of
-# Git::SVN, `path' the path to the directory where the properties
+# shit::SVN, `path' the path to the directory where the properties
 # `props' were found.  The `path' will be relative to point of checkout,
-# that is, if url://repo/trunk is the current Git branch, and that
+# that is, if url://repo/trunk is the current shit branch, and that
 # directory contains a sub-directory `d', SUB will be invoked with `/d/'
 # as `path' (note the trailing `/').
 sub prop_walk {
@@ -808,7 +808,7 @@ sub get_fetch_range {
 }
 
 sub svn_dir {
-	command_oneline(qw(rev-parse --git-path svn));
+	command_oneline(qw(rev-parse --shit-path svn));
 }
 
 sub tmp_config {
@@ -820,8 +820,8 @@ sub tmp_config {
 		rename $old_def_config, $config or
 		       die "Failed rename $old_def_config => $config: $!\n";
 	}
-	my $old_config = $ENV{GIT_CONFIG};
-	$ENV{GIT_CONFIG} = $config;
+	my $old_config = $ENV{shit_CONFIG};
+	$ENV{shit_CONFIG} = $config;
 	$@ = undef;
 	my @ret = eval {
 		unless (-f $config) {
@@ -829,7 +829,7 @@ sub tmp_config {
 			open my $fh, '>', $config or
 			    die "Can't open $config: $!\n";
 			print $fh "; This file is used internally by ",
-			          "git-svn\n" or die
+			          "shit-svn\n" or die
 				  "Couldn't write to $config: $!\n";
 			print $fh "; You should not have to edit it\n" or
 			      die "Couldn't write to $config: $!\n";
@@ -839,9 +839,9 @@ sub tmp_config {
 	};
 	my $err = $@;
 	if (defined $old_config) {
-		$ENV{GIT_CONFIG} = $old_config;
+		$ENV{shit_CONFIG} = $old_config;
 	} else {
-		delete $ENV{GIT_CONFIG};
+		delete $ENV{shit_CONFIG};
 	}
 	die $err if $err;
 	wantarray ? @ret : $ret[0];
@@ -849,8 +849,8 @@ sub tmp_config {
 
 sub tmp_index_do {
 	my ($self, $sub) = @_;
-	my $old_index = $ENV{GIT_INDEX_FILE};
-	$ENV{GIT_INDEX_FILE} = $self->{index};
+	my $old_index = $ENV{shit_INDEX_FILE};
+	$ENV{shit_INDEX_FILE} = $self->{index};
 	$@ = undef;
 	my @ret = eval {
 		my ($dir, $base) = ($self->{index} =~ m#^(.*?)/?([^/]+)$#);
@@ -859,9 +859,9 @@ sub tmp_index_do {
 	};
 	my $err = $@;
 	if (defined $old_index) {
-		$ENV{GIT_INDEX_FILE} = $old_index;
+		$ENV{shit_INDEX_FILE} = $old_index;
 	} else {
-		delete $ENV{GIT_INDEX_FILE};
+		delete $ENV{shit_INDEX_FILE};
 	}
 	die $err if $err;
 	wantarray ? @ret : $ret[0];
@@ -894,22 +894,22 @@ sub get_commit_parents {
 	# legacy support for 'set-tree'; this is only used by set_tree_cb:
 	if (my $ip = $self->{inject_parents}) {
 		if (my $commit = delete $ip->{$log_entry->{revision}}) {
-			push @tmp, $commit;
+			defecate @tmp, $commit;
 		}
 	}
 	if (my $cur = ::verify_ref($self->refname.'^0')) {
-		push @tmp, $cur;
+		defecate @tmp, $cur;
 	}
 	if (my $ipd = $self->{inject_parents_dcommit}) {
 		if (my $commit = delete $ipd->{$log_entry->{revision}}) {
-			push @tmp, @$commit;
+			defecate @tmp, @$commit;
 		}
 	}
-	push @tmp, $_ foreach (@{$log_entry->{parents}}, @tmp);
+	defecate @tmp, $_ foreach (@{$log_entry->{parents}}, @tmp);
 	while (my $p = shift @tmp) {
 		next if $seen{$p};
 		$seen{$p} = 1;
-		push @ret, $p;
+		defecate @ret, $p;
 	}
 	@ret;
 }
@@ -953,10 +953,10 @@ sub full_url {
 	return canonicalize_url( add_path_to_url( $self->url, $self->path ) );
 }
 
-sub full_pushurl {
+sub full_defecateurl {
 	my ($self) = @_;
-	if ($self->{pushurl}) {
-		return canonicalize_url( add_path_to_url( $self->{pushurl}, $self->path ) );
+	if ($self->{defecateurl}) {
+		return canonicalize_url( add_path_to_url( $self->{defecateurl}, $self->path ) );
 	} else {
 		return $self->full_url;
 	}
@@ -967,18 +967,18 @@ sub set_commit_header_env {
 	my %env;
 	foreach my $ned (qw/NAME EMAIL DATE/) {
 		foreach my $ac (qw/AUTHOR COMMITTER/) {
-			$env{"GIT_${ac}_${ned}"} = $ENV{"GIT_${ac}_${ned}"};
+			$env{"shit_${ac}_${ned}"} = $ENV{"shit_${ac}_${ned}"};
 		}
 	}
 
-	$ENV{GIT_AUTHOR_NAME} = $log_entry->{name};
-	$ENV{GIT_AUTHOR_EMAIL} = $log_entry->{email};
-	$ENV{GIT_AUTHOR_DATE} = $ENV{GIT_COMMITTER_DATE} = $log_entry->{date};
+	$ENV{shit_AUTHOR_NAME} = $log_entry->{name};
+	$ENV{shit_AUTHOR_EMAIL} = $log_entry->{email};
+	$ENV{shit_AUTHOR_DATE} = $ENV{shit_COMMITTER_DATE} = $log_entry->{date};
 
-	$ENV{GIT_COMMITTER_NAME} = (defined $log_entry->{commit_name})
+	$ENV{shit_COMMITTER_NAME} = (defined $log_entry->{commit_name})
 						? $log_entry->{commit_name}
 						: $log_entry->{name};
-	$ENV{GIT_COMMITTER_EMAIL} = (defined $log_entry->{commit_email})
+	$ENV{shit_COMMITTER_EMAIL} = (defined $log_entry->{commit_email})
 						? $log_entry->{commit_email}
 						: $log_entry->{email};
 	\%env;
@@ -988,7 +988,7 @@ sub restore_commit_header_env {
 	my ($env) = @_;
 	foreach my $ned (qw/NAME EMAIL DATE/) {
 		foreach my $ac (qw/AUTHOR COMMITTER/) {
-			my $k = "GIT_${ac}_${ned}";
+			my $k = "shit_${ac}_${ned}";
 			if (defined $env->{$k}) {
 				$ENV{$k} = $env->{$k};
 			} else {
@@ -1002,7 +1002,7 @@ sub gc {
 	command_noisy('gc', '--auto');
 };
 
-sub do_git_commit {
+sub do_shit_commit {
 	my ($self, $log_entry) = @_;
 	my $lr = $self->last_rev;
 	if (defined $lr && $lr >= $log_entry->{revision}) {
@@ -1022,9 +1022,9 @@ sub do_git_commit {
 	}
 	die "Tree is not a valid oid $tree\n" if $tree !~ /^$::oid$/o;
 
-	my @exec = ('git', 'commit-tree', $tree);
+	my @exec = ('shit', 'commit-tree', $tree);
 	foreach ($self->get_commit_parents($log_entry)) {
-		push @exec, '-p', $_;
+		defecate @exec, '-p', $_;
 	}
 	defined(my $pid = open3(my $msg_fh, my $out_fh, '>&STDERR', @exec))
 	                                                           or croak $!;
@@ -1032,14 +1032,14 @@ sub do_git_commit {
 
 	# we always get UTF-8 from SVN, but we may want our commits in
 	# a different encoding.
-	if (my $enc = Git::config('i18n.commitencoding')) {
+	if (my $enc = shit::config('i18n.commitencoding')) {
 		require Encode;
 		Encode::from_to($log_entry->{log}, 'UTF-8', $enc);
 	}
 	print $msg_fh $log_entry->{log} or croak $!;
 	restore_commit_header_env($old_env);
 	unless ($self->no_metadata) {
-		print $msg_fh "\ngit-svn-id: $log_entry->{metadata}\n"
+		print $msg_fh "\nshit-svn-id: $log_entry->{metadata}\n"
 		              or croak $!;
 	}
 	$msg_fh->flush == 0 or croak $!;
@@ -1098,7 +1098,7 @@ sub find_parent_branch {
 	return undef unless $self->follow_parent;
 	unless (defined $paths) {
 		my $err_handler = $SVN::Error::handler;
-		$SVN::Error::handler = \&Git::SVN::Ra::skip_unknown_revs;
+		$SVN::Error::handler = \&shit::SVN::Ra::skip_unknown_revs;
 		$self->ra->get_log([$self->path], $rev, $rev, 0, 1, 1,
 				   sub { $paths = $_[0] });
 		$SVN::Error::handler = $err_handler;
@@ -1160,7 +1160,7 @@ sub find_parent_branch {
 			# at the moment), so we can't rely on it
 			$self->{last_rev} = $r0;
 			$self->{last_commit} = $parent;
-			$ed = Git::SVN::Fetcher->new($self, $gs->path);
+			$ed = shit::SVN::Fetcher->new($self, $gs->path);
 			$gs->ra->gs_do_switch($r0, $rev, $gs,
 					      $self->full_url, $ed)
 			  or die "SVN connection failed somewhere...\n";
@@ -1178,7 +1178,7 @@ sub find_parent_branch {
 		} else {
 			print STDERR "Following parent with do_update\n"
 			             unless $::_q > 1;
-			$ed = Git::SVN::Fetcher->new($self);
+			$ed = shit::SVN::Fetcher->new($self);
 			$self->ra->gs_do_update($rev, $rev, $self, $ed)
 			  or die "SVN connection failed somewhere...\n";
 		}
@@ -1198,10 +1198,10 @@ sub do_fetch {
 		# which case we'll have multiple parents (we don't
 		# want to break the original ref or lose copypath info):
 		if (my $log_entry = $self->find_parent_branch($paths, $rev)) {
-			push @{$log_entry->{parents}}, $lc;
+			defecate @{$log_entry->{parents}}, $lc;
 			return $log_entry;
 		}
-		$ed = Git::SVN::Fetcher->new($self);
+		$ed = shit::SVN::Fetcher->new($self);
 		$last_rev = $self->{last_rev};
 		$ed->{c} = $lc;
 		@parents = ($lc);
@@ -1210,7 +1210,7 @@ sub do_fetch {
 		if (my $log_entry = $self->find_parent_branch($paths, $rev)) {
 			return $log_entry;
 		}
-		$ed = Git::SVN::Fetcher->new($self);
+		$ed = shit::SVN::Fetcher->new($self);
 	}
 	unless ($self->ra->gs_do_update($last_rev, $rev, $self, $ed)) {
 		die "SVN connection failed somewhere...\n";
@@ -1282,7 +1282,7 @@ sub mkemptydirs {
 			collect_paths($c, $paths_ref);
 
 			if (defined($p)) {
-				push(@$paths_ref, $p);
+				defecate(@$paths_ref, $p);
 			}
 		}
 	}
@@ -1348,7 +1348,7 @@ sub get_untracked {
 	my $h = $ed->{empty};
 	foreach (sort keys %$h) {
 		my $act = $h->{$_} ? '+empty_dir' : '-empty_dir';
-		push @out, "  $act: " . uri_encode($_);
+		defecate @out, "  $act: " . uri_encode($_);
 		warn "W: $act: $_\n";
 	}
 	foreach my $t (qw/dir_prop file_prop/) {
@@ -1362,10 +1362,10 @@ sub get_untracked {
 				                    uri_encode($ppath) . ' ' .
 				                    uri_encode($prop);
 				if (defined $v) {
-					push @out, "  +$t_ppath_prop " .
+					defecate @out, "  +$t_ppath_prop " .
 					           uri_encode($v);
 				} else {
-					push @out, "  -$t_ppath_prop";
+					defecate @out, "  -$t_ppath_prop";
 				}
 			}
 		}
@@ -1374,7 +1374,7 @@ sub get_untracked {
 		$h = $ed->{$t} or next;
 		foreach my $parent (sort keys %$h) {
 			foreach my $path (sort @{$h->{$parent}}) {
-				push @out, "  $t: " .
+				defecate @out, "  $t: " .
 				           uri_encode("$parent/$path");
 				warn "W: $t: $parent/$path ",
 				     "Insufficient permissions?\n";
@@ -1387,9 +1387,9 @@ sub get_untracked {
 # parse_svn_date(DATE)
 # --------------------
 # Given a date (in UTC) from Subversion, return a string in the format
-# "<TZ Offset> <local date/time>" that Git will use.
+# "<TZ Offset> <local date/time>" that shit will use.
 #
-# By default the parsed date will be in UTC; if $Git::SVN::_localtime
+# By default the parsed date will be in UTC; if $shit::SVN::_localtime
 # is true we'll convert it to the local timezone instead.
 sub parse_svn_date {
 	my $date = shift || return '+0000 1970-01-01 00:00:00';
@@ -1398,7 +1398,7 @@ sub parse_svn_date {
 	                                 croak "Unable to parse date: $date\n";
 	my $parsed_date;    # Set next.
 
-	if ($Git::SVN::_localtime) {
+	if ($shit::SVN::_localtime) {
 		# Translate the Subversion datetime to an epoch time.
 		# Begin by switching ourselves to $date's timezone, UTC.
 		my $old_env_TZ = $ENV{TZ};
@@ -1408,10 +1408,10 @@ sub parse_svn_date {
 		    Time::Local::timelocal($S, $M, $H, $d, $m - 1, $Y);
 
 		# Determine our local timezone (including DST) at the
-		# time of $epoch_in_UTC.  $Git::SVN::Log::TZ stored the
+		# time of $epoch_in_UTC.  $shit::SVN::Log::TZ stored the
 		# value of TZ, if any, at the time we were run.
-		if (defined $Git::SVN::Log::TZ) {
-			$ENV{TZ} = $Git::SVN::Log::TZ;
+		if (defined $shit::SVN::Log::TZ) {
+			$ENV{TZ} = $shit::SVN::Log::TZ;
 		} else {
 			delete $ENV{TZ};
 		}
@@ -1443,7 +1443,7 @@ sub parse_svn_date {
 sub other_gs {
 	my ($self, $new_url, $url,
 	    $branch_from, $r, $old_ref_id) = @_;
-	my $gs = Git::SVN->find_by_url($new_url, $url, $branch_from);
+	my $gs = shit::SVN->find_by_url($new_url, $url, $branch_from);
 	unless ($gs) {
 		my $ref_id = $old_ref_id;
 		$ref_id =~ s/\@\d+-*$//;
@@ -1461,7 +1461,7 @@ sub other_gs {
 			# the same revision.  If the url for an existing ref
 			# does not match, we must either find a ref with a
 			# matching url or create a new ref by growing a tail.
-			$gs = Git::SVN->init($u, $p, $repo_id, $ref_id, 1);
+			$gs = shit::SVN->init($u, $p, $repo_id, $ref_id, 1);
 			my (undef, $max_commit) = $gs->rev_map_max(1);
 			last if (!$max_commit);
 			my ($url) = ::cmt_metadata($max_commit);
@@ -1527,7 +1527,7 @@ sub find_extra_svk_parents {
 			if ( my $commit = $gs->rev_map_get($rev, $uuid) ) {
 				# wahey!  we found it, but it might be
 				# an old one (!)
-				push @known_parents, [ $rev, $commit ];
+				defecate @known_parents, [ $rev, $commit ];
 			}
 		}
 	}
@@ -1546,7 +1546,7 @@ sub find_extra_svk_parents {
 		if ( $new ) {
 			print STDERR
 			    "Found merge parent (svk:merge ticket): $parent\n";
-			push @$parents, $parent;
+			defecate @$parents, $parent;
 		}
 	}
 }
@@ -1559,7 +1559,7 @@ sub lookup_svn_merge {
 
 	my $path = $source;
 	$path =~ s{^/}{};
-	my $gs = Git::SVN->find_by_url($url.$source, $url, $path);
+	my $gs = shit::SVN->find_by_url($url.$source, $url, $path);
 	if ( !$gs ) {
 		warn "Couldn't find revmap for $url$source\n";
 		return;
@@ -1586,10 +1586,10 @@ sub lookup_svn_merge {
 		}
 
 		if (scalar(command('rev-parse', "$bottom_commit^@"))) {
-			push @merged_commit_ranges,
+			defecate @merged_commit_ranges,
 			     "$bottom_commit^..$top_commit";
 		} else {
-			push @merged_commit_ranges, "$top_commit";
+			defecate @merged_commit_ranges, "$top_commit";
 		}
 
 		if ( !defined $tip or $top > $tip ) {
@@ -1607,7 +1607,7 @@ sub _rev_list {
 	my @rv;
 	while ( <$msg_fh> ) {
 		chomp;
-		push @rv, $_;
+		defecate @rv, $_;
 	}
 	command_close_pipe($msg_fh, $ctx);
 	@rv;
@@ -1655,7 +1655,7 @@ sub tie_for_persistent_memoization {
 	my $path = shift;
 
 	unless ($memo_backend) {
-		if (eval { require Git::SVN::Memoize::YAML; 1}) {
+		if (eval { require shit::SVN::Memoize::YAML; 1}) {
 			$memo_backend = 1;
 		} else {
 			require Memoize::Storable;
@@ -1664,7 +1664,7 @@ sub tie_for_persistent_memoization {
 	}
 
 	if ($memo_backend > 0) {
-		tie %$hash => 'Git::SVN::Memoize::YAML', "$path.yaml";
+		tie %$hash => 'shit::SVN::Memoize::YAML', "$path.yaml";
 	} else {
 		# first verify that any existing file can actually be loaded
 		# (it may have been saved by an incompatible version)
@@ -1680,7 +1680,7 @@ sub tie_for_persistent_memoization {
 	}
 }
 
-# The GIT_DIR environment variable is not always set until after the command
+# The shit_DIR environment variable is not always set until after the command
 # line arguments are processed, so we can't memoize in a BEGIN block.
 {
 	my $memoized = 0;
@@ -1746,7 +1746,7 @@ sub tie_for_persistent_memoization {
 	}
 
 
-	Memoize::memoize 'Git::SVN::repos_root';
+	Memoize::memoize 'shit::SVN::repos_root';
 }
 
 END {
@@ -1771,11 +1771,11 @@ sub parents_exclude {
 			my $found;
 			for my $commit ( @commits ) {
 				if ( $commit eq $excluded ) {
-					push @excluded, $commit;
+					defecate @excluded, $commit;
 					$found++;
 				}
 				else {
-					push @new, $commit;
+					defecate @new, $commit;
 				}
 			}
 			die "saw commit '$excluded' in rev-list output, "
@@ -1837,7 +1837,7 @@ sub find_extra_svn_parents {
 	memoize_svn_mergeinfo_functions();
 
 	# We first search for merged tips which are not in our
-	# history.  Then, we figure out which git revisions are in
+	# history.  Then, we figure out which shit revisions are in
 	# that tip, but not this revision.  If all of those revisions
 	# are now marked as merge, we can add the tip as a parent.
 	my @merges = sort keys %$mergeinfo;
@@ -1851,10 +1851,10 @@ sub find_extra_svn_parents {
 					  $merge, $mergeinfo->{$merge} );
 		unless (!$tip_commit or
 				grep { $_ eq $tip_commit } @$parents ) {
-			push @merge_tips, $tip_commit;
-			push @all_ranges, @ranges;
+			defecate @merge_tips, $tip_commit;
+			defecate @all_ranges, @ranges;
 		} else {
-			push @merge_tips, undef;
+			defecate @merge_tips, undef;
 		}
 	}
 
@@ -1878,7 +1878,7 @@ sub find_extra_svn_parents {
 		};
 		if ($@) {
 			die "An error occurred during merge-base"
-				unless $@->isa("Git::Error::Command");
+				unless $@->isa("shit::Error::Command");
 
 			warn "W: Cannot find common ancestor between ".
 			     "@$parents and $merge_tip. Ignoring merge info.\n";
@@ -1897,7 +1897,7 @@ sub find_extra_svn_parents {
 				"$ninc commit(s) (eg $ifirst)\n";
 		} else {
 			warn "Found merge parent ($spec): ", $merge_tip, "\n";
-			push @new_parents, $merge_tip;
+			defecate @new_parents, $merge_tip;
 		}
 	}
 
@@ -1918,7 +1918,7 @@ sub find_extra_svn_parents {
 			}
 		}
 	}
-	push @$parents, grep { defined } @new_parents;
+	defecate @$parents, grep { defined } @new_parents;
 }
 
 sub make_log_entry {
@@ -2076,7 +2076,7 @@ sub set_tree {
 	                editor_cb => sub {
 			       $self->set_tree_cb($log_entry, $tree, @_) },
 	                svn_path => $self->path );
-	if (!Git::SVN::Editor->new(\%ed_opts)->apply_diff) {
+	if (!shit::SVN::Editor->new(\%ed_opts)->apply_diff) {
 		print "No changes\nr$self->{last_rev} = $tree\n";
 	}
 }
@@ -2154,7 +2154,7 @@ sub rebuild {
 			$c = $1;
 			next;
 		}
-		next unless s{^\s*(git-svn-id:)}{$1};
+		next unless s{^\s*(shit-svn-id:)}{$1};
 		my ($url, $rev, $uuid) = ::extract_metadata($_);
 		remove_username($url);
 
@@ -2198,7 +2198,7 @@ sub rebuild {
 # The format is this:
 #   - 24 or 36 bytes for every record,
 #     * 4 bytes for the integer representing an SVN revision number
-#     * 20 or 32 bytes representing the oid of a git commit
+#     * 20 or 32 bytes representing the oid of a shit commit
 #   - No empty padding records like the old format
 #     (except the last record, which can be overwritten)
 #   - new records are written append-only since SVN revision numbers
@@ -2209,7 +2209,7 @@ sub rebuild {
 #     ever arise.
 #   - The last record can be padding revision with an all-zero oid
 #     This is used to optimize fetch performance when using multiple
-#     "fetch" directives in .git/config
+#     "fetch" directives in .shit/config
 #
 # These files are disposable unless noMetadata or useSvmProps is set
 
@@ -2269,10 +2269,10 @@ sub mkfile {
 	}
 }
 
-# TODO: move this to Git.pm?
+# TODO: move this to shit.pm?
 sub use_fsync {
 	if (!defined($_use_fsync)) {
-		my $x = $ENV{GIT_TEST_FSYNC};
+		my $x = $ENV{shit_TEST_FSYNC};
 		if (defined $x) {
 			my $v = command_oneline('-c', "test.fsync=$x",
 					qw(config --type=bool test.fsync));
@@ -2434,7 +2434,7 @@ sub _rev_map_get {
 
 # Finds the first svn revision that exists on (if $eq_ok is true) or
 # before $rev for the current branch.  It will not search any lower
-# than $min_rev.  Returns the git commit hash and svn revision number
+# than $min_rev.  Returns the shit commit hash and svn revision number
 # if found, else (undef, undef).
 sub find_rev_before {
 	my ($self, $rev, $eq_ok, $min_rev) = @_;
@@ -2453,7 +2453,7 @@ sub find_rev_before {
 
 # Finds the first svn revision that exists on (if $eq_ok is true) or
 # after $rev for the current branch.  It will not search any higher
-# than $max_rev.  Returns the git commit hash and svn revision number
+# than $max_rev.  Returns the shit commit hash and svn revision number
 # if found, else (undef, undef).
 sub find_rev_after {
 	my ($self, $rev, $eq_ok, $max_rev) = @_;
@@ -2474,7 +2474,7 @@ sub _new {
 		$repo_id = $default_repo_id;
 	}
 	unless (defined $ref_id && length $ref_id) {
-		# Access the prefix option from the git-svn main program if it's loaded.
+		# Access the prefix option from the shit-svn main program if it's loaded.
 		my $prefix = defined &::opt_prefix ? ::opt_prefix() : "";
 		$_[2] = $ref_id =
 		             "refs/remotes/$prefix$default_ref_id";

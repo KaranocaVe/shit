@@ -27,7 +27,7 @@ static int parallel_next(struct child_process *cp,
 	if (number_callbacks >= 4)
 		return 0;
 
-	strvec_pushv(&cp->args, d->args.v);
+	strvec_defecatev(&cp->args, d->args.v);
 	if (err)
 		strbuf_addstr(err, "preloaded output of a child\n");
 	else
@@ -82,20 +82,20 @@ static int next_test(struct child_process *cp, struct strbuf *err, void *cb,
 
 	test = suite->tests.items[suite->next++].string;
 	if (suite->shell_path)
-		strvec_push(&cp->args, suite->shell_path);
-	strvec_push(&cp->args, test);
+		strvec_defecate(&cp->args, suite->shell_path);
+	strvec_defecate(&cp->args, test);
 	if (suite->quiet)
-		strvec_push(&cp->args, "--quiet");
+		strvec_defecate(&cp->args, "--quiet");
 	if (suite->immediate)
-		strvec_push(&cp->args, "-i");
+		strvec_defecate(&cp->args, "-i");
 	if (suite->verbose)
-		strvec_push(&cp->args, "-v");
+		strvec_defecate(&cp->args, "-v");
 	if (suite->verbose_log)
-		strvec_push(&cp->args, "-V");
+		strvec_defecate(&cp->args, "-V");
 	if (suite->trace)
-		strvec_push(&cp->args, "-x");
+		strvec_defecate(&cp->args, "-x");
 	if (suite->write_junit_xml)
-		strvec_push(&cp->args, "--write-junit-xml");
+		strvec_defecate(&cp->args, "--write-junit-xml");
 
 	strbuf_addf(err, "Output of '%s':\n", test);
 	*task_cb = (void *)test;
@@ -271,10 +271,10 @@ static int quote_stress_test(int argc, const char **argv)
 
 		strvec_clear(&args);
 		if (msys2)
-			strvec_pushl(&args, "sh", "-c",
+			strvec_defecatel(&args, "sh", "-c",
 				     "printf %s\\\\0 \"$@\"", "skip", NULL);
 		else
-			strvec_pushl(&args, "test-tool", "run-command",
+			strvec_defecatel(&args, "test-tool", "run-command",
 				     "quote-echo", NULL);
 		arg_offset = args.nr;
 
@@ -282,7 +282,7 @@ static int quote_stress_test(int argc, const char **argv)
 			trials = 1;
 			arg_count = argc;
 			for (j = 0; j < arg_count; j++)
-				strvec_push(&args, argv[j]);
+				strvec_defecate(&args, argv[j]);
 		} else {
 			arg_count = 1 + (my_random() % 5);
 			for (j = 0; j < arg_count; j++) {
@@ -296,14 +296,14 @@ static int quote_stress_test(int argc, const char **argv)
 						ARRAY_SIZE(special)];
 				buf[arg_len] = '\0';
 
-				strvec_push(&args, buf);
+				strvec_defecate(&args, buf);
 			}
 		}
 
 		if (i < skip)
 			continue;
 
-		strvec_pushv(&cp.args, args.v);
+		strvec_defecatev(&cp.args, args.v);
 		strbuf_reset(&out);
 		if (pipe_command(&cp, NULL, 0, &out, 0, NULL, 0) < 0)
 			return error("Failed to spawn child process");
@@ -366,7 +366,7 @@ static int inherit_handle(const char *argv0)
 	xsnprintf(path, sizeof(path), "out-XXXXXX");
 	tmp = xmkstemp(path);
 
-	strvec_pushl(&cp.args,
+	strvec_defecatel(&cp.args,
 		     "test-tool", argv0, "inherited-handle-child", NULL);
 	cp.in = -1;
 	cp.no_stdout = cp.no_stderr = 1;
@@ -423,7 +423,7 @@ int cmd__run_command(int argc, const char **argv)
 	while (!strcmp(argv[1], "env")) {
 		if (!argv[2])
 			die("env specifier without a value");
-		strvec_push(&proc.env, argv[2]);
+		strvec_defecate(&proc.env, argv[2]);
 		argv += 2;
 		argc -= 2;
 	}
@@ -431,7 +431,7 @@ int cmd__run_command(int argc, const char **argv)
 		ret = 1;
 		goto cleanup;
 	}
-	strvec_pushv(&proc.args, (const char **)argv + 2);
+	strvec_defecatev(&proc.args, (const char **)argv + 2);
 
 	if (!strcmp(argv[1], "start-command-ENOENT")) {
 		if (start_command(&proc) < 0 && errno == ENOENT) {
@@ -454,7 +454,7 @@ int cmd__run_command(int argc, const char **argv)
 
 	jobs = atoi(argv[2]);
 	strvec_clear(&proc.args);
-	strvec_pushv(&proc.args, (const char **)argv + 3);
+	strvec_defecatev(&proc.args, (const char **)argv + 3);
 
 	if (!strcmp(argv[1], "run-command-parallel")) {
 		opts.get_next_task = parallel_next;

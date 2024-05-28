@@ -4,7 +4,7 @@
 #include "hash-ll.h"
 #include "repository.h"
 
-#define GIT_REFLOG_ACTION_ENVIRONMENT "GIT_REFLOG_ACTION"
+#define shit_REFLOG_ACTION_ENVIRONMENT "shit_REFLOG_ACTION"
 
 /* Request a detached checkout */
 #define RESET_HEAD_DETACH (1<<0)

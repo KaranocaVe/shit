@@ -1,13 +1,13 @@
 #!/bin/sh
 
-test_description='git merge-tree --write-tree'
+test_description='shit merge-tree --write-tree'
 
 . ./test-lib.sh
 
 # This test is ort-specific
-if test "$GIT_TEST_MERGE_ALGORITHM" != "ort"
+if test "$shit_TEST_MERGE_ALGORITHM" != "ort"
 then
-	skip_all="GIT_TEST_MERGE_ALGORITHM != ort"
+	skip_all="shit_TEST_MERGE_ALGORITHM != ort"
 	test_done
 fi
 
@@ -15,74 +15,74 @@ test_expect_success setup '
 	test_write_lines 1 2 3 4 5 >numbers &&
 	echo hello >greeting &&
 	echo foo >whatever &&
-	git add numbers greeting whatever &&
+	shit add numbers greeting whatever &&
 	test_tick &&
-	git commit -m initial &&
+	shit commit -m initial &&
 
-	git branch side1 &&
-	git branch side2 &&
-	git branch side3 &&
-	git branch side4 &&
+	shit branch side1 &&
+	shit branch side2 &&
+	shit branch side3 &&
+	shit branch side4 &&
 
-	git checkout side1 &&
+	shit checkout side1 &&
 	test_write_lines 1 2 3 4 5 6 >numbers &&
 	echo hi >greeting &&
 	echo bar >whatever &&
-	git add numbers greeting whatever &&
+	shit add numbers greeting whatever &&
 	test_tick &&
-	git commit -m modify-stuff &&
+	shit commit -m modify-stuff &&
 
-	git checkout side2 &&
+	shit checkout side2 &&
 	test_write_lines 0 1 2 3 4 5 >numbers &&
 	echo yo >greeting &&
-	git rm whatever &&
+	shit rm whatever &&
 	mkdir whatever &&
 	>whatever/empty &&
-	git add numbers greeting whatever/empty &&
+	shit add numbers greeting whatever/empty &&
 	test_tick &&
-	git commit -m other-modifications &&
+	shit commit -m other-modifications &&
 
-	git checkout side3 &&
-	git mv numbers sequence &&
+	shit checkout side3 &&
+	shit mv numbers sequence &&
 	test_tick &&
-	git commit -m rename-numbers &&
+	shit commit -m rename-numbers &&
 
-	git checkout side4 &&
+	shit checkout side4 &&
 	test_write_lines 0 1 2 3 4 5 >numbers &&
 	echo yo >greeting &&
-	git add numbers greeting &&
+	shit add numbers greeting &&
 	test_tick &&
-	git commit -m other-content-modifications &&
+	shit commit -m other-content-modifications &&
 
-	git switch --orphan unrelated &&
+	shit switch --orphan unrelated &&
 	>something-else &&
-	git add something-else &&
+	shit add something-else &&
 	test_tick &&
-	git commit -m first-commit
+	shit commit -m first-commit
 '
 
 test_expect_success 'Clean merge' '
-	TREE_OID=$(git merge-tree --write-tree side1 side3) &&
+	TREE_OID=$(shit merge-tree --write-tree side1 side3) &&
 	q_to_tab <<-EOF >expect &&
-	100644 blob $(git rev-parse side1:greeting)Qgreeting
-	100644 blob $(git rev-parse side1:numbers)Qsequence
-	100644 blob $(git rev-parse side1:whatever)Qwhatever
+	100644 blob $(shit rev-parse side1:greeting)Qgreeting
+	100644 blob $(shit rev-parse side1:numbers)Qsequence
+	100644 blob $(shit rev-parse side1:whatever)Qwhatever
 	EOF
 
-	git ls-tree $TREE_OID >actual &&
+	shit ls-tree $TREE_OID >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'Content merge and a few conflicts' '
-	git checkout side1^0 &&
-	test_must_fail git merge side2 &&
-	expected_tree=$(git rev-parse AUTO_MERGE) &&
+	shit checkout side1^0 &&
+	test_must_fail shit merge side2 &&
+	expected_tree=$(shit rev-parse AUTO_MERGE) &&
 
 	# We will redo the merge, while we are still in a conflicted state!
-	git ls-files -u >conflicted-file-info &&
-	test_when_finished "git reset --hard" &&
+	shit ls-files -u >conflicted-file-info &&
+	test_when_finished "shit reset --hard" &&
 
-	test_expect_code 1 git merge-tree --write-tree side1 side2 >RESULT &&
+	test_expect_code 1 shit merge-tree --write-tree side1 side2 >RESULT &&
 	actual_tree=$(head -n 1 RESULT) &&
 
 	# Due to differences of e.g. "HEAD" vs "side1", the results will not
@@ -90,47 +90,47 @@ test_expect_success 'Content merge and a few conflicts' '
 
 	# Numbers should have three-way merged cleanly
 	test_write_lines 0 1 2 3 4 5 6 >expect &&
-	git show ${actual_tree}:numbers >actual &&
+	shit show ${actual_tree}:numbers >actual &&
 	test_cmp expect actual &&
 
 	# whatever and whatever~<branch> should have same HASHES
-	git rev-parse ${expected_tree}:whatever ${expected_tree}:whatever~HEAD >expect &&
-	git rev-parse ${actual_tree}:whatever ${actual_tree}:whatever~side1 >actual &&
+	shit rev-parse ${expected_tree}:whatever ${expected_tree}:whatever~HEAD >expect &&
+	shit rev-parse ${actual_tree}:whatever ${actual_tree}:whatever~side1 >actual &&
 	test_cmp expect actual &&
 
 	# greeting should have a merge conflict
-	git show ${expected_tree}:greeting >tmp &&
+	shit show ${expected_tree}:greeting >tmp &&
 	sed -e s/HEAD/side1/ tmp >expect &&
-	git show ${actual_tree}:greeting >actual &&
+	shit show ${actual_tree}:greeting >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'Auto resolve conflicts by "ours" strategy option' '
-	git checkout side1^0 &&
+	shit checkout side1^0 &&
 
 	# make sure merge conflict exists
-	test_must_fail git merge side4 &&
-	git merge --abort &&
+	test_must_fail shit merge side4 &&
+	shit merge --abort &&
 
-	git merge -X ours side4 &&
-	git rev-parse HEAD^{tree} >expected &&
+	shit merge -X ours side4 &&
+	shit rev-parse HEAD^{tree} >expected &&
 
-	git merge-tree -X ours side1 side4 >actual &&
+	shit merge-tree -X ours side1 side4 >actual &&
 
 	test_cmp expected actual
 '
 
 test_expect_success 'Barf on misspelled option, with exit code other than 0 or 1' '
 	# Mis-spell with single "s" instead of double "s"
-	test_expect_code 129 git merge-tree --write-tree --mesages FOOBAR side1 side2 2>expect &&
+	test_expect_code 129 shit merge-tree --write-tree --mesages FOOBAR side1 side2 2>expect &&
 
 	grep "error: unknown option.*mesages" expect
 '
 
 test_expect_success 'Barf on too many arguments' '
-	test_expect_code 129 git merge-tree --write-tree side1 side2 invalid 2>expect &&
+	test_expect_code 129 shit merge-tree --write-tree side1 side2 invalid 2>expect &&
 
-	grep "^usage: git merge-tree" expect
+	grep "^usage: shit merge-tree" expect
 '
 
 anonymize_hash() {
@@ -138,7 +138,7 @@ anonymize_hash() {
 }
 
 test_expect_success 'test conflict notices and such' '
-	test_expect_code 1 git merge-tree --write-tree --name-only side1 side2 >out &&
+	test_expect_code 1 shit merge-tree --write-tree --name-only side1 side2 >out &&
 	anonymize_hash out >actual &&
 
 	# Expected results:
@@ -168,37 +168,37 @@ test_expect_success 'test conflict notices and such' '
 
 test_expect_success 'directory rename + content conflict' '
 	# Setup
-	git init dir-rename-and-content &&
+	shit init dir-rename-and-content &&
 	(
 		cd dir-rename-and-content &&
 		test_write_lines 1 2 3 4 5 >foo &&
 		mkdir olddir &&
 		for i in a b c; do echo $i >olddir/$i || exit 1; done &&
-		git add foo olddir &&
-		git commit -m "original" &&
+		shit add foo olddir &&
+		shit commit -m "original" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
+		shit checkout A &&
 		test_write_lines 1 2 3 4 5 6 >foo &&
-		git add foo &&
-		git mv olddir newdir &&
-		git commit -m "Modify foo, rename olddir to newdir" &&
+		shit add foo &&
+		shit mv olddir newdir &&
+		shit commit -m "Modify foo, rename olddir to newdir" &&
 
-		git checkout B &&
+		shit checkout B &&
 		test_write_lines 1 2 3 4 5 six >foo &&
-		git add foo &&
-		git mv foo olddir/bar &&
-		git commit -m "Modify foo & rename foo -> olddir/bar"
+		shit add foo &&
+		shit mv foo olddir/bar &&
+		shit commit -m "Modify foo & rename foo -> olddir/bar"
 	) &&
 	# Testing
 	(
 		cd dir-rename-and-content &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 		anonymize_hash out >actual &&
 		q_to_tab <<-\EOF | lf_to_nul >expect &&
@@ -226,33 +226,33 @@ test_expect_success 'directory rename + content conflict' '
 
 test_expect_success 'rename/delete handling' '
 	# Setup
-	git init rename-delete &&
+	shit init rename-delete &&
 	(
 		cd rename-delete &&
 		test_write_lines 1 2 3 4 5 >foo &&
-		git add foo &&
-		git commit -m "original" &&
+		shit add foo &&
+		shit commit -m "original" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
+		shit checkout A &&
 		test_write_lines 1 2 3 4 5 6 >foo &&
-		git add foo &&
-		git mv foo bar &&
-		git commit -m "Modify foo, rename to bar" &&
+		shit add foo &&
+		shit mv foo bar &&
+		shit commit -m "Modify foo, rename to bar" &&
 
-		git checkout B &&
-		git rm foo &&
-		git commit -m "remove foo"
+		shit checkout B &&
+		shit rm foo &&
+		shit commit -m "remove foo"
 	) &&
 	# Testing
 	(
 		cd rename-delete &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 		anonymize_hash out >actual &&
 		q_to_tab <<-\EOF | lf_to_nul >expect &&
@@ -278,35 +278,35 @@ test_expect_success 'rename/delete handling' '
 
 test_expect_success 'rename/add handling' '
 	# Setup
-	git init rename-add &&
+	shit init rename-add &&
 	(
 		cd rename-add &&
 		test_write_lines original 1 2 3 4 5 >foo &&
-		git add foo &&
-		git commit -m "original" &&
+		shit add foo &&
+		shit commit -m "original" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
+		shit checkout A &&
 		test_write_lines 1 2 3 4 5 >foo &&
 		echo "different file" >bar &&
-		git add foo bar &&
-		git commit -m "Modify foo, add bar" &&
+		shit add foo bar &&
+		shit commit -m "Modify foo, add bar" &&
 
-		git checkout B &&
+		shit checkout B &&
 		test_write_lines original 1 2 3 4 5 6 >foo &&
-		git add foo &&
-		git mv foo bar &&
-		git commit -m "rename foo to bar"
+		shit add foo &&
+		shit mv foo bar &&
+		shit commit -m "rename foo to bar"
 	) &&
 	# Testing
 	(
 		cd rename-add &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 
 		#
@@ -314,7 +314,7 @@ test_expect_success 'rename/add handling' '
 		# correspond to an individual blob anywhere in history
 		#
 		hash=$(tr "\0" "\n" <out | head -n 3 | grep 3.bar | cut -f 2 -d " ") &&
-		git rev-list --objects --all >all_blobs &&
+		shit rev-list --objects --all >all_blobs &&
 		! grep $hash all_blobs &&
 
 		#
@@ -345,35 +345,35 @@ test_expect_success 'rename/add handling' '
 
 test_expect_success SYMLINKS 'rename/add, where add is a mode conflict' '
 	# Setup
-	git init rename-add-symlink &&
+	shit init rename-add-symlink &&
 	(
 		cd rename-add-symlink &&
 		test_write_lines original 1 2 3 4 5 >foo &&
-		git add foo &&
-		git commit -m "original" &&
+		shit add foo &&
+		shit commit -m "original" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
+		shit checkout A &&
 		test_write_lines 1 2 3 4 5 >foo &&
 		ln -s foo bar &&
-		git add foo bar &&
-		git commit -m "Modify foo, add symlink bar" &&
+		shit add foo bar &&
+		shit commit -m "Modify foo, add symlink bar" &&
 
-		git checkout B &&
+		shit checkout B &&
 		test_write_lines original 1 2 3 4 5 6 >foo &&
-		git add foo &&
-		git mv foo bar &&
-		git commit -m "rename foo to bar"
+		shit add foo &&
+		shit mv foo bar &&
+		shit commit -m "rename foo to bar"
 	) &&
 	# Testing
 	(
 		cd rename-add-symlink &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 
 		#
@@ -381,7 +381,7 @@ test_expect_success SYMLINKS 'rename/add, where add is a mode conflict' '
 		# correspond to an individual blob anywhere in history
 		#
 		hash=$(tr "\0" "\n" <out | head -n 3 | grep 3.bar | cut -f 2 -d " ") &&
-		git rev-list --objects --all >all_blobs &&
+		shit rev-list --objects --all >all_blobs &&
 		! grep $hash all_blobs &&
 
 		#
@@ -411,35 +411,35 @@ test_expect_success SYMLINKS 'rename/add, where add is a mode conflict' '
 
 test_expect_success 'rename/rename + content conflict' '
 	# Setup
-	git init rr-plus-content &&
+	shit init rr-plus-content &&
 	(
 		cd rr-plus-content &&
 		test_write_lines 1 2 3 4 5 >foo &&
-		git add foo &&
-		git commit -m "original" &&
+		shit add foo &&
+		shit commit -m "original" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
+		shit checkout A &&
 		test_write_lines 1 2 3 4 5 six >foo &&
-		git add foo &&
-		git mv foo bar &&
-		git commit -m "Modify foo + rename to bar" &&
+		shit add foo &&
+		shit mv foo bar &&
+		shit commit -m "Modify foo + rename to bar" &&
 
-		git checkout B &&
+		shit checkout B &&
 		test_write_lines 1 2 3 4 5 6 >foo &&
-		git add foo &&
-		git mv foo baz &&
-		git commit -m "Modify foo + rename to baz"
+		shit add foo &&
+		shit mv foo baz &&
+		shit commit -m "Modify foo + rename to baz"
 	) &&
 	# Testing
 	(
 		cd rr-plus-content &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 		anonymize_hash out >actual &&
 		q_to_tab <<-\EOF | lf_to_nul >expect &&
@@ -467,33 +467,33 @@ test_expect_success 'rename/rename + content conflict' '
 
 test_expect_success 'rename/add/delete conflict' '
 	# Setup
-	git init rad &&
+	shit init rad &&
 	(
 		cd rad &&
 		echo "original file" >foo &&
-		git add foo &&
-		git commit -m "original" &&
+		shit add foo &&
+		shit commit -m "original" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
-		git rm foo &&
+		shit checkout A &&
+		shit rm foo &&
 		echo "different file" >bar &&
-		git add bar &&
-		git commit -m "Remove foo, add bar" &&
+		shit add bar &&
+		shit commit -m "Remove foo, add bar" &&
 
-		git checkout B &&
-		git mv foo bar &&
-		git commit -m "rename foo to bar"
+		shit checkout B &&
+		shit mv foo bar &&
+		shit commit -m "rename foo to bar"
 	) &&
 	# Testing
 	(
 		cd rad &&
 
 		test_expect_code 1 \
-			git merge-tree -z B^0 A^0 >out &&
+			shit merge-tree -z B^0 A^0 >out &&
 		echo >>out &&
 		anonymize_hash out >actual &&
 
@@ -523,34 +523,34 @@ test_expect_success 'rename/add/delete conflict' '
 
 test_expect_success 'rename/rename(2to1)/delete/delete conflict' '
 	# Setup
-	git init rrdd &&
+	shit init rrdd &&
 	(
 		cd rrdd &&
 		echo foo >foo &&
 		echo bar >bar &&
-		git add foo bar &&
-		git commit -m O &&
+		shit add foo bar &&
+		shit commit -m O &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
-		git mv foo baz &&
-		git rm bar &&
-		git commit -m "Rename foo, remove bar" &&
+		shit checkout A &&
+		shit mv foo baz &&
+		shit rm bar &&
+		shit commit -m "Rename foo, remove bar" &&
 
-		git checkout B &&
-		git mv bar baz &&
-		git rm foo &&
-		git commit -m "Rename bar, remove foo"
+		shit checkout B &&
+		shit mv bar baz &&
+		shit rm foo &&
+		shit commit -m "Rename bar, remove foo"
 	) &&
 	# Testing
 	(
 		cd rrdd &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 		anonymize_hash out >actual &&
 
@@ -582,47 +582,47 @@ test_expect_success 'rename/rename(2to1)/delete/delete conflict' '
 
 test_expect_success 'mod6: chains of rename/rename(1to2) and add/add via colliding renames' '
 	# Setup
-	git init mod6 &&
+	shit init mod6 &&
 	(
 		cd mod6 &&
 		test_seq 11 19 >one &&
 		test_seq 31 39 >three &&
 		test_seq 51 59 >five &&
-		git add . &&
+		shit add . &&
 		test_tick &&
-		git commit -m "O" &&
+		shit commit -m "O" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
+		shit checkout A &&
 		test_seq 10 19 >one &&
 		echo 40        >>three &&
-		git add one three &&
-		git mv  one   two  &&
-		git mv  three four &&
-		git mv  five  six  &&
+		shit add one three &&
+		shit mv  one   two  &&
+		shit mv  three four &&
+		shit mv  five  six  &&
 		test_tick &&
-		git commit -m "A" &&
+		shit commit -m "A" &&
 
-		git checkout B &&
+		shit checkout B &&
 		echo 20    >>one       &&
 		echo forty >>three     &&
 		echo 60    >>five      &&
-		git add one three five &&
-		git mv  one   six  &&
-		git mv  three two  &&
-		git mv  five  four &&
+		shit add one three five &&
+		shit mv  one   six  &&
+		shit mv  three two  &&
+		shit mv  five  four &&
 		test_tick &&
-		git commit -m "B"
+		shit commit -m "B"
 	) &&
 	# Testing
 	(
 		cd mod6 &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 
 		#
@@ -632,7 +632,7 @@ test_expect_success 'mod6: chains of rename/rename(1to2) and add/add via collidi
 		#
 		hash1=$(tr "\0" "\n" <out | head | grep 2.four | cut -f 2 -d " ") &&
 		hash2=$(tr "\0" "\n" <out | head | grep 3.two | cut -f 2 -d " ") &&
-		git rev-list --objects --all >all_blobs &&
+		shit rev-list --objects --all >all_blobs &&
 		! grep $hash1 all_blobs &&
 		! grep $hash2 all_blobs &&
 
@@ -680,39 +680,39 @@ test_expect_success 'mod6: chains of rename/rename(1to2) and add/add via collidi
 
 test_expect_success 'directory rename + rename/delete + modify/delete + directory/file conflict' '
 	# Setup
-	git init 4-stacked-conflict &&
+	shit init 4-stacked-conflict &&
 	(
 		cd 4-stacked-conflict &&
 		test_write_lines 1 2 3 4 5 >foo &&
 		mkdir olddir &&
 		for i in a b c; do echo $i >olddir/$i || exit 1; done &&
-		git add foo olddir &&
-		git commit -m "original" &&
+		shit add foo olddir &&
+		shit commit -m "original" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
-		git rm foo &&
-		git mv olddir newdir &&
+		shit checkout A &&
+		shit rm foo &&
+		shit mv olddir newdir &&
 		mkdir newdir/bar &&
 		>newdir/bar/file &&
-		git add newdir/bar/file &&
-		git commit -m "rm foo, olddir/ -> newdir/, + newdir/bar/file" &&
+		shit add newdir/bar/file &&
+		shit commit -m "rm foo, olddir/ -> newdir/, + newdir/bar/file" &&
 
-		git checkout B &&
+		shit checkout B &&
 		test_write_lines 1 2 3 4 5 6 >foo &&
-		git add foo &&
-		git mv foo olddir/bar &&
-		git commit -m "Modify foo & rename foo -> olddir/bar"
+		shit add foo &&
+		shit mv foo olddir/bar &&
+		shit commit -m "Modify foo & rename foo -> olddir/bar"
 	) &&
 	# Testing
 	(
 		cd 4-stacked-conflict &&
 
 		test_expect_code 1 \
-			git merge-tree -z A^0 B^0 >out &&
+			shit merge-tree -z A^0 B^0 >out &&
 		echo >>out &&
 		anonymize_hash out >actual &&
 
@@ -733,7 +733,7 @@ test_expect_success 'directory rename + rename/delete + modify/delete + director
 	)
 '
 
-for opt in $(git merge-tree --git-completion-helper-all)
+for opt in $(shit merge-tree --shit-completion-helper-all)
 do
 	if test $opt = "--trivial-merge" || test $opt = "--write-tree"
 	then
@@ -741,12 +741,12 @@ do
 	fi
 
 	test_expect_success "usage: --trivial-merge is incompatible with $opt" '
-		test_expect_code 128 git merge-tree --trivial-merge $opt side1 side2 side3
+		test_expect_code 128 shit merge-tree --trivial-merge $opt side1 side2 side3
 	'
 done
 
 test_expect_success 'Just the conflicted files without the messages' '
-	test_expect_code 1 git merge-tree --write-tree --no-messages --name-only side1 side2 >out &&
+	test_expect_code 1 shit merge-tree --write-tree --no-messages --name-only side1 side2 >out &&
 	anonymize_hash out >actual &&
 
 	test_write_lines HASH greeting whatever~side1 >expect &&
@@ -755,7 +755,7 @@ test_expect_success 'Just the conflicted files without the messages' '
 '
 
 test_expect_success 'Check conflicted oids and modes without messages' '
-	test_expect_code 1 git merge-tree --write-tree --no-messages side1 side2 >out &&
+	test_expect_code 1 shit merge-tree --write-tree --no-messages side1 side2 >out &&
 	anonymize_hash out >actual &&
 
 	# Compare the basic output format
@@ -776,13 +776,13 @@ test_expect_success 'Check conflicted oids and modes without messages' '
 '
 
 test_expect_success 'NUL terminated conflicted file "lines"' '
-	git checkout -b tweak1 side1 &&
+	shit checkout -b tweak1 side1 &&
 	test_write_lines zero 1 2 3 4 5 6 >numbers &&
-	git add numbers &&
-	git mv numbers "Αυτά μου φαίνονται κινέζικα" &&
-	git commit -m "Renamed numbers" &&
+	shit add numbers &&
+	shit mv numbers "Αυτά μου φαίνονται κινέζικα" &&
+	shit commit -m "Renamed numbers" &&
 
-	test_expect_code 1 git merge-tree --write-tree -z tweak1 side2 >out &&
+	test_expect_code 1 shit merge-tree --write-tree -z tweak1 side2 >out &&
 	echo >>out &&
 	anonymize_hash out >actual &&
 
@@ -818,56 +818,56 @@ test_expect_success 'NUL terminated conflicted file "lines"' '
 '
 
 test_expect_success 'error out by default for unrelated histories' '
-	test_expect_code 128 git merge-tree --write-tree side1 unrelated 2>error &&
+	test_expect_code 128 shit merge-tree --write-tree side1 unrelated 2>error &&
 
 	grep "refusing to merge unrelated histories" error
 '
 
 test_expect_success 'can override merge of unrelated histories' '
-	git merge-tree --write-tree --allow-unrelated-histories side1 unrelated >tree &&
+	shit merge-tree --write-tree --allow-unrelated-histories side1 unrelated >tree &&
 	TREE=$(cat tree) &&
 
-	git rev-parse side1:numbers side1:greeting side1:whatever unrelated:something-else >expect &&
-	git rev-parse $TREE:numbers $TREE:greeting $TREE:whatever $TREE:something-else >actual &&
+	shit rev-parse side1:numbers side1:greeting side1:whatever unrelated:something-else >expect &&
+	shit rev-parse $TREE:numbers $TREE:greeting $TREE:whatever $TREE:something-else >actual &&
 
 	test_cmp expect actual
 '
 
 test_expect_success SANITY 'merge-ort fails gracefully in a read-only repository' '
-	git init --bare read-only &&
-	git push read-only side1 side2 side3 &&
+	shit init --bare read-only &&
+	shit defecate read-only side1 side2 side3 &&
 	test_when_finished "chmod -R u+w read-only" &&
 	chmod -R a-w read-only &&
-	test_must_fail git -C read-only merge-tree side1 side3 &&
-	test_must_fail git -C read-only merge-tree side1 side2
+	test_must_fail shit -C read-only merge-tree side1 side3 &&
+	test_must_fail shit -C read-only merge-tree side1 side2
 '
 
 test_expect_success '--stdin with both a successful and a conflicted merge' '
-	printf "side1 side3\nside1 side2" | git merge-tree --stdin >actual &&
+	printf "side1 side3\nside1 side2" | shit merge-tree --stdin >actual &&
 
-	git checkout side1^0 &&
-	git merge side3 &&
+	shit checkout side1^0 &&
+	shit merge side3 &&
 
 	printf "1\0" >expect &&
-	git rev-parse HEAD^{tree} | lf_to_nul >>expect &&
+	shit rev-parse HEAD^{tree} | lf_to_nul >>expect &&
 	printf "\0" >>expect &&
 
-	git checkout side1^0 &&
-	test_must_fail git merge side2 &&
+	shit checkout side1^0 &&
+	test_must_fail shit merge side2 &&
 	sed s/HEAD/side1/ greeting >tmp &&
 	mv tmp greeting &&
-	git add -u &&
-	git mv whatever~HEAD whatever~side1 &&
+	shit add -u &&
+	shit mv whatever~HEAD whatever~side1 &&
 
 	printf "0\0" >>expect &&
-	git write-tree | lf_to_nul >>expect &&
+	shit write-tree | lf_to_nul >>expect &&
 
 	cat <<-EOF | q_to_tab | lf_to_nul >>expect &&
-	100644 $(git rev-parse side1~1:greeting) 1Qgreeting
-	100644 $(git rev-parse side1:greeting) 2Qgreeting
-	100644 $(git rev-parse side2:greeting) 3Qgreeting
-	100644 $(git rev-parse side1~1:whatever) 1Qwhatever~side1
-	100644 $(git rev-parse side1:whatever) 2Qwhatever~side1
+	100644 $(shit rev-parse side1~1:greeting) 1Qgreeting
+	100644 $(shit rev-parse side1:greeting) 2Qgreeting
+	100644 $(shit rev-parse side2:greeting) 3Qgreeting
+	100644 $(shit rev-parse side1~1:whatever) 1Qwhatever~side1
+	100644 $(shit rev-parse side1:whatever) 2Qwhatever~side1
 	EOF
 
 	q_to_nul <<-EOF >>expect &&
@@ -885,13 +885,13 @@ test_expect_success '--stdin with both a successful and a conflicted merge' '
 
 
 test_expect_success '--merge-base is incompatible with --stdin' '
-	test_must_fail git merge-tree --merge-base=side1 --stdin 2>expect &&
+	test_must_fail shit merge-tree --merge-base=side1 --stdin 2>expect &&
 
 	grep "^fatal: .*merge-base.*stdin.* cannot be used together" expect
 '
 
 # specify merge-base as parent of branch2
-# git merge-tree --write-tree --merge-base=c2 c1 c3
+# shit merge-tree --write-tree --merge-base=c2 c1 c3
 #   Commit c1: add file1
 #   Commit c2: add file2 after c1
 #   Commit c3: add file3 after c2
@@ -900,20 +900,20 @@ test_expect_success '--merge-base is incompatible with --stdin' '
 test_expect_success 'specify merge-base as parent of branch2' '
 	# Setup
 	test_when_finished "rm -rf base-b2-p" &&
-	git init base-b2-p &&
+	shit init base-b2-p &&
 	test_commit -C base-b2-p c1 file1 &&
 	test_commit -C base-b2-p c2 file2 &&
 	test_commit -C base-b2-p c3 file3 &&
 
 	# Testing
-	TREE_OID=$(git -C base-b2-p merge-tree --write-tree --merge-base=c2 c1 c3) &&
+	TREE_OID=$(shit -C base-b2-p merge-tree --write-tree --merge-base=c2 c1 c3) &&
 
 	q_to_tab <<-EOF >expect &&
-	100644 blob $(git -C base-b2-p rev-parse c1:file1)Qfile1
-	100644 blob $(git -C base-b2-p rev-parse c3:file3)Qfile3
+	100644 blob $(shit -C base-b2-p rev-parse c1:file1)Qfile1
+	100644 blob $(shit -C base-b2-p rev-parse c3:file3)Qfile3
 	EOF
 
-	git -C base-b2-p ls-tree $TREE_OID >actual &&
+	shit -C base-b2-p ls-tree $TREE_OID >actual &&
 	test_cmp expect actual
 '
 
@@ -924,68 +924,68 @@ test_expect_success 'specify merge-base as parent of branch2' '
 
 test_expect_success 'check the input format when --stdin is passed' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
+	shit init repo &&
 	test_commit -C repo c1 &&
 	test_commit -C repo c2 &&
 	test_commit -C repo c3 &&
-	printf "c1 c3\nc2 -- c1 c3\nc2 c3" | git -C repo merge-tree --stdin >actual &&
+	printf "c1 c3\nc2 -- c1 c3\nc2 c3" | shit -C repo merge-tree --stdin >actual &&
 
 	printf "1\0" >expect &&
-	git -C repo merge-tree --write-tree -z c1 c3 >>expect &&
+	shit -C repo merge-tree --write-tree -z c1 c3 >>expect &&
 	printf "\0" >>expect &&
 
 	printf "1\0" >>expect &&
-	git -C repo merge-tree --write-tree -z --merge-base=c2 c1 c3 >>expect &&
+	shit -C repo merge-tree --write-tree -z --merge-base=c2 c1 c3 >>expect &&
 	printf "\0" >>expect &&
 
 	printf "1\0" >>expect &&
-	git -C repo merge-tree --write-tree -z c2 c3 >>expect &&
+	shit -C repo merge-tree --write-tree -z c2 c3 >>expect &&
 	printf "\0" >>expect &&
 
 	test_cmp expect actual
 '
 
 test_expect_success '--merge-base with tree OIDs' '
-	git merge-tree --merge-base=side1^ side1 side3 >with-commits &&
-	git merge-tree --merge-base=side1^^{tree} side1^{tree} side3^{tree} >with-trees &&
+	shit merge-tree --merge-base=side1^ side1 side3 >with-commits &&
+	shit merge-tree --merge-base=side1^^{tree} side1^{tree} side3^{tree} >with-trees &&
 	test_cmp with-commits with-trees
 '
 
 test_expect_success 'error out on missing tree objects' '
-	git init --bare missing-tree.git &&
-	git rev-list side3 >list &&
-	git rev-parse side3^: >>list &&
-	git pack-objects missing-tree.git/objects/pack/side3-tree-is-missing <list &&
-	side3=$(git rev-parse side3) &&
-	test_must_fail git --git-dir=missing-tree.git merge-tree $side3^ $side3 >actual 2>err &&
-	test_grep "Could not read $(git rev-parse $side3:)" err &&
+	shit init --bare missing-tree.shit &&
+	shit rev-list side3 >list &&
+	shit rev-parse side3^: >>list &&
+	shit pack-objects missing-tree.shit/objects/pack/side3-tree-is-missing <list &&
+	side3=$(shit rev-parse side3) &&
+	test_must_fail shit --shit-dir=missing-tree.shit merge-tree $side3^ $side3 >actual 2>err &&
+	test_grep "Could not read $(shit rev-parse $side3:)" err &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'error out on missing blob objects' '
-	echo 1 | git hash-object -w --stdin >blob1 &&
-	echo 2 | git hash-object -w --stdin >blob2 &&
-	echo 3 | git hash-object -w --stdin >blob3 &&
-	printf "100644 blob $(cat blob1)\tblob\n" | git mktree >tree1 &&
-	printf "100644 blob $(cat blob2)\tblob\n" | git mktree >tree2 &&
-	printf "100644 blob $(cat blob3)\tblob\n" | git mktree >tree3 &&
-	git init --bare missing-blob.git &&
+	echo 1 | shit hash-object -w --stdin >blob1 &&
+	echo 2 | shit hash-object -w --stdin >blob2 &&
+	echo 3 | shit hash-object -w --stdin >blob3 &&
+	printf "100644 blob $(cat blob1)\tblob\n" | shit mktree >tree1 &&
+	printf "100644 blob $(cat blob2)\tblob\n" | shit mktree >tree2 &&
+	printf "100644 blob $(cat blob3)\tblob\n" | shit mktree >tree3 &&
+	shit init --bare missing-blob.shit &&
 	cat blob1 blob3 tree1 tree2 tree3 |
-	git pack-objects missing-blob.git/objects/pack/side1-whatever-is-missing &&
-	test_must_fail git --git-dir=missing-blob.git >actual 2>err \
+	shit pack-objects missing-blob.shit/objects/pack/side1-whatever-is-missing &&
+	test_must_fail shit --shit-dir=missing-blob.shit >actual 2>err \
 		merge-tree --merge-base=$(cat tree1) $(cat tree2) $(cat tree3) &&
 	test_grep "unable to read blob object $(cat blob2)" err &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'error out on missing commits as well' '
-	git init --bare missing-commit.git &&
-	git rev-list --objects side1 side3 >list-including-initial &&
-	grep -v ^$(git rev-parse side1^) <list-including-initial >list &&
-	git pack-objects missing-commit.git/objects/pack/missing-initial <list &&
-	side1=$(git rev-parse side1) &&
-	side3=$(git rev-parse side3) &&
-	test_must_fail git --git-dir=missing-commit.git \
+	shit init --bare missing-commit.shit &&
+	shit rev-list --objects side1 side3 >list-including-initial &&
+	grep -v ^$(shit rev-parse side1^) <list-including-initial >list &&
+	shit pack-objects missing-commit.shit/objects/pack/missing-initial <list &&
+	side1=$(shit rev-parse side1) &&
+	side3=$(shit rev-parse side3) &&
+	test_must_fail shit --shit-dir=missing-commit.shit \
 		merge-tree --allow-unrelated-histories $side1 $side3 >actual &&
 	test_must_be_empty actual
 '

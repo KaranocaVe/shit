@@ -2,7 +2,7 @@
 #define ATTR_H
 
 /**
- * gitattributes mechanism gives a uniform way to associate various attributes
+ * shitattributes mechanism gives a uniform way to associate various attributes
  * to set of paths.
  *
  *
@@ -15,7 +15,7 @@
  *   prepared by calling `attr_check_alloc()` function and then attributes you
  *   want to ask about can be added to it with `attr_check_append()` function.
  *
- * - Call `git_check_attr()` to check the attributes for the path.
+ * - Call `shit_check_attr()` to check the attributes for the path.
  *
  * - Inspect `attr_check` structure to see how each of the attribute in the
  *   array is defined for the path.
@@ -39,13 +39,13 @@
  * }
  * ------------
  *
- * - Call `git_check_attr()` with the prepared `struct attr_check`:
+ * - Call `shit_check_attr()` with the prepared `struct attr_check`:
  *
  * ------------
  * const char *path;
  *
  * setup_check();
- * git_check_attr(&the_index, path, check);
+ * shit_check_attr(&the_index, path, check);
  * ------------
  *
  * - Act on `.value` member of the result, left in `check->items[]`:
@@ -55,7 +55,7 @@
  *
  * if (ATTR_TRUE(value)) {
  * The attribute is Set, by listing only the name of the
- * attribute in the gitattributes file for the path.
+ * attribute in the shitattributes file for the path.
  * } else if (ATTR_FALSE(value)) {
  * The attribute is Unset, by listing the name of the
  *         attribute prefixed with a dash - for the path.
@@ -63,7 +63,7 @@
  * The attribute is neither set nor unset for the path.
  * } else if (!strcmp(value, "input")) {
  * If none of ATTR_TRUE(), ATTR_FALSE(), or ATTR_UNSET() is
- *         true, the value is a string set in the gitattributes
+ *         true, the value is a string set in the shitattributes
  * file for the path by saying "attr=value".
  * } else if (... other check using value as string ...) {
  * ...
@@ -79,7 +79,7 @@
  * {
  *     check = attr_check_alloc();
  *     while (*argv) {
- *         struct git_attr *attr = git_attr(*argv);
+ *         struct shit_attr *attr = shit_attr(*argv);
  *         attr_check_append(check, attr);
  *         argv++;
  *     }
@@ -94,13 +94,13 @@
  *
  * - Prepare an empty `attr_check` structure by calling `attr_check_alloc()`.
  *
- * - Call `git_all_attrs()`, which populates the `attr_check` with the
+ * - Call `shit_all_attrs()`, which populates the `attr_check` with the
  * attributes attached to the path.
  *
  * - Iterate over the `attr_check.items[]` array to examine the attribute
  * names and values. The name of the attribute described by an
  * `attr_check.items[]` object can be retrieved via
- * `git_attr_name(check->items[i].attr)`. (Please note that no items will be
+ * `shit_attr_name(check->items[i].attr)`. (Please note that no items will be
  * returned for unset attributes, so `ATTR_UNSET()` will return false for all
  * returned `attr_check.items[]` objects.)
  *
@@ -108,7 +108,7 @@
  */
 
 /**
- * The maximum line length for a gitattributes file. If the line exceeds this
+ * The maximum line length for a shitattributes file. If the line exceeds this
  * length we will ignore it.
  */
 #define ATTR_MAX_LINE_LENGTH 2048
@@ -123,32 +123,32 @@ struct index_state;
 
 /**
  * An attribute is an opaque object that is identified by its name. Pass the
- * name to `git_attr()` function to obtain the object of this type.
+ * name to `shit_attr()` function to obtain the object of this type.
  * The internal representation of this structure is of no interest to the
  * calling programs. The name of the attribute can be retrieved by calling
- * `git_attr_name()`.
+ * `shit_attr_name()`.
  */
-struct git_attr;
+struct shit_attr;
 
 /* opaque structures used internally for attribute collection */
 struct all_attrs_item;
 struct attr_stack;
 
 /*
- * The textual object name for the tree-ish used by git_check_attr()
+ * The textual object name for the tree-ish used by shit_check_attr()
  * to read attributes from (instead of from the working tree).
  */
-void set_git_attr_source(const char *);
+void set_shit_attr_source(const char *);
 
 /*
- * Given a string, return the gitattribute object that
+ * Given a string, return the shitattribute object that
  * corresponds to it.
  */
-const struct git_attr *git_attr(const char *);
+const struct shit_attr *shit_attr(const char *);
 
 /* Internal use */
-extern const char git_attr__true[];
-extern const char git_attr__false[];
+extern const char shit_attr__true[];
+extern const char shit_attr__false[];
 
 /**
  * Attribute Values
@@ -161,23 +161,23 @@ extern const char git_attr__false[];
  */
 
 /* Returns true if the attribute is Set for the path. */
-#define ATTR_TRUE(v) ((v) == git_attr__true)
+#define ATTR_TRUE(v) ((v) == shit_attr__true)
 
 /* Returns true if the attribute is Unset for the path. */
-#define ATTR_FALSE(v) ((v) == git_attr__false)
+#define ATTR_FALSE(v) ((v) == shit_attr__false)
 
 /* Returns true if the attribute is Unspecified for the path. */
 #define ATTR_UNSET(v) ((v) == NULL)
 
 /* This structure represents one attribute and its value. */
 struct attr_check_item {
-	const struct git_attr *attr;
+	const struct shit_attr *attr;
 	const char *value;
 };
 
 /**
  * This structure represents a collection of `attr_check_item`. It is passed to
- * `git_check_attr()` function, specifying the attributes to check, and
+ * `shit_check_attr()` function, specifying the attributes to check, and
  * receives their values.
  */
 struct attr_check {
@@ -194,7 +194,7 @@ struct attr_check *attr_check_initl(const char *, ...);
 struct attr_check *attr_check_dup(const struct attr_check *check);
 
 struct attr_check_item *attr_check_append(struct attr_check *check,
-					  const struct git_attr *attr);
+					  const struct shit_attr *attr);
 
 void attr_check_reset(struct attr_check *check);
 void attr_check_clear(struct attr_check *check);
@@ -205,9 +205,9 @@ void attr_check_free(struct attr_check *check);
  * return value is a pointer to a null-delimited string that is part
  * of the internal data structure; it should not be modified or freed.
  */
-const char *git_attr_name(const struct git_attr *);
+const char *shit_attr_name(const struct shit_attr *);
 
-void git_check_attr(struct index_state *istate,
+void shit_check_attr(struct index_state *istate,
 		    const char *path,
 		    struct attr_check *check);
 
@@ -215,27 +215,27 @@ void git_check_attr(struct index_state *istate,
  * Retrieve all attributes that apply to the specified path.
  * check holds the attributes and their values.
  */
-void git_all_attrs(struct index_state *istate,
+void shit_all_attrs(struct index_state *istate,
 		   const char *path, struct attr_check *check);
 
-enum git_attr_direction {
-	GIT_ATTR_CHECKIN,
-	GIT_ATTR_CHECKOUT,
-	GIT_ATTR_INDEX
+enum shit_attr_direction {
+	shit_ATTR_CHECKIN,
+	shit_ATTR_CHECKOUT,
+	shit_ATTR_INDEX
 };
-void git_attr_set_direction(enum git_attr_direction new_direction);
+void shit_attr_set_direction(enum shit_attr_direction new_direction);
 
 void attr_start(void);
 
-/* Return the system gitattributes file. */
-const char *git_attr_system_file(void);
+/* Return the system shitattributes file. */
+const char *shit_attr_system_file(void);
 
-/* Return the global gitattributes file, if any. */
-const char *git_attr_global_file(void);
+/* Return the global shitattributes file, if any. */
+const char *shit_attr_global_file(void);
 
-/* Return whether the system gitattributes file is enabled and should be used. */
-int git_attr_system_is_enabled(void);
+/* Return whether the system shitattributes file is enabled and should be used. */
+int shit_attr_system_is_enabled(void);
 
-extern const char *git_attr_tree;
+extern const char *shit_attr_tree;
 
 #endif /* ATTR_H */

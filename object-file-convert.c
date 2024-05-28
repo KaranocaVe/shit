@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "strbuf.h"
 #include "hex.h"
@@ -12,13 +12,13 @@
 #include "object-file-convert.h"
 
 int repo_oid_to_algop(struct repository *repo, const struct object_id *src,
-		      const struct git_hash_algo *to, struct object_id *dest)
+		      const struct shit_hash_algo *to, struct object_id *dest)
 {
 	/*
 	 * If the source algorithm is not set, then we're using the
 	 * default hash algorithm for that object.
 	 */
-	const struct git_hash_algo *from =
+	const struct shit_hash_algo *from =
 		src->algo ? &hash_algos[src->algo] : repo->hash_algo;
 
 	if (from == to) {
@@ -41,7 +41,7 @@ int repo_oid_to_algop(struct repository *repo, const struct object_id *src,
 }
 
 static int decode_tree_entry_raw(struct object_id *oid, const char **path,
-				 size_t *len, const struct git_hash_algo *algo,
+				 size_t *len, const struct shit_hash_algo *algo,
 				 const char *buf, unsigned long size)
 {
 	uint16_t mode;
@@ -61,8 +61,8 @@ static int decode_tree_entry_raw(struct object_id *oid, const char **path,
 }
 
 static int convert_tree_object(struct strbuf *out,
-			       const struct git_hash_algo *from,
-			       const struct git_hash_algo *to,
+			       const struct shit_hash_algo *from,
+			       const struct shit_hash_algo *to,
 			       const char *buffer, size_t size)
 {
 	const char *p = buffer, *end = buffer + size;
@@ -86,8 +86,8 @@ static int convert_tree_object(struct strbuf *out,
 }
 
 static int convert_tag_object(struct strbuf *out,
-			      const struct git_hash_algo *from,
-			      const struct git_hash_algo *to,
+			      const struct shit_hash_algo *from,
+			      const struct shit_hash_algo *to,
 			      const char *buffer, size_t size)
 {
 	struct strbuf payload = STRBUF_INIT, oursig = STRBUF_INIT, othersig = STRBUF_INIT;
@@ -137,8 +137,8 @@ static int convert_tag_object(struct strbuf *out,
 }
 
 static int convert_commit_object(struct strbuf *out,
-				 const struct git_hash_algo *from,
-				 const struct git_hash_algo *to,
+				 const struct shit_hash_algo *from,
+				 const struct shit_hash_algo *to,
 				 const char *buffer, size_t size)
 {
 	const char *tail = buffer;
@@ -239,8 +239,8 @@ static int convert_commit_object(struct strbuf *out,
 }
 
 int convert_object_file(struct strbuf *outbuf,
-			const struct git_hash_algo *from,
-			const struct git_hash_algo *to,
+			const struct shit_hash_algo *from,
+			const struct shit_hash_algo *to,
 			const void *buf, size_t len,
 			enum object_type type,
 			int gentle)

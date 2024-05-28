@@ -406,7 +406,7 @@ int xdl_fall_back_diff(xdfenv_t *diff_env, xpparam_t const *xpp,
 		int line1, int count1, int line2, int count2)
 {
 	/*
-	 * This probably does not work outside Git, since
+	 * This probably does not work outside shit, since
 	 * we have a very simple mmfile structure.
 	 *
 	 * Note: ideally, we would reuse the prepared environment, but

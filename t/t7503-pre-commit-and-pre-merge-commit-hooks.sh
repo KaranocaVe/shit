@@ -2,67 +2,67 @@
 
 test_description='pre-commit and pre-merge-commit hooks'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'root commit' '
 	echo "root" >file &&
-	git add file &&
-	git commit -m "zeroth" &&
-	git checkout -b side &&
+	shit add file &&
+	shit commit -m "zeroth" &&
+	shit checkout -b side &&
 	echo "foo" >foo &&
-	git add foo &&
-	git commit -m "make it non-ff" &&
-	git branch side-orig side &&
-	git checkout main
+	shit add foo &&
+	shit commit -m "make it non-ff" &&
+	shit branch side-orig side &&
+	shit checkout main
 '
 
 test_expect_success 'setup conflicting branches' '
-	test_when_finished "git checkout main" &&
-	git checkout -b conflicting-a main &&
+	test_when_finished "shit checkout main" &&
+	shit checkout -b conflicting-a main &&
 	echo a >conflicting &&
-	git add conflicting &&
-	git commit -m conflicting-a &&
-	git checkout -b conflicting-b main &&
+	shit add conflicting &&
+	shit commit -m conflicting-a &&
+	shit checkout -b conflicting-b main &&
 	echo b >conflicting &&
-	git add conflicting &&
-	git commit -m conflicting-b
+	shit add conflicting &&
+	shit commit -m conflicting-b
 '
 
 test_expect_success 'with no hook' '
 	test_when_finished "rm -f actual_hooks" &&
 	echo "foo" >file &&
-	git add file &&
-	git commit -m "first" &&
+	shit add file &&
+	shit commit -m "first" &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success 'with no hook (merge)' '
 	test_when_finished "rm -f actual_hooks" &&
-	git branch -f side side-orig &&
-	git checkout side &&
-	git merge -m "merge main" main &&
-	git checkout main &&
+	shit branch -f side side-orig &&
+	shit checkout side &&
+	shit merge -m "merge main" main &&
+	shit checkout main &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success '--no-verify with no hook' '
 	test_when_finished "rm -f actual_hooks" &&
 	echo "bar" >file &&
-	git add file &&
-	git commit --no-verify -m "bar" &&
+	shit add file &&
+	shit commit --no-verify -m "bar" &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success '--no-verify with no hook (merge)' '
 	test_when_finished "rm -f actual_hooks" &&
-	git branch -f side side-orig &&
-	git checkout side &&
-	git merge --no-verify -m "merge main" main &&
-	git checkout main &&
+	shit branch -f side side-orig &&
+	shit checkout side &&
+	shit merge --no-verify -m "merge main" main &&
+	shit checkout main &&
 	test_path_is_missing actual_hooks
 '
 
@@ -77,16 +77,16 @@ setup_success_hook () {
 test_expect_success 'with succeeding hook' '
 	setup_success_hook "pre-commit" &&
 	echo "more" >>file &&
-	git add file &&
-	git commit -m "more" &&
+	shit add file &&
+	shit commit -m "more" &&
 	test_cmp expected_hooks actual_hooks
 '
 
 test_expect_success 'with succeeding hook (merge)' '
 	setup_success_hook "pre-merge-commit" &&
-	git checkout side &&
-	git merge -m "merge main" main &&
-	git checkout main &&
+	shit checkout side &&
+	shit merge -m "merge main" main &&
+	shit checkout main &&
 	test_cmp expected_hooks actual_hooks
 '
 
@@ -94,31 +94,31 @@ test_expect_success 'automatic merge fails; both hooks are available' '
 	setup_success_hook "pre-commit" &&
 	setup_success_hook "pre-merge-commit" &&
 
-	git checkout conflicting-a &&
-	test_must_fail git merge -m "merge conflicting-b" conflicting-b &&
+	shit checkout conflicting-a &&
+	test_must_fail shit merge -m "merge conflicting-b" conflicting-b &&
 	test_path_is_missing actual_hooks &&
 
 	echo "pre-commit" >expected_hooks &&
 	echo a+b >conflicting &&
-	git add conflicting &&
-	git commit -m "resolve conflict" &&
+	shit add conflicting &&
+	shit commit -m "resolve conflict" &&
 	test_cmp expected_hooks actual_hooks
 '
 
 test_expect_success '--no-verify with succeeding hook' '
 	setup_success_hook "pre-commit" &&
 	echo "even more" >>file &&
-	git add file &&
-	git commit --no-verify -m "even more" &&
+	shit add file &&
+	shit commit --no-verify -m "even more" &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success '--no-verify with succeeding hook (merge)' '
 	setup_success_hook "pre-merge-commit" &&
-	git branch -f side side-orig &&
-	git checkout side &&
-	git merge --no-verify -m "merge main" main &&
-	git checkout main &&
+	shit branch -f side side-orig &&
+	shit checkout side &&
+	shit merge --no-verify -m "merge main" main &&
+	shit checkout main &&
 	test_path_is_missing actual_hooks
 '
 
@@ -136,35 +136,35 @@ test_expect_success 'with failing hook' '
 	echo "pre-commit-failing-hook" >expected_hooks &&
 
 	echo "another" >>file &&
-	git add file &&
-	test_must_fail git commit -m "another" &&
+	shit add file &&
+	test_must_fail shit commit -m "another" &&
 	test_cmp expected_hooks actual_hooks
 '
 
 test_expect_success '--no-verify with failing hook' '
 	setup_failing_hook "pre-commit" &&
 	echo "stuff" >>file &&
-	git add file &&
-	git commit --no-verify -m "stuff" &&
+	shit add file &&
+	shit commit --no-verify -m "stuff" &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success 'with failing hook (merge)' '
 	setup_failing_hook "pre-merge-commit" &&
 	echo "pre-merge-commit-failing-hook" >expected_hooks &&
-	git checkout side &&
-	test_must_fail git merge -m "merge main" main &&
-	git checkout main &&
+	shit checkout side &&
+	test_must_fail shit merge -m "merge main" main &&
+	shit checkout main &&
 	test_cmp expected_hooks actual_hooks
 '
 
 test_expect_success '--no-verify with failing hook (merge)' '
 	setup_failing_hook "pre-merge-commit" &&
 
-	git branch -f side side-orig &&
-	git checkout side &&
-	git merge --no-verify -m "merge main" main &&
-	git checkout main &&
+	shit branch -f side side-orig &&
+	shit checkout side &&
+	shit merge --no-verify -m "merge main" main &&
+	shit checkout main &&
 	test_path_is_missing actual_hooks
 '
 
@@ -181,34 +181,34 @@ setup_non_exec_hook () {
 test_expect_success POSIXPERM 'with non-executable hook' '
 	setup_non_exec_hook "pre-commit" &&
 	echo "content" >>file &&
-	git add file &&
-	git commit -m "content" &&
+	shit add file &&
+	shit commit -m "content" &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success POSIXPERM '--no-verify with non-executable hook' '
 	setup_non_exec_hook "pre-commit" &&
 	echo "more content" >>file &&
-	git add file &&
-	git commit --no-verify -m "more content" &&
+	shit add file &&
+	shit commit --no-verify -m "more content" &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success POSIXPERM 'with non-executable hook (merge)' '
 	setup_non_exec_hook "pre-merge" &&
-	git branch -f side side-orig &&
-	git checkout side &&
-	git merge -m "merge main" main &&
-	git checkout main &&
+	shit branch -f side side-orig &&
+	shit checkout side &&
+	shit merge -m "merge main" main &&
+	shit checkout main &&
 	test_path_is_missing actual_hooks
 '
 
 test_expect_success POSIXPERM '--no-verify with non-executable hook (merge)' '
 	setup_non_exec_hook "pre-merge" &&
-	git branch -f side side-orig &&
-	git checkout side &&
-	git merge --no-verify -m "merge main" main &&
-	git checkout main &&
+	shit branch -f side side-orig &&
+	shit checkout side &&
+	shit merge --no-verify -m "merge main" main &&
+	shit checkout main &&
 	test_path_is_missing actual_hooks
 '
 
@@ -217,34 +217,34 @@ setup_require_prefix_hook () {
 	echo require-prefix >expected_hooks &&
 	test_hook pre-commit <<-\EOF
 	echo require-prefix >>actual_hooks
-	test $GIT_PREFIX = "success/"
+	test $shit_PREFIX = "success/"
 	EOF
 }
 
-test_expect_success 'with hook requiring GIT_PREFIX' '
+test_expect_success 'with hook requiring shit_PREFIX' '
 	test_when_finished "rm -rf actual_hooks success" &&
 	setup_require_prefix_hook &&
 	echo "more content" >>file &&
-	git add file &&
+	shit add file &&
 	mkdir success &&
 	(
 		cd success &&
-		git commit -m "hook requires GIT_PREFIX = success/"
+		shit commit -m "hook requires shit_PREFIX = success/"
 	) &&
 	test_cmp expected_hooks actual_hooks
 '
 
-test_expect_success 'with failing hook requiring GIT_PREFIX' '
+test_expect_success 'with failing hook requiring shit_PREFIX' '
 	test_when_finished "rm -rf actual_hooks fail" &&
 	setup_require_prefix_hook &&
 	echo "more content" >>file &&
-	git add file &&
+	shit add file &&
 	mkdir fail &&
 	(
 		cd fail &&
-		test_must_fail git commit -m "hook must fail"
+		test_must_fail shit commit -m "hook must fail"
 	) &&
-	git checkout -- file &&
+	shit checkout -- file &&
 	test_cmp expected_hooks actual_hooks
 '
 
@@ -253,8 +253,8 @@ setup_require_author_hook () {
 	echo check-author >expected_hooks &&
 	test_hook pre-commit <<-\EOF
 	echo check-author >>actual_hooks
-	test "$GIT_AUTHOR_NAME" = "New Author" &&
-	test "$GIT_AUTHOR_EMAIL" = "newauthor@example.com"
+	test "$shit_AUTHOR_NAME" = "New Author" &&
+	test "$shit_AUTHOR_EMAIL" = "newauthor@example.com"
 	EOF
 }
 
@@ -266,17 +266,17 @@ test_expect_success 'check the author in hook' '
 	check-author
 	check-author
 	EOF
-	test_must_fail git commit --allow-empty -m "by a.u.thor" &&
+	test_must_fail shit commit --allow-empty -m "by a.u.thor" &&
 	(
-		GIT_AUTHOR_NAME="New Author" &&
-		GIT_AUTHOR_EMAIL="newauthor@example.com" &&
-		export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL &&
-		git commit --allow-empty -m "by new.author via env" &&
-		git show -s
+		shit_AUTHOR_NAME="New Author" &&
+		shit_AUTHOR_EMAIL="newauthor@example.com" &&
+		export shit_AUTHOR_NAME shit_AUTHOR_EMAIL &&
+		shit commit --allow-empty -m "by new.author via env" &&
+		shit show -s
 	) &&
-	git commit --author="New Author <newauthor@example.com>" \
+	shit commit --author="New Author <newauthor@example.com>" \
 		--allow-empty -m "by new.author via command line" &&
-	git show -s &&
+	shit show -s &&
 	test_cmp expected_hooks actual_hooks
 '
 

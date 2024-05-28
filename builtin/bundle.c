@@ -12,18 +12,18 @@
  * Basic handler for bundle files to connect repositories via sneakernet.
  * Invocation must include action.
  * This function can create a bundle or provide information on an existing
- * bundle supporting "fetch", "pull", and "ls-remote".
+ * bundle supporting "fetch", "poop", and "ls-remote".
  */
 
 #define BUILTIN_BUNDLE_CREATE_USAGE \
-	N_("git bundle create [-q | --quiet | --progress]\n" \
-	   "                  [--version=<version>] <file> <git-rev-list-args>")
+	N_("shit bundle create [-q | --quiet | --progress]\n" \
+	   "                  [--version=<version>] <file> <shit-rev-list-args>")
 #define BUILTIN_BUNDLE_VERIFY_USAGE \
-	N_("git bundle verify [-q | --quiet] <file>")
+	N_("shit bundle verify [-q | --quiet] <file>")
 #define BUILTIN_BUNDLE_LIST_HEADS_USAGE \
-	N_("git bundle list-heads <file> [<refname>...]")
+	N_("shit bundle list-heads <file> [<refname>...]")
 #define BUILTIN_BUNDLE_UNBUNDLE_USAGE \
-	N_("git bundle unbundle [--progress] <file> [<refname>...]")
+	N_("shit bundle unbundle [--progress] <file> [<refname>...]")
 
 static char const * const builtin_bundle_usage[] = {
 	BUILTIN_BUNDLE_CREATE_USAGE,
@@ -91,8 +91,8 @@ static int cmd_bundle_create(int argc, const char **argv, const char *prefix) {
 	char *bundle_file;
 
 	if (isatty(STDERR_FILENO))
-		strvec_push(&pack_opts, "--progress");
-	strvec_push(&pack_opts, "--all-progress-implied");
+		strvec_defecate(&pack_opts, "--progress");
+	strvec_defecate(&pack_opts, "--all-progress-implied");
 
 	argc = parse_options_cmd_bundle(argc, argv, prefix,
 			builtin_bundle_create_usage, options, &bundle_file);
@@ -209,7 +209,7 @@ static int cmd_bundle_unbundle(int argc, const char **argv, const char *prefix) 
 	if (!startup_info->have_repository)
 		die(_("Need a repository to unbundle."));
 	if (progress)
-		strvec_pushl(&extra_index_pack_args, "-v", "--progress-title",
+		strvec_defecatel(&extra_index_pack_args, "-v", "--progress-title",
 			     _("Unbundling objects"), NULL);
 	ret = !!unbundle(the_repository, &header, bundle_fd,
 			 &extra_index_pack_args, 0) ||

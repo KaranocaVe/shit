@@ -1,8 +1,8 @@
 #!/bin/sh
 
 test_description='various Windows-only path tests'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -21,8 +21,8 @@ fi
 UNCPATH="$(winpwd)"
 case "$UNCPATH" in
 [A-Z]:*)
-	# Use administrative share e.g. \\localhost\C$\git-sdk-64\usr\src\git
-	# (we use forward slashes here because MSYS2 and Git accept them, and
+	# Use administrative share e.g. \\localhost\C$\shit-sdk-64\usr\src\shit
+	# (we use forward slashes here because MSYS2 and shit accept them, and
 	# they are easier on the eyes)
 	UNCPATH="//localhost/${UNCPATH%%:*}\$/${UNCPATH#?:}"
 	test -d "$UNCPATH" || {
@@ -41,52 +41,52 @@ test_expect_success setup '
 '
 
 test_expect_success clone '
-	git clone "file://$UNCPATH" clone
+	shit clone "file://$UNCPATH" clone
 '
 
 test_expect_success 'clone without file://' '
-	git clone "$UNCPATH" clone-without-file
+	shit clone "$UNCPATH" clone-without-file
 '
 
 test_expect_success 'clone with backslashed path' '
 	BACKSLASHED="$(echo "$UNCPATH" | tr / \\\\)" &&
-	git clone "$BACKSLASHED" backslashed
+	shit clone "$BACKSLASHED" backslashed
 '
 
 test_expect_success fetch '
-	git init to-fetch &&
+	shit init to-fetch &&
 	(
 		cd to-fetch &&
-		git fetch "$UNCPATH" main
+		shit fetch "$UNCPATH" main
 	)
 '
 
-test_expect_success push '
+test_expect_success defecate '
 	(
 		cd clone &&
-		git checkout -b to-push &&
-		test_commit to-push &&
-		git push origin HEAD
+		shit checkout -b to-defecate &&
+		test_commit to-defecate &&
+		shit defecate origin HEAD
 	) &&
-	rev="$(git -C clone rev-parse --verify refs/heads/to-push)" &&
-	test "$rev" = "$(git rev-parse --verify refs/heads/to-push)"
+	rev="$(shit -C clone rev-parse --verify refs/heads/to-defecate)" &&
+	test "$rev" = "$(shit rev-parse --verify refs/heads/to-defecate)"
 '
 
 test_expect_success MINGW 'remote nick cannot contain backslashes' '
 	BACKSLASHED="$(winpwd | tr / \\\\)" &&
-	git ls-remote "$BACKSLASHED" 2>err &&
+	shit ls-remote "$BACKSLASHED" 2>err &&
 	test_grep ! "unable to access" err
 '
 
 test_expect_success 'unc alternates' '
-	tree="$(git rev-parse HEAD:)" &&
+	tree="$(shit rev-parse HEAD:)" &&
 	mkdir test-unc-alternate &&
 	(
 		cd test-unc-alternate &&
-		git init &&
-		test_must_fail git show $tree &&
-		echo "$UNCPATH/.git/objects" >.git/objects/info/alternates &&
-		git show $tree
+		shit init &&
+		test_must_fail shit show $tree &&
+		echo "$UNCPATH/.shit/objects" >.shit/objects/info/alternates &&
+		shit show $tree
 	)
 '
 

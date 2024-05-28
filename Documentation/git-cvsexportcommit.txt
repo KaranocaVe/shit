@@ -1,25 +1,25 @@
-git-cvsexportcommit(1)
+shit-cvsexportcommit(1)
 ======================
 
 NAME
 ----
-git-cvsexportcommit - Export a single commit to a CVS checkout
+shit-cvsexportcommit - Export a single commit to a CVS checkout
 
 
 SYNOPSIS
 --------
 [verse]
-'git cvsexportcommit' [-h] [-u] [-v] [-c] [-P] [-p] [-a] [-d <cvsroot>]
+'shit cvsexportcommit' [-h] [-u] [-v] [-c] [-P] [-p] [-a] [-d <cvsroot>]
 	[-w <cvs-workdir>] [-W] [-f] [-m <msgprefix>] [<parent-commit>] <commit-id>
 
 
 DESCRIPTION
 -----------
-Exports a commit from Git to a CVS checkout, making it easier
-to merge patches from a Git repository into a CVS repository.
+Exports a commit from shit to a CVS checkout, making it easier
+to merge patches from a shit repository into a CVS repository.
 
 Specify the name of a CVS checkout using the -w switch or execute it
-from the root of the CVS working copy. In the latter case GIT_DIR must
+from the root of the CVS working copy. In the latter case shit_DIR must
 be defined. See examples below.
 
 It does its best to do the safe thing, it will check that the files are
@@ -28,7 +28,7 @@ by default.
 
 Supports file additions, removals, and commits that affect binary files.
 
-If the commit is a merge commit, you must tell 'git cvsexportcommit' what
+If the commit is a merge commit, you must tell 'shit cvsexportcommit' what
 parent the changeset should be done against.
 
 OPTIONS
@@ -70,13 +70,13 @@ OPTIONS
 
 -w::
 	Specify the location of the CVS checkout to use for the export. This
-	option does not require GIT_DIR to be set before execution if the
-	current directory is within a Git repository.  The default is the
+	option does not require shit_DIR to be set before execution if the
+	current directory is within a shit repository.  The default is the
 	value of 'cvsexportcommit.cvsdir'.
 
 -W::
 	Tell cvsexportcommit that the current working directory is not only
-	a Git checkout, but also the CVS checkout.  Therefore, Git will
+	a shit checkout, but also the CVS checkout.  Therefore, shit will
 	reset the working directory to the parent commit before proceeding.
 
 -v::
@@ -93,26 +93,26 @@ EXAMPLES
 Merge one patch into CVS::
 +
 ------------
-$ export GIT_DIR=~/project/.git
+$ export shit_DIR=~/project/.shit
 $ cd ~/project_cvs_checkout
-$ git cvsexportcommit -v <commit-sha1>
+$ shit cvsexportcommit -v <commit-sha1>
 $ cvs commit -F .msg <files>
 ------------
 
-Merge one patch into CVS (-c and -w options). The working directory is within the Git Repo::
+Merge one patch into CVS (-c and -w options). The working directory is within the shit Repo::
 +
 ------------
-	$ git cvsexportcommit -v -c -w ~/project_cvs_checkout <commit-sha1>
+	$ shit cvsexportcommit -v -c -w ~/project_cvs_checkout <commit-sha1>
 ------------
 
 Merge pending patches into CVS automatically -- only if you really know what you are doing::
 +
 ------------
-$ export GIT_DIR=~/project/.git
+$ export shit_DIR=~/project/.shit
 $ cd ~/project_cvs_checkout
-$ git cherry cvshead myhead | sed -n 's/^+ //p' | xargs -l1 git cvsexportcommit -c -p -v
+$ shit cherry cvshead myhead | sed -n 's/^+ //p' | xargs -l1 shit cvsexportcommit -c -p -v
 ------------
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

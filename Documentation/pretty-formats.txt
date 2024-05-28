@@ -15,7 +15,7 @@ There are several built-in formats, and you can define
 additional formats by setting a pretty.<name>
 config option to either another format name, or a
 'format:' string, as described below (see
-linkgit:git-config[1]). Here are the details of the
+linkshit:shit-config[1]). Here are the details of the
 built-in formats:
 
 * 'oneline'
@@ -98,7 +98,7 @@ displayed in full, regardless of whether --abbrev or
 true parent commits, without taking grafts or history
 simplification into account. Note that this format affects the way
 commits are displayed, but not the way the diff is shown e.g. with
-`git log --raw`. To get full object names in a raw diff format,
+`shit log --raw`. To get full object names in a raw diff format,
 use `--no-abbrev`.
 
 * 'format:<format-string>'
@@ -122,8 +122,8 @@ The placeholders are:
 - Placeholders that expand to a single literal character:
 '%n':: newline
 '%%':: a raw '%'
-'%x00':: '%x' followed by two hexadecimal digits is replaced with a
-	 byte with the hexadecimal digits' value (we will call this
+'%x00':: '%x' followed by two hexadecimal dishits is replaced with a
+	 byte with the hexadecimal dishits' value (we will call this
 	 "literal formatting code" in the rest of this document).
 
 - Placeholders that affect formatting of later placeholders:
@@ -132,7 +132,7 @@ The placeholders are:
 '%Cblue':: switch color to blue
 '%Creset':: reset color
 '%C(...)':: color specification, as described under Values in the
-	    "CONFIGURATION FILE" section of linkgit:git-config[1].  By
+	    "CONFIGURATION FILE" section of linkshit:shit-config[1].  By
 	    default, colors are shown only when enabled for log output
 	    (by `color.diff`, `color.ui`, or `--color`, and respecting
 	    the `auto` settings of the former if we are going to a
@@ -141,13 +141,13 @@ The placeholders are:
 	    `%C(always,...)` will show the colors even when color is
 	    not otherwise enabled (though consider just using
 	    `--color=always` to enable color for the whole output,
-	    including this format and anything else git might color).
+	    including this format and anything else shit might color).
 	    `auto` alone (i.e. `%C(auto)`) will turn on auto coloring
 	    on the next placeholders until the color is switched
 	    again.
 '%m':: left (`<`), right (`>`) or boundary (`-`) mark
 '%w([<w>[,<i1>[,<i2>]]])':: switch line wrapping, like the -w option of
-			    linkgit:git-shortlog[1].
+			    linkshit:shit-shortlog[1].
 '%<( <N> [,trunc|ltrunc|mtrunc])':: make the next placeholder take at
 				  least N column widths, padding spaces on
 				  the right if necessary.  Optionally
@@ -187,14 +187,14 @@ The placeholders are:
 '%P':: parent hashes
 '%p':: abbreviated parent hashes
 '%an':: author name
-'%aN':: author name (respecting .mailmap, see linkgit:git-shortlog[1]
-	or linkgit:git-blame[1])
+'%aN':: author name (respecting .mailmap, see linkshit:shit-shortlog[1]
+	or linkshit:shit-blame[1])
 '%ae':: author email
-'%aE':: author email (respecting .mailmap, see linkgit:git-shortlog[1]
-	or linkgit:git-blame[1])
+'%aE':: author email (respecting .mailmap, see linkshit:shit-shortlog[1]
+	or linkshit:shit-blame[1])
 '%al':: author email local-part (the part before the '@' sign)
 '%aL':: author local-part (see '%al') respecting .mailmap, see
-	linkgit:git-shortlog[1] or linkgit:git-blame[1])
+	linkshit:shit-shortlog[1] or linkshit:shit-blame[1])
 '%ad':: author date (format respects --date= option)
 '%aD':: author date, RFC2822 style
 '%ar':: author date, relative
@@ -203,16 +203,16 @@ The placeholders are:
 '%aI':: author date, strict ISO 8601 format
 '%as':: author date, short format (`YYYY-MM-DD`)
 '%ah':: author date, human style (like the `--date=human` option of
-	linkgit:git-rev-list[1])
+	linkshit:shit-rev-list[1])
 '%cn':: committer name
 '%cN':: committer name (respecting .mailmap, see
-	linkgit:git-shortlog[1] or linkgit:git-blame[1])
+	linkshit:shit-shortlog[1] or linkshit:shit-blame[1])
 '%ce':: committer email
 '%cE':: committer email (respecting .mailmap, see
-	linkgit:git-shortlog[1] or linkgit:git-blame[1])
+	linkshit:shit-shortlog[1] or linkshit:shit-blame[1])
 '%cl':: committer email local-part (the part before the '@' sign)
 '%cL':: committer local-part (see '%cl') respecting .mailmap, see
-	linkgit:git-shortlog[1] or linkgit:git-blame[1])
+	linkshit:shit-shortlog[1] or linkshit:shit-blame[1])
 '%cd':: committer date (format respects --date= option)
 '%cD':: committer date, RFC2822 style
 '%cr':: committer date, relative
@@ -221,8 +221,8 @@ The placeholders are:
 '%cI':: committer date, strict ISO 8601 format
 '%cs':: committer date, short format (`YYYY-MM-DD`)
 '%ch':: committer date, human style (like the `--date=human` option of
-	linkgit:git-rev-list[1])
-'%d':: ref names, like the --decorate option of linkgit:git-log[1]
+	linkshit:shit-rev-list[1])
+'%d':: ref names, like the --decorate option of linkshit:shit-log[1]
 '%D':: ref names without the " (", ")" wrapping.
 '%(decorate[:<options>])'::
 ref names with custom decorations. The `decorate` string may be followed by a
@@ -244,32 +244,32 @@ or tag annotations, and spaces as separators:
 `%(decorate:prefix=,suffix=,tag=,separator= )`
 
 '%(describe[:<options>])'::
-human-readable name, like linkgit:git-describe[1]; empty string for
+human-readable name, like linkshit:shit-describe[1]; empty string for
 undescribable commits.  The `describe` string may be followed by a colon and
 zero or more comma-separated options.  Descriptions can be inconsistent when
 tags are added or removed at the same time.
 +
 ** 'tags[=<bool-value>]': Instead of only considering annotated tags,
    consider lightweight tags as well.
-** 'abbrev=<number>': Instead of using the default number of hexadecimal digits
+** 'abbrev=<number>': Instead of using the default number of hexadecimal dishits
    (which will vary according to the number of objects in the repository with a
-   default of 7) of the abbreviated object name, use <number> digits, or as many
-   digits as needed to form a unique object name.
+   default of 7) of the abbreviated object name, use <number> dishits, or as many
+   dishits as needed to form a unique object name.
 ** 'match=<pattern>': Only consider tags matching the given
    `glob(7)` pattern, excluding the "refs/tags/" prefix.
 ** 'exclude=<pattern>': Do not consider tags matching the given
    `glob(7)` pattern, excluding the "refs/tags/" prefix.
 
 '%S':: ref name given on the command line by which the commit was reached
-       (like `git log --source`), only works with `git log`
+       (like `shit log --source`), only works with `shit log`
 '%e':: encoding
 '%s':: subject
 '%f':: sanitized subject line, suitable for a filename
 '%b':: body
 '%B':: raw body (unwrapped subject and body)
-ifndef::git-rev-list[]
+ifndef::shit-rev-list[]
 '%N':: commit notes
-endif::git-rev-list[]
+endif::shit-rev-list[]
 '%GG':: raw verification message from GPG for a signed commit
 '%G?':: show "G" for a good (valid) signature,
 	"B" for a bad signature,
@@ -288,21 +288,21 @@ endif::git-rev-list[]
 '%gD':: reflog selector, e.g., `refs/stash@{1}` or `refs/stash@{2
 	minutes ago}`; the format follows the rules described for the
 	`-g` option. The portion before the `@` is the refname as
-	given on the command line (so `git log -g refs/heads/master`
+	given on the command line (so `shit log -g refs/heads/master`
 	would yield `refs/heads/master@{0}`).
 '%gd':: shortened reflog selector; same as `%gD`, but the refname
 	portion is shortened for human readability (so
 	`refs/heads/master` becomes just `master`).
 '%gn':: reflog identity name
 '%gN':: reflog identity name (respecting .mailmap, see
-	linkgit:git-shortlog[1] or linkgit:git-blame[1])
+	linkshit:shit-shortlog[1] or linkshit:shit-blame[1])
 '%ge':: reflog identity email
 '%gE':: reflog identity email (respecting .mailmap, see
-	linkgit:git-shortlog[1] or linkgit:git-blame[1])
+	linkshit:shit-shortlog[1] or linkshit:shit-blame[1])
 '%gs':: reflog subject
 '%(trailers[:<options>])'::
 display the trailers of the body as interpreted by
-linkgit:git-interpret-trailers[1]. The `trailers` string may be followed by
+linkshit:shit-interpret-trailers[1]. The `trailers` string may be followed by
 a colon and zero or more comma-separated options. If any option is provided
 multiple times, the last occurrence wins.
 +
@@ -335,13 +335,13 @@ multiple times, the last occurrence wins.
 NOTE: Some placeholders may depend on other options given to the
 revision traversal engine. For example, the `%g*` reflog options will
 insert an empty string unless we are traversing reflog entries (e.g., by
-`git log -g`). The `%d` and `%D` placeholders will use the "short"
+`shit log -g`). The `%d` and `%D` placeholders will use the "short"
 decoration format if `--decorate` was not already provided on the command
 line.
 
 The boolean options accept an optional value `[=<bool-value>]`. The values
 `true`, `false`, `on`, `off` etc. are all accepted. See the "boolean"
-sub-section in "EXAMPLES" in linkgit:git-config[1]. If a boolean
+sub-section in "EXAMPLES" in linkshit:shit-config[1]. If a boolean
 option is given with no value, it's enabled.
 
 If you add a `+` (plus sign) after '%' of a placeholder, a line-feed
@@ -367,12 +367,12 @@ terminated with a new line, just as the "oneline" format does.
 For example:
 +
 ---------------------
-$ git log -2 --pretty=format:%h 4da45bef \
+$ shit log -2 --pretty=format:%h 4da45bef \
   | perl -pe '$_ .= " -- NO NEWLINE\n" unless /\n/'
 4da45be
 7134973 -- NO NEWLINE
 
-$ git log -2 --pretty=tformat:%h 4da45bef \
+$ shit log -2 --pretty=tformat:%h 4da45bef \
   | perl -pe '$_ .= " -- NO NEWLINE\n" unless /\n/'
 4da45be
 7134973
@@ -383,6 +383,6 @@ as if it has `tformat:` in front of it.  For example, these two are
 equivalent:
 +
 ---------------------
-$ git log -2 --pretty=tformat:%h 4da45bef
-$ git log -2 --pretty=%h 4da45bef
+$ shit log -2 --pretty=tformat:%h 4da45bef
+$ shit log -2 --pretty=%h 4da45bef
 ---------------------

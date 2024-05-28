@@ -13,7 +13,7 @@ include ../shared.mak
 -include ../config.mak.autogen
 -include ../config.mak
 
-#GIT_TEST_OPTS = --verbose --debug
+#shit_TEST_OPTS = --verbose --debug
 SHELL_PATH ?= $(SHELL)
 TEST_SHELL_PATH ?= $(SHELL_PATH)
 PERL_PATH ?= /usr/bin/perl
@@ -54,7 +54,7 @@ UNIT_TESTS_NO_DIR = $(notdir $(UNIT_TESTS))
 # `test-chainlint` (which is a dependency of `test-lint`, `test` and `prove`)
 # checks all tests in all scripts via a single invocation, so tell individual
 # scripts not to run the external "chainlint.pl" script themselves
-CHAINLINTSUPPRESS = GIT_TEST_EXT_CHAIN_LINT=0 && export GIT_TEST_EXT_CHAIN_LINT &&
+CHAINLINTSUPPRESS = shit_TEST_EXT_CHAIN_LINT=0 && export shit_TEST_EXT_CHAIN_LINT &&
 
 all:: $(DEFAULT_TEST_TARGET)
 
@@ -68,11 +68,11 @@ failed:
 	test -z "$$failed" || $(MAKE) $$failed
 
 prove: pre-clean check-chainlint $(TEST_LINT)
-	@echo "*** prove (shell & unit tests) ***"; $(CHAINLINTSUPPRESS) TEST_SHELL_PATH='$(TEST_SHELL_PATH_SQ)' $(PROVE) --exec ./run-test.sh $(GIT_PROVE_OPTS) $(T) $(UNIT_TESTS) :: $(GIT_TEST_OPTS)
+	@echo "*** prove (shell & unit tests) ***"; $(CHAINLINTSUPPRESS) TEST_SHELL_PATH='$(TEST_SHELL_PATH_SQ)' $(PROVE) --exec ./run-test.sh $(shit_PROVE_OPTS) $(T) $(UNIT_TESTS) :: $(shit_TEST_OPTS)
 	$(MAKE) clean-except-prove-cache
 
 $(T):
-	@echo "*** $@ ***"; '$(TEST_SHELL_PATH_SQ)' $@ $(GIT_TEST_OPTS)
+	@echo "*** $@ ***"; '$(TEST_SHELL_PATH_SQ)' $@ $(shit_TEST_OPTS)
 
 $(UNIT_TESTS):
 	@echo "*** $@ ***"; $@
@@ -83,7 +83,7 @@ unit-tests: $(DEFAULT_UNIT_TEST_TARGET)
 unit-tests-raw: $(UNIT_TESTS)
 
 unit-tests-prove:
-	@echo "*** prove - unit tests ***"; $(PROVE) $(GIT_PROVE_OPTS) $(UNIT_TESTS)
+	@echo "*** prove - unit tests ***"; $(PROVE) $(shit_PROVE_OPTS) $(UNIT_TESTS)
 
 unit-tests-test-tool:
 	@echo "*** test-tool - unit tests **"
@@ -126,7 +126,7 @@ check-chainlint:
 
 test-lint: test-lint-duplicates test-lint-executable test-lint-shell-syntax \
 	test-lint-filenames
-ifneq ($(GIT_TEST_CHAIN_LINT),0)
+ifneq ($(shit_TEST_CHAIN_LINT),0)
 test-lint: test-chainlint
 endif
 
@@ -146,7 +146,7 @@ test-lint-shell-syntax:
 test-lint-filenames:
 	@# We do *not* pass a glob to ls-files but use grep instead, to catch
 	@# non-ASCII characters (which are quoted within double-quotes)
-	@bad="$$(git -c core.quotepath=true ls-files 2>/dev/null | \
+	@bad="$$(shit -c core.quotepath=true ls-files 2>/dev/null | \
 			grep '["*:<>?\\|]')"; \
 		test -z "$$bad" || { \
 		echo >&2 "non-portable file name(s): $$bad"; exit 1; }
@@ -162,7 +162,7 @@ aggregate-results:
 	@'$(SHELL_PATH_SQ)' ./aggregate-results.sh '$(TEST_RESULTS_DIRECTORY_SQ)'
 
 valgrind:
-	$(MAKE) GIT_TEST_OPTS="$(GIT_TEST_OPTS) --valgrind"
+	$(MAKE) shit_TEST_OPTS="$(shit_TEST_OPTS) --valgrind"
 
 perf:
 	$(MAKE) -C perf/ all

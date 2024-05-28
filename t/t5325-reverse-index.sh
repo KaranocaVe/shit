@@ -7,15 +7,15 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 # The below tests want control over the 'pack.writeReverseIndex' setting
 # themselves to assert various combinations of it with other options.
-sane_unset GIT_TEST_NO_WRITE_REV_INDEX
+sane_unset shit_TEST_NO_WRITE_REV_INDEX
 
-packdir=.git/objects/pack
+packdir=.shit/objects/pack
 
 test_expect_success 'setup' '
 	test_commit base &&
 
 	test_config pack.writeReverseIndex false &&
-	pack=$(git pack-objects --all $packdir/pack) &&
+	pack=$(shit pack-objects --all $packdir/pack) &&
 	rev=$packdir/pack-$pack.rev &&
 
 	test_path_is_missing $rev
@@ -27,7 +27,7 @@ test_index_pack () {
 	shift &&
 	# remove the index since Windows won't overwrite an existing file
 	rm $packdir/pack-$pack.idx &&
-	git -c pack.writeReverseIndex=$conf index-pack "$@" \
+	shit -c pack.writeReverseIndex=$conf index-pack "$@" \
 		$packdir/pack-$pack.pack
 }
 
@@ -58,19 +58,19 @@ test_expect_success 'index-pack can verify reverse indexes' '
 	test_index_pack true &&
 
 	test_path_is_file $rev &&
-	git index-pack --rev-index --verify $packdir/pack-$pack.pack &&
+	shit index-pack --rev-index --verify $packdir/pack-$pack.pack &&
 
 	# Intentionally corrupt the reverse index.
 	chmod u+w $rev &&
 	printf "xxxx" | dd of=$rev bs=1 count=4 conv=notrunc &&
 
-	test_must_fail git index-pack --rev-index --verify \
+	test_must_fail shit index-pack --rev-index --verify \
 		$packdir/pack-$pack.pack 2>err &&
 	grep "validation error" err
 '
 
 test_expect_success 'index-pack infers reverse index name with -o' '
-	git index-pack --rev-index -o other.idx $packdir/pack-$pack.pack &&
+	shit index-pack --rev-index -o other.idx $packdir/pack-$pack.pack &&
 	test_path_is_file other.idx &&
 	test_path_is_file other.rev
 '
@@ -78,13 +78,13 @@ test_expect_success 'index-pack infers reverse index name with -o' '
 test_expect_success 'pack-objects respects pack.writeReverseIndex' '
 	test_when_finished "rm -fr pack-1-*" &&
 
-	git -c pack.writeReverseIndex= pack-objects --all pack-1 &&
+	shit -c pack.writeReverseIndex= pack-objects --all pack-1 &&
 	test_path_is_missing pack-1-*.rev &&
 
-	git -c pack.writeReverseIndex=false pack-objects --all pack-1 &&
+	shit -c pack.writeReverseIndex=false pack-objects --all pack-1 &&
 	test_path_is_missing pack-1-*.rev &&
 
-	git -c pack.writeReverseIndex=true pack-objects --all pack-1 &&
+	shit -c pack.writeReverseIndex=true pack-objects --all pack-1 &&
 	test_path_is_file pack-1-*.rev
 '
 
@@ -92,8 +92,8 @@ test_expect_success 'reverse index is not generated when available on disk' '
 	test_index_pack true &&
 	test_path_is_file $rev &&
 
-	git rev-parse HEAD >tip &&
-	GIT_TEST_REV_INDEX_DIE_IN_MEMORY=1 git cat-file \
+	shit rev-parse HEAD >tip &&
+	shit_TEST_REV_INDEX_DIE_IN_MEMORY=1 shit cat-file \
 		--batch-check="%(objectsize:disk)" <tip
 '
 
@@ -103,29 +103,29 @@ test_expect_success 'reverse index is ignored when pack.readReverseIndex is fals
 
 	test_config pack.readReverseIndex false &&
 
-	git rev-parse HEAD >tip &&
-	GIT_TEST_REV_INDEX_DIE_ON_DISK=1 git cat-file \
+	shit rev-parse HEAD >tip &&
+	shit_TEST_REV_INDEX_DIE_ON_DISK=1 shit cat-file \
 		--batch-check="%(objectsize:disk)" <tip
 '
 
 test_expect_success 'revindex in-memory vs on-disk' '
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -fr repo" &&
 	(
 		cd repo &&
 
 		test_commit commit &&
 
-		git rev-list --objects --no-object-names --all >objects &&
+		shit rev-list --objects --no-object-names --all >objects &&
 
-		git -c pack.writeReverseIndex=false repack -ad &&
+		shit -c pack.writeReverseIndex=false repack -ad &&
 		test_path_is_missing $packdir/pack-*.rev &&
-		git cat-file --batch-check="%(objectsize:disk) %(objectname)" \
+		shit cat-file --batch-check="%(objectsize:disk) %(objectname)" \
 			<objects >in-core &&
 
-		git -c pack.writeReverseIndex=true repack -ad &&
+		shit -c pack.writeReverseIndex=true repack -ad &&
 		test_path_is_file $packdir/pack-*.rev &&
-		git cat-file --batch-check="%(objectsize:disk) %(objectname)" \
+		shit cat-file --batch-check="%(objectsize:disk) %(objectname)" \
 			<objects >on-disk &&
 
 		test_cmp on-disk in-core
@@ -134,26 +134,26 @@ test_expect_success 'revindex in-memory vs on-disk' '
 
 test_expect_success 'fsck succeeds on good rev-index' '
 	test_when_finished rm -fr repo &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 
 		test_commit commit &&
-		git -c pack.writeReverseIndex=true repack -ad &&
-		git fsck 2>err &&
+		shit -c pack.writeReverseIndex=true repack -ad &&
+		shit fsck 2>err &&
 		test_must_be_empty err
 	)
 '
 
 test_expect_success 'set up rev-index corruption tests' '
-	git init corrupt &&
+	shit init corrupt &&
 	(
 		cd corrupt &&
 
 		test_commit commit &&
-		git -c pack.writeReverseIndex=true repack -ad &&
+		shit -c pack.writeReverseIndex=true repack -ad &&
 
-		revfile=$(ls .git/objects/pack/pack-*.rev) &&
+		revfile=$(ls .shit/objects/pack/pack-*.rev) &&
 		chmod a+w $revfile &&
 		cp $revfile $revfile.bak
 	)
@@ -166,19 +166,19 @@ corrupt_rev_and_verify () {
 		error="$3" &&
 
 		cd corrupt &&
-		revfile=$(ls .git/objects/pack/pack-*.rev) &&
+		revfile=$(ls .shit/objects/pack/pack-*.rev) &&
 
 		# Reset to original rev-file.
 		cp $revfile.bak $revfile &&
 
 		printf "$value" | dd of=$revfile bs=1 seek="$pos" conv=notrunc &&
-		test_must_fail git fsck 2>err &&
+		test_must_fail shit fsck 2>err &&
 		grep "$error" err
 	)
 }
 
 test_expect_success 'fsck catches invalid checksum' '
-	revfile=$(ls corrupt/.git/objects/pack/pack-*.rev) &&
+	revfile=$(ls corrupt/.shit/objects/pack/pack-*.rev) &&
 	orig_size=$(wc -c <$revfile) &&
 	hashpos=$((orig_size - 10)) &&
 	corrupt_rev_and_verify $hashpos bogus \

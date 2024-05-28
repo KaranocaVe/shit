@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use lib (split(/:/, $ENV{GITPERLLIB}));
+use lib (split(/:/, $ENV{shitPERLLIB}));
 
 use 5.008001;
 use warnings;
@@ -8,7 +8,7 @@ use strict;
 use Test::More qw(no_plan);
 
 BEGIN {
-	# t9700-perl-git.sh kicks off our testing, so we have to go from
+	# t9700-perl-shit.sh kicks off our testing, so we have to go from
 	# there.
 	Test::More->builder->current_test(1);
 	Test::More->builder->no_ending(1);
@@ -25,22 +25,22 @@ sub adjust_dirsep {
 
 my $oid_re = qr/^[0-9a-fA-F]{40}(?:[0-9a-fA-F]{24})?$/;
 
-BEGIN { use_ok('Git') }
+BEGIN { use_ok('shit') }
 
 # set up
 our $abs_repo_dir = cwd();
-ok(our $r = Git->repository(Directory => "."), "open repository");
+ok(our $r = shit->repository(Directory => "."), "open repository");
 {
-	local $ENV{GIT_TEST_ASSUME_DIFFERENT_OWNER} = 1;
+	local $ENV{shit_TEST_ASSUME_DIFFERENT_OWNER} = 1;
 	my $failed;
 
-	$failed = eval { Git->repository(Directory => $abs_repo_dir) };
+	$failed = eval { shit->repository(Directory => $abs_repo_dir) };
 	ok(!$failed, "reject unsafe non-bare repository");
-	like($@, qr/not a git repository/i, "unsafe error message");
+	like($@, qr/not a shit repository/i, "unsafe error message");
 
-	$failed = eval { Git->repository(Directory => "$abs_repo_dir/bare.git") };
+	$failed = eval { shit->repository(Directory => "$abs_repo_dir/bare.shit") };
 	ok(!$failed, "reject unsafe bare repository");
-	like($@, qr/not a git repository/i, "unsafe error message");
+	like($@, qr/not a shit repository/i, "unsafe error message");
 }
 
 # config
@@ -64,7 +64,7 @@ is($r->get_color("color.test.slot1", "red"), $ansi_green, "get_color");
 
 # Failure cases for config:
 # Save and restore STDERR; we will probably extract this into a
-# "dies_ok" method and possibly move the STDERR handling to Git.pm.
+# "dies_ok" method and possibly move the STDERR handling to shit.pm.
 open our $tmpstderr, ">&STDERR" or die "cannot save STDERR";
 open STDERR, ">", "/dev/null" or die "cannot redirect STDERR to /dev/null";
 is($r->config("test.dupstring"), "value2", "config: multivar");
@@ -103,7 +103,7 @@ our $blobcontents;
 { local $/; seek TEMPFILE, 0, 0; $blobcontents = <TEMPFILE>; }
 is($blobcontents, "changed file 1\n", "cat_blob: data");
 close TEMPFILE or die "Failed writing to $tmpfile: $!";
-is(Git::hash_object("blob", $tmpfile), $file1hash, "hash_object: roundtrip");
+is(shit::hash_object("blob", $tmpfile), $file1hash, "hash_object: roundtrip");
 open TEMPFILE, ">$tmpfile" or die "Can't open $tmpfile: $!";
 print TEMPFILE my $test_text = "test blob, to be inserted\n";
 close TEMPFILE or die "Failed writing to $tmpfile: $!";
@@ -117,7 +117,7 @@ close TEMPFILE;
 unlink $tmpfile;
 
 # paths
-is($r->repo_path, $abs_repo_dir . "/.git", "repo_path");
+is($r->repo_path, $abs_repo_dir . "/.shit", "repo_path");
 is($r->wc_path, $abs_repo_dir . "/", "wc_path");
 is($r->wc_subdir, "", "wc_subdir initial");
 $r->wc_chdir("directory1");
@@ -126,8 +126,8 @@ is($r->config("test.string"), "value", "config after wc_chdir");
 
 # Object generation in sub directory
 chdir("directory2");
-my $r2 = Git->repository();
-is($r2->repo_path, $abs_repo_dir . "/.git", "repo_path (2)");
+my $r2 = shit->repository();
+is($r2->repo_path, $abs_repo_dir . "/.shit", "repo_path (2)");
 is($r2->wc_path, $abs_repo_dir . "/", "wc_path (2)");
 is($r2->wc_subdir, "directory2/", "wc_subdir initial (2)");
 
@@ -139,7 +139,7 @@ isnt($last_commit, $dir_commit, 'log . does not show last commit');
 
 # commands outside working tree
 chdir($abs_repo_dir . '/..');
-my $r3 = Git->repository(Directory => $abs_repo_dir);
+my $r3 = shit->repository(Directory => $abs_repo_dir);
 my $tmpfile3 = "$abs_repo_dir/file3.tmp";
 open TEMPFILE3, "+>$tmpfile3" or die "Can't open $tmpfile3: $!";
 is($r3->cat_blob($file1hash, \*TEMPFILE3), 15, "cat_blob(outside): size");
@@ -148,9 +148,9 @@ unlink $tmpfile3;
 chdir($abs_repo_dir);
 
 # unquoting paths
-is(Git::unquote_path('abc'), 'abc', 'unquote unquoted path');
-is(Git::unquote_path('"abc def"'), 'abc def', 'unquote simple quoted path');
-is(Git::unquote_path('"abc\"\\\\ \a\b\t\n\v\f\r\001\040"'),
+is(shit::unquote_path('abc'), 'abc', 'unquote unquoted path');
+is(shit::unquote_path('"abc def"'), 'abc def', 'unquote simple quoted path');
+is(shit::unquote_path('"abc\"\\\\ \a\b\t\n\v\f\r\001\040"'),
 		     "abc\"\\ \x07\x08\x09\x0a\x0b\x0c\x0d\x01 ",
 		     'unquote escape sequences');
 

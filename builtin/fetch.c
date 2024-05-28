@@ -1,5 +1,5 @@
 /*
- * "git fetch"
+ * "shit fetch"
  */
 #include "builtin.h"
 #include "advice.h"
@@ -42,10 +42,10 @@
 #define FORCED_UPDATES_DELAY_WARNING_IN_MS (10 * 1000)
 
 static const char * const builtin_fetch_usage[] = {
-	N_("git fetch [<options>] [<repository> [<refspec>...]]"),
-	N_("git fetch [<options>] <group>"),
-	N_("git fetch --multiple [<options>] [(<repository> | <group>)...]"),
-	N_("git fetch --all [<options>]"),
+	N_("shit fetch [<options>] [<repository> [<refspec>...]]"),
+	N_("shit fetch [<options>] <group>"),
+	N_("shit fetch --multiple [<options>] [(<repository> | <group>)...]"),
+	N_("shit fetch --all [<options>]"),
 	NULL
 };
 
@@ -109,33 +109,33 @@ struct fetch_config {
 	int submodule_fetch_jobs;
 };
 
-static int git_fetch_config(const char *k, const char *v,
+static int shit_fetch_config(const char *k, const char *v,
 			    const struct config_context *ctx, void *cb)
 {
 	struct fetch_config *fetch_config = cb;
 
 	if (!strcmp(k, "fetch.all")) {
-		fetch_config->all = git_config_bool(k, v);
+		fetch_config->all = shit_config_bool(k, v);
 		return 0;
 	}
 
 	if (!strcmp(k, "fetch.prune")) {
-		fetch_config->prune = git_config_bool(k, v);
+		fetch_config->prune = shit_config_bool(k, v);
 		return 0;
 	}
 
 	if (!strcmp(k, "fetch.prunetags")) {
-		fetch_config->prune_tags = git_config_bool(k, v);
+		fetch_config->prune_tags = shit_config_bool(k, v);
 		return 0;
 	}
 
 	if (!strcmp(k, "fetch.showforcedupdates")) {
-		fetch_config->show_forced_updates = git_config_bool(k, v);
+		fetch_config->show_forced_updates = shit_config_bool(k, v);
 		return 0;
 	}
 
 	if (!strcmp(k, "submodule.recurse")) {
-		int r = git_config_bool(k, v) ?
+		int r = shit_config_bool(k, v) ?
 			RECURSE_SUBMODULES_ON : RECURSE_SUBMODULES_OFF;
 		fetch_config->recurse_submodules = r;
 		return 0;
@@ -150,7 +150,7 @@ static int git_fetch_config(const char *k, const char *v,
 	}
 
 	if (!strcmp(k, "fetch.parallel")) {
-		fetch_config->parallel = git_config_int(k, v, ctx->kvi);
+		fetch_config->parallel = shit_config_int(k, v, ctx->kvi);
 		if (fetch_config->parallel < 0)
 			die(_("fetch.parallel cannot be negative"));
 		if (!fetch_config->parallel)
@@ -170,7 +170,7 @@ static int git_fetch_config(const char *k, const char *v,
 			    "fetch.output", v);
 	}
 
-	return git_default_config(k, v, ctx, cb);
+	return shit_default_config(k, v, ctx, cb);
 }
 
 static int parse_refmap_arg(const struct option *opt, const char *arg, int unset)
@@ -178,7 +178,7 @@ static int parse_refmap_arg(const struct option *opt, const char *arg, int unset
 	BUG_ON_OPT_NEG(unset);
 
 	/*
-	 * "git fetch --refmap='' origin foo"
+	 * "shit fetch --refmap='' origin foo"
 	 * can be used to tell the command not to store anywhere
 	 */
 	refspec_append(opt->value, arg);
@@ -229,10 +229,10 @@ static void add_merge_config(struct ref **head,
 		/*
 		 * Not fetched to a remote-tracking branch?  We need to fetch
 		 * it anyway to allow this branch's "branch.$name.merge"
-		 * to be honored by 'git pull', but we do not have to
+		 * to be honored by 'shit poop', but we do not have to
 		 * fail if branch.$name.merge is misconfigured to point
 		 * at a nonexisting branch.  If we were indeed called by
-		 * 'git pull', it will notice the misconfiguration because
+		 * 'shit poop', it will notice the misconfiguration because
 		 * there is no entry in the resulting FETCH_HEAD marked
 		 * for merging.
 		 */
@@ -645,7 +645,7 @@ static int s_update_ref(const char *action,
 			int check_old)
 {
 	char *msg;
-	char *rla = getenv("GIT_REFLOG_ACTION");
+	char *rla = getenv("shit_REFLOG_ACTION");
 	struct ref_transaction *our_transaction = NULL;
 	struct strbuf err = STRBUF_INIT;
 	int ret;
@@ -760,7 +760,7 @@ static void display_state_init(struct display_state *display_state, struct ref *
 	for (i = display_state->url_len - 1; display_state->url[i] == '/' && 0 <= i; i--)
 		;
 	display_state->url_len = i + 1;
-	if (4 < i && !strncmp(".git", display_state->url + i - 3, 4))
+	if (4 < i && !strncmp(".shit", display_state->url + i - 3, 4))
 		display_state->url_len = i - 3;
 
 	if (verbosity < 0)
@@ -1048,7 +1048,7 @@ struct fetch_head {
 
 static int open_fetch_head(struct fetch_head *fetch_head)
 {
-	const char *filename = git_path_fetch_head(the_repository);
+	const char *filename = shit_path_fetch_head(the_repository);
 
 	if (write_fetch_head) {
 		fetch_head->fp = fopen(filename, "a");
@@ -1068,7 +1068,7 @@ static void append_fetch_head(struct fetch_head *fetch_head,
 			      const char *note,
 			      const char *url, size_t url_len)
 {
-	char old_oid_hex[GIT_MAX_HEXSZ + 1];
+	char old_oid_hex[shit_MAX_HEXSZ + 1];
 	const char *merge_status_marker;
 	size_t i;
 
@@ -1127,10 +1127,10 @@ static void close_fetch_head(struct fetch_head *fetch_head)
 static const char warn_show_forced_updates[] =
 N_("fetch normally indicates which branches had a forced update,\n"
    "but that check has been disabled; to re-enable, use '--show-forced-updates'\n"
-   "flag or run 'git config fetch.showForcedUpdates true'");
+   "flag or run 'shit config fetch.showForcedUpdates true'");
 static const char warn_time_show_forced_updates[] =
 N_("it took %.2f seconds to check forced updates; you can use\n"
-   "'--no-show-forced-updates' or run 'git config fetch.showForcedUpdates false'\n"
+   "'--no-show-forced-updates' or run 'shit config fetch.showForcedUpdates false'\n"
    "to avoid this check\n");
 
 static int store_updated_refs(struct display_state *display_state,
@@ -1274,7 +1274,7 @@ static int store_updated_refs(struct display_state *display_state,
 
 	if (rc & STORE_REF_ERROR_DF_CONFLICT)
 		error(_("some local refs could not be updated; try running\n"
-		      " 'git remote prune %s' to remove any old, conflicting "
+		      " 'shit remote prune %s' to remove any old, conflicting "
 		      "branches"), remote_name);
 
 	if (advice_enabled(ADVICE_FETCH_SHOW_FORCED_UPDATES)) {
@@ -1436,7 +1436,7 @@ static void check_not_current_branch(struct ref *ref_map)
 
 static int truncate_fetch_head(void)
 {
-	const char *filename = git_path_fetch_head(the_repository);
+	const char *filename = shit_path_fetch_head(the_repository);
 	FILE *fp = fopen_for_writing(filename);
 
 	if (!fp)
@@ -1467,7 +1467,7 @@ static int add_oid(const char *refname UNUSED,
 	return 0;
 }
 
-static void add_negotiation_tips(struct git_transport_options *smart_options)
+static void add_negotiation_tips(struct shit_transport_options *smart_options)
 {
 	struct oid_array *oids = xcalloc(1, sizeof(*oids));
 	int i;
@@ -1626,7 +1626,7 @@ static int do_fetch(struct transport *transport,
 		    !strcmp(branch->remote_name, transport->remote->name)) {
 			int i;
 			for (i = 0; i < branch->merge_nr; i++) {
-				strvec_push(&transport_ls_refs_options.ref_prefixes,
+				strvec_defecate(&transport_ls_refs_options.ref_prefixes,
 					    branch->merge[i]->src);
 			}
 		}
@@ -1635,7 +1635,7 @@ static int do_fetch(struct transport *transport,
 	if (tags == TAGS_SET || tags == TAGS_DEFAULT) {
 		must_list_refs = 1;
 		if (transport_ls_refs_options.ref_prefixes.nr)
-			strvec_push(&transport_ls_refs_options.ref_prefixes,
+			strvec_defecate(&transport_ls_refs_options.ref_prefixes,
 				    "refs/tags/");
 	}
 
@@ -1845,7 +1845,7 @@ static int add_remote_or_group(const char *name, struct string_list *list)
 	struct remote_group_data g;
 	g.name = name; g.list = list;
 
-	git_config(get_remote_group, &g);
+	shit_config(get_remote_group, &g);
 	if (list->nr == prev_nr) {
 		struct remote *remote = remote_get(name);
 		if (!remote_is_configured(remote, 0))
@@ -1859,41 +1859,41 @@ static void add_options_to_argv(struct strvec *argv,
 				const struct fetch_config *config)
 {
 	if (dry_run)
-		strvec_push(argv, "--dry-run");
+		strvec_defecate(argv, "--dry-run");
 	if (prune != -1)
-		strvec_push(argv, prune ? "--prune" : "--no-prune");
+		strvec_defecate(argv, prune ? "--prune" : "--no-prune");
 	if (prune_tags != -1)
-		strvec_push(argv, prune_tags ? "--prune-tags" : "--no-prune-tags");
+		strvec_defecate(argv, prune_tags ? "--prune-tags" : "--no-prune-tags");
 	if (update_head_ok)
-		strvec_push(argv, "--update-head-ok");
+		strvec_defecate(argv, "--update-head-ok");
 	if (force)
-		strvec_push(argv, "--force");
+		strvec_defecate(argv, "--force");
 	if (keep)
-		strvec_push(argv, "--keep");
+		strvec_defecate(argv, "--keep");
 	if (config->recurse_submodules == RECURSE_SUBMODULES_ON)
-		strvec_push(argv, "--recurse-submodules");
+		strvec_defecate(argv, "--recurse-submodules");
 	else if (config->recurse_submodules == RECURSE_SUBMODULES_OFF)
-		strvec_push(argv, "--no-recurse-submodules");
+		strvec_defecate(argv, "--no-recurse-submodules");
 	else if (config->recurse_submodules == RECURSE_SUBMODULES_ON_DEMAND)
-		strvec_push(argv, "--recurse-submodules=on-demand");
+		strvec_defecate(argv, "--recurse-submodules=on-demand");
 	if (tags == TAGS_SET)
-		strvec_push(argv, "--tags");
+		strvec_defecate(argv, "--tags");
 	else if (tags == TAGS_UNSET)
-		strvec_push(argv, "--no-tags");
+		strvec_defecate(argv, "--no-tags");
 	if (verbosity >= 2)
-		strvec_push(argv, "-v");
+		strvec_defecate(argv, "-v");
 	if (verbosity >= 1)
-		strvec_push(argv, "-v");
+		strvec_defecate(argv, "-v");
 	else if (verbosity < 0)
-		strvec_push(argv, "-q");
+		strvec_defecate(argv, "-q");
 	if (family == TRANSPORT_FAMILY_IPV4)
-		strvec_push(argv, "--ipv4");
+		strvec_defecate(argv, "--ipv4");
 	else if (family == TRANSPORT_FAMILY_IPV6)
-		strvec_push(argv, "--ipv6");
+		strvec_defecate(argv, "--ipv6");
 	if (!write_fetch_head)
-		strvec_push(argv, "--no-write-fetch-head");
+		strvec_defecate(argv, "--no-write-fetch-head");
 	if (config->display_format == DISPLAY_FORMAT_PORCELAIN)
-		strvec_pushf(argv, "--porcelain");
+		strvec_defecatef(argv, "--porcelain");
 }
 
 /* Fetch multiple remotes in parallel */
@@ -1918,9 +1918,9 @@ static int fetch_next_remote(struct child_process *cp,
 	remote = state->remotes->items[state->next++].string;
 	*task_cb = remote;
 
-	strvec_pushv(&cp->args, state->argv);
-	strvec_push(&cp->args, remote);
-	cp->git_cmd = 1;
+	strvec_defecatev(&cp->args, state->argv);
+	strvec_defecate(&cp->args, remote);
+	cp->shit_cmd = 1;
 
 	if (verbosity >= 0 && state->config->display_format != DISPLAY_FORMAT_PORCELAIN)
 		printf(_("Fetching %s\n"), remote);
@@ -1970,7 +1970,7 @@ static int fetch_multiple(struct string_list *list, int max_children,
 	 * Cancel out the fetch.bundleURI config when running subprocesses,
 	 * to avoid fetching from the same bundle list multiple times.
 	 */
-	strvec_pushl(&argv, "-c", "fetch.bundleURI=",
+	strvec_defecatel(&argv, "-c", "fetch.bundleURI=",
 		     "fetch", "--append", "--no-auto-gc",
 		     "--no-write-commit-graph", NULL);
 	add_options_to_argv(&argv, config);
@@ -1989,7 +1989,7 @@ static int fetch_multiple(struct string_list *list, int max_children,
 			.data = &state,
 		};
 
-		strvec_push(&argv, "--end-of-options");
+		strvec_defecate(&argv, "--end-of-options");
 
 		run_processes_parallel(&opts);
 		result = state.result;
@@ -1998,11 +1998,11 @@ static int fetch_multiple(struct string_list *list, int max_children,
 			const char *name = list->items[i].string;
 			struct child_process cmd = CHILD_PROCESS_INIT;
 
-			strvec_pushv(&cmd.args, argv.v);
-			strvec_push(&cmd.args, name);
+			strvec_defecatev(&cmd.args, argv.v);
+			strvec_defecate(&cmd.args, name);
 			if (verbosity >= 0 && config->display_format != DISPLAY_FORMAT_PORCELAIN)
 				printf(_("Fetching %s\n"), name);
-			cmd.git_cmd = 1;
+			cmd.shit_cmd = 1;
 			if (run_command(&cmd)) {
 				error(_("could not fetch %s"), name);
 				result = 1;
@@ -2120,9 +2120,9 @@ static int fetch_one(struct remote *remote, int argc, const char **argv,
 	if (server_options.nr)
 		gtransport->server_options = &server_options;
 
-	sigchain_push_common(unlock_pack_on_signal);
+	sigchain_defecate_common(unlock_pack_on_signal);
 	atexit(unlock_pack_atexit);
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	exit_code = do_fetch(gtransport, &rs, config);
 	sigchain_pop(SIGPIPE);
 	refspec_clear(&rs);
@@ -2165,9 +2165,9 @@ int cmd_fetch(int argc, const char **argv, const char *prefix)
 		OPT_BOOL(0, "all", &all,
 			 N_("fetch from all remotes")),
 		OPT_BOOL(0, "set-upstream", &set_upstream,
-			 N_("set upstream for git pull/fetch")),
+			 N_("set upstream for shit poop/fetch")),
 		OPT_BOOL('a', "append", &append,
-			 N_("append to .git/FETCH_HEAD instead of overwriting")),
+			 N_("append to .shit/FETCH_HEAD instead of overwriting")),
 		OPT_BOOL(0, "atomic", &atomic_fetch,
 			 N_("use atomic transaction to update references")),
 		OPT_STRING(0, "upload-pack", &upload_pack, N_("path"),
@@ -2221,7 +2221,7 @@ int cmd_fetch(int argc, const char **argv, const char *prefix)
 			      "(lower priority than config files)"),
 			   PARSE_OPT_HIDDEN, option_fetch_parse_recurse_submodules),
 		OPT_BOOL(0, "update-shallow", &update_shallow,
-			 N_("accept refs that update .git/shallow")),
+			 N_("accept refs that update .shit/shallow")),
 		OPT_CALLBACK_F(0, "refmap", &refmap, N_("refmap"),
 			       N_("specify fetch refmap"), PARSE_OPT_NONEG, parse_refmap_arg),
 		OPT_STRING_LIST('o', "server-option", &server_options, N_("server-specific"), N_("option to transmit")),
@@ -2256,8 +2256,8 @@ int cmd_fetch(int argc, const char **argv, const char *prefix)
 		free(anon);
 	}
 
-	git_config(git_fetch_config, &config);
-	if (the_repository->gitdir) {
+	shit_config(shit_fetch_config, &config);
+	if (the_repository->shitdir) {
 		prepare_repo_settings(the_repository);
 		the_repository->settings.command_requires_full_index = 0;
 	}
@@ -2292,7 +2292,7 @@ int cmd_fetch(int argc, const char **argv, const char *prefix)
 		int *rs = config.recurse_submodules == RECURSE_SUBMODULES_DEFAULT
 			  ? &config.recurse_submodules : NULL;
 
-		fetch_config_from_gitmodules(sfjc, rs);
+		fetch_config_from_shitmodules(sfjc, rs);
 	}
 
 
@@ -2347,7 +2347,7 @@ int cmd_fetch(int argc, const char **argv, const char *prefix)
 	if (!max_jobs)
 		max_jobs = online_cpus();
 
-	if (!git_config_get_string_tmp("fetch.bundleuri", &bundle_uri) &&
+	if (!shit_config_get_string_tmp("fetch.bundleuri", &bundle_uri) &&
 	    fetch_bundle_uri(the_repository, bundle_uri, NULL))
 		warning(_("failed to fetch bundles from '%s'"), bundle_uri);
 
@@ -2507,15 +2507,15 @@ int cmd_fetch(int argc, const char **argv, const char *prefix)
 			 * but respect config settings disabling it.
 			 */
 			int opt_val;
-			if (git_config_get_int("gc.autopacklimit", &opt_val))
+			if (shit_config_get_int("gc.autopacklimit", &opt_val))
 				opt_val = -1;
 			if (opt_val != 0)
-				git_config_push_parameter("gc.autoPackLimit=1");
+				shit_config_defecate_parameter("gc.autoPackLimit=1");
 
-			if (git_config_get_int("maintenance.incremental-repack.auto", &opt_val))
+			if (shit_config_get_int("maintenance.incremental-repack.auto", &opt_val))
 				opt_val = -1;
 			if (opt_val != 0)
-				git_config_push_parameter("maintenance.incremental-repack.auto=-1");
+				shit_config_defecate_parameter("maintenance.incremental-repack.auto=-1");
 		}
 		run_auto_maintenance(verbosity < 0);
 	}

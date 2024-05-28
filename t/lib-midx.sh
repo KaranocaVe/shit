@@ -4,5 +4,5 @@ test_midx_consistent () {
 	test-tool read-midx $1 | grep ^pack-.*\.idx$ | sort >actual &&
 
 	test_cmp expect actual &&
-	git multi-pack-index --object-dir=$1 verify
+	shit multi-pack-index --object-dir=$1 verify
 }

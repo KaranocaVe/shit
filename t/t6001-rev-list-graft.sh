@@ -2,8 +2,8 @@
 
 test_description='Revision traversal vs grafts and path limiter'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -11,34 +11,34 @@ test_expect_success setup '
 	mkdir subdir &&
 	echo >fileA fileA &&
 	echo >subdir/fileB fileB &&
-	git add fileA subdir/fileB &&
-	git commit -a -m "Initial in one history." &&
-	A0=$(git rev-parse --verify HEAD) &&
+	shit add fileA subdir/fileB &&
+	shit commit -a -m "Initial in one history." &&
+	A0=$(shit rev-parse --verify HEAD) &&
 
 	echo >fileA fileA modified &&
-	git commit -a -m "Second in one history." &&
-	A1=$(git rev-parse --verify HEAD) &&
+	shit commit -a -m "Second in one history." &&
+	A1=$(shit rev-parse --verify HEAD) &&
 
 	echo >subdir/fileB fileB modified &&
-	git commit -a -m "Third in one history." &&
-	A2=$(git rev-parse --verify HEAD) &&
+	shit commit -a -m "Third in one history." &&
+	A2=$(shit rev-parse --verify HEAD) &&
 
-	git update-ref -d refs/heads/main &&
-	rm -f .git/index &&
+	shit update-ref -d refs/heads/main &&
+	rm -f .shit/index &&
 
 	echo >fileA fileA again &&
 	echo >subdir/fileB fileB again &&
-	git add fileA subdir/fileB &&
-	git commit -a -m "Initial in alternate history." &&
-	B0=$(git rev-parse --verify HEAD) &&
+	shit add fileA subdir/fileB &&
+	shit commit -a -m "Initial in alternate history." &&
+	B0=$(shit rev-parse --verify HEAD) &&
 
 	echo >fileA fileA modified in alternate history &&
-	git commit -a -m "Second in alternate history." &&
-	B1=$(git rev-parse --verify HEAD) &&
+	shit commit -a -m "Second in alternate history." &&
+	B1=$(shit rev-parse --verify HEAD) &&
 
 	echo >subdir/fileB fileB modified in alternate history &&
-	git commit -a -m "Third in alternate history." &&
-	B2=$(git rev-parse --verify HEAD) &&
+	shit commit -a -m "Third in alternate history." &&
+	B2=$(shit rev-parse --verify HEAD) &&
 	: done
 '
 
@@ -79,13 +79,13 @@ check () {
 	fi
 	if test $type = basic
 	then
-		git rev-list $arg >test.actual
+		shit rev-list $arg >test.actual
 	elif test $type = parents
 	then
-		git rev-list --parents $arg >test.actual
+		shit rev-list --parents $arg >test.actual
 	elif test $type = parents-raw
 	then
-		git rev-list --parents --pretty=raw $arg |
+		shit rev-list --parents --pretty=raw $arg |
 		sed -n -e 's/^commit //p' >test.actual
 	fi
 	test_cmp test.expect test.actual
@@ -94,34 +94,34 @@ check () {
 for type in basic parents parents-raw
 do
 	test_expect_success 'without grafts' "
-		rm -f .git/info/grafts &&
+		rm -f .shit/info/grafts &&
 		check $type $B2 -- $B2 $B1 $B0
 	"
 
 	test_expect_success 'with grafts' "
-		mkdir -p .git/info &&
-		echo '$B0 $A2' >.git/info/grafts &&
+		mkdir -p .shit/info &&
+		echo '$B0 $A2' >.shit/info/grafts &&
 		check $type $B2 -- $B2 $B1 $B0 $A2 $A1 $A0
 	"
 
 	test_expect_success 'without grafts, with pathlimit' "
-		rm -f .git/info/grafts &&
+		rm -f .shit/info/grafts &&
 		check $type $B2 subdir -- $B2 $B0
 	"
 
 	test_expect_success 'with grafts, with pathlimit' "
-		echo '$B0 $A2' >.git/info/grafts &&
+		echo '$B0 $A2' >.shit/info/grafts &&
 		check $type $B2 subdir -- $B2 $B0 $A2 $A0
 	"
 
 done
 
 test_expect_success 'show advice that grafts are deprecated' '
-	git show HEAD 2>err &&
-	test_grep "git replace" err &&
+	shit show HEAD 2>err &&
+	test_grep "shit replace" err &&
 	test_config advice.graftFileDeprecated false &&
-	git show HEAD 2>err &&
-	test_grep ! "git replace" err
+	shit show HEAD 2>err &&
+	test_grep ! "shit replace" err
 '
 
 test_done

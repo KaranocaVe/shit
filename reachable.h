@@ -4,9 +4,9 @@
 struct progress;
 struct rev_info;
 struct object;
-struct packed_git;
+struct packed_shit;
 
-typedef void report_recent_object_fn(const struct object *, struct packed_git *,
+typedef void report_recent_object_fn(const struct object *, struct packed_shit *,
 				     off_t, time_t);
 
 int add_unseen_recent_objects_to_traversal(struct rev_info *revs,

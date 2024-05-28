@@ -1,55 +1,55 @@
 #!/bin/sh
 
 test_description='rerere run in a workdir'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 test_expect_success SYMLINKS setup '
-	git config rerere.enabled true &&
+	shit config rerere.enabled true &&
 	>world &&
-	git add world &&
+	shit add world &&
 	test_tick &&
-	git commit -m initial &&
+	shit commit -m initial &&
 
 	echo hello >world &&
 	test_tick &&
-	git commit -a -m hello &&
+	shit commit -a -m hello &&
 
-	git checkout -b side HEAD^ &&
+	shit checkout -b side HEAD^ &&
 	echo goodbye >world &&
 	test_tick &&
-	git commit -a -m goodbye &&
+	shit commit -a -m goodbye &&
 
-	git checkout main
+	shit checkout main
 '
 
 test_expect_success SYMLINKS 'rerere in workdir' '
-	rm -rf .git/rr-cache &&
-	"$SHELL_PATH" "$TEST_DIRECTORY/../contrib/workdir/git-new-workdir" . work &&
+	rm -rf .shit/rr-cache &&
+	"$SHELL_PATH" "$TEST_DIRECTORY/../contrib/workdir/shit-new-workdir" . work &&
 	(
 		cd work &&
-		test_must_fail git merge side &&
-		git rerere status >actual &&
+		test_must_fail shit merge side &&
+		shit rerere status >actual &&
 		echo world >expect &&
 		test_cmp expect actual
 	)
 '
 
-# This fails because we don't resolve relative symlink in mkdir_in_gitdir()
-# For the purpose of helping contrib/workdir/git-new-workdir users, we do not
+# This fails because we don't resolve relative symlink in mkdir_in_shitdir()
+# For the purpose of helping contrib/workdir/shit-new-workdir users, we do not
 # have to support relative symlinks, but it might be nicer to make this work
 # with a relative symbolic link someday.
 test_expect_failure SYMLINKS 'rerere in workdir (relative)' '
-	rm -rf .git/rr-cache &&
-	"$SHELL_PATH" "$TEST_DIRECTORY/../contrib/workdir/git-new-workdir" . krow &&
+	rm -rf .shit/rr-cache &&
+	"$SHELL_PATH" "$TEST_DIRECTORY/../contrib/workdir/shit-new-workdir" . krow &&
 	(
 		cd krow &&
-		rm -f .git/rr-cache &&
-		ln -s ../.git/rr-cache .git/rr-cache &&
-		test_must_fail git merge side &&
-		git rerere status >actual &&
+		rm -f .shit/rr-cache &&
+		ln -s ../.shit/rr-cache .shit/rr-cache &&
+		test_must_fail shit merge side &&
+		shit rerere status >actual &&
 		echo world >expect &&
 		test_cmp expect actual
 	)

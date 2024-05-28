@@ -6,35 +6,35 @@ TEST_PASSES_SANITIZE_LEAK=false
 . ./test-lib.sh
 
 # Turn off any inherited trace2 settings for this test.
-sane_unset GIT_TRACE2 GIT_TRACE2_PERF GIT_TRACE2_EVENT
-sane_unset GIT_TRACE2_BRIEF
-sane_unset GIT_TRACE2_CONFIG_PARAMS
+sane_unset shit_TRACE2 shit_TRACE2_PERF shit_TRACE2_EVENT
+sane_unset shit_TRACE2_BRIEF
+sane_unset shit_TRACE2_CONFIG_PARAMS
 
 # Add t/helper directory to PATH so that we can use a relative
 # path to run nested instances of test-tool.exe (see 004child).
 # This helps with HEREDOC comparisons later.
-TTDIR="$GIT_BUILD_DIR/t/helper/" && export TTDIR
+TTDIR="$shit_BUILD_DIR/t/helper/" && export TTDIR
 PATH="$TTDIR:$PATH" && export PATH
 
-# Warning: use of 'test_cmp' may run test-tool.exe and/or git.exe
+# Warning: use of 'test_cmp' may run test-tool.exe and/or shit.exe
 # Warning: to do the actual diff/comparison, so the HEREDOCs here
-# Warning: only cover our actual calls to test-tool and/or git.
+# Warning: only cover our actual calls to test-tool and/or shit.
 # Warning: So you may see extra lines in artifact files when
 # Warning: interactively debugging.
 
-V=$(git version | sed -e 's/^git version //') && export V
+V=$(shit version | sed -e 's/^shit version //') && export V
 
 # There are multiple trace2 targets: normal, perf, and event.
 # Trace2 events will/can be written to each active target (subject
 # to whatever filtering that target decides to do).
 # This script tests the normal target in isolation.
 #
-# Defer setting GIT_TRACE2 until the actual command line we want to test
-# because hidden git and test-tool commands run by the test harness
+# Defer setting shit_TRACE2 until the actual command line we want to test
+# because hidden shit and test-tool commands run by the test harness
 # can contaminate our output.
 
 # Enable "brief" feature which turns off "<clock> <file>:<line> " prefix.
-GIT_TRACE2_BRIEF=1 && export GIT_TRACE2_BRIEF
+shit_TRACE2_BRIEF=1 && export shit_TRACE2_BRIEF
 
 # Basic tests of the trace2 normal stream.  Since this stream is used
 # primarily with printf-style debugging/tracing, we do limited testing
@@ -56,7 +56,7 @@ GIT_TRACE2_BRIEF=1 && export GIT_TRACE2_BRIEF
 
 test_expect_success 'normal stream, return code 0' '
 	test_when_finished "rm trace.normal actual expect" &&
-	GIT_TRACE2="$(pwd)/trace.normal" test-tool trace2 001return 0 &&
+	shit_TRACE2="$(pwd)/trace.normal" test-tool trace2 001return 0 &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <trace.normal >actual &&
 	cat >expect <<-EOF &&
 		version $V
@@ -70,7 +70,7 @@ test_expect_success 'normal stream, return code 0' '
 
 test_expect_success 'normal stream, return code 1' '
 	test_when_finished "rm trace.normal actual expect" &&
-	test_must_fail env GIT_TRACE2="$(pwd)/trace.normal" test-tool trace2 001return 1 &&
+	test_must_fail env shit_TRACE2="$(pwd)/trace.normal" test-tool trace2 001return 1 &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <trace.normal >actual &&
 	cat >expect <<-EOF &&
 		version $V
@@ -85,7 +85,7 @@ test_expect_success 'normal stream, return code 1' '
 test_expect_success 'automatic filename' '
 	test_when_finished "rm -r traces actual expect" &&
 	mkdir traces &&
-	GIT_TRACE2="$(pwd)/traces" test-tool trace2 001return 0 &&
+	shit_TRACE2="$(pwd)/traces" test-tool trace2 001return 0 &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <"$(ls traces/*)" >actual &&
 	cat >expect <<-EOF &&
 		version $V
@@ -103,7 +103,7 @@ test_expect_success 'automatic filename' '
 
 test_expect_success 'normal stream, exit code 0' '
 	test_when_finished "rm trace.normal actual expect" &&
-	GIT_TRACE2="$(pwd)/trace.normal" test-tool trace2 002exit 0 &&
+	shit_TRACE2="$(pwd)/trace.normal" test-tool trace2 002exit 0 &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <trace.normal >actual &&
 	cat >expect <<-EOF &&
 		version $V
@@ -117,7 +117,7 @@ test_expect_success 'normal stream, exit code 0' '
 
 test_expect_success 'normal stream, exit code 1' '
 	test_when_finished "rm trace.normal actual expect" &&
-	test_must_fail env GIT_TRACE2="$(pwd)/trace.normal" test-tool trace2 002exit 1 &&
+	test_must_fail env shit_TRACE2="$(pwd)/trace.normal" test-tool trace2 002exit 1 &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <trace.normal >actual &&
 	cat >expect <<-EOF &&
 		version $V
@@ -135,7 +135,7 @@ test_expect_success 'normal stream, exit code 1' '
 
 test_expect_success 'normal stream, error event' '
 	test_when_finished "rm trace.normal actual expect" &&
-	GIT_TRACE2="$(pwd)/trace.normal" test-tool trace2 003error "hello world" "this is a test" &&
+	shit_TRACE2="$(pwd)/trace.normal" test-tool trace2 003error "hello world" "this is a test" &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <trace.normal >actual &&
 	cat >expect <<-EOF &&
 		version $V
@@ -155,7 +155,7 @@ test_expect_success 'normal stream, error event' '
 
 test_expect_success 'BUG messages are written to trace2' '
 	test_when_finished "rm trace.normal actual expect" &&
-	test_must_fail env GIT_TRACE2="$(pwd)/trace.normal" test-tool trace2 007bug &&
+	test_must_fail env shit_TRACE2="$(pwd)/trace.normal" test-tool trace2 007bug &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <trace.normal >actual &&
 	cat >expect <<-EOF &&
 		version $V
@@ -170,7 +170,7 @@ test_expect_success 'BUG messages are written to trace2' '
 
 test_expect_success 'bug messages with BUG_if_bug() are written to trace2' '
 	test_when_finished "rm trace.normal actual expect" &&
-	test_expect_code 99 env GIT_TRACE2="$(pwd)/trace.normal" \
+	test_expect_code 99 env shit_TRACE2="$(pwd)/trace.normal" \
 		test-tool trace2 008bug 2>err &&
 	cat >expect <<-\EOF &&
 	a bug message
@@ -196,7 +196,7 @@ test_expect_success 'bug messages with BUG_if_bug() are written to trace2' '
 
 test_expect_success 'bug messages without explicit BUG_if_bug() are written to trace2' '
 	test_when_finished "rm trace.normal actual expect" &&
-	test_expect_code 99 env GIT_TRACE2="$(pwd)/trace.normal" \
+	test_expect_code 99 env shit_TRACE2="$(pwd)/trace.normal" \
 		test-tool trace2 009bug_BUG 2>err &&
 	cat >expect <<-\EOF &&
 	a bug message
@@ -222,7 +222,7 @@ test_expect_success 'bug messages without explicit BUG_if_bug() are written to t
 
 test_expect_success 'bug messages followed by BUG() are written to trace2' '
 	test_when_finished "rm trace.normal actual expect" &&
-	test_expect_code 99 env GIT_TRACE2="$(pwd)/trace.normal" \
+	test_expect_code 99 env shit_TRACE2="$(pwd)/trace.normal" \
 		test-tool trace2 010bug_BUG 2>err &&
 	cat >expect <<-\EOF &&
 	a bug message
@@ -244,7 +244,7 @@ test_expect_success 'bug messages followed by BUG() are written to trace2' '
 	test_cmp expect actual
 '
 
-sane_unset GIT_TRACE2_BRIEF
+sane_unset shit_TRACE2_BRIEF
 
 # Now test without environment variables and get all Trace2 settings
 # from the global config.
@@ -266,11 +266,11 @@ test_expect_success 'using global config, normal stream, return code 0' '
 '
 
 test_expect_success 'using global config with include' '
-	test_when_finished "rm trace.normal actual expect real.gitconfig" &&
+	test_when_finished "rm trace.normal actual expect real.shitconfig" &&
 	test_config_global trace2.normalBrief 1 &&
 	test_config_global trace2.normalTarget "$(pwd)/trace.normal" &&
-	mv "$(pwd)/.gitconfig" "$(pwd)/real.gitconfig" &&
-	test_config_global include.path "$(pwd)/real.gitconfig" &&
+	mv "$(pwd)/.shitconfig" "$(pwd)/real.shitconfig" &&
+	test_config_global include.path "$(pwd)/real.shitconfig" &&
 	test-tool trace2 001return 0 &&
 	perl "$TEST_DIRECTORY/t0210/scrub_normal.perl" <trace.normal >actual &&
 	cat >expect <<-EOF &&
@@ -291,12 +291,12 @@ test_expect_success 'unsafe URLs are redacted by default' '
 		"url.$(pwd).insteadOf" https://user:pwd@example.com/ &&
 	test_config_global trace2.configParams "core.*,remote.*.url" &&
 
-	GIT_TRACE2="$(pwd)/trace.normal" \
-		git clone https://user:pwd@example.com/ clone &&
+	shit_TRACE2="$(pwd)/trace.normal" \
+		shit clone https://user:pwd@example.com/ clone &&
 	! grep user:pwd trace.normal &&
 
-	GIT_TRACE2_REDACT=0 GIT_TRACE2="$(pwd)/unredacted.normal" \
-		git clone https://user:pwd@example.com/ clone2 &&
+	shit_TRACE2_REDACT=0 shit_TRACE2="$(pwd)/unredacted.normal" \
+		shit clone https://user:pwd@example.com/ clone2 &&
 	grep "start .* clone https://user:pwd@example.com" unredacted.normal &&
 	grep "remote.origin.url=https://user:pwd@example.com" unredacted.normal
 '

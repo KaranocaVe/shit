@@ -1,0 +1,1371 @@
+# Translation of shitk to Russian.
+#
+# Translators:
+# 0xAX <kuleshovmail@gmail.com>, 2014
+# Alex Riesen <raa.lkml@gmail.com>, 2015
+# Dimitriy Ryazantcev <DJm00n@mail.ru>, 2015-2016
+# Dmitry Potapov <dpotapov@gmail.com>, 2009
+# Skip <bsvskip@rambler.ru>, 2011
+msgid ""
+msgstr ""
+"Project-Id-Version: shit Russian Localization Project\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-15 00:18+0200\n"
+"PO-Revision-Date: 2016-12-14 22:23+0000\n"
+"Last-Translator: Dimitriy Ryazantcev <DJm00n@mail.ru>\n"
+"Language-Team: Russian (http://www.transifex.com/djm00n/shit-po-ru/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: shitk:140
+msgid "Couldn't get list of unmerged files:"
+msgstr "Невозможно получить список файлов незавершённой операции слияния:"
+
+#: shitk:212 shitk:2403
+msgid "Color words"
+msgstr "Цветные слова"
+
+#: shitk:217 shitk:2403 shitk:8249 shitk:8282
+msgid "Markup words"
+msgstr "Помеченые слова"
+
+#: shitk:324
+msgid "Error parsing revisions:"
+msgstr "Ошибка при разборе редакции:"
+
+#: shitk:380
+msgid "Error executing --argscmd command:"
+msgstr "Ошибка выполнения команды заданной --argscmd:"
+
+#: shitk:393
+msgid "No files selected: --merge specified but no files are unmerged."
+msgstr "Файлы не выбраны: указан --merge, но не было найдено ни одного файла где эта операция должна быть завершена."
+
+#: shitk:396
+msgid ""
+"No files selected: --merge specified but no unmerged files are within file "
+"limit."
+msgstr "Файлы не выбраны: указан --merge, но в рамках указанного ограничения на имена файлов нет ни одного где эта операция должна быть завершена."
+
+#: shitk:418 shitk:566
+msgid "Error executing shit log:"
+msgstr "Ошибка запуска shit log:"
+
+#: shitk:436 shitk:582
+msgid "Reading"
+msgstr "Чтение"
+
+#: shitk:496 shitk:4549
+msgid "Reading commits..."
+msgstr "Чтение коммитов..."
+
+#: shitk:499 shitk:1641 shitk:4552
+msgid "No commits selected"
+msgstr "Ничего не выбрано"
+
+#: shitk:1449 shitk:4069 shitk:12583
+msgid "Command line"
+msgstr "Командная строка"
+
+#: shitk:1515
+msgid "Can't parse shit log output:"
+msgstr "Ошибка обработки вывода команды shit log:"
+
+#: shitk:1744
+msgid "No commit information available"
+msgstr "Нет информации о коммите"
+
+#: shitk:1907 shitk:1936 shitk:4339 shitk:9789 shitk:11388 shitk:11668
+msgid "OK"
+msgstr "Ok"
+
+#: shitk:1938 shitk:4341 shitk:9225 shitk:9304 shitk:9434 shitk:9520 shitk:9791
+#: shitk:11389 shitk:11669
+msgid "Cancel"
+msgstr "Отмена"
+
+#: shitk:2087
+msgid "&Update"
+msgstr "Обновить"
+
+#: shitk:2088
+msgid "&Reload"
+msgstr "Перечитать"
+
+#: shitk:2089
+msgid "Reread re&ferences"
+msgstr "Обновить список ссылок"
+
+#: shitk:2090
+msgid "&List references"
+msgstr "Список ссылок"
+
+#: shitk:2092
+msgid "Start shit &gui"
+msgstr "Запустить shit gui"
+
+#: shitk:2094
+msgid "&Quit"
+msgstr "Завершить"
+
+#: shitk:2086
+msgid "&File"
+msgstr "Файл"
+
+#: shitk:2098
+msgid "&Preferences"
+msgstr "Настройки"
+
+#: shitk:2097
+msgid "&Edit"
+msgstr "Редактировать"
+
+#: shitk:2102
+msgid "&New view..."
+msgstr "Новое представление..."
+
+#: shitk:2103
+msgid "&Edit view..."
+msgstr "Редактировать представление..."
+
+#: shitk:2104
+msgid "&Delete view"
+msgstr "Удалить представление"
+
+#: shitk:2106
+msgid "&All files"
+msgstr "Все файлы"
+
+#: shitk:2101
+msgid "&View"
+msgstr "Представление"
+
+#: shitk:2111 shitk:2121
+msgid "&About shitk"
+msgstr "О shitk"
+
+#: shitk:2112 shitk:2126
+msgid "&Key bindings"
+msgstr "Назначения клавиатуры"
+
+#: shitk:2110 shitk:2125
+msgid "&Help"
+msgstr "Подсказка"
+
+#: shitk:2203 shitk:8681
+msgid "SHA1 ID:"
+msgstr "SHA1 ID:"
+
+#: shitk:2247
+msgid "Row"
+msgstr "Строка"
+
+#: shitk:2285
+msgid "Find"
+msgstr "Поиск"
+
+#: shitk:2313
+msgid "commit"
+msgstr "коммит"
+
+#: shitk:2317 shitk:2319 shitk:4711 shitk:4734 shitk:4758 shitk:6779 shitk:6851
+#: shitk:6936
+msgid "containing:"
+msgstr "содержащее:"
+
+#: shitk:2320 shitk:3550 shitk:3555 shitk:4787
+msgid "touching paths:"
+msgstr "касательно файлов:"
+
+#: shitk:2321 shitk:4801
+msgid "adding/removing string:"
+msgstr "добавив/удалив строку:"
+
+#: shitk:2322 shitk:4803
+msgid "changing lines matching:"
+msgstr "изменяя совпадающие строки:"
+
+#: shitk:2331 shitk:2333 shitk:4790
+msgid "Exact"
+msgstr "Точно"
+
+#: shitk:2333 shitk:4878 shitk:6747
+msgid "IgnCase"
+msgstr "Игнорировать большие/маленькие"
+
+#: shitk:2333 shitk:4760 shitk:4876 shitk:6743
+msgid "Regexp"
+msgstr "Регулярные выражения"
+
+#: shitk:2335 shitk:2336 shitk:4898 shitk:4928 shitk:4935 shitk:6872 shitk:6940
+msgid "All fields"
+msgstr "Во всех полях"
+
+#: shitk:2336 shitk:4895 shitk:4928 shitk:6810
+msgid "Headline"
+msgstr "Заголовок"
+
+#: shitk:2337 shitk:4895 shitk:6810 shitk:6940 shitk:7413
+msgid "Comments"
+msgstr "Комментарии"
+
+#: shitk:2337 shitk:4895 shitk:4900 shitk:4935 shitk:6810 shitk:7348 shitk:8859
+#: shitk:8874
+msgid "Author"
+msgstr "Автор"
+
+#: shitk:2337 shitk:4895 shitk:6810 shitk:7350
+msgid "Committer"
+msgstr "Коммитер"
+
+#: shitk:2371
+msgid "Search"
+msgstr "Найти"
+
+#: shitk:2379
+msgid "Diff"
+msgstr "Сравнить"
+
+#: shitk:2381
+msgid "Old version"
+msgstr "Старая версия"
+
+#: shitk:2383
+msgid "New version"
+msgstr "Новая версия"
+
+#: shitk:2386
+msgid "Lines of context"
+msgstr "Строк контекста"
+
+#: shitk:2396
+msgid "Ignore space change"
+msgstr "Игнорировать пробелы"
+
+#: shitk:2400 shitk:2402 shitk:7983 shitk:8235
+msgid "Line diff"
+msgstr "Изменения строк"
+
+#: shitk:2467
+msgid "Patch"
+msgstr "Патч"
+
+#: shitk:2469
+msgid "Tree"
+msgstr "Файлы"
+
+#: shitk:2639 shitk:2660
+msgid "Diff this -> selected"
+msgstr "Сравнить этот коммит с выделенным"
+
+#: shitk:2640 shitk:2661
+msgid "Diff selected -> this"
+msgstr "Сравнить выделенный с этим коммитом"
+
+#: shitk:2641 shitk:2662
+msgid "Make patch"
+msgstr "Создать патч"
+
+#: shitk:2642 shitk:9283
+msgid "Create tag"
+msgstr "Создать метку"
+
+#: shitk:2643
+msgid "Copy commit summary"
+msgstr "Копировать информацию о коммите"
+
+#: shitk:2644 shitk:9414
+msgid "Write commit to file"
+msgstr "Сохранить коммит в файл"
+
+#: shitk:2645
+msgid "Create new branch"
+msgstr "Создать ветку"
+
+#: shitk:2646
+msgid "Cherry-pick this commit"
+msgstr "Копировать этот коммит в текущую ветку"
+
+#: shitk:2647
+msgid "Reset HEAD branch to here"
+msgstr "Установить HEAD на этот коммит"
+
+#: shitk:2648
+msgid "Mark this commit"
+msgstr "Пометить этот коммит"
+
+#: shitk:2649
+msgid "Return to mark"
+msgstr "Вернуться на пометку"
+
+#: shitk:2650
+msgid "Find descendant of this and mark"
+msgstr "Найти и пометить потомка этого коммита"
+
+#: shitk:2651
+msgid "Compare with marked commit"
+msgstr "Сравнить с помеченным коммитом"
+
+#: shitk:2652 shitk:2663
+msgid "Diff this -> marked commit"
+msgstr "Сравнить выделенное с помеченным коммитом"
+
+#: shitk:2653 shitk:2664
+msgid "Diff marked commit -> this"
+msgstr "Сравнить помеченный с этим коммитом"
+
+#: shitk:2654
+msgid "Revert this commit"
+msgstr "Обратить изменения этого коммита"
+
+#: shitk:2670
+msgid "Check out this branch"
+msgstr "Перейти на эту ветку"
+
+#: shitk:2671
+msgid "Rename this branch"
+msgstr "Переименовать эту ветку"
+
+#: shitk:2672
+msgid "Remove this branch"
+msgstr "Удалить эту ветку"
+
+#: shitk:2673
+msgid "Copy branch name"
+msgstr "Копировать имя ветки"
+
+#: shitk:2680
+msgid "Highlight this too"
+msgstr "Подсветить этот тоже"
+
+#: shitk:2681
+msgid "Highlight this only"
+msgstr "Подсветить только этот"
+
+#: shitk:2682
+msgid "External diff"
+msgstr "Программа сравнения"
+
+#: shitk:2683
+msgid "Blame parent commit"
+msgstr "Авторы изменений родительского коммита"
+
+#: shitk:2684
+msgid "Copy path"
+msgstr "Копировать путь"
+
+#: shitk:2691
+msgid "Show origin of this line"
+msgstr "Показать источник этой строки"
+
+#: shitk:2692
+msgid "Run shit gui blame on this line"
+msgstr "Запустить shit gui blame для этой строки"
+
+#: shitk:3036
+msgid "About shitk"
+msgstr "О shitk"
+
+#: shitk:3038
+msgid ""
+"\n"
+"shitk - a commit viewer for shit\n"
+"\n"
+"Copyright © 2005-2016 Paul Mackerras\n"
+"\n"
+"Use and redistribute under the terms of the GNU General Public License"
+msgstr "\nshitk — программа просмотра истории репозиториев shit\n\n© 2005-2016 Paul Mackerras\n\nИспользование и распространение согласно условиям GNU General Public License"
+
+#: shitk:3046 shitk:3113 shitk:10004
+msgid "Close"
+msgstr "Закрыть"
+
+#: shitk:3067
+msgid "shitk key bindings"
+msgstr "Назначения клавиатуры в shitk"
+
+#: shitk:3070
+msgid "shitk key bindings:"
+msgstr "Назначения клавиатуры в shitk:"
+
+#: shitk:3072
+#, tcl-format
+msgid "<%s-Q>\t\tQuit"
+msgstr "<%s-Q>\t\tЗавершить"
+
+#: shitk:3073
+#, tcl-format
+msgid "<%s-W>\t\tClose window"
+msgstr "<%s-W>\t\tЗакрыть окно"
+
+#: shitk:3074
+msgid "<Home>\t\tMove to first commit"
+msgstr "<Home>\t\tПерейти к первому коммиту"
+
+#: shitk:3075
+msgid "<End>\t\tMove to last commit"
+msgstr "<End>\t\tПерейти к последнему коммиту"
+
+#: shitk:3076
+msgid "<Up>, p, k\tMove up one commit"
+msgstr "<Up>, p, k\tПерейти на один коммит вверх"
+
+#: shitk:3077
+msgid "<Down>, n, j\tMove down one commit"
+msgstr "<Down>, n, j\tПерейти на один коммит вниз"
+
+#: shitk:3078
+msgid "<Left>, z, h\tGo back in history list"
+msgstr "<Left>, z, h\tПоказать ранее посещённое состояние"
+
+#: shitk:3079
+msgid "<Right>, x, l\tGo forward in history list"
+msgstr "<Right>, x, l\tПоказать следующий посещённый коммит"
+
+#: shitk:3080
+#, tcl-format
+msgid "<%s-n>\tGo to n-th parent of current commit in history list"
+msgstr "<%s-n>\tПерейти на n родителя от текущего коммита"
+
+#: shitk:3081
+msgid "<PageUp>\tMove up one page in commit list"
+msgstr "<PageUp>\tПерейти на страницу выше в списке коммитов"
+
+#: shitk:3082
+msgid "<PageDown>\tMove down one page in commit list"
+msgstr "<PageDown>\tПерейти на страницу ниже в списке коммитов"
+
+#: shitk:3083
+#, tcl-format
+msgid "<%s-Home>\tScroll to top of commit list"
+msgstr "<%s-Home>\tПерейти на начало списка коммитов"
+
+#: shitk:3084
+#, tcl-format
+msgid "<%s-End>\tScroll to bottom of commit list"
+msgstr "<%s-End>\tПерейти на конец списка коммитов"
+
+#: shitk:3085
+#, tcl-format
+msgid "<%s-Up>\tScroll commit list up one line"
+msgstr "<%s-Up>\tПровернуть список коммитов вверх"
+
+#: shitk:3086
+#, tcl-format
+msgid "<%s-Down>\tScroll commit list down one line"
+msgstr "<%s-Down>\tПровернуть список коммитов вниз"
+
+#: shitk:3087
+#, tcl-format
+msgid "<%s-PageUp>\tScroll commit list up one page"
+msgstr "<%s-PageUp>\tПровернуть список коммитов на страницу вверх"
+
+#: shitk:3088
+#, tcl-format
+msgid "<%s-PageDown>\tScroll commit list down one page"
+msgstr "<%s-PageDown>\tПровернуть список коммитов на страницу вниз"
+
+#: shitk:3089
+msgid "<Shift-Up>\tFind backwards (upwards, later commits)"
+msgstr "<Shift-Up>\tПоиск в обратном порядке (вверх, среди новых коммитов)"
+
+#: shitk:3090
+msgid "<Shift-Down>\tFind forwards (downwards, earlier commits)"
+msgstr "<Shift-Down>\tПоиск (вниз, среди старых коммитов)"
+
+#: shitk:3091
+msgid "<Delete>, b\tScroll diff view up one page"
+msgstr "<Delete>, b\tПрокрутить список изменений на страницу выше"
+
+#: shitk:3092
+msgid "<Backspace>\tScroll diff view up one page"
+msgstr "<Backspace>\tПрокрутить список изменений на страницу выше"
+
+#: shitk:3093
+msgid "<Space>\t\tScroll diff view down one page"
+msgstr "<Leertaste>\t\tПрокрутить список изменений на страницу ниже"
+
+#: shitk:3094
+msgid "u\t\tScroll diff view up 18 lines"
+msgstr "u\t\tПрокрутить список изменений на 18 строк вверх"
+
+#: shitk:3095
+msgid "d\t\tScroll diff view down 18 lines"
+msgstr "d\t\tПрокрутить список изменений на 18 строк вниз"
+
+#: shitk:3096
+#, tcl-format
+msgid "<%s-F>\t\tFind"
+msgstr "<%s-F>\t\tПоиск"
+
+#: shitk:3097
+#, tcl-format
+msgid "<%s-G>\t\tMove to next find hit"
+msgstr "<%s-G>\t\tПерейти к следующему найденному коммиту"
+
+#: shitk:3098
+msgid "<Return>\tMove to next find hit"
+msgstr "<Return>\tПерейти к следующему найденному коммиту"
+
+#: shitk:3099
+msgid "g\t\tGo to commit"
+msgstr "g\t\tПерейти на коммит"
+
+#: shitk:3100
+msgid "/\t\tFocus the search box"
+msgstr "/\t\tПерейти к полю поиска"
+
+#: shitk:3101
+msgid "?\t\tMove to previous find hit"
+msgstr "?\t\tПерейти к предыдущему найденному коммиту"
+
+#: shitk:3102
+msgid "f\t\tScroll diff view to next file"
+msgstr "f\t\tПрокрутить список изменений к следующему файлу"
+
+#: shitk:3103
+#, tcl-format
+msgid "<%s-S>\t\tSearch for next hit in diff view"
+msgstr "<%s-S>\t\tПродолжить поиск в списке изменений"
+
+#: shitk:3104
+#, tcl-format
+msgid "<%s-R>\t\tSearch for previous hit in diff view"
+msgstr "<%s-R>\t\tПерейти к предыдущему найденному тексту в списке изменений"
+
+#: shitk:3105
+#, tcl-format
+msgid "<%s-KP+>\tIncrease font size"
+msgstr "<%s-KP+>\tУвеличить размер шрифта"
+
+#: shitk:3106
+#, tcl-format
+msgid "<%s-plus>\tIncrease font size"
+msgstr "<%s-plus>\tУвеличить размер шрифта"
+
+#: shitk:3107
+#, tcl-format
+msgid "<%s-KP->\tDecrease font size"
+msgstr "<%s-KP->\tУменьшить размер шрифта"
+
+#: shitk:3108
+#, tcl-format
+msgid "<%s-minus>\tDecrease font size"
+msgstr "<%s-minus>\tУменьшить размер шрифта"
+
+#: shitk:3109
+msgid "<F5>\t\tUpdate"
+msgstr "<F5>\t\tОбновить"
+
+#: shitk:3574 shitk:3583
+#, tcl-format
+msgid "Error creating temporary directory %s:"
+msgstr "Ошибка создания временного каталога %s:"
+
+#: shitk:3596
+#, tcl-format
+msgid "Error getting \"%s\" from %s:"
+msgstr "Ошибка получения «%s» из %s:"
+
+#: shitk:3659
+msgid "command failed:"
+msgstr "ошибка выполнения команды:"
+
+#: shitk:3808
+msgid "No such commit"
+msgstr "Коммит не найден"
+
+#: shitk:3822
+msgid "shit gui blame: command failed:"
+msgstr "shit gui blame: ошибка выполнения команды:"
+
+#: shitk:3853
+#, tcl-format
+msgid "Couldn't read merge head: %s"
+msgstr "Ошибка чтения MERGE_HEAD: %s"
+
+#: shitk:3861
+#, tcl-format
+msgid "Error reading index: %s"
+msgstr "Ошибка чтения индекса: %s"
+
+#: shitk:3886
+#, tcl-format
+msgid "Couldn't start shit blame: %s"
+msgstr "Ошибка запуска shit blame: %s"
+
+#: shitk:3889 shitk:6778
+msgid "Searching"
+msgstr "Поиск"
+
+#: shitk:3921
+#, tcl-format
+msgid "Error running shit blame: %s"
+msgstr "Ошибка выполнения shit blame: %s"
+
+#: shitk:3949
+#, tcl-format
+msgid "That line comes from commit %s,  which is not in this view"
+msgstr "Эта строка принадлежит коммиту %s, который не показан в этом представлении"
+
+#: shitk:3963
+msgid "External diff viewer failed:"
+msgstr "Ошибка выполнения программы сравнения:"
+
+#: shitk:4067
+msgid "All files"
+msgstr "Все файлы"
+
+#: shitk:4091
+msgid "View"
+msgstr "Представление"
+
+#: shitk:4094
+msgid "shitk view definition"
+msgstr "shitk определение представлений"
+
+#: shitk:4098
+msgid "Remember this view"
+msgstr "Запомнить представление"
+
+#: shitk:4099
+msgid "References (space separated list):"
+msgstr "Ссылки (разделённые пробелом):"
+
+#: shitk:4100
+msgid "Branches & tags:"
+msgstr "Ветки и метки"
+
+#: shitk:4101
+msgid "All refs"
+msgstr "Все ссылки"
+
+#: shitk:4102
+msgid "All (local) branches"
+msgstr "Все (локальные) ветки"
+
+#: shitk:4103
+msgid "All tags"
+msgstr "Все метки"
+
+#: shitk:4104
+msgid "All remote-tracking branches"
+msgstr "Все внешние отслеживаемые ветки"
+
+#: shitk:4105
+msgid "Commit Info (regular expressions):"
+msgstr "Информация о коммите (регулярные выражения):"
+
+#: shitk:4106
+msgid "Author:"
+msgstr "Автор:"
+
+#: shitk:4107
+msgid "Committer:"
+msgstr "Коммитер:"
+
+#: shitk:4108
+msgid "Commit Message:"
+msgstr "Сообщение коммита:"
+
+#: shitk:4109
+msgid "Matches all Commit Info criteria"
+msgstr "Совпадает со всеми условиями информации о коммите"
+
+#: shitk:4110
+msgid "Matches no Commit Info criteria"
+msgstr "Не совпадает с условиями информации о коммите"
+
+#: shitk:4111
+msgid "Changes to Files:"
+msgstr "Изменения файлов:"
+
+#: shitk:4112
+msgid "Fixed String"
+msgstr "Обычная строка"
+
+#: shitk:4113
+msgid "Regular Expression"
+msgstr "Регулярное выражение:"
+
+#: shitk:4114
+msgid "Search string:"
+msgstr "Строка для поиска:"
+
+#: shitk:4115
+msgid ""
+"Commit Dates (\"2 weeks ago\", \"2009-03-17 15:27:38\", \"March 17, 2009 "
+"15:27:38\"):"
+msgstr "Даты коммита («2 недели назад», «2009-03-17 15:27:38», «17 марта 2009 15:27:38»):"
+
+#: shitk:4116
+msgid "Since:"
+msgstr "С даты:"
+
+#: shitk:4117
+msgid "Until:"
+msgstr "По дату:"
+
+#: shitk:4118
+msgid "Limit and/or skip a number of revisions (positive integer):"
+msgstr "Ограничить и/или пропустить количество редакций (положительное число):"
+
+#: shitk:4119
+msgid "Number to show:"
+msgstr "Показать количество:"
+
+#: shitk:4120
+msgid "Number to skip:"
+msgstr "Пропустить количество:"
+
+#: shitk:4121
+msgid "Miscellaneous options:"
+msgstr "Различные опции:"
+
+#: shitk:4122
+msgid "Strictly sort by date"
+msgstr "Строгая сортировка по дате"
+
+#: shitk:4123
+msgid "Mark branch sides"
+msgstr "Отметить стороны веток"
+
+#: shitk:4124
+msgid "Limit to first parent"
+msgstr "Ограничить первым предком"
+
+#: shitk:4125
+msgid "Simple history"
+msgstr "Упрощенная история"
+
+#: shitk:4126
+msgid "Additional arguments to shit log:"
+msgstr "Дополнительные аргументы для shit log:"
+
+#: shitk:4127
+msgid "Enter files and directories to include, one per line:"
+msgstr "Файлы и каталоги для ограничения истории, по одному на строку:"
+
+#: shitk:4128
+msgid "Command to generate more commits to include:"
+msgstr "Дополнительная команда для списка коммитов:"
+
+#: shitk:4252
+msgid "shitk: edit view"
+msgstr "shitk: изменить представление"
+
+#: shitk:4260
+msgid "-- criteria for selecting revisions"
+msgstr "— критерий поиска редакций"
+
+#: shitk:4265
+msgid "View Name"
+msgstr "Имя представления"
+
+#: shitk:4340
+msgid "Apply (F5)"
+msgstr "Применить (F5)"
+
+#: shitk:4378
+msgid "Error in commit selection arguments:"
+msgstr "Ошибка в параметрах выбора коммитов:"
+
+#: shitk:4433 shitk:4486 shitk:4948 shitk:4962 shitk:6232 shitk:12524 shitk:12525
+msgid "None"
+msgstr "Ни одного"
+
+#: shitk:5045 shitk:5050
+msgid "Descendant"
+msgstr "Порождённое"
+
+#: shitk:5046
+msgid "Not descendant"
+msgstr "Не порождённое"
+
+#: shitk:5053 shitk:5058
+msgid "Ancestor"
+msgstr "Предок"
+
+#: shitk:5054
+msgid "Not ancestor"
+msgstr "Не предок"
+
+#: shitk:5348
+msgid "Local changes checked in to index but not committed"
+msgstr "Проиндексированные изменения"
+
+#: shitk:5384
+msgid "Local uncommitted changes, not checked in to index"
+msgstr "Непроиндексированные изменения"
+
+#: shitk:7158
+msgid "and many more"
+msgstr "и многое другое"
+
+#: shitk:7161
+msgid "many"
+msgstr "много"
+
+#: shitk:7352
+msgid "Tags:"
+msgstr "Метки:"
+
+#: shitk:7369 shitk:7375 shitk:8854
+msgid "Parent"
+msgstr "Предок"
+
+#: shitk:7380
+msgid "Child"
+msgstr "Потомок"
+
+#: shitk:7389
+msgid "Branch"
+msgstr "Ветка"
+
+#: shitk:7392
+msgid "Follows"
+msgstr "Следует за"
+
+#: shitk:7395
+msgid "Precedes"
+msgstr "Предшествует"
+
+#: shitk:7990
+#, tcl-format
+msgid "Error getting diffs: %s"
+msgstr "Ошибка получения изменений: %s"
+
+#: shitk:8679
+msgid "Goto:"
+msgstr "Перейти к:"
+
+#: shitk:8700
+#, tcl-format
+msgid "Short SHA1 id %s is ambiguous"
+msgstr "Сокращённый SHA1 идентификатор %s неоднозначен"
+
+#: shitk:8707
+#, tcl-format
+msgid "Revision %s is not known"
+msgstr "Редакция %s не найдена"
+
+#: shitk:8717
+#, tcl-format
+msgid "SHA1 id %s is not known"
+msgstr "SHA1 идентификатор %s не найден"
+
+#: shitk:8719
+#, tcl-format
+msgid "Revision %s is not in the current view"
+msgstr "Редакция %s не найдена в текущем представлении"
+
+#: shitk:8861 shitk:8876
+msgid "Date"
+msgstr "Дата"
+
+#: shitk:8864
+msgid "Children"
+msgstr "Потомки"
+
+#: shitk:8927
+#, tcl-format
+msgid "Reset %s branch to here"
+msgstr "Сбросить ветку %s на этот коммит"
+
+#: shitk:8929
+msgid "Detached head: can't reset"
+msgstr "Коммит не принадлежит ни одной ветке, сбросить невозможно"
+
+#: shitk:9034 shitk:9040
+msgid "Skipping merge commit "
+msgstr "Пропускаю коммит-слияние"
+
+#: shitk:9049 shitk:9054
+msgid "Error getting patch ID for "
+msgstr "Не удалось получить идентификатор патча для "
+
+#: shitk:9050 shitk:9055
+msgid " - stopping\n"
+msgstr " — останов\n"
+
+#: shitk:9060 shitk:9063 shitk:9071 shitk:9085 shitk:9094
+msgid "Commit "
+msgstr "Коммит"
+
+#: shitk:9064
+msgid ""
+" is the same patch as\n"
+"       "
+msgstr " такой же патч, как и\n       "
+
+#: shitk:9072
+msgid ""
+" differs from\n"
+"       "
+msgstr " отличается от\n       "
+
+#: shitk:9074
+msgid ""
+"Diff of commits:\n"
+"\n"
+msgstr "Различия коммитов:\n\n"
+
+#: shitk:9086 shitk:9095
+#, tcl-format
+msgid " has %s children - stopping\n"
+msgstr " является %s потомком — останов\n"
+
+#: shitk:9114
+#, tcl-format
+msgid "Error writing commit to file: %s"
+msgstr "Произошла ошибка при записи коммита в файл: %s"
+
+#: shitk:9120
+#, tcl-format
+msgid "Error diffing commits: %s"
+msgstr "Произошла ошибка при выводе различий коммитов: %s"
+
+#: shitk:9166
+msgid "Top"
+msgstr "Верх"
+
+#: shitk:9167
+msgid "From"
+msgstr "От"
+
+#: shitk:9172
+msgid "To"
+msgstr "До"
+
+#: shitk:9196
+msgid "Generate patch"
+msgstr "Создать патч"
+
+#: shitk:9198
+msgid "From:"
+msgstr "От:"
+
+#: shitk:9207
+msgid "To:"
+msgstr "До:"
+
+#: shitk:9216
+msgid "Reverse"
+msgstr "В обратном порядке"
+
+#: shitk:9218 shitk:9428
+msgid "Output file:"
+msgstr "Файл для сохранения:"
+
+#: shitk:9224
+msgid "Generate"
+msgstr "Создать"
+
+#: shitk:9262
+msgid "Error creating patch:"
+msgstr "Ошибка создания патча:"
+
+#: shitk:9285 shitk:9416 shitk:9504
+msgid "ID:"
+msgstr "ID:"
+
+#: shitk:9294
+msgid "Tag name:"
+msgstr "Имя метки:"
+
+#: shitk:9297
+msgid "Tag message is optional"
+msgstr "Описание метки указывать не обязательно"
+
+#: shitk:9299
+msgid "Tag message:"
+msgstr "Описание метки:"
+
+#: shitk:9303 shitk:9474
+msgid "Create"
+msgstr "Создать"
+
+#: shitk:9321
+msgid "No tag name specified"
+msgstr "Не задано имя метки"
+
+#: shitk:9325
+#, tcl-format
+msgid "Tag \"%s\" already exists"
+msgstr "Метка «%s» уже существует"
+
+#: shitk:9335
+msgid "Error creating tag:"
+msgstr "Ошибка создания метки:"
+
+#: shitk:9425
+msgid "Command:"
+msgstr "Команда:"
+
+#: shitk:9433
+msgid "Write"
+msgstr "Запись"
+
+#: shitk:9451
+msgid "Error writing commit:"
+msgstr "Произошла ошибка при записи коммита:"
+
+#: shitk:9473
+msgid "Create branch"
+msgstr "Создать ветку"
+
+#: shitk:9489
+#, tcl-format
+msgid "Rename branch %s"
+msgstr "Переименовать ветку %s"
+
+#: shitk:9490
+msgid "Rename"
+msgstr "Переименовать"
+
+#: shitk:9514
+msgid "Name:"
+msgstr "Имя:"
+
+#: shitk:9538
+msgid "Please specify a name for the new branch"
+msgstr "Укажите имя для новой ветки"
+
+#: shitk:9543
+#, tcl-format
+msgid "Branch '%s' already exists. Overwrite?"
+msgstr "Ветка «%s» уже существует. Переписать?"
+
+#: shitk:9587
+msgid "Please specify a new name for the branch"
+msgstr "Укажите имя для новой ветки"
+
+#: shitk:9650
+#, tcl-format
+msgid "Commit %s is already included in branch %s -- really re-apply it?"
+msgstr "Коммит %s уже включён в ветку %s. Продолжить операцию?"
+
+#: shitk:9655
+msgid "Cherry-picking"
+msgstr "Копирование коммита"
+
+#: shitk:9664
+#, tcl-format
+msgid ""
+"Cherry-pick failed because of local changes to file '%s'.\n"
+"Please commit, reset or stash your changes and try again."
+msgstr "Копирование коммита невозможно из-за изменений в файле «%s».\nЗакоммитьте, сбросьте или спрячьте изменения и повторите операцию."
+
+#: shitk:9670
+msgid ""
+"Cherry-pick failed because of merge conflict.\n"
+"Do you wish to run shit citool to resolve it?"
+msgstr "Копирование изменений невозможно из-за незавершённой операции слияния.\nЗапустить shit citool для завершения этой операции?"
+
+#: shitk:9686 shitk:9744
+msgid "No changes committed"
+msgstr "Изменения не закоммичены"
+
+#: shitk:9713
+#, tcl-format
+msgid "Commit %s is not included in branch %s -- really revert it?"
+msgstr "Коммит %s не включён в ветку %s. Продолжить операцию?"
+
+#: shitk:9718
+msgid "Reverting"
+msgstr "Обращение изменений"
+
+#: shitk:9726
+#, tcl-format
+msgid ""
+"Revert failed because of local changes to the following files:%s Please "
+"commit, reset or stash  your changes and try again."
+msgstr "Возврат изменений коммита не удался из-за локальных изменений в указанных файлах: %s\nЗакоммитьте, сбросьте или спрячьте изменения и повторите операцию."
+
+#: shitk:9730
+msgid ""
+"Revert failed because of merge conflict.\n"
+" Do you wish to run shit citool to resolve it?"
+msgstr "Возврат изменений невозможен из-за незавершённой операции слияния.\nЗапустить shit citool для завершения этой операции?"
+
+#: shitk:9773
+msgid "Confirm reset"
+msgstr "Подтвердите операцию перехода"
+
+#: shitk:9775
+#, tcl-format
+msgid "Reset branch %s to %s?"
+msgstr "Сбросить ветку %s на коммит %s?"
+
+#: shitk:9777
+msgid "Reset type:"
+msgstr "Тип операции перехода:"
+
+#: shitk:9780
+msgid "Soft: Leave working tree and index untouched"
+msgstr "Лёгкий: оставить рабочий каталог и индекс неизменными"
+
+#: shitk:9783
+msgid "Mixed: Leave working tree untouched, reset index"
+msgstr "Смешанный: оставить рабочий каталог неизменным, установить индекс"
+
+#: shitk:9786
+msgid ""
+"Hard: Reset working tree and index\n"
+"(discard ALL local changes)"
+msgstr "Жесткий: переписать индекс и рабочий каталог\n(все изменения в рабочем каталоге будут потеряны)"
+
+#: shitk:9803
+msgid "Resetting"
+msgstr "Сброс"
+
+#: shitk:9876
+#, tcl-format
+msgid "A local branch named %s exists already"
+msgstr "Локальная ветка с именем %s уже существует"
+
+#: shitk:9884
+msgid "Checking out"
+msgstr "Переход"
+
+#: shitk:9943
+msgid "Cannot delete the currently checked-out branch"
+msgstr "Активная ветка не может быть удалена"
+
+#: shitk:9949
+#, tcl-format
+msgid ""
+"The commits on branch %s aren't on any other branch.\n"
+"Really delete branch %s?"
+msgstr "Коммиты из ветки %s не принадлежат больше никакой другой ветке.\nДействительно удалить ветку %s?"
+
+#: shitk:9980
+#, tcl-format
+msgid "Tags and heads: %s"
+msgstr "Метки и ветки: %s"
+
+#: shitk:9997
+msgid "Filter"
+msgstr "Фильтровать"
+
+#: shitk:10293
+msgid ""
+"Error reading commit topology information; branch and preceding/following "
+"tag information will be incomplete."
+msgstr "Ошибка чтения истории проекта; информация о ветках и коммитах вокруг меток (до/после) может быть неполной."
+
+#: shitk:11270
+msgid "Tag"
+msgstr "Метка"
+
+#: shitk:11274
+msgid "Id"
+msgstr "Id"
+
+#: shitk:11357
+msgid "shitk font chooser"
+msgstr "Шрифт shitk"
+
+#: shitk:11374
+msgid "B"
+msgstr "Ж"
+
+#: shitk:11377
+msgid "I"
+msgstr "К"
+
+#: shitk:11495
+msgid "Commit list display options"
+msgstr "Параметры показа списка коммитов"
+
+#: shitk:11498
+msgid "Maximum graph width (lines)"
+msgstr "Макс. ширина графа (строк)"
+
+#: shitk:11502
+#, no-tcl-format
+msgid "Maximum graph width (% of pane)"
+msgstr "Макс. ширина графа (% ширины панели)"
+
+#: shitk:11505
+msgid "Show local changes"
+msgstr "Показывать изменения в рабочем каталоге"
+
+#: shitk:11508
+msgid "Auto-select SHA1 (length)"
+msgstr "Автоматически выделить SHA1 (длинна)"
+
+#: shitk:11512
+msgid "Hide remote refs"
+msgstr "Скрыть внешние ссылки"
+
+#: shitk:11516
+msgid "Diff display options"
+msgstr "Параметры показа изменений"
+
+#: shitk:11518
+msgid "Tab spacing"
+msgstr "Ширина табуляции"
+
+#: shitk:11521
+msgid "Display nearby tags/heads"
+msgstr "Показывать близкие метки/ветки"
+
+#: shitk:11524
+msgid "Maximum # tags/heads to show"
+msgstr "Показывать максимальное количество меток/веток"
+
+#: shitk:11527
+msgid "Limit diffs to listed paths"
+msgstr "Ограничить показ изменений выбранными файлами"
+
+#: shitk:11530
+msgid "Support per-file encodings"
+msgstr "Поддержка кодировок в отдельных файлах"
+
+#: shitk:11536 shitk:11683
+msgid "External diff tool"
+msgstr "Программа для показа изменений"
+
+#: shitk:11537
+msgid "Choose..."
+msgstr "Выберите..."
+
+#: shitk:11542
+msgid "General options"
+msgstr "Общие опции"
+
+#: shitk:11545
+msgid "Use themed widgets"
+msgstr "Использовать стили виджетов"
+
+#: shitk:11547
+msgid "(change requires restart)"
+msgstr "(изменение потребует перезапуск)"
+
+#: shitk:11549
+msgid "(currently unavailable)"
+msgstr "(недоступно в данный момент)"
+
+#: shitk:11560
+msgid "Colors: press to choose"
+msgstr "Цвета: нажмите для выбора"
+
+#: shitk:11563
+msgid "Interface"
+msgstr "Интерфейс"
+
+#: shitk:11564
+msgid "interface"
+msgstr "интерфейс"
+
+#: shitk:11567
+msgid "Background"
+msgstr "Фон"
+
+#: shitk:11568 shitk:11598
+msgid "background"
+msgstr "фон"
+
+#: shitk:11571
+msgid "Foreground"
+msgstr "Передний план"
+
+#: shitk:11572
+msgid "foreground"
+msgstr "передний план"
+
+#: shitk:11575
+msgid "Diff: old lines"
+msgstr "Изменения: старый текст"
+
+#: shitk:11576
+msgid "diff old lines"
+msgstr "старый текст изменения"
+
+#: shitk:11580
+msgid "Diff: new lines"
+msgstr "Изменения: новый текст"
+
+#: shitk:11581
+msgid "diff new lines"
+msgstr "новый текст изменения"
+
+#: shitk:11585
+msgid "Diff: hunk header"
+msgstr "Изменения: заголовок блока"
+
+#: shitk:11587
+msgid "diff hunk header"
+msgstr "заголовок блока изменений"
+
+#: shitk:11591
+msgid "Marked line bg"
+msgstr "Фон выбранной строки"
+
+#: shitk:11593
+msgid "marked line background"
+msgstr "фон выбранной строки"
+
+#: shitk:11597
+msgid "Select bg"
+msgstr "Выберите фон"
+
+#: shitk:11606
+msgid "Fonts: press to choose"
+msgstr "Шрифт: нажмите для выбора"
+
+#: shitk:11608
+msgid "Main font"
+msgstr "Основной шрифт"
+
+#: shitk:11609
+msgid "Diff display font"
+msgstr "Шрифт показа изменений"
+
+#: shitk:11610
+msgid "User interface font"
+msgstr "Шрифт интерфейса"
+
+#: shitk:11632
+msgid "shitk preferences"
+msgstr "Настройки shitk"
+
+#: shitk:11641
+msgid "General"
+msgstr "Общие"
+
+#: shitk:11642
+msgid "Colors"
+msgstr "Цвета"
+
+#: shitk:11643
+msgid "Fonts"
+msgstr "Шрифты"
+
+#: shitk:11693
+#, tcl-format
+msgid "shitk: choose color for %s"
+msgstr "shitk: выберите цвет для %s"
+
+#: shitk:12206
+msgid ""
+"Sorry, shitk cannot run with this version of Tcl/Tk.\n"
+" shitk requires at least Tcl/Tk 8.4."
+msgstr "К сожалению shitk не может работать с этой версий Tcl/Tk.\nТребуется как минимум Tcl/Tk 8.4."
+
+#: shitk:12416
+msgid "Cannot find a shit repository here."
+msgstr "shit-репозитарий не найден в текущем каталоге."
+
+#: shitk:12463
+#, tcl-format
+msgid "Ambiguous argument '%s': both revision and filename"
+msgstr "Неоднозначный аргумент «%s»: существует как редакция и как имя файла"
+
+#: shitk:12475
+msgid "Bad arguments to shitk:"
+msgstr "Неправильные аргументы для shitk:"

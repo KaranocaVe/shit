@@ -1,15 +1,15 @@
 #!/usr/bin/perl
 use 5.008001;
-use lib (split(/:/, $ENV{GITPERLLIB}));
+use lib (split(/:/, $ENV{shitPERLLIB}));
 use strict;
 use warnings;
 use POSIX qw(:locale_h);
 use Test::More tests => 13;
-use Git::I18N;
+use shit::I18N;
 
-my $has_gettext_library = $Git::I18N::__HAS_LIBRARY;
+my $has_gettext_library = $shit::I18N::__HAS_LIBRARY;
 
-ok(1, "Testing Git::I18N with " .
+ok(1, "Testing shit::I18N with " .
 	 ($has_gettext_library
 	  ? (defined $Locale::Messages::VERSION
 		 ? "Locale::Messages version $Locale::Messages::VERSION"
@@ -17,13 +17,13 @@ ok(1, "Testing Git::I18N with " .
 		 # $VERSION variable.
 		 : "Locale::Messages version <1.17")
 	  : "NO Perl gettext library"));
-ok(1, "Git::I18N is located at $INC{'Git/I18N.pm'}");
+ok(1, "shit::I18N is located at $INC{'shit/I18N.pm'}");
 
 {
-	my $exports = @Git::I18N::EXPORT;
-	ok($exports, "sanity: Git::I18N has $exports export(s)");
+	my $exports = @shit::I18N::EXPORT;
+	ok($exports, "sanity: shit::I18N has $exports export(s)");
 }
-is_deeply(\@Git::I18N::EXPORT, \@Git::I18N::EXPORT_OK, "sanity: Git::I18N exports everything by default");
+is_deeply(\@shit::I18N::EXPORT, \@shit::I18N::EXPORT_OK, "sanity: shit::I18N exports everything by default");
 
 # prototypes
 {
@@ -35,7 +35,7 @@ is_deeply(\@Git::I18N::EXPORT, \@Git::I18N::EXPORT_OK, "sanity: Git::I18N export
 		N__	$
 	));
 	while (my ($sub, $proto) = each %prototypes) {
-		is(prototype(\&{"Git::I18N::$sub"}), $proto, "sanity: $sub has a $proto prototype");
+		is(prototype(\&{"shit::I18N::$sub"}), $proto, "sanity: $sub has a $proto prototype");
 	}
 }
 
@@ -70,7 +70,7 @@ SKIP: {
 		# tests. Skipping these here will eliminate failures on odd
 		# platforms with incomplete locale data.
 
-		skip "GETTEXT_LOCALE must be set by lib-gettext.sh for exhaustive Git::I18N tests", 2;
+		skip "GETTEXT_LOCALE must be set by lib-gettext.sh for exhaustive shit::I18N tests", 2;
 	}
 
 	# The is_IS UTF-8 locale passed from lib-gettext.sh

@@ -30,19 +30,19 @@ test_expect_success 'setup split file case' '
 	# use lines long enough to trigger content detection
 	test_seq 1000 1010 >one &&
 	test_seq 2000 2010 >two &&
-	git add one two &&
+	shit add one two &&
 	test_commit base &&
 
 	sed "6s/^/modified /" <one >one.tmp &&
 	mv one.tmp one &&
 	sed "6s/^/modified /" <two >two.tmp &&
 	mv two.tmp two &&
-	git add -u &&
+	shit add -u &&
 	test_commit modified &&
 
 	cat one two >combined &&
-	git add combined &&
-	git rm one two &&
+	shit add combined &&
+	shit rm one two &&
 	test_commit combined
 '
 
@@ -77,7 +77,7 @@ test_expect_success 'setup simulated porcelain' '
 for output in porcelain line-porcelain
 do
 	test_expect_success "generate --$output output" '
-		git blame --root -C --$output combined >output
+		shit blame --root -C --$output combined >output
 	'
 
 	test_expect_success "$output output finds correct commits" '
@@ -104,9 +104,9 @@ do
 	test_expect_success "$output output shows correct previous pointer" '
 		generate_expect >expect <<-EOF &&
 		5 NONE
-		1 $(git rev-parse modified^) one
+		1 $(shit rev-parse modified^) one
 		10 NONE
-		1 $(git rev-parse modified^) two
+		1 $(shit rev-parse modified^) two
 		5 NONE
 		EOF
 		perl read-porcelain.pl previous <output >actual &&

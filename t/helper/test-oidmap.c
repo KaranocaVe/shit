@@ -31,7 +31,7 @@ int cmd__oidmap(int argc UNUSED, const char **argv UNUSED)
 	struct strbuf line = STRBUF_INIT;
 	struct oidmap map = OIDMAP_INIT;
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	/* init oidmap */
 	oidmap_init(&map, 0);

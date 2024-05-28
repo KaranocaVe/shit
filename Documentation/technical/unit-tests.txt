@@ -10,7 +10,7 @@ data around (no shell-isms required), and reduces testing runtime by not
 spawning a separate process for every test invocation.
 
 We believe that a large body of unit tests, living alongside the existing test
-suite, will improve code quality for the Git project.
+suite, will improve code quality for the shit project.
 
 == Definitions
 
@@ -31,8 +31,8 @@ can be made to work with a harness that we can choose later.
 == Summary
 
 We believe the best way forward is to implement a custom TAP framework for the
-Git project. We use a version of the framework originally proposed in
-https://lore.kernel.org/git/c902a166-98ce-afba-93f2-ea6027557176@gmail.com/[1].
+shit project. We use a version of the framework originally proposed in
+https://lore.kernel.org/shit/c902a166-98ce-afba-93f2-ea6027557176@gmail.com/[1].
 
 See the <<framework-selection,Framework Selection>> section below for the
 rationale behind this decision.
@@ -46,7 +46,7 @@ previously failed tests.
 
 While we already support the use of `prove` as a test harness for the shell
 tests, it is not strictly required. The t/Makefile allows running shell tests
-directly (though with interleaved output if parallelism is enabled). Git
+directly (though with interleaved output if parallelism is enabled). shit
 developers who wish to use `prove` as a more advanced harness can do so by
 setting DEFAULT_TEST_TARGET=prove in their config.mak.
 
@@ -82,16 +82,16 @@ those features have different priorities:
 [[license]]
 === License
 
-We must be able to legally use the framework in connection with Git. As Git is
+We must be able to legally use the framework in connection with shit. As shit is
 licensed only under GPLv2, we must eliminate any LGPLv3, GPLv3, or Apache 2.0
 projects.
 
 [[vendorable-or-ubiquitous]]
 === Vendorable or ubiquitous
 
-We want to avoid forcing Git developers to install new tools just to run unit
+We want to avoid forcing shit developers to install new tools just to run unit
 tests. Any prospective frameworks and harnesses must either be vendorable
-(meaning, we can copy their source directly into Git's repository), or so
+(meaning, we can copy their source directly into shit's repository), or so
 ubiquitous that it is reasonable to expect that most developers will have the
 tools installed already.
 
@@ -101,11 +101,11 @@ tools installed already.
 It is unlikely that any pre-existing project perfectly fits our needs, so any
 project we select will need to be actively maintained and open to accepting
 changes. Alternatively, assuming we are vendoring the source into our repo, it
-must be simple enough that Git developers can feel comfortable making changes as
+must be simple enough that shit developers can feel comfortable making changes as
 needed to our version.
 
 In the comparison table below, "True" means that the framework seems to have
-active developers, that it is simple enough that Git developers can make changes
+active developers, that it is simple enough that shit developers can make changes
 to it, and that the project seems open to accepting external contributions (or
 that it is vendorable). "Partial" means that at least one of the above
 conditions holds.
@@ -124,7 +124,7 @@ more platforms, but it is still usable in principle.
 
 The https://testanything.org/[Test Anything Protocol] is a text-based interface
 that allows tests to communicate with a test harness. It is already used by
-Git's integration test suite. Supporting TAP output is a mandatory feature for
+shit's integration test suite. Supporting TAP output is a mandatory feature for
 any prospective test framework.
 
 In the comparison table below, "True" means this is natively supported.
@@ -183,7 +183,7 @@ https://dwheeler.com/sloccount/[sloccount] (rounded up to the next multiple of
 === Adoption
 
 As a tie-breaker, we prefer a more widely-used project. We use the number of
-GitHub / GitLab stars to estimate this.
+shitHub / shitLab stars to estimate this.
 
 
 === Comparison
@@ -198,11 +198,11 @@ GitHub / GitLab stars to estimate this.
 :expat: [lime-background]#Expat#
 :lgpl: [lime-background]#LGPL v2.1#
 
-:custom-impl: https://lore.kernel.org/git/c902a166-98ce-afba-93f2-ea6027557176@gmail.com/[Custom Git impl.]
-:greatest: https://github.com/silentbicycle/greatest[Greatest]
-:criterion: https://github.com/Snaipe/Criterion[Criterion]
-:c-tap: https://github.com/rra/c-tap-harness/[C TAP]
-:check: https://libcheck.github.io/check/[Check]
+:custom-impl: https://lore.kernel.org/shit/c902a166-98ce-afba-93f2-ea6027557176@gmail.com/[Custom shit impl.]
+:greatest: https://shithub.com/silentbicycle/greatest[Greatest]
+:criterion: https://shithub.com/Snaipe/Criterion[Criterion]
+:c-tap: https://shithub.com/rra/c-tap-harness/[C TAP]
+:check: https://libcheck.shithub.io/check/[Check]
 
 [format="csv",options="header",width="33%",subs="specialcharacters,attributes,quotes,macros"]
 |=====
@@ -219,15 +219,15 @@ Framework,"<<license,License>>","<<vendorable-or-ubiquitous,Vendorable or ubiqui
 Several suggested frameworks have been eliminated from consideration:
 
 * Incompatible licenses:
-** https://github.com/zorgnax/libtap[libtap] (LGPL v3)
+** https://shithub.com/zorgnax/libtap[libtap] (LGPL v3)
 ** https://cmocka.org/[cmocka] (Apache 2.0)
 * Missing source: https://www.kindahl.net/mytap/doc/index.html[MyTap]
 * No TAP support:
-** https://nemequ.github.io/munit/[µnit]
-** https://github.com/google/cmockery[cmockery]
-** https://github.com/lpabon/cmockery2[cmockery2]
-** https://github.com/ThrowTheSwitch/Unity[Unity]
-** https://github.com/siu/minunit[minunit]
+** https://nemequ.shithub.io/munit/[µnit]
+** https://shithub.com/google/cmockery[cmockery]
+** https://shithub.com/lpabon/cmockery2[cmockery2]
+** https://shithub.com/ThrowTheSwitch/Unity[Unity]
+** https://shithub.com/siu/minunit[minunit]
 ** https://cunit.sourceforge.net/[CUnit]
 
 
@@ -235,6 +235,6 @@ Several suggested frameworks have been eliminated from consideration:
 
 * Add useful tests of library-like code
 * Integrate with
-  https://lore.kernel.org/git/20230502211454.1673000-1-calvinwan@google.com/[stdlib
+  https://lore.kernel.org/shit/20230502211454.1673000-1-calvinwan@google.com/[stdlib
   work]
 * Run alongside regular `make test` target

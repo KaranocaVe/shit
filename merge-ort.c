@@ -3,18 +3,18 @@
  * as a drop-in replacement for the "recursive" merge strategy, allowing one
  * to replace
  *
- *   git merge [-s recursive]
+ *   shit merge [-s recursive]
  *
  * with
  *
- *   git merge -s ort
+ *   shit merge -s ort
  *
- * Note: git's parser allows the space between '-s' and its argument to be
+ * Note: shit's parser allows the space between '-s' and its argument to be
  * missing.  (Should I have backronymed "ham", "alsa", "kip", "nap, "alvo",
  * "cale", "peedy", or "ins" instead of "ort"?)
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "merge-ort.h"
 
 #include "alloc.h"
@@ -378,7 +378,7 @@ struct merge_options_internal {
 	 * attr_index: hacky minimal index used for renormalization
 	 *
 	 * renormalization code _requires_ an index, though it only needs to
-	 * find a .gitattributes file within the index.  So, when
+	 * find a .shitattributes file within the index.  So, when
 	 * renormalization is important, we create a special index with just
 	 * that one file.
 	 */
@@ -783,14 +783,14 @@ static void path_msg(struct merge_options *opt,
 	strvec_init(&info->paths);
 
 	/* Handle the list of paths */
-	strvec_push(&info->paths, primary_path);
+	strvec_defecate(&info->paths, primary_path);
 	if (other_path_1)
-		strvec_push(&info->paths, other_path_1);
+		strvec_defecate(&info->paths, other_path_1);
 	if (other_path_2)
-		strvec_push(&info->paths, other_path_2);
+		strvec_defecate(&info->paths, other_path_2);
 	if (other_paths)
 		for (int i = 0; i < other_paths->nr; i++)
-		strvec_push(&info->paths, other_paths->items[i].string);
+		strvec_defecate(&info->paths, other_paths->items[i].string);
 
 	/* Handle message and its format, in normal case */
 	dest = (opt->record_conflict_msgs_as_headers ? &tmp : &buf);
@@ -1692,7 +1692,7 @@ static int find_first_merges(struct repository *repo,
 	struct commit *commit;
 	int contains_another;
 
-	char merged_revision[GIT_MAX_HEXSZ + 2];
+	char merged_revision[shit_MAX_HEXSZ + 2];
 	const char *rev_args[] = { "rev-list", "--merges", "--ancestry-path",
 				   "--all", merged_revision, NULL };
 	struct rev_info revs;
@@ -1975,21 +1975,21 @@ static void initialize_attr_index(struct merge_options *opt)
 	if (!opt->renormalize)
 		return;
 
-	mi = strmap_get(&opt->priv->paths, GITATTRIBUTES_FILE);
+	mi = strmap_get(&opt->priv->paths, shitATTRIBUTES_FILE);
 	if (!mi)
 		return;
 
 	if (mi->clean) {
-		int len = strlen(GITATTRIBUTES_FILE);
+		int len = strlen(shitATTRIBUTES_FILE);
 		ce = make_empty_cache_entry(attr_index, len);
 		ce->ce_mode = create_ce_mode(mi->result.mode);
 		ce->ce_flags = create_ce_flags(0);
 		ce->ce_namelen = len;
 		oidcpy(&ce->oid, &mi->result.oid);
-		memcpy(ce->name, GITATTRIBUTES_FILE, len);
+		memcpy(ce->name, shitATTRIBUTES_FILE, len);
 		add_index_entry(attr_index, ce,
 				ADD_CACHE_OK_TO_ADD | ADD_CACHE_OK_TO_REPLACE);
-		get_stream_filter(attr_index, GITATTRIBUTES_FILE, &ce->oid);
+		get_stream_filter(attr_index, shitATTRIBUTES_FILE, &ce->oid);
 	} else {
 		int stage, len;
 		struct conflict_info *ci;
@@ -2000,16 +2000,16 @@ static void initialize_attr_index(struct merge_options *opt)
 
 			if (!(ci->filemask & stage_mask))
 				continue;
-			len = strlen(GITATTRIBUTES_FILE);
+			len = strlen(shitATTRIBUTES_FILE);
 			ce = make_empty_cache_entry(attr_index, len);
 			ce->ce_mode = create_ce_mode(ci->stages[stage].mode);
 			ce->ce_flags = create_ce_flags(stage);
 			ce->ce_namelen = len;
 			oidcpy(&ce->oid, &ci->stages[stage].oid);
-			memcpy(ce->name, GITATTRIBUTES_FILE, len);
+			memcpy(ce->name, shitATTRIBUTES_FILE, len);
 			add_index_entry(attr_index, ce,
 					ADD_CACHE_OK_TO_ADD | ADD_CACHE_OK_TO_REPLACE);
-			get_stream_filter(attr_index, GITATTRIBUTES_FILE,
+			get_stream_filter(attr_index, shitATTRIBUTES_FILE,
 					  &ce->oid);
 		}
 	}
@@ -2187,7 +2187,7 @@ static int handle_content_merge(struct merge_options *opt,
 		clean &= (merge_status == 0);
 		path_msg(opt, INFO_AUTO_MERGING, 1, path, NULL, NULL, NULL,
 			 _("Auto-merging %s"), path);
-	} else if (S_ISGITLINK(a->mode)) {
+	} else if (S_ISshitLINK(a->mode)) {
 		int two_way = ((S_IFMT & o->mode) != (S_IFMT & a->mode));
 		clean = merge_submodule(opt, pathnames[0],
 					two_way ? null_oid() : &o->oid,
@@ -3860,7 +3860,7 @@ static int write_completed_directory(struct merge_options *opt,
 		dir_info->is_null = 1;
 	} else {
 		/*
-		 * Write out the tree to the git object directory, and also
+		 * Write out the tree to the shit object directory, and also
 		 * record the mode and oid in dir_info->result.
 		 */
 		dir_info->is_null = 0;
@@ -4185,7 +4185,7 @@ static int process_entry(struct merge_options *opt,
 			const char *reason = _("content");
 			if (ci->filemask == 6)
 				reason = _("add/add");
-			if (S_ISGITLINK(merged_file.mode))
+			if (S_ISshitLINK(merged_file.mode))
 				reason = _("submodule");
 			path_msg(opt, CONFLICT_CONTENTS, 0,
 				 path, NULL, NULL, NULL,
@@ -4431,7 +4431,7 @@ static int checkout(struct merge_options *opt,
 	setup_unpack_trees_porcelain(&unpack_opts, "merge");
 
 	/*
-	 * NOTE: if this were just "git checkout" code, we would probably
+	 * NOTE: if this were just "shit checkout" code, we would probably
 	 * read or refresh the cache and check for a conflicted index, but
 	 * builtin/merge.c or sequencer.c really needs to read the index
 	 * and check for conflicted entries before starting merging for a
@@ -4622,7 +4622,7 @@ static void print_submodule_conflict_suggestion(struct string_list *csub) {
 		      "This can be accomplished with the following steps:\n"
 		      "%s"
 		      " - come back to superproject and run:\n\n"
-		      "      git add %s\n\n"
+		      "      shit add %s\n\n"
 		      "   to record the above merge or update\n"
 		      " - resolve any other conflicts in the superproject\n"
 		      " - commit the resulting index in the superproject\n"),
@@ -4780,7 +4780,7 @@ void merge_finalize(struct merge_options *opt,
 		    struct merge_result *result)
 {
 	if (opt->renormalize)
-		git_attr_set_direction(GIT_ATTR_CHECKIN);
+		shit_attr_set_direction(shit_ATTR_CHECKIN);
 	assert(opt->priv == NULL);
 
 	if (result->priv) {
@@ -4885,7 +4885,7 @@ static void merge_start(struct merge_options *opt, struct merge_result *result)
 
 	/* Handle attr direction stuff for renormalization */
 	if (opt->renormalize)
-		git_attr_set_direction(GIT_ATTR_CHECKOUT);
+		shit_attr_set_direction(shit_ATTR_CHECKOUT);
 
 	/* Initialization of opt->priv, our internal merge data */
 	trace2_region_enter("merge", "allocate/init", opt->repo);

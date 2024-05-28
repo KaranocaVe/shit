@@ -1,44 +1,44 @@
 #!/bin/sh
 
-test_description='forced push to replace commit we do not have'
+test_description='forced defecate to replace commit we do not have'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success setup '
 
-	>file1 && git add file1 && test_tick &&
-	git commit -m Initial &&
-	git config receive.denyCurrentBranch warn &&
+	>file1 && shit add file1 && test_tick &&
+	shit commit -m Initial &&
+	shit config receive.denyCurrentBranch warn &&
 
 	mkdir another && (
 		cd another &&
-		git init &&
-		git fetch --update-head-ok .. main:main
+		shit init &&
+		shit fetch --update-head-ok .. main:main
 	) &&
 
-	>file2 && git add file2 && test_tick &&
-	git commit -m Second
+	>file2 && shit add file2 && test_tick &&
+	shit commit -m Second
 
 '
 
-test_expect_success 'non forced push should die not segfault' '
+test_expect_success 'non forced defecate should die not segfault' '
 
 	(
 		cd another &&
-		test_must_fail git push .. main:main
+		test_must_fail shit defecate .. main:main
 	)
 
 '
 
-test_expect_success 'forced push should succeed' '
+test_expect_success 'forced defecate should succeed' '
 
 	(
 		cd another &&
-		git push .. +main:main
+		shit defecate .. +main:main
 	)
 
 '

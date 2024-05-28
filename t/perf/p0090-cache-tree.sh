@@ -10,7 +10,7 @@ test_checkout_worktree
 count=100
 
 test_expect_success 'setup cache tree' '
-	git write-tree
+	shit write-tree
 '
 
 test_cache_tree () {

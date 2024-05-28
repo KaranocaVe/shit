@@ -3,9 +3,9 @@
 # Copyright (c) 2013 Tobias Schulte
 #
 
-test_description='git svn branch for subproject clones'
+test_description='shit svn branch for subproject clones'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 test_expect_success 'initialize svnrepo' '
 	mkdir import &&
@@ -16,7 +16,7 @@ test_expect_success 'initialize svnrepo' '
 			cd trunk/project &&
 			echo foo > foo
 		) &&
-		svn_cmd import -m "import for git-svn" . "$svnrepo" >/dev/null
+		svn_cmd import -m "import for shit-svn" . "$svnrepo" >/dev/null
 	) &&
 	rm -rf import &&
 	svn_cmd co "$svnrepo"/trunk/project trunk/project &&
@@ -28,22 +28,22 @@ test_expect_success 'initialize svnrepo' '
 	rm -rf trunk
 '
 
-test_expect_success 'import into git' '
-	git svn init --trunk=trunk/project --branches=branches/*/project \
+test_expect_success 'import into shit' '
+	shit svn init --trunk=trunk/project --branches=branches/*/project \
 		--tags=tags/*/project "$svnrepo" &&
-	git svn fetch &&
-	git checkout remotes/origin/trunk
+	shit svn fetch &&
+	shit checkout remotes/origin/trunk
 '
 
-test_expect_success 'git svn branch tests' '
-	test_must_fail git svn branch a &&
-	git svn branch --parents a &&
-	test_must_fail git svn branch -t tag1 &&
-	git svn branch --parents -t tag1 &&
-	test_must_fail git svn branch --tag tag2 &&
-	git svn branch --parents --tag tag2 &&
-	test_must_fail git svn tag tag3 &&
-	git svn tag --parents tag3
+test_expect_success 'shit svn branch tests' '
+	test_must_fail shit svn branch a &&
+	shit svn branch --parents a &&
+	test_must_fail shit svn branch -t tag1 &&
+	shit svn branch --parents -t tag1 &&
+	test_must_fail shit svn branch --tag tag2 &&
+	shit svn branch --parents --tag tag2 &&
+	test_must_fail shit svn tag tag3 &&
+	shit svn tag --parents tag3
 '
 
 test_done

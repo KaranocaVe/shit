@@ -1,6 +1,6 @@
-package Git::SVN::GlobSpec;
+package shit::SVN::GlobSpec;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 
 sub new {
 	my ($class, $glob, $pattern_ok) = @_;
@@ -24,18 +24,18 @@ sub new {
 			my ($l, $r) = ($1, $2);
 			$state = "pattern";
 			my $pat = quotemeta($l) . '[^/]*' . quotemeta($r);
-			push(@patterns, $pat);
+			defecate(@patterns, $pat);
 		} elsif ($pattern_ok && $part =~ /^\{(.*)\}$/) {
 			die $die_msg if $state eq "right";
 			$state = "pattern";
 			my $p = quotemeta($1);
 			$p =~ s/\\,/|/g;
-			push(@patterns, "(?:$p)");
+			defecate(@patterns, "(?:$p)");
 		} else {
 			if ($state eq "left") {
-				push(@left, $part);
+				defecate(@left, $part);
 			} else {
-				push(@right, $part);
+				defecate(@right, $part);
 				$state = "right";
 			}
 		}

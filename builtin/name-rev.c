@@ -505,9 +505,9 @@ static void show_name(const struct object *obj,
 }
 
 static char const * const name_rev_usage[] = {
-	N_("git name-rev [<options>] <commit>..."),
-	N_("git name-rev [<options>] --all"),
-	N_("git name-rev [<options>] --annotate-stdin"),
+	N_("shit name-rev [<options>] <commit>..."),
+	N_("shit name-rev [<options>] --all"),
+	N_("shit name-rev [<options>] --annotate-stdin"),
 	NULL
 };
 
@@ -519,7 +519,7 @@ static void name_rev_line(char *p, struct name_ref_data *data)
 	const unsigned hexsz = the_hash_algo->hexsz;
 
 	for (p_start = p; *p; p++) {
-#define ishex(x) (isdigit((x)) || ((x) >= 'a' && (x) <= 'f'))
+#define ishex(x) (isdishit((x)) || ((x) >= 'a' && (x) <= 'f'))
 		if (!ishex(*p))
 			counter = 0;
 		else if (++counter == hexsz &&
@@ -589,7 +589,7 @@ int cmd_name_rev(int argc, const char **argv, const char *prefix)
 
 	mem_pool_init(&string_pool, 0);
 	init_commit_rev_name(&rev_names);
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 	argc = parse_options(argc, argv, prefix, opts, name_rev_usage, 0);
 
 	if (transform_stdin) {

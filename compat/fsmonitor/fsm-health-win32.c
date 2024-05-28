@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "fsmonitor-ll.h"
 #include "fsm-health.h"
@@ -114,7 +114,7 @@ static int bhfi_eq(const BY_HANDLE_FILE_INFORMATION *bhfi_1,
  * Furthermore, if the user does something like:
  *
  *   $ mv repo repo.old
- *   $ git init repo
+ *   $ shit init repo
  *
  * A new daemon cannot be started in the new instance of "repo"
  * because the named-pipe is still being used by the daemon on

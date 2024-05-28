@@ -1,14 +1,14 @@
-git-jump
+shit-jump
 ========
 
-Git-jump is a script for helping you jump to "interesting" parts of your
+shit-jump is a script for helping you jump to "interesting" parts of your
 project in your editor. It works by outputting a set of interesting
 spots in the "quickfix" format, which editors like vim can use as a
 queue of places to visit (this feature is usually used to jump to errors
 produced by a compiler). For example, given a diff like this:
 
 ------------------------------------
-diff --git a/foo.c b/foo.c
+diff --shit a/foo.c b/foo.c
 index a655540..5a59044 100644
 --- a/foo.c
 +++ b/foo.c
@@ -19,14 +19,14 @@ index a655540..5a59044 100644
  }
 -----------------------------------
 
-git-jump will feed this to the editor:
+shit-jump will feed this to the editor:
 
 -----------------------------------
 foo.c:2: printf("hello word!\n");
 -----------------------------------
 
-Or, when running 'git jump grep', column numbers will also be emitted,
-e.g. `git jump grep "hello"` would return:
+Or, when running 'shit jump grep', column numbers will also be emitted,
+e.g. `shit jump grep "hello"` would return:
 
 -----------------------------------
 foo.c:2:9: printf("hello word!\n");
@@ -36,7 +36,7 @@ Obviously this trivial case isn't that interesting; you could just open
 `foo.c` yourself. But when you have many changes scattered across a
 project, you can use the editor's support to "jump" from point to point.
 
-Git-jump can generate four types of interesting lists:
+shit-jump can generate four types of interesting lists:
 
   1. The beginning of any diff hunks.
 
@@ -45,38 +45,38 @@ Git-jump can generate four types of interesting lists:
   3. Any grep matches, including the column of the first match on a
      line.
 
-  4. Any whitespace errors detected by `git diff --check`.
+  4. Any whitespace errors detected by `shit diff --check`.
 
 
-Using git-jump
+Using shit-jump
 --------------
 
-To use it, just drop git-jump in your PATH, and then invoke it like
+To use it, just drop shit-jump in your PATH, and then invoke it like
 this:
 
 --------------------------------------------------
 # jump to changes not yet staged for commit
-git jump diff
+shit jump diff
 
 # jump to changes that are staged for commit; you can give
 # arbitrary diff options
-git jump diff --cached
+shit jump diff --cached
 
 # jump to merge conflicts
-git jump merge
+shit jump merge
 
 # documentation conflicts are hard; skip past them for now
-git jump merge :^Documentation
+shit jump merge :^Documentation
 
 # jump to all instances of foo_bar
-git jump grep foo_bar
+shit jump grep foo_bar
 
 # same as above, but case-insensitive; you can give
 # arbitrary grep options
-git jump grep -i foo_bar
+shit jump grep -i foo_bar
 
-# use the silver searcher for git jump grep
-git config jump.grepCmd "ag --column"
+# use the silver searcher for shit jump grep
+shit config jump.grepCmd "ag --column"
 --------------------------------------------------
 
 You can use the optional argument '--stdout' to print the listing to
@@ -84,23 +84,23 @@ standard output instead of feeding it to the editor. You can use the
 argument with M-x grep on Emacs:
 
 --------------------------------------------------
-# In Emacs, M-x grep and invoke "git jump --stdout <mode>"
-M-x grep<RET>git jump --stdout diff<RET>
+# In Emacs, M-x grep and invoke "shit jump --stdout <mode>"
+M-x grep<RET>shit jump --stdout diff<RET>
 --------------------------------------------------
 
 Related Programs
 ----------------
 
 You can accomplish some of the same things with individual tools. For
-example, you can use `git mergetool` to start vimdiff on each unmerged
-file. `git jump merge` is for the vim-wielding luddite who just wants to
+example, you can use `shit mergetool` to start vimdiff on each unmerged
+file. `shit jump merge` is for the vim-wielding luddite who just wants to
 jump straight to the conflict text with no fanfare.
 
-As of git v1.7.2, `git grep` knows the `--open-files-in-pager` option,
-which does something similar to `git jump grep`. However, it is limited
+As of shit v1.7.2, `shit grep` knows the `--open-files-in-pager` option,
+which does something similar to `shit jump grep`. However, it is limited
 to positioning the cursor to the correct line in only the first file,
 leaving you to locate subsequent hits in that file or other files using
-the editor or pager. By contrast, git-jump provides the editor with a
+the editor or pager. By contrast, shit-jump provides the editor with a
 complete list of files, lines, and a column number for each match.
 
 
@@ -119,5 +119,5 @@ Contributing
 ------------
 
 Bug fixes, bug reports, and feature requests should be discussed on the
-Git mailing list <git@vger.kernel.org>, and cc'd to the git-jump
+shit mailing list <shit@vger.kernel.org>, and cc'd to the shit-jump
 maintainer, Jeff King <peff@peff.net>.

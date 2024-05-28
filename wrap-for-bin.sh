@@ -1,36 +1,36 @@
 #!/bin/sh
 
-# wrap-for-bin.sh: Template for git executable wrapper scripts
+# wrap-for-bin.sh: Template for shit executable wrapper scripts
 # to run test suite against sandbox, but with only bindir-installed
 # executables in PATH.  The Makefile copies this into various
 # files in bin-wrappers, substituting
 # @@BUILD_DIR@@ and @@PROG@@.
 
-GIT_EXEC_PATH='@@BUILD_DIR@@'
-if test -n "$NO_SET_GIT_TEMPLATE_DIR"
+shit_EXEC_PATH='@@BUILD_DIR@@'
+if test -n "$NO_SET_shit_TEMPLATE_DIR"
 then
-	unset GIT_TEMPLATE_DIR
+	unset shit_TEMPLATE_DIR
 else
-	GIT_TEMPLATE_DIR='@@BUILD_DIR@@/templates/blt'
-	export GIT_TEMPLATE_DIR
+	shit_TEMPLATE_DIR='@@BUILD_DIR@@/templates/blt'
+	export shit_TEMPLATE_DIR
 fi
-GITPERLLIB='@@BUILD_DIR@@/perl/build/lib'"${GITPERLLIB:+:$GITPERLLIB}"
-GIT_TEXTDOMAINDIR='@@BUILD_DIR@@/po/build/locale'
+shitPERLLIB='@@BUILD_DIR@@/perl/build/lib'"${shitPERLLIB:+:$shitPERLLIB}"
+shit_TEXTDOMAINDIR='@@BUILD_DIR@@/po/build/locale'
 PATH='@@BUILD_DIR@@/bin-wrappers:'"$PATH"
 
-export GIT_EXEC_PATH GITPERLLIB PATH GIT_TEXTDOMAINDIR
+export shit_EXEC_PATH shitPERLLIB PATH shit_TEXTDOMAINDIR
 
-case "$GIT_DEBUGGER" in
+case "$shit_DEBUGGER" in
 '')
-	exec "${GIT_EXEC_PATH}/@@PROG@@" "$@"
+	exec "${shit_EXEC_PATH}/@@PROG@@" "$@"
 	;;
 1)
-	unset GIT_DEBUGGER
-	exec gdb --args "${GIT_EXEC_PATH}/@@PROG@@" "$@"
+	unset shit_DEBUGGER
+	exec gdb --args "${shit_EXEC_PATH}/@@PROG@@" "$@"
 	;;
 *)
-	GIT_DEBUGGER_ARGS="$GIT_DEBUGGER"
-	unset GIT_DEBUGGER
-	exec ${GIT_DEBUGGER_ARGS} "${GIT_EXEC_PATH}/@@PROG@@" "$@"
+	shit_DEBUGGER_ARGS="$shit_DEBUGGER"
+	unset shit_DEBUGGER
+	exec ${shit_DEBUGGER_ARGS} "${shit_EXEC_PATH}/@@PROG@@" "$@"
 	;;
 esac

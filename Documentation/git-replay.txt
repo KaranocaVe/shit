@@ -1,15 +1,15 @@
-git-replay(1)
+shit-replay(1)
 =============
 
 NAME
 ----
-git-replay - EXPERIMENTAL: Replay commits on a new base, works with bare repos too
+shit-replay - EXPERIMENTAL: Replay commits on a new base, works with bare repos too
 
 
 SYNOPSIS
 --------
 [verse]
-(EXPERIMENTAL!) 'git replay' ([--contained] --onto <newbase> | --advance <branch>) <revision-range>...
+(EXPERIMENTAL!) 'shit replay' ([--contained] --onto <newbase> | --advance <branch>) <revision-range>...
 
 DESCRIPTION
 -----------
@@ -17,7 +17,7 @@ DESCRIPTION
 Takes ranges of commits and replays them onto a new location. Leaves
 the working tree and the index untouched, and updates no references.
 The output of this command is meant to be used as input to
-`git update-ref --stdin`, which would update the relevant branches
+`shit update-ref --stdin`, which would update the relevant branches
 (see the OUTPUT section below).
 
 THIS COMMAND IS EXPERIMENTAL. THE BEHAVIOR MAY CHANGE.
@@ -31,7 +31,7 @@ OPTIONS
 +
 When `--onto` is specified, the update-ref command(s) in the output will
 update the branch(es) in the revision range to point at the new
-commits, similar to the way how `git rebase --update-refs` updates
+commits, similar to the way how `shit rebase --update-refs` updates
 multiple branches in the affected range.
 
 --advance <branch>::
@@ -46,7 +46,7 @@ the new commits (in other words, this mimics a cherry-pick operation).
 	Range of commits to replay. More than one <revision-range> can
 	be passed, but in `--advance <branch>` mode, they should have
 	a single tip, so that it's clear where <branch> should point
-	to. See "Specifying Ranges" in linkgit:git-rev-parse[1] and the
+	to. See "Specifying Ranges" in linkshit:shit-rev-parse[1] and the
 	"Commit Limiting" options below.
 
 include::rev-list-options.txt[]
@@ -55,7 +55,7 @@ OUTPUT
 ------
 
 When there are no conflicts, the output of this command is usable as
-input to `git update-ref --stdin`.  It is of the form:
+input to `shit update-ref --stdin`.  It is of the form:
 
 	update refs/heads/branch1 ${NEW_branch1_HASH} ${OLD_branch1_HASH}
 	update refs/heads/branch2 ${NEW_branch2_HASH} ${OLD_branch2_HASH}
@@ -80,14 +80,14 @@ EXAMPLES
 To simply rebase `mybranch` onto `target`:
 
 ------------
-$ git replay --onto target origin/main..mybranch
+$ shit replay --onto target origin/main..mybranch
 update refs/heads/mybranch ${NEW_mybranch_HASH} ${OLD_mybranch_HASH}
 ------------
 
 To cherry-pick the commits from mybranch onto target:
 
 ------------
-$ git replay --advance target origin/main..mybranch
+$ shit replay --advance target origin/main..mybranch
 update refs/heads/target ${NEW_target_HASH} ${OLD_target_HASH}
 ------------
 
@@ -100,18 +100,18 @@ What if you have a stack of branches, one depending upon another, and
 you'd really like to rebase the whole set?
 
 ------------
-$ git replay --contained --onto origin/main origin/main..tipbranch
+$ shit replay --contained --onto origin/main origin/main..tipbranch
 update refs/heads/branch1 ${NEW_branch1_HASH} ${OLD_branch1_HASH}
 update refs/heads/branch2 ${NEW_branch2_HASH} ${OLD_branch2_HASH}
 update refs/heads/tipbranch ${NEW_tipbranch_HASH} ${OLD_tipbranch_HASH}
 ------------
 
-When calling `git replay`, one does not need to specify a range of
+When calling `shit replay`, one does not need to specify a range of
 commits to replay using the syntax `A..B`; any range expression will
 do:
 
 ------------
-$ git replay --onto origin/main ^base branch1 branch2 branch3
+$ shit replay --onto origin/main ^base branch1 branch2 branch3
 update refs/heads/branch1 ${NEW_branch1_HASH} ${OLD_branch1_HASH}
 update refs/heads/branch2 ${NEW_branch2_HASH} ${OLD_branch2_HASH}
 update refs/heads/branch3 ${NEW_branch3_HASH} ${OLD_branch3_HASH}
@@ -122,6 +122,6 @@ all commits they have since `base`, playing them on top of
 `origin/main`. These three branches may have commits on top of `base`
 that they have in common, but that does not need to be the case.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

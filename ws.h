@@ -7,7 +7,7 @@ struct strbuf;
 /*
  * whitespace rules.
  * used by both diff and apply
- * last two digits are tab width
+ * last two dishits are tab width
  */
 #define WS_BLANK_AT_EOL         0100
 #define WS_SPACE_BEFORE_TAB     0200

@@ -1,13 +1,13 @@
-package Git::SVN::Fetcher;
+package shit::SVN::Fetcher;
 use vars qw/@ISA $_ignore_regex $_include_regex $_preserve_empty_dirs
             $_placeholder_filename @deleted_gpath %added_placeholder
             $repo_id/;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 use SVN::Delta;
 use Carp qw/croak/;
 use File::Basename qw/dirname/;
-use Git qw/command command_oneline command_noisy command_output_pipe
+use shit qw/command command_oneline command_noisy command_output_pipe
            command_input_pipe command_close_pipe
            command_bidi_pipe command_close_bidi_pipe
            get_record/;
@@ -17,19 +17,19 @@ BEGIN {
 
 # file baton members: path, mode_a, mode_b, pool, fh, blob, base
 sub new {
-	my ($class, $git_svn, $switch_path) = @_;
+	my ($class, $shit_svn, $switch_path) = @_;
 	my $self = SVN::Delta::Editor->new;
 	bless $self, $class;
-	if (exists $git_svn->{last_commit}) {
-		$self->{c} = $git_svn->{last_commit};
+	if (exists $shit_svn->{last_commit}) {
+		$self->{c} = $shit_svn->{last_commit};
 		$self->{empty_symlinks} =
-		                  _mark_empty_symlinks($git_svn, $switch_path);
+		                  _mark_empty_symlinks($shit_svn, $switch_path);
 	}
 
 	# some options are read globally, but can be overridden locally
 	# per [svn-remote "..."] section.  Command-line options will *NOT*
 	# override options set in an [svn-remote "..."] section
-	$repo_id = $git_svn->{repo_id};
+	$repo_id = $shit_svn->{repo_id};
 	my $k = "svn-remote.$repo_id.ignore-paths";
 	my $v = eval { command_oneline('config', '--get', $k) };
 	$self->{ignore_regex} = $v;
@@ -62,32 +62,32 @@ sub new {
 	$self->{file_prop} = {};
 	$self->{absent_dir} = {};
 	$self->{absent_file} = {};
-	require Git::IndexInfo;
-	$self->{gii} = $git_svn->tmp_index_do(sub { Git::IndexInfo->new });
-	$self->{pathnameencoding} = Git::config('svn.pathnameencoding');
+	require shit::IndexInfo;
+	$self->{gii} = $shit_svn->tmp_index_do(sub { shit::IndexInfo->new });
+	$self->{pathnameencoding} = shit::config('svn.pathnameencoding');
 	$self;
 }
 
 # this uses the Ra object, so it must be called before do_{switch,update},
-# not inside them (when the Git::SVN::Fetcher object is passed) to
+# not inside them (when the shit::SVN::Fetcher object is passed) to
 # do_{switch,update}
 sub _mark_empty_symlinks {
-	my ($git_svn, $switch_path) = @_;
-	my $bool = Git::config_bool('svn.brokenSymlinkWorkaround');
+	my ($shit_svn, $switch_path) = @_;
+	my $bool = shit::config_bool('svn.brokenSymlinkWorkaround');
 	return {} if (!defined($bool)) || (defined($bool) && ! $bool);
 
 	my %ret;
-	my ($rev, $cmt) = $git_svn->last_rev_commit;
+	my ($rev, $cmt) = $shit_svn->last_rev_commit;
 	return {} unless ($rev && $cmt);
 
 	# allow the warning to be printed for each revision we fetch to
 	# ensure the user sees it.  The user can also disable the workaround
-	# on the repository even while git svn is running and the next
+	# on the repository even while shit svn is running and the next
 	# revision fetched will skip this expensive function.
 	my $printed_warning;
-	chomp(my $empty_blob = `git hash-object -t blob --stdin < /dev/null`);
+	chomp(my $empty_blob = `shit hash-object -t blob --stdin < /dev/null`);
 	my ($ls, $ctx) = command_output_pipe(qw/ls-tree -r -z/, $cmt);
-	my $pfx = defined($switch_path) ? $switch_path : $git_svn->path;
+	my $pfx = defined($switch_path) ? $switch_path : $shit_svn->path;
 	$pfx .= '/' if length($pfx);
 	while (defined($_ = get_record($ls, "\0"))) {
 		s/\A100644 blob $empty_blob\t//o or next;
@@ -96,16 +96,16 @@ sub _mark_empty_symlinks {
 			             "this may take a while if you have ",
 				     "many empty files\n",
 				     "You may disable this with `",
-				     "git config svn.brokenSymlinkWorkaround ",
+				     "shit config svn.brokenSymlinkWorkaround ",
 				     "false'.\n",
 				     "This may be done in a different ",
 				     "terminal without restarting ",
-				     "git svn\n";
+				     "shit svn\n";
 			$printed_warning = 1;
 		}
 		my $path = $_;
 		my (undef, $props) =
-		               $git_svn->ra->get_file($pfx.$path, $rev, undef);
+		               $shit_svn->ra->get_file($pfx.$path, $rev, undef);
 		if ($props->{'svn:special'}) {
 			$ret{$path} = 1;
 		}
@@ -114,16 +114,16 @@ sub _mark_empty_symlinks {
 	\%ret;
 }
 
-# returns true if a given path is inside a ".git" directory
-sub in_dot_git {
-	$_[0] =~ m{(?:^|/)\.git(?:/|$)};
+# returns true if a given path is inside a ".shit" directory
+sub in_dot_shit {
+	$_[0] =~ m{(?:^|/)\.shit(?:/|$)};
 }
 
 # return value: 0 -- don't ignore, 1 -- ignore
 # This will also check whether the path is explicitly included
 sub is_path_ignored {
 	my ($self, $path) = @_;
-	return 1 if in_dot_git($path);
+	return 1 if in_dot_shit($path);
 	return 1 if defined($self->{ignore_regex}) &&
 	            $path =~ m!$self->{ignore_regex}!;
 	return 0 if defined($self->{include_regex}) &&
@@ -151,7 +151,7 @@ sub open_directory {
 	{ path => $path };
 }
 
-sub git_path {
+sub shit_path {
 	my ($self, $path) = @_;
 	if (my $enc = $self->{pathnameencoding}) {
 		require Encode;
@@ -168,7 +168,7 @@ sub delete_entry {
 	my ($self, $path, $rev, $pb) = @_;
 	return undef if $self->is_path_ignored($path);
 
-	my $gpath = $self->git_path($path);
+	my $gpath = $self->shit_path($path);
 	return undef if ($gpath eq '');
 
 	# remove entire directories.
@@ -190,7 +190,7 @@ sub delete_entry {
 		print "\tD\t$gpath\n" unless $::_q;
 	}
 	# Don't add to @deleted_gpath if we're deleting a placeholder file.
-	push @deleted_gpath, $gpath unless $added_placeholder{dirname($path)};
+	defecate @deleted_gpath, $gpath unless $added_placeholder{dirname($path)};
 	$self->{empty}->{$path} = 0;
 	undef;
 }
@@ -201,7 +201,7 @@ sub open_file {
 
 	goto out if $self->is_path_ignored($path);
 
-	my $gpath = $self->git_path($path);
+	my $gpath = $self->shit_path($path);
 	($mode, $blob) = (command('ls-tree', '-z', $self->{c}, "./$gpath")
 	                     =~ /\A(\d{6}) blob ($::oid)\t\Q$gpath\E\0/);
 	unless (defined $mode && defined $blob) {
@@ -239,7 +239,7 @@ sub add_file {
 sub add_directory {
 	my ($self, $path, $cp_path, $cp_rev) = @_;
 	goto out if $self->is_path_ignored($path);
-	my $gpath = $self->git_path($path);
+	my $gpath = $self->shit_path($path);
 	if ($gpath eq '') {
 		my ($ls, $ctx) = command_output_pipe(qw/ls-tree
 		                                     -r --name-only -z/,
@@ -247,7 +247,7 @@ sub add_directory {
 		while (defined($_ = get_record($ls, "\0"))) {
 			$self->{gii}->remove($_);
 			print "\tD\t$_\n" unless $::_q;
-			push @deleted_gpath, $gpath;
+			defecate @deleted_gpath, $gpath;
 		}
 		command_close_pipe($ls, $ctx);
 		$self->{empty}->{$path} = 0;
@@ -278,7 +278,7 @@ sub absent_directory {
 	my ($self, $path, $pb) = @_;
 	return undef if $self->is_path_ignored($path);
 	$self->{absent_dir}->{$pb->{path}} ||= [];
-	push @{$self->{absent_dir}->{$pb->{path}}}, $path;
+	defecate @{$self->{absent_dir}->{$pb->{path}}}, $path;
 	undef;
 }
 
@@ -286,7 +286,7 @@ sub absent_file {
 	my ($self, $path, $pb) = @_;
 	return undef if $self->is_path_ignored($path);
 	$self->{absent_file}->{$pb->{path}} ||= [];
-	push @{$self->{absent_file}->{$pb->{path}}}, $path;
+	defecate @{$self->{absent_file}->{$pb->{path}}}, $path;
 	undef;
 }
 
@@ -315,7 +315,7 @@ sub apply_textdelta {
 	# $fh gets auto-closed() by SVN::TxDelta::apply(),
 	# (but $base does not,) so dup() it for reading in close_file
 	open my $dup, '<&', $fh or croak $!;
-	my $base = $::_repository->temp_acquire("git_blob_${$}_$suffix");
+	my $base = $::_repository->temp_acquire("shit_blob_${$}_$suffix");
 	# close_file may call temp_acquire on 'svn_hash', but because of the
 	# call chain, if the temp_acquire call from close_file ends up being the
 	# call that first creates the 'svn_hash' temp file, then the FileHandle
@@ -368,7 +368,7 @@ sub close_file {
 	return undef if $self->is_path_ignored($fb->{path});
 
 	my $hash;
-	my $path = $self->git_path($fb->{path});
+	my $path = $self->shit_path($fb->{path});
 	if (my $fh = $fb->{fh}) {
 		if (defined $exp) {
 			seek($fh, 0, 0) or croak $!;
@@ -401,22 +401,22 @@ sub close_file {
 					my $out = syswrite($tmp_fh, $str, $res);
 					defined($out) && $out == $res
 						or croak("write ",
-							Git::temp_path($tmp_fh),
+							shit::temp_path($tmp_fh),
 							": $!\n");
 				}
 				defined $res or croak $!;
 
 				($fh, $tmp_fh) = ($tmp_fh, $fh);
-				Git::temp_release($tmp_fh, 1);
+				shit::temp_release($tmp_fh, 1);
 			}
 		}
 
 		$hash = $::_repository->hash_and_insert_object(
-				Git::temp_path($fh));
+				shit::temp_path($fh));
 		$hash =~ /^$::oid$/ or die "not an object ID: $hash\n";
 
-		Git::temp_release($fb->{base}, 1);
-		Git::temp_release($fh, 1);
+		shit::temp_release($fb->{base}, 1);
+		shit::temp_release($fh, 1);
 	} else {
 		$hash = $fb->{blob} or die "no blob information\n";
 	}
@@ -442,12 +442,12 @@ sub close_edit {
 		# Any entry flagged as empty that also has an associated
 		# dir_prop represents a newly created empty directory.
 		foreach my $i (keys %{$self->{empty}}) {
-			push @empty_dirs, $i if exists $self->{dir_prop}->{$i};
+			defecate @empty_dirs, $i if exists $self->{dir_prop}->{$i};
 		}
 
 		# Search for directories that have become empty due subsequent
 		# file deletes.
-		push @empty_dirs, $self->find_empty_directories();
+		defecate @empty_dirs, $self->find_empty_directories();
 
 		# Finally, add a placeholder file to each empty directory.
 		$self->add_placeholder_file($_) foreach (@empty_dirs);
@@ -455,7 +455,7 @@ sub close_edit {
 		$self->stash_placeholder_list();
 	}
 
-	$self->{git_commit_ok} = 1;
+	$self->{shit_commit_ok} = 1;
 	$self->{nr} = $self->{gii}->{nr};
 	delete $self->{gii};
 	$self->SUPER::close_edit(@_);
@@ -483,7 +483,7 @@ sub find_empty_directories {
 		}
 		next if $skip_added;
 
-		# Use `git ls-tree` to get the filenames of this directory
+		# Use `shit ls-tree` to get the filenames of this directory
 		# that existed prior to this particular commit.
 		my $ls = command('ls-tree', '-z', '--name-only',
 				 $self->{c}, "$dir/");
@@ -493,7 +493,7 @@ sub find_empty_directories {
 		delete $files{$_} foreach (@deleted_gpath);
 
 		# Report the directory if there are no filenames left.
-		push @empty_dirs, $dir unless (scalar %files);
+		defecate @empty_dirs, $dir unless (scalar %files);
 	}
 	@empty_dirs;
 }
@@ -501,11 +501,11 @@ sub find_empty_directories {
 sub add_placeholder_file {
 	my ($self, $dir) = @_;
 	my $path = "$dir/$_placeholder_filename";
-	my $gpath = $self->git_path($path);
+	my $gpath = $self->shit_path($path);
 
 	my $fh = $::_repository->temp_acquire($gpath);
-	my $hash = $::_repository->hash_and_insert_object(Git::temp_path($fh));
-	Git::temp_release($fh, 1);
+	my $hash = $::_repository->hash_and_insert_object(shit::temp_path($fh));
+	shit::temp_release($fh, 1);
 	$self->{gii}->update('100644', $hash, $gpath) or croak $!;
 
 	# The directory should no longer be considered empty.
@@ -530,19 +530,19 @@ __END__
 
 =head1 NAME
 
-Git::SVN::Fetcher - tree delta consumer for "git svn fetch"
+shit::SVN::Fetcher - tree delta consumer for "shit svn fetch"
 
 =head1 SYNOPSIS
 
     use SVN::Core;
     use SVN::Ra;
-    use Git::SVN;
-    use Git::SVN::Fetcher;
-    use Git;
+    use shit::SVN;
+    use shit::SVN::Fetcher;
+    use shit;
 
-    my $gs = Git::SVN->find_by_url($url);
+    my $gs = shit::SVN->find_by_url($url);
     my $ra = SVN::Ra->new(url => $url);
-    my $editor = Git::SVN::Fetcher->new($gs);
+    my $editor = shit::SVN::Fetcher->new($gs);
     my $reporter = $ra->do_update($SVN::Core::INVALID_REVNUM, '',
                                   1, $editor);
     $reporter->set_path('', $old_rev, 0);
@@ -572,15 +572,15 @@ Git::SVN::Fetcher - tree delta consumer for "git svn fetch"
 This is a subclass of C<SVN::Delta::Editor>, which means it implements
 callbacks to act as a consumer of Subversion tree deltas.  This
 particular implementation of those callbacks is meant to store
-information about the resulting content which B<git svn fetch> could
+information about the resulting content which B<shit svn fetch> could
 use to populate new commits and new entries for F<unhandled.log>.
 More specifically:
 
 =over
 
 =item * Additions, removals, and modifications of files are propagated
-to git-svn's index file F<$GIT_DIR/svn/$refname/index> using
-B<git update-index>.
+to shit-svn's index file F<$shit_DIR/svn/$refname/index> using
+B<shit update-index>.
 
 =item * Changes in Subversion path properties are recorded in the
 C<dir_prop> and C<file_prop> fields (which are hashes).
@@ -597,21 +597,21 @@ could not be conveyed.
 =back
 
 The interface is unstable.  Do not use this module unless you are
-developing git-svn.
+developing shit-svn.
 
 =head1 DEPENDENCIES
 
 L<SVN::Delta> from the Subversion perl bindings,
 the core L<Carp> and L<File::Basename> modules,
-and git's L<Git> helper module.
+and shit's L<shit> helper module.
 
-C<Git::SVN::Fetcher> has not been tested using callers other than
-B<git-svn> itself.
+C<shit::SVN::Fetcher> has not been tested using callers other than
+B<shit-svn> itself.
 
 =head1 SEE ALSO
 
 L<SVN::Delta>,
-L<Git::SVN::Editor>.
+L<shit::SVN::Editor>.
 
 =head1 INCOMPATIBILITIES
 

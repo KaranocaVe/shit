@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git p4 handling of EDITOR'
+test_description='shit p4 handling of EDITOR'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 test_expect_success 'start p4d' '
 	start_p4d
@@ -18,16 +18,16 @@ test_expect_success 'init depot' '
 '
 
 # Check that the P4EDITOR argument can be given command-line
-# options, which git-p4 will then pass through to the shell.
+# options, which shit-p4 will then pass through to the shell.
 test_expect_success 'EDITOR with options' '
-	git p4 clone --dest="$git" //depot &&
-	test_when_finished cleanup_git &&
+	shit p4 clone --dest="$shit" //depot &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
+		cd "$shit" &&
 		echo change >file1 &&
-		git commit -m "change" file1 &&
-		P4EDITOR=": >\"$git/touched\" && test-tool chmtime +5" git p4 submit &&
-		test_path_is_file "$git/touched"
+		shit commit -m "change" file1 &&
+		P4EDITOR=": >\"$shit/touched\" && test-tool chmtime +5" shit p4 submit &&
+		test_path_is_file "$shit/touched"
 	)
 '
 

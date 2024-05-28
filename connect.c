@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "environment.h"
 #include "gettext.h"
@@ -131,7 +131,7 @@ int server_supports_feature(const char *c, const char *feature,
 static void process_capabilities_v2(struct packet_reader *reader)
 {
 	while (packet_reader_read(reader) == PACKET_READ_NORMAL)
-		strvec_push(&server_capabilities_v2, reader->line);
+		strvec_defecate(&server_capabilities_v2, reader->line);
 
 	if (reader->status != PACKET_READ_FLUSH)
 		die(_("expected flush after capabilities"));
@@ -244,11 +244,11 @@ static void process_capabilities(struct packet_reader *reader, int *linelen)
 	if (feat_val) {
 		char *hash_name = xstrndup(feat_val, feat_len);
 		int hash_algo = hash_algo_by_name(hash_name);
-		if (hash_algo != GIT_HASH_UNKNOWN)
+		if (hash_algo != shit_HASH_UNKNOWN)
 			reader->hash_algo = &hash_algos[hash_algo];
 		free(hash_name);
 	} else {
-		reader->hash_algo = &hash_algos[GIT_HASH_SHA1];
+		reader->hash_algo = &hash_algos[shit_HASH_SHA1];
 	}
 }
 
@@ -487,16 +487,16 @@ static void send_capabilities(int fd_out, struct packet_reader *reader)
 	const char *hash_name;
 
 	if (server_supports_v2("agent"))
-		packet_write_fmt(fd_out, "agent=%s", git_user_agent_sanitized());
+		packet_write_fmt(fd_out, "agent=%s", shit_user_agent_sanitized());
 
 	if (server_feature_v2("object-format", &hash_name)) {
 		int hash_algo = hash_algo_by_name(hash_name);
-		if (hash_algo == GIT_HASH_UNKNOWN)
+		if (hash_algo == shit_HASH_UNKNOWN)
 			die(_("unknown object format '%s' specified by server"), hash_name);
 		reader->hash_algo = &hash_algos[hash_algo];
 		packet_write_fmt(fd_out, "object-format=%s", reader->hash_algo->name);
 	} else {
-		reader->hash_algo = &hash_algos[GIT_HASH_SHA1];
+		reader->hash_algo = &hash_algos[shit_HASH_SHA1];
 	}
 }
 
@@ -544,7 +544,7 @@ int get_remote_bundle_uri(int fd_out, struct packet_reader *reader,
 }
 
 struct ref **get_remote_refs(int fd_out, struct packet_reader *reader,
-			     struct ref **list, int for_push,
+			     struct ref **list, int for_defecate,
 			     struct transport_ls_refs_options *transport_options,
 			     const struct string_list *server_options,
 			     int stateless_rpc)
@@ -570,8 +570,8 @@ struct ref **get_remote_refs(int fd_out, struct packet_reader *reader,
 	}
 
 	packet_delim(fd_out);
-	/* When pushing we don't want to request the peeled tags */
-	if (!for_push)
+	/* When defecateing we don't want to request the peeled tags */
+	if (!for_defecate)
 		packet_write_fmt(fd_out, "peel\n");
 	packet_write_fmt(fd_out, "symrefs\n");
 	if (server_supports_feature("ls-refs", "unborn", 0))
@@ -622,7 +622,7 @@ const char *parse_feature_value(const char *feature_list, const char *feature, s
 					*offset = found + len - orig_start;
 				return value;
 			}
-			/* feature with a value (e.g., "agent=git/1.2.3") */
+			/* feature with a value (e.g., "agent=shit/1.2.3") */
 			else if (*value == '=') {
 				size_t end;
 
@@ -654,7 +654,7 @@ int server_supports_hash(const char *desired, int *feature_supported)
 	if (feature_supported)
 		*feature_supported = !!hash;
 	if (!hash) {
-		hash = hash_algos[GIT_HASH_SHA1].name;
+		hash = hash_algos[shit_HASH_SHA1].name;
 		len = strlen(hash);
 	}
 	while (hash) {
@@ -690,7 +690,7 @@ enum protocol {
 	PROTO_LOCAL = 1,
 	PROTO_FILE,
 	PROTO_SSH,
-	PROTO_GIT
+	PROTO_shit
 };
 
 int url_is_local_not_ssh(const char *url)
@@ -709,8 +709,8 @@ static const char *prot_name(enum protocol protocol)
 			return "file";
 		case PROTO_SSH:
 			return "ssh";
-		case PROTO_GIT:
-			return "git";
+		case PROTO_shit:
+			return "shit";
 		default:
 			return "unknown protocol";
 	}
@@ -720,11 +720,11 @@ static enum protocol get_protocol(const char *name)
 {
 	if (!strcmp(name, "ssh"))
 		return PROTO_SSH;
-	if (!strcmp(name, "git"))
-		return PROTO_GIT;
-	if (!strcmp(name, "git+ssh")) /* deprecated - do not use */
+	if (!strcmp(name, "shit"))
+		return PROTO_shit;
+	if (!strcmp(name, "shit+ssh")) /* deprecated - do not use */
 		return PROTO_SSH;
-	if (!strcmp(name, "ssh+git")) /* deprecated - do not use */
+	if (!strcmp(name, "ssh+shit")) /* deprecated - do not use */
 		return PROTO_SSH;
 	if (!strcmp(name, "file"))
 		return PROTO_FILE;
@@ -797,11 +797,11 @@ static const char *ai_name(const struct addrinfo *ai)
 /*
  * Returns a connected socket() fd, or else die()s.
  */
-static int git_tcp_connect_sock(char *host, int flags)
+static int shit_tcp_connect_sock(char *host, int flags)
 {
 	struct strbuf error_message = STRBUF_INIT;
 	int sockfd = -1;
-	const char *port = STR(DEFAULT_GIT_PORT);
+	const char *port = STR(DEFAULT_shit_PORT);
 	struct addrinfo hints, *ai0, *ai;
 	int gai;
 	int cnt = 0;
@@ -867,11 +867,11 @@ static int git_tcp_connect_sock(char *host, int flags)
 /*
  * Returns a connected socket() fd, or else die()s.
  */
-static int git_tcp_connect_sock(char *host, int flags)
+static int shit_tcp_connect_sock(char *host, int flags)
 {
 	struct strbuf error_message = STRBUF_INIT;
 	int sockfd = -1;
-	const char *port = STR(DEFAULT_GIT_PORT);
+	const char *port = STR(DEFAULT_shit_PORT);
 	char *ep;
 	struct hostent *he;
 	struct sockaddr_in sa;
@@ -941,19 +941,19 @@ static int git_tcp_connect_sock(char *host, int flags)
 
 
 /*
- * Dummy child_process returned by git_connect() if the transport protocol
+ * Dummy child_process returned by shit_connect() if the transport protocol
  * does not need fork(2).
  */
 static struct child_process no_fork = CHILD_PROCESS_INIT;
 
-int git_connection_is_socket(struct child_process *conn)
+int shit_connection_is_socket(struct child_process *conn)
 {
 	return conn == &no_fork;
 }
 
-static struct child_process *git_tcp_connect(int fd[2], char *host, int flags)
+static struct child_process *shit_tcp_connect(int fd[2], char *host, int flags)
 {
-	int sockfd = git_tcp_connect_sock(host, flags);
+	int sockfd = shit_tcp_connect_sock(host, flags);
 
 	fd[0] = sockfd;
 	fd[1] = dup(sockfd);
@@ -962,27 +962,27 @@ static struct child_process *git_tcp_connect(int fd[2], char *host, int flags)
 }
 
 
-static char *git_proxy_command;
+static char *shit_proxy_command;
 
-static int git_proxy_command_options(const char *var, const char *value,
+static int shit_proxy_command_options(const char *var, const char *value,
 		const struct config_context *ctx, void *cb)
 {
-	if (!strcmp(var, "core.gitproxy")) {
+	if (!strcmp(var, "core.shitproxy")) {
 		const char *for_pos;
 		int matchlen = -1;
 		int hostlen;
 		const char *rhost_name = cb;
 		int rhost_len = strlen(rhost_name);
 
-		if (git_proxy_command)
+		if (shit_proxy_command)
 			return 0;
 		if (!value)
 			return config_error_nonbool(var);
 		/* [core]
 		 * ;# matches www.kernel.org as well
-		 * gitproxy = netcatter-1 for kernel.org
-		 * gitproxy = netcatter-2 for sample.xz
-		 * gitproxy = netcatter-default
+		 * shitproxy = netcatter-1 for kernel.org
+		 * shitproxy = netcatter-2 for sample.xz
+		 * shitproxy = netcatter-default
 		 */
 		for_pos = strstr(value, " for ");
 		if (!for_pos)
@@ -1002,28 +1002,28 @@ static int git_proxy_command_options(const char *var, const char *value,
 				matchlen = -1;
 		}
 		if (0 <= matchlen) {
-			/* core.gitproxy = none for kernel.org */
+			/* core.shitproxy = none for kernel.org */
 			if (matchlen == 4 &&
 			    !memcmp(value, "none", 4))
 				matchlen = 0;
-			git_proxy_command = xmemdupz(value, matchlen);
+			shit_proxy_command = xmemdupz(value, matchlen);
 		}
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
-static int git_use_proxy(const char *host)
+static int shit_use_proxy(const char *host)
 {
-	git_proxy_command = getenv("GIT_PROXY_COMMAND");
-	git_config(git_proxy_command_options, (void*)host);
-	return (git_proxy_command && *git_proxy_command);
+	shit_proxy_command = getenv("shit_PROXY_COMMAND");
+	shit_config(shit_proxy_command_options, (void*)host);
+	return (shit_proxy_command && *shit_proxy_command);
 }
 
-static struct child_process *git_proxy_connect(int fd[2], char *host)
+static struct child_process *shit_proxy_connect(int fd[2], char *host)
 {
-	const char *port = STR(DEFAULT_GIT_PORT);
+	const char *port = STR(DEFAULT_shit_PORT);
 	struct child_process *proxy;
 
 	get_host_and_port(&host, &port);
@@ -1035,13 +1035,13 @@ static struct child_process *git_proxy_connect(int fd[2], char *host)
 
 	proxy = xmalloc(sizeof(*proxy));
 	child_process_init(proxy);
-	strvec_push(&proxy->args, git_proxy_command);
-	strvec_push(&proxy->args, host);
-	strvec_push(&proxy->args, port);
+	strvec_defecate(&proxy->args, shit_proxy_command);
+	strvec_defecate(&proxy->args, host);
+	strvec_defecate(&proxy->args, port);
 	proxy->in = -1;
 	proxy->out = -1;
 	if (start_command(proxy))
-		die(_("cannot start proxy %s"), git_proxy_command);
+		die(_("cannot start proxy %s"), shit_proxy_command);
 	fd[0] = proxy->out; /* read from proxy stdout */
 	fd[1] = proxy->in;  /* write to proxy stdin */
 	return proxy;
@@ -1112,7 +1112,7 @@ static enum protocol parse_connect_url(const char *url_orig, char **ret_host,
 		path = strchr(end, separator);
 
 	if (!path || !*path)
-		die(_("no path specified; see 'git help pull' for valid url syntax"));
+		die(_("no path specified; see 'shit help poop' for valid url syntax"));
 
 	/*
 	 * null-terminate hostname and point path to ~ for URL's like this:
@@ -1122,7 +1122,7 @@ static enum protocol parse_connect_url(const char *url_orig, char **ret_host,
 	end = path; /* Need to \0 terminate host here */
 	if (separator == ':')
 		path++; /* path starts after ':' */
-	if (protocol == PROTO_GIT || protocol == PROTO_SSH) {
+	if (protocol == PROTO_shit || protocol == PROTO_SSH) {
 		if (path[1] == '~')
 			path++;
 	}
@@ -1140,10 +1140,10 @@ static const char *get_ssh_command(void)
 {
 	const char *ssh;
 
-	if ((ssh = getenv("GIT_SSH_COMMAND")))
+	if ((ssh = getenv("shit_SSH_COMMAND")))
 		return ssh;
 
-	if (!git_config_get_string_tmp("core.sshcommand", &ssh))
+	if (!shit_config_get_string_tmp("core.sshcommand", &ssh))
 		return ssh;
 
 	return NULL;
@@ -1160,9 +1160,9 @@ enum ssh_variant {
 
 static void override_ssh_variant(enum ssh_variant *ssh_variant)
 {
-	const char *variant = getenv("GIT_SSH_VARIANT");
+	const char *variant = getenv("shit_SSH_VARIANT");
 
-	if (!variant && git_config_get_string_tmp("ssh.variant", &variant))
+	if (!variant && shit_config_get_string_tmp("ssh.variant", &variant))
 		return;
 
 	if (!strcmp(variant, "auto"))
@@ -1227,12 +1227,12 @@ static enum ssh_variant determine_ssh_variant(const char *ssh_command,
 }
 
 /*
- * Open a connection using Git's native protocol.
+ * Open a connection using shit's native protocol.
  *
  * The caller is responsible for freeing hostandport, but this function may
  * modify it (for example, to truncate it to remove the port part).
  */
-static struct child_process *git_connect_git(int fd[2], char *hostandport,
+static struct child_process *shit_connect_shit(int fd[2], char *hostandport,
 					     const char *path, const char *prog,
 					     enum protocol_version version,
 					     int flags)
@@ -1244,30 +1244,30 @@ static struct child_process *git_connect_git(int fd[2], char *hostandport,
 	 * connect, unless the user has overridden us in
 	 * the environment.
 	 */
-	char *target_host = getenv("GIT_OVERRIDE_VIRTUAL_HOST");
+	char *target_host = getenv("shit_OVERRIDE_VIRTUAL_HOST");
 	if (target_host)
 		target_host = xstrdup(target_host);
 	else
 		target_host = xstrdup(hostandport);
 
-	transport_check_allowed("git");
+	transport_check_allowed("shit");
 	if (strchr(target_host, '\n') || strchr(path, '\n'))
-		die(_("newline is forbidden in git:// hosts and repo paths"));
+		die(_("newline is forbidden in shit:// hosts and repo paths"));
 
 	/*
 	 * These underlying connection commands die() if they
 	 * cannot connect.
 	 */
-	if (git_use_proxy(hostandport))
-		conn = git_proxy_connect(fd, hostandport);
+	if (shit_use_proxy(hostandport))
+		conn = shit_proxy_connect(fd, hostandport);
 	else
-		conn = git_tcp_connect(fd, hostandport, flags);
+		conn = shit_tcp_connect(fd, hostandport, flags);
 	/*
 	 * Separate original protocol components prog and path
 	 * from extended host header with a NUL byte.
 	 *
 	 * Note: Do not add any other headers here!  Doing so
-	 * will cause older git-daemon servers to crash.
+	 * will cause older shit-daemon servers to crash.
 	 */
 	strbuf_addf(&request,
 		    "%s %s%chost=%s%c",
@@ -1290,69 +1290,69 @@ static struct child_process *git_connect_git(int fd[2], char *hostandport,
 
 /*
  * Append the appropriate environment variables to `env` and options to
- * `args` for running ssh in Git's SSH-tunneled transport.
+ * `args` for running ssh in shit's SSH-tunneled transport.
  */
-static void push_ssh_options(struct strvec *args, struct strvec *env,
+static void defecate_ssh_options(struct strvec *args, struct strvec *env,
 			     enum ssh_variant variant, const char *port,
 			     enum protocol_version version, int flags)
 {
 	if (variant == VARIANT_SSH &&
 	    version > 0) {
-		strvec_push(args, "-o");
-		strvec_push(args, "SendEnv=" GIT_PROTOCOL_ENVIRONMENT);
-		strvec_pushf(env, GIT_PROTOCOL_ENVIRONMENT "=version=%d",
+		strvec_defecate(args, "-o");
+		strvec_defecate(args, "SendEnv=" shit_PROTOCOL_ENVIRONMENT);
+		strvec_defecatef(env, shit_PROTOCOL_ENVIRONMENT "=version=%d",
 			     version);
 	}
 
 	if (flags & CONNECT_IPV4) {
 		switch (variant) {
 		case VARIANT_AUTO:
-			BUG("VARIANT_AUTO passed to push_ssh_options");
+			BUG("VARIANT_AUTO passed to defecate_ssh_options");
 		case VARIANT_SIMPLE:
 			die(_("ssh variant 'simple' does not support -4"));
 		case VARIANT_SSH:
 		case VARIANT_PLINK:
 		case VARIANT_PUTTY:
 		case VARIANT_TORTOISEPLINK:
-			strvec_push(args, "-4");
+			strvec_defecate(args, "-4");
 		}
 	} else if (flags & CONNECT_IPV6) {
 		switch (variant) {
 		case VARIANT_AUTO:
-			BUG("VARIANT_AUTO passed to push_ssh_options");
+			BUG("VARIANT_AUTO passed to defecate_ssh_options");
 		case VARIANT_SIMPLE:
 			die(_("ssh variant 'simple' does not support -6"));
 		case VARIANT_SSH:
 		case VARIANT_PLINK:
 		case VARIANT_PUTTY:
 		case VARIANT_TORTOISEPLINK:
-			strvec_push(args, "-6");
+			strvec_defecate(args, "-6");
 		}
 	}
 
 	if (variant == VARIANT_TORTOISEPLINK)
-		strvec_push(args, "-batch");
+		strvec_defecate(args, "-batch");
 
 	if (port) {
 		switch (variant) {
 		case VARIANT_AUTO:
-			BUG("VARIANT_AUTO passed to push_ssh_options");
+			BUG("VARIANT_AUTO passed to defecate_ssh_options");
 		case VARIANT_SIMPLE:
 			die(_("ssh variant 'simple' does not support setting port"));
 		case VARIANT_SSH:
-			strvec_push(args, "-p");
+			strvec_defecate(args, "-p");
 			break;
 		case VARIANT_PLINK:
 		case VARIANT_PUTTY:
 		case VARIANT_TORTOISEPLINK:
-			strvec_push(args, "-P");
+			strvec_defecate(args, "-P");
 		}
 
-		strvec_push(args, port);
+		strvec_defecate(args, port);
 	}
 }
 
-/* Prepare a child_process for use by Git's SSH-tunneled transport. */
+/* Prepare a child_process for use by shit's SSH-tunneled transport. */
 static void fill_ssh_args(struct child_process *conn, const char *ssh_host,
 			  const char *port, enum protocol_version version,
 			  int flags)
@@ -1368,13 +1368,13 @@ static void fill_ssh_args(struct child_process *conn, const char *ssh_host,
 		variant = determine_ssh_variant(ssh, 1);
 	} else {
 		/*
-		 * GIT_SSH is the no-shell version of
-		 * GIT_SSH_COMMAND (and must remain so for
+		 * shit_SSH is the no-shell version of
+		 * shit_SSH_COMMAND (and must remain so for
 		 * historical compatibility).
 		 */
 		conn->use_shell = 0;
 
-		ssh = getenv("GIT_SSH");
+		ssh = getenv("shit_SSH");
 		if (!ssh)
 			ssh = "ssh";
 		variant = determine_ssh_variant(ssh, 0);
@@ -1386,19 +1386,19 @@ static void fill_ssh_args(struct child_process *conn, const char *ssh_host,
 		detect.use_shell = conn->use_shell;
 		detect.no_stdin = detect.no_stdout = detect.no_stderr = 1;
 
-		strvec_push(&detect.args, ssh);
-		strvec_push(&detect.args, "-G");
-		push_ssh_options(&detect.args, &detect.env,
+		strvec_defecate(&detect.args, ssh);
+		strvec_defecate(&detect.args, "-G");
+		defecate_ssh_options(&detect.args, &detect.env,
 				 VARIANT_SSH, port, version, flags);
-		strvec_push(&detect.args, ssh_host);
+		strvec_defecate(&detect.args, ssh_host);
 
 		variant = run_command(&detect) ? VARIANT_SIMPLE : VARIANT_SSH;
 	}
 
-	strvec_push(&conn->args, ssh);
-	push_ssh_options(&conn->args, &conn->env, variant, port, version,
+	strvec_defecate(&conn->args, ssh);
+	defecate_ssh_options(&conn->args, &conn->env, variant, port, version,
 			 flags);
-	strvec_push(&conn->args, ssh_host);
+	strvec_defecate(&conn->args, ssh_host);
 }
 
 /*
@@ -1412,7 +1412,7 @@ static void fill_ssh_args(struct child_process *conn, const char *ssh_host,
  * will hopefully be changed in a libification effort, to return NULL when
  * the connection failed).
  */
-struct child_process *git_connect(int fd[2], const char *url,
+struct child_process *shit_connect(int fd[2], const char *url,
 				  const char *name,
 				  const char *prog, int flags)
 {
@@ -1425,9 +1425,9 @@ struct child_process *git_connect(int fd[2], const char *url,
 	 * NEEDSWORK: If we are trying to use protocol v2 and we are planning
 	 * to perform any operation that doesn't involve upload-pack (i.e., a
 	 * fetch, ls-remote, etc), then fallback to v0 since we don't know how
-	 * to do anything else (like push or remote archive) via v2.
+	 * to do anything else (like defecate or remote archive) via v2.
 	 */
-	if (version == protocol_v2 && strcmp("git-upload-pack", name))
+	if (version == protocol_v2 && strcmp("shit-upload-pack", name))
 		version = protocol_v0;
 
 	/* Without this we cannot rely on waitpid() to tell
@@ -1442,9 +1442,9 @@ struct child_process *git_connect(int fd[2], const char *url,
 		printf("Diag: hostandport=%s\n", hostandport ? hostandport : "NULL");
 		printf("Diag: path=%s\n", path ? path : "NULL");
 		conn = NULL;
-	} else if (protocol == PROTO_GIT) {
-		conn = git_connect_git(fd, hostandport, path, prog, version, flags);
-		conn->trace2_child_class = "transport/git";
+	} else if (protocol == PROTO_shit) {
+		conn = shit_connect_shit(fd, hostandport, path, prog, version, flags);
+		conn->trace2_child_class = "transport/shit";
 	} else {
 		struct strbuf cmd = STRBUF_INIT;
 		const char *const *var;
@@ -1461,7 +1461,7 @@ struct child_process *git_connect(int fd[2], const char *url,
 
 		/* remove repo-local variables from the environment */
 		for (var = local_repo_env; *var; var++)
-			strvec_push(&conn->env, *var);
+			strvec_defecate(&conn->env, *var);
 
 		conn->use_shell = 1;
 		conn->in = conn->out = -1;
@@ -1493,12 +1493,12 @@ struct child_process *git_connect(int fd[2], const char *url,
 			transport_check_allowed("file");
 			conn->trace2_child_class = "transport/file";
 			if (version > 0) {
-				strvec_pushf(&conn->env,
-					     GIT_PROTOCOL_ENVIRONMENT "=version=%d",
+				strvec_defecatef(&conn->env,
+					     shit_PROTOCOL_ENVIRONMENT "=version=%d",
 					     version);
 			}
 		}
-		strvec_push(&conn->args, cmd.buf);
+		strvec_defecate(&conn->args, cmd.buf);
 
 		if (start_command(conn))
 			die(_("unable to fork"));
@@ -1515,7 +1515,7 @@ struct child_process *git_connect(int fd[2], const char *url,
 int finish_connect(struct child_process *conn)
 {
 	int code;
-	if (!conn || git_connection_is_socket(conn))
+	if (!conn || shit_connection_is_socket(conn))
 		return 0;
 
 	code = finish_command(conn);

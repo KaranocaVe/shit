@@ -7,28 +7,28 @@ test_description='branch --contains <commit>, --no-contains <commit> --merged, a
 test_expect_success setup '
 
 	>file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial &&
-	git branch -M main &&
-	git branch side &&
+	shit commit -m initial &&
+	shit branch -M main &&
+	shit branch side &&
 
 	echo 1 >file &&
 	test_tick &&
-	git commit -a -m "second on main" &&
+	shit commit -a -m "second on main" &&
 
-	git checkout side &&
+	shit checkout side &&
 	echo 1 >file &&
 	test_tick &&
-	git commit -a -m "second on side" &&
+	shit commit -a -m "second on side" &&
 
-	git merge main
+	shit merge main
 
 '
 
 test_expect_success 'branch --contains=main' '
 
-	git branch --contains=main >actual &&
+	shit branch --contains=main >actual &&
 	{
 		echo "  main" && echo "* side"
 	} >expect &&
@@ -38,7 +38,7 @@ test_expect_success 'branch --contains=main' '
 
 test_expect_success 'branch --contains main' '
 
-	git branch --contains main >actual &&
+	shit branch --contains main >actual &&
 	{
 		echo "  main" && echo "* side"
 	} >expect &&
@@ -48,21 +48,21 @@ test_expect_success 'branch --contains main' '
 
 test_expect_success 'branch --no-contains=main' '
 
-	git branch --no-contains=main >actual &&
+	shit branch --no-contains=main >actual &&
 	test_must_be_empty actual
 
 '
 
 test_expect_success 'branch --no-contains main' '
 
-	git branch --no-contains main >actual &&
+	shit branch --no-contains main >actual &&
 	test_must_be_empty actual
 
 '
 
 test_expect_success 'branch --contains=side' '
 
-	git branch --contains=side >actual &&
+	shit branch --contains=side >actual &&
 	{
 		echo "* side"
 	} >expect &&
@@ -72,7 +72,7 @@ test_expect_success 'branch --contains=side' '
 
 test_expect_success 'branch --no-contains=side' '
 
-	git branch --no-contains=side >actual &&
+	shit branch --no-contains=side >actual &&
 	{
 		echo "  main"
 	} >expect &&
@@ -82,7 +82,7 @@ test_expect_success 'branch --no-contains=side' '
 
 test_expect_success 'branch --contains with pattern implies --list' '
 
-	git branch --contains=main main >actual &&
+	shit branch --contains=main main >actual &&
 	{
 		echo "  main"
 	} >expect &&
@@ -92,14 +92,14 @@ test_expect_success 'branch --contains with pattern implies --list' '
 
 test_expect_success 'branch --no-contains with pattern implies --list' '
 
-	git branch --no-contains=main main >actual &&
+	shit branch --no-contains=main main >actual &&
 	test_must_be_empty actual
 
 '
 
 test_expect_success 'side: branch --merged' '
 
-	git branch --merged >actual &&
+	shit branch --merged >actual &&
 	{
 		echo "  main" &&
 		echo "* side"
@@ -110,7 +110,7 @@ test_expect_success 'side: branch --merged' '
 
 test_expect_success 'branch --merged with pattern implies --list' '
 
-	git branch --merged=side main >actual &&
+	shit branch --merged=side main >actual &&
 	{
 		echo "  main"
 	} >expect &&
@@ -120,15 +120,15 @@ test_expect_success 'branch --merged with pattern implies --list' '
 
 test_expect_success 'side: branch --no-merged' '
 
-	git branch --no-merged >actual &&
+	shit branch --no-merged >actual &&
 	test_must_be_empty actual
 
 '
 
 test_expect_success 'main: branch --merged' '
 
-	git checkout main &&
-	git branch --merged >actual &&
+	shit checkout main &&
+	shit branch --merged >actual &&
 	{
 		echo "* main"
 	} >expect &&
@@ -138,7 +138,7 @@ test_expect_success 'main: branch --merged' '
 
 test_expect_success 'main: branch --no-merged' '
 
-	git branch --no-merged >actual &&
+	shit branch --no-merged >actual &&
 	{
 		echo "  side"
 	} >expect &&
@@ -148,38 +148,38 @@ test_expect_success 'main: branch --no-merged' '
 
 test_expect_success 'branch --no-merged with pattern implies --list' '
 
-	git branch --no-merged=main main >actual &&
+	shit branch --no-merged=main main >actual &&
 	test_must_be_empty actual
 
 '
 
 test_expect_success 'implicit --list conflicts with modification options' '
 
-	test_must_fail git branch --contains=main -d &&
-	test_must_fail git branch --contains=main -m foo &&
-	test_must_fail git branch --no-contains=main -d &&
-	test_must_fail git branch --no-contains=main -m foo
+	test_must_fail shit branch --contains=main -d &&
+	test_must_fail shit branch --contains=main -m foo &&
+	test_must_fail shit branch --no-contains=main -d &&
+	test_must_fail shit branch --no-contains=main -m foo
 
 '
 
 test_expect_success 'Assert that --contains only works on commits, not trees & blobs' '
-	test_must_fail git branch --contains main^{tree} &&
-	blob=$(git hash-object -w --stdin <<-\EOF
+	test_must_fail shit branch --contains main^{tree} &&
+	blob=$(shit hash-object -w --stdin <<-\EOF
 	Some blob
 	EOF
 	) &&
-	test_must_fail git branch --contains $blob &&
-	test_must_fail git branch --no-contains $blob
+	test_must_fail shit branch --contains $blob &&
+	test_must_fail shit branch --no-contains $blob
 '
 
 test_expect_success 'multiple branch --contains' '
-	git checkout -b side2 main &&
+	shit checkout -b side2 main &&
 	>feature &&
-	git add feature &&
-	git commit -m "add feature" &&
-	git checkout -b next main &&
-	git merge side &&
-	git branch --contains side --contains side2 >actual &&
+	shit add feature &&
+	shit commit -m "add feature" &&
+	shit checkout -b next main &&
+	shit merge side &&
+	shit branch --contains side --contains side2 >actual &&
 	cat >expect <<-\EOF &&
 	* next
 	  side
@@ -189,7 +189,7 @@ test_expect_success 'multiple branch --contains' '
 '
 
 test_expect_success 'multiple branch --merged' '
-	git branch --merged next --merged main >actual &&
+	shit branch --merged next --merged main >actual &&
 	cat >expect <<-\EOF &&
 	  main
 	* next
@@ -199,7 +199,7 @@ test_expect_success 'multiple branch --merged' '
 '
 
 test_expect_success 'multiple branch --no-contains' '
-	git branch --no-contains side --no-contains side2 >actual &&
+	shit branch --no-contains side --no-contains side2 >actual &&
 	cat >expect <<-\EOF &&
 	  main
 	EOF
@@ -207,7 +207,7 @@ test_expect_success 'multiple branch --no-contains' '
 '
 
 test_expect_success 'multiple branch --no-merged' '
-	git branch --no-merged next --no-merged main >actual &&
+	shit branch --no-merged next --no-merged main >actual &&
 	cat >expect <<-\EOF &&
 	  side2
 	EOF
@@ -215,10 +215,10 @@ test_expect_success 'multiple branch --no-merged' '
 '
 
 test_expect_success 'branch --contains combined with --no-contains' '
-	git checkout -b seen main &&
-	git merge side &&
-	git merge side2 &&
-	git branch --contains side --no-contains side2 >actual &&
+	shit checkout -b seen main &&
+	shit merge side &&
+	shit merge side2 &&
+	shit branch --contains side --no-contains side2 >actual &&
 	cat >expect <<-\EOF &&
 	  next
 	  side
@@ -227,7 +227,7 @@ test_expect_success 'branch --contains combined with --no-contains' '
 '
 
 test_expect_success 'branch --merged combined with --no-merged' '
-	git branch --merged seen --no-merged next >actual &&
+	shit branch --merged seen --no-merged next >actual &&
 	cat >expect <<-\EOF &&
 	* seen
 	  side2
@@ -244,22 +244,22 @@ test_expect_success 'branch --merged combined with --no-merged' '
 # same tip as main The name "zzz" must come alphabetically after "topic"
 # as we process them in that order.
 test_expect_success 'branch --merged with --verbose' '
-	git branch --track topic main &&
-	git branch zzz topic &&
-	git checkout topic &&
+	shit branch --track topic main &&
+	shit branch zzz topic &&
+	shit checkout topic &&
 	test_commit foo &&
-	git branch --merged topic >actual &&
+	shit branch --merged topic >actual &&
 	cat >expect <<-\EOF &&
 	  main
 	* topic
 	  zzz
 	EOF
 	test_cmp expect actual &&
-	git branch --verbose --merged topic >actual &&
+	shit branch --verbose --merged topic >actual &&
 	cat >expect <<-EOF &&
-	  main  $(git rev-parse --short main) second on main
-	* topic $(git rev-parse --short topic ) [ahead 1] foo
-	  zzz   $(git rev-parse --short zzz   ) second on main
+	  main  $(shit rev-parse --short main) second on main
+	* topic $(shit rev-parse --short topic ) [ahead 1] foo
+	  zzz   $(shit rev-parse --short zzz   ) second on main
 	EOF
 	test_cmp expect actual
 '

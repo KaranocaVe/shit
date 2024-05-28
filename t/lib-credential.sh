@@ -14,8 +14,8 @@ check() {
 	read_chunk >stdin &&
 	read_chunk >expect-stdout &&
 	read_chunk >expect-stderr &&
-	if ! eval "git $credential_opts credential $credential_cmd <stdin >stdout 2>stderr"; then
-		echo "git credential failed with code $?" &&
+	if ! eval "shit $credential_opts credential $credential_cmd <stdin >stdout 2>stderr"; then
+		echo "shit credential failed with code $?" &&
 		cat stderr &&
 		false
 	fi &&
@@ -61,7 +61,7 @@ reject() {
 		echo protocol=$2
 		echo host=$3
 		echo username=$4
-	) | git -c credential.helper=$1 credential reject
+	) | shit -c credential.helper=$1 credential reject
 }
 
 helper_test() {
@@ -154,23 +154,23 @@ helper_test() {
 		check approve $HELPER <<-\EOF &&
 		protocol=http
 		host=path.tld
-		path=foo.git
+		path=foo.shit
 		username=user
 		password=pass
 		EOF
 		check fill $HELPER <<-\EOF
 		protocol=http
 		host=path.tld
-		path=bar.git
+		path=bar.shit
 		--
 		protocol=http
 		host=path.tld
-		path=bar.git
+		path=bar.shit
 		username=askpass-username
 		password=askpass-password
 		--
-		askpass: Username for '\''http://path.tld/bar.git'\'':
-		askpass: Password for '\''http://askpass-username@path.tld/bar.git'\'':
+		askpass: Username for '\''http://path.tld/bar.shit'\'':
+		askpass: Password for '\''http://askpass-username@path.tld/bar.shit'\'':
 		EOF
 	'
 
@@ -378,9 +378,9 @@ helper_test() {
 		EOF
 	'
 
-	: ${GIT_TEST_LONG_CRED_BUFFER:=1024}
+	: ${shit_TEST_LONG_CRED_BUFFER:=1024}
 	# 23 bytes accounts for "wwwauth[]=basic realm=" plus NUL
-	LONG_VALUE_LEN=$((GIT_TEST_LONG_CRED_BUFFER - 23))
+	LONG_VALUE_LEN=$((shit_TEST_LONG_CRED_BUFFER - 23))
 	LONG_VALUE=$(perl -e 'print "a" x shift' $LONG_VALUE_LEN)
 
 	test_expect_success "helper ($HELPER) not confused by long header" '
@@ -547,7 +547,7 @@ helper_test_authtype() {
 		authtype=Bearer
 		credential=random-token
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		EOF
 	'
 
@@ -555,13 +555,13 @@ helper_test_authtype() {
 		check fill $HELPER <<-\EOF
 		capability[]=authtype
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		--
 		capability[]=authtype
 		authtype=Bearer
 		credential=random-token
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		--
 		EOF
 	'
@@ -572,7 +572,7 @@ helper_test_authtype() {
 		authtype=Bearer
 		credential=other-token
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		username=foobar
 		EOF
 	'
@@ -581,14 +581,14 @@ helper_test_authtype() {
 		check fill $HELPER <<-\EOF
 		capability[]=authtype
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		username=foobar
 		--
 		capability[]=authtype
 		authtype=Bearer
 		credential=other-token
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		username=foobar
 		--
 		EOF
@@ -598,15 +598,15 @@ helper_test_authtype() {
 		check fill $HELPER <<-\EOF
 		capability[]=authtype
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		username=barbaz
 		--
 		protocol=https
-		host=git.example.com
+		host=shit.example.com
 		username=barbaz
 		password=askpass-password
 		--
-		askpass: Password for '\''https://barbaz@git.example.com'\'':
+		askpass: Password for '\''https://barbaz@shit.example.com'\'':
 		EOF
 	'
 
@@ -614,24 +614,24 @@ helper_test_authtype() {
 		check approve $HELPER <<-\EOF &&
 		capability[]=authtype
 		authtype=Bearer
-		credential=git2-token
+		credential=shit2-token
 		protocol=https
-		host=git2.example.com
+		host=shit2.example.com
 		ephemeral=1
 		EOF
 
 		check fill $HELPER <<-\EOF
 		capability[]=authtype
 		protocol=https
-		host=git2.example.com
+		host=shit2.example.com
 		--
 		protocol=https
-		host=git2.example.com
+		host=shit2.example.com
 		username=askpass-username
 		password=askpass-password
 		--
-		askpass: Username for '\''https://git2.example.com'\'':
-		askpass: Password for '\''https://askpass-username@git2.example.com'\'':
+		askpass: Username for '\''https://shit2.example.com'\'':
+		askpass: Password for '\''https://askpass-username@shit2.example.com'\'':
 		EOF
 	'
 
@@ -639,7 +639,7 @@ helper_test_authtype() {
 		check approve $HELPER <<-\EOF &&
 		capability[]=authtype
 		protocol=https
-		host=git2.example.com
+		host=shit2.example.com
 		user=barbaz
 		password=secret
 		ephemeral=1
@@ -648,15 +648,15 @@ helper_test_authtype() {
 		check fill $HELPER <<-\EOF
 		capability[]=authtype
 		protocol=https
-		host=git2.example.com
+		host=shit2.example.com
 		--
 		protocol=https
-		host=git2.example.com
+		host=shit2.example.com
 		username=askpass-username
 		password=askpass-password
 		--
-		askpass: Username for '\''https://git2.example.com'\'':
-		askpass: Password for '\''https://askpass-username@git2.example.com'\'':
+		askpass: Username for '\''https://shit2.example.com'\'':
+		askpass: Password for '\''https://askpass-username@shit2.example.com'\'':
 		EOF
 	'
 }
@@ -666,5 +666,5 @@ echo >&2 askpass: $*
 what=$(echo $1 | cut -d" " -f1 | tr A-Z a-z | tr -cd a-z)
 echo "askpass-$what"
 EOF
-GIT_ASKPASS="$PWD/askpass"
-export GIT_ASKPASS
+shit_ASKPASS="$PWD/askpass"
+export shit_ASKPASS

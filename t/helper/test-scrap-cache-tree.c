@@ -10,7 +10,7 @@ int cmd__scrap_cache_tree(int ac UNUSED, const char **av UNUSED)
 {
 	struct lock_file index_lock = LOCK_INIT;
 
-	setup_git_directory();
+	setup_shit_directory();
 	repo_hold_locked_index(the_repository, &index_lock, LOCK_DIE_ON_ERROR);
 	if (repo_read_index(the_repository) < 0)
 		die("unable to read index file");

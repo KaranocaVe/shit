@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='test git-http-backend'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+test_description='test shit-http-backend'
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -16,7 +16,7 @@ fi
 start_httpd
 
 GET() {
-	curl --include "$HTTPD_URL/$SMART/repo.git/$1" >out &&
+	curl --include "$HTTPD_URL/$SMART/repo.shit/$1" >out &&
 	tr '\015' Q <out |
 	sed '
 		s/Q$//
@@ -29,7 +29,7 @@ GET() {
 POST() {
 	curl --include --data "$2" \
 	--header "Content-Type: application/x-$1-request" \
-	"$HTTPD_URL/smart/repo.git/$1" >out &&
+	"$HTTPD_URL/smart/repo.shit/$1" >out &&
 	tr '\015' Q <out |
 	sed '
 		s/Q$//
@@ -45,92 +45,92 @@ grep '^[^#]' >exp <<EOF
 
 ###  refs/heads/main
 ###
-GET  /smart/repo.git/refs/heads/main HTTP/1.1 404 -
+GET  /smart/repo.shit/refs/heads/main HTTP/1.1 404 -
 
 ###  getanyfile default
 ###
-GET  /smart/repo.git/HEAD HTTP/1.1 200
-GET  /smart/repo.git/info/refs HTTP/1.1 200
-GET  /smart/repo.git/objects/info/packs HTTP/1.1 200
-GET  /smart/repo.git/objects/info/alternates HTTP/1.1 200 -
-GET  /smart/repo.git/objects/info/http-alternates HTTP/1.1 200 -
-GET  /smart/repo.git/$LOOSE_URL HTTP/1.1 200
-GET  /smart/repo.git/$PACK_URL HTTP/1.1 200
-GET  /smart/repo.git/$IDX_URL HTTP/1.1 200
+GET  /smart/repo.shit/HEAD HTTP/1.1 200
+GET  /smart/repo.shit/info/refs HTTP/1.1 200
+GET  /smart/repo.shit/objects/info/packs HTTP/1.1 200
+GET  /smart/repo.shit/objects/info/alternates HTTP/1.1 200 -
+GET  /smart/repo.shit/objects/info/http-alternates HTTP/1.1 200 -
+GET  /smart/repo.shit/$LOOSE_URL HTTP/1.1 200
+GET  /smart/repo.shit/$PACK_URL HTTP/1.1 200
+GET  /smart/repo.shit/$IDX_URL HTTP/1.1 200
 
-###  no git-daemon-export-ok
+###  no shit-daemon-export-ok
 ###
-GET  /smart_noexport/repo.git/HEAD HTTP/1.1 404 -
-GET  /smart_noexport/repo.git/info/refs HTTP/1.1 404 -
-GET  /smart_noexport/repo.git/objects/info/packs HTTP/1.1 404 -
-GET  /smart_noexport/repo.git/objects/info/alternates HTTP/1.1 404 -
-GET  /smart_noexport/repo.git/objects/info/http-alternates HTTP/1.1 404 -
-GET  /smart_noexport/repo.git/$LOOSE_URL HTTP/1.1 404 -
-GET  /smart_noexport/repo.git/$PACK_URL HTTP/1.1 404 -
-GET  /smart_noexport/repo.git/$IDX_URL HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/HEAD HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/info/refs HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/objects/info/packs HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/objects/info/alternates HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/objects/info/http-alternates HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/$LOOSE_URL HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/$PACK_URL HTTP/1.1 404 -
+GET  /smart_noexport/repo.shit/$IDX_URL HTTP/1.1 404 -
 
-###  git-daemon-export-ok
+###  shit-daemon-export-ok
 ###
-GET  /smart_noexport/repo.git/HEAD HTTP/1.1 200
-GET  /smart_noexport/repo.git/info/refs HTTP/1.1 200
-GET  /smart_noexport/repo.git/objects/info/packs HTTP/1.1 200
-GET  /smart_noexport/repo.git/objects/info/alternates HTTP/1.1 200 -
-GET  /smart_noexport/repo.git/objects/info/http-alternates HTTP/1.1 200 -
-GET  /smart_noexport/repo.git/$LOOSE_URL HTTP/1.1 200
-GET  /smart_noexport/repo.git/$PACK_URL HTTP/1.1 200
-GET  /smart_noexport/repo.git/$IDX_URL HTTP/1.1 200
+GET  /smart_noexport/repo.shit/HEAD HTTP/1.1 200
+GET  /smart_noexport/repo.shit/info/refs HTTP/1.1 200
+GET  /smart_noexport/repo.shit/objects/info/packs HTTP/1.1 200
+GET  /smart_noexport/repo.shit/objects/info/alternates HTTP/1.1 200 -
+GET  /smart_noexport/repo.shit/objects/info/http-alternates HTTP/1.1 200 -
+GET  /smart_noexport/repo.shit/$LOOSE_URL HTTP/1.1 200
+GET  /smart_noexport/repo.shit/$PACK_URL HTTP/1.1 200
+GET  /smart_noexport/repo.shit/$IDX_URL HTTP/1.1 200
 
 ###  getanyfile true
 ###
-GET  /smart/repo.git/HEAD HTTP/1.1 200
-GET  /smart/repo.git/info/refs HTTP/1.1 200
-GET  /smart/repo.git/objects/info/packs HTTP/1.1 200
-GET  /smart/repo.git/objects/info/alternates HTTP/1.1 200 -
-GET  /smart/repo.git/objects/info/http-alternates HTTP/1.1 200 -
-GET  /smart/repo.git/$LOOSE_URL HTTP/1.1 200
-GET  /smart/repo.git/$PACK_URL HTTP/1.1 200
-GET  /smart/repo.git/$IDX_URL HTTP/1.1 200
+GET  /smart/repo.shit/HEAD HTTP/1.1 200
+GET  /smart/repo.shit/info/refs HTTP/1.1 200
+GET  /smart/repo.shit/objects/info/packs HTTP/1.1 200
+GET  /smart/repo.shit/objects/info/alternates HTTP/1.1 200 -
+GET  /smart/repo.shit/objects/info/http-alternates HTTP/1.1 200 -
+GET  /smart/repo.shit/$LOOSE_URL HTTP/1.1 200
+GET  /smart/repo.shit/$PACK_URL HTTP/1.1 200
+GET  /smart/repo.shit/$IDX_URL HTTP/1.1 200
 
 ###  getanyfile false
 ###
-GET  /smart/repo.git/HEAD HTTP/1.1 403 -
-GET  /smart/repo.git/info/refs HTTP/1.1 403 -
-GET  /smart/repo.git/objects/info/packs HTTP/1.1 403 -
-GET  /smart/repo.git/objects/info/alternates HTTP/1.1 403 -
-GET  /smart/repo.git/objects/info/http-alternates HTTP/1.1 403 -
-GET  /smart/repo.git/$LOOSE_URL HTTP/1.1 403 -
-GET  /smart/repo.git/$PACK_URL HTTP/1.1 403 -
-GET  /smart/repo.git/$IDX_URL HTTP/1.1 403 -
+GET  /smart/repo.shit/HEAD HTTP/1.1 403 -
+GET  /smart/repo.shit/info/refs HTTP/1.1 403 -
+GET  /smart/repo.shit/objects/info/packs HTTP/1.1 403 -
+GET  /smart/repo.shit/objects/info/alternates HTTP/1.1 403 -
+GET  /smart/repo.shit/objects/info/http-alternates HTTP/1.1 403 -
+GET  /smart/repo.shit/$LOOSE_URL HTTP/1.1 403 -
+GET  /smart/repo.shit/$PACK_URL HTTP/1.1 403 -
+GET  /smart/repo.shit/$IDX_URL HTTP/1.1 403 -
 
 ###  uploadpack default
 ###
-GET  /smart/repo.git/info/refs?service=git-upload-pack HTTP/1.1 200
-POST /smart/repo.git/git-upload-pack HTTP/1.1 200 -
+GET  /smart/repo.shit/info/refs?service=shit-upload-pack HTTP/1.1 200
+POST /smart/repo.shit/shit-upload-pack HTTP/1.1 200 -
 
 ###  uploadpack true
 ###
-GET  /smart/repo.git/info/refs?service=git-upload-pack HTTP/1.1 200
-POST /smart/repo.git/git-upload-pack HTTP/1.1 200 -
+GET  /smart/repo.shit/info/refs?service=shit-upload-pack HTTP/1.1 200
+POST /smart/repo.shit/shit-upload-pack HTTP/1.1 200 -
 
 ###  uploadpack false
 ###
-GET  /smart/repo.git/info/refs?service=git-upload-pack HTTP/1.1 403 -
-POST /smart/repo.git/git-upload-pack HTTP/1.1 403 -
+GET  /smart/repo.shit/info/refs?service=shit-upload-pack HTTP/1.1 403 -
+POST /smart/repo.shit/shit-upload-pack HTTP/1.1 403 -
 
 ###  receivepack default
 ###
-GET  /smart/repo.git/info/refs?service=git-receive-pack HTTP/1.1 403 -
-POST /smart/repo.git/git-receive-pack HTTP/1.1 403 -
+GET  /smart/repo.shit/info/refs?service=shit-receive-pack HTTP/1.1 403 -
+POST /smart/repo.shit/shit-receive-pack HTTP/1.1 403 -
 
 ###  receivepack true
 ###
-GET  /smart/repo.git/info/refs?service=git-receive-pack HTTP/1.1 200
-POST /smart/repo.git/git-receive-pack HTTP/1.1 200 -
+GET  /smart/repo.shit/info/refs?service=shit-receive-pack HTTP/1.1 200
+POST /smart/repo.shit/shit-receive-pack HTTP/1.1 200 -
 
 ###  receivepack false
 ###
-GET  /smart/repo.git/info/refs?service=git-receive-pack HTTP/1.1 403 -
-POST /smart/repo.git/git-receive-pack HTTP/1.1 403 -
+GET  /smart/repo.shit/info/refs?service=shit-receive-pack HTTP/1.1 403 -
+POST /smart/repo.shit/shit-receive-pack HTTP/1.1 403 -
 EOF
 test_expect_success 'server request log matches test results' '
 	check_access_log exp

@@ -34,7 +34,7 @@ int trailer_set_if_missing(enum trailer_if_missing *item, const char *value);
 
 /*
  * A list that represents newly-added trailers, such as those provided
- * with the --trailer command line option of git-interpret-trailers.
+ * with the --trailer command line option of shit-interpret-trailers.
  */
 struct new_trailer_item {
 	struct list_head list;
@@ -196,7 +196,7 @@ int trailer_iterator_advance(struct trailer_iterator *iter);
 void trailer_iterator_release(struct trailer_iterator *iter);
 
 /*
- * Augment a file to add trailers to it by running git-interpret-trailers.
+ * Augment a file to add trailers to it by running shit-interpret-trailers.
  * This calls run_command() and its return value is the same (i.e. 0 for
  * success, various non-zero for other errors). See run-command.h.
  */

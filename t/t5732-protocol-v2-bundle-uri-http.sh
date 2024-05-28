@@ -4,8 +4,8 @@ test_description="Test bundle-uri with protocol v2 and 'http://' transport"
 
 TEST_NO_CREATE_REPO=1
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 

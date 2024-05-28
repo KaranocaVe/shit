@@ -30,14 +30,14 @@ struct refspec_item {
 };
 
 #define REFSPEC_FETCH 1
-#define REFSPEC_PUSH 0
+#define REFSPEC_defecate 0
 
 #define REFSPEC_INIT_FETCH { .fetch = REFSPEC_FETCH }
-#define REFSPEC_INIT_PUSH { .fetch = REFSPEC_PUSH }
+#define REFSPEC_INIT_defecate { .fetch = REFSPEC_defecate }
 
 /**
  * An array of strings can be parsed into a struct refspec using
- * parse_fetch_refspec() or parse_push_refspec().
+ * parse_fetch_refspec() or parse_defecate_refspec().
  */
 struct refspec {
 	struct refspec_item *items;
@@ -69,7 +69,7 @@ int valid_remote_name(const char *name);
 struct strvec;
 /*
  * Determine what <prefix> values to pass to the peer in ref-prefix lines
- * (see linkgit:gitprotocol-v2[5]).
+ * (see linkshit:shitprotocol-v2[5]).
  */
 void refspec_ref_prefixes(const struct refspec *rs,
 			  struct strvec *ref_prefixes);

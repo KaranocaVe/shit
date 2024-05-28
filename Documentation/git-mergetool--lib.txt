@@ -1,14 +1,14 @@
-git-mergetool{litdd}lib(1)
+shit-mergetool{litdd}lib(1)
 ==========================
 
 NAME
 ----
-git-mergetool--lib - Common Git merge tool shell scriptlets
+shit-mergetool--lib - Common shit merge tool shell scriptlets
 
 SYNOPSIS
 --------
 [verse]
-'TOOL_MODE=(diff|merge) . "$(git --exec-path)/git-mergetool{litdd}lib"'
+'TOOL_MODE=(diff|merge) . "$(shit --exec-path)/shit-mergetool{litdd}lib"'
 
 DESCRIPTION
 -----------
@@ -17,11 +17,11 @@ This is not a command the end user would want to run.  Ever.
 This documentation is meant for people who are studying the
 Porcelain-ish scripts and/or are writing new ones.
 
-The 'git-mergetool{litdd}lib' scriptlet is designed to be sourced (using
+The 'shit-mergetool{litdd}lib' scriptlet is designed to be sourced (using
 `.`) by other shell scripts to set up functions for working
-with Git merge tools.
+with shit merge tools.
 
-Before sourcing 'git-mergetool{litdd}lib', your script must set `TOOL_MODE`
+Before sourcing 'shit-mergetool{litdd}lib', your script must set `TOOL_MODE`
 to define the operation mode for the functions listed below.
 'diff' and 'merge' are valid values.
 
@@ -29,7 +29,7 @@ FUNCTIONS
 ---------
 get_merge_tool::
 	Returns a merge tool. The return code is 1 if we returned a guessed
-	merge tool, else 0. '$GIT_MERGETOOL_GUI' may be set to 'true' to
+	merge tool, else 0. '$shit_MERGETOOL_GUI' may be set to 'true' to
 	search for the appropriate guitool.
 
 get_merge_tool_cmd::
@@ -48,6 +48,6 @@ run_merge_tool::
 	'$MERGED', '$LOCAL', '$REMOTE', and '$BASE' must be defined
 	for use by the merge tool.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

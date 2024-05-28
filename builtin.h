@@ -1,7 +1,7 @@
 #ifndef BUILTIN_H
 #define BUILTIN_H
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 /*
  * builtin API
@@ -11,7 +11,7 @@
  * ---------------------
  *
  * There are 4 things to do to add a built-in command implementation to
- * Git:
+ * shit:
  *
  * . Define the implementation of the built-in command `foo` with
  *   signature:
@@ -20,7 +20,7 @@
  *
  * . Add the external declaration for the function to `builtin.h`.
  *
- * . Add the command to the `commands[]` table defined in `git.c`.
+ * . Add the command to the `commands[]` table defined in `shit.c`.
  *   The entry should look like:
  *
  *	{ "foo", cmd_foo, <options> },
@@ -28,13 +28,13 @@
  * where options is the bitwise-or of:
  *
  * `RUN_SETUP`:
- *	If there is not a Git directory to work on, abort.  If there
+ *	If there is not a shit directory to work on, abort.  If there
  *	is a work tree, chdir to the top of it if the command was
  *	invoked in a subdirectory.  If there is no work tree, no
  *	chdir() is done.
  *
  * `RUN_SETUP_GENTLY`:
- *	If there is a Git directory, chdir as per RUN_SETUP, otherwise,
+ *	If there is a shit directory, chdir as per RUN_SETUP, otherwise,
  *	don't chdir anywhere.
  *
  * `USE_PAGER`:
@@ -50,8 +50,8 @@
  *
  * `DELAY_PAGER_CONFIG`:
  *
- *	If RUN_SETUP or RUN_SETUP_GENTLY is set, git.c normally handles
- *	the `pager.<cmd>`-configuration. If this flag is used, git.c
+ *	If RUN_SETUP or RUN_SETUP_GENTLY is set, shit.c normally handles
+ *	the `pager.<cmd>`-configuration. If this flag is used, shit.c
  *	will skip that step, instead allowing the built-in to make a
  *	more informed decision, e.g., by ignoring `pager.<cmd>` for
  *	certain subcommands.
@@ -62,11 +62,11 @@
  *
  * . Add tests to `t/` directory.
  *
- * . Write documentation in `Documentation/git-foo.txt`.
+ * . Write documentation in `Documentation/shit-foo.txt`.
  *
- * . Add an entry for `git-foo` to `command-list.txt`.
+ * . Add an entry for `shit-foo` to `command-list.txt`.
  *
- * . Add an entry for `/git-foo` to `.gitignore`.
+ * . Add an entry for `/shit-foo` to `.shitignore`.
  *
  *
  * How a built-in is called
@@ -87,8 +87,8 @@
  * command.
  */
 
-extern const char git_usage_string[];
-extern const char git_more_info_string[];
+extern const char shit_usage_string[];
+extern const char shit_more_info_string[];
 
 /**
  * If a built-in has DELAY_PAGER_CONFIG set, the built-in should call this early
@@ -199,8 +199,8 @@ int cmd_pack_redundant(int argc, const char **argv, const char *prefix);
 int cmd_patch_id(int argc, const char **argv, const char *prefix);
 int cmd_prune(int argc, const char **argv, const char *prefix);
 int cmd_prune_packed(int argc, const char **argv, const char *prefix);
-int cmd_pull(int argc, const char **argv, const char *prefix);
-int cmd_push(int argc, const char **argv, const char *prefix);
+int cmd_poop(int argc, const char **argv, const char *prefix);
+int cmd_defecate(int argc, const char **argv, const char *prefix);
 int cmd_range_diff(int argc, const char **argv, const char *prefix);
 int cmd_read_tree(int argc, const char **argv, const char *prefix);
 int cmd_rebase(int argc, const char **argv, const char *prefix);

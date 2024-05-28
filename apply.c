@@ -7,7 +7,7 @@
  *
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "base85.h"
 #include "config.h"
@@ -36,17 +36,17 @@
 #include "wildmatch.h"
 #include "ws.h"
 
-struct gitdiff_data {
+struct shitdiff_data {
 	struct strbuf *root;
 	int linenr;
 	int p_value;
 };
 
-static void git_apply_config(void)
+static void shit_apply_config(void)
 {
-	git_config_get_string("apply.whitespace", &apply_default_whitespace);
-	git_config_get_string("apply.ignorewhitespace", &apply_default_ignorewhitespace);
-	git_config(git_xmerge_config, NULL);
+	shit_config_get_string("apply.whitespace", &apply_default_whitespace);
+	shit_config_get_string("apply.ignorewhitespace", &apply_default_ignorewhitespace);
+	shit_config(shit_xmerge_config, NULL);
 }
 
 static int parse_whitespace_option(struct apply_state *state, const char *option)
@@ -77,8 +77,8 @@ static int parse_whitespace_option(struct apply_state *state, const char *option
 		return 0;
 	}
 	/*
-	 * Please update $__git_whitespacelist in git-completion.bash,
-	 * Documentation/git-apply.txt, and Documentation/git-am.txt
+	 * Please update $__shit_whitespacelist in shit-completion.bash,
+	 * Documentation/shit-apply.txt, and Documentation/shit-am.txt
 	 * when you add new options.
 	 */
 	return error(_("unrecognized whitespace option '%s'"), option);
@@ -121,7 +121,7 @@ int init_apply_state(struct apply_state *state,
 	strset_init(&state->kept_symlinks);
 	strbuf_init(&state->root, 0);
 
-	git_apply_config();
+	shit_apply_config();
 	if (apply_default_whitespace && parse_whitespace_option(state, apply_default_whitespace))
 		return -1;
 	if (apply_default_ignorewhitespace && parse_ignorewhitespace_option(state, apply_default_ignorewhitespace))
@@ -146,12 +146,12 @@ static void mute_routine(const char *msg UNUSED, va_list params UNUSED)
 
 int check_apply_state(struct apply_state *state, int force_apply)
 {
-	int is_not_gitdir = !startup_info->have_repository;
+	int is_not_shitdir = !startup_info->have_repository;
 
 	if (state->apply_with_reject && state->threeway)
 		return error(_("options '%s' and '%s' cannot be used together"), "--reject", "--3way");
 	if (state->threeway) {
-		if (is_not_gitdir)
+		if (is_not_shitdir)
 			return error(_("'%s' outside a repository"), "--3way");
 		state->check_index = 1;
 	}
@@ -162,14 +162,14 @@ int check_apply_state(struct apply_state *state, int force_apply)
 	}
 	if (!force_apply && (state->diffstat || state->numstat || state->summary || state->check || state->fake_ancestor))
 		state->apply = 0;
-	if (state->check_index && is_not_gitdir)
+	if (state->check_index && is_not_shitdir)
 		return error(_("'%s' outside a repository"), "--index");
 	if (state->cached) {
-		if (is_not_gitdir)
+		if (is_not_shitdir)
 			return error(_("'%s' outside a repository"), "--cached");
 		state->check_index = 1;
 	}
-	if (state->ita_only && (state->check_index || is_not_gitdir))
+	if (state->ita_only && (state->check_index || is_not_shitdir))
 		state->ita_only = 0;
 	if (state->check_index)
 		state->unsafe_paths = 0;
@@ -481,7 +481,7 @@ static char *find_name_gnu(struct strbuf *root,
 
 	/*
 	 * Proposed "new-style" GNU patch/diff format; see
-	 * https://lore.kernel.org/git/7vll0wvb2a.fsf@assigned-by-dhcp.cox.net/
+	 * https://lore.kernel.org/shit/7vll0wvb2a.fsf@assigned-by-dhcp.cox.net/
 	 */
 	if (unquote_c_style(&name, line, NULL)) {
 		strbuf_release(&name);
@@ -515,7 +515,7 @@ static size_t sane_tz_len(const char *line, size_t len)
 		return 0;
 
 	for (p = tz + 2; p != line + len; p++)
-		if (!isdigit(*p))
+		if (!isdishit(*p))
 			return 0;
 
 	return line + len - tz;
@@ -532,8 +532,8 @@ static size_t tz_with_colon_len(const char *line, size_t len)
 	if (tz[0] != ' ' || (tz[1] != '+' && tz[1] != '-'))
 		return 0;
 	p = tz + 2;
-	if (!isdigit(*p++) || !isdigit(*p++) || *p++ != ':' ||
-	    !isdigit(*p++) || !isdigit(*p++))
+	if (!isdishit(*p++) || !isdishit(*p++) || *p++ != ':' ||
+	    !isdishit(*p++) || !isdishit(*p++))
 		return 0;
 
 	return line + len - tz;
@@ -547,13 +547,13 @@ static size_t date_len(const char *line, size_t len)
 		return 0;
 	p = date = line + len - strlen("72-02-05");
 
-	if (!isdigit(*p++) || !isdigit(*p++) || *p++ != '-' ||
-	    !isdigit(*p++) || !isdigit(*p++) || *p++ != '-' ||
-	    !isdigit(*p++) || !isdigit(*p++))	/* Not a date. */
+	if (!isdishit(*p++) || !isdishit(*p++) || *p++ != '-' ||
+	    !isdishit(*p++) || !isdishit(*p++) || *p++ != '-' ||
+	    !isdishit(*p++) || !isdishit(*p++))	/* Not a date. */
 		return 0;
 
 	if (date - line >= strlen("19") &&
-	    isdigit(date[-1]) && isdigit(date[-2]))	/* 4-digit year */
+	    isdishit(date[-1]) && isdishit(date[-2]))	/* 4-dishit year */
 		date -= strlen("19");
 
 	return line + len - date;
@@ -567,11 +567,11 @@ static size_t short_time_len(const char *line, size_t len)
 		return 0;
 	p = time = line + len - strlen(" 07:01:32");
 
-	/* Permit 1-digit hours? */
+	/* Permit 1-dishit hours? */
 	if (*p++ != ' ' ||
-	    !isdigit(*p++) || !isdigit(*p++) || *p++ != ':' ||
-	    !isdigit(*p++) || !isdigit(*p++) || *p++ != ':' ||
-	    !isdigit(*p++) || !isdigit(*p++))	/* Not a time. */
+	    !isdishit(*p++) || !isdishit(*p++) || *p++ != ':' ||
+	    !isdishit(*p++) || !isdishit(*p++) || *p++ != ':' ||
+	    !isdishit(*p++) || !isdishit(*p++))	/* Not a time. */
 		return 0;
 
 	return line + len - time;
@@ -583,12 +583,12 @@ static size_t fractional_time_len(const char *line, size_t len)
 	size_t n;
 
 	/* Expected format: 19:41:17.620000023 */
-	if (!len || !isdigit(line[len - 1]))
+	if (!len || !isdishit(line[len - 1]))
 		return 0;
 	p = line + len - 1;
 
 	/* Fractional seconds. */
-	while (p > line && isdigit(*p))
+	while (p > line && isdishit(*p))
 		p--;
 	if (*p != '.')
 		return 0;
@@ -630,7 +630,7 @@ static size_t diff_timestamp_len(const char *line, size_t len)
 	 * GNU: 2010-07-05 19:41:17.620000023 -0500
 	 */
 
-	if (!isdigit(end[-1]))
+	if (!isdishit(end[-1]))
 		return 0;
 
 	n = sane_tz_len(line, end - line);
@@ -917,7 +917,7 @@ static int parse_traditional_patch(struct apply_state *state,
 	return 0;
 }
 
-static int gitdiff_hdrend(struct gitdiff_data *state UNUSED,
+static int shitdiff_hdrend(struct shitdiff_data *state UNUSED,
 			  const char *line UNUSED,
 			  struct patch *patch UNUSED)
 {
@@ -929,14 +929,14 @@ static int gitdiff_hdrend(struct gitdiff_data *state UNUSED,
  * sure that we don't end up having strange ambiguous
  * patches floating around.
  *
- * As a result, gitdiff_{old|new}name() will check
+ * As a result, shitdiff_{old|new}name() will check
  * their names against any previous information, just
  * to make sure..
  */
 #define DIFF_OLD_NAME 0
 #define DIFF_NEW_NAME 1
 
-static int gitdiff_verify_name(struct gitdiff_data *state,
+static int shitdiff_verify_name(struct shitdiff_data *state,
 			       const char *line,
 			       int isnull,
 			       char **name,
@@ -950,38 +950,38 @@ static int gitdiff_verify_name(struct gitdiff_data *state,
 	if (*name) {
 		char *another;
 		if (isnull)
-			return error(_("git apply: bad git-diff - expected /dev/null, got %s on line %d"),
+			return error(_("shit apply: bad shit-diff - expected /dev/null, got %s on line %d"),
 				     *name, state->linenr);
 		another = find_name(state->root, line, NULL, state->p_value, TERM_TAB);
 		if (!another || strcmp(another, *name)) {
 			free(another);
 			return error((side == DIFF_NEW_NAME) ?
-			    _("git apply: bad git-diff - inconsistent new filename on line %d") :
-			    _("git apply: bad git-diff - inconsistent old filename on line %d"), state->linenr);
+			    _("shit apply: bad shit-diff - inconsistent new filename on line %d") :
+			    _("shit apply: bad shit-diff - inconsistent old filename on line %d"), state->linenr);
 		}
 		free(another);
 	} else {
 		if (!is_dev_null(line))
-			return error(_("git apply: bad git-diff - expected /dev/null on line %d"), state->linenr);
+			return error(_("shit apply: bad shit-diff - expected /dev/null on line %d"), state->linenr);
 	}
 
 	return 0;
 }
 
-static int gitdiff_oldname(struct gitdiff_data *state,
+static int shitdiff_oldname(struct shitdiff_data *state,
 			   const char *line,
 			   struct patch *patch)
 {
-	return gitdiff_verify_name(state, line,
+	return shitdiff_verify_name(state, line,
 				   patch->is_new, &patch->old_name,
 				   DIFF_OLD_NAME);
 }
 
-static int gitdiff_newname(struct gitdiff_data *state,
+static int shitdiff_newname(struct shitdiff_data *state,
 			   const char *line,
 			   struct patch *patch)
 {
-	return gitdiff_verify_name(state, line,
+	return shitdiff_verify_name(state, line,
 				   patch->is_delete, &patch->new_name,
 				   DIFF_NEW_NAME);
 }
@@ -995,41 +995,41 @@ static int parse_mode_line(const char *line, int linenr, unsigned int *mode)
 	return 0;
 }
 
-static int gitdiff_oldmode(struct gitdiff_data *state,
+static int shitdiff_oldmode(struct shitdiff_data *state,
 			   const char *line,
 			   struct patch *patch)
 {
 	return parse_mode_line(line, state->linenr, &patch->old_mode);
 }
 
-static int gitdiff_newmode(struct gitdiff_data *state,
+static int shitdiff_newmode(struct shitdiff_data *state,
 			   const char *line,
 			   struct patch *patch)
 {
 	return parse_mode_line(line, state->linenr, &patch->new_mode);
 }
 
-static int gitdiff_delete(struct gitdiff_data *state,
+static int shitdiff_delete(struct shitdiff_data *state,
 			  const char *line,
 			  struct patch *patch)
 {
 	patch->is_delete = 1;
 	free(patch->old_name);
 	patch->old_name = xstrdup_or_null(patch->def_name);
-	return gitdiff_oldmode(state, line, patch);
+	return shitdiff_oldmode(state, line, patch);
 }
 
-static int gitdiff_newfile(struct gitdiff_data *state,
+static int shitdiff_newfile(struct shitdiff_data *state,
 			   const char *line,
 			   struct patch *patch)
 {
 	patch->is_new = 1;
 	free(patch->new_name);
 	patch->new_name = xstrdup_or_null(patch->def_name);
-	return gitdiff_newmode(state, line, patch);
+	return shitdiff_newmode(state, line, patch);
 }
 
-static int gitdiff_copysrc(struct gitdiff_data *state,
+static int shitdiff_copysrc(struct shitdiff_data *state,
 			   const char *line,
 			   struct patch *patch)
 {
@@ -1039,7 +1039,7 @@ static int gitdiff_copysrc(struct gitdiff_data *state,
 	return 0;
 }
 
-static int gitdiff_copydst(struct gitdiff_data *state,
+static int shitdiff_copydst(struct shitdiff_data *state,
 			   const char *line,
 			   struct patch *patch)
 {
@@ -1049,7 +1049,7 @@ static int gitdiff_copydst(struct gitdiff_data *state,
 	return 0;
 }
 
-static int gitdiff_renamesrc(struct gitdiff_data *state,
+static int shitdiff_renamesrc(struct shitdiff_data *state,
 			     const char *line,
 			     struct patch *patch)
 {
@@ -1059,7 +1059,7 @@ static int gitdiff_renamesrc(struct gitdiff_data *state,
 	return 0;
 }
 
-static int gitdiff_renamedst(struct gitdiff_data *state,
+static int shitdiff_renamedst(struct shitdiff_data *state,
 			     const char *line,
 			     struct patch *patch)
 {
@@ -1069,7 +1069,7 @@ static int gitdiff_renamedst(struct gitdiff_data *state,
 	return 0;
 }
 
-static int gitdiff_similarity(struct gitdiff_data *state UNUSED,
+static int shitdiff_similarity(struct shitdiff_data *state UNUSED,
 			      const char *line,
 			      struct patch *patch)
 {
@@ -1079,7 +1079,7 @@ static int gitdiff_similarity(struct gitdiff_data *state UNUSED,
 	return 0;
 }
 
-static int gitdiff_dissimilarity(struct gitdiff_data *state UNUSED,
+static int shitdiff_dissimilarity(struct shitdiff_data *state UNUSED,
 				 const char *line,
 				 struct patch *patch)
 {
@@ -1089,7 +1089,7 @@ static int gitdiff_dissimilarity(struct gitdiff_data *state UNUSED,
 	return 0;
 }
 
-static int gitdiff_index(struct gitdiff_data *state,
+static int shitdiff_index(struct shitdiff_data *state,
 			 const char *line,
 			 struct patch *patch)
 {
@@ -1121,7 +1121,7 @@ static int gitdiff_index(struct gitdiff_data *state,
 	memcpy(patch->new_oid_prefix, line, len);
 	patch->new_oid_prefix[len] = 0;
 	if (*ptr == ' ')
-		return gitdiff_oldmode(state, ptr + 1, patch);
+		return shitdiff_oldmode(state, ptr + 1, patch);
 	return 0;
 }
 
@@ -1129,7 +1129,7 @@ static int gitdiff_index(struct gitdiff_data *state,
  * This is normal for a diff that doesn't change anything: we'll fall through
  * into the next diff. Tell the parser to break out.
  */
-static int gitdiff_unrecognized(struct gitdiff_data *state UNUSED,
+static int shitdiff_unrecognized(struct shitdiff_data *state UNUSED,
 				const char *line UNUSED,
 				struct patch *patch UNUSED)
 {
@@ -1160,14 +1160,14 @@ static const char *skip_tree_prefix(int p_value,
 }
 
 /*
- * This is to extract the same name that appears on "diff --git"
+ * This is to extract the same name that appears on "diff --shit"
  * line.  We do not find and return anything if it is a rename
  * patch, and it is OK because we will find the name elsewhere.
  * We need to reliably find name only when it is mode-change only,
  * creation or deletion of an empty file.  In any of these cases,
  * both sides are the same name under a/ and b/ respectively.
  */
-static char *git_header_name(int p_value,
+static char *shit_header_name(int p_value,
 			     const char *line,
 			     int llen)
 {
@@ -1175,8 +1175,8 @@ static char *git_header_name(int p_value,
 	const char *second = NULL;
 	size_t len, line_len;
 
-	line += strlen("diff --git ");
-	llen -= strlen("diff --git ");
+	line += strlen("diff --shit ");
+	llen -= strlen("diff --shit ");
 
 	if (*line == '"') {
 		const char *cp;
@@ -1324,7 +1324,7 @@ static int check_header_line(int linenr, struct patch *patch)
 	return 0;
 }
 
-int parse_git_diff_header(struct strbuf *root,
+int parse_shit_diff_header(struct strbuf *root,
 			  int *linenr,
 			  int p_value,
 			  const char *line,
@@ -1333,9 +1333,9 @@ int parse_git_diff_header(struct strbuf *root,
 			  struct patch *patch)
 {
 	unsigned long offset;
-	struct gitdiff_data parse_hdr_state;
+	struct shitdiff_data parse_hdr_state;
 
-	/* A git diff has explicit new/delete information, so we don't guess */
+	/* A shit diff has explicit new/delete information, so we don't guess */
 	patch->is_new = 0;
 	patch->is_delete = 0;
 
@@ -1345,7 +1345,7 @@ int parse_git_diff_header(struct strbuf *root,
 	 * or removing or adding empty files), so we get
 	 * the default name from the header.
 	 */
-	patch->def_name = git_header_name(p_value, line, len);
+	patch->def_name = shit_header_name(p_value, line, len);
 	if (patch->def_name && root->len) {
 		char *s = xstrfmt("%s%s", root->buf, patch->def_name);
 		free(patch->def_name);
@@ -1362,25 +1362,25 @@ int parse_git_diff_header(struct strbuf *root,
 	for (offset = len ; size > 0 ; offset += len, size -= len, line += len, (*linenr)++) {
 		static const struct opentry {
 			const char *str;
-			int (*fn)(struct gitdiff_data *, const char *, struct patch *);
+			int (*fn)(struct shitdiff_data *, const char *, struct patch *);
 		} optable[] = {
-			{ "@@ -", gitdiff_hdrend },
-			{ "--- ", gitdiff_oldname },
-			{ "+++ ", gitdiff_newname },
-			{ "old mode ", gitdiff_oldmode },
-			{ "new mode ", gitdiff_newmode },
-			{ "deleted file mode ", gitdiff_delete },
-			{ "new file mode ", gitdiff_newfile },
-			{ "copy from ", gitdiff_copysrc },
-			{ "copy to ", gitdiff_copydst },
-			{ "rename old ", gitdiff_renamesrc },
-			{ "rename new ", gitdiff_renamedst },
-			{ "rename from ", gitdiff_renamesrc },
-			{ "rename to ", gitdiff_renamedst },
-			{ "similarity index ", gitdiff_similarity },
-			{ "dissimilarity index ", gitdiff_dissimilarity },
-			{ "index ", gitdiff_index },
-			{ "", gitdiff_unrecognized },
+			{ "@@ -", shitdiff_hdrend },
+			{ "--- ", shitdiff_oldname },
+			{ "+++ ", shitdiff_newname },
+			{ "old mode ", shitdiff_oldmode },
+			{ "new mode ", shitdiff_newmode },
+			{ "deleted file mode ", shitdiff_delete },
+			{ "new file mode ", shitdiff_newfile },
+			{ "copy from ", shitdiff_copysrc },
+			{ "copy to ", shitdiff_copydst },
+			{ "rename old ", shitdiff_renamesrc },
+			{ "rename new ", shitdiff_renamedst },
+			{ "rename from ", shitdiff_renamesrc },
+			{ "rename to ", shitdiff_renamedst },
+			{ "similarity index ", shitdiff_similarity },
+			{ "dissimilarity index ", shitdiff_dissimilarity },
+			{ "index ", shitdiff_index },
+			{ "", shitdiff_unrecognized },
 		};
 		int i;
 
@@ -1407,9 +1407,9 @@ int parse_git_diff_header(struct strbuf *root,
 done:
 	if (!patch->old_name && !patch->new_name) {
 		if (!patch->def_name) {
-			error(Q_("git diff header lacks filename information when removing "
+			error(Q_("shit diff header lacks filename information when removing "
 				 "%d leading pathname component (line %d)",
-				 "git diff header lacks filename information when removing "
+				 "shit diff header lacks filename information when removing "
 				 "%d leading pathname components (line %d)",
 				 parse_hdr_state.p_value),
 			      parse_hdr_state.p_value, *linenr);
@@ -1420,7 +1420,7 @@ done:
 	}
 	if ((!patch->new_name && !patch->is_delete) ||
 	    (!patch->old_name && !patch->is_new)) {
-		error(_("git diff header lacks filename information "
+		error(_("shit diff header lacks filename information "
 			"(line %d)"), *linenr);
 		return -128;
 	}
@@ -1432,7 +1432,7 @@ static int parse_num(const char *line, unsigned long *p)
 {
 	char *ptr;
 
-	if (!isdigit(*line))
+	if (!isdishit(*line))
 		return 0;
 	*p = strtoul(line, &ptr, 10);
 	return ptr - line;
@@ -1441,30 +1441,30 @@ static int parse_num(const char *line, unsigned long *p)
 static int parse_range(const char *line, int len, int offset, const char *expect,
 		       unsigned long *p1, unsigned long *p2)
 {
-	int digits, ex;
+	int dishits, ex;
 
 	if (offset < 0 || offset >= len)
 		return -1;
 	line += offset;
 	len -= offset;
 
-	digits = parse_num(line, p1);
-	if (!digits)
+	dishits = parse_num(line, p1);
+	if (!dishits)
 		return -1;
 
-	offset += digits;
-	line += digits;
-	len -= digits;
+	offset += dishits;
+	line += dishits;
+	len -= dishits;
 
 	*p2 = 1;
 	if (*line == ',') {
-		digits = parse_num(line+1, p2);
-		if (!digits)
+		dishits = parse_num(line+1, p2);
+		if (!dishits)
 			return -1;
 
-		offset += digits+1;
-		line += digits+1;
-		len -= digits+1;
+		offset += dishits+1;
+		line += dishits+1;
+		len -= dishits+1;
 	}
 
 	ex = strlen(expect);
@@ -1594,18 +1594,18 @@ static int find_header(struct apply_state *state,
 			break;
 
 		/*
-		 * Git patch? It might not have a real patch, just a rename
+		 * shit patch? It might not have a real patch, just a rename
 		 * or mode change, so we handle that specially
 		 */
-		if (!memcmp("diff --git ", line, 11)) {
-			int git_hdr_len = parse_git_diff_header(&state->root, &state->linenr,
+		if (!memcmp("diff --shit ", line, 11)) {
+			int shit_hdr_len = parse_shit_diff_header(&state->root, &state->linenr,
 								state->p_value, line, len,
 								size, patch);
-			if (git_hdr_len < 0)
+			if (shit_hdr_len < 0)
 				return -128;
-			if (git_hdr_len <= len)
+			if (shit_hdr_len <= len)
 				continue;
-			*hdrsize = git_hdr_len;
+			*hdrsize = shit_hdr_len;
 			return offset;
 		}
 
@@ -1795,7 +1795,7 @@ static int parse_fragment(struct apply_state *state,
 }
 
 /*
- * We have seen "diff --git a/... b/..." header (or a traditional patch
+ * We have seen "diff --shit a/... b/..." header (or a traditional patch
  * header).  Read hunks that belong to this patch into fragments and hang
  * them to the given patch structure.
  *
@@ -1886,7 +1886,7 @@ static inline int metadata_changes(struct patch *patch)
 static char *inflate_it(const void *data, unsigned long size,
 			unsigned long inflated_size)
 {
-	git_zstream stream;
+	shit_zstream stream;
 	void *out;
 	int st;
 
@@ -1896,9 +1896,9 @@ static char *inflate_it(const void *data, unsigned long size,
 	stream.avail_in = size;
 	stream.next_out = out = xmalloc(inflated_size);
 	stream.avail_out = inflated_size;
-	git_inflate_init(&stream);
-	st = git_inflate(&stream, Z_FINISH);
-	git_inflate_end(&stream);
+	shit_inflate_init(&stream);
+	st = shit_inflate(&stream, Z_FINISH);
+	shit_inflate_end(&stream);
 	if ((st != Z_STREAM_END) || stream.total_out != inflated_size) {
 		free(out);
 		return NULL;
@@ -2030,7 +2030,7 @@ static int parse_binary(struct apply_state *state,
 			struct patch *patch)
 {
 	/*
-	 * We have read "GIT binary patch\n"; what follows is a line
+	 * We have read "shit binary patch\n"; what follows is a line
 	 * that says the patch method (currently, either "literal" or
 	 * "delta") and the length of data before deflating; a
 	 * sequence of 'length-byte' followed by base-85 encoded data
@@ -2171,12 +2171,12 @@ static int parse_chunk(struct apply_state *state, char *buffer, unsigned long si
 		return -128;
 
 	if (!patchsize) {
-		static const char git_binary[] = "GIT binary patch\n";
+		static const char shit_binary[] = "shit binary patch\n";
 		int hd = hdrsize + offset;
 		unsigned long llen = linelen(buffer + hd, size - hd);
 
-		if (llen == sizeof(git_binary) - 1 &&
-		    !memcmp(git_binary, buffer + hd, llen)) {
+		if (llen == sizeof(shit_binary) - 1 &&
+		    !memcmp(shit_binary, buffer + hd, llen)) {
 			int used;
 			state->linenr++;
 			used = parse_binary(state, buffer + hd + llen,
@@ -2306,14 +2306,14 @@ static int read_old_data(struct stat *st, struct patch *patch,
 		if (strbuf_read_file(buf, path, st->st_size) != st->st_size)
 			return error(_("unable to open or read %s"), path);
 		/*
-		 * "git apply" without "--index/--cached" should never look
+		 * "shit apply" without "--index/--cached" should never look
 		 * at the index; the target file may not have been added to
-		 * the index yet, and we may not even be in any Git repository.
-		 * Pass NULL to convert_to_git() to stress this; the function
+		 * the index yet, and we may not even be in any shit repository.
+		 * Pass NULL to convert_to_shit() to stress this; the function
 		 * should never look at the index when explicit crlf option
 		 * is given.
 		 */
-		convert_to_git(NULL, path, buf->buf, buf->len, buf, conv_flags);
+		convert_to_shit(NULL, path, buf->buf, buf->len, buf, conv_flags);
 		return 0;
 	default:
 		return -1;
@@ -3280,7 +3280,7 @@ static int apply_fragments(struct apply_state *state, struct image *img, struct 
 
 static int read_blob_object(struct strbuf *buf, const struct object_id *oid, unsigned mode)
 {
-	if (S_ISGITLINK(mode)) {
+	if (S_ISshitLINK(mode)) {
 		strbuf_grow(buf, 100);
 		strbuf_addf(buf, "Subproject commit %s\n", oid_to_hex(oid));
 	} else {
@@ -3298,7 +3298,7 @@ static int read_blob_object(struct strbuf *buf, const struct object_id *oid, uns
 	return 0;
 }
 
-static int read_file_or_gitlink(const struct cache_entry *ce, struct strbuf *buf)
+static int read_file_or_shitlink(const struct cache_entry *ce, struct strbuf *buf)
 {
 	if (!ce)
 		return 0;
@@ -3404,7 +3404,7 @@ static struct patch *previous_patch(struct apply_state *state,
 
 	*gone = 0;
 	if (patch->is_copy || patch->is_rename)
-		return NULL; /* "git" patches do not depend on the order */
+		return NULL; /* "shit" patches do not depend on the order */
 
 	previous = in_fn_table(state, patch->old_name);
 	if (!previous)
@@ -3423,7 +3423,7 @@ static int verify_index_match(struct apply_state *state,
 			      const struct cache_entry *ce,
 			      struct stat *st)
 {
-	if (S_ISGITLINK(ce->ce_mode)) {
+	if (S_ISshitLINK(ce->ce_mode)) {
 		if (!S_ISDIR(st->st_mode))
 			return -1;
 		return 0;
@@ -3443,12 +3443,12 @@ static int load_patch_target(struct apply_state *state,
 			     unsigned expected_mode)
 {
 	if (state->cached || state->check_index) {
-		if (read_file_or_gitlink(ce, buf))
+		if (read_file_or_shitlink(ce, buf))
 			return error(_("failed to read %s"), name);
 	} else if (name) {
-		if (S_ISGITLINK(expected_mode)) {
+		if (S_ISshitLINK(expected_mode)) {
 			if (ce)
-				return read_file_or_gitlink(ce, buf);
+				return read_file_or_shitlink(ce, buf);
 			else
 				return SUBMODULE_PATCH_WITHOUT_INDEX;
 		} else if (has_symlink_leading_path(name, strlen(name))) {
@@ -3465,7 +3465,7 @@ static int load_patch_target(struct apply_state *state,
  * We are about to apply "patch"; populate the "image" with the
  * current version we have, from the working tree or from the index,
  * depending on the situation e.g. --cached/--index.  If we are
- * applying a non-git patch that incrementally updates the tree,
+ * applying a non-shit patch that incrementally updates the tree,
  * we read from the result of a previous diff.
  */
 static int load_preimage(struct apply_state *state,
@@ -3628,7 +3628,7 @@ static int try_threeway(struct apply_state *state,
 
 	/* No point falling back to 3-way merge in these cases */
 	if (patch->is_delete ||
-	    S_ISGITLINK(patch->old_mode) || S_ISGITLINK(patch->new_mode) ||
+	    S_ISshitLINK(patch->old_mode) || S_ISshitLINK(patch->new_mode) ||
 	    (patch->is_new && !patch->direct_to_threeway) ||
 	    (patch->is_rename && !patch->lines_added && !patch->lines_deleted))
 		return -1;
@@ -3733,7 +3733,7 @@ static int apply_data(struct apply_state *state, struct patch *patch,
  * we would want it not to lose any local modification we have, either
  * in the working tree or in the index.
  *
- * This also decides if a non-git patch is a creation patch or a
+ * This also decides if a non-shit patch is a creation patch or a
  * modification to an existing empty file.  We do not check the state
  * of the current tree for a creation patch in this function; the caller
  * check_patch() separately makes sure (and errors out otherwise) that
@@ -3859,7 +3859,7 @@ static int check_to_create(struct apply_state *state,
 		 * that is going to be removed with this patch, but
 		 * still pointing at somewhere that has the path.
 		 * In such a case, path "new_name" does not exist as
-		 * far as git is concerned.
+		 * far as shit is concerned.
 		 */
 		if (has_symlink_leading_path(new_name, strlen(new_name)))
 			return 0;
@@ -4084,7 +4084,7 @@ static int read_apply_cache(struct apply_state *state)
 {
 	if (state->index_file)
 		return read_index_from(state->repo->index, state->index_file,
-				       get_git_dir());
+				       get_shit_dir());
 	else
 		return repo_read_index(state->repo);
 }
@@ -4104,10 +4104,10 @@ static int get_current_oid(struct apply_state *state, const char *path,
 	return 0;
 }
 
-static int preimage_oid_in_gitlink_patch(struct patch *p, struct object_id *oid)
+static int preimage_oid_in_shitlink_patch(struct patch *p, struct object_id *oid)
 {
 	/*
-	 * A usable gitlink patch has only one fragment (hunk) that looks like:
+	 * A usable shitlink patch has only one fragment (hunk) that looks like:
 	 * @@ -1 +1 @@
 	 * -Subproject commit <old sha1>
 	 * +Subproject commit <new sha1>
@@ -4158,8 +4158,8 @@ static int build_fake_ancestor(struct apply_state *state, struct patch *list)
 		if (0 < patch->is_new)
 			continue;
 
-		if (S_ISGITLINK(patch->old_mode)) {
-			if (!preimage_oid_in_gitlink_patch(patch, &oid))
+		if (S_ISshitLINK(patch->old_mode)) {
+			if (!preimage_oid_in_shitlink_patch(patch, &oid))
 				; /* ok, the textual part looks sane */
 			else
 				return error(_("sha1 information is lacking or "
@@ -4357,7 +4357,7 @@ static int add_index_file(struct apply_state *state,
 	if (state->ita_only) {
 		ce->ce_flags |= CE_INTENT_TO_ADD;
 		set_object_name_for_intent_to_add_entry(ce);
-	} else if (S_ISGITLINK(mode)) {
+	} else if (S_ISshitLINK(mode)) {
 		const char *s;
 
 		if (!skip_prefix(buf, "Subproject commit ", &s) ||
@@ -4402,7 +4402,7 @@ static int try_create_file(struct apply_state *state, const char *path,
 	int fd, res;
 	struct strbuf nbuf = STRBUF_INIT;
 
-	if (S_ISGITLINK(mode)) {
+	if (S_ISshitLINK(mode)) {
 		struct stat st;
 		if (!lstat(path, &st) && S_ISDIR(st.st_mode))
 			return 0;
@@ -4672,8 +4672,8 @@ static int write_out_one_reject(struct apply_state *state, struct patch *patch)
 		goto error;
 	}
 
-	/* Normal git tools never deal with .rej, so do not pretend
-	 * this is a git patch by saying --git or giving extended
+	/* Normal shit tools never deal with .rej, so do not pretend
+	 * this is a shit patch by saying --shit or giving extended
 	 * headers.  While at it, maybe please "kompare" that wants
 	 * the trailing TAB and some garbage at the end of line ;-).
 	 */
@@ -4811,10 +4811,10 @@ static int apply_patch(struct apply_state *state,
 
 			if ((patch->new_name &&
 			     ends_with_path_components(patch->new_name,
-						       GITATTRIBUTES_FILE)) ||
+						       shitATTRIBUTES_FILE)) ||
 			    (patch->old_name &&
 			     ends_with_path_components(patch->old_name,
-						       GITATTRIBUTES_FILE)))
+						       shitATTRIBUTES_FILE)))
 				flush_attributes = 1;
 		}
 		else {
@@ -5114,7 +5114,7 @@ int apply_parse_options(int argc, const char **argv,
 		OPT_BOOL(0, "index", &state->check_index,
 			N_("make sure the patch is applicable to the current index")),
 		OPT_BOOL('N', "intent-to-add", &state->ita_only,
-			N_("mark new files with `git add --intent-to-add`")),
+			N_("mark new files with `shit add --intent-to-add`")),
 		OPT_BOOL(0, "cached", &state->cached,
 			N_("apply a patch without touching the working tree")),
 		OPT_BOOL_F(0, "unsafe-paths", &state->unsafe_paths,

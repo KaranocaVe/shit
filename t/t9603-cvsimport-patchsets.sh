@@ -11,17 +11,17 @@
 # Rev 1 this leads to a broken import because of a cvsps
 # bug.
 
-test_description='git cvsimport testing for correct patchset estimation'
+test_description='shit cvsimport testing for correct patchset estimation'
 . ./lib-cvs.sh
 
 setup_cvs_test_repository t9603
 
 test_expect_failure PERL 'import with criss cross times on revisions' '
-	git cvsimport -p"-x" -C module-git module &&
+	shit cvsimport -p"-x" -C module-shit module &&
 	(
-		cd module-git &&
-		git log --pretty=format:%s > ../actual-main &&
-		git log A~2..A --pretty="format:%s %ad" -- > ../actual-A &&
+		cd module-shit &&
+		shit log --pretty=format:%s > ../actual-main &&
+		shit log A~2..A --pretty="format:%s %ad" -- > ../actual-A &&
 		echo "" >> ../actual-main &&
 		echo "" >> ../actual-A
 	) &&

@@ -3,7 +3,7 @@ scalar(1)
 
 NAME
 ----
-scalar - A tool for managing large Git repositories
+scalar - A tool for managing large shit repositories
 
 SYNOPSIS
 --------
@@ -21,16 +21,16 @@ scalar delete <enlistment>
 DESCRIPTION
 -----------
 
-Scalar is a repository management tool that optimizes Git for use in large
-repositories. Scalar improves performance by configuring advanced Git settings,
+Scalar is a repository management tool that optimizes shit for use in large
+repositories. Scalar improves performance by configuring advanced shit settings,
 maintaining repositories in the background, and helping to reduce data sent
 across the network.
 
 An important Scalar concept is the enlistment: this is the top-level directory
-of the project. It usually contains the subdirectory `src/` which is a Git
+of the project. It usually contains the subdirectory `src/` which is a shit
 worktree. This encourages the separation between tracked files (inside `src/`)
 and untracked files, such as build artifacts (outside `src/`). When registering
-an existing Git worktree with Scalar whose name is not `src`, the enlistment
+an existing shit worktree with Scalar whose name is not `src`, the enlistment
 will be identical to the worktree.
 
 The `scalar` command implements various subcommands, and different options
@@ -41,11 +41,11 @@ The following options can be specified _before_ the subcommand:
 
 -C <directory>::
 	Before running the subcommand, change the working directory. This
-	option imitates the same option of linkgit:git[1].
+	option imitates the same option of linkshit:shit[1].
 
 -c <key>=<value>::
 	For the duration of running the specified subcommand, configure this
-	setting. This option imitates the same option of linkgit:git[1].
+	setting. This option imitates the same option of linkshit:shit[1].
 
 COMMANDS
 --------
@@ -54,16 +54,16 @@ Clone
 ~~~~~
 
 clone [<options>] <url> [<enlistment>]::
-	Clones the specified repository, similar to linkgit:git-clone[1]. By
+	Clones the specified repository, similar to linkshit:shit-clone[1]. By
 	default, only commit and tree objects are cloned. Once finished, the
 	worktree is located at `<enlistment>/src`.
 +
 The sparse-checkout feature is enabled (except when run with `--full-clone`)
 and the only files present are those in the top-level directory. Use
-`git sparse-checkout set` to expand the set of directories you want to see,
-or `git sparse-checkout disable` to expand to all files (see
-linkgit:git-sparse-checkout[1] for more details). You can explore the
-subdirectories outside your sparse-checkout by using `git ls-tree
+`shit sparse-checkout set` to expand the set of directories you want to see,
+or `shit sparse-checkout disable` to expand to all files (see
+linkshit:shit-sparse-checkout[1] for more details). You can explore the
+subdirectories outside your sparse-checkout by using `shit ls-tree
 HEAD[:<directory>]`.
 
 -b <name>::
@@ -123,7 +123,7 @@ Run
 scalar run ( all | config | commit-graph | fetch | loose-objects | pack-files ) [<enlistment>]::
 	Run the given maintenance task (or all tasks, if `all` was specified).
 	Except for `all` and `config`, this subcommand simply hands off to
-	linkgit:git-maintenance[1] (mapping `fetch` to `prefetch` and
+	linkshit:shit-maintenance[1] (mapping `fetch` to `prefetch` and
 	`pack-files` to `incremental-repack`).
 +
 These tasks are run automatically as part of the scheduled maintenance,
@@ -131,7 +131,7 @@ as soon as the repository is registered with Scalar. It should therefore
 not be necessary to run this subcommand manually.
 +
 The `config` task is specific to Scalar and configures all those
-opinionated default settings that make Git work more efficiently with
+opinionated default settings that make shit work more efficiently with
 large repositories. As this task is run as part of `scalar clone`
 automatically, explicit invocations of this task are rarely needed.
 
@@ -165,8 +165,8 @@ delete <enlistment>::
 
 SEE ALSO
 --------
-linkgit:git-clone[1], linkgit:git-maintenance[1].
+linkshit:shit-clone[1], linkshit:shit-maintenance[1].
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

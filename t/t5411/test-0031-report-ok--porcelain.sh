@@ -8,9 +8,9 @@ test_expect_success "setup proc-receive hook (ok, $PROTOCOL/porcelain)" '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       refs/for/main/topic
+# shit defecate         :                       refs/for/main/topic
 test_expect_success "proc-receive: ok ($PROTOCOL/porcelain)" '
-	git -C workbench push --porcelain origin \
+	shit -C workbench defecate --porcelain origin \
 		HEAD:refs/for/main/topic \
 		>out 2>&1 &&
 	make_user_friendly_and_stable_output <out >actual &&
@@ -22,7 +22,7 @@ test_expect_success "proc-receive: ok ($PROTOCOL/porcelain)" '
 	> remote: proc-receive> ok refs/for/main/topic        Z
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	> *	HEAD:refs/for/main/topic	[new reference]
 	> Done
 	EOF

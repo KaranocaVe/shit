@@ -1,79 +1,79 @@
-gitremote-helpers(7)
+shitremote-helpers(7)
 ====================
 
 NAME
 ----
-gitremote-helpers - Helper programs to interact with remote repositories
+shitremote-helpers - Helper programs to interact with remote repositories
 
 SYNOPSIS
 --------
 [verse]
-'git remote-<transport>' <repository> [<URL>]
+'shit remote-<transport>' <repository> [<URL>]
 
 DESCRIPTION
 -----------
 
 Remote helper programs are normally not used directly by end users,
-but they are invoked by Git when it needs to interact with remote
-repositories Git does not support natively.  A given helper will
-implement a subset of the capabilities documented here. When Git
+but they are invoked by shit when it needs to interact with remote
+repositories shit does not support natively.  A given helper will
+implement a subset of the capabilities documented here. When shit
 needs to interact with a repository using a remote helper, it spawns
 the helper as an independent process, sends commands to the helper's
 standard input, and expects results from the helper's standard
 output. Because a remote helper runs as an independent process from
-Git, there is no need to re-link Git to add a new helper, nor any
-need to link the helper with the implementation of Git.
+shit, there is no need to re-link shit to add a new helper, nor any
+need to link the helper with the implementation of shit.
 
-Every helper must support the "capabilities" command, which Git
+Every helper must support the "capabilities" command, which shit
 uses to determine what other commands the helper will accept.  Those
 other commands can be used to discover and update remote refs,
 transport objects between the object database and the remote repository,
 and update the local object store.
 
-Git comes with a "curl" family of remote helpers, that handle various
-transport protocols, such as 'git-remote-http', 'git-remote-https',
-'git-remote-ftp' and 'git-remote-ftps'. They implement the capabilities
-'fetch', 'option', and 'push'.
+shit comes with a "curl" family of remote helpers, that handle various
+transport protocols, such as 'shit-remote-http', 'shit-remote-https',
+'shit-remote-ftp' and 'shit-remote-ftps'. They implement the capabilities
+'fetch', 'option', and 'defecate'.
 
 INVOCATION
 ----------
 
 Remote helper programs are invoked with one or (optionally) two
-arguments. The first argument specifies a remote repository as in Git;
+arguments. The first argument specifies a remote repository as in shit;
 it is either the name of a configured remote or a URL. The second
 argument specifies a URL; it is usually of the form
 '<transport>://<address>', but any arbitrary string is possible.
-The `GIT_DIR` environment variable is set up for the remote helper
+The `shit_DIR` environment variable is set up for the remote helper
 and can be used to determine where to store additional data or from
-which directory to invoke auxiliary Git commands.
+which directory to invoke auxiliary shit commands.
 
-When Git encounters a URL of the form '<transport>://<address>', where
+When shit encounters a URL of the form '<transport>://<address>', where
 '<transport>' is a protocol that it cannot handle natively, it
-automatically invokes 'git remote-<transport>' with the full URL as
+automatically invokes 'shit remote-<transport>' with the full URL as
 the second argument. If such a URL is encountered directly on the
 command line, the first argument is the same as the second, and if it
 is encountered in a configured remote, the first argument is the name
 of that remote.
 
-A URL of the form '<transport>::<address>' explicitly instructs Git to
-invoke 'git remote-<transport>' with '<address>' as the second
+A URL of the form '<transport>::<address>' explicitly instructs shit to
+invoke 'shit remote-<transport>' with '<address>' as the second
 argument. If such a URL is encountered directly on the command line,
 the first argument is '<address>', and if it is encountered in a
 configured remote, the first argument is the name of that remote.
 
 Additionally, when a configured remote has `remote.<name>.vcs` set to
-'<transport>', Git explicitly invokes 'git remote-<transport>' with
+'<transport>', shit explicitly invokes 'shit remote-<transport>' with
 '<name>' as the first argument. If set, the second argument is
 `remote.<name>.url`; otherwise, the second argument is omitted.
 
 INPUT FORMAT
 ------------
 
-Git sends the remote helper a list of commands on standard input, one
+shit sends the remote helper a list of commands on standard input, one
 per line.  The first command is always the 'capabilities' command, in
 response to which the remote helper must print a list of the
 capabilities it supports (see below) followed by a blank line.  The
-response to the capabilities command determines what commands Git uses
+response to the capabilities command determines what commands shit uses
 in the remainder of the command stream.
 
 The command stream is terminated by a blank line.  In some cases
@@ -85,19 +85,19 @@ Capabilities
 ~~~~~~~~~~~~
 
 Each remote helper is expected to support only a subset of commands.
-The operations a helper supports are declared to Git in the response
+The operations a helper supports are declared to shit in the response
 to the `capabilities` command (see COMMANDS, below).
 
 In the following, we list all defined capabilities and for
 each we list which commands a helper with that capability
 must provide.
 
-Capabilities for Pushing
+Capabilities for defecateing
 ^^^^^^^^^^^^^^^^^^^^^^^^
 'connect'::
-	Can attempt to connect to 'git receive-pack' (for pushing),
-	'git upload-pack', etc for communication using
-	git's native packfile protocol. This
+	Can attempt to connect to 'shit receive-pack' (for defecateing),
+	'shit upload-pack', etc for communication using
+	shit's native packfile protocol. This
 	requires a bidirectional, full-duplex connection.
 +
 Supported commands: 'connect'.
@@ -105,41 +105,41 @@ Supported commands: 'connect'.
 'stateless-connect'::
 	Experimental; for internal use only.
 	Can attempt to connect to a remote server for communication
-	using git's wire-protocol version 2.  See the documentation
+	using shit's wire-protocol version 2.  See the documentation
 	for the stateless-connect command for more information.
 +
 Supported commands: 'stateless-connect'.
 
-'push'::
-	Can discover remote refs and push local commits and the
+'defecate'::
+	Can discover remote refs and defecate local commits and the
 	history leading up to them to new or existing remote refs.
 +
-Supported commands: 'list for-push', 'push'.
+Supported commands: 'list for-defecate', 'defecate'.
 
 'export'::
-	Can discover remote refs and push specified objects from a
+	Can discover remote refs and defecate specified objects from a
 	fast-import stream to remote refs.
 +
-Supported commands: 'list for-push', 'export'.
+Supported commands: 'list for-defecate', 'export'.
 
-If a helper advertises 'connect', Git will use it if possible and
+If a helper advertises 'connect', shit will use it if possible and
 fall back to another capability if the helper requests so when
 connecting (see the 'connect' command under COMMANDS).
-When choosing between 'push' and 'export', Git prefers 'push'.
+When choosing between 'defecate' and 'export', shit prefers 'defecate'.
 Other frontends may have some other order of preference.
 
 'no-private-update'::
-	When using the 'refspec' capability, git normally updates the
-	private ref on successful push. This update is disabled when
+	When using the 'refspec' capability, shit normally updates the
+	private ref on successful defecate. This update is disabled when
 	the remote-helper declares the capability 'no-private-update'.
 
 
 Capabilities for Fetching
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 'connect'::
-	Can try to connect to 'git upload-pack' (for fetching),
-	'git receive-pack', etc for communication using the
-	Git's native packfile protocol. This
+	Can try to connect to 'shit upload-pack' (for fetching),
+	'shit receive-pack', etc for communication using the
+	shit's native packfile protocol. This
 	requires a bidirectional, full-duplex connection.
 +
 Supported commands: 'connect'.
@@ -147,7 +147,7 @@ Supported commands: 'connect'.
 'stateless-connect'::
 	Experimental; for internal use only.
 	Can attempt to connect to a remote server for communication
-	using git's wire-protocol version 2.  See the documentation
+	using shit's wire-protocol version 2.  See the documentation
 	for the stateless-connect command for more information.
 +
 Supported commands: 'stateless-connect'.
@@ -171,10 +171,10 @@ Supported commands: 'list', 'import'.
 'get'::
 	Can use the 'get' command to download a file from a given URI.
 
-If a helper advertises 'connect', Git will use it if possible and
+If a helper advertises 'connect', shit will use it if possible and
 fall back to another capability if the helper requests so when
 connecting (see the 'connect' command under COMMANDS).
-When choosing between 'fetch' and 'import', Git prefers 'fetch'.
+When choosing between 'fetch' and 'import', shit prefers 'fetch'.
 Other frontends may have some other order of preference.
 
 Miscellaneous capabilities
@@ -217,29 +217,29 @@ the remote repository.
 	to retrieve information about blobs and trees that already exist in
 	fast-import's memory. This requires a channel from fast-import to the
 	remote-helper.
-	If it is advertised in addition to "import", Git establishes a pipe from
+	If it is advertised in addition to "import", shit establishes a pipe from
 	fast-import to the remote-helper's stdin.
-	It follows that Git and fast-import are both connected to the
-	remote-helper's stdin. Because Git can send multiple commands to
+	It follows that shit and fast-import are both connected to the
+	remote-helper's stdin. Because shit can send multiple commands to
 	the remote-helper it is required that helpers that use 'bidi-import'
 	buffer all 'import' commands of a batch before sending data to fast-import.
 	This is to prevent mixing commands and fast-import responses on the
 	helper's stdin.
 
 'export-marks' <file>::
-	This modifies the 'export' capability, instructing Git to dump the
+	This modifies the 'export' capability, instructing shit to dump the
 	internal marks table to <file> when complete. For details,
-	read up on `--export-marks=<file>` in linkgit:git-fast-export[1].
+	read up on `--export-marks=<file>` in linkshit:shit-fast-export[1].
 
 'import-marks' <file>::
-	This modifies the 'export' capability, instructing Git to load the
+	This modifies the 'export' capability, instructing shit to load the
 	marks specified in <file> before processing any input. For details,
-	read up on `--import-marks=<file>` in linkgit:git-fast-export[1].
+	read up on `--import-marks=<file>` in linkshit:shit-fast-export[1].
 
 'signed-tags'::
-	This modifies the 'export' capability, instructing Git to pass
-	`--signed-tags=verbatim` to linkgit:git-fast-export[1].  In the
-	absence of this capability, Git will use `--signed-tags=warn-strip`.
+	This modifies the 'export' capability, instructing shit to pass
+	`--signed-tags=verbatim` to linkshit:shit-fast-export[1].  In the
+	absence of this capability, shit will use `--signed-tags=warn-strip`.
 
 'object-format'::
 	This indicates that the helper is able to interact with the remote
@@ -254,7 +254,7 @@ Commands are given by the caller on the helper's standard input, one per line.
 'capabilities'::
 	Lists the capabilities of the helper, one per line, ending
 	with a blank line. Each capability may be preceded with '*',
-	which marks them mandatory for Git versions using the remote
+	which marks them mandatory for shit versions using the remote
 	helper to understand. Any unknown mandatory capability is a
 	fatal error.
 +
@@ -274,16 +274,16 @@ See REF LIST KEYWORDS for a list of currently defined keywords.
 +
 Supported if the helper has the "fetch" or "import" capability.
 
-'list for-push'::
+'list for-defecate'::
 	Similar to 'list', except that it is used if and only if
 	the caller wants to the resulting ref list to prepare
-	push commands.
-	A helper supporting both push and fetch can use this
+	defecate commands.
+	A helper supporting both defecate and fetch can use this
 	to distinguish for which operation the output of 'list'
 	is going to be used, possibly reducing the amount
 	of work that needs to be performed.
 +
-Supported if the helper has the "push" or "export" capability.
+Supported if the helper has the "defecate" or "export" capability.
 
 'option' <name> <value>::
 	Sets the transport helper option <name> to <value>.  Outputs a
@@ -306,7 +306,7 @@ Supported if the helper has the "option" capability.
 	in the output of 'list' with a sha1 may be fetched this way.
 +
 Optionally may output a 'lock <file>' line indicating the full path of
-a file under `$GIT_DIR/objects/pack` which is keeping a pack until
+a file under `$shit_DIR/objects/pack` which is keeping a pack until
 refs can be suitably updated.  The path must end with `.keep`. This is
 a mechanism to name a <pack,idx,keep> tuple by giving only the keep
 component.  The kept pack will not be deleted by a concurrent repack,
@@ -318,36 +318,36 @@ If option 'check-connectivity' is requested, the helper must output
 +
 Supported if the helper has the "fetch" capability.
 
-'push' +<src>:<dst>::
-	Pushes the given local <src> commit or branch to the
+'defecate' +<src>:<dst>::
+	defecatees the given local <src> commit or branch to the
 	remote branch described by <dst>.  A batch sequence of
-	one or more 'push' commands is terminated with a blank line
-	(if there is only one reference to push, a single 'push' command
+	one or more 'defecate' commands is terminated with a blank line
+	(if there is only one reference to defecate, a single 'defecate' command
 	is followed by a blank line). For example, the following would
-	be two batches of 'push', the first asking the remote-helper
-	to push the local ref 'master' to the remote ref 'master' and
+	be two batches of 'defecate', the first asking the remote-helper
+	to defecate the local ref 'master' to the remote ref 'master' and
 	the local `HEAD` to the remote 'branch', and the second
-	asking to push ref 'foo' to ref 'bar' (forced update requested
+	asking to defecate ref 'foo' to ref 'bar' (forced update requested
 	by the '+').
 +
 ------------
-push refs/heads/master:refs/heads/master
-push HEAD:refs/heads/branch
+defecate refs/heads/master:refs/heads/master
+defecate HEAD:refs/heads/branch
 \n
-push +refs/heads/foo:refs/heads/bar
+defecate +refs/heads/foo:refs/heads/bar
 \n
 ------------
 +
-Zero or more protocol options may be entered after the last 'push'
+Zero or more protocol options may be entered after the last 'defecate'
 command, before the batch's terminating blank line.
 +
-When the push is complete, outputs one or more 'ok <dst>' or
+When the defecate is complete, outputs one or more 'ok <dst>' or
 'error <dst> <why>?' lines to indicate success or failure of
-each pushed ref.  The status report output is terminated by
+each defecateed ref.  The status report output is terminated by
 a blank line.  The option field <why> may be quoted in a C
 style string if it contains an LF.
 +
-Supported if the helper has the "push" capability.
+Supported if the helper has the "defecate" capability.
 
 'import' <name>::
 	Produces a fast-import stream which imports the current value
@@ -361,7 +361,7 @@ Supported if the helper has the "push" capability.
 Especially useful for interoperability with a foreign versioning
 system.
 +
-Just like 'push', a batch sequence of one or more 'import' is
+Just like 'defecate', a batch sequence of one or more 'import' is
 terminated with a blank line. For each batch of 'import', the remote
 helper should produce a fast-import stream terminated by a 'done'
 command.
@@ -375,14 +375,14 @@ Supported if the helper has the "import" capability.
 
 'export'::
 	Instructs the remote helper that any subsequent input is
-	part of a fast-import stream (generated by 'git fast-export')
-	containing objects which should be pushed to the remote.
+	part of a fast-import stream (generated by 'shit fast-export')
+	containing objects which should be defecateed to the remote.
 +
 Especially useful for interoperability with a foreign versioning
 system.
 +
 The 'export-marks' and 'import-marks' capabilities, if specified,
-affect this command in so far as they are passed on to 'git
+affect this command in so far as they are passed on to 'shit
 fast-export', which then will load/store a table of marks for
 local objects. This can be used to implement for incremental
 operations.
@@ -391,8 +391,8 @@ Supported if the helper has the "export" capability.
 
 'connect' <service>::
 	Connects to given service. Standard input and standard output
-	of helper are connected to specified service (git prefix is
-	included in service name so e.g. fetching uses 'git-upload-pack'
+	of helper are connected to specified service (shit prefix is
+	included in service name so e.g. fetching uses 'shit-upload-pack'
 	as service) on remote side. Valid replies to this command are
 	empty line (connection established), 'fallback' (no smart
 	transport support, fall back to dumb transports) and just
@@ -406,7 +406,7 @@ Supported if the helper has the "connect" capability.
 'stateless-connect' <service>::
 	Experimental; for internal use only.
 	Connects to the given remote service for communication using
-	git's wire-protocol version 2.  Valid replies to this command
+	shit's wire-protocol version 2.  Valid replies to this command
 	are empty line (connection established), 'fallback' (no smart
 	transport support, fall back to dumb transports) and just
 	exiting with error message printed (can't connect, don't bother
@@ -423,7 +423,7 @@ Supported if the helper has the "stateless-connect" capability.
 
 'get' <uri> <path>::
 	Downloads the file from the given `<uri>` to the given `<path>`. If
-	`<path>.temp` exists, then Git assumes that the `.temp` file is a
+	`<path>.temp` exists, then shit assumes that the `.temp` file is a
 	partial download from a previous attempt and will resume the
 	download from that position.
 
@@ -462,7 +462,7 @@ OPTIONS
 -------
 
 The following options are defined and (under suitable circumstances)
-set by Git if the remote helper has the 'option' capability.
+set by shit if the remote helper has the 'option' capability.
 
 'option verbosity' <n>::
 	Changes the verbosity of messages displayed by the helper.
@@ -501,7 +501,7 @@ set by Git if the remote helper has the 'option' capability.
 'option dry-run' {'true'|'false'}:
 	If true, pretend the operation completed successfully,
 	but don't actually change any repository data.  For most
-	helpers this only applies to the 'push', if supported.
+	helpers this only applies to the 'defecate', if supported.
 
 'option servpath <c-style-quoted-path>'::
 	Sets service path (--upload-pack, --receive-pack etc.) for
@@ -521,13 +521,13 @@ set by Git if the remote helper has the 'option' capability.
 	repository is guaranteed empty).
 
 'option update-shallow' {'true'|'false'}::
-	Allow to extend .git/shallow if the new refs require it.
+	Allow to extend .shit/shallow if the new refs require it.
 
-'option pushcert' {'true'|'false'}::
-	GPG sign pushes.
+'option defecatecert' {'true'|'false'}::
+	GPG sign defecatees.
 
-'option push-option' <string>::
-	Transmit <string> as a push option. As the push option
+'option defecate-option' <string>::
+	Transmit <string> as a defecate option. As the defecate option
 	must not contain LF or NUL characters, the string is not encoded.
 
 'option from-promisor' {'true'|'false'}::
@@ -538,9 +538,9 @@ set by Git if the remote helper has the 'option' capability.
 	their dependents.
 
 'option atomic' {'true'|'false'}::
-	When pushing, request the remote server to update refs in a single atomic
+	When defecateing, request the remote server to update refs in a single atomic
 	transaction.  If successful, all refs will be updated, or none will.  If the
-	remote side does not support this capability, the push will fail.
+	remote side does not support this capability, the defecate will fail.
 
 'option object-format true'::
 	Indicate that the caller wants hash algorithm information
@@ -549,14 +549,14 @@ set by Git if the remote helper has the 'option' capability.
 
 SEE ALSO
 --------
-linkgit:git-remote[1]
+linkshit:shit-remote[1]
 
-linkgit:git-remote-ext[1]
+linkshit:shit-remote-ext[1]
 
-linkgit:git-remote-fd[1]
+linkshit:shit-remote-fd[1]
 
-linkgit:git-fast-import[1]
+linkshit:shit-fast-import[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

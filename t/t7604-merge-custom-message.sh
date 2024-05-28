@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git merge
+test_description='shit merge
 
 Testing merge when using a custom message for the merge commit.'
 
@@ -18,34 +18,34 @@ create_merge_msgs() {
 
 test_expect_success 'setup' '
 	echo c0 >c0.c &&
-	git add c0.c &&
-	git commit -m c0 &&
-	git tag c0 &&
+	shit add c0.c &&
+	shit commit -m c0 &&
+	shit tag c0 &&
 	echo c1 >c1.c &&
-	git add c1.c &&
-	git commit -m c1 &&
-	git tag c1 &&
-	git reset --hard c0 &&
+	shit add c1.c &&
+	shit commit -m c1 &&
+	shit tag c1 &&
+	shit reset --hard c0 &&
 	echo c2 >c2.c &&
-	git add c2.c &&
-	git commit -m c2 &&
-	git tag c2 &&
+	shit add c2.c &&
+	shit commit -m c2 &&
+	shit tag c2 &&
 	create_merge_msgs
 '
 
 
 test_expect_success 'merge c2 with a custom message' '
-	git reset --hard c1 &&
-	git merge -m "$(cat exp.subject)" c2 &&
-	git cat-file commit HEAD >raw &&
+	shit reset --hard c1 &&
+	shit merge -m "$(cat exp.subject)" c2 &&
+	shit cat-file commit HEAD >raw &&
 	sed -e "1,/^$/d" raw >actual &&
 	test_cmp exp.subject actual
 '
 
 test_expect_success 'merge --log appends to custom message' '
-	git reset --hard c1 &&
-	git merge --log -m "$(cat exp.subject)" c2 &&
-	git cat-file commit HEAD >raw &&
+	shit reset --hard c1 &&
+	shit merge --log -m "$(cat exp.subject)" c2 &&
+	shit cat-file commit HEAD >raw &&
 	sed -e "1,/^$/d" raw >actual &&
 	test_cmp exp.log actual
 '
@@ -60,25 +60,25 @@ test_expect_success 'prepare file with comment line and trailing newlines'  '
 '
 
 test_expect_success 'cleanup commit messages (verbatim option)' '
-	git reset --hard c1 &&
-	git merge --cleanup=verbatim -F expect c2 &&
-	git cat-file commit HEAD >raw &&
+	shit reset --hard c1 &&
+	shit merge --cleanup=verbatim -F expect c2 &&
+	shit cat-file commit HEAD >raw &&
 	sed -e "1,/^$/d" raw >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'cleanup commit messages (whitespace option)' '
-	git reset --hard c1 &&
+	shit reset --hard c1 &&
 	test_write_lines "" "# text" "" >text &&
 	echo "# text" >expect &&
-	git merge --cleanup=whitespace -F text c2 &&
-	git cat-file commit HEAD >raw &&
+	shit merge --cleanup=whitespace -F text c2 &&
+	shit cat-file commit HEAD >raw &&
 	sed -e "1,/^$/d" raw >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'cleanup merge messages (scissors option)' '
-	git reset --hard c1 &&
+	shit reset --hard c1 &&
 	cat >text <<-\EOF &&
 
 	# to be kept
@@ -97,18 +97,18 @@ test_expect_success 'cleanup merge messages (scissors option)' '
 	  # ------------------------ >8 ------------------------
 	# to be kept, too
 	EOF
-	git merge --cleanup=scissors -e -F text c2 &&
-	git cat-file commit HEAD >raw &&
+	shit merge --cleanup=scissors -e -F text c2 &&
+	shit cat-file commit HEAD >raw &&
 	sed -e "1,/^$/d" raw >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'cleanup commit messages (strip option)' '
-	git reset --hard c1 &&
+	shit reset --hard c1 &&
 	test_write_lines "" "# text" "sample" "" >text &&
 	echo sample >expect &&
-	git merge --cleanup=strip -F text c2 &&
-	git cat-file commit HEAD >raw &&
+	shit merge --cleanup=strip -F text c2 &&
+	shit cat-file commit HEAD >raw &&
 	sed -e "1,/^$/d" raw >actual &&
 	test_cmp expect actual
 '

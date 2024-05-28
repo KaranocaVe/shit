@@ -1,11 +1,11 @@
 /*
- * Builtin "git replace"
+ * Builtin "shit replace"
  *
  * Copyright (c) 2008 Christian Couder <chriscool@tuxfamily.org>
  *
  * Based on builtin/tag.c by Kristian Høgsberg <krh@redhat.com>
  * and Carlos Rica <jasampler@gmail.com> that was itself based on
- * git-tag.sh and mktag.c by Linus Torvalds.
+ * shit-tag.sh and mktag.c by Linus Torvalds.
  */
 
 #include "builtin.h"
@@ -26,13 +26,13 @@
 #include "tag.h"
 #include "wildmatch.h"
 
-static const char * const git_replace_usage[] = {
-	N_("git replace [-f] <object> <replacement>"),
-	N_("git replace [-f] --edit <object>"),
-	N_("git replace [-f] --graft <commit> [<parent>...]"),
-	"git replace [-f] --convert-graft-file",
-	N_("git replace -d <object>..."),
-	N_("git replace [--format=<format>] [-l [<pattern>]]"),
+static const char * const shit_replace_usage[] = {
+	N_("shit replace [-f] <object> <replacement>"),
+	N_("shit replace [-f] --edit <object>"),
+	N_("shit replace [-f] --graft <commit> [<parent>...]"),
+	"shit replace [-f] --convert-graft-file",
+	N_("shit replace -d <object>..."),
+	N_("shit replace [--format=<format>] [-l [<pattern>]]"),
 	NULL
 };
 
@@ -91,7 +91,7 @@ static int list_replace_refs(const char *pattern, const char *format)
 	else if (!strcmp(format, "long"))
 		data.format = REPLACE_FORMAT_LONG;
 	/*
-	 * Please update _git_replace() in git-completion.bash when
+	 * Please update _shit_replace() in shit-completion.bash when
 	 * you add new format
 	 */
 	else
@@ -114,9 +114,9 @@ static int for_each_replace_name(const char **argv, each_replace_name_fn fn)
 	size_t base_len;
 	int had_error = 0;
 	struct object_id oid;
-	const char *git_replace_ref_base = ref_namespace[NAMESPACE_REPLACE].ref;
+	const char *shit_replace_ref_base = ref_namespace[NAMESPACE_REPLACE].ref;
 
-	strbuf_addstr(&ref, git_replace_ref_base);
+	strbuf_addstr(&ref, shit_replace_ref_base);
 	base_len = ref.len;
 
 	for (p = argv; *p; p++) {
@@ -156,10 +156,10 @@ static int check_ref_valid(struct object_id *object,
 			    struct strbuf *ref,
 			    int force)
 {
-	const char *git_replace_ref_base = ref_namespace[NAMESPACE_REPLACE].ref;
+	const char *shit_replace_ref_base = ref_namespace[NAMESPACE_REPLACE].ref;
 
 	strbuf_reset(ref);
-	strbuf_addf(ref, "%s%s", git_replace_ref_base, oid_to_hex(object));
+	strbuf_addf(ref, "%s%s", shit_replace_ref_base, oid_to_hex(object));
 	if (check_refname_format(ref->buf, 0))
 		return error(_("'%s' is not a valid ref name"), ref->buf);
 
@@ -240,14 +240,14 @@ static int export_object(const struct object_id *oid, enum object_type type,
 	if (fd < 0)
 		return error_errno(_("unable to open %s for writing"), filename);
 
-	strvec_push(&cmd.args, "--no-replace-objects");
-	strvec_push(&cmd.args, "cat-file");
+	strvec_defecate(&cmd.args, "--no-replace-objects");
+	strvec_defecate(&cmd.args, "cat-file");
 	if (raw)
-		strvec_push(&cmd.args, type_name(type));
+		strvec_defecate(&cmd.args, type_name(type));
 	else
-		strvec_push(&cmd.args, "-p");
-	strvec_push(&cmd.args, oid_to_hex(oid));
-	cmd.git_cmd = 1;
+		strvec_defecate(&cmd.args, "-p");
+	strvec_defecate(&cmd.args, oid_to_hex(oid));
+	cmd.shit_cmd = 1;
 	cmd.out = fd;
 
 	if (run_command(&cmd))
@@ -273,8 +273,8 @@ static int import_object(struct object_id *oid, enum object_type type,
 		struct child_process cmd = CHILD_PROCESS_INIT;
 		struct strbuf result = STRBUF_INIT;
 
-		strvec_push(&cmd.args, "mktree");
-		cmd.git_cmd = 1;
+		strvec_defecate(&cmd.args, "mktree");
+		cmd.shit_cmd = 1;
 		cmd.in = fd;
 		cmd.out = -1;
 
@@ -343,7 +343,7 @@ static int edit_and_replace(const char *object_ref, int force, int raw)
 	}
 	strbuf_release(&ref);
 
-	tmpfile = git_pathdup("REPLACE_EDITOBJ");
+	tmpfile = shit_pathdup("REPLACE_EDITOBJ");
 	if (export_object(&old_oid, type, raw, tmpfile)) {
 		free(tmpfile);
 		return -1;
@@ -569,16 +569,16 @@ int cmd_replace(int argc, const char **argv, const char *prefix)
 	};
 
 	disable_replace_refs();
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
-	argc = parse_options(argc, argv, prefix, options, git_replace_usage, 0);
+	argc = parse_options(argc, argv, prefix, options, shit_replace_usage, 0);
 
 	if (!cmdmode)
 		cmdmode = argc ? MODE_REPLACE : MODE_LIST;
 
 	if (format && cmdmode != MODE_LIST)
 		usage_msg_opt(_("--format cannot be used when not listing"),
-			      git_replace_usage, options);
+			      shit_replace_usage, options);
 
 	if (force &&
 	    cmdmode != MODE_REPLACE &&
@@ -586,47 +586,47 @@ int cmd_replace(int argc, const char **argv, const char *prefix)
 	    cmdmode != MODE_GRAFT &&
 	    cmdmode != MODE_CONVERT_GRAFT_FILE)
 		usage_msg_opt(_("-f only makes sense when writing a replacement"),
-			      git_replace_usage, options);
+			      shit_replace_usage, options);
 
 	if (raw && cmdmode != MODE_EDIT)
 		usage_msg_opt(_("--raw only makes sense with --edit"),
-			      git_replace_usage, options);
+			      shit_replace_usage, options);
 
 	switch (cmdmode) {
 	case MODE_DELETE:
 		if (argc < 1)
 			usage_msg_opt(_("-d needs at least one argument"),
-				      git_replace_usage, options);
+				      shit_replace_usage, options);
 		return for_each_replace_name(argv, delete_replace_ref);
 
 	case MODE_REPLACE:
 		if (argc != 2)
 			usage_msg_opt(_("bad number of arguments"),
-				      git_replace_usage, options);
+				      shit_replace_usage, options);
 		return replace_object(argv[0], argv[1], force);
 
 	case MODE_EDIT:
 		if (argc != 1)
 			usage_msg_opt(_("-e needs exactly one argument"),
-				      git_replace_usage, options);
+				      shit_replace_usage, options);
 		return edit_and_replace(argv[0], force, raw);
 
 	case MODE_GRAFT:
 		if (argc < 1)
 			usage_msg_opt(_("-g needs at least one argument"),
-				      git_replace_usage, options);
+				      shit_replace_usage, options);
 		return create_graft(argc, argv, force, 0);
 
 	case MODE_CONVERT_GRAFT_FILE:
 		if (argc != 0)
 			usage_msg_opt(_("--convert-graft-file takes no argument"),
-				      git_replace_usage, options);
+				      shit_replace_usage, options);
 		return !!convert_graft_file(force);
 
 	case MODE_LIST:
 		if (argc > 1)
 			usage_msg_opt(_("only one pattern can be given with -l"),
-				      git_replace_usage, options);
+				      shit_replace_usage, options);
 		return list_replace_refs(argv[0], format);
 
 	default:

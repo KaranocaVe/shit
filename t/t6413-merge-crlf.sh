@@ -8,39 +8,39 @@ test_description='merge conflict in crlf repo
 
 '
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success setup '
-	git config core.autocrlf true &&
+	shit config core.autocrlf true &&
 	echo foo | append_cr >file &&
-	git add file &&
-	git commit -m "Initial" &&
-	git tag initial &&
-	git branch side &&
+	shit add file &&
+	shit commit -m "Initial" &&
+	shit tag initial &&
+	shit branch side &&
 	echo line from a | append_cr >file &&
-	git commit -m "add line from a" file &&
-	git tag a &&
-	git checkout side &&
+	shit commit -m "add line from a" file &&
+	shit tag a &&
+	shit checkout side &&
 	echo line from b | append_cr >file &&
-	git commit -m "add line from b" file &&
-	git tag b &&
-	git checkout main
+	shit commit -m "add line from b" file &&
+	shit tag b &&
+	shit checkout main
 '
 
 test_expect_success 'Check "ours" is CRLF' '
-	git reset --hard initial &&
-	git merge side -s ours &&
+	shit reset --hard initial &&
+	shit merge side -s ours &&
 	remove_cr <file | append_cr >file.temp &&
 	test_cmp file file.temp
 '
 
 test_expect_success 'Check that conflict file is CRLF' '
-	git reset --hard a &&
-	test_must_fail git merge side &&
+	shit reset --hard a &&
+	test_must_fail shit merge side &&
 	remove_cr <file | append_cr >file.temp &&
 	test_cmp file file.temp
 '

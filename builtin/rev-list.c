@@ -22,7 +22,7 @@
 #include "packfile.h"
 
 static const char rev_list_usage[] =
-"git rev-list [<options>] <commit>... [--] [<path>...]\n"
+"shit rev-list [<options>] <commit>... [--] [<path>...]\n"
 "\n"
 "  limiting output:\n"
 "    --max-count=<n>\n"
@@ -327,7 +327,7 @@ static void print_var_int(const char *var, int val)
 static int show_bisect_vars(struct rev_list_info *info, int reaches, int all)
 {
 	int cnt, flags = info->flags;
-	char hex[GIT_MAX_HEXSZ + 1] = "";
+	char hex[shit_MAX_HEXSZ + 1] = "";
 	struct commit_list *tried;
 	struct rev_info *revs = info->revs;
 
@@ -374,7 +374,7 @@ static int show_object_fast(
 	enum object_type type UNUSED,
 	int exclude UNUSED,
 	uint32_t name_hash UNUSED,
-	struct packed_git *found_pack UNUSED,
+	struct packed_shit *found_pack UNUSED,
 	off_t found_offset UNUSED)
 {
 	fprintf(stdout, "%s\n", oid_to_hex(oid));
@@ -428,7 +428,7 @@ static int try_bitmap_count(struct rev_info *revs,
 		 tree_count = 0,
 		 blob_count = 0;
 	int max_count;
-	struct bitmap_index *bitmap_git;
+	struct bitmap_index *bitmap_shit;
 
 	/* This function only handles counting, not general traversal. */
 	if (!revs->count)
@@ -456,11 +456,11 @@ static int try_bitmap_count(struct rev_info *revs,
 	 */
 	max_count = revs->max_count;
 
-	bitmap_git = prepare_bitmap_walk(revs, filter_provided_objects);
-	if (!bitmap_git)
+	bitmap_shit = prepare_bitmap_walk(revs, filter_provided_objects);
+	if (!bitmap_shit)
 		return -1;
 
-	count_bitmap_commit_list(bitmap_git, &commit_count,
+	count_bitmap_commit_list(bitmap_shit, &commit_count,
 				 revs->tree_objects ? &tree_count : NULL,
 				 revs->blob_objects ? &blob_count : NULL,
 				 revs->tag_objects ? &tag_count : NULL);
@@ -468,14 +468,14 @@ static int try_bitmap_count(struct rev_info *revs,
 		commit_count = max_count;
 
 	printf("%d\n", commit_count + tree_count + blob_count + tag_count);
-	free_bitmap_index(bitmap_git);
+	free_bitmap_index(bitmap_shit);
 	return 0;
 }
 
 static int try_bitmap_traversal(struct rev_info *revs,
 				int filter_provided_objects)
 {
-	struct bitmap_index *bitmap_git;
+	struct bitmap_index *bitmap_shit;
 
 	/*
 	 * We can't use a bitmap result with a traversal limit, since the set
@@ -484,29 +484,29 @@ static int try_bitmap_traversal(struct rev_info *revs,
 	if (revs->max_count >= 0)
 		return -1;
 
-	bitmap_git = prepare_bitmap_walk(revs, filter_provided_objects);
-	if (!bitmap_git)
+	bitmap_shit = prepare_bitmap_walk(revs, filter_provided_objects);
+	if (!bitmap_shit)
 		return -1;
 
-	traverse_bitmap_commit_list(bitmap_git, revs, &show_object_fast);
-	free_bitmap_index(bitmap_git);
+	traverse_bitmap_commit_list(bitmap_shit, revs, &show_object_fast);
+	free_bitmap_index(bitmap_shit);
 	return 0;
 }
 
 static int try_bitmap_disk_usage(struct rev_info *revs,
 				 int filter_provided_objects)
 {
-	struct bitmap_index *bitmap_git;
+	struct bitmap_index *bitmap_shit;
 	off_t size_from_bitmap;
 
 	if (!show_disk_usage)
 		return -1;
 
-	bitmap_git = prepare_bitmap_walk(revs, filter_provided_objects);
-	if (!bitmap_git)
+	bitmap_shit = prepare_bitmap_walk(revs, filter_provided_objects);
+	if (!bitmap_shit)
 		return -1;
 
-	size_from_bitmap = get_disk_usage_from_bitmap(bitmap_git, revs);
+	size_from_bitmap = get_disk_usage_from_bitmap(bitmap_shit, revs);
 	print_disk_usage(size_from_bitmap);
 	return 0;
 }
@@ -530,7 +530,7 @@ int cmd_rev_list(int argc, const char **argv, const char *prefix)
 	if (argc == 2 && !strcmp(argv[1], "-h"))
 		usage(rev_list_usage);
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 	repo_init_revisions(the_repository, &revs, prefix);
 	revs.abbrev = DEFAULT_ABBREV;
 	revs.commit_format = CMIT_FMT_UNSPECIFIED;

@@ -23,8 +23,8 @@ populate_files () {
 }
 
 setup_repo () {
-	(rm -rf .git || 1) &&
-	git init &&
+	(rm -rf .shit || 1) &&
+	shit init &&
 	test_commit first &&
 	populate_files
 }
@@ -42,11 +42,11 @@ test_perf_fsync_cfgs () {
 			cfg="-c core.fsync=loose-object -c core.fsyncMethod=$method"
 		esac &&
 
-		# Set GIT_TEST_FSYNC=1 explicitly since fsync is normally
+		# Set shit_TEST_FSYNC=1 explicitly since fsync is normally
 		# disabled by t/test-lib.sh.
 		if ! test_perf "$1 (fsyncMethod=$method)" \
 						--setup "$2" \
-						"GIT_TEST_FSYNC=1 git $cfg $3"
+						"shit_TEST_FSYNC=1 shit $cfg $3"
 		then
 			break
 		fi
@@ -59,14 +59,14 @@ test_perf_fsync_cfgs "add $total_files files" \
 
 test_perf_fsync_cfgs "stash $total_files files" \
 	"setup_repo" \
-	"stash push -u -- files"
+	"stash defecate -u -- files"
 
 test_perf_fsync_cfgs "unpack $total_files files" \
 	"
 	setup_repo &&
-	git -c core.fsync=none add -- files &&
-	git -c core.fsync=none commit -q -m second &&
-	echo HEAD | git pack-objects -q --stdout --revs >test_pack.pack &&
+	shit -c core.fsync=none add -- files &&
+	shit -c core.fsync=none commit -q -m second &&
+	echo HEAD | shit pack-objects -q --stdout --revs >test_pack.pack &&
 	setup_repo
 	" \
 	"unpack-objects -q <test_pack.pack"
@@ -74,7 +74,7 @@ test_perf_fsync_cfgs "unpack $total_files files" \
 test_perf_fsync_cfgs "commit $total_files files" \
 	"
 	setup_repo &&
-	git -c core.fsync=none add -- files &&
+	shit -c core.fsync=none add -- files &&
 	populate_files
 	" \
 	"commit -q -a -m test"

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "gettext.h"
 #include "repository.h"
@@ -125,7 +125,7 @@ static void lookup_fsmonitor_settings(struct repository *r)
 		return;
 
 	case 1: /* config value was unset */
-		const_str = getenv("GIT_TEST_FSMONITOR");
+		const_str = getenv("shit_TEST_FSMONITOR");
 		break;
 
 	case -1: /* config value set to an arbitrary string */
@@ -264,7 +264,7 @@ char *fsm_settings__get_incompatible_msg(struct repository *r,
 			    r->worktree);
 		goto done;
 
-	case FSMONITOR_REASON_VFS4GIT:
+	case FSMONITOR_REASON_VFS4shit:
 		strbuf_addf(&msg,
 			    _("virtual repository '%s' is incompatible with fsmonitor"),
 			    r->worktree);

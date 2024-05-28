@@ -3,11 +3,11 @@
 # Copyright (c) 2010 Stefan-W. Hahn
 #
 
-test_description='git-am mbox with dos line ending.
+test_description='shit-am mbox with dos line ending.
 
 '
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -35,67 +35,67 @@ EOF
 
 test_expect_success 'setup repository with dos files' '
 	append_cr <file1 >file &&
-	git add file &&
-	git commit -m Initial &&
-	git tag initial &&
+	shit add file &&
+	shit commit -m Initial &&
+	shit tag initial &&
 	append_cr <file2 >file &&
-	git commit -a -m Second &&
+	shit commit -a -m Second &&
 	append_cr <file3 >file &&
-	git commit -a -m Third
+	shit commit -a -m Third
 '
 
 test_expect_success 'am with dos files without --keep-cr' '
-	git checkout -b dosfiles initial &&
-	git format-patch -k initial..main &&
-	test_must_fail git am -k -3 000*.patch &&
-	git am --abort &&
-	rm -rf .git/rebase-apply 000*.patch
+	shit checkout -b dosfiles initial &&
+	shit format-patch -k initial..main &&
+	test_must_fail shit am -k -3 000*.patch &&
+	shit am --abort &&
+	rm -rf .shit/rebase-apply 000*.patch
 '
 
 test_expect_success 'am with dos files with --keep-cr' '
-	git checkout -b dosfiles-keep-cr initial &&
-	git format-patch -k --stdout initial..main >output &&
-	git am --keep-cr -k -3 output &&
-	git diff --exit-code main
+	shit checkout -b dosfiles-keep-cr initial &&
+	shit format-patch -k --stdout initial..main >output &&
+	shit am --keep-cr -k -3 output &&
+	shit diff --exit-code main
 '
 
 test_expect_success 'am with dos files config am.keepcr' '
-	git config am.keepcr 1 &&
-	git checkout -b dosfiles-conf-keepcr initial &&
-	git format-patch -k --stdout initial..main >output &&
-	git am -k -3 output &&
-	git diff --exit-code main
+	shit config am.keepcr 1 &&
+	shit checkout -b dosfiles-conf-keepcr initial &&
+	shit format-patch -k --stdout initial..main >output &&
+	shit am -k -3 output &&
+	shit diff --exit-code main
 '
 
 test_expect_success 'am with dos files config am.keepcr overridden by --no-keep-cr' '
-	git config am.keepcr 1 &&
-	git checkout -b dosfiles-conf-keepcr-override initial &&
-	git format-patch -k initial..main &&
-	test_must_fail git am -k -3 --no-keep-cr 000*.patch &&
-	git am --abort &&
-	rm -rf .git/rebase-apply 000*.patch
+	shit config am.keepcr 1 &&
+	shit checkout -b dosfiles-conf-keepcr-override initial &&
+	shit format-patch -k initial..main &&
+	test_must_fail shit am -k -3 --no-keep-cr 000*.patch &&
+	shit am --abort &&
+	rm -rf .shit/rebase-apply 000*.patch
 '
 
 test_expect_success 'am with dos files with --keep-cr continue' '
-	git checkout -b dosfiles-keep-cr-continue initial &&
-	git format-patch -k initial..main &&
+	shit checkout -b dosfiles-keep-cr-continue initial &&
+	shit format-patch -k initial..main &&
 	append_cr <file1a >file &&
-	git commit -m "different patch" file &&
-	test_must_fail git am --keep-cr -k -3 000*.patch &&
+	shit commit -m "different patch" file &&
+	test_must_fail shit am --keep-cr -k -3 000*.patch &&
 	append_cr <file2 >file &&
-	git add file &&
-	git am -3 --resolved &&
-	git diff --exit-code main
+	shit add file &&
+	shit am -3 --resolved &&
+	shit diff --exit-code main
 '
 
 test_expect_success 'am with unix files config am.keepcr overridden by --no-keep-cr' '
-	git config am.keepcr 1 &&
-	git checkout -b unixfiles-conf-keepcr-override initial &&
+	shit config am.keepcr 1 &&
+	shit checkout -b unixfiles-conf-keepcr-override initial &&
 	cp -f file1 file &&
-	git commit -m "line ending to unix" file &&
-	git format-patch -k initial..main &&
-	git am -k -3 --no-keep-cr 000*.patch &&
-	git diff --exit-code -w main
+	shit commit -m "line ending to unix" file &&
+	shit format-patch -k initial..main &&
+	shit am -k -3 --no-keep-cr 000*.patch &&
+	shit diff --exit-code -w main
 '
 
 test_done

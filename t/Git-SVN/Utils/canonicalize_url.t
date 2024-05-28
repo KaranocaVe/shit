@@ -8,8 +8,8 @@ use warnings;
 
 use Test::More 'no_plan';
 
-use Git::SVN::Utils;
-my $canonicalize_url = \&Git::SVN::Utils::_canonicalize_url_ourselves;
+use shit::SVN::Utils;
+my $canonicalize_url = \&shit::SVN::Utils::_canonicalize_url_ourselves;
 
 my %tests = (
 	"http://x.com"			=> "http://x.com",

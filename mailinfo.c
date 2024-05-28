@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "gettext.h"
 #include "hex-ll.h"
@@ -1245,15 +1245,15 @@ int mailinfo_parse_quoted_cr_action(const char *actionstr, int *action)
 	return 0;
 }
 
-static int git_mailinfo_config(const char *var, const char *value,
+static int shit_mailinfo_config(const char *var, const char *value,
 			       const struct config_context *ctx, void *mi_)
 {
 	struct mailinfo *mi = mi_;
 
 	if (!starts_with(var, "mailinfo."))
-		return git_default_config(var, value, ctx, NULL);
+		return shit_default_config(var, value, ctx, NULL);
 	if (!strcmp(var, "mailinfo.scissors")) {
-		mi->use_scissors = git_config_bool(var, value);
+		mi->use_scissors = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "mailinfo.quotedcr")) {
@@ -1279,7 +1279,7 @@ void setup_mailinfo(struct mailinfo *mi)
 	mi->header_stage = 1;
 	mi->use_inbody_headers = 1;
 	mi->content_top = mi->content;
-	git_config(git_mailinfo_config, mi);
+	shit_config(shit_mailinfo_config, mi);
 }
 
 void clear_mailinfo(struct mailinfo *mi)

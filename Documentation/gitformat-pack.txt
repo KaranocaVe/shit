@@ -1,30 +1,30 @@
-gitformat-pack(5)
+shitformat-pack(5)
 =================
 
 NAME
 ----
-gitformat-pack - Git pack format
+shitformat-pack - shit pack format
 
 
 SYNOPSIS
 --------
 [verse]
-$GIT_DIR/objects/pack/pack-*.{pack,idx}
-$GIT_DIR/objects/pack/pack-*.rev
-$GIT_DIR/objects/pack/pack-*.mtimes
-$GIT_DIR/objects/pack/multi-pack-index
+$shit_DIR/objects/pack/pack-*.{pack,idx}
+$shit_DIR/objects/pack/pack-*.rev
+$shit_DIR/objects/pack/pack-*.mtimes
+$shit_DIR/objects/pack/multi-pack-index
 
 DESCRIPTION
 -----------
 
-The Git pack format is how Git stores most of its primary repository
+The shit pack format is how shit stores most of its primary repository
 data. Over the lifetime of a repository, loose objects (if any) and
 smaller packs are consolidated into larger pack(s). See
-linkgit:git-gc[1] and linkgit:git-pack-objects[1].
+linkshit:shit-gc[1] and linkshit:shit-pack-objects[1].
 
 The pack format is also used over-the-wire, see
-e.g. linkgit:gitprotocol-v2[5], as well as being a part of
-other container formats in the case of linkgit:gitformat-bundle[5].
+e.g. linkshit:shitprotocol-v2[5], as well as being a part of
+other container formats in the case of linkshit:shitformat-bundle[5].
 
 == Checksums and object IDs
 
@@ -40,7 +40,7 @@ Similarly, in SHA-256 repositories, these values are computed using SHA-256.
          The signature is: {'P', 'A', 'C', 'K'}
 
      4-byte version number (network byte order):
-	 Git currently accepts version number 2 or 3 but
+	 shit currently accepts version number 2 or 3 but
          generates version 2 only.
 
      4-byte number of objects contained in the pack (network byte order)
@@ -355,7 +355,7 @@ HEADER:
 	    The signature is: {'M', 'I', 'D', 'X'}
 
 	1-byte version number:
-	    Git only writes or recognizes version 1.
+	    shit only writes or recognizes version 1.
 
 	1-byte Object Id Version
 	    We infer the length of object IDs (OIDs) from this value:
@@ -381,7 +381,7 @@ CHUNK LOOKUP:
 	    using the next chunk position if necessary.)
 
 	The CHUNK LOOKUP matches the table of contents from
-	the chunk-based file format, see linkgit:gitformat-chunk[5].
+	the chunk-based file format, see linkshit:shitformat-chunk[5].
 
 	The remaining data in the body is described one chunk at a time, and
 	these chunks may be given in any order. Chunks are required unless
@@ -532,7 +532,7 @@ be arranged as follows:
     |a,0|a,1|...|a,9|b,0|b,1|...|b,14|c,0|c,1|...|c,19|
 
 When working with single-pack bitmaps (or, equivalently, multi-pack
-reachability bitmaps with a preferred pack), linkgit:git-pack-objects[1]
+reachability bitmaps with a preferred pack), linkshit:shit-pack-objects[1]
 performs ``verbatim'' reuse, attempting to reuse chunks of the bitmapped
 or preferred packfile instead of adding objects to the packing list.
 
@@ -587,29 +587,29 @@ chunk.
 
 == cruft packs
 
-The cruft packs feature offer an alternative to Git's traditional mechanism of
-removing unreachable objects. This document provides an overview of Git's
+The cruft packs feature offer an alternative to shit's traditional mechanism of
+removing unreachable objects. This document provides an overview of shit's
 pruning mechanism, and how a cruft pack can be used instead to accomplish the
 same.
 
 === Background
 
-To remove unreachable objects from your repository, Git offers `git repack -Ad`
-(see linkgit:git-repack[1]). Quoting from the documentation:
+To remove unreachable objects from your repository, shit offers `shit repack -Ad`
+(see linkshit:shit-repack[1]). Quoting from the documentation:
 
 ----
 [...] unreachable objects in a previous pack become loose, unpacked objects,
 instead of being left in the old pack. [...] loose unreachable objects will be
-pruned according to normal expiry rules with the next 'git gc' invocation.
+pruned according to normal expiry rules with the next 'shit gc' invocation.
 ----
 
 Unreachable objects aren't removed immediately, since doing so could race with
-an incoming push which may reference an object which is about to be deleted.
+an incoming defecate which may reference an object which is about to be deleted.
 Instead, those unreachable objects are stored as loose objects and stay that way
 until they are older than the expiration window, at which point they are removed
-by linkgit:git-prune[1].
+by linkshit:shit-prune[1].
 
-Git must store these unreachable objects loose in order to keep track of their
+shit must store these unreachable objects loose in order to keep track of their
 per-object mtimes. If these unreachable objects were written into one big pack,
 then either freshening that pack (because an object contained within it was
 re-written) or creating a new pack of unreachable objects would cause the pack's
@@ -620,7 +620,7 @@ freshened at once.
 
 This can lead to undesirable situations when a repository contains many
 unreachable objects which have not yet left the grace period. Having large
-directories in the shards of `.git/objects` can lead to decreased performance in
+directories in the shards of `.shit/objects` can lead to decreased performance in
 the repository. But given enough unreachable objects, this can lead to inode
 starvation and degrade the performance of the whole system. Since we
 can never pack those objects, these repositories often take up a large amount of
@@ -633,11 +633,11 @@ A cruft pack eliminates the need for storing unreachable objects in a loose
 state by including the per-object mtimes in a separate file alongside a single
 pack containing all loose objects.
 
-A cruft pack is written by `git repack --cruft` when generating a new pack.
-linkgit:git-pack-objects[1]'s `--cruft` option. Note that `git repack --cruft`
+A cruft pack is written by `shit repack --cruft` when generating a new pack.
+linkshit:shit-pack-objects[1]'s `--cruft` option. Note that `shit repack --cruft`
 is a classic all-into-one repack, meaning that everything in the resulting pack is
 reachable, and everything else is unreachable. Once written, the `--cruft`
-option instructs `git repack` to generate another pack containing only objects
+option instructs `shit repack` to generate another pack containing only objects
 not packed in the previous step (which equates to packing all unreachable
 objects together). This progresses as follows:
 
@@ -651,18 +651,18 @@ objects together). This progresses as follows:
   3. Write the pack out, along with a `.mtimes` file that records the per-object
      timestamps.
 
-This mode is invoked internally by linkgit:git-repack[1] when instructed to
+This mode is invoked internally by linkshit:shit-repack[1] when instructed to
 write a cruft pack. Crucially, the set of in-core kept packs is exactly the set
 of packs which will not be deleted by the repack; in other words, they contain
 all of the repository's reachable objects.
 
-When a repository already has a cruft pack, `git repack --cruft` typically only
-adds objects to it. An exception to this is when `git repack` is given the
+When a repository already has a cruft pack, `shit repack --cruft` typically only
+adds objects to it. An exception to this is when `shit repack` is given the
 `--cruft-expiration` option, which allows the generated cruft pack to omit
-expired objects instead of waiting for linkgit:git-gc[1] to expire those objects
+expired objects instead of waiting for linkshit:shit-gc[1] to expire those objects
 later on.
 
-It is linkgit:git-gc[1] that is typically responsible for removing expired
+It is linkshit:shit-gc[1] that is typically responsible for removing expired
 unreachable objects.
 
 === Alternatives
@@ -676,6 +676,6 @@ to avoid complicating the `.idx` format. If the `.idx` format were ever to gain
 support for optional chunks of data, it may make sense to consolidate the
 `.mtimes` format into the `.idx` itself.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -17,7 +17,7 @@ struct parsed_object_pool {
 	struct alloc_state *tag_state;
 	struct alloc_state *object_state;
 
-	/* parent substitutions from .git/info/grafts and .git/shallow */
+	/* parent substitutions from .shit/info/grafts and .shit/shallow */
 	struct commit_graft **grafts;
 	int grafts_alloc, grafts_nr;
 
@@ -70,7 +70,7 @@ void object_array_init(struct object_array *array);
  * builtin/blame.c:                        12-13
  * bisect.c:                                        16
  * bundle.c:                                        16
- * http-push.c:                          11-----14
+ * http-defecate.c:                          11-----14
  * commit-graph.c:                                15
  * commit-reach.c:                                  16-----19
  * sha1-name.c:                                              20
@@ -88,7 +88,7 @@ void object_array_init(struct object_array *array);
 
 /*
  * Values in this enum (except those outside the 3 bit range) are part
- * of pack file format. See gitformat-pack(5) for more information.
+ * of pack file format. See shitformat-pack(5) for more information.
  */
 enum object_type {
 	OBJ_BAD = -1,
@@ -108,20 +108,20 @@ enum object_type {
 #define S_IFINVALID     0030000
 
 /*
- * A "directory link" is a link to another git directory.
+ * A "directory link" is a link to another shit directory.
  *
  * The value 0160000 is not normally a valid mode, and
  * also just happens to be S_IFDIR + S_IFLNK
  */
-#define S_IFGITLINK	0160000
-#define S_ISGITLINK(m)	(((m) & S_IFMT) == S_IFGITLINK)
+#define S_IFshitLINK	0160000
+#define S_ISshitLINK(m)	(((m) & S_IFMT) == S_IFshitLINK)
 
 #define S_ISSPARSEDIR(m) ((m) == S_IFDIR)
 
 static inline enum object_type object_type(unsigned int mode)
 {
 	return S_ISDIR(mode) ? OBJ_TREE :
-		S_ISGITLINK(mode) ? OBJ_COMMIT :
+		S_ISshitLINK(mode) ? OBJ_COMMIT :
 		OBJ_BLOB;
 }
 
@@ -132,8 +132,8 @@ static inline unsigned int create_ce_mode(unsigned int mode)
 		return S_IFLNK;
 	if (S_ISSPARSEDIR(mode))
 		return S_IFDIR;
-	if (S_ISDIR(mode) || S_ISGITLINK(mode))
-		return S_IFGITLINK;
+	if (S_ISDIR(mode) || S_ISshitLINK(mode))
+		return S_IFshitLINK;
 	return S_IFREG | ce_permissions(mode);
 }
 
@@ -145,7 +145,7 @@ static inline unsigned int canon_mode(unsigned int mode)
 		return S_IFLNK;
 	if (S_ISDIR(mode))
 		return S_IFDIR;
-	return S_IFGITLINK;
+	return S_IFshitLINK;
 }
 
 /*

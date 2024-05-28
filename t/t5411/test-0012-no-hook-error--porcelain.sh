@@ -1,8 +1,8 @@
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push         :                       next(A)  refs/for/main/topic(A)
-test_expect_success "proc-receive: no hook, fail to push special ref ($PROTOCOL/porcelain)" '
-	test_must_fail git -C workbench push --porcelain origin \
+# shit defecate         :                       next(A)  refs/for/main/topic(A)
+test_expect_success "proc-receive: no hook, fail to defecate special ref ($PROTOCOL/porcelain)" '
+	test_must_fail shit -C workbench defecate --porcelain origin \
 		HEAD:next \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
@@ -14,7 +14,7 @@ test_expect_success "proc-receive: no hook, fail to push special ref ($PROTOCOL/
 	> remote: error: cannot find hook "proc-receive"        Z
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	> *	HEAD:refs/heads/next	[new branch]
 	> !	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
 	Done
@@ -30,14 +30,14 @@ test_expect_success "proc-receive: no hook, fail to push special ref ($PROTOCOL/
 # Refs of upstream : main(A)             next(A)
 # Refs of workbench: main(A)  tags/v123
 test_expect_success "cleanup ($PROTOCOL/porcelain)" '
-	git -C "$upstream" update-ref -d refs/heads/next
+	shit -C "$upstream" update-ref -d refs/heads/next
 '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push --atomic: (B)                   next(A)  refs/for/main/topic(A)
-test_expect_success "proc-receive: no hook, all failed for atomic push ($PROTOCOL/porcelain)" '
-	test_must_fail git -C workbench push --porcelain --atomic origin \
+# shit defecate --atomic: (B)                   next(A)  refs/for/main/topic(A)
+test_expect_success "proc-receive: no hook, all failed for atomic defecate ($PROTOCOL/porcelain)" '
+	test_must_fail shit -C workbench defecate --porcelain --atomic origin \
 		$B:main \
 		HEAD:next \
 		HEAD:refs/for/main/topic >out-$test_count 2>&1 &&
@@ -48,7 +48,7 @@ test_expect_success "proc-receive: no hook, all failed for atomic push ($PROTOCO
 	> remote: pre-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
 	> remote: pre-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
 	> remote: error: cannot find hook "proc-receive"        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	> !	<COMMIT-B>:refs/heads/main	[remote rejected] (fail to run proc-receive hook)
 	> !	HEAD:refs/heads/next	[remote rejected] (fail to run proc-receive hook)
 	> !	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)

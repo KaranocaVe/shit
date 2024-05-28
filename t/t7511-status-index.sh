@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git status with certain file name lengths'
+test_description='shit status with certain file name lengths'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -17,10 +17,10 @@ check() {
 	done
 
 	test_expect_success "status, filename length $len" "
-		git add $prefix* &&
-		git status
+		shit add $prefix* &&
+		shit status
 	"
-	rm $prefix* .git/index
+	rm $prefix* .shit/index
 }
 
 check  1

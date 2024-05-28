@@ -1,9 +1,9 @@
-package Git::Mediawiki;
+package shit::Mediawiki;
 
 use 5.008001;
 use strict;
 use POSIX;
-use Git;
+use shit;
 
 BEGIN {
 
@@ -66,9 +66,9 @@ sub connect_maybe {
 	my $remote_url = shift;
 	my ($wiki_login, $wiki_password, $wiki_domain);
 
-	$wiki_login = Git::config("remote.${remote_name}.mwLogin");
-	$wiki_password = Git::config("remote.${remote_name}.mwPassword");
-	$wiki_domain = Git::config("remote.${remote_name}.mwDomain");
+	$wiki_login = shit::config("remote.${remote_name}.mwLogin");
+	$wiki_password = shit::config("remote.${remote_name}.mwPassword");
+	$wiki_domain = shit::config("remote.${remote_name}.mwDomain");
 
 	$wiki = MediaWiki::API->new;
 	$wiki->{config}->{api_url} = "${remote_url}/api.php";
@@ -78,19 +78,19 @@ sub connect_maybe {
 			'username' => $wiki_login,
 			'password' => $wiki_password
 		);
-		Git::credential(\%credential);
+		shit::credential(\%credential);
 		my $request = {lgname => $credential{username},
 			       lgpassword => $credential{password},
 			       lgdomain => $wiki_domain};
 		if ($wiki->login($request)) {
-			Git::credential(\%credential, 'approve');
+			shit::credential(\%credential, 'approve');
 			print {*STDERR} qq(Logged in mediawiki user "$credential{username}".\n);
 		} else {
 			print {*STDERR} qq(Failed to log in mediawiki user "$credential{username}" on ${remote_url}\n);
 			print {*STDERR} '  (error ' .
 				$wiki->{error}->{code} . ': ' .
 				$wiki->{error}->{details} . ")\n";
-			Git::credential(\%credential, 'reject');
+			shit::credential(\%credential, 'reject');
 			exit 1;
 		}
 	}

@@ -20,9 +20,9 @@ test_expect_success 'setup' '
 test_expect_success 'core.unsetenvvars works' '
 	HOBBES=Calvin &&
 	export HOBBES &&
-	git commit --allow-empty -m with 2>err &&
+	shit commit --allow-empty -m with 2>err &&
 	grep Calvin err &&
-	git -c core.unsetenvvars=FINDUS,HOBBES,CALVIN \
+	shit -c core.unsetenvvars=FINDUS,HOBBES,CALVIN \
 		commit --allow-empty -m without 2>err &&
 	! grep Calvin err
 '

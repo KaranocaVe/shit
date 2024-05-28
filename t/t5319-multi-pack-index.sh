@@ -4,8 +4,8 @@ test_description='multi-pack-indexes'
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-chunk.sh
 
-GIT_TEST_MULTI_PACK_INDEX=0
-objdir=.git/objects
+shit_TEST_MULTI_PACK_INDEX=0
+objdir=.shit/objects
 
 HASH_LEN=$(test_oid rawsz)
 
@@ -46,13 +46,13 @@ test_expect_success 'setup' '
 '
 
 test_expect_success "don't write midx with no packs" '
-	test_must_fail git multi-pack-index --object-dir=. write &&
+	test_must_fail shit multi-pack-index --object-dir=. write &&
 	test_path_is_missing pack/multi-pack-index
 '
 
 test_expect_success SHA1 'warn if a midx contains no oid' '
 	cp "$TEST_DIRECTORY"/t5319/no-objects.midx $objdir/pack/multi-pack-index &&
-	test_must_fail git multi-pack-index verify &&
+	test_must_fail shit multi-pack-index verify &&
 	rm $objdir/pack/multi-pack-index
 '
 
@@ -72,7 +72,7 @@ generate_objects () {
 		echo $iii &&
 		test-tool genrandom "$iii" 8192
 	} >file_$iii &&
-	git update-index --add file_$iii deep_delta_$iii wide_delta_$iii
+	shit update-index --add file_$iii deep_delta_$iii wide_delta_$iii
 }
 
 commit_and_list_objects () {
@@ -80,14 +80,14 @@ commit_and_list_objects () {
 		echo 101 &&
 		test-tool genrandom 100 8192;
 	} >file_101 &&
-	git update-index --add file_101 &&
-	tree=$(git write-tree) &&
-	commit=$(git commit-tree $tree -p HEAD</dev/null) &&
+	shit update-index --add file_101 &&
+	tree=$(shit write-tree) &&
+	commit=$(shit commit-tree $tree -p HEAD</dev/null) &&
 	{
 		echo $tree &&
-		git ls-tree $tree | sed -e "s/.* \\([0-9a-f]*\\)	.*/\\1/"
+		shit ls-tree $tree | sed -e "s/.* \\([0-9a-f]*\\)	.*/\\1/"
 	} >obj-list &&
-	git reset --hard $commit
+	shit reset --hard $commit
 }
 
 test_expect_success 'create objects' '
@@ -100,16 +100,16 @@ test_expect_success 'create objects' '
 '
 
 test_expect_success 'write midx with one v1 pack' '
-	pack=$(git pack-objects --index-version=1 $objdir/pack/test <obj-list) &&
+	pack=$(shit pack-objects --index-version=1 $objdir/pack/test <obj-list) &&
 	test_when_finished rm $objdir/pack/test-$pack.pack \
 		$objdir/pack/test-$pack.idx $objdir/pack/multi-pack-index &&
-	git multi-pack-index --object-dir=$objdir write &&
+	shit multi-pack-index --object-dir=$objdir write &&
 	midx_read_expect 1 18 4 $objdir
 '
 
-midx_git_two_modes () {
-	git -c core.multiPackIndex=false $1 >expect &&
-	git -c core.multiPackIndex=true $1 >actual &&
+midx_shit_two_modes () {
+	shit -c core.multiPackIndex=false $1 >expect &&
+	shit -c core.multiPackIndex=true $1 >actual &&
 	if [ "$2" = "sorted" ]
 	then
 		sort <expect >expect.sorted &&
@@ -122,18 +122,18 @@ midx_git_two_modes () {
 
 compare_results_with_midx () {
 	MSG=$1
-	test_expect_success "check normal git operations: $MSG" '
-		midx_git_two_modes "rev-list --objects --all" &&
-		midx_git_two_modes "log --raw" &&
-		midx_git_two_modes "count-objects --verbose" &&
-		midx_git_two_modes "cat-file --batch-all-objects --batch-check" &&
-		midx_git_two_modes "cat-file --batch-all-objects --batch-check --unordered" sorted
+	test_expect_success "check normal shit operations: $MSG" '
+		midx_shit_two_modes "rev-list --objects --all" &&
+		midx_shit_two_modes "log --raw" &&
+		midx_shit_two_modes "count-objects --verbose" &&
+		midx_shit_two_modes "cat-file --batch-all-objects --batch-check" &&
+		midx_shit_two_modes "cat-file --batch-all-objects --batch-check --unordered" sorted
 	'
 }
 
 test_expect_success 'write midx with one v2 pack' '
-	git pack-objects --index-version=2,0x40 $objdir/pack/test <obj-list &&
-	git multi-pack-index --object-dir=$objdir write &&
+	shit pack-objects --index-version=2,0x40 $objdir/pack/test <obj-list &&
+	shit multi-pack-index --object-dir=$objdir write &&
 	midx_read_expect 1 18 4 $objdir
 '
 
@@ -149,7 +149,7 @@ test_expect_success 'corrupt idx reports errors' '
 	# the idx file will complain.
 	test_copy_bytes 1064 <backup-$idx >$objdir/pack/$idx &&
 
-	git -c core.multiPackIndex=true rev-list --objects --all 2>err &&
+	shit -c core.multiPackIndex=true rev-list --objects --all 2>err &&
 	grep "index unavailable" err
 '
 
@@ -162,8 +162,8 @@ test_expect_success 'add more objects' '
 '
 
 test_expect_success 'write midx with two packs' '
-	git pack-objects --index-version=1 $objdir/pack/test-2 <obj-list &&
-	git multi-pack-index --object-dir=$objdir write &&
+	shit pack-objects --index-version=1 $objdir/pack/test-2 <obj-list &&
+	shit multi-pack-index --object-dir=$objdir write &&
 	midx_read_expect 2 34 4 $objdir
 '
 
@@ -175,7 +175,7 @@ test_expect_success 'write midx with --stdin-packs' '
 	idx="$(find $objdir/pack -name "test-2-*.idx")" &&
 	basename "$idx" >in &&
 
-	git multi-pack-index write --stdin-packs <in &&
+	shit multi-pack-index write --stdin-packs <in &&
 
 	test-tool read-midx $objdir | grep "\.idx$" >packs &&
 
@@ -186,8 +186,8 @@ compare_results_with_midx "mixed mode (one pack + extra)"
 
 test_expect_success 'write with no objects and preferred pack' '
 	test_when_finished "rm -rf empty" &&
-	git init empty &&
-	test_must_fail git -C empty multi-pack-index write \
+	shit init empty &&
+	test_must_fail shit -C empty multi-pack-index write \
 		--stdin-packs --preferred-pack=does-not-exist </dev/null 2>err &&
 	cat >expect <<-EOF &&
 	warning: unknown preferred pack: ${SQ}does-not-exist${SQ}
@@ -197,17 +197,17 @@ test_expect_success 'write with no objects and preferred pack' '
 '
 
 test_expect_success 'write progress off for redirected stderr' '
-	git multi-pack-index --object-dir=$objdir write 2>err &&
+	shit multi-pack-index --object-dir=$objdir write 2>err &&
 	test_line_count = 0 err
 '
 
 test_expect_success 'write force progress on for stderr' '
-	GIT_PROGRESS_DELAY=0 git multi-pack-index --object-dir=$objdir write --progress 2>err &&
+	shit_PROGRESS_DELAY=0 shit multi-pack-index --object-dir=$objdir write --progress 2>err &&
 	test_file_not_empty err
 '
 
 test_expect_success 'write with the --no-progress option' '
-	GIT_PROGRESS_DELAY=0 git multi-pack-index --object-dir=$objdir write --no-progress 2>err &&
+	shit_PROGRESS_DELAY=0 shit multi-pack-index --object-dir=$objdir write --no-progress 2>err &&
 	test_line_count = 0 err
 '
 
@@ -216,89 +216,89 @@ test_expect_success 'add more packs' '
 	do
 		generate_objects $j &&
 		commit_and_list_objects &&
-		git pack-objects --index-version=2 $objdir/pack/test-pack <obj-list || return 1
+		shit pack-objects --index-version=2 $objdir/pack/test-pack <obj-list || return 1
 	done
 '
 
 compare_results_with_midx "mixed mode (two packs + extra)"
 
 test_expect_success 'write midx with twelve packs' '
-	git multi-pack-index --object-dir=$objdir write &&
+	shit multi-pack-index --object-dir=$objdir write &&
 	midx_read_expect 12 74 4 $objdir
 '
 
 compare_results_with_midx "twelve packs"
 
 test_expect_success 'multi-pack-index *.rev cleanup with --object-dir' '
-	git init repo &&
-	git clone -s repo alternate &&
+	shit init repo &&
+	shit clone -s repo alternate &&
 
 	test_when_finished "rm -rf repo alternate" &&
 
 	(
 		cd repo &&
 		test_commit base &&
-		git repack -d
+		shit repack -d
 	) &&
 
-	ours="alternate/.git/objects/pack/multi-pack-index-123.rev" &&
-	theirs="repo/.git/objects/pack/multi-pack-index-abc.rev" &&
+	ours="alternate/.shit/objects/pack/multi-pack-index-123.rev" &&
+	theirs="repo/.shit/objects/pack/multi-pack-index-abc.rev" &&
 	touch "$ours" "$theirs" &&
 
 	(
 		cd alternate &&
-		git multi-pack-index --object-dir ../repo/.git/objects write
+		shit multi-pack-index --object-dir ../repo/.shit/objects write
 	) &&
 
 	# writing a midx in "repo" should not remove the .rev file in the
 	# alternate
-	test_path_is_file repo/.git/objects/pack/multi-pack-index &&
+	test_path_is_file repo/.shit/objects/pack/multi-pack-index &&
 	test_path_is_file $ours &&
 	test_path_is_missing $theirs
 '
 
 test_expect_success 'warn on improper hash version' '
-	git init --object-format=sha1 sha1 &&
+	shit init --object-format=sha1 sha1 &&
 	(
 		cd sha1 &&
-		git config core.multiPackIndex true &&
+		shit config core.multiPackIndex true &&
 		test_commit 1 &&
-		git repack -a &&
-		git multi-pack-index write &&
-		mv .git/objects/pack/multi-pack-index ../mpi-sha1
+		shit repack -a &&
+		shit multi-pack-index write &&
+		mv .shit/objects/pack/multi-pack-index ../mpi-sha1
 	) &&
-	git init --object-format=sha256 sha256 &&
+	shit init --object-format=sha256 sha256 &&
 	(
 		cd sha256 &&
-		git config core.multiPackIndex true &&
+		shit config core.multiPackIndex true &&
 		test_commit 1 &&
-		git repack -a &&
-		git multi-pack-index write &&
-		mv .git/objects/pack/multi-pack-index ../mpi-sha256
+		shit repack -a &&
+		shit multi-pack-index write &&
+		mv .shit/objects/pack/multi-pack-index ../mpi-sha256
 	) &&
 	(
 		cd sha1 &&
-		mv ../mpi-sha256 .git/objects/pack/multi-pack-index &&
-		git log -1 2>err &&
+		mv ../mpi-sha256 .shit/objects/pack/multi-pack-index &&
+		shit log -1 2>err &&
 		test_grep "multi-pack-index hash version 2 does not match version 1" err
 	) &&
 	(
 		cd sha256 &&
-		mv ../mpi-sha1 .git/objects/pack/multi-pack-index &&
-		git log -1 2>err &&
+		mv ../mpi-sha1 .shit/objects/pack/multi-pack-index &&
+		shit log -1 2>err &&
 		test_grep "multi-pack-index hash version 1 does not match version 2" err
 	)
 '
 
 test_expect_success 'midx picks objects from preferred pack' '
-	test_when_finished rm -rf preferred.git &&
-	git init --bare preferred.git &&
+	test_when_finished rm -rf preferred.shit &&
+	shit init --bare preferred.shit &&
 	(
-		cd preferred.git &&
+		cd preferred.shit &&
 
-		a=$(echo "a" | git hash-object -w --stdin) &&
-		b=$(echo "b" | git hash-object -w --stdin) &&
-		c=$(echo "c" | git hash-object -w --stdin) &&
+		a=$(echo "a" | shit hash-object -w --stdin) &&
+		b=$(echo "b" | shit hash-object -w --stdin) &&
+		c=$(echo "c" | shit hash-object -w --stdin) &&
 
 		# Set up two packs, duplicating the object "B" at different
 		# offsets.
@@ -307,23 +307,23 @@ test_expect_success 'midx picks objects from preferred pack' '
 		# lexically after the "AB" pack, meaning that omitting the
 		# --preferred-pack argument would cause this test to fail (since
 		# the MIDX code would select the copy of "b" in the "AB" pack).
-		git pack-objects objects/pack/test-AB <<-EOF &&
+		shit pack-objects objects/pack/test-AB <<-EOF &&
 		$a
 		$b
 		EOF
-		bc=$(git pack-objects objects/pack/test-BC <<-EOF
+		bc=$(shit pack-objects objects/pack/test-BC <<-EOF
 		$b
 		$c
 		EOF
 		) &&
 
-		git multi-pack-index --object-dir=objects \
+		shit multi-pack-index --object-dir=objects \
 			write --preferred-pack=test-BC-$bc.idx 2>err &&
 		test_must_be_empty err &&
 
 		test-tool read-midx --show-objects objects >out &&
 
-		ofs=$(git show-index <objects/pack/test-BC-$bc.idx | grep $b |
+		ofs=$(shit show-index <objects/pack/test-BC-$bc.idx | grep $b |
 			cut -d" " -f1) &&
 		printf "%s %s\tobjects/pack/test-BC-%s.pack\n" \
 			"$b" "$ofs" "$bc" >expect &&
@@ -334,38 +334,38 @@ test_expect_success 'midx picks objects from preferred pack' '
 '
 
 test_expect_success 'preferred packs must be non-empty' '
-	test_when_finished rm -rf preferred.git &&
-	git init preferred.git &&
+	test_when_finished rm -rf preferred.shit &&
+	shit init preferred.shit &&
 	(
-		cd preferred.git &&
+		cd preferred.shit &&
 
 		test_commit base &&
-		git repack -ad &&
+		shit repack -ad &&
 
-		empty="$(git pack-objects $objdir/pack/pack </dev/null)" &&
+		empty="$(shit pack-objects $objdir/pack/pack </dev/null)" &&
 
-		test_must_fail git multi-pack-index write \
+		test_must_fail shit multi-pack-index write \
 			--preferred-pack=pack-$empty.pack 2>err &&
 		grep "with no objects" err
 	)
 '
 
 test_expect_success 'verify multi-pack-index success' '
-	git multi-pack-index verify --object-dir=$objdir
+	shit multi-pack-index verify --object-dir=$objdir
 '
 
 test_expect_success 'verify progress off for redirected stderr' '
-	git multi-pack-index verify --object-dir=$objdir 2>err &&
+	shit multi-pack-index verify --object-dir=$objdir 2>err &&
 	test_line_count = 0 err
 '
 
 test_expect_success 'verify force progress on for stderr' '
-	git multi-pack-index verify --object-dir=$objdir --progress 2>err &&
+	shit multi-pack-index verify --object-dir=$objdir --progress 2>err &&
 	test_file_not_empty err
 '
 
 test_expect_success 'verify with the --no-progress option' '
-	git multi-pack-index verify --object-dir=$objdir --no-progress 2>err &&
+	shit multi-pack-index verify --object-dir=$objdir --no-progress 2>err &&
 	test_line_count = 0 err
 '
 
@@ -378,7 +378,7 @@ corrupt_midx_and_verify() {
 	COMMAND="$5" &&
 	if test -z "$COMMAND"
 	then
-		COMMAND="git multi-pack-index verify --object-dir=$OBJDIR"
+		COMMAND="shit multi-pack-index verify --object-dir=$OBJDIR"
 	fi &&
 	FILE=$OBJDIR/pack/multi-pack-index &&
 	chmod a+w $FILE &&
@@ -477,23 +477,23 @@ test_expect_success 'verify incorrect offset' '
 		"incorrect object offset"
 '
 
-test_expect_success 'git-fsck incorrect offset' '
+test_expect_success 'shit-fsck incorrect offset' '
 	corrupt_midx_and_verify $MIDX_BYTE_OFFSET "\377" $objdir \
 		"incorrect object offset" \
-		"git -c core.multiPackIndex=true fsck" &&
+		"shit -c core.multiPackIndex=true fsck" &&
 	test_unconfig core.multiPackIndex &&
-	test_must_fail git fsck &&
-	git -c core.multiPackIndex=false fsck
+	test_must_fail shit fsck &&
+	shit -c core.multiPackIndex=false fsck
 '
 
-test_expect_success 'git fsck shows MIDX output with --progress' '
-	git fsck --progress 2>err &&
+test_expect_success 'shit fsck shows MIDX output with --progress' '
+	shit fsck --progress 2>err &&
 	grep "Verifying OID order in multi-pack-index" err &&
 	grep "Verifying object offsets" err
 '
 
-test_expect_success 'git fsck suppresses MIDX output with --no-progress' '
-	git fsck --no-progress 2>err &&
+test_expect_success 'shit fsck suppresses MIDX output with --no-progress' '
+	shit fsck --no-progress 2>err &&
 	! grep "Verifying OID order in multi-pack-index" err &&
 	! grep "Verifying object offsets" err
 '
@@ -501,9 +501,9 @@ test_expect_success 'git fsck suppresses MIDX output with --no-progress' '
 test_expect_success 'corrupt MIDX is not reused' '
 	corrupt_midx_and_verify $MIDX_BYTE_OFFSET "\377" $objdir \
 		"incorrect object offset" &&
-	git multi-pack-index write 2>err &&
+	shit multi-pack-index write 2>err &&
 	test_grep checksum.mismatch err &&
-	git multi-pack-index verify
+	shit multi-pack-index verify
 '
 
 test_expect_success 'verify incorrect checksum' '
@@ -514,45 +514,45 @@ test_expect_success 'verify incorrect checksum' '
 '
 
 test_expect_success 'repack progress off for redirected stderr' '
-	GIT_PROGRESS_DELAY=0 git multi-pack-index --object-dir=$objdir repack 2>err &&
+	shit_PROGRESS_DELAY=0 shit multi-pack-index --object-dir=$objdir repack 2>err &&
 	test_line_count = 0 err
 '
 
 test_expect_success 'repack force progress on for stderr' '
-	GIT_PROGRESS_DELAY=0 git multi-pack-index --object-dir=$objdir repack --progress 2>err &&
+	shit_PROGRESS_DELAY=0 shit multi-pack-index --object-dir=$objdir repack --progress 2>err &&
 	test_file_not_empty err
 '
 
 test_expect_success 'repack with the --no-progress option' '
-	GIT_PROGRESS_DELAY=0 git multi-pack-index --object-dir=$objdir repack --no-progress 2>err &&
+	shit_PROGRESS_DELAY=0 shit multi-pack-index --object-dir=$objdir repack --no-progress 2>err &&
 	test_line_count = 0 err
 '
 
 test_expect_success 'repack removes multi-pack-index when deleting packs' '
 	test_path_is_file $objdir/pack/multi-pack-index &&
-	# Set GIT_TEST_MULTI_PACK_INDEX to 0 to avoid writing a new
+	# Set shit_TEST_MULTI_PACK_INDEX to 0 to avoid writing a new
 	# multi-pack-index after repacking, but set "core.multiPackIndex" to
-	# true so that "git repack" can read the existing MIDX.
-	GIT_TEST_MULTI_PACK_INDEX=0 git -c core.multiPackIndex repack -adf &&
+	# true so that "shit repack" can read the existing MIDX.
+	shit_TEST_MULTI_PACK_INDEX=0 shit -c core.multiPackIndex repack -adf &&
 	test_path_is_missing $objdir/pack/multi-pack-index
 '
 
 test_expect_success 'repack preserves multi-pack-index when creating packs' '
-	git init preserve &&
+	shit init preserve &&
 	test_when_finished "rm -fr preserve" &&
 	(
 		cd preserve &&
-		packdir=.git/objects/pack &&
+		packdir=.shit/objects/pack &&
 		midx=$packdir/multi-pack-index &&
 
 		test_commit 1 &&
-		pack1=$(git pack-objects --all $packdir/pack) &&
+		pack1=$(shit pack-objects --all $packdir/pack) &&
 		touch $packdir/pack-$pack1.keep &&
 		test_commit 2 &&
-		pack2=$(git pack-objects --revs $packdir/pack) &&
+		pack2=$(shit pack-objects --revs $packdir/pack) &&
 		touch $packdir/pack-$pack2.keep &&
 
-		git multi-pack-index write &&
+		shit multi-pack-index write &&
 		cp $midx $midx.bak &&
 
 		cat >pack-input <<-EOF &&
@@ -560,11 +560,11 @@ test_expect_success 'repack preserves multi-pack-index when creating packs' '
 		^HEAD~1
 		EOF
 		test_commit 3 &&
-		pack3=$(git pack-objects --revs $packdir/pack <pack-input) &&
+		pack3=$(shit pack-objects --revs $packdir/pack <pack-input) &&
 		test_commit 4 &&
-		pack4=$(git pack-objects --revs $packdir/pack <pack-input) &&
+		pack4=$(shit pack-objects --revs $packdir/pack <pack-input) &&
 
-		GIT_TEST_MULTI_PACK_INDEX=0 git -c core.multiPackIndex repack -ad &&
+		shit_TEST_MULTI_PACK_INDEX=0 shit -c core.multiPackIndex repack -ad &&
 		ls -la $packdir &&
 		test_path_is_file $packdir/pack-$pack1.pack &&
 		test_path_is_file $packdir/pack-$pack2.pack &&
@@ -577,31 +577,31 @@ test_expect_success 'repack preserves multi-pack-index when creating packs' '
 compare_results_with_midx "after repack"
 
 test_expect_success 'multi-pack-index and pack-bitmap' '
-	GIT_TEST_MULTI_PACK_INDEX_WRITE_BITMAP=0 \
-		git -c repack.writeBitmaps=true repack -ad &&
-	git multi-pack-index write &&
-	git rev-list --test-bitmap HEAD
+	shit_TEST_MULTI_PACK_INDEX_WRITE_BITMAP=0 \
+		shit -c repack.writeBitmaps=true repack -ad &&
+	shit multi-pack-index write &&
+	shit rev-list --test-bitmap HEAD
 '
 
 test_expect_success 'multi-pack-index and alternates' '
-	git init --bare alt.git &&
-	echo $(pwd)/alt.git/objects >.git/objects/info/alternates &&
+	shit init --bare alt.shit &&
+	echo $(pwd)/alt.shit/objects >.shit/objects/info/alternates &&
 	echo content1 >file1 &&
-	altblob=$(GIT_DIR=alt.git git hash-object -w file1) &&
-	git cat-file blob $altblob &&
-	git rev-list --all
+	altblob=$(shit_DIR=alt.shit shit hash-object -w file1) &&
+	shit cat-file blob $altblob &&
+	shit rev-list --all
 '
 
 compare_results_with_midx "with alternate (local midx)"
 
 test_expect_success 'multi-pack-index in an alternate' '
-	mv .git/objects/pack/* alt.git/objects/pack &&
+	mv .shit/objects/pack/* alt.shit/objects/pack &&
 	test_commit add_local_objects &&
-	git repack --local &&
-	git multi-pack-index write &&
+	shit repack --local &&
+	shit multi-pack-index write &&
 	midx_read_expect 1 3 4 $objdir &&
-	git reset --hard HEAD~1 &&
-	rm -f .git/objects/pack/*
+	shit reset --hard HEAD~1 &&
+	rm -f .shit/objects/pack/*
 '
 
 compare_results_with_midx "with alternate (remote midx)"
@@ -624,24 +624,24 @@ test_expect_success 'force some 64-bit offsets with pack-objects' '
 		generate_objects 11 || return 1
 	done &&
 	commit_and_list_objects &&
-	pack64=$(git pack-objects --index-version=2,0x40 objects64/pack/test-64 <obj-list) &&
+	pack64=$(shit pack-objects --index-version=2,0x40 objects64/pack/test-64 <obj-list) &&
 	idx64=objects64/pack/test-64-$pack64.idx &&
 	chmod u+w $idx64 &&
 	corrupt_data $idx64 $(test_oid idxoff) "\02" &&
 	# objects64 is not a real repository, but can serve as an alternate
 	# anyway so we can write a MIDX into it
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -fr repo" &&
 	(
 		cd repo &&
-		( cd ../objects64 && pwd ) >.git/objects/info/alternates &&
-		midx64=$(git multi-pack-index --object-dir=../objects64 write)
+		( cd ../objects64 && pwd ) >.shit/objects/info/alternates &&
+		midx64=$(shit multi-pack-index --object-dir=../objects64 write)
 	) &&
 	midx_read_expect 1 63 5 objects64 " large-offsets"
 '
 
 test_expect_success 'verify multi-pack-index with 64-bit offsets' '
-	git multi-pack-index verify --object-dir=objects64
+	shit multi-pack-index verify --object-dir=objects64
 '
 
 NUM_OBJECTS=63
@@ -660,48 +660,48 @@ test_expect_success 'setup expire tests' '
 	mkdir dup &&
 	(
 		cd dup &&
-		git init &&
+		shit init &&
 		test-tool genrandom "data" 4096 >large_file.txt &&
-		git update-index --add large_file.txt &&
+		shit update-index --add large_file.txt &&
 		for i in $(test_seq 1 20)
 		do
 			test_commit $i || exit 1
 		done &&
-		git branch A HEAD &&
-		git branch B HEAD~8 &&
-		git branch C HEAD~13 &&
-		git branch D HEAD~16 &&
-		git branch E HEAD~18 &&
-		git pack-objects --revs .git/objects/pack/pack-A <<-EOF &&
+		shit branch A HEAD &&
+		shit branch B HEAD~8 &&
+		shit branch C HEAD~13 &&
+		shit branch D HEAD~16 &&
+		shit branch E HEAD~18 &&
+		shit pack-objects --revs .shit/objects/pack/pack-A <<-EOF &&
 		refs/heads/A
 		^refs/heads/B
 		EOF
-		git pack-objects --revs .git/objects/pack/pack-B <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-B <<-EOF &&
 		refs/heads/B
 		^refs/heads/C
 		EOF
-		git pack-objects --revs .git/objects/pack/pack-C <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-C <<-EOF &&
 		refs/heads/C
 		^refs/heads/D
 		EOF
-		git pack-objects --revs .git/objects/pack/pack-D <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-D <<-EOF &&
 		refs/heads/D
 		^refs/heads/E
 		EOF
-		git pack-objects --revs .git/objects/pack/pack-E <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-E <<-EOF &&
 		refs/heads/E
 		EOF
-		git multi-pack-index write &&
-		cp -r .git/objects/pack .git/objects/pack-backup
+		shit multi-pack-index write &&
+		cp -r .shit/objects/pack .shit/objects/pack-backup
 	)
 '
 
 test_expect_success 'expire does not remove any packs' '
 	(
 		cd dup &&
-		ls .git/objects/pack >expect &&
-		git multi-pack-index expire &&
-		ls .git/objects/pack >actual &&
+		ls .shit/objects/pack >expect &&
+		shit multi-pack-index expire &&
+		ls .shit/objects/pack >actual &&
 		test_cmp expect actual
 	)
 '
@@ -709,7 +709,7 @@ test_expect_success 'expire does not remove any packs' '
 test_expect_success 'expire progress off for redirected stderr' '
 	(
 		cd dup &&
-		git multi-pack-index expire 2>err &&
+		shit multi-pack-index expire 2>err &&
 		test_line_count = 0 err
 	)
 '
@@ -717,7 +717,7 @@ test_expect_success 'expire progress off for redirected stderr' '
 test_expect_success 'expire force progress on for stderr' '
 	(
 		cd dup &&
-		GIT_PROGRESS_DELAY=0 git multi-pack-index expire --progress 2>err &&
+		shit_PROGRESS_DELAY=0 shit multi-pack-index expire --progress 2>err &&
 		test_file_not_empty err
 	)
 '
@@ -725,7 +725,7 @@ test_expect_success 'expire force progress on for stderr' '
 test_expect_success 'expire with the --no-progress option' '
 	(
 		cd dup &&
-		GIT_PROGRESS_DELAY=0 git multi-pack-index expire --no-progress 2>err &&
+		shit_PROGRESS_DELAY=0 shit multi-pack-index expire --no-progress 2>err &&
 		test_line_count = 0 err
 	)
 '
@@ -733,63 +733,63 @@ test_expect_success 'expire with the --no-progress option' '
 test_expect_success 'expire removes unreferenced packs' '
 	(
 		cd dup &&
-		git pack-objects --revs .git/objects/pack/pack-combined <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-combined <<-EOF &&
 		refs/heads/A
 		^refs/heads/C
 		EOF
-		git multi-pack-index write &&
-		ls .git/objects/pack | grep -v -e pack-[AB] >expect &&
-		git multi-pack-index expire &&
-		ls .git/objects/pack >actual &&
+		shit multi-pack-index write &&
+		ls .shit/objects/pack | grep -v -e pack-[AB] >expect &&
+		shit multi-pack-index expire &&
+		ls .shit/objects/pack >actual &&
 		test_cmp expect actual &&
-		ls .git/objects/pack/ | grep idx >expect-idx &&
-		test-tool read-midx .git/objects | grep idx >actual-midx &&
+		ls .shit/objects/pack/ | grep idx >expect-idx &&
+		test-tool read-midx .shit/objects | grep idx >actual-midx &&
 		test_cmp expect-idx actual-midx &&
-		git multi-pack-index verify &&
-		git fsck
+		shit multi-pack-index verify &&
+		shit fsck
 	)
 '
 
 test_expect_success 'repack with minimum size does not alter existing packs' '
 	(
 		cd dup &&
-		rm -rf .git/objects/pack &&
-		mv .git/objects/pack-backup .git/objects/pack &&
-		test-tool chmtime =-5 .git/objects/pack/pack-D* &&
-		test-tool chmtime =-4 .git/objects/pack/pack-C* &&
-		test-tool chmtime =-3 .git/objects/pack/pack-B* &&
-		test-tool chmtime =-2 .git/objects/pack/pack-A* &&
-		ls .git/objects/pack >expect &&
-		MINSIZE=$(test-tool path-utils file-size .git/objects/pack/*pack | sort -n | head -n 1) &&
-		git multi-pack-index repack --batch-size=$MINSIZE &&
-		ls .git/objects/pack >actual &&
+		rm -rf .shit/objects/pack &&
+		mv .shit/objects/pack-backup .shit/objects/pack &&
+		test-tool chmtime =-5 .shit/objects/pack/pack-D* &&
+		test-tool chmtime =-4 .shit/objects/pack/pack-C* &&
+		test-tool chmtime =-3 .shit/objects/pack/pack-B* &&
+		test-tool chmtime =-2 .shit/objects/pack/pack-A* &&
+		ls .shit/objects/pack >expect &&
+		MINSIZE=$(test-tool path-utils file-size .shit/objects/pack/*pack | sort -n | head -n 1) &&
+		shit multi-pack-index repack --batch-size=$MINSIZE &&
+		ls .shit/objects/pack >actual &&
 		test_cmp expect actual
 	)
 '
 
 test_expect_success 'repack respects repack.packKeptObjects=false' '
-	test_when_finished rm -f dup/.git/objects/pack/*keep &&
+	test_when_finished rm -f dup/.shit/objects/pack/*keep &&
 	(
 		cd dup &&
-		ls .git/objects/pack/*idx >idx-list &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 5 idx-list &&
-		ls .git/objects/pack/*.pack | sed "s/\.pack/.keep/" >keep-list &&
+		ls .shit/objects/pack/*.pack | sed "s/\.pack/.keep/" >keep-list &&
 		test_line_count = 5 keep-list &&
 		for keep in $(cat keep-list)
 		do
 			touch $keep || return 1
 		done &&
-		git multi-pack-index repack --batch-size=0 &&
-		ls .git/objects/pack/*idx >idx-list &&
+		shit multi-pack-index repack --batch-size=0 &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 5 idx-list &&
-		test-tool read-midx .git/objects | grep idx >midx-list &&
+		test-tool read-midx .shit/objects | grep idx >midx-list &&
 		test_line_count = 5 midx-list &&
-		THIRD_SMALLEST_SIZE=$(test-tool path-utils file-size .git/objects/pack/*pack | sort -n | sed -n 3p) &&
+		THIRD_SMALLEST_SIZE=$(test-tool path-utils file-size .shit/objects/pack/*pack | sort -n | sed -n 3p) &&
 		BATCH_SIZE=$((THIRD_SMALLEST_SIZE + 1)) &&
-		git multi-pack-index repack --batch-size=$BATCH_SIZE &&
-		ls .git/objects/pack/*idx >idx-list &&
+		shit multi-pack-index repack --batch-size=$BATCH_SIZE &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 5 idx-list &&
-		test-tool read-midx .git/objects | grep idx >midx-list &&
+		test-tool read-midx .shit/objects | grep idx >midx-list &&
 		test_line_count = 5 midx-list
 	)
 '
@@ -797,20 +797,20 @@ test_expect_success 'repack respects repack.packKeptObjects=false' '
 test_expect_success 'repack creates a new pack' '
 	(
 		cd dup &&
-		ls .git/objects/pack/*idx >idx-list &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 5 idx-list &&
-		THIRD_SMALLEST_SIZE=$(test-tool path-utils file-size .git/objects/pack/*pack | sort -n | head -n 3 | tail -n 1) &&
+		THIRD_SMALLEST_SIZE=$(test-tool path-utils file-size .shit/objects/pack/*pack | sort -n | head -n 3 | tail -n 1) &&
 		BATCH_SIZE=$(($THIRD_SMALLEST_SIZE + 1)) &&
-		git multi-pack-index repack --batch-size=$BATCH_SIZE &&
-		ls .git/objects/pack/*idx >idx-list &&
+		shit multi-pack-index repack --batch-size=$BATCH_SIZE &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 6 idx-list &&
-		test-tool read-midx .git/objects | grep idx >midx-list &&
+		test-tool read-midx .shit/objects | grep idx >midx-list &&
 		test_line_count = 6 midx-list
 	)
 '
 
 test_expect_success 'repack (all) ignores cruft pack' '
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -fr repo" &&
 	(
 		cd repo &&
@@ -818,14 +818,14 @@ test_expect_success 'repack (all) ignores cruft pack' '
 		test_commit base &&
 		test_commit --no-tag unreachable &&
 
-		git reset --hard base &&
-		git reflog expire --all --expire=all &&
-		git repack --cruft -d &&
+		shit reset --hard base &&
+		shit reflog expire --all --expire=all &&
+		shit repack --cruft -d &&
 
-		git multi-pack-index write &&
+		shit multi-pack-index write &&
 
 		find $objdir/pack | sort >before &&
-		git multi-pack-index repack --batch-size=0 &&
+		shit multi-pack-index repack --batch-size=0 &&
 		find $objdir/pack | sort >after &&
 
 		test_cmp before after
@@ -833,7 +833,7 @@ test_expect_success 'repack (all) ignores cruft pack' '
 '
 
 test_expect_success 'repack (--batch-size) ignores cruft pack' '
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -fr repo" &&
 	(
 		cd repo &&
@@ -841,14 +841,14 @@ test_expect_success 'repack (--batch-size) ignores cruft pack' '
 		test_commit_bulk 5 &&
 		test_commit --no-tag unreachable &&
 
-		git reset --hard HEAD^ &&
-		git reflog expire --all --expire=all &&
-		git repack --cruft -d &&
+		shit reset --hard HEAD^ &&
+		shit reflog expire --all --expire=all &&
+		shit repack --cruft -d &&
 
 		test_commit four &&
 
 		find $objdir/pack -type f -name "*.pack" | sort >before &&
-		git repack -d &&
+		shit repack -d &&
 		find $objdir/pack -type f -name "*.pack" | sort >after &&
 
 		pack="$(comm -13 before after)" &&
@@ -863,10 +863,10 @@ test_expect_success 'repack (--batch-size) ignores cruft pack' '
 		# We ensure that it does not below.
 		batch="$((($(cat sz) * 2)))" &&
 
-		git multi-pack-index write &&
+		shit multi-pack-index write &&
 
 		find $objdir/pack | sort >before &&
-		git multi-pack-index repack --batch-size=$batch &&
+		shit multi-pack-index repack --batch-size=$batch &&
 		find $objdir/pack | sort >after &&
 
 		test_cmp before after
@@ -876,12 +876,12 @@ test_expect_success 'repack (--batch-size) ignores cruft pack' '
 test_expect_success 'expire removes repacked packs' '
 	(
 		cd dup &&
-		ls -al .git/objects/pack/*pack &&
-		ls -S .git/objects/pack/*pack | head -n 4 >expect &&
-		git multi-pack-index expire &&
-		ls -S .git/objects/pack/*pack >actual &&
+		ls -al .shit/objects/pack/*pack &&
+		ls -S .shit/objects/pack/*pack | head -n 4 >expect &&
+		shit multi-pack-index expire &&
+		ls -S .shit/objects/pack/*pack >actual &&
 		test_cmp expect actual &&
-		test-tool read-midx .git/objects | grep idx >midx-list &&
+		test-tool read-midx .shit/objects | grep idx >midx-list &&
 		test_line_count = 4 midx-list
 	)
 '
@@ -889,78 +889,78 @@ test_expect_success 'expire removes repacked packs' '
 test_expect_success 'expire works when adding new packs' '
 	(
 		cd dup &&
-		git pack-objects --revs .git/objects/pack/pack-combined <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-combined <<-EOF &&
 		refs/heads/A
 		^refs/heads/B
 		EOF
-		git pack-objects --revs .git/objects/pack/pack-combined <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-combined <<-EOF &&
 		refs/heads/B
 		^refs/heads/C
 		EOF
-		git pack-objects --revs .git/objects/pack/pack-combined <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-combined <<-EOF &&
 		refs/heads/C
 		^refs/heads/D
 		EOF
-		git multi-pack-index write &&
-		git pack-objects --revs .git/objects/pack/a-pack <<-EOF &&
+		shit multi-pack-index write &&
+		shit pack-objects --revs .shit/objects/pack/a-pack <<-EOF &&
 		refs/heads/D
 		^refs/heads/E
 		EOF
-		git multi-pack-index write &&
-		git pack-objects --revs .git/objects/pack/z-pack <<-EOF &&
+		shit multi-pack-index write &&
+		shit pack-objects --revs .shit/objects/pack/z-pack <<-EOF &&
 		refs/heads/E
 		EOF
-		git multi-pack-index expire &&
-		ls .git/objects/pack/ | grep idx >expect &&
-		test-tool read-midx .git/objects | grep idx >actual &&
+		shit multi-pack-index expire &&
+		ls .shit/objects/pack/ | grep idx >expect &&
+		test-tool read-midx .shit/objects | grep idx >actual &&
 		test_cmp expect actual &&
-		git multi-pack-index verify
+		shit multi-pack-index verify
 	)
 '
 
 test_expect_success 'expire respects .keep files' '
 	(
 		cd dup &&
-		git pack-objects --revs .git/objects/pack/pack-all <<-EOF &&
+		shit pack-objects --revs .shit/objects/pack/pack-all <<-EOF &&
 		refs/heads/A
 		EOF
-		git multi-pack-index write &&
-		PACKA=$(ls .git/objects/pack/a-pack*\.pack | sed s/\.pack\$//) &&
+		shit multi-pack-index write &&
+		PACKA=$(ls .shit/objects/pack/a-pack*\.pack | sed s/\.pack\$//) &&
 		touch $PACKA.keep &&
-		git multi-pack-index expire &&
+		shit multi-pack-index expire &&
 		test_path_is_file $PACKA.idx &&
 		test_path_is_file $PACKA.keep &&
 		test_path_is_file $PACKA.pack &&
-		test-tool read-midx .git/objects | grep idx >midx-list &&
+		test-tool read-midx .shit/objects | grep idx >midx-list &&
 		test_line_count = 2 midx-list
 	)
 '
 
 test_expect_success 'expiring unreferenced cruft pack retains pack' '
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -fr repo" &&
 	(
 		cd repo &&
 
 		test_commit base &&
 		test_commit --no-tag unreachable &&
-		unreachable=$(git rev-parse HEAD) &&
+		unreachable=$(shit rev-parse HEAD) &&
 
-		git reset --hard base &&
-		git reflog expire --all --expire=all &&
-		git repack --cruft -d &&
+		shit reset --hard base &&
+		shit reflog expire --all --expire=all &&
+		shit repack --cruft -d &&
 		mtimes="$(ls $objdir/pack/pack-*.mtimes)" &&
 
 		echo "base..$unreachable" >in &&
-		pack="$(git pack-objects --revs --delta-base-offset \
+		pack="$(shit pack-objects --revs --delta-base-offset \
 			$objdir/pack/pack <in)" &&
 
 		# Preferring the contents of "$pack" will leave the
 		# cruft pack unreferenced (ie., none of the objects
 		# contained in the cruft pack will have their MIDX copy
 		# selected from the cruft pack).
-		git multi-pack-index write --preferred-pack="pack-$pack.pack" &&
-		git multi-pack-index expire &&
+		shit multi-pack-index write --preferred-pack="pack-$pack.pack" &&
+		shit multi-pack-index expire &&
 
 		test_path_is_file "$mtimes"
 	)
@@ -970,19 +970,19 @@ test_expect_success 'repack --batch-size=0 repacks everything' '
 	cp -r dup dup2 &&
 	(
 		cd dup &&
-		rm .git/objects/pack/*.keep &&
-		ls .git/objects/pack/*idx >idx-list &&
+		rm .shit/objects/pack/*.keep &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 2 idx-list &&
-		git multi-pack-index repack --batch-size=0 &&
-		ls .git/objects/pack/*idx >idx-list &&
+		shit multi-pack-index repack --batch-size=0 &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 3 idx-list &&
-		test-tool read-midx .git/objects | grep idx >midx-list &&
+		test-tool read-midx .shit/objects | grep idx >midx-list &&
 		test_line_count = 3 midx-list &&
-		git multi-pack-index expire &&
-		ls -al .git/objects/pack/*idx >idx-list &&
+		shit multi-pack-index expire &&
+		ls -al .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 1 idx-list &&
-		git multi-pack-index repack --batch-size=0 &&
-		ls -al .git/objects/pack/*idx >new-idx-list &&
+		shit multi-pack-index repack --batch-size=0 &&
+		ls -al .shit/objects/pack/*idx >new-idx-list &&
 		test_cmp idx-list new-idx-list
 	)
 '
@@ -990,82 +990,82 @@ test_expect_success 'repack --batch-size=0 repacks everything' '
 test_expect_success 'repack --batch-size=<large> repacks everything' '
 	(
 		cd dup2 &&
-		rm .git/objects/pack/*.keep &&
-		ls .git/objects/pack/*idx >idx-list &&
+		rm .shit/objects/pack/*.keep &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 2 idx-list &&
-		git multi-pack-index repack --batch-size=2000000 &&
-		ls .git/objects/pack/*idx >idx-list &&
+		shit multi-pack-index repack --batch-size=2000000 &&
+		ls .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 3 idx-list &&
-		test-tool read-midx .git/objects | grep idx >midx-list &&
+		test-tool read-midx .shit/objects | grep idx >midx-list &&
 		test_line_count = 3 midx-list &&
-		git multi-pack-index expire &&
-		ls -al .git/objects/pack/*idx >idx-list &&
+		shit multi-pack-index expire &&
+		ls -al .shit/objects/pack/*idx >idx-list &&
 		test_line_count = 1 idx-list
 	)
 '
 
 test_expect_success 'load reverse index when missing .idx, .pack' '
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -fr repo" &&
 	(
 		cd repo &&
 
-		git config core.multiPackIndex true &&
+		shit config core.multiPackIndex true &&
 
 		test_commit base &&
-		git repack -ad &&
-		git multi-pack-index write &&
+		shit repack -ad &&
+		shit multi-pack-index write &&
 
-		git rev-parse HEAD >tip &&
-		pack=$(ls .git/objects/pack/pack-*.pack) &&
-		idx=$(ls .git/objects/pack/pack-*.idx) &&
+		shit rev-parse HEAD >tip &&
+		pack=$(ls .shit/objects/pack/pack-*.pack) &&
+		idx=$(ls .shit/objects/pack/pack-*.idx) &&
 
 		mv $idx $idx.bak &&
-		git cat-file --batch-check="%(objectsize:disk)" <tip &&
+		shit cat-file --batch-check="%(objectsize:disk)" <tip &&
 
 		mv $idx.bak $idx &&
 
 		mv $pack $pack.bak &&
-		git cat-file --batch-check="%(objectsize:disk)" <tip
+		shit cat-file --batch-check="%(objectsize:disk)" <tip
 	)
 '
 
 test_expect_success 'usage shown without sub-command' '
-	test_expect_code 129 git multi-pack-index 2>err &&
+	test_expect_code 129 shit multi-pack-index 2>err &&
 	! test_grep "unrecognized subcommand" err
 '
 
 test_expect_success 'complains when run outside of a repository' '
-	nongit test_must_fail git multi-pack-index write 2>err &&
-	grep "not a git repository" err
+	nonshit test_must_fail shit multi-pack-index write 2>err &&
+	grep "not a shit repository" err
 '
 
 test_expect_success 'repack with delta islands' '
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -fr repo" &&
 	(
 		cd repo &&
 
 		test_commit first &&
-		git repack &&
+		shit repack &&
 		test_commit second &&
-		git repack &&
+		shit repack &&
 
-		git multi-pack-index write &&
-		git -c repack.useDeltaIslands=true multi-pack-index repack
+		shit multi-pack-index write &&
+		shit -c repack.useDeltaIslands=true multi-pack-index repack
 	)
 '
 
 corrupt_chunk () {
-	midx=.git/objects/pack/multi-pack-index &&
+	midx=.shit/objects/pack/multi-pack-index &&
 	test_when_finished "rm -rf $midx" &&
-	git repack -ad --write-midx &&
+	shit repack -ad --write-midx &&
 	corrupt_chunk_file $midx "$@"
 }
 
 test_expect_success 'reader notices too-small oid fanout chunk' '
 	corrupt_chunk OIDF clear 00000000 &&
-	test_must_fail git log 2>err &&
+	test_must_fail shit log 2>err &&
 	cat >expect <<-\EOF &&
 	error: multi-pack-index OID fanout is of the wrong size
 	fatal: multi-pack-index required OID fanout chunk missing or corrupted
@@ -1075,7 +1075,7 @@ test_expect_success 'reader notices too-small oid fanout chunk' '
 
 test_expect_success 'reader notices too-small oid lookup chunk' '
 	corrupt_chunk OIDL clear 00000000 &&
-	test_must_fail git log 2>err &&
+	test_must_fail shit log 2>err &&
 	cat >expect <<-\EOF &&
 	error: multi-pack-index OID lookup chunk is the wrong size
 	fatal: multi-pack-index required OID lookup chunk missing or corrupted
@@ -1087,7 +1087,7 @@ test_expect_success 'reader notices too-small pack names chunk' '
 	# There is no NUL to terminate the name here, so the
 	# chunk is too short.
 	corrupt_chunk PNAM clear 70656666 &&
-	test_must_fail git log 2>err &&
+	test_must_fail shit log 2>err &&
 	cat >expect <<-\EOF &&
 	fatal: multi-pack-index pack-name chunk is too short
 	EOF
@@ -1099,8 +1099,8 @@ test_expect_success 'reader handles unaligned chunks' '
 	# will no longer be 4-byte aligned, but it is still
 	# a valid one-pack chunk on its own (it is "foo.pack\0").
 	corrupt_chunk PNAM clear 666f6f2e7061636b00 &&
-	git -c core.multipackindex=false log >expect.out &&
-	git -c core.multipackindex=true log >out 2>err &&
+	shit -c core.multipackindex=false log >expect.out &&
+	shit -c core.multipackindex=true log >out 2>err &&
 	test_cmp expect.out out &&
 	cat >expect.err <<-\EOF &&
 	error: chunk id 4f494446 not 4-byte aligned
@@ -1110,7 +1110,7 @@ test_expect_success 'reader handles unaligned chunks' '
 
 test_expect_success 'reader notices too-small object offset chunk' '
 	corrupt_chunk OOFF clear 00000000 &&
-	test_must_fail git log 2>err &&
+	test_must_fail shit log 2>err &&
 	cat >expect <<-\EOF &&
 	error: multi-pack-index object offset chunk is the wrong size
 	fatal: multi-pack-index required object offsets chunk missing or corrupted
@@ -1121,17 +1121,17 @@ test_expect_success 'reader notices too-small object offset chunk' '
 test_expect_success 'reader bounds-checks large offset table' '
 	# re-use the objects64 dir here to cheaply get access to a midx
 	# with large offsets.
-	git init repo &&
+	shit init repo &&
 	test_when_finished "rm -rf repo" &&
 	(
 		cd repo &&
-		(cd ../objects64 && pwd) >.git/objects/info/alternates &&
-		git multi-pack-index --object-dir=../objects64 write &&
+		(cd ../objects64 && pwd) >.shit/objects/info/alternates &&
+		shit multi-pack-index --object-dir=../objects64 write &&
 		midx=../objects64/pack/multi-pack-index &&
 		corrupt_chunk_file $midx LOFF clear &&
 		# using only %(objectsize) is important here; see the commit
 		# message for more details
-		test_must_fail git cat-file --batch-all-objects \
+		test_must_fail shit cat-file --batch-all-objects \
 			--batch-check="%(objectsize)" 2>err &&
 		cat >expect <<-\EOF &&
 		fatal: multi-pack-index large offset out of bounds
@@ -1145,9 +1145,9 @@ test_expect_success 'reader notices too-small revindex chunk' '
 	# load it when they are asked for).
 	test_config repack.writeBitmaps true &&
 	corrupt_chunk RIDX clear 00000000 &&
-	git -c core.multipackIndex=false rev-list \
+	shit -c core.multipackIndex=false rev-list \
 		--all --use-bitmap-index >expect.out &&
-	git -c core.multipackIndex=true rev-list \
+	shit -c core.multipackIndex=true rev-list \
 		--all --use-bitmap-index >out 2>err &&
 	test_cmp expect.out out &&
 	cat >expect.err <<-\EOF &&
@@ -1163,7 +1163,7 @@ test_expect_success 'reader notices out-of-bounds fanout' '
 	# are used as hi/lo starts for a binary search, which would then abort
 	# immediately).
 	corrupt_chunk OIDF 0 $(printf "%02x000000" $(test_seq 0 254)) &&
-	test_must_fail git log 2>err &&
+	test_must_fail shit log 2>err &&
 	cat >expect <<-\EOF &&
 	error: oid fanout out of order: fanout[254] = fe000000 > 5c = fanout[255]
 	fatal: multi-pack-index required OID fanout chunk missing or corrupted
@@ -1173,27 +1173,27 @@ test_expect_success 'reader notices out-of-bounds fanout' '
 
 test_expect_success 'bitmapped packs are stored via the BTMP chunk' '
 	test_when_finished "rm -fr repo" &&
-	git init repo &&
+	shit init repo &&
 	(
 		cd repo &&
 
 		for i in 1 2 3 4 5
 		do
 			test_commit "$i" &&
-			git repack -d || return 1
+			shit repack -d || return 1
 		done &&
 
 		find $objdir/pack -type f -name "*.idx" | xargs -n 1 basename |
 		sort >packs &&
 
-		git multi-pack-index write --stdin-packs <packs &&
+		shit multi-pack-index write --stdin-packs <packs &&
 		test_must_fail test-tool read-midx --bitmap $objdir 2>err &&
 		cat >expect <<-\EOF &&
 		error: MIDX does not contain the BTMP chunk
 		EOF
 		test_cmp expect err &&
 
-		git multi-pack-index write --stdin-packs --bitmap \
+		shit multi-pack-index write --stdin-packs --bitmap \
 			--preferred-pack="$(head -n1 <packs)" <packs  &&
 		test-tool read-midx --bitmap $objdir >actual &&
 		for i in $(test_seq $(wc -l <packs))

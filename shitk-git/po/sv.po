@@ -1,0 +1,1413 @@
+# Swedish translation for shitk
+# Copyright (C) 2005-2015 Paul Mackerras
+# This file is distributed under the same license as the shitk package.
+#
+# Mikael Magnusson <mikachu@gmail.com>, 2008.
+# Peter Krefting <peter@softwolves.pp.se>, 2008, 2009, 2010, 2012, 2013, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sv\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-09 09:40+0100\n"
+"PO-Revision-Date: 2015-12-11 09:46+0100\n"
+"Last-Translator: Peter Krefting <peter@softwolves.pp.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#: shitk:140
+msgid "Couldn't get list of unmerged files:"
+msgstr "Kunde inte hämta lista över ej sammanslagna filer:"
+
+#: shitk:212 shitk:2381
+msgid "Color words"
+msgstr "Färga ord"
+
+#: shitk:217 shitk:2381 shitk:8221 shitk:8254
+msgid "Markup words"
+msgstr "Märk upp ord"
+
+#: shitk:324
+msgid "Error parsing revisions:"
+msgstr "Fel vid tolkning av revisioner:"
+
+#: shitk:380
+msgid "Error executing --argscmd command:"
+msgstr "Fel vid körning av --argscmd-kommando:"
+
+#: shitk:393
+msgid "No files selected: --merge specified but no files are unmerged."
+msgstr ""
+"Inga filer valdes: --merge angavs men det finns inga filer som inte har "
+"slashits samman."
+
+#: shitk:396
+msgid ""
+"No files selected: --merge specified but no unmerged files are within file "
+"limit."
+msgstr ""
+"Inga filer valdes: --merge angavs men det finns inga filer inom "
+"filbegränsningen."
+
+#: shitk:418 shitk:566
+msgid "Error executing shit log:"
+msgstr "Fel vid körning av shit log:"
+
+#: shitk:436 shitk:582
+msgid "Reading"
+msgstr "Läser"
+
+#: shitk:496 shitk:4526
+msgid "Reading commits..."
+msgstr "Läser incheckningar..."
+
+#: shitk:499 shitk:1637 shitk:4529
+msgid "No commits selected"
+msgstr "Inga incheckningar markerade"
+
+#: shitk:1445 shitk:4046 shitk:12447
+msgid "Command line"
+msgstr "Kommandorad"
+
+#: shitk:1511
+msgid "Can't parse shit log output:"
+msgstr "Kan inte tolka utdata från shit log:"
+
+#: shitk:1740
+msgid "No commit information available"
+msgstr "Ingen incheckningsinformation är tillgänglig"
+
+#: shitk:1903 shitk:1932 shitk:4316 shitk:9684 shitk:11256 shitk:11536
+msgid "OK"
+msgstr "OK"
+
+#: shitk:1934 shitk:4318 shitk:9197 shitk:9276 shitk:9406 shitk:9455 shitk:9686
+#: shitk:11257 shitk:11537
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: shitk:2069
+msgid "&Update"
+msgstr "&Uppdatera"
+
+#: shitk:2070
+msgid "&Reload"
+msgstr "Läs &om"
+
+#: shitk:2071
+msgid "Reread re&ferences"
+msgstr "Läs om &referenser"
+
+#: shitk:2072
+msgid "&List references"
+msgstr "&Visa referenser"
+
+#: shitk:2074
+msgid "Start shit &gui"
+msgstr "Starta shit &gui"
+
+#: shitk:2076
+msgid "&Quit"
+msgstr "&Avsluta"
+
+#: shitk:2068
+msgid "&File"
+msgstr "&Arkiv"
+
+#: shitk:2080
+msgid "&Preferences"
+msgstr "&Inställningar"
+
+#: shitk:2079
+msgid "&Edit"
+msgstr "&Redigera"
+
+#: shitk:2084
+msgid "&New view..."
+msgstr "&Ny vy..."
+
+#: shitk:2085
+msgid "&Edit view..."
+msgstr "&Ändra vy..."
+
+#: shitk:2086
+msgid "&Delete view"
+msgstr "&Ta bort vy"
+
+#: shitk:2088
+msgid "&All files"
+msgstr "&Alla filer"
+
+#: shitk:2083
+msgid "&View"
+msgstr "&Visa"
+
+#: shitk:2093 shitk:2103
+msgid "&About shitk"
+msgstr "&Om shitk"
+
+#: shitk:2094 shitk:2108
+msgid "&Key bindings"
+msgstr "&Tangentbordsbindningar"
+
+#: shitk:2092 shitk:2107
+msgid "&Help"
+msgstr "&Hjälp"
+
+#: shitk:2185 shitk:8653
+msgid "SHA1 ID:"
+msgstr "SHA1-id:"
+
+#: shitk:2229
+msgid "Row"
+msgstr "Rad"
+
+#: shitk:2267
+msgid "Find"
+msgstr "Sök"
+
+#: shitk:2295
+msgid "commit"
+msgstr "incheckning"
+
+#: shitk:2299 shitk:2301 shitk:4688 shitk:4711 shitk:4735 shitk:6756 shitk:6828
+#: shitk:6913
+msgid "containing:"
+msgstr "som innehåller:"
+
+#: shitk:2302 shitk:3527 shitk:3532 shitk:4764
+msgid "touching paths:"
+msgstr "som rör sökväg:"
+
+#: shitk:2303 shitk:4778
+msgid "adding/removing string:"
+msgstr "som lägger/till tar bort sträng:"
+
+#: shitk:2304 shitk:4780
+msgid "changing lines matching:"
+msgstr "ändrar rader som matchar:"
+
+#: shitk:2313 shitk:2315 shitk:4767
+msgid "Exact"
+msgstr "Exakt"
+
+#: shitk:2315 shitk:4855 shitk:6724
+msgid "IgnCase"
+msgstr "IgnVersaler"
+
+#: shitk:2315 shitk:4737 shitk:4853 shitk:6720
+msgid "Regexp"
+msgstr "Reg.uttr."
+
+#: shitk:2317 shitk:2318 shitk:4875 shitk:4905 shitk:4912 shitk:6849 shitk:6917
+msgid "All fields"
+msgstr "Alla fält"
+
+#: shitk:2318 shitk:4872 shitk:4905 shitk:6787
+msgid "Headline"
+msgstr "Rubrik"
+
+#: shitk:2319 shitk:4872 shitk:6787 shitk:6917 shitk:7390
+msgid "Comments"
+msgstr "Kommentarer"
+
+#: shitk:2319 shitk:4872 shitk:4877 shitk:4912 shitk:6787 shitk:7325 shitk:8831
+#: shitk:8846
+msgid "Author"
+msgstr "Författare"
+
+#: shitk:2319 shitk:4872 shitk:6787 shitk:7327
+msgid "Committer"
+msgstr "Incheckare"
+
+#: shitk:2350
+msgid "Search"
+msgstr "Sök"
+
+#: shitk:2358
+msgid "Diff"
+msgstr "Diff"
+
+#: shitk:2360
+msgid "Old version"
+msgstr "Gammal version"
+
+#: shitk:2362
+msgid "New version"
+msgstr "Ny version"
+
+#: shitk:2364
+msgid "Lines of context"
+msgstr "Rader sammanhang"
+
+#: shitk:2374
+msgid "Ignore space change"
+msgstr "Ignorera ändringar i blanksteg"
+
+#: shitk:2378 shitk:2380 shitk:7960 shitk:8207
+msgid "Line diff"
+msgstr "Rad-diff"
+
+#: shitk:2445
+msgid "Patch"
+msgstr "Patch"
+
+#: shitk:2447
+msgid "Tree"
+msgstr "Träd"
+
+#: shitk:2617 shitk:2638
+msgid "Diff this -> selected"
+msgstr "Diff denna -> markerad"
+
+#: shitk:2618 shitk:2639
+msgid "Diff selected -> this"
+msgstr "Diff markerad -> denna"
+
+#: shitk:2619 shitk:2640
+msgid "Make patch"
+msgstr "Skapa patch"
+
+#: shitk:2620 shitk:9255
+msgid "Create tag"
+msgstr "Skapa tagg"
+
+#: shitk:2621
+msgid "Copy commit summary"
+msgstr "Kopiera incheckningssammanfattning"
+
+#: shitk:2622 shitk:9386
+msgid "Write commit to file"
+msgstr "Skriv incheckning till fil"
+
+#: shitk:2623 shitk:9443
+msgid "Create new branch"
+msgstr "Skapa ny gren"
+
+#: shitk:2624
+msgid "Cherry-pick this commit"
+msgstr "Plocka denna incheckning"
+
+#: shitk:2625
+msgid "Reset HEAD branch to here"
+msgstr "Återställ HEAD-grenen hit"
+
+#: shitk:2626
+msgid "Mark this commit"
+msgstr "Markera denna incheckning"
+
+#: shitk:2627
+msgid "Return to mark"
+msgstr "Återgå till markering"
+
+#: shitk:2628
+msgid "Find descendant of this and mark"
+msgstr "Hitta efterföljare till denna och markera"
+
+#: shitk:2629
+msgid "Compare with marked commit"
+msgstr "Jämför med markerad incheckning"
+
+#: shitk:2630 shitk:2641
+msgid "Diff this -> marked commit"
+msgstr "Diff denna -> markerad incheckning"
+
+#: shitk:2631 shitk:2642
+msgid "Diff marked commit -> this"
+msgstr "Diff markerad incheckning -> denna"
+
+#: shitk:2632
+msgid "Revert this commit"
+msgstr "Ångra denna incheckning"
+
+#: shitk:2648
+msgid "Check out this branch"
+msgstr "Checka ut denna gren"
+
+#: shitk:2649
+msgid "Remove this branch"
+msgstr "Ta bort denna gren"
+
+#: shitk:2650
+msgid "Copy branch name"
+msgstr "Kopiera namn på gren"
+
+#: shitk:2657
+msgid "Highlight this too"
+msgstr "Markera även detta"
+
+#: shitk:2658
+msgid "Highlight this only"
+msgstr "Markera bara detta"
+
+#: shitk:2659
+msgid "External diff"
+msgstr "Extern diff"
+
+#: shitk:2660
+msgid "Blame parent commit"
+msgstr "Klandra föräldraincheckning"
+
+#: shitk:2661
+msgid "Copy path"
+msgstr "Kopiera sökväg"
+
+#: shitk:2668
+msgid "Show origin of this line"
+msgstr "Visa ursprunget för den här raden"
+
+#: shitk:2669
+msgid "Run shit gui blame on this line"
+msgstr "Kör shit gui blame på den här raden"
+
+#: shitk:3013
+msgid "About shitk"
+msgstr "Om shitk"
+
+#: shitk:3015
+msgid ""
+"\n"
+"shitk - a commit viewer for shit\n"
+"\n"
+"Copyright © 2005-2016 Paul Mackerras\n"
+"\n"
+"Use and redistribute under the terms of the GNU General Public License"
+msgstr ""
+"\n"
+"shitk - en incheckningsvisare för shit\n"
+"\n"
+"Copyright © 2005-2016 Paul Mackerras\n"
+"\n"
+"Använd och vidareförmedla enligt villkoren i GNU General Public License"
+
+#: shitk:3023 shitk:3090 shitk:9872
+msgid "Close"
+msgstr "Stäng"
+
+#: shitk:3044
+msgid "shitk key bindings"
+msgstr "Tangentbordsbindningar för shitk"
+
+#: shitk:3047
+msgid "shitk key bindings:"
+msgstr "Tangentbordsbindningar för shitk:"
+
+#: shitk:3049
+#, tcl-format
+msgid "<%s-Q>\t\tQuit"
+msgstr "<%s-Q>\t\tAvsluta"
+
+#: shitk:3050
+#, tcl-format
+msgid "<%s-W>\t\tClose window"
+msgstr "<%s-W>\t\tStäng fönster"
+
+#: shitk:3051
+msgid "<Home>\t\tMove to first commit"
+msgstr "<Home>\t\tGå till första incheckning"
+
+#: shitk:3052
+msgid "<End>\t\tMove to last commit"
+msgstr "<End>\t\tGå till sista incheckning"
+
+#: shitk:3053
+msgid "<Up>, p, k\tMove up one commit"
+msgstr "<Upp>, p, k\tGå en incheckning upp"
+
+#: shitk:3054
+msgid "<Down>, n, j\tMove down one commit"
+msgstr "<Ned>, n, j\tGå en incheckning ned"
+
+#: shitk:3055
+msgid "<Left>, z, h\tGo back in history list"
+msgstr "<Vänster>, z, h\tGå bakåt i historiken"
+
+#: shitk:3056
+msgid "<Right>, x, l\tGo forward in history list"
+msgstr "<Höger>, x, l\tGå framåt i historiken"
+
+#: shitk:3057
+#, tcl-format
+msgid "<%s-n>\tGo to n-th parent of current commit in history list"
+msgstr "<%s-n>\tGå till aktuell inchecknings n:te förälder i historielistan"
+
+#: shitk:3058
+msgid "<PageUp>\tMove up one page in commit list"
+msgstr "<PageUp>\tGå upp en sida i incheckningslistan"
+
+#: shitk:3059
+msgid "<PageDown>\tMove down one page in commit list"
+msgstr "<PageDown>\tGå ned en sida i incheckningslistan"
+
+#: shitk:3060
+#, tcl-format
+msgid "<%s-Home>\tScroll to top of commit list"
+msgstr "<%s-Home>\tRulla till början av incheckningslistan"
+
+#: shitk:3061
+#, tcl-format
+msgid "<%s-End>\tScroll to bottom of commit list"
+msgstr "<%s-End>\tRulla till slutet av incheckningslistan"
+
+#: shitk:3062
+#, tcl-format
+msgid "<%s-Up>\tScroll commit list up one line"
+msgstr "<%s-Upp>\tRulla incheckningslistan upp ett steg"
+
+#: shitk:3063
+#, tcl-format
+msgid "<%s-Down>\tScroll commit list down one line"
+msgstr "<%s-Ned>\tRulla incheckningslistan ned ett steg"
+
+#: shitk:3064
+#, tcl-format
+msgid "<%s-PageUp>\tScroll commit list up one page"
+msgstr "<%s-PageUp>\tRulla incheckningslistan upp en sida"
+
+#: shitk:3065
+#, tcl-format
+msgid "<%s-PageDown>\tScroll commit list down one page"
+msgstr "<%s-PageDown>\tRulla incheckningslistan ned en sida"
+
+#: shitk:3066
+msgid "<Shift-Up>\tFind backwards (upwards, later commits)"
+msgstr "<Skift-Upp>\tSök bakåt (uppåt, senare incheckningar)"
+
+#: shitk:3067
+msgid "<Shift-Down>\tFind forwards (downwards, earlier commits)"
+msgstr "<Skift-Ned>\tSök framåt (nedåt, tidigare incheckningar)"
+
+#: shitk:3068
+msgid "<Delete>, b\tScroll diff view up one page"
+msgstr "<Delete>, b\tRulla diffvisningen upp en sida"
+
+#: shitk:3069
+msgid "<Backspace>\tScroll diff view up one page"
+msgstr "<Baksteg>\tRulla diffvisningen upp en sida"
+
+#: shitk:3070
+msgid "<Space>\t\tScroll diff view down one page"
+msgstr "<Blanksteg>\tRulla diffvisningen ned en sida"
+
+#: shitk:3071
+msgid "u\t\tScroll diff view up 18 lines"
+msgstr "u\t\tRulla diffvisningen upp 18 rader"
+
+#: shitk:3072
+msgid "d\t\tScroll diff view down 18 lines"
+msgstr "d\t\tRulla diffvisningen ned 18 rader"
+
+#: shitk:3073
+#, tcl-format
+msgid "<%s-F>\t\tFind"
+msgstr "<%s-F>\t\tSök"
+
+#: shitk:3074
+#, tcl-format
+msgid "<%s-G>\t\tMove to next find hit"
+msgstr "<%s-G>\t\tGå till nästa sökträff"
+
+#: shitk:3075
+msgid "<Return>\tMove to next find hit"
+msgstr "<Return>\t\tGå till nästa sökträff"
+
+#: shitk:3076
+msgid "g\t\tGo to commit"
+msgstr "g\t\tGå till incheckning"
+
+#: shitk:3077
+msgid "/\t\tFocus the search box"
+msgstr "/\t\tFokusera sökrutan"
+
+#: shitk:3078
+msgid "?\t\tMove to previous find hit"
+msgstr "?\t\tGå till föregående sökträff"
+
+#: shitk:3079
+msgid "f\t\tScroll diff view to next file"
+msgstr "f\t\tRulla diffvisningen till nästa fil"
+
+#: shitk:3080
+#, tcl-format
+msgid "<%s-S>\t\tSearch for next hit in diff view"
+msgstr "<%s-S>\t\tGå till nästa sökträff i diffvisningen"
+
+#: shitk:3081
+#, tcl-format
+msgid "<%s-R>\t\tSearch for previous hit in diff view"
+msgstr "<%s-R>\t\tGå till föregående sökträff i diffvisningen"
+
+#: shitk:3082
+#, tcl-format
+msgid "<%s-KP+>\tIncrease font size"
+msgstr "<%s-Num+>\tÖka teckenstorlek"
+
+#: shitk:3083
+#, tcl-format
+msgid "<%s-plus>\tIncrease font size"
+msgstr "<%s-plus>\tÖka teckenstorlek"
+
+#: shitk:3084
+#, tcl-format
+msgid "<%s-KP->\tDecrease font size"
+msgstr "<%s-Num->\tMinska teckenstorlek"
+
+#: shitk:3085
+#, tcl-format
+msgid "<%s-minus>\tDecrease font size"
+msgstr "<%s-minus>\tMinska teckenstorlek"
+
+#: shitk:3086
+msgid "<F5>\t\tUpdate"
+msgstr "<F5>\t\tUppdatera"
+
+#: shitk:3551 shitk:3560
+#, tcl-format
+msgid "Error creating temporary directory %s:"
+msgstr "Fel vid skapande av temporär katalog %s:"
+
+#: shitk:3573
+#, tcl-format
+msgid "Error getting \"%s\" from %s:"
+msgstr "Fel vid hämtning av  \"%s\" från %s:"
+
+#: shitk:3636
+msgid "command failed:"
+msgstr "kommando misslyckades:"
+
+#: shitk:3785
+msgid "No such commit"
+msgstr "Incheckning saknas"
+
+#: shitk:3799
+msgid "shit gui blame: command failed:"
+msgstr "shit gui blame: kommando misslyckades:"
+
+#: shitk:3830
+#, tcl-format
+msgid "Couldn't read merge head: %s"
+msgstr "Kunde inte läsa sammanslagningshuvud: %s"
+
+#: shitk:3838
+#, tcl-format
+msgid "Error reading index: %s"
+msgstr "Fel vid läsning av index: %s"
+
+#: shitk:3863
+#, tcl-format
+msgid "Couldn't start shit blame: %s"
+msgstr "Kunde inte starta shit blame: %s"
+
+#: shitk:3866 shitk:6755
+msgid "Searching"
+msgstr "Söker"
+
+#: shitk:3898
+#, tcl-format
+msgid "Error running shit blame: %s"
+msgstr "Fel vid körning av shit blame: %s"
+
+#: shitk:3926
+#, tcl-format
+msgid "That line comes from commit %s,  which is not in this view"
+msgstr "Raden kommer från incheckningen %s, som inte finns i denna vy"
+
+#: shitk:3940
+msgid "External diff viewer failed:"
+msgstr "Externt diff-verktyg misslyckades:"
+
+#: shitk:4044
+msgid "All files"
+msgstr "Alla filer"
+
+#: shitk:4068
+msgid "View"
+msgstr "Visa"
+
+#: shitk:4071
+msgid "shitk view definition"
+msgstr "Definition av shitk-vy"
+
+#: shitk:4075
+msgid "Remember this view"
+msgstr "Spara denna vy"
+
+#: shitk:4076
+msgid "References (space separated list):"
+msgstr "Referenser (blankstegsavdelad lista):"
+
+#: shitk:4077
+msgid "Branches & tags:"
+msgstr "Grenar & taggar:"
+
+#: shitk:4078
+msgid "All refs"
+msgstr "Alla referenser"
+
+#: shitk:4079
+msgid "All (local) branches"
+msgstr "Alla (lokala) grenar"
+
+#: shitk:4080
+msgid "All tags"
+msgstr "Alla taggar"
+
+#: shitk:4081
+msgid "All remote-tracking branches"
+msgstr "Alla fjärrspårande grenar"
+
+#: shitk:4082
+msgid "Commit Info (regular expressions):"
+msgstr "Incheckningsinfo (reguljära uttryck):"
+
+#: shitk:4083
+msgid "Author:"
+msgstr "Författare:"
+
+#: shitk:4084
+msgid "Committer:"
+msgstr "Incheckare:"
+
+#: shitk:4085
+msgid "Commit Message:"
+msgstr "Incheckningsmeddelande:"
+
+#: shitk:4086
+msgid "Matches all Commit Info criteria"
+msgstr "Motsvarar alla kriterier för incheckningsinfo"
+
+#: shitk:4087
+msgid "Matches no Commit Info criteria"
+msgstr "Motsvarar inga kriterier för incheckningsinfo"
+
+#: shitk:4088
+msgid "Changes to Files:"
+msgstr "Ändringar av filer:"
+
+#: shitk:4089
+msgid "Fixed String"
+msgstr "Fast sträng"
+
+#: shitk:4090
+msgid "Regular Expression"
+msgstr "Reguljärt uttryck"
+
+#: shitk:4091
+msgid "Search string:"
+msgstr "Söksträng:"
+
+#: shitk:4092
+msgid ""
+"Commit Dates (\"2 weeks ago\", \"2009-03-17 15:27:38\", \"March 17, 2009 "
+"15:27:38\"):"
+msgstr ""
+"Incheckingsdatum (\"2 weeks ago\", \"2009-03-17 15:27:38\", \"March 17, 2009 "
+"15:27:38\"):"
+
+#: shitk:4093
+msgid "Since:"
+msgstr "Från:"
+
+#: shitk:4094
+msgid "Until:"
+msgstr "Till:"
+
+#: shitk:4095
+msgid "Limit and/or skip a number of revisions (positive integer):"
+msgstr "Begränsa och/eller hoppa över ett antal revisioner (positivt heltal):"
+
+#: shitk:4096
+msgid "Number to show:"
+msgstr "Antal att visa:"
+
+#: shitk:4097
+msgid "Number to skip:"
+msgstr "Antal att hoppa över:"
+
+#: shitk:4098
+msgid "Miscellaneous options:"
+msgstr "Diverse alternativ:"
+
+#: shitk:4099
+msgid "Strictly sort by date"
+msgstr "Strikt datumsortering"
+
+#: shitk:4100
+msgid "Mark branch sides"
+msgstr "Markera sidogrenar"
+
+#: shitk:4101
+msgid "Limit to first parent"
+msgstr "Begränsa till första förälder"
+
+#: shitk:4102
+msgid "Simple history"
+msgstr "Enkel historik"
+
+#: shitk:4103
+msgid "Additional arguments to shit log:"
+msgstr "Ytterligare argument till shit log:"
+
+#: shitk:4104
+msgid "Enter files and directories to include, one per line:"
+msgstr "Ange filer och kataloger att ta med, en per rad:"
+
+#: shitk:4105
+msgid "Command to generate more commits to include:"
+msgstr "Kommando för att generera fler incheckningar att ta med:"
+
+#: shitk:4229
+msgid "shitk: edit view"
+msgstr "shitk: redigera vy"
+
+#: shitk:4237
+msgid "-- criteria for selecting revisions"
+msgstr " - kriterier för val av revisioner"
+
+#: shitk:4242
+msgid "View Name"
+msgstr "Namn på vy"
+
+#: shitk:4317
+msgid "Apply (F5)"
+msgstr "Använd (F5)"
+
+#: shitk:4355
+msgid "Error in commit selection arguments:"
+msgstr "Fel i argument för val av incheckningar:"
+
+#: shitk:4410 shitk:4463 shitk:4925 shitk:4939 shitk:6209 shitk:12388 shitk:12389
+msgid "None"
+msgstr "Inget"
+
+#: shitk:5022 shitk:5027
+msgid "Descendant"
+msgstr "Avkomling"
+
+#: shitk:5023
+msgid "Not descendant"
+msgstr "Inte avkomling"
+
+#: shitk:5030 shitk:5035
+msgid "Ancestor"
+msgstr "Förfader"
+
+#: shitk:5031
+msgid "Not ancestor"
+msgstr "Inte förfader"
+
+#: shitk:5325
+msgid "Local changes checked in to index but not committed"
+msgstr "Lokala ändringar sparade i indexet men inte incheckade"
+
+#: shitk:5361
+msgid "Local uncommitted changes, not checked in to index"
+msgstr "Lokala ändringar, ej sparade i indexet"
+
+#: shitk:7135
+msgid "and many more"
+msgstr "med många flera"
+
+#: shitk:7138
+msgid "many"
+msgstr "många"
+
+#: shitk:7329
+msgid "Tags:"
+msgstr "Taggar:"
+
+#: shitk:7346 shitk:7352 shitk:8826
+msgid "Parent"
+msgstr "Förälder"
+
+#: shitk:7357
+msgid "Child"
+msgstr "Barn"
+
+#: shitk:7366
+msgid "Branch"
+msgstr "Gren"
+
+#: shitk:7369
+msgid "Follows"
+msgstr "Följer"
+
+#: shitk:7372
+msgid "Precedes"
+msgstr "Föregår"
+
+#: shitk:7967
+#, tcl-format
+msgid "Error getting diffs: %s"
+msgstr "Fel vid hämtning av diff: %s"
+
+#: shitk:8651
+msgid "Goto:"
+msgstr "Gå till:"
+
+#: shitk:8672
+#, tcl-format
+msgid "Short SHA1 id %s is ambiguous"
+msgstr "Förkortat SHA1-id %s är tvetydigt"
+
+#: shitk:8679
+#, tcl-format
+msgid "Revision %s is not known"
+msgstr "Revisionen %s är inte känd"
+
+#: shitk:8689
+#, tcl-format
+msgid "SHA1 id %s is not known"
+msgstr "SHA-id:t %s är inte känt"
+
+#: shitk:8691
+#, tcl-format
+msgid "Revision %s is not in the current view"
+msgstr "Revisionen %s finns inte i den nuvarande vyn"
+
+#: shitk:8833 shitk:8848
+msgid "Date"
+msgstr "Datum"
+
+#: shitk:8836
+msgid "Children"
+msgstr "Barn"
+
+#: shitk:8899
+#, tcl-format
+msgid "Reset %s branch to here"
+msgstr "Återställ grenen %s hit"
+
+#: shitk:8901
+msgid "Detached head: can't reset"
+msgstr "Frånkopplad head: kan inte återställa"
+
+#: shitk:9006 shitk:9012
+msgid "Skipping merge commit "
+msgstr "Hoppar över sammanslagningsincheckning "
+
+#: shitk:9021 shitk:9026
+msgid "Error getting patch ID for "
+msgstr "Fel vid hämtning av patch-id för "
+
+#: shitk:9022 shitk:9027
+msgid " - stopping\n"
+msgstr " - stannar\n"
+
+#: shitk:9032 shitk:9035 shitk:9043 shitk:9057 shitk:9066
+msgid "Commit "
+msgstr "Incheckning "
+
+#: shitk:9036
+msgid ""
+" is the same patch as\n"
+"       "
+msgstr ""
+" är samma patch som\n"
+"       "
+
+#: shitk:9044
+msgid ""
+" differs from\n"
+"       "
+msgstr ""
+" skiljer sig från\n"
+"       "
+
+#: shitk:9046
+msgid ""
+"Diff of commits:\n"
+"\n"
+msgstr ""
+"Skillnad mellan incheckningar:\n"
+"\n"
+
+#: shitk:9058 shitk:9067
+#, tcl-format
+msgid " has %s children - stopping\n"
+msgstr " har %s barn - stannar\n"
+
+#: shitk:9086
+#, tcl-format
+msgid "Error writing commit to file: %s"
+msgstr "Fel vid skrivning av incheckning till fil: %s"
+
+#: shitk:9092
+#, tcl-format
+msgid "Error diffing commits: %s"
+msgstr "Fel vid jämförelse av incheckningar: %s"
+
+#: shitk:9138
+msgid "Top"
+msgstr "Topp"
+
+#: shitk:9139
+msgid "From"
+msgstr "Från"
+
+#: shitk:9144
+msgid "To"
+msgstr "Till"
+
+#: shitk:9168
+msgid "Generate patch"
+msgstr "Generera patch"
+
+#: shitk:9170
+msgid "From:"
+msgstr "Från:"
+
+#: shitk:9179
+msgid "To:"
+msgstr "Till:"
+
+#: shitk:9188
+msgid "Reverse"
+msgstr "Vänd"
+
+#: shitk:9190 shitk:9400
+msgid "Output file:"
+msgstr "Utdatafil:"
+
+#: shitk:9196
+msgid "Generate"
+msgstr "Generera"
+
+#: shitk:9234
+msgid "Error creating patch:"
+msgstr "Fel vid generering av patch:"
+
+#: shitk:9257 shitk:9388 shitk:9445
+msgid "ID:"
+msgstr "Id:"
+
+#: shitk:9266
+msgid "Tag name:"
+msgstr "Taggnamn:"
+
+#: shitk:9269
+msgid "Tag message is optional"
+msgstr "Taggmeddelandet är valfritt"
+
+#: shitk:9271
+msgid "Tag message:"
+msgstr "Taggmeddelande:"
+
+#: shitk:9275 shitk:9454
+msgid "Create"
+msgstr "Skapa"
+
+#: shitk:9293
+msgid "No tag name specified"
+msgstr "Inget taggnamn angavs"
+
+#: shitk:9297
+#, tcl-format
+msgid "Tag \"%s\" already exists"
+msgstr "Taggen \"%s\" finns redan"
+
+#: shitk:9307
+msgid "Error creating tag:"
+msgstr "Fel vid skapande av tagg:"
+
+#: shitk:9397
+msgid "Command:"
+msgstr "Kommando:"
+
+#: shitk:9405
+msgid "Write"
+msgstr "Skriv"
+
+#: shitk:9423
+msgid "Error writing commit:"
+msgstr "Fel vid skrivning av incheckning:"
+
+#: shitk:9450
+msgid "Name:"
+msgstr "Namn:"
+
+#: shitk:9473
+msgid "Please specify a name for the new branch"
+msgstr "Ange ett namn för den nya grenen"
+
+#: shitk:9478
+#, tcl-format
+msgid "Branch '%s' already exists. Overwrite?"
+msgstr "Grenen \"%s\" finns redan. Skriva över?"
+
+#: shitk:9545
+#, tcl-format
+msgid "Commit %s is already included in branch %s -- really re-apply it?"
+msgstr ""
+"Incheckningen %s finns redan på grenen %s -- skall den verkligen appliceras "
+"på nytt?"
+
+#: shitk:9550
+msgid "Cherry-picking"
+msgstr "Plockar"
+
+#: shitk:9559
+#, tcl-format
+msgid ""
+"Cherry-pick failed because of local changes to file '%s'.\n"
+"Please commit, reset or stash your changes and try again."
+msgstr ""
+"Cherry-pick misslyckades på grund av lokala ändringar i filen \"%s\".\n"
+"Checka in, återställ eller spara undan (stash) dina ändringar och försök "
+"igen."
+
+#: shitk:9565
+msgid ""
+"Cherry-pick failed because of merge conflict.\n"
+"Do you wish to run shit citool to resolve it?"
+msgstr ""
+"Cherry-pick misslyckades på grund av en sammanslagningskonflikt.\n"
+"Vill du köra shit citool för att lösa den?"
+
+#: shitk:9581 shitk:9639
+msgid "No changes committed"
+msgstr "Inga ändringar incheckade"
+
+#: shitk:9608
+#, tcl-format
+msgid "Commit %s is not included in branch %s -- really revert it?"
+msgstr "Incheckningen %s finns inte på grenen %s -- vill du verkligen ångra?"
+
+#: shitk:9613
+msgid "Reverting"
+msgstr "Ångrar"
+
+#: shitk:9621
+#, tcl-format
+msgid ""
+"Revert failed because of local changes to the following files:%s Please "
+"commit, reset or stash  your changes and try again."
+msgstr ""
+"Misslyckades med att ångra på grund av lokala ändringar i följande filer:%s. "
+"Checka in, återställ eller spara undan (stash) dina ändringar och försök "
+"igen."
+
+#: shitk:9625
+msgid ""
+"Revert failed because of merge conflict.\n"
+" Do you wish to run shit citool to resolve it?"
+msgstr ""
+"Misslyckades med att ångra på grund av en sammanslagningskonflikt.\n"
+" Vill du köra shit citool för att lösa den?"
+
+#: shitk:9668
+msgid "Confirm reset"
+msgstr "Bekräfta återställning"
+
+#: shitk:9670
+#, tcl-format
+msgid "Reset branch %s to %s?"
+msgstr "Återställa grenen %s till %s?"
+
+#: shitk:9672
+msgid "Reset type:"
+msgstr "Typ av återställning:"
+
+#: shitk:9675
+msgid "Soft: Leave working tree and index untouched"
+msgstr "Mjuk: Rör inte utcheckning och index"
+
+#: shitk:9678
+msgid "Mixed: Leave working tree untouched, reset index"
+msgstr "Blandad: Rör inte utcheckning, återställ index"
+
+#: shitk:9681
+msgid ""
+"Hard: Reset working tree and index\n"
+"(discard ALL local changes)"
+msgstr ""
+"Hård: Återställ utcheckning och index\n"
+"(förkastar ALLA lokala ändringar)"
+
+#: shitk:9698
+msgid "Resetting"
+msgstr "Återställer"
+
+#: shitk:9758
+msgid "Checking out"
+msgstr "Checkar ut"
+
+#: shitk:9811
+msgid "Cannot delete the currently checked-out branch"
+msgstr "Kan inte ta bort den just nu utcheckade grenen"
+
+#: shitk:9817
+#, tcl-format
+msgid ""
+"The commits on branch %s aren't on any other branch.\n"
+"Really delete branch %s?"
+msgstr ""
+"Incheckningarna på grenen %s existerar inte på någon annan gren.\n"
+"Vill du verkligen ta bort grenen %s?"
+
+#: shitk:9848
+#, tcl-format
+msgid "Tags and heads: %s"
+msgstr "Taggar och huvuden: %s"
+
+#: shitk:9865
+msgid "Filter"
+msgstr "Filter"
+
+#: shitk:10161
+msgid ""
+"Error reading commit topology information; branch and preceding/following "
+"tag information will be incomplete."
+msgstr ""
+"Fel vid läsning av information om incheckningstopologi; information om "
+"grenar och föregående/senare taggar kommer inte vara komplett."
+
+#: shitk:11138
+msgid "Tag"
+msgstr "Tagg"
+
+#: shitk:11142
+msgid "Id"
+msgstr "Id"
+
+#: shitk:11225
+msgid "shitk font chooser"
+msgstr "Teckensnittsväljare för shitk"
+
+#: shitk:11242
+msgid "B"
+msgstr "F"
+
+#: shitk:11245
+msgid "I"
+msgstr "K"
+
+#: shitk:11363
+msgid "Commit list display options"
+msgstr "Alternativ för incheckningslistvy"
+
+#: shitk:11366
+msgid "Maximum graph width (lines)"
+msgstr "Maximal grafbredd (rader)"
+
+#: shitk:11370
+#, no-tcl-format
+msgid "Maximum graph width (% of pane)"
+msgstr "Maximal grafbredd (% av ruta)"
+
+#: shitk:11373
+msgid "Show local changes"
+msgstr "Visa lokala ändringar"
+
+#: shitk:11376
+msgid "Auto-select SHA1 (length)"
+msgstr "Välj SHA1 (längd) automatiskt"
+
+#: shitk:11380
+msgid "Hide remote refs"
+msgstr "Dölj fjärr-referenser"
+
+#: shitk:11384
+msgid "Diff display options"
+msgstr "Alternativ för diffvy"
+
+#: shitk:11386
+msgid "Tab spacing"
+msgstr "Blanksteg för tabulatortecken"
+
+#: shitk:11389
+msgid "Display nearby tags/heads"
+msgstr "Visa närliggande taggar/huvuden"
+
+#: shitk:11392
+msgid "Maximum # tags/heads to show"
+msgstr "Maximalt antal taggar/huvuden att visa"
+
+#: shitk:11395
+msgid "Limit diffs to listed paths"
+msgstr "Begränsa diff till listade sökvägar"
+
+#: shitk:11398
+msgid "Support per-file encodings"
+msgstr "Stöd för filspecifika teckenkodningar"
+
+#: shitk:11404 shitk:11551
+msgid "External diff tool"
+msgstr "Externt diff-verktyg"
+
+#: shitk:11405
+msgid "Choose..."
+msgstr "Välj..."
+
+#: shitk:11410
+msgid "General options"
+msgstr "Allmänna inställningar"
+
+#: shitk:11413
+msgid "Use themed widgets"
+msgstr "Använd tema på fönsterelement"
+
+#: shitk:11415
+msgid "(change requires restart)"
+msgstr "(ändringen kräver omstart)"
+
+#: shitk:11417
+msgid "(currently unavailable)"
+msgstr "(för närvarande inte tillgängligt)"
+
+#: shitk:11428
+msgid "Colors: press to choose"
+msgstr "Färger: tryck för att välja"
+
+#: shitk:11431
+msgid "Interface"
+msgstr "Gränssnitt"
+
+#: shitk:11432
+msgid "interface"
+msgstr "gränssnitt"
+
+#: shitk:11435
+msgid "Background"
+msgstr "Bakgrund"
+
+#: shitk:11436 shitk:11466
+msgid "background"
+msgstr "bakgrund"
+
+#: shitk:11439
+msgid "Foreground"
+msgstr "Förgrund"
+
+#: shitk:11440
+msgid "foreground"
+msgstr "förgrund"
+
+#: shitk:11443
+msgid "Diff: old lines"
+msgstr "Diff: gamla rader"
+
+#: shitk:11444
+msgid "diff old lines"
+msgstr "diff gamla rader"
+
+#: shitk:11448
+msgid "Diff: new lines"
+msgstr "Diff: nya rader"
+
+#: shitk:11449
+msgid "diff new lines"
+msgstr "diff nya rader"
+
+#: shitk:11453
+msgid "Diff: hunk header"
+msgstr "Diff: delhuvud"
+
+#: shitk:11455
+msgid "diff hunk header"
+msgstr "diff delhuvud"
+
+#: shitk:11459
+msgid "Marked line bg"
+msgstr "Markerad rad bakgrund"
+
+#: shitk:11461
+msgid "marked line background"
+msgstr "markerad rad bakgrund"
+
+#: shitk:11465
+msgid "Select bg"
+msgstr "Markerad bakgrund"
+
+#: shitk:11474
+msgid "Fonts: press to choose"
+msgstr "Teckensnitt: tryck för att välja"
+
+#: shitk:11476
+msgid "Main font"
+msgstr "Huvudteckensnitt"
+
+#: shitk:11477
+msgid "Diff display font"
+msgstr "Teckensnitt för diffvisning"
+
+#: shitk:11478
+msgid "User interface font"
+msgstr "Teckensnitt för användargränssnitt"
+
+#: shitk:11500
+msgid "shitk preferences"
+msgstr "Inställningar för shitk"
+
+#: shitk:11509
+msgid "General"
+msgstr "Allmänt"
+
+#: shitk:11510
+msgid "Colors"
+msgstr "Färger"
+
+#: shitk:11511
+msgid "Fonts"
+msgstr "Teckensnitt"
+
+#: shitk:11561
+#, tcl-format
+msgid "shitk: choose color for %s"
+msgstr "shitk: välj färg för %s"
+
+#: shitk:12074
+msgid ""
+"Sorry, shitk cannot run with this version of Tcl/Tk.\n"
+" shitk requires at least Tcl/Tk 8.4."
+msgstr ""
+"shitk kan tyvärr inte köra med denna version av Tcl/Tk.\n"
+" shitk kräver åtminstone Tcl/Tk 8.4."
+
+#: shitk:12284
+msgid "Cannot find a shit repository here."
+msgstr "Hittar inget shit-arkiv här."
+
+#: shitk:12331
+#, tcl-format
+msgid "Ambiguous argument '%s': both revision and filename"
+msgstr "Tvetydigt argument \"%s\": både revision och filnamn"
+
+#: shitk:12343
+msgid "Bad arguments to shitk:"
+msgstr "Felaktiga argument till shitk:"
+
+#~ msgid "mc"
+#~ msgstr "mc"
+
+#~ msgid "next"
+#~ msgstr "nästa"
+
+#~ msgid "prev"
+#~ msgstr "föreg"
+
+#~ msgid "CDate"
+#~ msgstr "Skapat datum"
+
+#~ msgid "Cannot find the shit directory \"%s\"."
+#~ msgstr "Hittar inte shit-katalogen \"%s\"."
+
+#~ msgid "SHA1 ID: "
+#~ msgstr "SHA1-id: "
+
+#~ msgid "- stopping\n"
+#~ msgstr "- stannar\n"
+
+#~ msgid "Tag/Head %s is not known"
+#~ msgstr "Tagg/huvud %s är okänt"
+
+#~ msgid "/\t\tMove to next find hit, or redo find"
+#~ msgstr "/\t\tGå till nästa sökträff, eller sök på nytt"
+
+#~ msgid "Name"
+#~ msgstr "Namn"

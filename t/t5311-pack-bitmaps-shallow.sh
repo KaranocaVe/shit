@@ -30,25 +30,25 @@ test_shallow_bitmaps () {
 	done
 
 	test_expect_success 'setup shallow repo' '
-		rm -rf * .git &&
-		git init &&
-		git config pack.writeBitmapLookupTable '"$writeLookupTable"' &&
+		rm -rf * .shit &&
+		shit init &&
+		shit config pack.writeBitmapLookupTable '"$writeLookupTable"' &&
 		echo 1 >file &&
-		git add file &&
-		git commit -m orig &&
+		shit add file &&
+		shit commit -m orig &&
 		echo 2 >file &&
-		git commit -a -m update &&
-		git clone --no-local --bare --depth=1 . shallow.git &&
+		shit commit -a -m update &&
+		shit clone --no-local --bare --depth=1 . shallow.shit &&
 		echo 1 >file &&
-		git commit -a -m repeat
+		shit commit -a -m repeat
 	'
 
 	test_expect_success 'turn on bitmaps in the parent' '
-		git repack -adb
+		shit repack -adb
 	'
 
 	test_expect_success 'shallow fetch from bitmapped repo' '
-		(cd shallow.git && git fetch)
+		(cd shallow.shit && shit fetch)
 	'
 }
 

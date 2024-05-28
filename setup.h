@@ -3,23 +3,23 @@
 
 #include "string-list.h"
 
-int is_inside_git_dir(void);
+int is_inside_shit_dir(void);
 int is_inside_work_tree(void);
-int get_common_dir_noenv(struct strbuf *sb, const char *gitdir);
-int get_common_dir(struct strbuf *sb, const char *gitdir);
+int get_common_dir_noenv(struct strbuf *sb, const char *shitdir);
+int get_common_dir(struct strbuf *sb, const char *shitdir);
 
 /*
- * Return true if the given path is a git directory; note that this _just_
- * looks at the directory itself. If you want to know whether "foo/.git"
+ * Return true if the given path is a shit directory; note that this _just_
+ * looks at the directory itself. If you want to know whether "foo/.shit"
  * is a repository, you must feed that path, not just "foo".
  */
-int is_git_directory(const char *path);
+int is_shit_directory(const char *path);
 
 /*
- * Return 1 if the given path is the root of a git repository or
+ * Return 1 if the given path is the root of a shit repository or
  * submodule, else 0. Will not return 1 for bare repositories with the
- * exception of creating a bare repository in "foo/.git" and calling
- * is_git_repository("foo").
+ * exception of creating a bare repository in "foo/.shit" and calling
+ * is_shit_repository("foo").
  *
  * If we run into read errors, we err on the side of saying "yes, it is",
  * as we usually consider sub-repos precious, and would prefer to err on the
@@ -27,74 +27,74 @@ int is_git_directory(const char *path);
  */
 int is_nonbare_repository_dir(struct strbuf *path);
 
-#define READ_GITFILE_ERR_STAT_FAILED 1
-#define READ_GITFILE_ERR_NOT_A_FILE 2
-#define READ_GITFILE_ERR_OPEN_FAILED 3
-#define READ_GITFILE_ERR_READ_FAILED 4
-#define READ_GITFILE_ERR_INVALID_FORMAT 5
-#define READ_GITFILE_ERR_NO_PATH 6
-#define READ_GITFILE_ERR_NOT_A_REPO 7
-#define READ_GITFILE_ERR_TOO_LARGE 8
-void read_gitfile_error_die(int error_code, const char *path, const char *dir);
-const char *read_gitfile_gently(const char *path, int *return_error_code);
-#define read_gitfile(path) read_gitfile_gently((path), NULL)
-const char *resolve_gitdir_gently(const char *suspect, int *return_error_code);
-#define resolve_gitdir(path) resolve_gitdir_gently((path), NULL)
+#define READ_shitFILE_ERR_STAT_FAILED 1
+#define READ_shitFILE_ERR_NOT_A_FILE 2
+#define READ_shitFILE_ERR_OPEN_FAILED 3
+#define READ_shitFILE_ERR_READ_FAILED 4
+#define READ_shitFILE_ERR_INVALID_FORMAT 5
+#define READ_shitFILE_ERR_NO_PATH 6
+#define READ_shitFILE_ERR_NOT_A_REPO 7
+#define READ_shitFILE_ERR_TOO_LARGE 8
+void read_shitfile_error_die(int error_code, const char *path, const char *dir);
+const char *read_shitfile_gently(const char *path, int *return_error_code);
+#define read_shitfile(path) read_shitfile_gently((path), NULL)
+const char *resolve_shitdir_gently(const char *suspect, int *return_error_code);
+#define resolve_shitdir(path) resolve_shitdir_gently((path), NULL)
 
 /*
  * Check if a repository is safe and die if it is not, by verifying the
- * ownership of the worktree (if any), the git directory, and the gitfile (if
+ * ownership of the worktree (if any), the shit directory, and the shitfile (if
  * any).
  *
  * Exemptions for known-safe repositories can be added via `safe.directory`
  * config settings; for non-bare repositories, their worktree needs to be
- * added, for bare ones their git directory.
+ * added, for bare ones their shit directory.
  */
-void die_upon_dubious_ownership(const char *gitfile, const char *worktree,
-				const char *gitdir);
+void die_upon_dubious_ownership(const char *shitfile, const char *worktree,
+				const char *shitdir);
 
 void setup_work_tree(void);
 
 /*
- * discover_git_directory_reason() is similar to discover_git_directory(),
+ * discover_shit_directory_reason() is similar to discover_shit_directory(),
  * except it returns an enum value instead. It is important to note that
- * a zero-valued return here is actually GIT_DIR_NONE, which is different
- * from discover_git_directory.
+ * a zero-valued return here is actually shit_DIR_NONE, which is different
+ * from discover_shit_directory.
  */
 enum discovery_result {
-	GIT_DIR_EXPLICIT = 1,
-	GIT_DIR_DISCOVERED = 2,
-	GIT_DIR_BARE = 3,
+	shit_DIR_EXPLICIT = 1,
+	shit_DIR_DISCOVERED = 2,
+	shit_DIR_BARE = 3,
 	/* these are errors */
-	GIT_DIR_HIT_CEILING = -1,
-	GIT_DIR_HIT_MOUNT_POINT = -2,
-	GIT_DIR_INVALID_GITFILE = -3,
-	GIT_DIR_INVALID_OWNERSHIP = -4,
-	GIT_DIR_DISALLOWED_BARE = -5,
-	GIT_DIR_INVALID_FORMAT = -6,
-	GIT_DIR_CWD_FAILURE = -7,
+	shit_DIR_HIT_CEILING = -1,
+	shit_DIR_HIT_MOUNT_POINT = -2,
+	shit_DIR_INVALID_shitFILE = -3,
+	shit_DIR_INVALID_OWNERSHIP = -4,
+	shit_DIR_DISALLOWED_BARE = -5,
+	shit_DIR_INVALID_FORMAT = -6,
+	shit_DIR_CWD_FAILURE = -7,
 };
-enum discovery_result discover_git_directory_reason(struct strbuf *commondir,
-						    struct strbuf *gitdir);
+enum discovery_result discover_shit_directory_reason(struct strbuf *commondir,
+						    struct strbuf *shitdir);
 
 /*
- * Find the commondir and gitdir of the repository that contains the current
+ * Find the commondir and shitdir of the repository that contains the current
  * working directory, without changing the working directory or other global
- * state. The result is appended to commondir and gitdir.  If the discovered
- * gitdir does not correspond to a worktree, then 'commondir' and 'gitdir' will
+ * state. The result is appended to commondir and shitdir.  If the discovered
+ * shitdir does not correspond to a worktree, then 'commondir' and 'shitdir' will
  * both have the same result appended to the buffer.  The return value is
  * either 0 upon success and -1 if no repository was found.
  */
-static inline int discover_git_directory(struct strbuf *commondir,
-					 struct strbuf *gitdir)
+static inline int discover_shit_directory(struct strbuf *commondir,
+					 struct strbuf *shitdir)
 {
-	if (discover_git_directory_reason(commondir, gitdir) <= 0)
+	if (discover_shit_directory_reason(commondir, shitdir) <= 0)
 		return -1;
 	return 0;
 }
 
-const char *setup_git_directory_gently(int *);
-const char *setup_git_directory(void);
+const char *setup_shit_directory_gently(int *);
+const char *setup_shit_directory(void);
 char *prefix_path(const char *prefix, int len, const char *path);
 char *prefix_path_gently(const char *prefix, int len, int *remaining, const char *path);
 
@@ -109,12 +109,12 @@ void sanitize_stdfds(void);
 int daemonize(void);
 
 /*
- * GIT_REPO_VERSION is the version we write by default. The
+ * shit_REPO_VERSION is the version we write by default. The
  * _READ variant is the highest number we know how to
  * handle.
  */
-#define GIT_REPO_VERSION 0
-#define GIT_REPO_VERSION_READ 1
+#define shit_REPO_VERSION 0
+#define shit_REPO_VERSION_READ 1
 
 /*
  * You _have_ to initialize a `struct repository_format` using
@@ -144,7 +144,7 @@ struct repository_format {
 { \
 	.version = -1, \
 	.is_bare = -1, \
-	.hash_algo = GIT_HASH_SHA1, \
+	.hash_algo = shit_HASH_SHA1, \
 	.ref_storage_format = REF_STORAGE_FORMAT_FILES, \
 	.unknown_extensions = STRING_LIST_INIT_DUP, \
 	.v1_only_extensions = STRING_LIST_INIT_DUP, \
@@ -175,9 +175,9 @@ int verify_repository_format(const struct repository_format *format,
 			     struct strbuf *err);
 
 /*
- * Check the repository format version in the path found in get_git_dir(),
+ * Check the repository format version in the path found in get_shit_dir(),
  * and die if it is a version we don't understand. Generally one would
- * set_git_dir() before calling this, and use it only for "are we in a valid
+ * set_shit_dir() before calling this, and use it only for "are we in a valid
  * repo?".
  *
  * If successful and fmt is not NULL, fill fmt with data.
@@ -190,7 +190,7 @@ const char *get_template_dir(const char *option_template);
 #define INIT_DB_EXIST_OK   (1 << 1)
 #define INIT_DB_SKIP_REFDB (1 << 2)
 
-int init_db(const char *git_dir, const char *real_git_dir,
+int init_db(const char *shit_dir, const char *real_shit_dir,
 	    const char *template_dir, int hash_algo,
 	    unsigned int ref_storage_format,
 	    const char *initial_branch, int init_shared_repository,
@@ -216,7 +216,7 @@ enum sharedrepo {
 	PERM_GROUP          = 0660,
 	PERM_EVERYBODY      = 0664
 };
-int git_config_perm(const char *var, const char *value);
+int shit_config_perm(const char *var, const char *value);
 
 struct startup_info {
 	int have_repository;

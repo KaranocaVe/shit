@@ -7,8 +7,8 @@
 
 test_description='--graph and simplified history'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-log-graph.sh
@@ -23,32 +23,32 @@ test_expect_success 'set up rev-list --graph test' '
 	test_commit A1 foo.txt &&
 	test_commit A2 bar.txt &&
 	test_commit A3 bar.txt &&
-	git branch -m main A &&
+	shit branch -m main A &&
 
 	# 2 commits on branch B, started from A1
-	git checkout -b B A1 &&
+	shit checkout -b B A1 &&
 	test_commit B1 foo.txt &&
 	test_commit B2 abc.txt &&
 
 	# 2 commits on branch C, started from A2
-	git checkout -b C A2 &&
+	shit checkout -b C A2 &&
 	test_commit C1 xyz.txt &&
 	test_commit C2 xyz.txt &&
 
 	# Octopus merge B and C into branch A
-	git checkout A &&
-	git merge B C -m A4 &&
-	git tag A4 &&
+	shit checkout A &&
+	shit merge B C -m A4 &&
+	shit tag A4 &&
 
 	test_commit A5 bar.txt &&
 
 	# More commits on C, then merge C into A
-	git checkout C &&
+	shit checkout C &&
 	test_commit C3 foo.txt &&
 	test_commit C4 bar.txt &&
-	git checkout A &&
-	git merge -s ours C -m A6 &&
-	git tag A6 &&
+	shit checkout A &&
+	shit merge -s ours C -m A6 &&
+	shit tag A6 &&
 
 	test_commit A7 bar.txt
 '
@@ -81,7 +81,7 @@ test_expect_success '--graph --all' '
 # Make sure the graph_is_interesting() code still realizes
 # that undecorated merges are interesting, even with --simplify-by-decoration
 test_expect_success '--graph --simplify-by-decoration' '
-	git tag -d A4 &&
+	shit tag -d A4 &&
 	check_graph --all --simplify-by-decoration <<-\EOF
 	* A7
 	*   A6
@@ -107,9 +107,9 @@ test_expect_success '--graph --simplify-by-decoration' '
 '
 
 test_expect_success 'setup: get rid of decorations on B' '
-	git tag -d B2 &&
-	git tag -d B1 &&
-	git branch -d B
+	shit tag -d B2 &&
+	shit tag -d B1 &&
+	shit branch -d B
 '
 
 # Graph with branch B simplified away

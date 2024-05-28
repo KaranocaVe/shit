@@ -1,9 +1,9 @@
 #!/bin/sh
 
-test_description='rebase should handle arbitrary git message'
+test_description='rebase should handle arbitrary shit message'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,7 +11,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 cat >F <<\EOF
 This is an example of a commit log message
-that does not  conform to git commit convention.
+that does not  conform to shit commit convention.
 
 It has two paragraphs, but its first paragraph is not friendly
 to oneline summary format.
@@ -26,69 +26,69 @@ test_expect_success setup '
 
 	>file1 &&
 	>file2 &&
-	git add file1 file2 &&
+	shit add file1 file2 &&
 	test_tick &&
-	git commit -m "Initial commit" &&
-	git branch diff-in-message &&
-	git branch empty-message-merge &&
+	shit commit -m "Initial commit" &&
+	shit branch diff-in-message &&
+	shit branch empty-message-merge &&
 
-	git checkout -b multi-line-subject &&
+	shit checkout -b multi-line-subject &&
 	cat F >file2 &&
-	git add file2 &&
+	shit add file2 &&
 	test_tick &&
-	git commit -F F &&
+	shit commit -F F &&
 
-	git cat-file commit HEAD | sed -e "1,/^\$/d" >F0 &&
+	shit cat-file commit HEAD | sed -e "1,/^\$/d" >F0 &&
 
-	git checkout diff-in-message &&
+	shit checkout diff-in-message &&
 	echo "commit log message containing a diff" >G &&
 	echo "" >>G &&
 	cat G >file2 &&
-	git add file2 &&
-	git diff --cached >>G &&
+	shit add file2 &&
+	shit diff --cached >>G &&
 	test_tick &&
-	git commit -F G &&
+	shit commit -F G &&
 
-	git cat-file commit HEAD | sed -e "1,/^\$/d" >G0 &&
+	shit cat-file commit HEAD | sed -e "1,/^\$/d" >G0 &&
 
-	git checkout empty-message-merge &&
+	shit checkout empty-message-merge &&
 	echo file3 >file3 &&
-	git add file3 &&
-	git commit --allow-empty-message -m "" &&
+	shit add file3 &&
+	shit commit --allow-empty-message -m "" &&
 
-	git checkout main &&
+	shit checkout main &&
 
 	echo One >file1 &&
 	test_tick &&
-	git add file1 &&
-	git commit -m "Second commit"
+	shit add file1 &&
+	shit commit -m "Second commit"
 '
 
 test_expect_success 'rebase commit with multi-line subject' '
 
-	git rebase main multi-line-subject &&
-	git cat-file commit HEAD | sed -e "1,/^\$/d" >F1 &&
+	shit rebase main multi-line-subject &&
+	shit cat-file commit HEAD | sed -e "1,/^\$/d" >F1 &&
 
 	test_cmp F0 F1 &&
 	test_cmp F F0
 '
 
 test_expect_success 'rebase commit with diff in message' '
-	git rebase main diff-in-message &&
-	git cat-file commit HEAD | sed -e "1,/^$/d" >G1 &&
+	shit rebase main diff-in-message &&
+	shit cat-file commit HEAD | sed -e "1,/^$/d" >G1 &&
 	test_cmp G0 G1 &&
 	test_cmp G G0
 '
 
 test_expect_success 'rebase -m commit with empty message' '
-	git rebase -m main empty-message-merge
+	shit rebase -m main empty-message-merge
 '
 
 test_expect_success 'rebase -i commit with empty message' '
-	git checkout diff-in-message &&
+	shit checkout diff-in-message &&
 	set_fake_editor &&
 	test_must_fail env FAKE_COMMIT_MESSAGE=" " FAKE_LINES="reword 1" \
-		git rebase -i HEAD^
+		shit rebase -i HEAD^
 '
 
 test_done

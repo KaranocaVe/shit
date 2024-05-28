@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "environment.h"
 #include "gettext.h"
@@ -69,7 +69,7 @@ static int configured;
 
 #define TRAILER_ARG_STRING "$ARG"
 
-static const char *git_generated_prefixes[] = {
+static const char *shit_generated_prefixes[] = {
 	"Signed-off-by: ",
 	"(cherry picked from commit ",
 	NULL
@@ -218,16 +218,16 @@ static char *apply_command(struct conf_info *conf, const char *arg)
 
 	if (conf->cmd) {
 		strbuf_addstr(&cmd, conf->cmd);
-		strvec_push(&cp.args, cmd.buf);
+		strvec_defecate(&cp.args, cmd.buf);
 		if (arg)
-			strvec_push(&cp.args, arg);
+			strvec_defecate(&cp.args, arg);
 	} else if (conf->command) {
 		strbuf_addstr(&cmd, conf->command);
 		if (arg)
 			strbuf_replace(&cmd, TRAILER_ARG_STRING, arg);
-		strvec_push(&cp.args, cmd.buf);
+		strvec_defecate(&cp.args, cmd.buf);
 	}
-	strvec_pushv(&cp.env, (const char **)local_repo_env);
+	strvec_defecatev(&cp.env, (const char **)local_repo_env);
 	cp.no_stdin = 1;
 	cp.use_shell = 1;
 
@@ -469,7 +469,7 @@ static struct {
 	{ "ifmissing", TRAILER_IF_MISSING }
 };
 
-static int git_trailer_default_config(const char *conf_key, const char *value,
+static int shit_trailer_default_config(const char *conf_key, const char *value,
 				      const struct config_context *ctx UNUSED,
 				      void *cb UNUSED)
 {
@@ -504,7 +504,7 @@ static int git_trailer_default_config(const char *conf_key, const char *value,
 	return 0;
 }
 
-static int git_trailer_config(const char *conf_key, const char *value,
+static int shit_trailer_config(const char *conf_key, const char *value,
 			      const struct config_context *ctx UNUSED,
 			      void *cb UNUSED)
 {
@@ -587,8 +587,8 @@ void trailer_config_init(void)
 	default_conf_info.where = WHERE_END;
 	default_conf_info.if_exists = EXISTS_ADD_IF_DIFFERENT_NEIGHBOR;
 	default_conf_info.if_missing = MISSING_ADD;
-	git_config(git_trailer_default_config, NULL);
-	git_config(git_trailer_config, NULL);
+	shit_config(shit_trailer_default_config, NULL);
+	shit_config(shit_trailer_config, NULL);
 	configured = 1;
 }
 
@@ -802,9 +802,9 @@ static ssize_t last_line(const char *buf, size_t len)
  * belong in the log message):
  *
  * (1) the "patch part" which begins with a "---" divider and has patch
- * information (like the output of git-format-patch), and
+ * information (like the output of shit-format-patch), and
  *
- * (2) any trailing comment lines, blank lines like in the output of "git
+ * (2) any trailing comment lines, blank lines like in the output of "shit
  * commit -v", or stuff below the "cut" (scissor) line.
  *
  * As a formula, the situation looks like this:
@@ -870,7 +870,7 @@ static size_t find_trailer_block_start(const char *buf, size_t len)
 	/*
 	 * Get the start of the trailers by looking starting from the end for a
 	 * blank line before a set of non-blank lines that (i) are all
-	 * trailers, or (ii) contains at least one Git-generated trailer and
+	 * trailers, or (ii) contains at least one shit-generated trailer and
 	 * consists of at least 25% trailers.
 	 */
 	for (l = last_line(buf, len);
@@ -898,7 +898,7 @@ static size_t find_trailer_block_start(const char *buf, size_t len)
 		}
 		only_spaces = 0;
 
-		for (p = git_generated_prefixes; *p; p++) {
+		for (p = shit_generated_prefixes; *p; p++) {
 			if (starts_with(bol, *p)) {
 				trailer_lines++;
 				possible_continuation_lines = 0;
@@ -1218,10 +1218,10 @@ int amend_file_with_trailers(const char *path, const struct strvec *trailer_args
 {
 	struct child_process run_trailer = CHILD_PROCESS_INIT;
 
-	run_trailer.git_cmd = 1;
-	strvec_pushl(&run_trailer.args, "interpret-trailers",
+	run_trailer.shit_cmd = 1;
+	strvec_defecatel(&run_trailer.args, "interpret-trailers",
 		     "--in-place", "--no-divider",
 		     path, NULL);
-	strvec_pushv(&run_trailer.args, trailer_args->v);
+	strvec_defecatev(&run_trailer.args, trailer_args->v);
 	return run_command(&run_trailer);
 }

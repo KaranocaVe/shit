@@ -10,10 +10,10 @@ dir="$TEST_DIRECTORY/t4051"
 commit_and_tag () {
 	tag=$1 &&
 	shift &&
-	git add "$@" &&
+	shit add "$@" &&
 	test_tick &&
-	git commit -m "$tag" &&
-	git tag "$tag"
+	shit commit -m "$tag" &&
+	shit tag "$tag"
 }
 
 first_context_line () {
@@ -33,14 +33,14 @@ check_diff () {
 	options="-W $3"
 
 	test_expect_success "$desc" '
-		git diff $options "$name^" "$name" >"$name.diff"
+		shit diff $options "$name^" "$name" >"$name.diff"
 	'
 
 	test_expect_success ' diff applies' '
-		test_when_finished "git reset --hard" &&
-		git checkout --detach "$name^" &&
-		git apply --index "$name.diff" &&
-		git diff --exit-code "$name"
+		test_when_finished "shit reset --hard" &&
+		shit checkout --detach "$name^" &&
+		shit apply --index "$name.diff" &&
+		shit diff --exit-code "$name"
 	'
 }
 
@@ -67,7 +67,7 @@ test_expect_success 'setup' '
 	mv file.c.new file.c &&
 	commit_and_tag long_common_tail file.c &&
 
-	git checkout initial &&
+	shit checkout initial &&
 	cat "$dir/hello.c" "$dir/dummy.c" >file.c &&
 	commit_and_tag hello_dummy file.c &&
 
@@ -77,7 +77,7 @@ test_expect_success 'setup' '
 	     extra line" <"$dir/dummy.c" >>file.c &&
 	commit_and_tag changed_hello_dummy file.c &&
 
-	git checkout initial &&
+	shit checkout initial &&
 	grep -v "delete me from hello" <file.c >file.c.new &&
 	mv file.c.new file.c &&
 	cat "$dir/appended1.c" >>file.c &&

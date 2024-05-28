@@ -46,7 +46,7 @@ static const char *make_relative(const char *location)
 
 		/*
 		 * The path could be relative (t/unit-tests/test-lib.c)
-		 * or full (/home/user/git/t/unit-tests/test-lib.c).
+		 * or full (/home/user/shit/t/unit-tests/test-lib.c).
 		 * Check the slash between "t" and "unit-tests".
 		 */
 		prefix_len = len - needle_len;

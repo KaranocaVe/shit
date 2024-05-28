@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='test that git handles an svn repository with missing md5sums'
+test_description='test that shit handles an svn repository with missing md5sums'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 # Loading a node from a svn dumpfile without a Text-Content-Length
 # field causes svn to neglect to store or report an md5sum.  (it will
@@ -42,6 +42,6 @@ EOF
 
 test_expect_success 'load svn dumpfile' 'svnadmin load "$rawsvnrepo" < dumpfile.svn'
 
-test_expect_success 'initialize git svn' 'git svn init "$svnrepo"'
-test_expect_success 'fetch revisions from svn' 'git svn fetch'
+test_expect_success 'initialize shit svn' 'shit svn init "$svnrepo"'
+test_expect_success 'fetch revisions from svn' 'shit svn fetch'
 test_done

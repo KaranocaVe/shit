@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 # Copyright (c) 2007 Eric Wong
-test_description='git svn dcommit clobber series'
-. ./lib-git-svn.sh
+test_description='shit svn dcommit clobber series'
+. ./lib-shit-svn.sh
 
 test_expect_success 'initialize repo' '
 	mkdir import &&
@@ -10,8 +10,8 @@ test_expect_success 'initialize repo' '
 	awk "BEGIN { for (i = 1; i < 64; i++) { print i } }" > file &&
 	svn_cmd import -m "initial" . "$svnrepo"
 	) &&
-	git svn init "$svnrepo" &&
-	git svn fetch &&
+	shit svn init "$svnrepo" &&
+	shit svn fetch &&
 	test -e file
 	'
 
@@ -29,12 +29,12 @@ test_expect_success '(supposedly) non-conflicting change from SVN' '
 	)
 	'
 
-test_expect_success 'some unrelated changes to git' "
+test_expect_success 'some unrelated changes to shit' "
 	echo hi > life &&
-	git update-index --add life &&
-	git commit -m hi-life &&
+	shit update-index --add life &&
+	shit commit -m hi-life &&
 	echo bye >> life &&
-	git commit -m bye-life life
+	shit commit -m bye-life life
 	"
 
 test_expect_success 'change file but in unrelated area' "
@@ -44,8 +44,8 @@ test_expect_success 'change file but in unrelated area' "
 	perl -i.bak -p -e 's/^7\$/7777/' file &&
 	test x\"\$(sed -n -e 4p < file)\" = x4444 &&
 	test x\"\$(sed -n -e 7p < file)\" = x7777 &&
-	git commit -m '4 => 4444, 7 => 7777' file &&
-	git svn dcommit &&
+	shit commit -m '4 => 4444, 7 => 7777' file &&
+	shit svn dcommit &&
 	svn_cmd up tmp &&
 	cd tmp &&
 		test x\"\$(sed -n -e 4p < file)\" = x4444 &&
@@ -56,8 +56,8 @@ test_expect_success 'change file but in unrelated area' "
 
 test_expect_success 'attempt to dcommit with a dirty index' '
 	echo foo >>file &&
-	git add file &&
-	test_must_fail git svn dcommit
+	shit add file &&
+	test_must_fail shit svn dcommit
 '
 
 test_done

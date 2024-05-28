@@ -1,5 +1,5 @@
 /*
- * Builtin "git grep"
+ * Builtin "shit grep"
  *
  * Copyright (c) 2006 Junio C Hamano
  */
@@ -33,7 +33,7 @@
 static const char *grep_prefix;
 
 static char const * const grep_usage[] = {
-	N_("git grep [<options>] [-e] <pattern> [<rev>...] [[--] <path>...]"),
+	N_("shit grep [<options>] [-e] <pattern> [<rev>...] [[--] <path>...]"),
 	NULL
 };
 
@@ -292,13 +292,13 @@ static int grep_cmd_config(const char *var, const char *value,
 {
 	int st = grep_config(var, value, ctx, cb);
 
-	if (git_color_config(var, value, cb) < 0)
+	if (shit_color_config(var, value, cb) < 0)
 		st = -1;
-	else if (git_default_config(var, value, ctx, cb) < 0)
+	else if (shit_default_config(var, value, ctx, cb) < 0)
 		st = -1;
 
 	if (!strcmp(var, "grep.threads")) {
-		num_threads = git_config_int(var, value, ctx->kvi);
+		num_threads = shit_config_int(var, value, ctx->kvi);
 		if (num_threads < 0)
 			die(_("invalid number of threads specified (%d) for %s"),
 			    num_threads, var);
@@ -314,7 +314,7 @@ static int grep_cmd_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, "submodule.recurse"))
-		recurse_submodules = git_config_bool(var, value);
+		recurse_submodules = shit_config_bool(var, value);
 
 	return st;
 }
@@ -421,7 +421,7 @@ static void run_pager(struct grep_opt *opt, const char *prefix)
 	int i, status;
 
 	for (i = 0; i < path_list->nr; i++)
-		strvec_push(&child.args, path_list->items[i].string);
+		strvec_defecate(&child.args, path_list->items[i].string);
 	child.dir = prefix;
 	child.use_shell = 1;
 
@@ -458,8 +458,8 @@ static int grep_submodule(struct grep_opt *opt,
 	repos_to_free[repos_to_free_nr++] = subrepo;
 
 	/*
-	 * NEEDSWORK: repo_read_gitmodules() might call
-	 * add_to_alternates_memory() via config_from_gitmodules(). This
+	 * NEEDSWORK: repo_read_shitmodules() might call
+	 * add_to_alternates_memory() via config_from_shitmodules(). This
 	 * operation causes a race condition with concurrent object readings
 	 * performed by the worker threads. That's why we need obj_read_lock()
 	 * here. It should be removed once it's no longer necessary to add the
@@ -493,7 +493,7 @@ static int grep_submodule(struct grep_opt *opt,
 	 *
 	 * Note that this list is not exhaustive.
 	 */
-	repo_read_gitmodules(subrepo, 0);
+	repo_read_shitmodules(subrepo, 0);
 
 	/*
 	 * All code paths tested by test code no longer need submodule ODBs to
@@ -582,7 +582,7 @@ static int grep_cache(struct grep_opt *opt,
 		} else if (S_ISREG(ce->ce_mode) &&
 		    match_pathspec(repo->index, pathspec, name.buf, name.len, 0, NULL,
 				   S_ISDIR(ce->ce_mode) ||
-				   S_ISGITLINK(ce->ce_mode))) {
+				   S_ISshitLINK(ce->ce_mode))) {
 			/*
 			 * If CE_VALID is on, we assume worktree file and its
 			 * cache entry are identical, even if worktree file has
@@ -596,7 +596,7 @@ static int grep_cache(struct grep_opt *opt,
 			} else {
 				hit |= grep_file(opt, name.buf);
 			}
-		} else if (recurse_submodules && S_ISGITLINK(ce->ce_mode) &&
+		} else if (recurse_submodules && S_ISshitLINK(ce->ce_mode) &&
 			   submodule_path_match(repo->index, pathspec, name.buf, NULL)) {
 			hit |= grep_submodule(opt, pathspec, NULL, ce->name,
 					      ce->name, cached);
@@ -673,7 +673,7 @@ static int grep_tree(struct grep_opt *opt, const struct pathspec *pathspec,
 			hit |= grep_tree(opt, pathspec, &sub, base, tn_len,
 					 check_attr);
 			free(data);
-		} else if (recurse_submodules && S_ISGITLINK(entry.mode)) {
+		} else if (recurse_submodules && S_ISshitLINK(entry.mode)) {
 			hit |= grep_submodule(opt, pathspec, &entry.oid,
 					      base->buf, base->buf + tn_len,
 					      1); /* ignored */
@@ -739,7 +739,7 @@ static int grep_objects(struct grep_opt *opt, const struct pathspec *pathspec,
 		obj_read_unlock();
 
 		if (!real_obj) {
-			char hex[GIT_MAX_HEXSZ + 1];
+			char hex[shit_MAX_HEXSZ + 1];
 			const char *name = list->objects[i].name;
 
 			if (!name) {
@@ -749,11 +749,11 @@ static int grep_objects(struct grep_opt *opt, const struct pathspec *pathspec,
 			die(_("invalid object '%s' given."), name);
 		}
 
-		/* load the gitmodules file for this rev */
+		/* load the shitmodules file for this rev */
 		if (recurse_submodules) {
 			submodule_free(opt->repo);
 			obj_read_lock();
-			gitmodules_config_oid(&real_obj->oid);
+			shitmodules_config_oid(&real_obj->oid);
 			obj_read_unlock();
 		}
 		if (grep_object(opt, pathspec, real_obj, list->objects[i].name,
@@ -773,7 +773,7 @@ static int grep_directory(struct grep_opt *opt, const struct pathspec *pathspec,
 	int i, hit = 0;
 
 	if (!use_index)
-		dir.flags |= DIR_NO_GITLINKS;
+		dir.flags |= DIR_NO_shitLINKS;
 	if (exc_std)
 		setup_standard_excludes(&dir);
 
@@ -908,11 +908,11 @@ int cmd_grep(int argc, const char **argv, const char *prefix)
 		OPT_BOOL(0, "cached", &cached,
 			N_("search in index instead of in the work tree")),
 		OPT_NEGBIT(0, "no-index", &use_index,
-			 N_("find in contents not managed by git"), 1),
+			 N_("find in contents not managed by shit"), 1),
 		OPT_BOOL(0, "untracked", &untracked,
 			N_("search in both tracked and untracked files")),
 		OPT_SET_INT(0, "exclude-standard", &opt_exclude,
-			    N_("ignore files specified via '.gitignore'"), 1),
+			    N_("ignore files specified via '.shitignore'"), 1),
 		OPT_BOOL(0, "recurse-submodules", &recurse_submodules,
 			 N_("recursively search in each submodule")),
 		OPT_GROUP(""),
@@ -1024,7 +1024,7 @@ int cmd_grep(int argc, const char **argv, const char *prefix)
 	grep_prefix = prefix;
 
 	grep_init(&opt, the_repository);
-	git_config(grep_cmd_config, &opt);
+	shit_config(grep_cmd_config, &opt);
 
 	/*
 	 * If there is no -- then the paths must exist in the working
@@ -1040,19 +1040,19 @@ int cmd_grep(int argc, const char **argv, const char *prefix)
 			     PARSE_OPT_KEEP_DASHDASH |
 			     PARSE_OPT_STOP_AT_NON_OPTION);
 
-	if (the_repository->gitdir) {
+	if (the_repository->shitdir) {
 		prepare_repo_settings(the_repository);
 		the_repository->settings.command_requires_full_index = 0;
 	}
 
 	if (use_index && !startup_info->have_repository) {
 		int fallback = 0;
-		git_config_get_bool("grep.fallbacktonoindex", &fallback);
+		shit_config_get_bool("grep.fallbacktonoindex", &fallback);
 		if (fallback)
 			use_index = 0;
 		else
 			/* die the same way as if we did it at the beginning */
-			setup_git_directory();
+			setup_shit_directory();
 	}
 	/* Ignore --recurse-submodules if --no-index is given or implied */
 	if (!use_index)
@@ -1077,7 +1077,7 @@ int cmd_grep(int argc, const char **argv, const char *prefix)
 	}
 
 	if (show_in_pager == default_pager)
-		show_in_pager = git_pager(1);
+		show_in_pager = shit_pager(1);
 	if (show_in_pager) {
 		opt.color = 0;
 		opt.name_only = 1;
@@ -1192,14 +1192,14 @@ int cmd_grep(int argc, const char **argv, const char *prefix)
 			skip_first_line = 1;
 
 		/*
-		 * Pre-read gitmodules (if not read already) and force eager
-		 * initialization of packed_git to prevent racy lazy
+		 * Pre-read shitmodules (if not read already) and force eager
+		 * initialization of packed_shit to prevent racy lazy
 		 * reading/initialization once worker threads are started.
 		 */
 		if (recurse_submodules)
-			repo_read_gitmodules(the_repository, 1);
+			repo_read_shitmodules(the_repository, 1);
 		if (startup_info->have_repository)
-			(void)get_packed_git(the_repository);
+			(void)get_packed_shit(the_repository);
 
 		start_threads(&opt);
 	} else {

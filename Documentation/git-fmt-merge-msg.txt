@@ -1,25 +1,25 @@
-git-fmt-merge-msg(1)
+shit-fmt-merge-msg(1)
 ====================
 
 NAME
 ----
-git-fmt-merge-msg - Produce a merge commit message
+shit-fmt-merge-msg - Produce a merge commit message
 
 
 SYNOPSIS
 --------
 [verse]
-'git fmt-merge-msg' [-m <message>] [--into-name <branch>] [--log[=<n>] | --no-log]
-'git fmt-merge-msg' [-m <message>] [--log[=<n>] | --no-log] -F <file>
+'shit fmt-merge-msg' [-m <message>] [--into-name <branch>] [--log[=<n>] | --no-log]
+'shit fmt-merge-msg' [-m <message>] [--log[=<n>] | --no-log] -F <file>
 
 DESCRIPTION
 -----------
 Takes the list of merged objects on stdin and produces a suitable
 commit message to be used for the merge commit, usually to be
-passed as the '<merge-message>' argument of 'git merge'.
+passed as the '<merge-message>' argument of 'shit merge'.
 
 This command is intended mostly for internal use by scripts
-automatically invoking 'git merge'.
+automatically invoking 'shit merge'.
 
 OPTIONS
 -------
@@ -65,8 +65,8 @@ EXAMPLES
 --------
 
 ---------
-$ git fetch origin master
-$ git fmt-merge-msg --log <$GIT_DIR/FETCH_HEAD
+$ shit fetch origin master
+$ shit fmt-merge-msg --log <$shit_DIR/FETCH_HEAD
 ---------
 
 Print a log message describing a merge of the "master" branch from
@@ -75,8 +75,8 @@ the "origin" remote.
 
 SEE ALSO
 --------
-linkgit:git-merge[1]
+linkshit:shit-merge[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

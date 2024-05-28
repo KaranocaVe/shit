@@ -7,7 +7,7 @@
 # "clear", replace the chunk entirely. Otherwise, overwrite data <offset> bytes
 # into the chunk.
 #
-# The <bytes> are interpreted as pairs of hex digits (so "000000FE" would be
+# The <bytes> are interpreted as pairs of hex dishits (so "000000FE" would be
 # big-endian 254).
 corrupt_chunk_file () {
 	fn=$1; shift

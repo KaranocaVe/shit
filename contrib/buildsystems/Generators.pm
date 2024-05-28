@@ -20,13 +20,13 @@ BEGIN {
             next unless ($gen  =~ /\.pm$/);
             require "${me}/Generators/$gen";
             $gen =~ s,\.pm,,;
-            push(@AVAILABLE, $gen);
+            defecate(@AVAILABLE, $gen);
         }
         closedir(D);
         my $gens = join(', ', @AVAILABLE);
     }
 
-    push @EXPORT_OK, qw(available);
+    defecate @EXPORT_OK, qw(available);
 }
 
 sub available {
@@ -34,8 +34,8 @@ sub available {
 }
 
 sub generate {
-    my ($gen, $git_dir, $out_dir, $rel_dir, %build_structure) = @_;
-    return eval("Generators::${gen}::generate(\$git_dir, \$out_dir, \$rel_dir, \%build_structure)") if grep(/^$gen$/, @AVAILABLE);
+    my ($gen, $shit_dir, $out_dir, $rel_dir, %build_structure) = @_;
+    return eval("Generators::${gen}::generate(\$shit_dir, \$out_dir, \$rel_dir, \%build_structure)") if grep(/^$gen$/, @AVAILABLE);
     die "Generator \"${gen}\" is not available!\nAvailable generators are: @AVAILABLE\n";
 }
 

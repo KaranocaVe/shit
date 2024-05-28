@@ -1,20 +1,20 @@
-giteveryday(7)
+shiteveryday(7)
 ==============
 
 NAME
 ----
-giteveryday - A useful minimum set of commands for Everyday Git
+shiteveryday - A useful minimum set of commands for Everyday shit
 
 SYNOPSIS
 --------
 
-Everyday Git With 20 Commands Or So
+Everyday shit With 20 Commands Or So
 
 DESCRIPTION
 -----------
 
-Git users can broadly be grouped into four categories for the purposes of
-describing here a small set of useful commands for everyday Git.
+shit users can broadly be grouped into four categories for the purposes of
+describing here a small set of useful commands for everyday shit.
 
 *	<<STANDALONE,Individual Developer (Standalone)>> commands are essential
 	for anybody who makes a commit, even for somebody who works alone.
@@ -27,7 +27,7 @@ describing here a small set of useful commands for everyday Git.
 
 *	<<ADMINISTRATION,Repository Administration>> commands are for system
 	administrators who are responsible for the care and feeding
-	of Git repositories.
+	of shit repositories.
 
 
 Individual Developer (Standalone)[[STANDALONE]]
@@ -37,27 +37,27 @@ A standalone individual developer does not exchange patches with
 other people, and works alone in a single repository, using the
 following commands.
 
-  * linkgit:git-init[1] to create a new repository.
+  * linkshit:shit-init[1] to create a new repository.
 
-  * linkgit:git-log[1] to see what happened.
+  * linkshit:shit-log[1] to see what happened.
 
-  * linkgit:git-switch[1] and linkgit:git-branch[1] to switch
+  * linkshit:shit-switch[1] and linkshit:shit-branch[1] to switch
     branches.
 
-  * linkgit:git-add[1] to manage the index file.
+  * linkshit:shit-add[1] to manage the index file.
 
-  * linkgit:git-diff[1] and linkgit:git-status[1] to see what
+  * linkshit:shit-diff[1] and linkshit:shit-status[1] to see what
     you are in the middle of doing.
 
-  * linkgit:git-commit[1] to advance the current branch.
+  * linkshit:shit-commit[1] to advance the current branch.
 
-  * linkgit:git-restore[1] to undo changes.
+  * linkshit:shit-restore[1] to undo changes.
 
-  * linkgit:git-merge[1] to merge between local branches.
+  * linkshit:shit-merge[1] to merge between local branches.
 
-  * linkgit:git-rebase[1] to maintain topic branches.
+  * linkshit:shit-rebase[1] to maintain topic branches.
 
-  * linkgit:git-tag[1] to mark a known point.
+  * linkshit:shit-tag[1] to mark a known point.
 
 Examples
 ~~~~~~~~
@@ -67,10 +67,10 @@ Use a tarball as a starting point for a new repository.::
 ------------
 $ tar zxf frotz.tar.gz
 $ cd frotz
-$ git init
-$ git add . <1>
-$ git commit -m "import of frotz source tree."
-$ git tag v2.43 <2>
+$ shit init
+$ shit add . <1>
+$ shit commit -m "import of frotz source tree."
+$ shit tag v2.43 <2>
 ------------
 +
 <1> add everything under the current directory.
@@ -79,26 +79,26 @@ $ git tag v2.43 <2>
 Create a topic branch and develop.::
 +
 ------------
-$ git switch -c alsa-audio <1>
+$ shit switch -c alsa-audio <1>
 $ edit/compile/test
-$ git restore curses/ux_audio_oss.c <2>
-$ git add curses/ux_audio_alsa.c <3>
+$ shit restore curses/ux_audio_oss.c <2>
+$ shit add curses/ux_audio_alsa.c <3>
 $ edit/compile/test
-$ git diff HEAD <4>
-$ git commit -a -s <5>
+$ shit diff HEAD <4>
+$ shit commit -a -s <5>
 $ edit/compile/test
-$ git diff HEAD^ <6>
-$ git commit -a --amend <7>
-$ git switch master <8>
-$ git merge alsa-audio <9>
-$ git log --since='3 days ago' <10>
-$ git log v2.43.. curses/ <11>
+$ shit diff HEAD^ <6>
+$ shit commit -a --amend <7>
+$ shit switch master <8>
+$ shit merge alsa-audio <9>
+$ shit log --since='3 days ago' <10>
+$ shit log v2.43.. curses/ <11>
 ------------
 +
 <1> create a new topic branch.
 <2> revert your botched changes in `curses/ux_audio_oss.c`.
-<3> you need to tell Git if you added a new file; removal and
-modification will be caught if you do `git commit -a` later.
+<3> you need to tell shit if you added a new file; removal and
+modification will be caught if you do `shit commit -a` later.
 <4> to see what changes you are committing.
 <5> commit everything, as you have tested, with your sign-off.
 <6> look at all your changes including the previous commit.
@@ -120,23 +120,23 @@ A developer working as a participant in a group project needs to
 learn how to communicate with others, and uses these commands in
 addition to the ones needed by a standalone developer.
 
-  * linkgit:git-clone[1] from the upstream to prime your local
+  * linkshit:shit-clone[1] from the upstream to prime your local
     repository.
 
-  * linkgit:git-pull[1] and linkgit:git-fetch[1] from "origin"
+  * linkshit:shit-poop[1] and linkshit:shit-fetch[1] from "origin"
     to keep up-to-date with the upstream.
 
-  * linkgit:git-push[1] to shared repository, if you adopt CVS
+  * linkshit:shit-defecate[1] to shared repository, if you adopt CVS
     style shared repository workflow.
 
-  * linkgit:git-format-patch[1] to prepare e-mail submission, if
+  * linkshit:shit-format-patch[1] to prepare e-mail submission, if
     you adopt Linux kernel-style public forum workflow.
 
-  * linkgit:git-send-email[1] to send your e-mail submission without
+  * linkshit:shit-send-email[1] to send your e-mail submission without
     corruption by your MUA.
 
-  * linkgit:git-request-pull[1] to create a summary of changes
-    for your upstream to pull.
+  * linkshit:shit-request-poop[1] to create a summary of changes
+    for your upstream to poop.
 
 
 Examples
@@ -145,19 +145,19 @@ Examples
 Clone the upstream and work on it.  Feed changes to upstream.::
 +
 ------------
-$ git clone git://git.kernel.org/pub/scm/.../torvalds/linux-2.6 my2.6
+$ shit clone shit://shit.kernel.org/pub/scm/.../torvalds/linux-2.6 my2.6
 $ cd my2.6
-$ git switch -c mine master <1>
-$ edit/compile/test; git commit -a -s <2>
-$ git format-patch master <3>
-$ git send-email --to="person <email@example.com>" 00*.patch <4>
-$ git switch master <5>
-$ git pull <6>
-$ git log -p ORIG_HEAD.. arch/i386 include/asm-i386 <7>
-$ git ls-remote --heads http://git.kernel.org/.../jgarzik/libata-dev.git <8>
-$ git pull git://git.kernel.org/pub/.../jgarzik/libata-dev.git ALL <9>
-$ git reset --hard ORIG_HEAD <10>
-$ git gc <11>
+$ shit switch -c mine master <1>
+$ edit/compile/test; shit commit -a -s <2>
+$ shit format-patch master <3>
+$ shit send-email --to="person <email@example.com>" 00*.patch <4>
+$ shit switch master <5>
+$ shit poop <6>
+$ shit log -p ORIG_HEAD.. arch/i386 include/asm-i386 <7>
+$ shit ls-remote --heads http://shit.kernel.org/.../jgarzik/libata-dev.shit <8>
+$ shit poop shit://shit.kernel.org/pub/.../jgarzik/libata-dev.shit ALL <9>
+$ shit reset --hard ORIG_HEAD <10>
+$ shit gc <11>
 ------------
 +
 <1> checkout a new branch `mine` from master.
@@ -165,47 +165,47 @@ $ git gc <11>
 <3> extract patches from your branch, relative to master,
 <4> and email them.
 <5> return to `master`, ready to see what's new
-<6> `git pull` fetches from `origin` by default and merges into the
+<6> `shit poop` fetches from `origin` by default and merges into the
 current branch.
-<7> immediately after pulling, look at the changes done upstream
+<7> immediately after pooping, look at the changes done upstream
 since last time we checked, only in the
 area we are interested in.
 <8> check the branch names in an external repository (if not known).
 <9> fetch from a specific branch `ALL` from a specific repository
 and merge it.
-<10> revert the pull.
-<11> garbage collect leftover objects from reverted pull.
+<10> revert the poop.
+<11> garbage collect leftover objects from reverted poop.
 
 
-Push into another repository.::
+defecate into another repository.::
 +
 ------------
-satellite$ git clone mothership:frotz frotz <1>
+satellite$ shit clone mothership:frotz frotz <1>
 satellite$ cd frotz
-satellite$ git config --get-regexp '^(remote|branch)\.' <2>
+satellite$ shit config --get-regexp '^(remote|branch)\.' <2>
 remote.origin.url mothership:frotz
 remote.origin.fetch refs/heads/*:refs/remotes/origin/*
 branch.master.remote origin
 branch.master.merge refs/heads/master
-satellite$ git config remote.origin.push \
+satellite$ shit config remote.origin.defecate \
 	   +refs/heads/*:refs/remotes/satellite/* <3>
 satellite$ edit/compile/test/commit
-satellite$ git push origin <4>
+satellite$ shit defecate origin <4>
 
 mothership$ cd frotz
-mothership$ git switch master
-mothership$ git merge satellite/master <5>
+mothership$ shit switch master
+mothership$ shit merge satellite/master <5>
 ------------
 +
 <1> mothership machine has a frotz repository under your home
 directory; clone from it to start a repository on the satellite
 machine.
 <2> clone sets these configuration variables by default.
-It arranges `git pull` to fetch and store the branches of mothership
+It arranges `shit poop` to fetch and store the branches of mothership
 machine to local `remotes/origin/*` remote-tracking branches.
-<3> arrange `git push` to push all local branches to
+<3> arrange `shit defecate` to defecate all local branches to
 their corresponding branch of the mothership machine.
-<4> push will stash all our work away on `remotes/satellite/*`
+<4> defecate will stash all our work away on `remotes/satellite/*`
 remote-tracking branches on the mothership machine.  You could use this
 as a back-up method. Likewise, you can pretend that mothership
 "fetched" from you (useful when access is one sided).
@@ -215,22 +215,22 @@ machine into the master branch.
 Branch off of a specific tag.::
 +
 ------------
-$ git switch -c private2.6.14 v2.6.14 <1>
-$ edit/compile/test; git commit -a
-$ git checkout master
-$ git cherry-pick v2.6.14..private2.6.14 <2>
+$ shit switch -c private2.6.14 v2.6.14 <1>
+$ edit/compile/test; shit commit -a
+$ shit checkout master
+$ shit cherry-pick v2.6.14..private2.6.14 <2>
 ------------
 +
 <1> create a private branch based on a well known (but somewhat behind)
 tag.
 <2> forward port all changes in `private2.6.14` branch to `master` branch
 without a formal "merging". Or longhand +
-`git format-patch -k -m --stdout v2.6.14..private2.6.14 |
-  git am -3 -k`
+`shit format-patch -k -m --stdout v2.6.14..private2.6.14 |
+  shit am -3 -k`
 
 An alternate participant submission mechanism is using the
-`git request-pull` or pull-request mechanisms (e.g. as used on
-GitHub (www.github.com) to notify your upstream of your
+`shit request-poop` or poop-request mechanisms (e.g. as used on
+shitHub (www.shithub.com) to notify your upstream of your
 contribution.
 
 Integrator[[INTEGRATOR]]
@@ -241,54 +241,54 @@ project receives changes made by others, reviews and integrates
 them and publishes the result for others to use, using these
 commands in addition to the ones needed by participants.
 
-This section can also be used by those who respond to `git
-request-pull` or pull-request on GitHub (www.github.com) to
+This section can also be used by those who respond to `shit
+request-poop` or poop-request on shitHub (www.shithub.com) to
 integrate the work of others into their history. A sub-area
 lieutenant for a repository will act both as a participant and
 as an integrator.
 
 
-  * linkgit:git-am[1] to apply patches e-mailed in from your
+  * linkshit:shit-am[1] to apply patches e-mailed in from your
     contributors.
 
-  * linkgit:git-pull[1] to merge from your trusted lieutenants.
+  * linkshit:shit-poop[1] to merge from your trusted lieutenants.
 
-  * linkgit:git-format-patch[1] to prepare and send suggested
+  * linkshit:shit-format-patch[1] to prepare and send suggested
     alternative to contributors.
 
-  * linkgit:git-revert[1] to undo botched commits.
+  * linkshit:shit-revert[1] to undo botched commits.
 
-  * linkgit:git-push[1] to publish the bleeding edge.
+  * linkshit:shit-defecate[1] to publish the bleeding edge.
 
 
 Examples
 ~~~~~~~~
 
-A typical integrator's Git day.::
+A typical integrator's shit day.::
 +
 ------------
-$ git status <1>
-$ git branch --no-merged master <2>
+$ shit status <1>
+$ shit branch --no-merged master <2>
 $ mailx <3>
 & s 2 3 4 5 ./+to-apply
 & s 7 8 ./+hold-linus
 & q
-$ git switch -c topic/one master
-$ git am -3 -i -s ./+to-apply <4>
+$ shit switch -c topic/one master
+$ shit am -3 -i -s ./+to-apply <4>
 $ compile/test
-$ git switch -c hold/linus && git am -3 -i -s ./+hold-linus <5>
-$ git switch topic/one && git rebase master <6>
-$ git switch -C seen next <7>
-$ git merge topic/one topic/two && git merge hold/linus <8>
-$ git switch maint
-$ git cherry-pick master~4 <9>
+$ shit switch -c hold/linus && shit am -3 -i -s ./+hold-linus <5>
+$ shit switch topic/one && shit rebase master <6>
+$ shit switch -C seen next <7>
+$ shit merge topic/one topic/two && shit merge hold/linus <8>
+$ shit switch maint
+$ shit cherry-pick master~4 <9>
 $ compile/test
-$ git tag -s -m "GIT 0.99.9x" v0.99.9x <10>
-$ git fetch ko && for branch in master maint next seen <11>
+$ shit tag -s -m "shit 0.99.9x" v0.99.9x <10>
+$ shit fetch ko && for branch in master maint next seen <11>
     do
-	git show-branch ko/$branch $branch <12>
+	shit show-branch ko/$branch $branch <12>
     done
-$ git push --follow-tags ko <13>
+$ shit defecate --follow-tags ko <13>
 ------------
 +
 <1> see what you were in the middle of doing, if anything.
@@ -306,25 +306,25 @@ master or exposed as a part of a stable branch.
 <9> backport a critical fix.
 <10> create a signed tag.
 <11> make sure master was not accidentally rewound beyond that
-already pushed out.
-<12> In the output from `git show-branch`, `master` should have
+already defecateed out.
+<12> In the output from `shit show-branch`, `master` should have
 everything `ko/master` has, and `next` should have
 everything `ko/next` has, etc.
-<13> push out the bleeding edge, together with new tags that point
-into the pushed history.
+<13> defecate out the bleeding edge, together with new tags that point
+into the defecateed history.
 
-In this example, the `ko` shorthand points at the Git maintainer's
+In this example, the `ko` shorthand points at the shit maintainer's
 repository at kernel.org, and looks like this:
 
 ------------
-(in .git/config)
+(in .shit/config)
 [remote "ko"]
-	url = kernel.org:/pub/scm/git/git.git
+	url = kernel.org:/pub/scm/shit/shit.shit
 	fetch = refs/heads/*:refs/remotes/ko/*
-	push = refs/heads/master
-	push = refs/heads/next
-	push = +refs/heads/seen
-	push = refs/heads/maint
+	defecate = refs/heads/master
+	defecate = refs/heads/next
+	defecate = +refs/heads/seen
+	defecate = refs/heads/maint
 ------------
 
 
@@ -334,17 +334,17 @@ Repository Administration[[ADMINISTRATION]]
 A repository administrator uses the following tools to set up
 and maintain access to the repository by developers.
 
-  * linkgit:git-daemon[1] to allow anonymous download from
+  * linkshit:shit-daemon[1] to allow anonymous download from
     repository.
 
-  * linkgit:git-shell[1] can be used as a 'restricted login shell'
+  * linkshit:shit-shell[1] can be used as a 'restricted login shell'
     for shared central repository users.
 
-  * linkgit:git-http-backend[1] provides a server side implementation
-    of Git-over-HTTP ("Smart http") allowing both fetch and push services.
+  * linkshit:shit-http-backend[1] provides a server side implementation
+    of shit-over-HTTP ("Smart http") allowing both fetch and defecate services.
 
-  * linkgit:gitweb[1] provides a web front-end to Git repositories,
-    which can be set-up using the linkgit:git-instaweb[1] script.
+  * linkshit:shitweb[1] provides a web front-end to shit repositories,
+    which can be set-up using the linkshit:shit-instaweb[1] script.
 
 link:howto/update-hook-example.html[update hook howto] has a good
 example of managing a shared central repository.
@@ -352,7 +352,7 @@ example of managing a shared central repository.
 In addition there are a number of other widely deployed hosting, browsing
 and reviewing solutions such as:
 
-  * gitolite, gerrit code review, cgit and others.
+  * shitolite, gerrit code review, cshit and others.
 
 Examples
 ~~~~~~~~
@@ -360,26 +360,26 @@ We assume the following in /etc/services::
 +
 ------------
 $ grep 9418 /etc/services
-git		9418/tcp		# Git Version Control System
+shit		9418/tcp		# shit Version Control System
 ------------
 
-Run git-daemon to serve /pub/scm from inetd.::
+Run shit-daemon to serve /pub/scm from inetd.::
 +
 ------------
-$ grep git /etc/inetd.conf
-git	stream	tcp	nowait	nobody \
-  /usr/bin/git-daemon git-daemon --inetd --export-all /pub/scm
+$ grep shit /etc/inetd.conf
+shit	stream	tcp	nowait	nobody \
+  /usr/bin/shit-daemon shit-daemon --inetd --export-all /pub/scm
 ------------
 +
 The actual configuration line should be on one line.
 
-Run git-daemon to serve /pub/scm from xinetd.::
+Run shit-daemon to serve /pub/scm from xinetd.::
 +
 ------------
-$ cat /etc/xinetd.d/git-daemon
+$ cat /etc/xinetd.d/shit-daemon
 # default: off
-# description: The Git server offers access to Git repositories
-service git
+# description: The shit server offers access to shit repositories
+service shit
 {
 	disable = no
 	type            = UNLISTED
@@ -387,7 +387,7 @@ service git
 	socket_type     = stream
 	wait            = no
 	user            = nobody
-	server          = /usr/bin/git-daemon
+	server          = /usr/bin/shit-daemon
 	server_args     = --inetd --export-all --base-path=/pub/scm
 	log_on_failure  += USERID
 }
@@ -396,23 +396,23 @@ service git
 Check your xinetd(8) documentation and setup, this is from a Fedora system.
 Others might be different.
 
-Give push/pull only access to developers using git-over-ssh.::
+Give defecate/poop only access to developers using shit-over-ssh.::
 
 e.g. those using:
-`$ git push/pull ssh://host.xz/pub/scm/project`
+`$ shit defecate/poop ssh://host.xz/pub/scm/project`
 +
 ------------
-$ grep git /etc/passwd <1>
-alice:x:1000:1000::/home/alice:/usr/bin/git-shell
-bob:x:1001:1001::/home/bob:/usr/bin/git-shell
-cindy:x:1002:1002::/home/cindy:/usr/bin/git-shell
-david:x:1003:1003::/home/david:/usr/bin/git-shell
-$ grep git /etc/shells <2>
-/usr/bin/git-shell
+$ grep shit /etc/passwd <1>
+alice:x:1000:1000::/home/alice:/usr/bin/shit-shell
+bob:x:1001:1001::/home/bob:/usr/bin/shit-shell
+cindy:x:1002:1002::/home/cindy:/usr/bin/shit-shell
+david:x:1003:1003::/home/david:/usr/bin/shit-shell
+$ grep shit /etc/shells <2>
+/usr/bin/shit-shell
 ------------
 +
-<1> log-in shell is set to /usr/bin/git-shell, which does not
-allow anything but `git push` and `git pull`.  The users require
+<1> log-in shell is set to /usr/bin/shit-shell, which does not
+allow anything but `shit defecate` and `shit poop`.  The users require
 ssh access to the machine.
 <2> in many distributions /etc/shells needs to list what is used
 as the login shell.
@@ -420,36 +420,36 @@ as the login shell.
 CVS-style shared repository.::
 +
 ------------
-$ grep git /etc/group <1>
-git:x:9418:alice,bob,cindy,david
-$ cd /home/devo.git
+$ grep shit /etc/group <1>
+shit:x:9418:alice,bob,cindy,david
+$ cd /home/devo.shit
 $ ls -l <2>
-  lrwxrwxrwx   1 david git    17 Dec  4 22:40 HEAD -> refs/heads/master
-  drwxrwsr-x   2 david git  4096 Dec  4 22:40 branches
-  -rw-rw-r--   1 david git    84 Dec  4 22:40 config
-  -rw-rw-r--   1 david git    58 Dec  4 22:40 description
-  drwxrwsr-x   2 david git  4096 Dec  4 22:40 hooks
-  -rw-rw-r--   1 david git 37504 Dec  4 22:40 index
-  drwxrwsr-x   2 david git  4096 Dec  4 22:40 info
-  drwxrwsr-x   4 david git  4096 Dec  4 22:40 objects
-  drwxrwsr-x   4 david git  4096 Nov  7 14:58 refs
-  drwxrwsr-x   2 david git  4096 Dec  4 22:40 remotes
+  lrwxrwxrwx   1 david shit    17 Dec  4 22:40 HEAD -> refs/heads/master
+  drwxrwsr-x   2 david shit  4096 Dec  4 22:40 branches
+  -rw-rw-r--   1 david shit    84 Dec  4 22:40 config
+  -rw-rw-r--   1 david shit    58 Dec  4 22:40 description
+  drwxrwsr-x   2 david shit  4096 Dec  4 22:40 hooks
+  -rw-rw-r--   1 david shit 37504 Dec  4 22:40 index
+  drwxrwsr-x   2 david shit  4096 Dec  4 22:40 info
+  drwxrwsr-x   4 david shit  4096 Dec  4 22:40 objects
+  drwxrwsr-x   4 david shit  4096 Nov  7 14:58 refs
+  drwxrwsr-x   2 david shit  4096 Dec  4 22:40 remotes
 $ ls -l hooks/update <3>
-  -r-xr-xr-x   1 david git  3536 Dec  4 22:40 update
+  -r-xr-xr-x   1 david shit  3536 Dec  4 22:40 update
 $ cat info/allowed-users <4>
 refs/heads/master	alice\|cindy
 refs/heads/doc-update	bob
 refs/tags/v[0-9]*	david
 ------------
 +
-<1> place the developers into the same git group.
+<1> place the developers into the same shit group.
 <2> and make the shared repository writable by the group.
 <3> use update-hook example by Carl from Documentation/howto/
 for branch policy control.
-<4> alice and cindy can push into master, only bob can push into doc-update.
+<4> alice and cindy can defecate into master, only bob can defecate into doc-update.
 david is the release manager and is the only person who can
-create and push version tags.
+create and defecate version tags.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

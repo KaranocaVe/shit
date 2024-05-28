@@ -1,11 +1,11 @@
 /*
  * ident.c
  *
- * create git identifier lines of the form "name <email> date"
+ * create shit identifier lines of the form "name <email> date"
  *
  * Copyright (C) 2005 Linus Torvalds
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "ident.h"
 #include "config.h"
 #include "date.h"
@@ -13,13 +13,13 @@
 #include "mailmap.h"
 #include "strbuf.h"
 
-static struct strbuf git_default_name = STRBUF_INIT;
-static struct strbuf git_default_email = STRBUF_INIT;
-static struct strbuf git_default_date = STRBUF_INIT;
-static struct strbuf git_author_name = STRBUF_INIT;
-static struct strbuf git_author_email = STRBUF_INIT;
-static struct strbuf git_committer_name = STRBUF_INIT;
-static struct strbuf git_committer_email = STRBUF_INIT;
+static struct strbuf shit_default_name = STRBUF_INIT;
+static struct strbuf shit_default_email = STRBUF_INIT;
+static struct strbuf shit_default_date = STRBUF_INIT;
+static struct strbuf shit_author_name = STRBUF_INIT;
+static struct strbuf shit_author_email = STRBUF_INIT;
+static struct strbuf shit_committer_name = STRBUF_INIT;
+static struct strbuf shit_committer_email = STRBUF_INIT;
 static int default_email_is_bogus;
 static int default_name_is_bogus;
 
@@ -161,43 +161,43 @@ static void copy_email(const struct passwd *pw, struct strbuf *email,
 
 const char *ident_default_name(void)
 {
-	if (!(ident_config_given & IDENT_NAME_GIVEN) && !git_default_name.len) {
-		copy_gecos(xgetpwuid_self(&default_name_is_bogus), &git_default_name);
-		strbuf_trim(&git_default_name);
+	if (!(ident_config_given & IDENT_NAME_GIVEN) && !shit_default_name.len) {
+		copy_gecos(xgetpwuid_self(&default_name_is_bogus), &shit_default_name);
+		strbuf_trim(&shit_default_name);
 	}
-	return git_default_name.buf;
+	return shit_default_name.buf;
 }
 
 const char *ident_default_email(void)
 {
-	if (!(ident_config_given & IDENT_MAIL_GIVEN) && !git_default_email.len) {
+	if (!(ident_config_given & IDENT_MAIL_GIVEN) && !shit_default_email.len) {
 		const char *email = getenv("EMAIL");
 
 		if (email && email[0]) {
-			strbuf_addstr(&git_default_email, email);
+			strbuf_addstr(&shit_default_email, email);
 			committer_ident_explicitly_given |= IDENT_MAIL_GIVEN;
 			author_ident_explicitly_given |= IDENT_MAIL_GIVEN;
 		} else if ((email = query_user_email()) && email[0]) {
-			strbuf_addstr(&git_default_email, email);
+			strbuf_addstr(&shit_default_email, email);
 			free((char *)email);
 		} else
 			copy_email(xgetpwuid_self(&default_email_is_bogus),
-				   &git_default_email, &default_email_is_bogus);
-		strbuf_trim(&git_default_email);
+				   &shit_default_email, &default_email_is_bogus);
+		strbuf_trim(&shit_default_email);
 	}
-	return git_default_email.buf;
+	return shit_default_email.buf;
 }
 
 static const char *ident_default_date(void)
 {
-	if (!git_default_date.len)
-		datestamp(&git_default_date);
-	return git_default_date.buf;
+	if (!shit_default_date.len)
+		datestamp(&shit_default_date);
+	return shit_default_date.buf;
 }
 
 void reset_ident_date(void)
 {
-	strbuf_reset(&git_default_date);
+	strbuf_reset(&shit_default_date);
 }
 
 static int crud(unsigned char c)
@@ -441,8 +441,8 @@ static void ident_env_hint(enum want_ident whose_ident)
 		"\n"
 		"Run\n"
 		"\n"
-		"  git config --global user.email \"you@example.com\"\n"
-		"  git config --global user.name \"Your Name\"\n"
+		"  shit config --global user.email \"you@example.com\"\n"
+		"  shit config --global user.name \"Your Name\"\n"
 		"\n"
 		"to set your account\'s default identity.\n"
 		"Omit --global to set the identity only in this repository.\n"
@@ -462,10 +462,10 @@ const char *fmt_ident(const char *name, const char *email,
 	index = (index + 1) % ARRAY_SIZE(ident_pool);
 
 	if (!email) {
-		if (whose_ident == WANT_AUTHOR_IDENT && git_author_email.len)
-			email = git_author_email.buf;
-		else if (whose_ident == WANT_COMMITTER_IDENT && git_committer_email.len)
-			email = git_committer_email.buf;
+		if (whose_ident == WANT_AUTHOR_IDENT && shit_author_email.len)
+			email = shit_author_email.buf;
+		else if (whose_ident == WANT_COMMITTER_IDENT && shit_committer_email.len)
+			email = shit_committer_email.buf;
 	}
 	if (!email) {
 		if (strict && ident_use_config_only
@@ -483,11 +483,11 @@ const char *fmt_ident(const char *name, const char *email,
 	if (want_name) {
 		int using_default = 0;
 		if (!name) {
-			if (whose_ident == WANT_AUTHOR_IDENT && git_author_name.len)
-				name = git_author_name.buf;
+			if (whose_ident == WANT_AUTHOR_IDENT && shit_author_name.len)
+				name = shit_author_name.buf;
 			else if (whose_ident == WANT_COMMITTER_IDENT &&
-					git_committer_name.len)
-				name = git_committer_name.buf;
+					shit_committer_name.len)
+				name = shit_committer_name.buf;
 		}
 		if (!name) {
 			if (strict && ident_use_config_only
@@ -546,41 +546,41 @@ const char *fmt_name(enum want_ident whose_ident)
 	case WANT_BLANK_IDENT:
 		break;
 	case WANT_AUTHOR_IDENT:
-		name = getenv("GIT_AUTHOR_NAME");
-		email = getenv("GIT_AUTHOR_EMAIL");
+		name = getenv("shit_AUTHOR_NAME");
+		email = getenv("shit_AUTHOR_EMAIL");
 		break;
 	case WANT_COMMITTER_IDENT:
-		name = getenv("GIT_COMMITTER_NAME");
-		email = getenv("GIT_COMMITTER_EMAIL");
+		name = getenv("shit_COMMITTER_NAME");
+		email = getenv("shit_COMMITTER_EMAIL");
 		break;
 	}
 	return fmt_ident(name, email, whose_ident, NULL,
 			IDENT_STRICT | IDENT_NO_DATE);
 }
 
-const char *git_author_info(int flag)
+const char *shit_author_info(int flag)
 {
-	if (getenv("GIT_AUTHOR_NAME"))
+	if (getenv("shit_AUTHOR_NAME"))
 		author_ident_explicitly_given |= IDENT_NAME_GIVEN;
-	if (getenv("GIT_AUTHOR_EMAIL"))
+	if (getenv("shit_AUTHOR_EMAIL"))
 		author_ident_explicitly_given |= IDENT_MAIL_GIVEN;
-	return fmt_ident(getenv("GIT_AUTHOR_NAME"),
-			 getenv("GIT_AUTHOR_EMAIL"),
+	return fmt_ident(getenv("shit_AUTHOR_NAME"),
+			 getenv("shit_AUTHOR_EMAIL"),
 			 WANT_AUTHOR_IDENT,
-			 getenv("GIT_AUTHOR_DATE"),
+			 getenv("shit_AUTHOR_DATE"),
 			 flag);
 }
 
-const char *git_committer_info(int flag)
+const char *shit_committer_info(int flag)
 {
-	if (getenv("GIT_COMMITTER_NAME"))
+	if (getenv("shit_COMMITTER_NAME"))
 		committer_ident_explicitly_given |= IDENT_NAME_GIVEN;
-	if (getenv("GIT_COMMITTER_EMAIL"))
+	if (getenv("shit_COMMITTER_EMAIL"))
 		committer_ident_explicitly_given |= IDENT_MAIL_GIVEN;
-	return fmt_ident(getenv("GIT_COMMITTER_NAME"),
-			 getenv("GIT_COMMITTER_EMAIL"),
+	return fmt_ident(getenv("shit_COMMITTER_NAME"),
+			 getenv("shit_COMMITTER_EMAIL"),
 			 WANT_COMMITTER_IDENT,
-			 getenv("GIT_COMMITTER_DATE"),
+			 getenv("shit_COMMITTER_DATE"),
 			 flag);
 }
 
@@ -608,8 +608,8 @@ static int set_ident(const char *var, const char *value)
 	if (!strcmp(var, "author.name")) {
 		if (!value)
 			return config_error_nonbool(var);
-		strbuf_reset(&git_author_name);
-		strbuf_addstr(&git_author_name, value);
+		strbuf_reset(&shit_author_name);
+		strbuf_addstr(&shit_author_name, value);
 		author_ident_explicitly_given |= IDENT_NAME_GIVEN;
 		ident_config_given |= IDENT_NAME_GIVEN;
 		return 0;
@@ -618,8 +618,8 @@ static int set_ident(const char *var, const char *value)
 	if (!strcmp(var, "author.email")) {
 		if (!value)
 			return config_error_nonbool(var);
-		strbuf_reset(&git_author_email);
-		strbuf_addstr(&git_author_email, value);
+		strbuf_reset(&shit_author_email);
+		strbuf_addstr(&shit_author_email, value);
 		author_ident_explicitly_given |= IDENT_MAIL_GIVEN;
 		ident_config_given |= IDENT_MAIL_GIVEN;
 		return 0;
@@ -628,8 +628,8 @@ static int set_ident(const char *var, const char *value)
 	if (!strcmp(var, "committer.name")) {
 		if (!value)
 			return config_error_nonbool(var);
-		strbuf_reset(&git_committer_name);
-		strbuf_addstr(&git_committer_name, value);
+		strbuf_reset(&shit_committer_name);
+		strbuf_addstr(&shit_committer_name, value);
 		committer_ident_explicitly_given |= IDENT_NAME_GIVEN;
 		ident_config_given |= IDENT_NAME_GIVEN;
 		return 0;
@@ -638,8 +638,8 @@ static int set_ident(const char *var, const char *value)
 	if (!strcmp(var, "committer.email")) {
 		if (!value)
 			return config_error_nonbool(var);
-		strbuf_reset(&git_committer_email);
-		strbuf_addstr(&git_committer_email, value);
+		strbuf_reset(&shit_committer_email);
+		strbuf_addstr(&shit_committer_email, value);
 		committer_ident_explicitly_given |= IDENT_MAIL_GIVEN;
 		ident_config_given |= IDENT_MAIL_GIVEN;
 		return 0;
@@ -648,8 +648,8 @@ static int set_ident(const char *var, const char *value)
 	if (!strcmp(var, "user.name")) {
 		if (!value)
 			return config_error_nonbool(var);
-		strbuf_reset(&git_default_name);
-		strbuf_addstr(&git_default_name, value);
+		strbuf_reset(&shit_default_name);
+		strbuf_addstr(&shit_default_name, value);
 		committer_ident_explicitly_given |= IDENT_NAME_GIVEN;
 		author_ident_explicitly_given |= IDENT_NAME_GIVEN;
 		ident_config_given |= IDENT_NAME_GIVEN;
@@ -659,8 +659,8 @@ static int set_ident(const char *var, const char *value)
 	if (!strcmp(var, "user.email")) {
 		if (!value)
 			return config_error_nonbool(var);
-		strbuf_reset(&git_default_email);
-		strbuf_addstr(&git_default_email, value);
+		strbuf_reset(&shit_default_email);
+		strbuf_addstr(&shit_default_email, value);
 		committer_ident_explicitly_given |= IDENT_MAIL_GIVEN;
 		author_ident_explicitly_given |= IDENT_MAIL_GIVEN;
 		ident_config_given |= IDENT_MAIL_GIVEN;
@@ -670,12 +670,12 @@ static int set_ident(const char *var, const char *value)
 	return 0;
 }
 
-int git_ident_config(const char *var, const char *value,
+int shit_ident_config(const char *var, const char *value,
 		     const struct config_context *ctx UNUSED,
 		     void *data UNUSED)
 {
 	if (!strcmp(var, "user.useconfigonly")) {
-		ident_use_config_only = git_config_bool(var, value);
+		ident_use_config_only = shit_config_bool(var, value);
 		return 0;
 	}
 
@@ -692,13 +692,13 @@ static void set_env_if(const char *key, const char *value, int *given, int bit)
 
 void prepare_fallback_ident(const char *name, const char *email)
 {
-	set_env_if("GIT_AUTHOR_NAME", name,
+	set_env_if("shit_AUTHOR_NAME", name,
 		   &author_ident_explicitly_given, IDENT_NAME_GIVEN);
-	set_env_if("GIT_AUTHOR_EMAIL", email,
+	set_env_if("shit_AUTHOR_EMAIL", email,
 		   &author_ident_explicitly_given, IDENT_MAIL_GIVEN);
-	set_env_if("GIT_COMMITTER_NAME", name,
+	set_env_if("shit_COMMITTER_NAME", name,
 		   &committer_ident_explicitly_given, IDENT_NAME_GIVEN);
-	set_env_if("GIT_COMMITTER_EMAIL", email,
+	set_env_if("shit_COMMITTER_EMAIL", email,
 		   &committer_ident_explicitly_given, IDENT_MAIL_GIVEN);
 }
 

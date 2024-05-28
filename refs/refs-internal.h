@@ -536,12 +536,12 @@ struct ref_store;
 				 REF_STORE_MAIN)
 
 /*
- * Initialize the ref_store for the specified gitdir. These functions
+ * Initialize the ref_store for the specified shitdir. These functions
  * should call base_ref_store_init() to initialize the shared part of
  * the ref_store and to record the ref_store for later lookup.
  */
 typedef struct ref_store *ref_store_init_fn(struct repository *repo,
-					    const char *gitdir,
+					    const char *shitdir,
 					    unsigned int flags);
 
 typedef int ref_init_db_fn(struct ref_store *refs,
@@ -718,10 +718,10 @@ struct ref_store {
 	struct repository *repo;
 
 	/*
-	 * The gitdir that this ref_store applies to. Note that this is not
-	 * necessarily repo->gitdir if the repo has multiple worktrees.
+	 * The shitdir that this ref_store applies to. Note that this is not
+	 * necessarily repo->shitdir if the repo has multiple worktrees.
 	 */
-	char *gitdir;
+	char *shitdir;
 };
 
 /*
@@ -740,9 +740,9 @@ void base_ref_store_init(struct ref_store *refs, struct repository *repo,
 			 const char *path, const struct ref_storage_be *be);
 
 /*
- * Support GIT_TRACE_REFS by optionally wrapping the given ref_store instance.
+ * Support shit_TRACE_REFS by optionally wrapping the given ref_store instance.
  */
-struct ref_store *maybe_debug_wrap_ref_store(const char *gitdir, struct ref_store *store);
+struct ref_store *maybe_debug_wrap_ref_store(const char *shitdir, struct ref_store *store);
 
 /*
  * Return the refname under which update was originally requested.

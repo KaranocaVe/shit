@@ -1,21 +1,21 @@
-git-for-each-repo(1)
+shit-for-each-repo(1)
 ====================
 
 NAME
 ----
-git-for-each-repo - Run a Git command on a list of repositories
+shit-for-each-repo - Run a shit command on a list of repositories
 
 
 SYNOPSIS
 --------
 [verse]
-'git for-each-repo' --config=<config> [--] <arguments>
+'shit for-each-repo' --config=<config> [--] <arguments>
 
 
 DESCRIPTION
 -----------
-Run a Git command on a list of repositories. The arguments after the
-known options or `--` indicator are used as the arguments for the Git
+Run a shit command on a list of repositories. The arguments after the
+known options or `--` indicator are used as the arguments for the shit
 subprocess.
 
 THIS COMMAND IS EXPERIMENTAL. THE BEHAVIOR MAY CHANGE.
@@ -24,10 +24,10 @@ For example, we could run maintenance on each of a list of repositories
 stored in a `maintenance.repo` config variable using
 
 -------------
-git for-each-repo --config=maintenance.repo maintenance run
+shit for-each-repo --config=maintenance.repo maintenance run
 -------------
 
-This will run `git -C <repo> maintenance run` for each value `<repo>`
+This will run `shit -C <repo> maintenance run` for each value `<repo>`
 in the multi-valued config variable `maintenance.repo`.
 
 
@@ -38,9 +38,9 @@ OPTIONS
 	absolute path names. Iterate on that list of paths to run
 	the given arguments.
 +
-These config values are loaded from system, global, and local Git config,
-as available. If `git for-each-repo` is run in a directory that is not a
-Git repository, then only the system and global config is used.
+These config values are loaded from system, global, and local shit config,
+as available. If `shit for-each-repo` is run in a directory that is not a
+shit repository, then only the system and global config is used.
 
 --keep-going::
 	Continue with the remaining repositories if the command failed
@@ -55,14 +55,14 @@ be 1.
 SUBPROCESS BEHAVIOR
 -------------------
 
-If any `git -C <repo> <arguments>` subprocess returns a non-zero exit code,
-then the `git for-each-repo` process returns that exit code without running
+If any `shit -C <repo> <arguments>` subprocess returns a non-zero exit code,
+then the `shit for-each-repo` process returns that exit code without running
 more subprocesses.
 
-Each `git -C <repo> <arguments>` subprocess inherits the standard file
+Each `shit -C <repo> <arguments>` subprocess inherits the standard file
 descriptors `stdin`, `stdout`, and `stderr`.
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

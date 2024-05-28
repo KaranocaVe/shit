@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "commit-reach.h"
 #include "config.h"
 #include "diff.h"
@@ -35,13 +35,13 @@ static int decoration_loaded;
 static int decoration_flags;
 
 static char decoration_colors[][COLOR_MAXLEN] = {
-	GIT_COLOR_RESET,
-	GIT_COLOR_BOLD_GREEN,	/* REF_LOCAL */
-	GIT_COLOR_BOLD_RED,	/* REF_REMOTE */
-	GIT_COLOR_BOLD_YELLOW,	/* REF_TAG */
-	GIT_COLOR_BOLD_MAGENTA,	/* REF_STASH */
-	GIT_COLOR_BOLD_CYAN,	/* REF_HEAD */
-	GIT_COLOR_BOLD_BLUE,	/* GRAFTED */
+	shit_COLOR_RESET,
+	shit_COLOR_BOLD_GREEN,	/* REF_LOCAL */
+	shit_COLOR_BOLD_RED,	/* REF_REMOTE */
+	shit_COLOR_BOLD_YELLOW,	/* REF_TAG */
+	shit_COLOR_BOLD_MAGENTA,	/* REF_STASH */
+	shit_COLOR_BOLD_CYAN,	/* REF_HEAD */
+	shit_COLOR_BOLD_BLUE,	/* GRAFTED */
 };
 
 static const char *color_decorate_slots[] = {
@@ -152,16 +152,16 @@ static int add_ref_decoration(const char *refname, const struct object_id *oid,
 	enum object_type objtype;
 	enum decoration_type deco_type = DECORATION_NONE;
 	struct decoration_filter *filter = (struct decoration_filter *)cb_data;
-	const char *git_replace_ref_base = ref_namespace[NAMESPACE_REPLACE].ref;
+	const char *shit_replace_ref_base = ref_namespace[NAMESPACE_REPLACE].ref;
 
 	if (filter && !ref_filter_match(refname, filter))
 		return 0;
 
-	if (starts_with(refname, git_replace_ref_base)) {
+	if (starts_with(refname, shit_replace_ref_base)) {
 		struct object_id original_oid;
 		if (!replace_refs_enabled(the_repository))
 			return 0;
-		if (get_oid_hex(refname + strlen(git_replace_ref_base),
+		if (get_oid_hex(refname + strlen(shit_replace_ref_base),
 				&original_oid)) {
 			warning("invalid replace ref %s", refname);
 			return 0;
@@ -409,7 +409,7 @@ void show_decorations(struct rev_info *opt, struct commit *commit)
 	strbuf_release(&sb);
 }
 
-static unsigned int digits_in_number(unsigned int number)
+static unsigned int dishits_in_number(unsigned int number)
 {
 	unsigned int i = 10, result = 1;
 	while (i <= number) {
@@ -462,7 +462,7 @@ void fmt_output_email_subject(struct strbuf *sb, struct rev_info *opt)
 		strbuf_addf(sb, "Subject: [%s%s%0*d/%d] ",
 			    opt->subject_prefix,
 			    *opt->subject_prefix ? " " : "",
-			    digits_in_number(opt->total),
+			    dishits_in_number(opt->total),
 			    opt->nr, opt->total);
 	} else if (opt->total == 0 && opt->subject_prefix && *opt->subject_prefix) {
 		strbuf_addf(sb, "Subject: [%s] ",

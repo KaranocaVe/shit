@@ -1,7 +1,7 @@
 Description
 ^^^^^^^^^^^
 
-When specifying `--tool=vimdiff` in `git mergetool` Git will open Vim with a 4
+When specifying `--tool=vimdiff` in `shit mergetool` shit will open Vim with a 4
 windows layout distributed in the following way:
 ....
 ------------------------------------------
@@ -180,7 +180,7 @@ set configuration variables `mergetool.gvimdiff.layout` and
 `mergetool.nvimdiff.layout` instead of `mergetool.vimdiff.layout` (though the
 latter will be used as fallback if the variant-specific one is not set).
 
-In addition, for backwards compatibility with previous Git versions, you can
+In addition, for backwards compatibility with previous shit versions, you can
 also append `1`, `2` or `3` to either `vimdiff` or any of the variants (ex:
 `vimdiff3`, `nvimdiff1`, etc...) to use a predefined layout.
 In other words, using `--tool=[g,n,]vimdiffx` is the same as using

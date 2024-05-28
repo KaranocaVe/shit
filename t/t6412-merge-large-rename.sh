@@ -1,8 +1,8 @@
 #!/bin/sh
 
 test_description='merging with large rename matrix'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -16,9 +16,9 @@ count() {
 
 test_expect_success 'setup (initial)' '
 	touch file &&
-	git add . &&
-	git commit -m initial &&
-	git tag initial
+	shit add . &&
+	shit commit -m initial &&
+	shit tag initial
 '
 
 make_text() {
@@ -33,28 +33,28 @@ test_rename() {
 	test_expect_success "rename ($1, $2)" '
 	n='$1' &&
 	expect='$2' &&
-	git checkout -f main &&
-	test_might_fail git branch -D test$n &&
-	git reset --hard initial &&
+	shit checkout -f main &&
+	test_might_fail shit branch -D test$n &&
+	shit reset --hard initial &&
 	for i in $(count $n); do
 		make_text $i initial initial >$i || return 1
 	done &&
-	git add . &&
-	git commit -m add=$n &&
+	shit add . &&
+	shit commit -m add=$n &&
 	for i in $(count $n); do
 		make_text $i changed initial >$i || return 1
 	done &&
-	git commit -a -m change=$n &&
-	git checkout -b test$n HEAD^ &&
+	shit commit -a -m change=$n &&
+	shit checkout -b test$n HEAD^ &&
 	for i in $(count $n); do
-		git rm $i &&
+		shit rm $i &&
 		make_text $i initial changed >$i.moved || return 1
 	done &&
-	git add . &&
-	git commit -m change+rename=$n &&
+	shit add . &&
+	shit commit -m change+rename=$n &&
 	case "$expect" in
-		ok) git merge main ;;
-		 *) test_must_fail git merge main ;;
+		ok) shit merge main ;;
+		 *) test_must_fail shit merge main ;;
 	esac
 	'
 }
@@ -62,44 +62,44 @@ test_rename() {
 test_rename 5 ok
 
 test_expect_success 'set diff.renamelimit to 4' '
-	git config diff.renamelimit 4
+	shit config diff.renamelimit 4
 '
 test_rename 4 ok
 test_rename 5 fail
 
 test_expect_success 'set merge.renamelimit to 5' '
-	git config merge.renamelimit 5
+	shit config merge.renamelimit 5
 '
 test_rename 5 ok
 test_rename 6 fail
 
 test_expect_success 'setup large simple rename' '
-	git config --unset merge.renamelimit &&
-	git config --unset diff.renamelimit &&
+	shit config --unset merge.renamelimit &&
+	shit config --unset diff.renamelimit &&
 
-	git reset --hard initial &&
+	shit reset --hard initial &&
 	for i in $(count 200); do
 		make_text foo bar baz >$i || return 1
 	done &&
-	git add . &&
-	git commit -m create-files &&
+	shit add . &&
+	shit commit -m create-files &&
 
-	git branch simple-change &&
-	git checkout -b simple-rename &&
+	shit branch simple-change &&
+	shit checkout -b simple-rename &&
 
 	mkdir builtin &&
-	git mv [0-9]* builtin/ &&
-	git commit -m renamed &&
+	shit mv [0-9]* builtin/ &&
+	shit commit -m renamed &&
 
-	git checkout simple-change &&
+	shit checkout simple-change &&
 	>unrelated-change &&
-	git add unrelated-change &&
-	git commit -m unrelated-change
+	shit add unrelated-change &&
+	shit commit -m unrelated-change
 '
 
 test_expect_success 'massive simple rename does not spam added files' '
-	sane_unset GIT_MERGE_VERBOSITY &&
-	git merge --no-stat simple-rename | grep -v Removing >output &&
+	sane_unset shit_MERGE_VERBOSITY &&
+	shit merge --no-stat simple-rename | grep -v Removing >output &&
 	test_line_count -lt 5 output
 '
 

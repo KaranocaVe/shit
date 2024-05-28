@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "dir.h"
 #include "hex.h"
@@ -102,7 +102,7 @@ struct multi_pack_index *load_multi_pack_index(const char *object_dir, int local
 
 	get_midx_filename(&midx_name, object_dir);
 
-	fd = git_open(midx_name.buf);
+	fd = shit_open(midx_name.buf);
 
 	if (fd < 0)
 		goto cleanup_fail;
@@ -170,12 +170,12 @@ struct multi_pack_index *load_multi_pack_index(const char *object_dir, int local
 
 	pair_chunk(cf, MIDX_CHUNKID_LARGEOFFSETS, &m->chunk_large_offsets,
 		   &m->chunk_large_offsets_len);
-	if (git_env_bool("GIT_TEST_MIDX_READ_BTMP", 1))
+	if (shit_env_bool("shit_TEST_MIDX_READ_BTMP", 1))
 		pair_chunk(cf, MIDX_CHUNKID_BITMAPPEDPACKS,
 			   (const unsigned char **)&m->chunk_bitmapped_packs,
 			   &m->chunk_bitmapped_packs_len);
 
-	if (git_env_bool("GIT_TEST_MIDX_READ_RIDX", 1))
+	if (shit_env_bool("shit_TEST_MIDX_READ_RIDX", 1))
 		pair_chunk(cf, MIDX_CHUNKID_REVINDEX, &m->chunk_revindex,
 			   &m->chunk_revindex_len);
 
@@ -241,7 +241,7 @@ void close_midx(struct multi_pack_index *m)
 int prepare_midx_pack(struct repository *r, struct multi_pack_index *m, uint32_t pack_int_id)
 {
 	struct strbuf pack_name = STRBUF_INIT;
-	struct packed_git *p;
+	struct packed_shit *p;
 
 	if (pack_int_id >= m->num_packs)
 		die(_("bad pack-int-id: %u (%u total packs)"),
@@ -253,7 +253,7 @@ int prepare_midx_pack(struct repository *r, struct multi_pack_index *m, uint32_t
 	strbuf_addf(&pack_name, "%s/pack/%s", m->object_dir,
 		    m->pack_names[pack_int_id]);
 
-	p = add_packed_git(pack_name.buf, pack_name.len, m->local);
+	p = add_packed_shit(pack_name.buf, pack_name.len, m->local);
 	strbuf_release(&pack_name);
 
 	if (!p)
@@ -261,8 +261,8 @@ int prepare_midx_pack(struct repository *r, struct multi_pack_index *m, uint32_t
 
 	p->multi_pack_index = 1;
 	m->packs[pack_int_id] = p;
-	install_packed_git(r, p);
-	list_add_tail(&p->mru, &r->objects->packed_git_mru);
+	install_packed_shit(r, p);
+	list_add_tail(&p->mru, &r->objects->packed_shit_mru);
 
 	return 0;
 }
@@ -340,7 +340,7 @@ int fill_midx_entry(struct repository *r,
 {
 	uint32_t pos;
 	uint32_t pack_int_id;
-	struct packed_git *p;
+	struct packed_shit *p;
 
 	if (!bsearch_midx(oid, m, &pos))
 		return 0;

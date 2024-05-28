@@ -1,4 +1,4 @@
-GIT v1.5.6.4 Release Notes
+shit v1.5.6.4 Release Notes
 ==========================
 
 Fixes since v1.5.6.3
@@ -15,33 +15,33 @@ Fixes since v1.5.6.3
 * Bash completion wasted too many cycles; this has been optimized to be
   usable again.
 
-* Bash completion lost ref part when completing something like "git show
+* Bash completion lost ref part when completing something like "shit show
   pu:Makefile".
 
-* "git-cvsserver" did not clean up its temporary working area after annotate
+* "shit-cvsserver" did not clean up its temporary working area after annotate
   request.
 
-* "git-daemon" called syslog() from its signal handler, which was a
+* "shit-daemon" called syslog() from its signal handler, which was a
   no-no.
 
-* "git-fetch" into an empty repository used to remind that the fetch will
+* "shit-fetch" into an empty repository used to remind that the fetch will
    be huge by saying "no common commits", but this was an unnecessary
    noise; it is already known by the user anyway.
 
-* "git-http-fetch" would have segfaulted when pack idx file retrieved
+* "shit-http-fetch" would have segfaulted when pack idx file retrieved
   from the other side was corrupt.
 
-* "git-index-pack" used too much memory when dealing with a deep delta chain.
+* "shit-index-pack" used too much memory when dealing with a deep delta chain.
 
-* "git-mailinfo" (hence "git-am") did not correctly handle in-body [PATCH]
+* "shit-mailinfo" (hence "shit-am") did not correctly handle in-body [PATCH]
   line to override the commit title taken from the mail Subject header.
 
-* "git-rebase -i -p" lost parents that are not involved in the history
+* "shit-rebase -i -p" lost parents that are not involved in the history
   being rewritten.
 
-* "git-rm" lost track of where the index file was when GIT_DIR was
+* "shit-rm" lost track of where the index file was when shit_DIR was
   specified as a relative path.
 
-* "git-rev-list --quiet" was not quiet as advertised.
+* "shit-rev-list --quiet" was not quiet as advertised.
 
 Contains other various documentation fixes.

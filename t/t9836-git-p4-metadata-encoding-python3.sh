@@ -1,12 +1,12 @@
 #!/bin/sh
 
-test_description='git p4 metadata encoding
+test_description='shit p4 metadata encoding
 
 This test checks that the import process handles inconsistent text
 encoding in p4 metadata (author names, commit messages, etc) without
-failing, and produces maximally sane output in git.'
+failing, and produces maximally sane output in shit.'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 python_target_version='3'
 
@@ -14,7 +14,7 @@ python_target_version='3'
 ## SECTION REPEATED IN t9835 ##
 ###############################
 
-# Please note: this test calls "git-p4.py" rather than "git-p4", because the
+# Please note: this test calls "shit-p4.py" rather than "shit-p4", because the
 # latter references a specific path so we can't easily force it to run under
 # the python version we need to.
 
@@ -30,12 +30,12 @@ fi
 python_major_version=$(python -V 2>&1 | cut -c  8)
 if ! test "$python_major_version" = "$python_target_version"
 then
-	skip_all="skipping python$python_target_version-specific git p4 tests; python$python_target_version not available"
+	skip_all="skipping python$python_target_version-specific shit p4 tests; python$python_target_version not available"
 	test_done
 fi
 
 remove_user_cache () {
-	rm "$HOME/.gitp4-usercache.txt" || true
+	rm "$HOME/.shitp4-usercache.txt" || true
 }
 
 test_expect_success 'start p4d' '
@@ -79,102 +79,102 @@ test_expect_success 'init depot' '
 '
 
 test_expect_success 'clone non-utf8 repo with strict encoding' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	test_must_fail git -c git-p4.metadataDecodingStrategy=strict p4.py clone --dest="$git" //depot@all 2>err &&
+	test_must_fail shit -c shit-p4.metadataDecodingStrategy=strict p4.py clone --dest="$shit" //depot@all 2>err &&
 	grep "Decoding perforce metadata failed!" err
 '
 
 test_expect_success 'check utf-8 contents with passthrough strategy' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=passthrough p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=passthrough p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
+		cd "$shit" &&
+		shit log >actual &&
 		grep "some utf-8 tǣxt" actual &&
 		grep "ǣuthor" actual
 	)
 '
 
-test_expect_success 'check latin-1 contents corrupted in git with passthrough strategy' '
-	test_when_finished cleanup_git &&
+test_expect_success 'check latin-1 contents corrupted in shit with passthrough strategy' '
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=passthrough p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=passthrough p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
-		badly_encoded_in_git=$(echo "some latin-1 tæxt" | iconv -f utf8 -t latin1) &&
-		grep "$badly_encoded_in_git" actual &&
-		bad_author_in_git="$(echo æuthor | iconv -f utf8 -t latin1)" &&
-		grep "$bad_author_in_git" actual
+		cd "$shit" &&
+		shit log >actual &&
+		badly_encoded_in_shit=$(echo "some latin-1 tæxt" | iconv -f utf8 -t latin1) &&
+		grep "$badly_encoded_in_shit" actual &&
+		bad_author_in_shit="$(echo æuthor | iconv -f utf8 -t latin1)" &&
+		grep "$bad_author_in_shit" actual
 	)
 '
 
 test_expect_success 'check utf-8 contents with fallback strategy' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
+		cd "$shit" &&
+		shit log >actual &&
 		grep "some utf-8 tǣxt" actual &&
 		grep "ǣuthor" actual
 	)
 '
 
 test_expect_success 'check latin-1 contents with fallback strategy' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
+		cd "$shit" &&
+		shit log >actual &&
 		grep "some latin-1 tæxt" actual &&
 		grep "æuthor" actual
 	)
 '
 
 test_expect_success 'check cp-1252 contents with fallback strategy' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
+		cd "$shit" &&
+		shit log >actual &&
 		grep "sœme cp-1252 tæxt" actual &&
 		grep "æuthœr" actual
 	)
 '
 
 test_expect_success 'check cp850 contents parsed with correct fallback' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=fallback -c git-p4.metadataFallbackEncoding=cp850 p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=fallback -c shit-p4.metadataFallbackEncoding=cp850 p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
+		cd "$shit" &&
+		shit log >actual &&
 		grep "hÅs some cp850 text" actual &&
 		grep "Åuthor" actual
 	)
 '
 
 test_expect_success 'check cp850-only contents escaped when cp1252 is fallback' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
+		cd "$shit" &&
+		shit log >actual &&
 		grep "h%8Fs some cp850 text" actual &&
 		grep "%8Futhor" actual
 	)
 '
 
 test_expect_success 'check cp-1252 contents on later sync after clone with fallback strategy' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git -c git-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$git" //depot@all &&
+	shit -c shit-p4.metadataDecodingStrategy=fallback p4.py clone --dest="$shit" //depot@all &&
 	(
 		cd "$cli" &&
 		P4USER=cp1252_author &&
@@ -184,11 +184,11 @@ test_expect_success 'check cp-1252 contents on later sync after clone with fallb
 			iconv -f utf8 -t cp1252)"
 	) &&
 	(
-		cd "$git" &&
+		cd "$shit" &&
 
-		git p4.py sync --branch=master &&
+		shit p4.py sync --branch=master &&
 
-		git log p4/master >actual &&
+		shit log p4/master >actual &&
 		grep "sœme more cp-1252 tæxt" actual &&
 		grep "æuthœr" actual
 	)
@@ -200,12 +200,12 @@ test_expect_success 'check cp-1252 contents on later sync after clone with fallb
 
 
 test_expect_success 'fallback (both utf-8 and cp-1252 contents handled) is the default with python3' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	test_when_finished remove_user_cache &&
-	git p4.py clone --dest="$git" //depot@all &&
+	shit p4.py clone --dest="$shit" //depot@all &&
 	(
-		cd "$git" &&
-		git log >actual &&
+		cd "$shit" &&
+		shit log >actual &&
 		grep "sœme cp-1252 tæxt" actual &&
 		grep "æuthœr" actual
 	)

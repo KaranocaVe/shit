@@ -1,14 +1,14 @@
-git-add(1)
+shit-add(1)
 ==========
 
 NAME
 ----
-git-add - Add file contents to the index
+shit-add - Add file contents to the index
 
 SYNOPSIS
 --------
 [verse]
-'git add' [--verbose | -v] [--dry-run | -n] [--force | -f] [--interactive | -i] [--patch | -p]
+'shit add' [--verbose | -v] [--dry-run | -n] [--force | -f] [--interactive | -i] [--patch | -p]
 	  [--edit | -e] [--[no-]all | -A | --[no-]ignore-removal | [--update | -u]] [--sparse]
 	  [--intent-to-add | -N] [--refresh] [--ignore-errors] [--ignore-missing] [--renormalize]
 	  [--chmod=(+|-)x] [--pathspec-from-file=<file> [--pathspec-file-nul]]
@@ -32,19 +32,19 @@ modified files to the index.
 This command can be performed multiple times before a commit.  It only
 adds the content of the specified file(s) at the time the add command is
 run; if you want subsequent changes included in the next commit, then
-you must run `git add` again to add the new content to the index.
+you must run `shit add` again to add the new content to the index.
 
-The `git status` command can be used to obtain a summary of which
+The `shit status` command can be used to obtain a summary of which
 files have changes that are staged for the next commit.
 
-The `git add` command will not add ignored files by default.  If any
-ignored files were explicitly specified on the command line, `git add`
+The `shit add` command will not add ignored files by default.  If any
+ignored files were explicitly specified on the command line, `shit add`
 will fail with a list of ignored files.  Ignored files reached by
-directory recursion or filename globbing performed by Git (quote your
-globs before the shell) will be silently ignored.  The 'git add' command can
+directory recursion or filename globbing performed by shit (quote your
+globs before the shell) will be silently ignored.  The 'shit add' command can
 be used to add ignored files with the `-f` (force) option.
 
-Please see linkgit:git-commit[1] for alternative ways to add content to a
+Please see linkshit:shit-commit[1] for alternative ways to add content to a
 commit.
 
 
@@ -59,12 +59,12 @@ OPTIONS
 	specifying `dir` will record not just a file `dir/file1`
 	modified in the working tree, a file `dir/file2` added to
 	the working tree, but also a file `dir/file3` removed from
-	the working tree). Note that older versions of Git used
+	the working tree). Note that older versions of shit used
 	to ignore removed files; use `--no-all` option if you want
 	to add modified or new files but ignore removed ones.
 +
 For more details about the _<pathspec>_ syntax, see the 'pathspec' entry
-in linkgit:gitglossary[7].
+in linkshit:shitglossary[7].
 
 -n::
 --dry-run::
@@ -81,10 +81,10 @@ in linkgit:gitglossary[7].
 
 --sparse::
 	Allow updating index entries outside of the sparse-checkout cone.
-	Normally, `git add` refuses to update index entries whose paths do
+	Normally, `shit add` refuses to update index entries whose paths do
 	not fit within the sparse-checkout cone, since those files might
 	be removed from the working tree without warning. See
-	linkgit:git-sparse-checkout[1] for more details.
+	linkshit:shit-sparse-checkout[1] for more details.
 
 -i::
 --interactive::
@@ -124,7 +124,7 @@ apply to the index. See EDITING PATCHES below.
 +
 If no _<pathspec>_ is given when `-u` option is used, all
 tracked files in the entire working tree are updated (old versions
-of Git used to limit the update to the current directory and its
+of shit used to limit the update to the current directory and its
 subdirectories).
 
 -A::
@@ -137,7 +137,7 @@ subdirectories).
 +
 If no _<pathspec>_ is given when `-A` option is used, all
 files in the entire working tree are updated (old versions
-of Git used to limit the update to the current directory and its
+of shit used to limit the update to the current directory and its
 subdirectories).
 
 --no-all::
@@ -148,15 +148,15 @@ subdirectories).
 	option is a no-op when no _<pathspec>_ is used.
 +
 This option is primarily to help users who are used to older
-versions of Git, whose "git add _<pathspec>_..." was a synonym
-for "git add --no-all _<pathspec>_...", i.e. ignored removed files.
+versions of shit, whose "shit add _<pathspec>_..." was a synonym
+for "shit add --no-all _<pathspec>_...", i.e. ignored removed files.
 
 -N::
 --intent-to-add::
 	Record only the fact that the path will be added later. An entry
 	for the path is placed in the index with no content. This is
 	useful for, among other things, showing the unstaged content of
-	such files with `git diff` and committing them with `git commit
+	such files with `shit diff` and committing them with `shit commit
 	-a`.
 
 --refresh::
@@ -177,9 +177,9 @@ for "git add --no-all _<pathspec>_...", i.e. ignored removed files.
 	tree or not.
 
 --no-warn-embedded-repo::
-	By default, `git add` will warn when adding an embedded
-	repository to the index without using `git submodule add` to
-	create an entry in `.gitmodules`. This option will suppress the
+	By default, `shit add` will warn when adding an embedded
+	repository to the index without using `shit submodule add` to
+	create an entry in `.shitmodules`. This option will suppress the
 	warning (e.g., if you are manually performing operations on
 	submodules).
 
@@ -202,7 +202,7 @@ for "git add --no-all _<pathspec>_...", i.e. ignored removed files.
 	_<file>_ is exactly `-` then standard input is used. Pathspec
 	elements are separated by LF or CR/LF. Pathspec elements can be
 	quoted as explained for the configuration variable `core.quotePath`
-	(see linkgit:git-config[1]). See also `--pathspec-file-nul` and
+	(see linkshit:shit-config[1]). See also `--pathspec-file-nul` and
 	global `--literal-pathspecs`.
 
 --pathspec-file-nul::
@@ -223,22 +223,22 @@ EXAMPLES
   and its subdirectories:
 +
 ------------
-$ git add Documentation/\*.txt
+$ shit add Documentation/\*.txt
 ------------
 +
 Note that the asterisk `*` is quoted from the shell in this
 example; this lets the command include the files from
 subdirectories of `Documentation/` directory.
 
-* Considers adding content from all git-*.sh scripts:
+* Considers adding content from all shit-*.sh scripts:
 +
 ------------
-$ git add git-*.sh
+$ shit add shit-*.sh
 ------------
 +
 Because this example lets the shell expand the asterisk (i.e. you are
 listing the files explicitly), it does not consider
-`subdir/git-foo.sh`.
+`subdir/shit-foo.sh`.
 
 INTERACTIVE MODE
 ----------------
@@ -266,9 +266,9 @@ The main command loop has 6 subcommands (plus help and quit).
 status::
 
    This shows the change between HEAD and index (i.e. what will be
-   committed if you say `git commit`), and between index and
+   committed if you say `shit commit`), and between index and
    working tree files (i.e. what you could stage further before
-   `git commit` using `git add`) for each path.  A sample output
+   `shit commit` using `shit add`) for each path.  A sample output
    looks like this:
 +
 ------------
@@ -366,7 +366,7 @@ diff::
 EDITING PATCHES
 ---------------
 
-Invoking `git add -e` or selecting `e` from the interactive hunk
+Invoking `shit add -e` or selecting `e` from the interactive hunk
 selector will open a patch in your editor; after the editor exits, the
 result is applied to the index. You are free to make arbitrary changes
 to the patch, but note that some changes may have confusing results, or
@@ -443,13 +443,13 @@ include::config/add.txt[]
 
 SEE ALSO
 --------
-linkgit:git-status[1]
-linkgit:git-rm[1]
-linkgit:git-reset[1]
-linkgit:git-mv[1]
-linkgit:git-commit[1]
-linkgit:git-update-index[1]
+linkshit:shit-status[1]
+linkshit:shit-rm[1]
+linkshit:shit-reset[1]
+linkshit:shit-mv[1]
+linkshit:shit-commit[1]
+linkshit:shit-update-index[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

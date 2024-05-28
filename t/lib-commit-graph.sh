@@ -8,30 +8,30 @@ oid_version sha1:1
 oid_version sha256:2
 EOF
 
-graph_git_two_modes() {
-	git -c core.commitGraph=true $1 >output &&
-	git -c core.commitGraph=false $1 >expect &&
+graph_shit_two_modes() {
+	shit -c core.commitGraph=true $1 >output &&
+	shit -c core.commitGraph=false $1 >expect &&
 	test_cmp expect output
 }
 
-# graph_git_behavior <name> <directory> <branch> <compare>
+# graph_shit_behavior <name> <directory> <branch> <compare>
 #
 # Ensures that a handful of traversal operations produce the same
 # results with and without the commit-graph in use.
 #
 # NOTE: it is a bug to call this function with <directory> containing
 # any characters in $IFS.
-graph_git_behavior() {
+graph_shit_behavior() {
 	MSG=$1
 	DIR=$2
 	BRANCH=$3
 	COMPARE=$4
-	test_expect_success "check normal git operations: $MSG" '
-		graph_git_two_modes "${DIR:+-C $DIR} log --oneline $BRANCH" &&
-		graph_git_two_modes "${DIR:+-C $DIR} log --topo-order $BRANCH" &&
-		graph_git_two_modes "${DIR:+-C $DIR} log --graph $COMPARE..$BRANCH" &&
-		graph_git_two_modes "${DIR:+-C $DIR} branch -vv" &&
-		graph_git_two_modes "${DIR:+-C $DIR} merge-base -a $BRANCH $COMPARE"
+	test_expect_success "check normal shit operations: $MSG" '
+		graph_shit_two_modes "${DIR:+-C $DIR} log --oneline $BRANCH" &&
+		graph_shit_two_modes "${DIR:+-C $DIR} log --topo-order $BRANCH" &&
+		graph_shit_two_modes "${DIR:+-C $DIR} log --graph $COMPARE..$BRANCH" &&
+		graph_shit_two_modes "${DIR:+-C $DIR} branch -vv" &&
+		graph_shit_two_modes "${DIR:+-C $DIR} merge-base -a $BRANCH $COMPARE"
 	'
 }
 

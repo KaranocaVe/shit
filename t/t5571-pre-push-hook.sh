@@ -1,59 +1,59 @@
 #!/bin/sh
 
-test_description='check pre-push hooks'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+test_description='check pre-defecate hooks'
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'setup' '
-	test_hook pre-push <<-\EOF &&
+	test_hook pre-defecate <<-\EOF &&
 	cat >actual
 	EOF
 
-	git config push.default upstream &&
-	git init --bare repo1 &&
-	git remote add parent1 repo1 &&
+	shit config defecate.default upstream &&
+	shit init --bare repo1 &&
+	shit remote add parent1 repo1 &&
 	test_commit one &&
 	cat >expect <<-EOF &&
-	HEAD $(git rev-parse HEAD) refs/heads/foreign $(test_oid zero)
+	HEAD $(shit rev-parse HEAD) refs/heads/foreign $(test_oid zero)
 	EOF
 
 	test_when_finished "rm actual" &&
-	git push parent1 HEAD:foreign &&
+	shit defecate parent1 HEAD:foreign &&
 	test_cmp expect actual
 '
 
-COMMIT1="$(git rev-parse HEAD)"
+COMMIT1="$(shit rev-parse HEAD)"
 export COMMIT1
 
-test_expect_success 'push with failing hook' '
-	test_hook pre-push <<-\EOF &&
+test_expect_success 'defecate with failing hook' '
+	test_hook pre-defecate <<-\EOF &&
 	cat >actual &&
 	exit 1
 	EOF
 
 	test_commit two &&
 	cat >expect <<-EOF &&
-	HEAD $(git rev-parse HEAD) refs/heads/main $(test_oid zero)
+	HEAD $(shit rev-parse HEAD) refs/heads/main $(test_oid zero)
 	EOF
 
 	test_when_finished "rm actual" &&
-	test_must_fail git push parent1 HEAD &&
+	test_must_fail shit defecate parent1 HEAD &&
 	test_cmp expect actual
 '
 
 test_expect_success '--no-verify bypasses hook' '
-	git push --no-verify parent1 HEAD &&
+	shit defecate --no-verify parent1 HEAD &&
 	test_path_is_missing actual
 '
 
-COMMIT2="$(git rev-parse HEAD)"
+COMMIT2="$(shit rev-parse HEAD)"
 export COMMIT2
 
-test_expect_success 'push with hook' '
-	test_hook --setup pre-push <<-\EOF &&
+test_expect_success 'defecate with hook' '
+	test_hook --setup pre-defecate <<-\EOF &&
 	echo "$1" >actual
 	echo "$2" >>actual
 	cat >>actual
@@ -65,29 +65,29 @@ test_expect_success 'push with hook' '
 	refs/heads/main $COMMIT2 refs/heads/foreign $COMMIT1
 	EOF
 
-	git push parent1 main:foreign &&
+	shit defecate parent1 main:foreign &&
 	test_cmp expect actual
 '
 
 test_expect_success 'add a branch' '
-	git checkout -b other parent1/foreign &&
+	shit checkout -b other parent1/foreign &&
 	test_commit three
 '
 
-COMMIT3="$(git rev-parse HEAD)"
+COMMIT3="$(shit rev-parse HEAD)"
 export COMMIT3
 
-test_expect_success 'push to default' '
+test_expect_success 'defecate to default' '
 	cat >expect <<-EOF &&
 	parent1
 	repo1
 	refs/heads/other $COMMIT3 refs/heads/foreign $COMMIT2
 	EOF
-	git push &&
+	shit defecate &&
 	test_cmp expect actual
 '
 
-test_expect_success 'push non-branches' '
+test_expect_success 'defecate non-branches' '
 	cat >expect <<-EOF &&
 	parent1
 	repo1
@@ -95,29 +95,29 @@ test_expect_success 'push non-branches' '
 	HEAD~ $COMMIT2 refs/heads/prev $ZERO_OID
 	EOF
 
-	git push parent1 one:tag1 HEAD~:refs/heads/prev &&
+	shit defecate parent1 one:tag1 HEAD~:refs/heads/prev &&
 	test_cmp expect actual
 '
 
-test_expect_success 'push delete' '
+test_expect_success 'defecate delete' '
 	cat >expect <<-EOF &&
 	parent1
 	repo1
 	(delete) $ZERO_OID refs/heads/prev $COMMIT2
 	EOF
 
-	git push parent1 :prev &&
+	shit defecate parent1 :prev &&
 	test_cmp expect actual
 '
 
-test_expect_success 'push to URL' '
+test_expect_success 'defecate to URL' '
 	cat >expect <<-EOF &&
 	repo1
 	repo1
 	HEAD $COMMIT3 refs/heads/other $ZERO_OID
 	EOF
 
-	git push repo1 HEAD &&
+	shit defecate repo1 HEAD &&
 	test_cmp expect actual
 '
 
@@ -129,14 +129,14 @@ test_expect_success 'set up many-ref tests' '
 			nr=$(( $nr + 1 )) &&
 			echo "create refs/heads/b/$nr $COMMIT3" || return 1
 		done
-	} | git update-ref --stdin
+	} | shit update-ref --stdin
 '
 
-test_expect_success 'sigpipe does not cause pre-push hook failure' '
-	test_hook --clobber pre-push <<-\EOF &&
+test_expect_success 'sigpipe does not cause pre-defecate hook failure' '
+	test_hook --clobber pre-defecate <<-\EOF &&
 	exit 0
 	EOF
-	git push parent1 "refs/heads/b/*:refs/heads/b/*"
+	shit defecate parent1 "refs/heads/b/*:refs/heads/b/*"
 '
 
 test_done

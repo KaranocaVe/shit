@@ -1,15 +1,15 @@
-git-am(1)
+shit-am(1)
 =========
 
 NAME
 ----
-git-am - Apply a series of patches from a mailbox
+shit-am - Apply a series of patches from a mailbox
 
 
 SYNOPSIS
 --------
 [verse]
-'git am' [--signoff] [--keep] [--[no-]keep-cr] [--[no-]utf8] [--no-verify]
+'shit am' [--signoff] [--keep] [--[no-]keep-cr] [--[no-]utf8] [--no-verify]
 	 [--[no-]3way] [--interactive] [--committer-date-is-author-date]
 	 [--ignore-date] [--ignore-space-change | --ignore-whitespace]
 	 [--whitespace=<action>] [-C<n>] [-p<n>] [--directory=<dir>]
@@ -18,14 +18,14 @@ SYNOPSIS
 	 [--quoted-cr=<action>]
 	 [--empty=(stop|drop|keep)]
 	 [(<mbox> | <Maildir>)...]
-'git am' (--continue | --skip | --abort | --quit | --show-current-patch[=(diff|raw)] | --allow-empty)
+'shit am' (--continue | --skip | --abort | --quit | --show-current-patch[=(diff|raw)] | --allow-empty)
 
 DESCRIPTION
 -----------
 Splits mail messages in a mailbox into commit log messages,
 authorship information, and patches, and applies them to the
 current branch. You could think of it as a reverse operation
-of linkgit:git-format-patch[1] run on a branch with a straight
+of linkshit:shit-format-patch[1] run on a branch with a straight
 history without merges.
 
 OPTIONS
@@ -39,17 +39,17 @@ OPTIONS
 --signoff::
 	Add a `Signed-off-by` trailer to the commit message, using
 	the committer identity of yourself.
-	See the signoff option in linkgit:git-commit[1] for more information.
+	See the signoff option in linkshit:shit-commit[1] for more information.
 
 -k::
 --keep::
-	Pass `-k` flag to 'git mailinfo' (see linkgit:git-mailinfo[1]).
+	Pass `-k` flag to 'shit mailinfo' (see linkshit:shit-mailinfo[1]).
 
 --keep-non-patch::
-	Pass `-b` flag to 'git mailinfo' (see linkgit:git-mailinfo[1]).
+	Pass `-b` flag to 'shit mailinfo' (see linkshit:shit-mailinfo[1]).
 
 --[no-]keep-cr::
-	With `--keep-cr`, call 'git mailsplit' (see linkgit:git-mailsplit[1])
+	With `--keep-cr`, call 'shit mailsplit' (see linkshit:shit-mailsplit[1])
 	with the same option, to prevent it from stripping CR at the end of
 	lines. `am.keepcr` configuration variable can be used to specify the
 	default behaviour.  `--no-keep-cr` is useful to override `am.keepcr`.
@@ -57,14 +57,14 @@ OPTIONS
 -c::
 --scissors::
 	Remove everything in body before a scissors line (see
-	linkgit:git-mailinfo[1]). Can be activated by default using
+	linkshit:shit-mailinfo[1]). Can be activated by default using
 	the `mailinfo.scissors` configuration variable.
 
 --no-scissors::
-	Ignore scissors lines (see linkgit:git-mailinfo[1]).
+	Ignore scissors lines (see linkshit:shit-mailinfo[1]).
 
 --quoted-cr=<action>::
-	This flag will be passed down to 'git mailinfo' (see linkgit:git-mailinfo[1]).
+	This flag will be passed down to 'shit mailinfo' (see linkshit:shit-mailinfo[1]).
 
 --empty=(drop|keep|stop)::
 	How to handle an e-mail message lacking a patch:
@@ -82,7 +82,7 @@ OPTIONS
 
 -m::
 --message-id::
-	Pass the `-m` flag to 'git mailinfo' (see linkgit:git-mailinfo[1]),
+	Pass the `-m` flag to 'shit mailinfo' (see linkshit:shit-mailinfo[1]),
 	so that the Message-ID header is added to the commit message.
 	The `am.messageid` configuration variable can be used to specify
 	the default behaviour.
@@ -97,18 +97,18 @@ OPTIONS
 
 -u::
 --utf8::
-	Pass `-u` flag to 'git mailinfo' (see linkgit:git-mailinfo[1]).
+	Pass `-u` flag to 'shit mailinfo' (see linkshit:shit-mailinfo[1]).
 	The proposed commit log message taken from the e-mail
 	is re-coded into UTF-8 encoding (configuration variable
 	`i18n.commitEncoding` can be used to specify the project's
 	preferred encoding if it is not UTF-8).
 +
-This was optional in prior versions of git, but now it is the
+This was optional in prior versions of shit, but now it is the
 default.   You can use `--no-utf8` to override this.
 
 --no-utf8::
-	Pass `-n` flag to 'git mailinfo' (see
-	linkgit:git-mailinfo[1]).
+	Pass `-n` flag to 'shit mailinfo' (see
+	linkshit:shit-mailinfo[1]).
 
 -3::
 --3way::
@@ -118,7 +118,7 @@ default.   You can use `--no-utf8` to override this.
 	it is supposed to apply to and we have those blobs
 	available locally. `--no-3way` can be used to override
 	am.threeWay configuration variable. For more information,
-	see am.threeWay in linkgit:git-config[1].
+	see am.threeWay in linkshit:shit-config[1].
 
 include::rerere-options.txt[]
 
@@ -131,7 +131,7 @@ include::rerere-options.txt[]
 --exclude=<path>::
 --include=<path>::
 --reject::
-	These flags are passed to the 'git apply' (see linkgit:git-apply[1])
+	These flags are passed to the 'shit apply' (see linkshit:shit-apply[1])
 	program that applies
 	the patch.
 +
@@ -143,7 +143,7 @@ Valid <action> for the `--whitespace` option are:
 	automatically. This option allows the user to bypass the automatic
 	detection and specify the patch format that the patch(es) should be
 	interpreted as. Valid formats are mbox, mboxrd,
-	stgit, stgit-series, and hg.
+	stshit, stshit-series, and hg.
 
 -i::
 --interactive::
@@ -153,7 +153,7 @@ Valid <action> for the `--whitespace` option are:
 --no-verify::
 	By default, the pre-applypatch and applypatch-msg hooks are run.
 	When any of `--no-verify` or `-n` is given, these are bypassed.
-	See also linkgit:githooks[5].
+	See also linkshit:shithooks[5].
 
 --committer-date-is-author-date::
 	By default the command records the date from the e-mail
@@ -197,7 +197,7 @@ Valid <action> for the `--whitespace` option are:
 	to the screen before exiting.  This overrides the
 	standard message informing you to use `--continue`
 	or `--skip` to handle the failure.  This is solely
-	for internal use between 'git rebase' and 'git am'.
+	for internal use between 'shit rebase' and 'shit am'.
 
 --abort::
 	Restore the original branch and abort the patching operation.
@@ -209,7 +209,7 @@ Valid <action> for the `--whitespace` option are:
 	untouched.
 
 --show-current-patch[=(diff|raw)]::
-	Show the message at which `git am` has stopped due to
+	Show the message at which `shit am` has stopped due to
 	conflicts.  If `raw` is specified, show the raw contents of
 	the e-mail message; if `diff`, show the diff portion only.
 	Defaults to `raw`.
@@ -247,7 +247,7 @@ message.  Any line that is of the form:
 is taken as the beginning of a patch, and the commit log message
 is terminated before the first occurrence of such a line.
 
-When initially invoking `git am`, you give it the names of the mailboxes
+When initially invoking `shit am`, you give it the names of the mailboxes
 to process.  Upon seeing the first patch that does not apply, it
 aborts in the middle.  You can recover from this in one of two ways:
 
@@ -260,19 +260,19 @@ aborts in the middle.  You can recover from this in one of two ways:
 
 The command refuses to process new mailboxes until the current
 operation is finished, so if you decide to start over from scratch,
-run `git am --abort` before running the command with mailbox
+run `shit am --abort` before running the command with mailbox
 names.
 
 Before any patches are applied, ORIG_HEAD is set to the tip of the
 current branch.  This is useful if you have problems with multiple
-commits, like running 'git am' on the wrong branch or an error in the
+commits, like running 'shit am' on the wrong branch or an error in the
 commits that is more easily fixed by changing the mailbox (e.g.
 errors in the "From:" lines).
 
 HOOKS
 -----
 This command can run `applypatch-msg`, `pre-applypatch`,
-and `post-applypatch` hooks.  See linkgit:githooks[5] for more
+and `post-applypatch` hooks.  See linkshit:shithooks[5] for more
 information.
 
 CONFIGURATION
@@ -284,9 +284,9 @@ include::config/am.txt[]
 
 SEE ALSO
 --------
-linkgit:git-apply[1],
-linkgit:git-format-patch[1].
+linkshit:shit-apply[1],
+linkshit:shit-format-patch[1].
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

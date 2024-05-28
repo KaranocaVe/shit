@@ -1,4 +1,4 @@
-Git v2.30.8 Release Notes
+shit v2.30.8 Release Notes
 =========================
 
 This release addresses the security issues CVE-2023-22490 and
@@ -10,9 +10,9 @@ Fixes since v2.30.7
 
  * CVE-2023-22490:
 
-   Using a specially-crafted repository, Git can be tricked into using
+   Using a specially-crafted repository, shit can be tricked into using
    its local clone optimization even when using a non-local transport.
-   Though Git will abort local clones whose source $GIT_DIR/objects
+   Though shit will abort local clones whose source $shit_DIR/objects
    directory contains symbolic links (c.f., CVE-2022-39253), the objects
    directory itself may still be a symbolic link.
 
@@ -23,17 +23,17 @@ Fixes since v2.30.7
 
  * CVE-2023-23946:
 
-   By feeding a crafted input to "git apply", a path outside the
-   working tree can be overwritten as the user who is running "git
+   By feeding a crafted input to "shit apply", a path outside the
+   working tree can be overwritten as the user who is running "shit
    apply".
 
  * A mismatched type in `attr.c::read_attr_from_index()` which could
-   cause Git to errantly reject attributes on Windows and 32-bit Linux
+   cause shit to errantly reject attributes on Windows and 32-bit Linux
    has been corrected.
 
 Credit for finding CVE-2023-22490 goes to yvvdwf, and the fix was
 developed by Taylor Blau, with additional help from others on the
-Git security mailing list.
+shit security mailing list.
 
 Credit for finding CVE-2023-23946 goes to Joern Schneeweisz, and the
 fix was developed by Patrick Steinhardt.

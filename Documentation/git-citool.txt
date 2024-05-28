@@ -1,25 +1,25 @@
-git-citool(1)
+shit-citool(1)
 =============
 
 NAME
 ----
-git-citool - Graphical alternative to git-commit
+shit-citool - Graphical alternative to shit-commit
 
 SYNOPSIS
 --------
 [verse]
-'git citool'
+'shit citool'
 
 DESCRIPTION
 -----------
 A Tcl/Tk based graphical interface to review modified files, stage
 them into the index, enter a commit message and record the new
 commit onto the current branch.  This interface is an alternative
-to the less interactive 'git commit' program.
+to the less interactive 'shit commit' program.
 
-'git citool' is actually a standard alias for `git gui citool`.
-See linkgit:git-gui[1] for more details.
+'shit citool' is actually a standard alias for `shit gui citool`.
+See linkshit:shit-gui[1] for more details.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

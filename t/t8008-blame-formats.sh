@@ -5,18 +5,18 @@ test_description='blame output in various formats on a simple case'
 
 test_expect_success 'setup' '
 	echo a >file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m one &&
+	shit commit -m one &&
 	echo b >>file &&
 	echo c >>file &&
 	echo d >>file &&
 	test_tick &&
-	git commit -a -m two &&
-	ID1=$(git rev-parse HEAD^) &&
-	shortID1="^$(git rev-parse HEAD^ |cut -c 1-17)" &&
-	ID2=$(git rev-parse HEAD) &&
-	shortID2="$(git rev-parse HEAD |cut -c 1-18)"
+	shit commit -a -m two &&
+	ID1=$(shit rev-parse HEAD^) &&
+	shortID1="^$(shit rev-parse HEAD^ |cut -c 1-17)" &&
+	ID2=$(shit rev-parse HEAD) &&
+	shortID2="$(shit rev-parse HEAD |cut -c 1-18)"
 '
 
 cat >expect <<EOF
@@ -26,7 +26,7 @@ $shortID2 (A U Thor 2005-04-07 15:14:13 -0700 3) c
 $shortID2 (A U Thor 2005-04-07 15:14:13 -0700 4) d
 EOF
 test_expect_success 'normal blame output' '
-	git blame --abbrev=17 file >actual &&
+	shit blame --abbrev=17 file >actual &&
 	test_cmp expect actual
 '
 
@@ -66,7 +66,7 @@ $ID2 4 4
 	d
 EOF
 test_expect_success 'blame --porcelain output' '
-	git blame --porcelain file >actual &&
+	shit blame --porcelain file >actual &&
 	test_cmp expect actual
 '
 
@@ -85,23 +85,23 @@ $COMMIT2
 	d
 EOF
 test_expect_success 'blame --line-porcelain output' '
-	git blame --line-porcelain file >actual &&
+	shit blame --line-porcelain file >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success '--porcelain detects first non-blank line as subject' '
 	(
-		GIT_INDEX_FILE=.git/tmp-index &&
-		export GIT_INDEX_FILE &&
+		shit_INDEX_FILE=.shit/tmp-index &&
+		export shit_INDEX_FILE &&
 		echo "This is it" >single-file &&
-		git add single-file &&
-		tree=$(git write-tree) &&
+		shit add single-file &&
+		tree=$(shit write-tree) &&
 		commit=$(printf "%s\n%s\n%s\n\n\n  \noneline\n\nbody\n" \
 			"tree $tree" \
 			"author A <a@b.c> 123456789 +0000" \
 			"committer C <c@d.e> 123456789 +0000" |
-		git hash-object -w -t commit --stdin) &&
-		git blame --porcelain $commit -- single-file >output &&
+		shit hash-object -w -t commit --stdin) &&
+		shit blame --porcelain $commit -- single-file >output &&
 		grep "^summary oneline$" output
 	)
 '

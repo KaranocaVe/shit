@@ -15,7 +15,7 @@ enum branch_track {
 	BRANCH_TRACK_SIMPLE,
 };
 
-extern enum branch_track git_branch_track;
+extern enum branch_track shit_branch_track;
 
 /* Functions for acting on the information about branches. */
 
@@ -81,7 +81,7 @@ void create_branch(struct repository *r,
  * - start_committish is the commit-ish, in repository r, that determines
  *   which commits the branches will point to. The superproject branch
  *   will point to the commit of start_committish and the submodule
- *   branches will point to the gitlink commit oids in start_committish's
+ *   branches will point to the shitlink commit oids in start_committish's
  *   tree.
  *
  * - tracking_name is the name of the ref, in repository r, that will be
@@ -92,7 +92,7 @@ void create_branch(struct repository *r,
  * When this function is called on the superproject, start_committish
  * can be any user-provided ref and tracking_name can be NULL (similar
  * to create_branches()). But when recursing through submodules,
- * start_committish is the plain gitlink commit oid. Since the oid cannot
+ * start_committish is the plain shitlink commit oid. Since the oid cannot
  * be used for tracking information, tracking_name is propagated and
  * used for tracking instead.
  */
@@ -137,7 +137,7 @@ void remove_branch_state(struct repository *r, int verbose);
 
 /*
  * Configure local branch "local" as downstream to branch "remote"
- * from remote "origin".  Used by git branch --set-upstream.
+ * from remote "origin".  Used by shit branch --set-upstream.
  * Returns 0 on success.
  */
 #define BRANCH_CONFIG_VERBOSE 01

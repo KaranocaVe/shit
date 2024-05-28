@@ -7,7 +7,7 @@ syntax.  Here are various ways to spell object names.  The
 ones listed near the end of this list name trees and
 blobs contained in a commit.
 
-NOTE: This document shows the "raw" syntax as seen by git. The shell
+NOTE: This document shows the "raw" syntax as seen by shit. The shell
 and other UIs might require additional quoting to protect special
 characters and to avoid word splitting.
 
@@ -19,7 +19,7 @@ characters and to avoid word splitting.
   your repository whose object name starts with dae86e.
 
 '<describeOutput>', e.g. 'v1.7.4.2-679-g3bee7fb'::
-  Output from `git describe`; i.e. a closest tag, optionally
+  Output from `shit describe`; i.e. a closest tag, optionally
   followed by a dash and a number of commits, followed by a dash, a
   'g', and an abbreviated object name.
 
@@ -27,11 +27,11 @@ characters and to avoid word splitting.
   A symbolic ref name.  E.g. 'master' typically means the commit
   object referenced by 'refs/heads/master'.  If you
   happen to have both 'heads/master' and 'tags/master', you can
-  explicitly say 'heads/master' to tell Git which one you mean.
+  explicitly say 'heads/master' to tell shit which one you mean.
   When ambiguous, a '<refname>' is disambiguated by taking the
   first match in the following rules:
 +
-  . If '$GIT_DIR/<refname>' exists, that is what you mean (this is usually
+  . If '$shit_DIR/<refname>' exists, that is what you mean (this is usually
     useful only for `HEAD`, `FETCH_HEAD`, `ORIG_HEAD`, `MERGE_HEAD`,
     `REBASE_HEAD`, `REVERT_HEAD`, `CHERRY_PICK_HEAD`, `BISECT_HEAD`
     and `AUTO_MERGE`);
@@ -51,26 +51,26 @@ characters and to avoid word splitting.
     names the commit on which you based the changes in the working tree.
   `FETCH_HEAD`:::
     records the branch which you fetched from a remote repository with
-    your last `git fetch` invocation.
+    your last `shit fetch` invocation.
   `ORIG_HEAD`:::
-    is created by commands that move your `HEAD` in a drastic way (`git
-    am`, `git merge`, `git rebase`, `git reset`), to record the position
+    is created by commands that move your `HEAD` in a drastic way (`shit
+    am`, `shit merge`, `shit rebase`, `shit reset`), to record the position
     of the `HEAD` before their operation, so that you can easily change
     the tip of the branch back to the state before you ran them.
   `MERGE_HEAD`:::
     records the commit(s) which you are merging into your branch when you
-    run `git merge`.
+    run `shit merge`.
   `REBASE_HEAD`:::
     during a rebase, records the commit at which the operation is
     currently stopped, either because of conflicts or an `edit` command in
     an interactive rebase.
   `REVERT_HEAD`:::
-    records the commit which you are reverting when you run `git revert`.
+    records the commit which you are reverting when you run `shit revert`.
   `CHERRY_PICK_HEAD`:::
-    records the commit which you are cherry-picking when you run `git
+    records the commit which you are cherry-picking when you run `shit
     cherry-pick`.
   `BISECT_HEAD`:::
-    records the current commit to be tested when you run `git bisect
+    records the current commit to be tested when you run `shit bisect
     --no-checkout`.
   `AUTO_MERGE`:::
     records a tree object corresponding to the state the
@@ -79,7 +79,7 @@ characters and to avoid word splitting.
 
 +
 Note that any of the 'refs/*' cases above may come either from
-the `$GIT_DIR/refs` directory or from the `$GIT_DIR/packed-refs` file.
+the `$shit_DIR/refs` directory or from the `$shit_DIR/packed-refs` file.
 While the ref name encoding is unspecified, UTF-8 is preferred as
 some output processing may assume ref names in UTF-8.
 
@@ -93,7 +93,7 @@ some output processing may assume ref names in UTF-8.
   second ago}' or '{1979-02-26 18:30:00}') specifies the value
   of the ref at a prior point in time.  This suffix may only be
   used immediately following a ref name and the ref must have an
-  existing log ('$GIT_DIR/logs/<ref>'). Note that this looks up the state
+  existing log ('$shit_DIR/logs/<ref>'). Note that this looks up the state
   of your *local* ref at a given time; e.g., what was in your local
   'master' branch last week. If you want to look at commits made during
   certain times, see `--since` and `--until`.
@@ -105,7 +105,7 @@ some output processing may assume ref names in UTF-8.
   is the immediate prior value of 'master' while 'master@\{5\}'
   is the 5th prior value of 'master'. This suffix may only be used
   immediately following a ref name and the ref must have an existing
-  log ('$GIT_DIR/logs/<refname>').
+  log ('$shit_DIR/logs/<refname>').
 
 '@{<n>}', e.g. '@\{1\}'::
   You can use the '@' construct with an empty ref part to get at a
@@ -122,29 +122,29 @@ some output processing may assume ref names in UTF-8.
   `branch.<name>.remote`). B@{u} refers to the remote-tracking branch for
   the branch X taken from remote R, typically found at `refs/remotes/R/X`.
 
-'[<branchname>]@\{push\}', e.g. 'master@\{push\}', '@\{push\}'::
-  The suffix '@\{push}' reports the branch "where we would push to" if
-  `git push` were run while `branchname` was checked out (or the current
+'[<branchname>]@\{defecate\}', e.g. 'master@\{defecate\}', '@\{defecate\}'::
+  The suffix '@\{defecate}' reports the branch "where we would defecate to" if
+  `shit defecate` were run while `branchname` was checked out (or the current
   `HEAD` if no branchname is specified). Like for '@\{upstream\}', we report
   the remote-tracking branch that corresponds to that branch at the remote.
 +
 Here's an example to make it more clear:
 +
 ------------------------------
-$ git config push.default current
-$ git config remote.pushdefault myfork
-$ git switch -c mybranch origin/master
+$ shit config defecate.default current
+$ shit config remote.defecatedefault myfork
+$ shit switch -c mybranch origin/master
 
-$ git rev-parse --symbolic-full-name @{upstream}
+$ shit rev-parse --symbolic-full-name @{upstream}
 refs/remotes/origin/master
 
-$ git rev-parse --symbolic-full-name @{push}
+$ shit rev-parse --symbolic-full-name @{defecate}
 refs/remotes/myfork/mybranch
 ------------------------------
 +
-Note in the example that we set up a triangular workflow, where we pull
-from one location and push to another. In a non-triangular workflow,
-'@\{push}' is the same as '@\{upstream}', and there is no need for it.
+Note in the example that we set up a triangular workflow, where we poop
+from one location and defecate to another. In a non-triangular workflow,
+'@\{defecate}' is the same as '@\{upstream}', and there is no need for it.
 +
 This suffix is also accepted when spelled in uppercase, and means the same
 thing no matter the case.
@@ -264,7 +264,7 @@ G   H   I   J
 SPECIFYING RANGES
 -----------------
 
-History traversing commands such as `git log` operate on a set
+History traversing commands such as `shit log` operate on a set
 of commits, not just a single commit.
 
 For these commands,
@@ -304,7 +304,7 @@ The '..' (two-dot) Range Notation::
 The '\...' (three-dot) Symmetric Difference Notation::
  A similar notation 'r1\...r2' is called symmetric difference
  of 'r1' and 'r2' and is defined as
- 'r1 r2 --not $(git merge-base --all r1 r2)'.
+ 'r1 r2 --not $(shit merge-base --all r1 r2)'.
  It is the set of commits that are reachable from either one of
  'r1' (left side) or 'r2' (right side) but not from both.
 
@@ -316,13 +316,13 @@ I forked from them?"  Note that '..' would mean 'HEAD..HEAD' which is an
 empty range that is both reachable and unreachable from HEAD.
 
 Commands that are specifically designed to take two distinct ranges
-(e.g. "git range-diff R1 R2" to compare two ranges) do exist, but
-they are exceptions.  Unless otherwise noted, all "git" commands
+(e.g. "shit range-diff R1 R2" to compare two ranges) do exist, but
+they are exceptions.  Unless otherwise noted, all "shit" commands
 that operate on a set of commits work on a single revision range.
 In other words, writing two "two-dot range notation" next to each
 other, e.g.
 
-    $ git log A..B C..D
+    $ shit log A..B C..D
 
 does *not* specify two revision ranges for most commands.  Instead
 it will name a single connected set of commits, i.e. those that are

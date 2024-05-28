@@ -1,5 +1,5 @@
-#ifndef GIT_UTF8_H
-#define GIT_UTF8_H
+#ifndef shit_UTF8_H
+#define shit_UTF8_H
 
 struct strbuf;
 
@@ -50,17 +50,17 @@ static inline char *reencode_string(const char *in,
 int mbs_chrlen(const char **text, size_t *remainder_p, const char *encoding);
 
 /*
- * Returns true if the path would match ".git" after HFS case-folding.
- * The path should be NUL-terminated, but we will match variants of both ".git\0"
- * and ".git/..." (but _not_ ".../.git"). This makes it suitable for both fsck
+ * Returns true if the path would match ".shit" after HFS case-folding.
+ * The path should be NUL-terminated, but we will match variants of both ".shit\0"
+ * and ".shit/..." (but _not_ ".../.shit"). This makes it suitable for both fsck
  * and verify_path().
  *
- * Likewise, the is_hfs_dotgitfoo() variants look for ".gitfoo".
+ * Likewise, the is_hfs_dotshitfoo() variants look for ".shitfoo".
  */
-int is_hfs_dotgit(const char *path);
-int is_hfs_dotgitmodules(const char *path);
-int is_hfs_dotgitignore(const char *path);
-int is_hfs_dotgitattributes(const char *path);
+int is_hfs_dotshit(const char *path);
+int is_hfs_dotshitmodules(const char *path);
+int is_hfs_dotshitignore(const char *path);
+int is_hfs_dotshitattributes(const char *path);
 int is_hfs_dotmailmap(const char *path);
 
 typedef enum {
@@ -97,7 +97,7 @@ int has_prohibited_utf_bom(const char *enc, const char *data, size_t len);
  * deployed content" [3].
  *
  * Therefore, strictly requiring a BOM seems to be the safest option for
- * content in Git.
+ * content in shit.
  *
  * [1] https://unicode.org/faq/utf_bom.html#gen6
  * [2] https://www.unicode.org/versions/Unicode10.0.0/ch03.pdf

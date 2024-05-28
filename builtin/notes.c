@@ -1,9 +1,9 @@
 /*
- * Builtin "git notes"
+ * Builtin "shit notes"
  *
  * Copyright (c) 2010 Johan Herland <johan@herland.net>
  *
- * Based on git-notes.sh by Johannes Schindelin,
+ * Based on shit-notes.sh by Johannes Schindelin,
  * and builtin/tag.c by Kristian Høgsberg and Carlos Rica.
  */
 
@@ -30,72 +30,72 @@
 #include "write-or-die.h"
 
 static const char *separator = "\n";
-static const char * const git_notes_usage[] = {
-	N_("git notes [--ref <notes-ref>] [list [<object>]]"),
-	N_("git notes [--ref <notes-ref>] add [-f] [--allow-empty] [--[no-]separator|--separator=<paragraph-break>] [--[no-]stripspace] [-m <msg> | -F <file> | (-c | -C) <object>] [<object>]"),
-	N_("git notes [--ref <notes-ref>] copy [-f] <from-object> <to-object>"),
-	N_("git notes [--ref <notes-ref>] append [--allow-empty] [--[no-]separator|--separator=<paragraph-break>] [--[no-]stripspace] [-m <msg> | -F <file> | (-c | -C) <object>] [<object>]"),
-	N_("git notes [--ref <notes-ref>] edit [--allow-empty] [<object>]"),
-	N_("git notes [--ref <notes-ref>] show [<object>]"),
-	N_("git notes [--ref <notes-ref>] merge [-v | -q] [-s <strategy>] <notes-ref>"),
-	"git notes merge --commit [-v | -q]",
-	"git notes merge --abort [-v | -q]",
-	N_("git notes [--ref <notes-ref>] remove [<object>...]"),
-	N_("git notes [--ref <notes-ref>] prune [-n] [-v]"),
-	N_("git notes [--ref <notes-ref>] get-ref"),
+static const char * const shit_notes_usage[] = {
+	N_("shit notes [--ref <notes-ref>] [list [<object>]]"),
+	N_("shit notes [--ref <notes-ref>] add [-f] [--allow-empty] [--[no-]separator|--separator=<paragraph-break>] [--[no-]stripspace] [-m <msg> | -F <file> | (-c | -C) <object>] [<object>]"),
+	N_("shit notes [--ref <notes-ref>] copy [-f] <from-object> <to-object>"),
+	N_("shit notes [--ref <notes-ref>] append [--allow-empty] [--[no-]separator|--separator=<paragraph-break>] [--[no-]stripspace] [-m <msg> | -F <file> | (-c | -C) <object>] [<object>]"),
+	N_("shit notes [--ref <notes-ref>] edit [--allow-empty] [<object>]"),
+	N_("shit notes [--ref <notes-ref>] show [<object>]"),
+	N_("shit notes [--ref <notes-ref>] merge [-v | -q] [-s <strategy>] <notes-ref>"),
+	"shit notes merge --commit [-v | -q]",
+	"shit notes merge --abort [-v | -q]",
+	N_("shit notes [--ref <notes-ref>] remove [<object>...]"),
+	N_("shit notes [--ref <notes-ref>] prune [-n] [-v]"),
+	N_("shit notes [--ref <notes-ref>] get-ref"),
 	NULL
 };
 
-static const char * const git_notes_list_usage[] = {
-	N_("git notes [list [<object>]]"),
+static const char * const shit_notes_list_usage[] = {
+	N_("shit notes [list [<object>]]"),
 	NULL
 };
 
-static const char * const git_notes_add_usage[] = {
-	N_("git notes add [<options>] [<object>]"),
+static const char * const shit_notes_add_usage[] = {
+	N_("shit notes add [<options>] [<object>]"),
 	NULL
 };
 
-static const char * const git_notes_copy_usage[] = {
-	N_("git notes copy [<options>] <from-object> <to-object>"),
-	N_("git notes copy --stdin [<from-object> <to-object>]..."),
+static const char * const shit_notes_copy_usage[] = {
+	N_("shit notes copy [<options>] <from-object> <to-object>"),
+	N_("shit notes copy --stdin [<from-object> <to-object>]..."),
 	NULL
 };
 
-static const char * const git_notes_append_usage[] = {
-	N_("git notes append [<options>] [<object>]"),
+static const char * const shit_notes_append_usage[] = {
+	N_("shit notes append [<options>] [<object>]"),
 	NULL
 };
 
-static const char * const git_notes_edit_usage[] = {
-	N_("git notes edit [<object>]"),
+static const char * const shit_notes_edit_usage[] = {
+	N_("shit notes edit [<object>]"),
 	NULL
 };
 
-static const char * const git_notes_show_usage[] = {
-	N_("git notes show [<object>]"),
+static const char * const shit_notes_show_usage[] = {
+	N_("shit notes show [<object>]"),
 	NULL
 };
 
-static const char * const git_notes_merge_usage[] = {
-	N_("git notes merge [<options>] <notes-ref>"),
-	N_("git notes merge --commit [<options>]"),
-	N_("git notes merge --abort [<options>]"),
+static const char * const shit_notes_merge_usage[] = {
+	N_("shit notes merge [<options>] <notes-ref>"),
+	N_("shit notes merge --commit [<options>]"),
+	N_("shit notes merge --abort [<options>]"),
 	NULL
 };
 
-static const char * const git_notes_remove_usage[] = {
-	N_("git notes remove [<object>]"),
+static const char * const shit_notes_remove_usage[] = {
+	N_("shit notes remove [<object>]"),
 	NULL
 };
 
-static const char * const git_notes_prune_usage[] = {
-	N_("git notes prune [<options>]"),
+static const char * const shit_notes_prune_usage[] = {
+	N_("shit notes prune [<options>]"),
 	NULL
 };
 
-static const char * const git_notes_get_ref_usage[] = {
-	"git notes get-ref",
+static const char * const shit_notes_get_ref_usage[] = {
+	"shit notes get-ref",
 	NULL
 };
 
@@ -166,13 +166,13 @@ static void write_commented_object(int fd, const struct object_id *object)
 	struct strbuf buf = STRBUF_INIT;
 	struct strbuf cbuf = STRBUF_INIT;
 
-	/* Invoke "git show --stat --no-notes $object" */
-	strvec_pushl(&show.args, "show", "--stat", "--no-notes",
+	/* Invoke "shit show --stat --no-notes $object" */
+	strvec_defecatel(&show.args, "show", "--stat", "--no-notes",
 		     oid_to_hex(object), NULL);
 	show.no_stdin = 1;
 	show.out = -1;
 	show.err = 0;
-	show.git_cmd = 1;
+	show.shit_cmd = 1;
 	if (start_command(&show))
 		die(_("unable to start 'show' for object '%s'"),
 		    oid_to_hex(object));
@@ -198,7 +198,7 @@ static void prepare_note_data(const struct object_id *object, struct note_data *
 		struct strbuf buf = STRBUF_INIT;
 
 		/* write the template message before editing: */
-		d->edit_path = git_pathdup("NOTES_EDITMSG");
+		d->edit_path = shit_pathdup("NOTES_EDITMSG");
 		fd = xopen(d->edit_path, O_CREAT | O_TRUNC | O_WRONLY, 0600);
 
 		if (d->given)
@@ -362,7 +362,7 @@ static int notes_copy_from_stdin(int force, const char *rewrite_cmd)
 	struct notes_rewrite_cfg *c = NULL;
 	struct notes_tree *t = NULL;
 	int ret = 0;
-	const char *msg = "Notes added by 'git notes copy'";
+	const char *msg = "Notes added by 'shit notes copy'";
 
 	if (rewrite_cmd) {
 		c = init_copy_notes_for_rewrite(rewrite_cmd);
@@ -424,7 +424,7 @@ static struct notes_tree *init_notes_check(const char *subcommand,
 	ref = (flags & NOTES_INIT_WRITABLE) ? t->update_ref : t->ref;
 	if (!starts_with(ref, "refs/notes/"))
 		/*
-		 * TRANSLATORS: the first %s will be replaced by a git
+		 * TRANSLATORS: the first %s will be replaced by a shit
 		 * notes command: 'add', 'merge', 'remove', etc.
 		 */
 		die(_("refusing to %s notes in %s (outside of refs/notes/)"),
@@ -444,11 +444,11 @@ static int list(int argc, const char **argv, const char *prefix)
 
 	if (argc)
 		argc = parse_options(argc, argv, prefix, options,
-				     git_notes_list_usage, 0);
+				     shit_notes_list_usage, 0);
 
 	if (1 < argc) {
 		error(_("too many arguments"));
-		usage_with_options(git_notes_list_usage, options);
+		usage_with_options(shit_notes_list_usage, options);
 	}
 
 	t = init_notes_check("list", 0);
@@ -505,12 +505,12 @@ static int add(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	argc = parse_options(argc, argv, prefix, options, git_notes_add_usage,
+	argc = parse_options(argc, argv, prefix, options, shit_notes_add_usage,
 			     PARSE_OPT_KEEP_ARGV0);
 
 	if (2 < argc) {
 		error(_("too many arguments"));
-		usage_with_options(git_notes_add_usage, options);
+		usage_with_options(shit_notes_add_usage, options);
 	}
 
 	if (d.msg_nr)
@@ -555,13 +555,13 @@ static int add(int argc, const char **argv, const char *prefix)
 		if (add_note(t, &object, &new_note, combine_notes_overwrite))
 			BUG("combine_notes_overwrite failed");
 		commit_notes(the_repository, t,
-			     "Notes added by 'git notes add'");
+			     "Notes added by 'shit notes add'");
 	} else {
 		fprintf(stderr, _("Removing note for object %s\n"),
 			oid_to_hex(&object));
 		remove_note(t, object.hash);
 		commit_notes(the_repository, t,
-			     "Notes removed by 'git notes add'");
+			     "Notes removed by 'shit notes add'");
 	}
 
 	free_note_data(&d);
@@ -586,13 +586,13 @@ static int copy(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	argc = parse_options(argc, argv, prefix, options, git_notes_copy_usage,
+	argc = parse_options(argc, argv, prefix, options, shit_notes_copy_usage,
 			     0);
 
 	if (from_stdin || rewrite_cmd) {
 		if (argc) {
 			error(_("too many arguments"));
-			usage_with_options(git_notes_copy_usage, options);
+			usage_with_options(shit_notes_copy_usage, options);
 		} else {
 			return notes_copy_from_stdin(force, rewrite_cmd);
 		}
@@ -600,11 +600,11 @@ static int copy(int argc, const char **argv, const char *prefix)
 
 	if (argc < 1) {
 		error(_("too few arguments"));
-		usage_with_options(git_notes_copy_usage, options);
+		usage_with_options(shit_notes_copy_usage, options);
 	}
 	if (2 < argc) {
 		error(_("too many arguments"));
-		usage_with_options(git_notes_copy_usage, options);
+		usage_with_options(shit_notes_copy_usage, options);
 	}
 
 	if (repo_get_oid(the_repository, argv[0], &from_obj))
@@ -640,7 +640,7 @@ static int copy(int argc, const char **argv, const char *prefix)
 	if (add_note(t, &object, from_note, combine_notes_overwrite))
 		BUG("combine_notes_overwrite failed");
 	commit_notes(the_repository, t,
-		     "Notes added by 'git notes copy'");
+		     "Notes added by 'shit notes copy'");
 out:
 	free_notes(t);
 	return retval;
@@ -681,7 +681,7 @@ static int append_edit(int argc, const char **argv, const char *prefix)
 	};
 	int edit = !strcmp(argv[0], "edit");
 
-	usage = edit ? git_notes_edit_usage : git_notes_append_usage;
+	usage = edit ? shit_notes_edit_usage : shit_notes_append_usage;
 	argc = parse_options(argc, argv, prefix, options, usage,
 			     PARSE_OPT_KEEP_ARGV0);
 
@@ -697,7 +697,7 @@ static int append_edit(int argc, const char **argv, const char *prefix)
 	if (d.given && edit)
 		fprintf(stderr, _("The -m/-F/-c/-C options have been deprecated "
 			"for the 'edit' subcommand.\n"
-			"Please use 'git notes add -f -m/-F/-c/-C' instead.\n"));
+			"Please use 'shit notes add -f -m/-F/-c/-C' instead.\n"));
 
 	object_ref = 1 < argc ? argv[1] : "HEAD";
 
@@ -732,12 +732,12 @@ static int append_edit(int argc, const char **argv, const char *prefix)
 		write_note_data(&d, &new_note);
 		if (add_note(t, &object, &new_note, combine_notes_overwrite))
 			BUG("combine_notes_overwrite failed");
-		logmsg = xstrfmt("Notes added by 'git notes %s'", argv[0]);
+		logmsg = xstrfmt("Notes added by 'shit notes %s'", argv[0]);
 	} else {
 		fprintf(stderr, _("Removing note for object %s\n"),
 			oid_to_hex(&object));
 		remove_note(t, object.hash);
-		logmsg = xstrfmt("Notes removed by 'git notes %s'", argv[0]);
+		logmsg = xstrfmt("Notes removed by 'shit notes %s'", argv[0]);
 	}
 	commit_notes(the_repository, t, logmsg);
 
@@ -758,12 +758,12 @@ static int show(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	argc = parse_options(argc, argv, prefix, options, git_notes_show_usage,
+	argc = parse_options(argc, argv, prefix, options, shit_notes_show_usage,
 			     0);
 
 	if (1 < argc) {
 		error(_("too many arguments"));
-		usage_with_options(git_notes_show_usage, options);
+		usage_with_options(shit_notes_show_usage, options);
 	}
 
 	object_ref = argc ? argv[0] : "HEAD";
@@ -779,7 +779,7 @@ static int show(int argc, const char **argv, const char *prefix)
 			       oid_to_hex(&object));
 	else {
 		const char *show_args[3] = {"show", oid_to_hex(note), NULL};
-		retval = execv_git_cmd(show_args);
+		retval = execv_shit_cmd(show_args);
 	}
 	free_notes(t);
 	return retval;
@@ -790,8 +790,8 @@ static int merge_abort(struct notes_merge_options *o)
 	int ret = 0;
 
 	/*
-	 * Remove .git/NOTES_MERGE_PARTIAL and .git/NOTES_MERGE_REF, and call
-	 * notes_merge_abort() to remove .git/NOTES_MERGE_WORKTREE.
+	 * Remove .shit/NOTES_MERGE_PARTIAL and .shit/NOTES_MERGE_REF, and call
+	 * notes_merge_abort() to remove .shit/NOTES_MERGE_WORKTREE.
 	 */
 
 	if (refs_delete_ref(get_main_ref_store(the_repository), NULL, "NOTES_MERGE_PARTIAL", NULL, 0))
@@ -799,7 +799,7 @@ static int merge_abort(struct notes_merge_options *o)
 	if (refs_delete_ref(get_main_ref_store(the_repository), NULL, "NOTES_MERGE_REF", NULL, REF_NO_DEREF))
 		ret += error(_("failed to delete ref NOTES_MERGE_REF"));
 	if (notes_merge_abort(o))
-		ret += error(_("failed to remove 'git notes merge' worktree"));
+		ret += error(_("failed to remove 'shit notes merge' worktree"));
 	return ret;
 }
 
@@ -814,8 +814,8 @@ static int merge_commit(struct notes_merge_options *o)
 	int ret;
 
 	/*
-	 * Read partial merge result from .git/NOTES_MERGE_PARTIAL,
-	 * and target notes ref from .git/NOTES_MERGE_REF.
+	 * Read partial merge result from .shit/NOTES_MERGE_PARTIAL,
+	 * and target notes ref from .shit/NOTES_MERGE_REF.
 	 */
 
 	if (repo_get_oid(the_repository, "NOTES_MERGE_PARTIAL", &oid))
@@ -860,15 +860,15 @@ static int merge_commit(struct notes_merge_options *o)
 	return ret;
 }
 
-static int git_config_get_notes_strategy(const char *key,
+static int shit_config_get_notes_strategy(const char *key,
 					 enum notes_merge_strategy *strategy)
 {
 	char *value;
 
-	if (git_config_get_string(key, &value))
+	if (shit_config_get_string(key, &value))
 		return 1;
 	if (parse_notes_merge_strategy(value, strategy))
-		git_die_config(key, _("unknown notes merge strategy %s"), value);
+		shit_die_config(key, _("unknown notes merge strategy %s"), value);
 
 	free(value);
 	return 0;
@@ -902,21 +902,21 @@ static int merge(int argc, const char **argv, const char *prefix)
 	};
 
 	argc = parse_options(argc, argv, prefix, options,
-			     git_notes_merge_usage, 0);
+			     shit_notes_merge_usage, 0);
 
 	if (strategy || do_commit + do_abort == 0)
 		do_merge = 1;
 	if (do_merge + do_commit + do_abort != 1) {
 		error(_("cannot mix --commit, --abort or -s/--strategy"));
-		usage_with_options(git_notes_merge_usage, options);
+		usage_with_options(shit_notes_merge_usage, options);
 	}
 
 	if (do_merge && argc != 1) {
 		error(_("must specify a notes ref to merge"));
-		usage_with_options(git_notes_merge_usage, options);
+		usage_with_options(shit_notes_merge_usage, options);
 	} else if (!do_merge && argc) {
 		error(_("too many arguments"));
-		usage_with_options(git_notes_merge_usage, options);
+		usage_with_options(shit_notes_merge_usage, options);
 	}
 
 	init_notes_merge_options(the_repository, &o);
@@ -937,7 +937,7 @@ static int merge(int argc, const char **argv, const char *prefix)
 	if (strategy) {
 		if (parse_notes_merge_strategy(strategy, &o.strategy)) {
 			error(_("unknown -s/--strategy: %s"), strategy);
-			usage_with_options(git_notes_merge_usage, options);
+			usage_with_options(shit_notes_merge_usage, options);
 		}
 	} else {
 		struct strbuf merge_key = STRBUF_INIT;
@@ -949,8 +949,8 @@ static int merge(int argc, const char **argv, const char *prefix)
 
 		strbuf_addf(&merge_key, "notes.%s.mergeStrategy", short_ref);
 
-		if (git_config_get_notes_strategy(merge_key.buf, &o.strategy))
-			git_config_get_notes_strategy("notes.mergeStrategy", &o.strategy);
+		if (shit_config_get_notes_strategy(merge_key.buf, &o.strategy))
+			shit_config_get_notes_strategy("notes.mergeStrategy", &o.strategy);
 
 		strbuf_release(&merge_key);
 	}
@@ -969,11 +969,11 @@ static int merge(int argc, const char **argv, const char *prefix)
 	else { /* Merge has unresolved conflicts */
 		struct worktree **worktrees;
 		const struct worktree *wt;
-		/* Update .git/NOTES_MERGE_PARTIAL with partial merge result */
+		/* Update .shit/NOTES_MERGE_PARTIAL with partial merge result */
 		refs_update_ref(get_main_ref_store(the_repository), msg.buf,
 				"NOTES_MERGE_PARTIAL", &result_oid, NULL,
 				0, UPDATE_REFS_DIE_ON_ERR);
-		/* Store ref-to-be-updated into .git/NOTES_MERGE_REF */
+		/* Store ref-to-be-updated into .shit/NOTES_MERGE_REF */
 		worktrees = get_worktrees();
 		wt = find_shared_symref(worktrees, "NOTES_MERGE_REF",
 					default_notes_ref());
@@ -985,9 +985,9 @@ static int merge(int argc, const char **argv, const char *prefix)
 			die(_("failed to store link to current notes ref (%s)"),
 			    default_notes_ref());
 		fprintf(stderr, _("Automatic notes merge failed. Fix conflicts in %s "
-				  "and commit the result with 'git notes merge --commit', "
-				  "or abort the merge with 'git notes merge --abort'.\n"),
-			git_path(NOTES_MERGE_WORKTREE));
+				  "and commit the result with 'shit notes merge --commit', "
+				  "or abort the merge with 'shit notes merge --abort'.\n"),
+			shit_path(NOTES_MERGE_WORKTREE));
 	}
 
 	free_notes(t);
@@ -1028,7 +1028,7 @@ static int remove_cmd(int argc, const char **argv, const char *prefix)
 	int retval = 0;
 
 	argc = parse_options(argc, argv, prefix, options,
-			     git_notes_remove_usage, 0);
+			     shit_notes_remove_usage, 0);
 
 	t = init_notes_check("remove", NOTES_INIT_WRITABLE);
 
@@ -1050,7 +1050,7 @@ static int remove_cmd(int argc, const char **argv, const char *prefix)
 	}
 	if (!retval)
 		commit_notes(the_repository, t,
-			     "Notes removed by 'git notes remove'");
+			     "Notes removed by 'shit notes remove'");
 	free_notes(t);
 	return retval;
 }
@@ -1065,12 +1065,12 @@ static int prune(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	argc = parse_options(argc, argv, prefix, options, git_notes_prune_usage,
+	argc = parse_options(argc, argv, prefix, options, shit_notes_prune_usage,
 			     0);
 
 	if (argc) {
 		error(_("too many arguments"));
-		usage_with_options(git_notes_prune_usage, options);
+		usage_with_options(shit_notes_prune_usage, options);
 	}
 
 	t = init_notes_check("prune", NOTES_INIT_WRITABLE);
@@ -1079,7 +1079,7 @@ static int prune(int argc, const char **argv, const char *prefix)
 		(show_only ? NOTES_PRUNE_VERBOSE|NOTES_PRUNE_DRYRUN : 0) );
 	if (!show_only)
 		commit_notes(the_repository, t,
-			     "Notes removed by 'git notes prune'");
+			     "Notes removed by 'shit notes prune'");
 	free_notes(t);
 	return 0;
 }
@@ -1088,11 +1088,11 @@ static int get_ref(int argc, const char **argv, const char *prefix)
 {
 	struct option options[] = { OPT_END() };
 	argc = parse_options(argc, argv, prefix, options,
-			     git_notes_get_ref_usage, 0);
+			     shit_notes_get_ref_usage, 0);
 
 	if (argc) {
 		error(_("too many arguments"));
-		usage_with_options(git_notes_get_ref_usage, options);
+		usage_with_options(shit_notes_get_ref_usage, options);
 	}
 
 	puts(default_notes_ref());
@@ -1119,13 +1119,13 @@ int cmd_notes(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_default_config, NULL);
-	argc = parse_options(argc, argv, prefix, options, git_notes_usage,
+	shit_config(shit_default_config, NULL);
+	argc = parse_options(argc, argv, prefix, options, shit_notes_usage,
 			     PARSE_OPT_SUBCOMMAND_OPTIONAL);
 	if (!fn) {
 		if (argc) {
 			error(_("unknown subcommand: `%s'"), argv[0]);
-			usage_with_options(git_notes_usage, options);
+			usage_with_options(shit_notes_usage, options);
 		}
 		fn = list;
 	}
@@ -1134,7 +1134,7 @@ int cmd_notes(int argc, const char **argv, const char *prefix)
 		struct strbuf sb = STRBUF_INIT;
 		strbuf_addstr(&sb, override_notes_ref);
 		expand_notes_ref(&sb);
-		setenv("GIT_NOTES_REF", sb.buf, 1);
+		setenv("shit_NOTES_REF", sb.buf, 1);
 		strbuf_release(&sb);
 	}
 

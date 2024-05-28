@@ -2,7 +2,7 @@
 #define LOCKFILE_H
 
 /*
- * File write-locks as used by Git.
+ * File write-locks as used by shit.
  *
  * The lockfile API serves two purposes:
  *

@@ -1,7 +1,7 @@
 /*
  * Helper functions for tree diff generation
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "diff.h"
 #include "diffcore.h"
 #include "hash.h"
@@ -16,7 +16,7 @@
  * to outside world - i.e. appear on disk or network. In other words, it's just
  * temporary fields, which we internally use, but they have to stay in-house.
  *
- * ( such approach is valid, as standard S_IF* fits into 16 bits, and in Git
+ * ( such approach is valid, as standard S_IF* fits into 16 bits, and in shit
  *   codebase mode is `unsigned int` which is assumed to be at least 32 bits )
  */
 

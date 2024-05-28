@@ -3,41 +3,41 @@
 # Copyright (c) 2010 Ævar Arnfjörð Bjarmason
 #
 
-test_description='Gettext support for Git'
+test_description='Gettext support for shit'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./lib-gettext.sh
 
-test_expect_success "sanity: \$GIT_INTERNAL_GETTEXT_SH_SCHEME is set (to $GIT_INTERNAL_GETTEXT_SH_SCHEME)" '
-    test -n "$GIT_INTERNAL_GETTEXT_SH_SCHEME"
+test_expect_success "sanity: \$shit_INTERNAL_GETTEXT_SH_SCHEME is set (to $shit_INTERNAL_GETTEXT_SH_SCHEME)" '
+    test -n "$shit_INTERNAL_GETTEXT_SH_SCHEME"
 '
 
-test_expect_success 'sanity: $TEXTDOMAIN is git' '
-    test $TEXTDOMAIN = "git"
+test_expect_success 'sanity: $TEXTDOMAIN is shit' '
+    test $TEXTDOMAIN = "shit"
 '
 
 test_expect_success 'xgettext sanity: Perl _() strings are not extracted' '
-    ! grep "A Perl string xgettext will not get" "$GIT_PO_PATH"/is.po
+    ! grep "A Perl string xgettext will not get" "$shit_PO_PATH"/is.po
 '
 
 test_expect_success 'xgettext sanity: Comment extraction with --add-comments' '
     grep "TRANSLATORS: This is a test" "$TEST_DIRECTORY"/t0200/* | wc -l >expect &&
-    grep "TRANSLATORS: This is a test" "$GIT_PO_PATH"/is.po  | wc -l >actual &&
+    grep "TRANSLATORS: This is a test" "$shit_PO_PATH"/is.po  | wc -l >actual &&
     test_cmp expect actual
 '
 
 test_expect_success 'xgettext sanity: Comment extraction with --add-comments stops at statements' '
-    ! grep "This is a phony" "$GIT_PO_PATH"/is.po &&
-    ! grep "the above comment" "$GIT_PO_PATH"/is.po
+    ! grep "This is a phony" "$shit_PO_PATH"/is.po &&
+    ! grep "the above comment" "$shit_PO_PATH"/is.po
 '
 
 test_expect_success GETTEXT 'sanity: $TEXTDOMAINDIR exists without NO_GETTEXT=YesPlease' '
     test -d "$TEXTDOMAINDIR" &&
-    test "$TEXTDOMAINDIR" = "$GIT_TEXTDOMAINDIR"
+    test "$TEXTDOMAINDIR" = "$shit_TEXTDOMAINDIR"
 '
 
 test_expect_success GETTEXT 'sanity: Icelandic locale was compiled' '
-    test -f "$TEXTDOMAINDIR/is/LC_MESSAGES/git.mo"
+    test -f "$TEXTDOMAINDIR/is/LC_MESSAGES/shit.mo"
 '
 
 # TODO: When we have more locales, generalize this to test them
@@ -45,8 +45,8 @@ test_expect_success GETTEXT 'sanity: Icelandic locale was compiled' '
 test_expect_success GETTEXT_LOCALE 'sanity: gettext("") metadata is OK' '
     # Return value may be non-zero
     LANGUAGE=is LC_ALL="$is_IS_locale" gettext "" >zero-expect &&
-    grep "Project-Id-Version: Git" zero-expect &&
-    grep "Git Mailing List <git@vger.kernel.org>" zero-expect &&
+    grep "Project-Id-Version: shit" zero-expect &&
+    grep "shit Mailing List <shit@vger.kernel.org>" zero-expect &&
     grep "Content-Type: text/plain; charset=UTF-8" zero-expect &&
     grep "Content-Transfer-Encoding: 8bit" zero-expect
 '
@@ -62,10 +62,10 @@ test_expect_success GETTEXT_LOCALE 'sanity: gettext(unknown) is passed through' 
 test_expect_success GETTEXT_LOCALE 'xgettext: C extraction of _() and N_() strings' '
     printf "TILRAUN: C tilraunastrengur" >expect &&
     printf "\n" >>expect &&
-    printf "Sjá '\''git help SKIPUN'\'' til að sjá hjálp fyrir tiltekna skipun." >>expect &&
+    printf "Sjá '\''shit help SKIPUN'\'' til að sjá hjálp fyrir tiltekna skipun." >>expect &&
     LANGUAGE=is LC_ALL="$is_IS_locale" gettext "TEST: A C test string" >actual &&
     printf "\n" >>actual &&
-    LANGUAGE=is LC_ALL="$is_IS_locale" gettext "See '\''git help COMMAND'\'' for more information on a specific command." >>actual &&
+    LANGUAGE=is LC_ALL="$is_IS_locale" gettext "See '\''shit help COMMAND'\'' for more information on a specific command." >>actual &&
     test_cmp expect actual
 '
 

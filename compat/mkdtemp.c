@@ -1,6 +1,6 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
-char *gitmkdtemp(char *template)
+char *shitmkdtemp(char *template)
 {
 	if (!*mktemp(template) || mkdir(template, 0700))
 		return NULL;

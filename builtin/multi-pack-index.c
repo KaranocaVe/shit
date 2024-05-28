@@ -11,17 +11,17 @@
 #include "replace-object.h"
 
 #define BUILTIN_MIDX_WRITE_USAGE \
-	N_("git multi-pack-index [<options>] write [--preferred-pack=<pack>]" \
+	N_("shit multi-pack-index [<options>] write [--preferred-pack=<pack>]" \
 	   "[--refs-snapshot=<path>]")
 
 #define BUILTIN_MIDX_VERIFY_USAGE \
-	N_("git multi-pack-index [<options>] verify")
+	N_("shit multi-pack-index [<options>] verify")
 
 #define BUILTIN_MIDX_EXPIRE_USAGE \
-	N_("git multi-pack-index [<options>] expire")
+	N_("shit multi-pack-index [<options>] expire")
 
 #define BUILTIN_MIDX_REPACK_USAGE \
-	N_("git multi-pack-index [<options>] repack [--batch-size=<size>]")
+	N_("shit multi-pack-index [<options>] repack [--batch-size=<size>]")
 
 static char const * const builtin_multi_pack_index_write_usage[] = {
 	BUILTIN_MIDX_WRITE_USAGE,
@@ -82,26 +82,26 @@ static struct option *add_common_options(struct option *prev)
 	return parse_options_concat(common_opts, prev);
 }
 
-static int git_multi_pack_index_write_config(const char *var, const char *value,
+static int shit_multi_pack_index_write_config(const char *var, const char *value,
 					     const struct config_context *ctx UNUSED,
 					     void *cb UNUSED)
 {
 	if (!strcmp(var, "pack.writebitmaphashcache")) {
-		if (git_config_bool(var, value))
+		if (shit_config_bool(var, value))
 			opts.flags |= MIDX_WRITE_BITMAP_HASH_CACHE;
 		else
 			opts.flags &= ~MIDX_WRITE_BITMAP_HASH_CACHE;
 	}
 
 	if (!strcmp(var, "pack.writebitmaplookuptable")) {
-		if (git_config_bool(var, value))
+		if (shit_config_bool(var, value))
 			opts.flags |= MIDX_WRITE_BITMAP_LOOKUP_TABLE;
 		else
 			opts.flags &= ~MIDX_WRITE_BITMAP_LOOKUP_TABLE;
 	}
 
 	/*
-	 * We should never make a fall-back call to 'git_default_config', since
+	 * We should never make a fall-back call to 'shit_default_config', since
 	 * this was already called in 'cmd_multi_pack_index()'.
 	 */
 	return 0;
@@ -138,7 +138,7 @@ static int cmd_multi_pack_index_write(int argc, const char **argv,
 
 	opts.flags |= MIDX_WRITE_BITMAP_HASH_CACHE;
 
-	git_config(git_multi_pack_index_write_config, NULL);
+	shit_config(shit_multi_pack_index_write_config, NULL);
 
 	options = add_common_options(builtin_multi_pack_index_write_options);
 
@@ -276,7 +276,7 @@ int cmd_multi_pack_index(int argc, const char **argv,
 
 	disable_replace_refs();
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	if (the_repository &&
 	    the_repository->objects &&

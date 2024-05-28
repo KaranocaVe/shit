@@ -1,24 +1,24 @@
 #!/bin/sh
 
 test_description='merge: handle file mode'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'set up mode change in one branch' '
 	: >file1 &&
-	git add file1 &&
-	git commit -m initial &&
-	git checkout -b a1 main &&
+	shit add file1 &&
+	shit commit -m initial &&
+	shit checkout -b a1 main &&
 	: >dummy &&
-	git add dummy &&
-	git commit -m a &&
-	git checkout -b b1 main &&
+	shit add dummy &&
+	shit commit -m a &&
+	shit checkout -b b1 main &&
 	test_chmod +x file1 &&
-	git add file1 &&
-	git commit -m b1
+	shit add file1 &&
+	shit commit -m b1
 '
 
 do_one_mode () {
@@ -26,9 +26,9 @@ do_one_mode () {
 	us=$2
 	them=$3
 	test_expect_success "resolve single mode change ($strategy, $us)" '
-		git checkout -f $us &&
-		git merge -s $strategy $them &&
-		git ls-files -s file1 | grep ^100755
+		shit checkout -f $us &&
+		shit merge -s $strategy $them &&
+		shit ls-files -s file1 | grep ^100755
 	'
 
 	test_expect_success FILEMODE "verify executable bit on file ($strategy, $us)" '
@@ -42,16 +42,16 @@ do_one_mode resolve a1 b1
 do_one_mode resolve b1 a1
 
 test_expect_success 'set up mode change in both branches' '
-	git reset --hard HEAD &&
-	git checkout -b a2 main &&
+	shit reset --hard HEAD &&
+	shit checkout -b a2 main &&
 	: >file2 &&
-	H=$(git hash-object file2) &&
+	H=$(shit hash-object file2) &&
 	test_chmod +x file2 &&
-	git commit -m a2 &&
-	git checkout -b b2 main &&
+	shit commit -m a2 &&
+	shit checkout -b b2 main &&
 	: >file2 &&
-	git add file2 &&
-	git commit -m b2 &&
+	shit add file2 &&
+	shit commit -m b2 &&
 	cat >expect <<-EOF
 	100755 $H 2	file2
 	100644 $H 3	file2
@@ -61,12 +61,12 @@ test_expect_success 'set up mode change in both branches' '
 do_both_modes () {
 	strategy=$1
 	test_expect_success "detect conflict on double mode change ($strategy)" '
-		git reset --hard &&
-		git checkout -f a2 &&
-		test_must_fail git merge -s $strategy b2 &&
-		git ls-files -u >actual &&
+		shit reset --hard &&
+		shit checkout -f a2 &&
+		test_must_fail shit merge -s $strategy b2 &&
+		shit ls-files -u >actual &&
 		test_cmp expect actual &&
-		git ls-files -s file2 | grep ^100755
+		shit ls-files -s file2 | grep ^100755
 	'
 
 	test_expect_success FILEMODE "verify executable bit on file ($strategy)" '
@@ -79,10 +79,10 @@ do_both_modes recursive
 do_both_modes resolve
 
 test_expect_success 'set up delete/modechange scenario' '
-	git reset --hard &&
-	git checkout -b deletion main &&
-	git rm file1 &&
-	git commit -m deletion
+	shit reset --hard &&
+	shit checkout -b deletion main &&
+	shit rm file1 &&
+	shit commit -m deletion
 '
 
 do_delete_modechange () {
@@ -90,9 +90,9 @@ do_delete_modechange () {
 	us=$2
 	them=$3
 	test_expect_success "detect delete/modechange conflict ($strategy, $us)" '
-		git reset --hard &&
-		git checkout $us &&
-		test_must_fail git merge -s $strategy $them
+		shit reset --hard &&
+		shit checkout $us &&
+		test_must_fail shit merge -s $strategy $them
 	'
 }
 

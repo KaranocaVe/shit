@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Build and test Git's fuzzers
+# Build and test shit's fuzzers
 #
 
 . ${0%/*}/lib.sh

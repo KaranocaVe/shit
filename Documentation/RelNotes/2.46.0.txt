@@ -1,4 +1,4 @@
-Git v2.46 Release Notes
+shit v2.46 Release Notes
 =======================
 
 Backward Compatibility Notes
@@ -7,7 +7,7 @@ Backward Compatibility Notes
 
 UI, Workflows & Features
 
- * The "--rfc" option of "git format-patch" learned to take an
+ * The "--rfc" option of "shit format-patch" learned to take an
    optional string value to be used in place of "RFC" to tweak the
    "[PATCH]" on the subject header.
 
@@ -16,10 +16,10 @@ UI, Workflows & Features
    username & password pair, like Bearer and NTLM.
 
  * Command line completion script (in contrib/) learned to complete
-   "git symbolic-ref" a bit better (you need to enable plumbing
-   commands to be completed with GIT_COMPLETION_SHOW_ALL_COMMANDS).
+   "shit symbolic-ref" a bit better (you need to enable plumbing
+   commands to be completed with shit_COMPLETION_SHOW_ALL_COMMANDS).
 
- * When the user responds to a prompt given by "git add -p" with an
+ * When the user responds to a prompt given by "shit add -p" with an
    unsupported command, list of available commands were given, which
    was too much if the user knew what they wanted to type but merely
    made a typo.  Now the user gets a much shorter error message.
@@ -27,12 +27,12 @@ UI, Workflows & Features
  * The color parsing code learned to handle 12-bit RGB colors, spelled
    as "#RGB" (in addition to "#RRGGBB" that is already supported).
 
- * The operation mode options (like "--get") the "git config" command
-   uses have been deprecated and replaced with subcommands (like "git
+ * The operation mode options (like "--get") the "shit config" command
+   uses have been deprecated and replaced with subcommands (like "shit
    config get").
 
- * "git tag" learned the "--trailer" option to futz with the trailers
-   in the same way as "git commit" does.
+ * "shit tag" learned the "--trailer" option to futz with the trailers
+   in the same way as "shit commit" does.
 
  * A new global "--no-advice" option can be used to disable all advice
    messages, which is meant to be used only in scripts.
@@ -45,7 +45,7 @@ UI, Workflows & Features
 
 Performance, Internal Implementation, Development Support etc.
 
- * Advertise "git contacts", a tool for newcomers to find people to
+ * Advertise "shit contacts", a tool for newcomers to find people to
    ask review for their patches, a bit more in our developer
    documentation.
 
@@ -56,21 +56,21 @@ Performance, Internal Implementation, Development Support etc.
  * Code to write out reftable has seen some optimization and
    simplification.
 
- * Tests to ensure interoperability between reftable written by jgit
+ * Tests to ensure interoperability between reftable written by jshit
    and our code have been added and enabled in CI.
 
  * The singleton index_state instance "the_index" has been eliminated
    by always instantiating "the_repository" and replacing references
    to "the_index"  with references to its .index member.
 
- * Git-GUI has a new maintainer, Johannes Sixt.
-   (merge e18ad8eb26 jc/git-gui-maintainer-update later to maint).
+ * shit-GUI has a new maintainer, Johannes Sixt.
+   (merge e18ad8eb26 jc/shit-gui-maintainer-update later to maint).
 
  * The "test-tool" has been taught to run testsuite tests in parallel,
    bypassing the need to use the "prove" tool.
 
- * The "whitespace check" task that was enabled for GitHub Actions CI
-   has been ported to GitLab CI.
+ * The "whitespace check" task that was enabled for shitHub Actions CI
+   has been ported to shitLab CI.
 
  * The refs API lost functions that implicitly assumes to work on the
    primary ref_store by forcing the callers to pass a ref_store as an
@@ -80,7 +80,7 @@ Performance, Internal Implementation, Development Support etc.
 Fixes since v2.45
 -----------------
 
- * "git rebase --signoff" used to forget that it needs to add a
+ * "shit rebase --signoff" used to forget that it needs to add a
    sign-off to the resulting commit when told to continue after a
    conflict stops its operation.
    (merge a6c2654f83 pw/rebase-m-signoff-fix later to maint).
@@ -96,11 +96,11 @@ Fixes since v2.45
    addition to "PATCH".
    (merge cadcf58085 ds/format-patch-rfc-and-k later to maint).
 
- * "git stash -S" did not handle binary files correctly, which has
+ * "shit stash -S" did not handle binary files correctly, which has
    been corrected.
    (merge 5fb7686409 aj/stash-staged-fix later to maint).
 
- * A scheduled "git maintenance" job is expected to work on all
+ * A scheduled "shit maintenance" job is expected to work on all
    repositories it knows about, but it stopped at the first one that
    errored out.  Now it keeps going.
    (merge c75662bfc9 js/for-each-repo-keep-going later to maint).
@@ -113,7 +113,7 @@ Fixes since v2.45
  * Command line completion support for zsh (in contrib/) has been
    updated to stop exposing internal state to end-user shell
    interaction.
-   (merge 3c20acdf46 dk/zsh-git-repo-path-fix later to maint).
+   (merge 3c20acdf46 dk/zsh-shit-repo-path-fix later to maint).
 
  * Tests that try to corrupt in-repository files in chunked format did
    not work well on macOS due to its broken "mv", which has been
@@ -127,24 +127,24 @@ Fixes since v2.45
    been removed from the platform.
    (merge 5ca0c455f1 ps/ci-python-2-deprecation later to maint).
 
- * Git 2.43 started using the tree of HEAD as the source of attributes
+ * shit 2.43 started using the tree of HEAD as the source of attributes
    in a bare repository, which has severe performance implications.
    For now, revert the change, without ripping out a more explicit
    support for the attr.tree configuration variable.
    (merge 51441e6460 jc/no-default-attr-tree-in-bare later to maint).
 
- * The "--exit-code" option of "git diff" command learned to work with
+ * The "--exit-code" option of "shit diff" command learned to work with
    the "--ext-diff" option.
    (merge 11be65cfa4 rs/external-diff-with-exit-code later to maint).
 
- * Windows CI running in GitHub Actions started complaining about the
+ * Windows CI running in shitHub Actions started complaining about the
    order of arguments given to calloc(); the imported regex code uses
    the wrong order almost consistently, which has been corrected.
    (merge f01301aabe jc/compat-regex-calloc-fix later to maint).
 
  * Expose "name conflict" error when a ref creation fails due to D/F
    conflict in the ref namespace, to improve an error message given by
-   "git fetch".
+   "shit fetch".
    (merge 9339fca23e it/refs-name-conflict later to maint).
 
  * Other code cleanup, docfix, build fix, etc.

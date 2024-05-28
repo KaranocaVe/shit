@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "gettext.h"
 #include "simple-ipc.h"
@@ -645,8 +645,8 @@ static void release_sa(struct my_sa_data *d)
  * and receive the response.
  *
  * Normally, this is not necessary since the daemon is usually
- * automatically started by a foreground command like `git status`,
- * but in those cases where an elevated Git command started the daemon
+ * automatically started by a foreground command like `shit status`,
+ * but in those cases where an elevated shit command started the daemon
  * (such that the daemon itself runs with elevation), we need to add
  * the ACL so that non-elevated commands can write to it.
  *

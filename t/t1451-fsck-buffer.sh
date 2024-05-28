@@ -46,15 +46,15 @@ check () {
 			cat base &&
 			echo "$content"
 		} >input &&
-		test_must_fail git hash-object -t "$type" input 2>err &&
+		test_must_fail shit hash-object -t "$type" input 2>err &&
 		grep "$fsck" err
 	'
 }
 
 test_expect_success 'create valid objects' '
-	git commit --allow-empty -m foo &&
-	commit=$(git rev-parse --verify HEAD) &&
-	tree=$(git rev-parse --verify HEAD^{tree})
+	shit commit --allow-empty -m foo &&
+	commit=$(shit rev-parse --verify HEAD) &&
+	tree=$(shit rev-parse --verify HEAD^{tree})
 '
 
 reset
@@ -125,7 +125,7 @@ ident_checks tag tagger
 # trees are a binary format and can't use our earlier helpers
 test_expect_success 'truncated tree (short hash)' '
 	printf "100644 foo\0\1\1\1\1" >input &&
-	test_must_fail git hash-object -t tree input 2>err &&
+	test_must_fail shit hash-object -t tree input 2>err &&
 	grep badTree err
 '
 
@@ -135,7 +135,7 @@ test_expect_success 'truncated tree (missing nul)' '
 	# make up a hash, and that there is no NUL (and we confirm that the
 	# parser does not walk past the end of the buffer).
 	printf "100644 a long filename, or a hash with missing nul?" >input &&
-	test_must_fail git hash-object -t tree input 2>err &&
+	test_must_fail shit hash-object -t tree input 2>err &&
 	grep badTree err
 '
 

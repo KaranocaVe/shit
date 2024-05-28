@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "object.h"
 #include "commit.h"
 #include "gettext.h"
@@ -288,7 +288,7 @@ void resolve_tree_islands(struct repository *r,
 		while (tree_entry(&desc, &entry)) {
 			struct object *obj;
 
-			if (S_ISGITLINK(entry.mode))
+			if (S_ISshitLINK(entry.mode))
 				continue;
 
 			obj = lookup_object(r, &entry.oid);
@@ -362,7 +362,7 @@ static int island_config_callback(const char *k, const char *v,
 	}
 
 	if (!strcmp(k, "pack.islandcore"))
-		return git_config_string(&core_island_name, k, v);
+		return shit_config_string(&core_island_name, k, v);
 
 	return 0;
 }
@@ -486,7 +486,7 @@ void load_delta_islands(struct repository *r, int progress)
 
 	island_marks = kh_init_oid_map();
 
-	git_config(island_config_callback, &ild);
+	shit_config(island_config_callback, &ild);
 	ild.remote_islands = kh_init_str();
 	refs_for_each_ref(get_main_ref_store(the_repository),
 			  find_island_for_ref, &ild);

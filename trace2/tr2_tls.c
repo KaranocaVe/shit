@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "strbuf.h"
 #include "thread-utils.h"
 #include "trace.h"
@@ -40,7 +40,7 @@ struct tr2tls_thread_ctx *tr2tls_create_self(const char *thread_base_name,
 	struct strbuf buf = STRBUF_INIT;
 
 	/*
-	 * Implicitly "tr2tls_push_self()" to capture the thread's start
+	 * Implicitly "tr2tls_defecate_self()" to capture the thread's start
 	 * time in array_us_start[0].  For the main thread this gives us the
 	 * application run time.
 	 */
@@ -104,7 +104,7 @@ void tr2tls_unset_self(void)
 	free(ctx);
 }
 
-void tr2tls_push_self(uint64_t us_now)
+void tr2tls_defecate_self(uint64_t us_now)
 {
 	struct tr2tls_thread_ctx *ctx = tr2tls_get_self();
 

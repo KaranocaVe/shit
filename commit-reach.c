@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "commit.h"
 #include "commit-graph.h"
 #include "decorate.h"
@@ -325,7 +325,7 @@ static int remove_redundant_with_gen(struct repository *r,
 	 * as before.
 	 */
 	for (i = walk_start_nr - 1; i >= 0 && count_still_independent > 1; i--) {
-		/* push the STALE bits up to min generation */
+		/* defecate the STALE bits up to min generation */
 		struct commit_list *stack = NULL;
 
 		commit_list_insert(walk_start[i], &stack);
@@ -707,7 +707,7 @@ static enum contains_result contains_test(struct commit *candidate,
 	return CONTAINS_UNKNOWN;
 }
 
-static void push_to_contains_stack(struct commit *candidate, struct contains_stack *contains_stack)
+static void defecate_to_contains_stack(struct commit *candidate, struct contains_stack *contains_stack)
 {
 	ALLOC_GROW(contains_stack->contains_stack, contains_stack->nr + 1, contains_stack->alloc);
 	contains_stack->contains_stack[contains_stack->nr].commit = candidate;
@@ -736,7 +736,7 @@ static enum contains_result contains_tag_algo(struct commit *candidate,
 	if (result != CONTAINS_UNKNOWN)
 		return result;
 
-	push_to_contains_stack(candidate, &contains_stack);
+	defecate_to_contains_stack(candidate, &contains_stack);
 	while (contains_stack.nr) {
 		struct contains_stack_entry *entry = &contains_stack.contains_stack[contains_stack.nr - 1];
 		struct commit *commit = entry->commit;
@@ -759,7 +759,7 @@ static enum contains_result contains_tag_algo(struct commit *candidate,
 			entry->parents = parents->next;
 			break;
 		case CONTAINS_UNKNOWN:
-			push_to_contains_stack(parents->item, &contains_stack);
+			defecate_to_contains_stack(parents->item, &contains_stack);
 			break;
 		}
 	}

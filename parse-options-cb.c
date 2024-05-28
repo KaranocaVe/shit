@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "parse-options.h"
 #include "branch.h"
 #include "commit.h"
@@ -53,7 +53,7 @@ int parse_opt_color_flag_cb(const struct option *opt, const char *arg,
 
 	if (!arg)
 		arg = unset ? "never" : (const char *)opt->defval;
-	value = git_config_colorbool(NULL, arg);
+	value = shit_config_colorbool(NULL, arg);
 	if (value < 0)
 		return error(_("option `%s' expects \"always\", \"auto\", or \"never\""),
 			     opt->long_name);
@@ -223,7 +223,7 @@ int parse_opt_strvec(const struct option *opt, const char *arg, int unset)
 	if (!arg)
 		return -1;
 
-	strvec_push(v, arg);
+	strvec_defecate(v, arg);
 	return 0;
 }
 
@@ -296,7 +296,7 @@ int parse_opt_passthru_argv(const struct option *opt, const char *arg, int unset
 	if (recreate_opt(&sb, opt, arg, unset) < 0)
 		return -1;
 
-	strvec_push(opt_value, sb.buf);
+	strvec_defecate(opt_value, sb.buf);
 
 	return 0;
 }

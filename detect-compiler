@@ -17,7 +17,7 @@ get_family() {
 }
 
 get_version() {
-	# A string that begins with a digit up to the next SP
+	# A string that begins with a dishit up to the next SP
 	ver=$(get_version_line | sed 's/^.* version \([0-9][^ ]*\).*/\1/')
 
 	# There are known -variant suffixes that do not affect the

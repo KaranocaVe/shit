@@ -2,8 +2,8 @@
 
 test_description='unpack-trees error messages'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,18 +11,18 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success 'setup' '
 	echo one >one &&
-	git add one &&
-	git commit -a -m First &&
+	shit add one &&
+	shit commit -a -m First &&
 
-	git checkout -b branch &&
+	shit checkout -b branch &&
 	echo two >two &&
 	echo three >three &&
 	echo four >four &&
 	echo five >five &&
-	git add two three four five &&
-	git commit -m Second &&
+	shit add two three four five &&
+	shit commit -m Second &&
 
-	git checkout main &&
+	shit checkout main &&
 	echo other >two &&
 	echo other >three &&
 	echo other >four &&
@@ -40,17 +40,17 @@ Aborting
 EOF
 
 test_expect_success 'untracked files overwritten by merge (fast and non-fast forward)' '
-	test_must_fail git merge branch 2>out &&
+	test_must_fail shit merge branch 2>out &&
 	test_cmp out expect &&
-	git commit --allow-empty -m empty &&
+	shit commit --allow-empty -m empty &&
 	(
-		GIT_MERGE_VERBOSITY=0 &&
-		export GIT_MERGE_VERBOSITY &&
-		test_must_fail git merge branch 2>out2
+		shit_MERGE_VERBOSITY=0 &&
+		export shit_MERGE_VERBOSITY &&
+		test_must_fail shit merge branch 2>out2
 	) &&
-	echo "Merge with strategy ${GIT_TEST_MERGE_ALGORITHM:-ort} failed." >>expect &&
+	echo "Merge with strategy ${shit_TEST_MERGE_ALGORITHM:-ort} failed." >>expect &&
 	test_cmp out2 expect &&
-	git reset --hard HEAD^
+	shit reset --hard HEAD^
 '
 
 cat >expect <<\EOF
@@ -66,10 +66,10 @@ Aborting
 EOF
 
 test_expect_success 'untracked files or local changes ovewritten by merge' '
-	git add two &&
-	git add three &&
-	git add four &&
-	test_must_fail git merge branch 2>out &&
+	shit add two &&
+	shit add three &&
+	shit add four &&
+	test_must_fail shit merge branch 2>out &&
 	test_cmp out expect
 '
 
@@ -82,16 +82,16 @@ Aborting
 EOF
 
 test_expect_success 'cannot switch branches because of local changes' '
-	git add five &&
+	shit add five &&
 	mkdir rep &&
 	echo one >rep/one &&
 	echo two >rep/two &&
-	git add rep/one rep/two &&
-	git commit -m Fourth &&
-	git checkout main &&
+	shit add rep/one rep/two &&
+	shit commit -m Fourth &&
+	shit checkout main &&
 	echo uno >rep/one &&
 	echo dos >rep/two &&
-	test_must_fail git checkout branch 2>out &&
+	test_must_fail shit checkout branch 2>out &&
 	test_cmp out expect
 '
 
@@ -104,8 +104,8 @@ Aborting
 EOF
 
 test_expect_success 'not uptodate file porcelain checkout error' '
-	git add rep/one rep/two &&
-	test_must_fail git checkout branch 2>out &&
+	shit add rep/one rep/two &&
+	test_must_fail shit checkout branch 2>out &&
 	test_cmp out expect
 '
 
@@ -118,25 +118,25 @@ Aborting
 EOF
 
 test_expect_success 'not_uptodate_dir porcelain checkout error' '
-	git init uptodate &&
+	shit init uptodate &&
 	cd uptodate &&
 	mkdir rep &&
 	mkdir rep2 &&
 	touch rep/foo &&
 	touch rep2/foo &&
-	git add rep/foo rep2/foo &&
-	git commit -m init &&
-	git checkout -b branch &&
-	git rm rep -r &&
-	git rm rep2 -r &&
+	shit add rep/foo rep2/foo &&
+	shit commit -m init &&
+	shit checkout -b branch &&
+	shit rm rep -r &&
+	shit rm rep2 -r &&
 	>rep &&
 	>rep2 &&
-	git add rep rep2 &&
-	git commit -m "added test as a file" &&
-	git checkout main &&
+	shit add rep rep2 &&
+	shit commit -m "added test as a file" &&
+	shit checkout main &&
 	>rep/untracked-file &&
 	>rep2/untracked-file &&
-	test_must_fail git checkout branch 2>out &&
+	test_must_fail shit checkout branch 2>out &&
 	test_cmp out ../expect
 '
 

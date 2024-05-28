@@ -1,4 +1,4 @@
-Git v2.3.6 Release Notes
+shit v2.3.6 Release Notes
 ========================
 
 Fixes since v2.3.5

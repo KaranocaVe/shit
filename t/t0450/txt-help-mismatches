@@ -39,7 +39,7 @@ multi-pack-index
 name-rev
 notes
 pack-objects
-push
+defecate
 range-diff
 rebase
 remote

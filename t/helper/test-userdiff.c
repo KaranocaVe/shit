@@ -38,8 +38,8 @@ int cmd__userdiff(int argc, const char **argv)
 		return error("unknown argument %s", argv[1]);
 
 	if (want & USERDIFF_DRIVER_TYPE_CUSTOM) {
-		setup_git_directory();
-		git_config(cmd__userdiff_config, NULL);
+		setup_shit_directory();
+		shit_config(cmd__userdiff_config, NULL);
 	}
 
 	for_each_userdiff_driver(driver_cb, &want);

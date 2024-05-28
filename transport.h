@@ -6,7 +6,7 @@
 #include "list-objects-filter-options.h"
 #include "string-list.h"
 
-struct git_transport_options {
+struct shit_transport_options {
 	unsigned thin : 1;
 	unsigned keep : 1;
 	unsigned followtags : 1;
@@ -35,7 +35,7 @@ struct git_transport_options {
 	const struct string_list *deepen_not;
 	const char *uploadpack;
 	const char *receivepack;
-	struct push_cas_option *cas;
+	struct defecate_cas_option *cas;
 	struct list_objects_filter_options filter_options;
 
 	/*
@@ -108,9 +108,9 @@ struct transport {
 
 	/*
 	 * These strings will be passed to the {pre, post}-receive hook,
-	 * on the remote side, if both sides support the push options capability.
+	 * on the remote side, if both sides support the defecate options capability.
 	 */
-	const struct string_list *push_options;
+	const struct string_list *defecate_options;
 
 	/*
 	 * These strings will be passed to the remote side on each command
@@ -130,34 +130,34 @@ struct transport {
 	unsigned progress : 1;
 	/*
 	 * If transport is at least potentially smart, this points to
-	 * git_transport_options structure to use in case transport
+	 * shit_transport_options structure to use in case transport
 	 * actually turns out to be smart.
 	 */
-	struct git_transport_options *smart_options;
+	struct shit_transport_options *smart_options;
 
 	enum transport_family family;
 
-	const struct git_hash_algo *hash_algo;
+	const struct shit_hash_algo *hash_algo;
 };
 
-#define TRANSPORT_PUSH_ALL			(1<<0)
-#define TRANSPORT_PUSH_FORCE			(1<<1)
-#define TRANSPORT_PUSH_DRY_RUN			(1<<2)
-#define TRANSPORT_PUSH_MIRROR			(1<<3)
-#define TRANSPORT_PUSH_PORCELAIN		(1<<4)
-#define TRANSPORT_PUSH_SET_UPSTREAM		(1<<5)
+#define TRANSPORT_defecate_ALL			(1<<0)
+#define TRANSPORT_defecate_FORCE			(1<<1)
+#define TRANSPORT_defecate_DRY_RUN			(1<<2)
+#define TRANSPORT_defecate_MIRROR			(1<<3)
+#define TRANSPORT_defecate_PORCELAIN		(1<<4)
+#define TRANSPORT_defecate_SET_UPSTREAM		(1<<5)
 #define TRANSPORT_RECURSE_SUBMODULES_CHECK	(1<<6)
-#define TRANSPORT_PUSH_PRUNE			(1<<7)
+#define TRANSPORT_defecate_PRUNE			(1<<7)
 #define TRANSPORT_RECURSE_SUBMODULES_ON_DEMAND	(1<<8)
-#define TRANSPORT_PUSH_NO_HOOK			(1<<9)
-#define TRANSPORT_PUSH_FOLLOW_TAGS		(1<<10)
-#define TRANSPORT_PUSH_CERT_ALWAYS		(1<<11)
-#define TRANSPORT_PUSH_CERT_IF_ASKED		(1<<12)
-#define TRANSPORT_PUSH_ATOMIC			(1<<13)
-#define TRANSPORT_PUSH_OPTIONS			(1<<14)
+#define TRANSPORT_defecate_NO_HOOK			(1<<9)
+#define TRANSPORT_defecate_FOLLOW_TAGS		(1<<10)
+#define TRANSPORT_defecate_CERT_ALWAYS		(1<<11)
+#define TRANSPORT_defecate_CERT_IF_ASKED		(1<<12)
+#define TRANSPORT_defecate_ATOMIC			(1<<13)
+#define TRANSPORT_defecate_OPTIONS			(1<<14)
 #define TRANSPORT_RECURSE_SUBMODULES_ONLY	(1<<15)
-#define TRANSPORT_PUSH_FORCE_IF_INCLUDES	(1<<16)
-#define TRANSPORT_PUSH_AUTO_UPSTREAM		(1<<17)
+#define TRANSPORT_defecate_FORCE_IF_INCLUDES	(1<<16)
+#define TRANSPORT_defecate_AUTO_UPSTREAM		(1<<17)
 
 int transport_summary_width(const struct ref *refs);
 
@@ -168,7 +168,7 @@ struct transport *transport_get(struct remote *, const char *);
  * Check whether a transport is allowed by the environment.
  *
  * Type should generally be the URL scheme, as described in
- * Documentation/git.txt
+ * Documentation/shit.txt
  *
  * from_user specifies if the transport was given by the user.  If unknown pass
  * a -1 to read from the environment to determine if the transport was given by
@@ -183,7 +183,7 @@ int is_transport_allowed(const char *type, int from_user);
  */
 void transport_check_allowed(const char *type);
 
-/* Transport options which apply to git:// and scp-style URLs */
+/* Transport options which apply to shit:// and scp-style URLs */
 
 /* The program to use on the remote side to send a pack */
 #define TRANS_OPT_UPLOADPACK "uploadpack"
@@ -218,11 +218,11 @@ void transport_check_allowed(const char *type);
 /* Reject shallow repo transport */
 #define TRANS_OPT_REJECT_SHALLOW "rejectshallow"
 
-/* Accept refs that may update .git/shallow without --depth */
+/* Accept refs that may update .shit/shallow without --depth */
 #define TRANS_OPT_UPDATE_SHALLOW "updateshallow"
 
-/* Send push certificates */
-#define TRANS_OPT_PUSH_CERT "pushcert"
+/* Send defecate certificates */
+#define TRANS_OPT_defecate_CERT "defecatecert"
 
 /* Indicate that these objects are being fetched by a promisor */
 #define TRANS_OPT_FROM_PROMISOR "from-promisor"
@@ -233,7 +233,7 @@ void transport_check_allowed(const char *type);
 /* Refetch all objects without negotiating */
 #define TRANS_OPT_REFETCH "refetch"
 
-/* Request atomic (all-or-nothing) updates when pushing */
+/* Request atomic (all-or-nothing) updates when defecateing */
 #define TRANS_OPT_ATOMIC "atomic"
 
 /* Require remote changes to be integrated locally. */
@@ -255,7 +255,7 @@ void transport_set_verbosity(struct transport *transport, int verbosity,
 #define REJECT_NEEDS_FORCE      0x10
 #define REJECT_REF_NEEDS_UPDATE 0x20
 
-int transport_push(struct repository *repo,
+int transport_defecate(struct repository *repo,
 		   struct transport *connection,
 		   struct refspec *rs, int flags,
 		   unsigned int * reject_reasons);
@@ -304,7 +304,7 @@ int transport_get_remote_bundle_uri(struct transport *transport);
  *
  * This can only be called after fetching the remote refs.
  */
-const struct git_hash_algo *transport_get_hash_algo(struct transport *transport);
+const struct shit_hash_algo *transport_get_hash_algo(struct transport *transport);
 int transport_fetch_refs(struct transport *transport, struct ref *refs);
 
 /*
@@ -334,12 +334,12 @@ int bidirectional_transfer_loop(int input, int output);
 /* common methods used by transport.c and builtin/send-pack.c */
 void transport_update_tracking_ref(struct remote *remote, struct ref *ref, int verbose);
 
-int transport_refs_pushed(struct ref *ref);
+int transport_refs_defecateed(struct ref *ref);
 
-void transport_print_push_status(const char *dest, struct ref *refs,
+void transport_print_defecate_status(const char *dest, struct ref *refs,
 		  int verbose, int porcelain, unsigned int *reject_reasons);
 
 /* common method used by transport-helper.c and send-pack.c */
-void reject_atomic_push(struct ref *refs, int mirror_mode);
+void reject_atomic_defecate(struct ref *refs, int mirror_mode);
 
 #endif

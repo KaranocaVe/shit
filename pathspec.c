@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "parse.h"
 #include "dir.h"
@@ -208,7 +208,7 @@ static void parse_pathspec_attr_match(struct pathspec_item *item, const char *va
 	for_each_string_list_item(si, &list) {
 		size_t attr_len;
 		char *attr_name;
-		const struct git_attr *a;
+		const struct shit_attr *a;
 
 		int j = item->attr_match_nr++;
 		const char *attr = si->string;
@@ -238,7 +238,7 @@ static void parse_pathspec_attr_match(struct pathspec_item *item, const char *va
 		}
 
 		attr_name = xmemdupz(attr, attr_len);
-		a = git_attr(attr_name);
+		a = shit_attr(attr_name);
 		if (!a)
 			die(_("invalid attribute name %s"), attr_name);
 
@@ -258,7 +258,7 @@ static inline int get_literal_global(void)
 	static int literal = -1;
 
 	if (literal < 0)
-		literal = git_env_bool(GIT_LITERAL_PATHSPECS_ENVIRONMENT, 0);
+		literal = shit_env_bool(shit_LITERAL_PATHSPECS_ENVIRONMENT, 0);
 
 	return literal;
 }
@@ -268,7 +268,7 @@ static inline int get_glob_global(void)
 	static int glob = -1;
 
 	if (glob < 0)
-		glob = git_env_bool(GIT_GLOB_PATHSPECS_ENVIRONMENT, 0);
+		glob = shit_env_bool(shit_GLOB_PATHSPECS_ENVIRONMENT, 0);
 
 	return glob;
 }
@@ -278,7 +278,7 @@ static inline int get_noglob_global(void)
 	static int noglob = -1;
 
 	if (noglob < 0)
-		noglob = git_env_bool(GIT_NOGLOB_PATHSPECS_ENVIRONMENT, 0);
+		noglob = shit_env_bool(shit_NOGLOB_PATHSPECS_ENVIRONMENT, 0);
 
 	return noglob;
 }
@@ -288,7 +288,7 @@ static inline int get_icase_global(void)
 	static int icase = -1;
 
 	if (icase < 0)
-		icase = git_env_bool(GIT_ICASE_PATHSPECS_ENVIRONMENT, 0);
+		icase = shit_env_bool(shit_ICASE_PATHSPECS_ENVIRONMENT, 0);
 
 	return icase;
 }
@@ -490,12 +490,12 @@ static void init_pathspec_item(struct pathspec_item *item, unsigned flags,
 		if (!match) {
 			const char *hint_path;
 
-			if (!have_git_dir())
+			if (!have_shit_dir())
 				die(_("'%s' is outside the directory tree"),
 				    copyfrom);
-			hint_path = get_git_work_tree();
+			hint_path = get_shit_work_tree();
 			if (!hint_path)
-				hint_path = get_git_dir();
+				hint_path = get_shit_dir();
 			die(_("%s: '%s' is outside repository at '%s'"), elt,
 			    copyfrom, absolute_path(hint_path));
 		}
@@ -584,7 +584,7 @@ static void NORETURN unsupported_magic(const char *pattern,
 	pathspec_magic_names(magic, &sb);
 	/*
 	 * We may want to substitute "this command" with a command
-	 * name. E.g. when "git add -p" or "git add -i" dies when running
+	 * name. E.g. when "shit add -p" or "shit add -i" dies when running
 	 * "checkout -p"
 	 */
 	die(_("%s: pathspec magic not supported by this command: %s"),
@@ -702,7 +702,7 @@ void parse_pathspec_file(struct pathspec *pathspec, unsigned magic_mask,
 				die(_("line is badly quoted: %s"), buf.buf);
 			strbuf_swap(&buf, &unquoted);
 		}
-		strvec_push(&parsed_file, buf.buf);
+		strvec_defecate(&parsed_file, buf.buf);
 		strbuf_reset(&buf);
 	}
 
@@ -769,7 +769,7 @@ int match_pathspec_attrs(struct index_state *istate,
 	if (name[namelen])
 		name = to_free = xmemdupz(name, namelen);
 
-	git_check_attr(istate, name, item->attr_check);
+	shit_check_attr(istate, name, item->attr_check);
 
 	free(to_free);
 

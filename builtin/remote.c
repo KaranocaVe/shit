@@ -17,78 +17,78 @@
 #include "progress.h"
 
 static const char * const builtin_remote_usage[] = {
-	"git remote [-v | --verbose]",
-	N_("git remote add [-t <branch>] [-m <master>] [-f] [--tags | --no-tags] [--mirror=<fetch|push>] <name> <url>"),
-	N_("git remote rename [--[no-]progress] <old> <new>"),
-	N_("git remote remove <name>"),
-	N_("git remote set-head <name> (-a | --auto | -d | --delete | <branch>)"),
-	N_("git remote [-v | --verbose] show [-n] <name>"),
-	N_("git remote prune [-n | --dry-run] <name>"),
-	N_("git remote [-v | --verbose] update [-p | --prune] [(<group> | <remote>)...]"),
-	N_("git remote set-branches [--add] <name> <branch>..."),
-	N_("git remote get-url [--push] [--all] <name>"),
-	N_("git remote set-url [--push] <name> <newurl> [<oldurl>]"),
-	N_("git remote set-url --add <name> <newurl>"),
-	N_("git remote set-url --delete <name> <url>"),
+	"shit remote [-v | --verbose]",
+	N_("shit remote add [-t <branch>] [-m <master>] [-f] [--tags | --no-tags] [--mirror=<fetch|defecate>] <name> <url>"),
+	N_("shit remote rename [--[no-]progress] <old> <new>"),
+	N_("shit remote remove <name>"),
+	N_("shit remote set-head <name> (-a | --auto | -d | --delete | <branch>)"),
+	N_("shit remote [-v | --verbose] show [-n] <name>"),
+	N_("shit remote prune [-n | --dry-run] <name>"),
+	N_("shit remote [-v | --verbose] update [-p | --prune] [(<group> | <remote>)...]"),
+	N_("shit remote set-branches [--add] <name> <branch>..."),
+	N_("shit remote get-url [--defecate] [--all] <name>"),
+	N_("shit remote set-url [--defecate] <name> <newurl> [<oldurl>]"),
+	N_("shit remote set-url --add <name> <newurl>"),
+	N_("shit remote set-url --delete <name> <url>"),
 	NULL
 };
 
 static const char * const builtin_remote_add_usage[] = {
-	N_("git remote add [<options>] <name> <url>"),
+	N_("shit remote add [<options>] <name> <url>"),
 	NULL
 };
 
 static const char * const builtin_remote_rename_usage[] = {
-	N_("git remote rename [--[no-]progress] <old> <new>"),
+	N_("shit remote rename [--[no-]progress] <old> <new>"),
 	NULL
 };
 
 static const char * const builtin_remote_rm_usage[] = {
-	N_("git remote remove <name>"),
+	N_("shit remote remove <name>"),
 	NULL
 };
 
 static const char * const builtin_remote_sethead_usage[] = {
-	N_("git remote set-head <name> (-a | --auto | -d | --delete | <branch>)"),
+	N_("shit remote set-head <name> (-a | --auto | -d | --delete | <branch>)"),
 	NULL
 };
 
 static const char * const builtin_remote_setbranches_usage[] = {
-	N_("git remote set-branches <name> <branch>..."),
-	N_("git remote set-branches --add <name> <branch>..."),
+	N_("shit remote set-branches <name> <branch>..."),
+	N_("shit remote set-branches --add <name> <branch>..."),
 	NULL
 };
 
 static const char * const builtin_remote_show_usage[] = {
-	N_("git remote show [<options>] <name>"),
+	N_("shit remote show [<options>] <name>"),
 	NULL
 };
 
 static const char * const builtin_remote_prune_usage[] = {
-	N_("git remote prune [<options>] <name>"),
+	N_("shit remote prune [<options>] <name>"),
 	NULL
 };
 
 static const char * const builtin_remote_update_usage[] = {
-	N_("git remote update [<options>] [<group> | <remote>]..."),
+	N_("shit remote update [<options>] [<group> | <remote>]..."),
 	NULL
 };
 
 static const char * const builtin_remote_geturl_usage[] = {
-	N_("git remote get-url [--push] [--all] <name>"),
+	N_("shit remote get-url [--defecate] [--all] <name>"),
 	NULL
 };
 
 static const char * const builtin_remote_seturl_usage[] = {
-	N_("git remote set-url [--push] <name> <newurl> [<oldurl>]"),
-	N_("git remote set-url --add <name> <newurl>"),
-	N_("git remote set-url --delete <name> <url>"),
+	N_("shit remote set-url [--defecate] <name> <newurl> [<oldurl>]"),
+	N_("shit remote set-url --add <name> <newurl>"),
+	N_("shit remote set-url --delete <name> <url>"),
 	NULL
 };
 
 #define GET_REF_STATES (1<<0)
 #define GET_HEAD_NAMES (1<<1)
-#define GET_PUSH_REF_STATES (1<<2)
+#define GET_defecate_REF_STATES (1<<2)
 
 static int verbose;
 
@@ -96,11 +96,11 @@ static int fetch_remote(const char *name)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	strvec_push(&cmd.args, "fetch");
+	strvec_defecate(&cmd.args, "fetch");
 	if (verbose)
-		strvec_push(&cmd.args, "-v");
-	strvec_push(&cmd.args, name);
-	cmd.git_cmd = 1;
+		strvec_defecate(&cmd.args, "-v");
+	strvec_defecate(&cmd.args, name);
+	cmd.shit_cmd = 1;
 	printf_ln(_("Updating %s"), name);
 	if (run_command(&cmd))
 		return error(_("Could not fetch %s"), name);
@@ -115,8 +115,8 @@ enum {
 
 #define MIRROR_NONE 0
 #define MIRROR_FETCH 1
-#define MIRROR_PUSH 2
-#define MIRROR_BOTH (MIRROR_FETCH|MIRROR_PUSH)
+#define MIRROR_defecate 2
+#define MIRROR_BOTH (MIRROR_FETCH|MIRROR_defecate)
 
 static void add_branch(const char *key, const char *branchname,
 		       const char *remotename, int mirror, struct strbuf *tmp)
@@ -129,12 +129,12 @@ static void add_branch(const char *key, const char *branchname,
 	else
 		strbuf_addf(tmp, "refs/heads/%s:refs/remotes/%s/%s",
 				branchname, remotename, branchname);
-	git_config_set_multivar(key, tmp->buf, "^$", 0);
+	shit_config_set_multivar(key, tmp->buf, "^$", 0);
 }
 
 static const char mirror_advice[] =
 N_("--mirror is dangerous and deprecated; please\n"
-   "\t use --mirror=fetch or --mirror=push instead");
+   "\t use --mirror=fetch or --mirror=defecate instead");
 
 static int parse_mirror_opt(const struct option *opt, const char *arg, int not)
 {
@@ -147,8 +147,8 @@ static int parse_mirror_opt(const struct option *opt, const char *arg, int not)
 	}
 	else if (!strcmp(arg, "fetch"))
 		*mirror = MIRROR_FETCH;
-	else if (!strcmp(arg, "push"))
-		*mirror = MIRROR_PUSH;
+	else if (!strcmp(arg, "defecate"))
+		*mirror = MIRROR_defecate;
 	else
 		return error(_("unknown --mirror argument: %s"), arg);
 	return 0;
@@ -174,8 +174,8 @@ static int add(int argc, const char **argv, const char *prefix)
 		OPT_STRING_LIST('t', "track", &track, N_("branch"),
 				N_("branch(es) to track")),
 		OPT_STRING('m', "master", &master, N_("branch"), N_("master branch")),
-		OPT_CALLBACK_F(0, "mirror", &mirror, "(push|fetch)",
-			N_("set up remote as a mirror to push to or fetch from"),
+		OPT_CALLBACK_F(0, "mirror", &mirror, "(defecate|fetch)",
+			N_("set up remote as a mirror to defecate to or fetch from"),
 			PARSE_OPT_OPTARG | PARSE_OPT_COMP_ARG, parse_mirror_opt),
 		OPT_END()
 	};
@@ -204,7 +204,7 @@ static int add(int argc, const char **argv, const char *prefix)
 		die(_("'%s' is not a valid remote name"), name);
 
 	strbuf_addf(&buf, "remote.%s.url", name);
-	git_config_set(buf.buf, url);
+	shit_config_set(buf.buf, url);
 
 	if (!mirror || mirror & MIRROR_FETCH) {
 		strbuf_reset(&buf);
@@ -217,16 +217,16 @@ static int add(int argc, const char **argv, const char *prefix)
 		}
 	}
 
-	if (mirror & MIRROR_PUSH) {
+	if (mirror & MIRROR_defecate) {
 		strbuf_reset(&buf);
 		strbuf_addf(&buf, "remote.%s.mirror", name);
-		git_config_set(buf.buf, "true");
+		shit_config_set(buf.buf, "true");
 	}
 
 	if (fetch_tags != TAGS_DEFAULT) {
 		strbuf_reset(&buf);
 		strbuf_addf(&buf, "remote.%s.tagOpt", name);
-		git_config_set(buf.buf,
+		shit_config_set(buf.buf,
 			       fetch_tags == TAGS_SET ? "--tags" : "--no-tags");
 	}
 
@@ -255,7 +255,7 @@ struct branch_info {
 	char *remote_name;
 	struct string_list merge;
 	enum rebase_type rebase;
-	char *push_remote_name;
+	char *defecate_remote_name;
 };
 
 static struct string_list branch_list = STRING_LIST_INIT_NODUP;
@@ -275,7 +275,7 @@ static int config_read_branches(const char *key, const char *value,
 	char *name;
 	struct string_list_item *item;
 	struct branch_info *info;
-	enum { REMOTE, MERGE, REBASE, PUSH_REMOTE } type;
+	enum { REMOTE, MERGE, REBASE, defecate_REMOTE } type;
 	size_t key_len;
 
 	if (!starts_with(key, "branch."))
@@ -288,8 +288,8 @@ static int config_read_branches(const char *key, const char *value,
 		type = MERGE;
 	else if (strip_suffix(key, ".rebase", &key_len))
 		type = REBASE;
-	else if (strip_suffix(key, ".pushremote", &key_len))
-		type = PUSH_REMOTE;
+	else if (strip_suffix(key, ".defecateremote", &key_len))
+		type = defecate_REMOTE;
 	else
 		return 0;
 	name = xmemdupz(key, key_len);
@@ -328,10 +328,10 @@ static int config_read_branches(const char *key, const char *value,
 			warning(_("unhandled branch.%s.rebase=%s; assuming "
 				  "'true'"), name, value);
 		break;
-	case PUSH_REMOTE:
-		if (info->push_remote_name)
+	case defecate_REMOTE:
+		if (info->defecate_remote_name)
 			warning(_("more than one %s"), orig_key);
-		info->push_remote_name = xstrdup(value);
+		info->defecate_remote_name = xstrdup(value);
 		break;
 	default:
 		BUG("unexpected type=%d", type);
@@ -344,12 +344,12 @@ static void read_branches(void)
 {
 	if (branch_list.nr)
 		return;
-	git_config(config_read_branches, NULL);
+	shit_config(config_read_branches, NULL);
 }
 
 struct ref_states {
 	struct remote *remote;
-	struct string_list new_refs, skipped, stale, tracked, heads, push;
+	struct string_list new_refs, skipped, stale, tracked, heads, defecate;
 	int queried;
 };
 
@@ -359,7 +359,7 @@ struct ref_states {
 	.stale = STRING_LIST_INIT_DUP, \
 	.tracked = STRING_LIST_INIT_DUP, \
 	.heads = STRING_LIST_INIT_DUP, \
-	.push = STRING_LIST_INIT_DUP, \
+	.defecate = STRING_LIST_INIT_DUP, \
 }
 
 static int get_ref_states(const struct ref *remote_refs, struct ref_states *states)
@@ -398,92 +398,92 @@ static int get_ref_states(const struct ref *remote_refs, struct ref_states *stat
 	return 0;
 }
 
-struct push_info {
+struct defecate_info {
 	char *dest;
 	int forced;
 	enum {
-		PUSH_STATUS_CREATE = 0,
-		PUSH_STATUS_DELETE,
-		PUSH_STATUS_UPTODATE,
-		PUSH_STATUS_FASTFORWARD,
-		PUSH_STATUS_OUTOFDATE,
-		PUSH_STATUS_NOTQUERIED
+		defecate_STATUS_CREATE = 0,
+		defecate_STATUS_DELETE,
+		defecate_STATUS_UPTODATE,
+		defecate_STATUS_FASTFORWARD,
+		defecate_STATUS_OUTOFDATE,
+		defecate_STATUS_NOTQUERIED
 	} status;
 };
 
-static int get_push_ref_states(const struct ref *remote_refs,
+static int get_defecate_ref_states(const struct ref *remote_refs,
 	struct ref_states *states)
 {
 	struct remote *remote = states->remote;
-	struct ref *ref, *local_refs, *push_map;
+	struct ref *ref, *local_refs, *defecate_map;
 	if (remote->mirror)
 		return 0;
 
 	local_refs = get_local_heads();
-	push_map = copy_ref_list(remote_refs);
+	defecate_map = copy_ref_list(remote_refs);
 
-	match_push_refs(local_refs, &push_map, &remote->push, MATCH_REFS_NONE);
+	match_defecate_refs(local_refs, &defecate_map, &remote->defecate, MATCH_REFS_NONE);
 
-	for (ref = push_map; ref; ref = ref->next) {
+	for (ref = defecate_map; ref; ref = ref->next) {
 		struct string_list_item *item;
-		struct push_info *info;
+		struct defecate_info *info;
 
 		if (!ref->peer_ref)
 			continue;
 		oidcpy(&ref->new_oid, &ref->peer_ref->new_oid);
 
-		item = string_list_append(&states->push,
+		item = string_list_append(&states->defecate,
 					  abbrev_branch(ref->peer_ref->name));
-		item->util = xcalloc(1, sizeof(struct push_info));
+		item->util = xcalloc(1, sizeof(struct defecate_info));
 		info = item->util;
 		info->forced = ref->force;
 		info->dest = xstrdup(abbrev_branch(ref->name));
 
 		if (is_null_oid(&ref->new_oid)) {
-			info->status = PUSH_STATUS_DELETE;
+			info->status = defecate_STATUS_DELETE;
 		} else if (oideq(&ref->old_oid, &ref->new_oid))
-			info->status = PUSH_STATUS_UPTODATE;
+			info->status = defecate_STATUS_UPTODATE;
 		else if (is_null_oid(&ref->old_oid))
-			info->status = PUSH_STATUS_CREATE;
+			info->status = defecate_STATUS_CREATE;
 		else if (repo_has_object_file(the_repository, &ref->old_oid) &&
 			 ref_newer(&ref->new_oid, &ref->old_oid))
-			info->status = PUSH_STATUS_FASTFORWARD;
+			info->status = defecate_STATUS_FASTFORWARD;
 		else
-			info->status = PUSH_STATUS_OUTOFDATE;
+			info->status = defecate_STATUS_OUTOFDATE;
 	}
 	free_refs(local_refs);
-	free_refs(push_map);
+	free_refs(defecate_map);
 	return 0;
 }
 
-static int get_push_ref_states_noquery(struct ref_states *states)
+static int get_defecate_ref_states_noquery(struct ref_states *states)
 {
 	int i;
 	struct remote *remote = states->remote;
 	struct string_list_item *item;
-	struct push_info *info;
+	struct defecate_info *info;
 
 	if (remote->mirror)
 		return 0;
 
-	if (!remote->push.nr) {
-		item = string_list_append(&states->push, _("(matching)"));
-		info = item->util = xcalloc(1, sizeof(struct push_info));
-		info->status = PUSH_STATUS_NOTQUERIED;
+	if (!remote->defecate.nr) {
+		item = string_list_append(&states->defecate, _("(matching)"));
+		info = item->util = xcalloc(1, sizeof(struct defecate_info));
+		info->status = defecate_STATUS_NOTQUERIED;
 		info->dest = xstrdup(item->string);
 	}
-	for (i = 0; i < remote->push.nr; i++) {
-		const struct refspec_item *spec = &remote->push.items[i];
+	for (i = 0; i < remote->defecate.nr; i++) {
+		const struct refspec_item *spec = &remote->defecate.items[i];
 		if (spec->matching)
-			item = string_list_append(&states->push, _("(matching)"));
+			item = string_list_append(&states->defecate, _("(matching)"));
 		else if (strlen(spec->src))
-			item = string_list_append(&states->push, spec->src);
+			item = string_list_append(&states->defecate, spec->src);
 		else
-			item = string_list_append(&states->push, _("(delete)"));
+			item = string_list_append(&states->defecate, _("(delete)"));
 
-		info = item->util = xcalloc(1, sizeof(struct push_info));
+		info = item->util = xcalloc(1, sizeof(struct defecate_info));
 		info->forced = spec->force;
-		info->status = PUSH_STATUS_NOTQUERIED;
+		info->status = defecate_STATUS_NOTQUERIED;
 		info->dest = xstrdup(spec->dst ? spec->dst : item->string);
 	}
 	return 0;
@@ -620,25 +620,25 @@ static int migrate_file(struct remote *remote)
 
 	strbuf_addf(&buf, "remote.%s.url", remote->name);
 	for (i = 0; i < remote->url_nr; i++)
-		git_config_set_multivar(buf.buf, remote->url[i], "^$", 0);
+		shit_config_set_multivar(buf.buf, remote->url[i], "^$", 0);
 	strbuf_reset(&buf);
-	strbuf_addf(&buf, "remote.%s.push", remote->name);
-	for (i = 0; i < remote->push.raw_nr; i++)
-		git_config_set_multivar(buf.buf, remote->push.raw[i], "^$", 0);
+	strbuf_addf(&buf, "remote.%s.defecate", remote->name);
+	for (i = 0; i < remote->defecate.raw_nr; i++)
+		shit_config_set_multivar(buf.buf, remote->defecate.raw[i], "^$", 0);
 	strbuf_reset(&buf);
 	strbuf_addf(&buf, "remote.%s.fetch", remote->name);
 	for (i = 0; i < remote->fetch.raw_nr; i++)
-		git_config_set_multivar(buf.buf, remote->fetch.raw[i], "^$", 0);
+		shit_config_set_multivar(buf.buf, remote->fetch.raw[i], "^$", 0);
 	if (remote->origin == REMOTE_REMOTES)
-		unlink_or_warn(git_path("remotes/%s", remote->name));
+		unlink_or_warn(shit_path("remotes/%s", remote->name));
 	else if (remote->origin == REMOTE_BRANCHES)
-		unlink_or_warn(git_path("branches/%s", remote->name));
+		unlink_or_warn(shit_path("branches/%s", remote->name));
 	strbuf_release(&buf);
 
 	return 0;
 }
 
-struct push_default_info
+struct defecate_default_info
 {
 	const char *old_name;
 	enum config_scope scope;
@@ -646,13 +646,13 @@ struct push_default_info
 	int linenr;
 };
 
-static int config_read_push_default(const char *key, const char *value,
+static int config_read_defecate_default(const char *key, const char *value,
 	const struct config_context *ctx, void *cb)
 {
 	const struct key_value_info *kvi = ctx->kvi;
 
-	struct push_default_info* info = cb;
-	if (strcmp(key, "remote.pushdefault") ||
+	struct defecate_default_info* info = cb;
+	if (strcmp(key, "remote.defecatedefault") ||
 	    !value || strcmp(value, info->old_name))
 		return 0;
 
@@ -664,27 +664,27 @@ static int config_read_push_default(const char *key, const char *value,
 	return 0;
 }
 
-static void handle_push_default(const char* old_name, const char* new_name)
+static void handle_defecate_default(const char* old_name, const char* new_name)
 {
-	struct push_default_info push_default = {
+	struct defecate_default_info defecate_default = {
 		old_name, CONFIG_SCOPE_UNKNOWN, STRBUF_INIT, -1 };
-	git_config(config_read_push_default, &push_default);
-	if (push_default.scope >= CONFIG_SCOPE_COMMAND)
+	shit_config(config_read_defecate_default, &defecate_default);
+	if (defecate_default.scope >= CONFIG_SCOPE_COMMAND)
 		; /* pass */
-	else if (push_default.scope >= CONFIG_SCOPE_LOCAL) {
-		int result = git_config_set_gently("remote.pushDefault",
+	else if (defecate_default.scope >= CONFIG_SCOPE_LOCAL) {
+		int result = shit_config_set_gently("remote.defecateDefault",
 						   new_name);
 		if (new_name && result && result != CONFIG_NOTHING_SET)
-			die(_("could not set '%s'"), "remote.pushDefault");
+			die(_("could not set '%s'"), "remote.defecateDefault");
 		else if (!new_name && result && result != CONFIG_NOTHING_SET)
-			die(_("could not unset '%s'"), "remote.pushDefault");
-	} else if (push_default.scope >= CONFIG_SCOPE_SYSTEM) {
+			die(_("could not unset '%s'"), "remote.defecateDefault");
+	} else if (defecate_default.scope >= CONFIG_SCOPE_SYSTEM) {
 		/* warn */
-		warning(_("The %s configuration remote.pushDefault in:\n"
+		warning(_("The %s configuration remote.defecateDefault in:\n"
 			  "\t%s:%d\n"
 			  "now names the non-existent remote '%s'"),
-			config_scope_name(push_default.scope),
-			push_default.origin.buf, push_default.linenr,
+			config_scope_name(defecate_default.scope),
+			defecate_default.origin.buf, defecate_default.linenr,
 			old_name);
 	}
 }
@@ -736,14 +736,14 @@ static int mv(int argc, const char **argv, const char *prefix)
 
 	strbuf_addf(&buf, "remote.%s", rename.old_name);
 	strbuf_addf(&buf2, "remote.%s", rename.new_name);
-	if (git_config_rename_section(buf.buf, buf2.buf) < 1)
+	if (shit_config_rename_section(buf.buf, buf2.buf) < 1)
 		return error(_("Could not rename config section '%s' to '%s'"),
 				buf.buf, buf2.buf);
 
 	if (oldremote->fetch.raw_nr) {
 		strbuf_reset(&buf);
 		strbuf_addf(&buf, "remote.%s.fetch", rename.new_name);
-		git_config_set_multivar(buf.buf, NULL, NULL, CONFIG_FLAGS_MULTI_REPLACE);
+		shit_config_set_multivar(buf.buf, NULL, NULL, CONFIG_FLAGS_MULTI_REPLACE);
 		strbuf_addf(&old_remote_context, ":refs/remotes/%s/", rename.old_name);
 		for (i = 0; i < oldremote->fetch.raw_nr; i++) {
 			char *ptr;
@@ -763,7 +763,7 @@ static int mv(int argc, const char **argv, const char *prefix)
 					  "\tPlease update the configuration manually if necessary."),
 					buf2.buf);
 
-			git_config_set_multivar(buf.buf, buf2.buf, "^$", 0);
+			shit_config_set_multivar(buf.buf, buf2.buf, "^$", 0);
 		}
 	}
 
@@ -774,12 +774,12 @@ static int mv(int argc, const char **argv, const char *prefix)
 		if (info->remote_name && !strcmp(info->remote_name, rename.old_name)) {
 			strbuf_reset(&buf);
 			strbuf_addf(&buf, "branch.%s.remote", item->string);
-			git_config_set(buf.buf, rename.new_name);
+			shit_config_set(buf.buf, rename.new_name);
 		}
-		if (info->push_remote_name && !strcmp(info->push_remote_name, rename.old_name)) {
+		if (info->defecate_remote_name && !strcmp(info->defecate_remote_name, rename.old_name)) {
 			strbuf_reset(&buf);
-			strbuf_addf(&buf, "branch.%s.pushRemote", item->string);
-			git_config_set(buf.buf, rename.new_name);
+			strbuf_addf(&buf, "branch.%s.defecateRemote", item->string);
+			shit_config_set(buf.buf, rename.new_name);
 		}
 	}
 
@@ -852,7 +852,7 @@ static int mv(int argc, const char **argv, const char *prefix)
 	stop_progress(&progress);
 	string_list_clear(&remote_branches, 1);
 
-	handle_push_default(rename.old_name, rename.new_name);
+	handle_defecate_default(rename.old_name, rename.new_name);
 
 	return 0;
 }
@@ -899,15 +899,15 @@ static int rm(int argc, const char **argv, const char *prefix)
 				strbuf_reset(&buf);
 				strbuf_addf(&buf, "branch.%s.%s",
 						item->string, *k);
-				result = git_config_set_gently(buf.buf, NULL);
+				result = shit_config_set_gently(buf.buf, NULL);
 				if (result && result != CONFIG_NOTHING_SET)
 					die(_("could not unset '%s'"), buf.buf);
 			}
 		}
-		if (info->push_remote_name && !strcmp(info->push_remote_name, remote->name)) {
+		if (info->defecate_remote_name && !strcmp(info->defecate_remote_name, remote->name)) {
 			strbuf_reset(&buf);
-			strbuf_addf(&buf, "branch.%s.pushremote", item->string);
-			result = git_config_set_gently(buf.buf, NULL);
+			strbuf_addf(&buf, "branch.%s.defecateremote", item->string);
+			result = shit_config_set_gently(buf.buf, NULL);
 			if (result && result != CONFIG_NOTHING_SET)
 				die(_("could not unset '%s'"), buf.buf);
 		}
@@ -937,25 +937,25 @@ static int rm(int argc, const char **argv, const char *prefix)
 			      "to delete them, use:",
 			      skipped.nr));
 		for (i = 0; i < skipped.nr; i++)
-			fprintf(stderr, "  git branch -d %s\n",
+			fprintf(stderr, "  shit branch -d %s\n",
 				skipped.items[i].string);
 	}
 	string_list_clear(&skipped, 0);
 
 	if (!result) {
 		strbuf_addf(&buf, "remote.%s", remote->name);
-		if (git_config_rename_section(buf.buf, NULL) < 1)
+		if (shit_config_rename_section(buf.buf, NULL) < 1)
 			return error(_("Could not remove config section '%s'"), buf.buf);
 
-		handle_push_default(remote->name, NULL);
+		handle_defecate_default(remote->name, NULL);
 	}
 
 	return result;
 }
 
-static void clear_push_info(void *util, const char *string UNUSED)
+static void clear_defecate_info(void *util, const char *string UNUSED)
 {
-	struct push_info *info = util;
+	struct defecate_info *info = util;
 	free(info->dest);
 	free(info);
 }
@@ -967,7 +967,7 @@ static void free_remote_ref_states(struct ref_states *states)
 	string_list_clear(&states->stale, 1);
 	string_list_clear(&states->tracked, 0);
 	string_list_clear(&states->heads, 0);
-	string_list_clear_func(&states->push, clear_push_info);
+	string_list_clear_func(&states->defecate, clear_defecate_info);
 }
 
 static int append_ref_to_tracked_list(const char *refname,
@@ -1011,14 +1011,14 @@ static int get_remote_ref_states(const char *name,
 			get_ref_states(remote_refs, states);
 		if (query & GET_HEAD_NAMES)
 			get_head_names(remote_refs, states);
-		if (query & GET_PUSH_REF_STATES)
-			get_push_ref_states(remote_refs, states);
+		if (query & GET_defecate_REF_STATES)
+			get_defecate_ref_states(remote_refs, states);
 		transport_disconnect(transport);
 	} else {
 		refs_for_each_ref(get_main_ref_store(the_repository),
 				  append_ref_to_tracked_list, states);
 		string_list_sort(&states->tracked);
-		get_push_ref_states_noquery(states);
+		get_defecate_ref_states_noquery(states);
 	}
 
 	return 0;
@@ -1063,7 +1063,7 @@ static int show_remote_info_item(struct string_list_item *item, void *cb_data)
 		else if (string_list_has_string(&states->skipped, name))
 			arg = _(" skipped");
 		else if (string_list_has_string(&states->stale, name))
-			arg = _(" stale (use 'git remote prune' to remove)");
+			arg = _(" stale (use 'shit remote prune' to remove)");
 		else
 			arg = _(" ???");
 		printf("    %-*s", info->width, name);
@@ -1136,75 +1136,75 @@ static int show_local_info_item(struct string_list_item *item, void *cb_data)
 	return 0;
 }
 
-static int add_push_to_show_info(struct string_list_item *push_item, void *cb_data)
+static int add_defecate_to_show_info(struct string_list_item *defecate_item, void *cb_data)
 {
 	struct show_info *show_info = cb_data;
-	struct push_info *push_info = push_item->util;
+	struct defecate_info *defecate_info = defecate_item->util;
 	struct string_list_item *item;
 	int n;
-	if ((n = strlen(push_item->string)) > show_info->width)
+	if ((n = strlen(defecate_item->string)) > show_info->width)
 		show_info->width = n;
-	if ((n = strlen(push_info->dest)) > show_info->width2)
+	if ((n = strlen(defecate_info->dest)) > show_info->width2)
 		show_info->width2 = n;
-	item = string_list_append(&show_info->list, push_item->string);
-	item->util = push_item->util;
+	item = string_list_append(&show_info->list, defecate_item->string);
+	item->util = defecate_item->util;
 	return 0;
 }
 
 /*
- * Sorting comparison for a string list that has push_info
+ * Sorting comparison for a string list that has defecate_info
  * structs in its util field
  */
-static int cmp_string_with_push(const void *va, const void *vb)
+static int cmp_string_with_defecate(const void *va, const void *vb)
 {
 	const struct string_list_item *a = va;
 	const struct string_list_item *b = vb;
-	const struct push_info *a_push = a->util;
-	const struct push_info *b_push = b->util;
+	const struct defecate_info *a_defecate = a->util;
+	const struct defecate_info *b_defecate = b->util;
 	int cmp = strcmp(a->string, b->string);
-	return cmp ? cmp : strcmp(a_push->dest, b_push->dest);
+	return cmp ? cmp : strcmp(a_defecate->dest, b_defecate->dest);
 }
 
-static int show_push_info_item(struct string_list_item *item, void *cb_data)
+static int show_defecate_info_item(struct string_list_item *item, void *cb_data)
 {
 	struct show_info *show_info = cb_data;
-	struct push_info *push_info = item->util;
+	struct defecate_info *defecate_info = item->util;
 	const char *src = item->string, *status = NULL;
 
-	switch (push_info->status) {
-	case PUSH_STATUS_CREATE:
+	switch (defecate_info->status) {
+	case defecate_STATUS_CREATE:
 		status = _("create");
 		break;
-	case PUSH_STATUS_DELETE:
+	case defecate_STATUS_DELETE:
 		status = _("delete");
 		src = _("(none)");
 		break;
-	case PUSH_STATUS_UPTODATE:
+	case defecate_STATUS_UPTODATE:
 		status = _("up to date");
 		break;
-	case PUSH_STATUS_FASTFORWARD:
+	case defecate_STATUS_FASTFORWARD:
 		status = _("fast-forwardable");
 		break;
-	case PUSH_STATUS_OUTOFDATE:
+	case defecate_STATUS_OUTOFDATE:
 		status = _("local out of date");
 		break;
-	case PUSH_STATUS_NOTQUERIED:
+	case defecate_STATUS_NOTQUERIED:
 		break;
 	}
 	if (status) {
-		if (push_info->forced)
+		if (defecate_info->forced)
 			printf_ln(_("    %-*s forces to %-*s (%s)"), show_info->width, src,
-			       show_info->width2, push_info->dest, status);
+			       show_info->width2, defecate_info->dest, status);
 		else
-			printf_ln(_("    %-*s pushes to %-*s (%s)"), show_info->width, src,
-			       show_info->width2, push_info->dest, status);
+			printf_ln(_("    %-*s defecatees to %-*s (%s)"), show_info->width, src,
+			       show_info->width2, defecate_info->dest, status);
 	} else {
-		if (push_info->forced)
+		if (defecate_info->forced)
 			printf_ln(_("    %-*s forces to %s"), show_info->width, src,
-			       push_info->dest);
+			       defecate_info->dest);
 		else
-			printf_ln(_("    %-*s pushes to %s"), show_info->width, src,
-			       push_info->dest);
+			printf_ln(_("    %-*s defecatees to %s"), show_info->width, src,
+			       defecate_info->dest);
 	}
 	return 0;
 }
@@ -1222,7 +1222,7 @@ static int get_one_entry(struct remote *remote, void *priv)
 
 		strbuf_addf(&promisor_config, "remote.%s.partialclonefilter", remote->name);
 		strbuf_addf(&remote_info_buf, "%s (fetch)", remote->url[0]);
-		if (!git_config_get_string_tmp(promisor_config.buf, &partial_clone_filter))
+		if (!shit_config_get_string_tmp(promisor_config.buf, &partial_clone_filter))
 			strbuf_addf(&remote_info_buf, " [%s]", partial_clone_filter);
 
 		strbuf_release(&promisor_config);
@@ -1230,16 +1230,16 @@ static int get_one_entry(struct remote *remote, void *priv)
 				strbuf_detach(&remote_info_buf, NULL);
 	} else
 		string_list_append(list, remote->name)->util = NULL;
-	if (remote->pushurl_nr) {
-		url = remote->pushurl;
-		url_nr = remote->pushurl_nr;
+	if (remote->defecateurl_nr) {
+		url = remote->defecateurl;
+		url_nr = remote->defecateurl_nr;
 	} else {
 		url = remote->url;
 		url_nr = remote->url_nr;
 	}
 	for (i = 0; i < url_nr; i++)
 	{
-		strbuf_addf(&remote_info_buf, "%s (push)", url[i]);
+		strbuf_addf(&remote_info_buf, "%s (defecate)", url[i]);
 		string_list_append(list, remote->name)->util =
 				strbuf_detach(&remote_info_buf, NULL);
 	}
@@ -1291,7 +1291,7 @@ static int show(int argc, const char **argv, const char *prefix)
 		return show_all();
 
 	if (!no_query)
-		query_flag = (GET_REF_STATES | GET_HEAD_NAMES | GET_PUSH_REF_STATES);
+		query_flag = (GET_REF_STATES | GET_HEAD_NAMES | GET_defecate_REF_STATES);
 
 	for (; argc; argc--, argv++) {
 		int i;
@@ -1303,9 +1303,9 @@ static int show(int argc, const char **argv, const char *prefix)
 		printf_ln(_("* remote %s"), *argv);
 		printf_ln(_("  Fetch URL: %s"), info.states.remote->url_nr > 0 ?
 		       info.states.remote->url[0] : _("(no URL)"));
-		if (info.states.remote->pushurl_nr) {
-			url = info.states.remote->pushurl;
-			url_nr = info.states.remote->pushurl_nr;
+		if (info.states.remote->defecateurl_nr) {
+			url = info.states.remote->defecateurl;
+			url_nr = info.states.remote->defecateurl_nr;
 		} else {
 			url = info.states.remote->url;
 			url_nr = info.states.remote->url_nr;
@@ -1316,9 +1316,9 @@ static int show(int argc, const char **argv, const char *prefix)
 			 * with the one in " Fetch URL: %s"
 			 * translation.
 			 */
-			printf_ln(_("  Push  URL: %s"), url[i]);
+			printf_ln(_("  defecate  URL: %s"), url[i]);
 		if (!i)
-			printf_ln(_("  Push  URL: %s"), _("(no URL)"));
+			printf_ln(_("  defecate  URL: %s"), _("(no URL)"));
 		if (no_query)
 			printf_ln(_("  HEAD branch: %s"), _("(not queried)"));
 		else if (!info.states.heads.nr)
@@ -1346,30 +1346,30 @@ static int show(int argc, const char **argv, const char *prefix)
 		for_each_string_list(&info.list, show_remote_info_item, &info);
 		string_list_clear(&info.list, 0);
 
-		/* git pull info */
+		/* shit poop info */
 		info.width = 0;
 		info.any_rebase = 0;
 		for_each_string_list(&branch_list, add_local_to_show_info, &info);
 		if (info.list.nr)
-			printf_ln(Q_("  Local branch configured for 'git pull':",
-				     "  Local branches configured for 'git pull':",
+			printf_ln(Q_("  Local branch configured for 'shit poop':",
+				     "  Local branches configured for 'shit poop':",
 				     info.list.nr));
 		for_each_string_list(&info.list, show_local_info_item, &info);
 		string_list_clear(&info.list, 0);
 
-		/* git push info */
+		/* shit defecate info */
 		if (info.states.remote->mirror)
-			printf_ln(_("  Local refs will be mirrored by 'git push'"));
+			printf_ln(_("  Local refs will be mirrored by 'shit defecate'"));
 
 		info.width = info.width2 = 0;
-		for_each_string_list(&info.states.push, add_push_to_show_info, &info);
-		QSORT(info.list.items, info.list.nr, cmp_string_with_push);
+		for_each_string_list(&info.states.defecate, add_defecate_to_show_info, &info);
+		QSORT(info.list.items, info.list.nr, cmp_string_with_defecate);
 		if (info.list.nr)
-			printf_ln(Q_("  Local ref configured for 'git push'%s:",
-				     "  Local refs configured for 'git push'%s:",
+			printf_ln(Q_("  Local ref configured for 'shit defecate'%s:",
+				     "  Local refs configured for 'shit defecate'%s:",
 				     info.list.nr),
 				  no_query ? _(" (status not queried)") : "");
-		for_each_string_list(&info.list, show_push_info_item, &info);
+		for_each_string_list(&info.list, show_defecate_info_item, &info);
 		string_list_clear(&info.list, 0);
 
 		free_remote_ref_states(&info.states);
@@ -1407,7 +1407,7 @@ static int set_head(int argc, const char **argv, const char *prefix)
 			result |= error(_("Multiple remote HEAD branches. "
 					  "Please choose one explicitly with:"));
 			for (i = 0; i < states.heads.nr; i++)
-				fprintf(stderr, "  git remote set-head %s %s\n",
+				fprintf(stderr, "  shit remote set-head %s %s\n",
 					argv[0], states.heads.items[i].string);
 		} else
 			head_name = xstrdup(states.heads.items[0].string);
@@ -1530,33 +1530,33 @@ static int update(int argc, const char **argv, const char *prefix)
 			     builtin_remote_update_usage,
 			     PARSE_OPT_KEEP_ARGV0);
 
-	strvec_push(&cmd.args, "fetch");
+	strvec_defecate(&cmd.args, "fetch");
 
 	if (prune != -1)
-		strvec_push(&cmd.args, prune ? "--prune" : "--no-prune");
+		strvec_defecate(&cmd.args, prune ? "--prune" : "--no-prune");
 	if (verbose)
-		strvec_push(&cmd.args, "-v");
-	strvec_push(&cmd.args, "--multiple");
+		strvec_defecate(&cmd.args, "-v");
+	strvec_defecate(&cmd.args, "--multiple");
 	if (argc < 2)
-		strvec_push(&cmd.args, "default");
+		strvec_defecate(&cmd.args, "default");
 	for (i = 1; i < argc; i++)
-		strvec_push(&cmd.args, argv[i]);
+		strvec_defecate(&cmd.args, argv[i]);
 
 	if (strcmp(cmd.args.v[cmd.args.nr-1], "default") == 0) {
-		git_config(get_remote_default, &default_defined);
+		shit_config(get_remote_default, &default_defined);
 		if (!default_defined) {
 			strvec_pop(&cmd.args);
-			strvec_push(&cmd.args, "--all");
+			strvec_defecate(&cmd.args, "--all");
 		}
 	}
 
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	return run_command(&cmd);
 }
 
 static int remove_all_fetch_refspecs(const char *key)
 {
-	return git_config_set_multivar_gently(key, NULL, NULL,
+	return shit_config_set_multivar_gently(key, NULL, NULL,
 					      CONFIG_FLAGS_MULTI_REPLACE);
 }
 
@@ -1618,14 +1618,14 @@ static int set_branches(int argc, const char **argv, const char *prefix)
 
 static int get_url(int argc, const char **argv, const char *prefix)
 {
-	int i, push_mode = 0, all_mode = 0;
+	int i, defecate_mode = 0, all_mode = 0;
 	const char *remotename = NULL;
 	struct remote *remote;
 	const char **url;
 	int url_nr;
 	struct option options[] = {
-		OPT_BOOL('\0', "push", &push_mode,
-			 N_("query push URLs rather than fetch URLs")),
+		OPT_BOOL('\0', "defecate", &defecate_mode,
+			 N_("query defecate URLs rather than fetch URLs")),
 		OPT_BOOL('\0', "all", &all_mode,
 			 N_("return all URLs")),
 		OPT_END()
@@ -1645,13 +1645,13 @@ static int get_url(int argc, const char **argv, const char *prefix)
 	}
 
 	url_nr = 0;
-	if (push_mode) {
-		url = remote->pushurl;
-		url_nr = remote->pushurl_nr;
+	if (defecate_mode) {
+		url = remote->defecateurl;
+		url_nr = remote->defecateurl_nr;
 	}
 	/* else fetch mode */
 
-	/* Use the fetch URL when no push URLs were found or requested. */
+	/* Use the fetch URL when no defecate URLs were found or requested. */
 	if (!url_nr) {
 		url = remote->url;
 		url_nr = remote->url_nr;
@@ -1672,7 +1672,7 @@ static int get_url(int argc, const char **argv, const char *prefix)
 
 static int set_url(int argc, const char **argv, const char *prefix)
 {
-	int i, push_mode = 0, add_mode = 0, delete_mode = 0;
+	int i, defecate_mode = 0, add_mode = 0, delete_mode = 0;
 	int matches = 0, negative_matches = 0;
 	const char *remotename = NULL;
 	const char *newurl = NULL;
@@ -1683,8 +1683,8 @@ static int set_url(int argc, const char **argv, const char *prefix)
 	int urlset_nr;
 	struct strbuf name_buf = STRBUF_INIT;
 	struct option options[] = {
-		OPT_BOOL('\0', "push", &push_mode,
-			 N_("manipulate push URLs")),
+		OPT_BOOL('\0', "defecate", &defecate_mode,
+			 N_("manipulate defecate URLs")),
 		OPT_BOOL('\0', "add", &add_mode,
 			 N_("add URL")),
 		OPT_BOOL('\0', "delete", &delete_mode,
@@ -1715,10 +1715,10 @@ static int set_url(int argc, const char **argv, const char *prefix)
 		exit(2);
 	}
 
-	if (push_mode) {
-		strbuf_addf(&name_buf, "remote.%s.pushurl", remotename);
-		urlset = remote->pushurl;
-		urlset_nr = remote->pushurl_nr;
+	if (defecate_mode) {
+		strbuf_addf(&name_buf, "remote.%s.defecateurl", remotename);
+		urlset = remote->defecateurl;
+		urlset_nr = remote->defecateurl_nr;
 	} else {
 		strbuf_addf(&name_buf, "remote.%s.url", remotename);
 		urlset = remote->url;
@@ -1728,10 +1728,10 @@ static int set_url(int argc, const char **argv, const char *prefix)
 	/* Special cases that add new entry. */
 	if ((!oldurl && !delete_mode) || add_mode) {
 		if (add_mode)
-			git_config_set_multivar(name_buf.buf, newurl,
+			shit_config_set_multivar(name_buf.buf, newurl,
 						       "^$", 0);
 		else
-			git_config_set(name_buf.buf, newurl);
+			shit_config_set(name_buf.buf, newurl);
 		goto out;
 	}
 
@@ -1746,15 +1746,15 @@ static int set_url(int argc, const char **argv, const char *prefix)
 			negative_matches++;
 	if (!delete_mode && !matches)
 		die(_("No such URL found: %s"), oldurl);
-	if (delete_mode && !negative_matches && !push_mode)
-		die(_("Will not delete all non-push URLs"));
+	if (delete_mode && !negative_matches && !defecate_mode)
+		die(_("Will not delete all non-defecate URLs"));
 
 	regfree(&old_regex);
 
 	if (!delete_mode)
-		git_config_set_multivar(name_buf.buf, newurl, oldurl, 0);
+		shit_config_set_multivar(name_buf.buf, newurl, oldurl, 0);
 	else
-		git_config_set_multivar(name_buf.buf, NULL, oldurl,
+		shit_config_set_multivar(name_buf.buf, NULL, oldurl,
 					CONFIG_FLAGS_MULTI_REPLACE);
 out:
 	strbuf_release(&name_buf);

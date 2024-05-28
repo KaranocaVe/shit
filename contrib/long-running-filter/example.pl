@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
-# Example implementation for the Git filter protocol version 2
-# See Documentation/gitattributes.txt, section "Filter Protocol"
+# Example implementation for the shit filter protocol version 2
+# See Documentation/shitattributes.txt, section "Filter Protocol"
 #
 # Please note, this pass-thru filter is a minimal skeleton. No proper
 # error handling was implemented.
@@ -17,7 +17,7 @@ sub packet_bin_read {
 	my $bytes_read = read STDIN, $buffer, 4;
 	if ( $bytes_read == 0 ) {
 
-		# EOF - Git stopped talking to us!
+		# EOF - shit stopped talking to us!
 		exit();
 	}
 	elsif ( $bytes_read != 4 ) {
@@ -64,11 +64,11 @@ sub packet_flush {
 	STDOUT->flush();
 }
 
-( packet_txt_read() eq ( 0, "git-filter-client" ) ) || die "bad initialize";
+( packet_txt_read() eq ( 0, "shit-filter-client" ) ) || die "bad initialize";
 ( packet_txt_read() eq ( 0, "version=2" ) )         || die "bad version";
 ( packet_bin_read() eq ( 1, "" ) )                  || die "bad version end";
 
-packet_txt_write("git-filter-server");
+packet_txt_write("shit-filter-server");
 packet_txt_write("version=2");
 packet_flush();
 

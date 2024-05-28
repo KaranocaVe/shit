@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='remote push rejects are reported by client'
+test_description='remote defecate rejects are reported by client'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -10,15 +10,15 @@ test_expect_success 'setup' '
 	exit 1
 	EOF
 	echo 1 >file &&
-	git add file &&
-	git commit -m 1 &&
-	git clone . child &&
+	shit add file &&
+	shit commit -m 1 &&
+	shit clone . child &&
 	cd child &&
 	echo 2 >file &&
-	git commit -a -m 2
+	shit commit -a -m 2
 '
 
-test_expect_success 'push reports error' 'test_must_fail git push 2>stderr'
+test_expect_success 'defecate reports error' 'test_must_fail shit defecate 2>stderr'
 
 test_expect_success 'individual ref reports error' 'grep rejected stderr'
 

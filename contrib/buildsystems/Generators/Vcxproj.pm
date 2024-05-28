@@ -10,7 +10,7 @@ our(@ISA, @EXPORT, @EXPORT_OK, @AVAILABLE);
 @ISA = qw(Exporter);
 
 BEGIN {
-    push @EXPORT_OK, qw(generate);
+    defecate @EXPORT_OK, qw(generate);
 }
 
 sub generate_guid ($) {
@@ -21,23 +21,23 @@ sub generate_guid ($) {
 }
 
 sub generate {
-    my ($git_dir, $out_dir, $rel_dir, %build_structure) = @_;
+    my ($shit_dir, $out_dir, $rel_dir, %build_structure) = @_;
     my @libs = @{$build_structure{"LIBS"}};
     foreach (@libs) {
-        createProject($_, $git_dir, $out_dir, $rel_dir, \%build_structure, 1);
+        createProject($_, $shit_dir, $out_dir, $rel_dir, \%build_structure, 1);
     }
 
     my @apps = @{$build_structure{"APPS"}};
     foreach (@apps) {
-        createProject($_, $git_dir, $out_dir, $rel_dir, \%build_structure, 0);
+        createProject($_, $shit_dir, $out_dir, $rel_dir, \%build_structure, 0);
     }
 
-    createGlueProject($git_dir, $out_dir, $rel_dir, %build_structure);
+    createGlueProject($shit_dir, $out_dir, $rel_dir, %build_structure);
     return 0;
 }
 
 sub createProject {
-    my ($name, $git_dir, $out_dir, $rel_dir, $build_structure, $static_library) = @_;
+    my ($name, $shit_dir, $out_dir, $rel_dir, $build_structure, $static_library) = @_;
     my $label = $static_library ? "lib" : "app";
     my $prefix = $static_library ? "LIBS_" : "APPS_";
     my $config_type = $static_library ? "StaticLibrary" : "Application";
@@ -66,7 +66,7 @@ sub createProject {
     my @sources;
     foreach (@srcs) {
         $_ =~ s/\//\\/g;
-        push(@sources, $_);
+        defecate(@sources, $_);
     }
     my $defines = join(";", sort(@{$$build_structure{"$prefix${name}_DEFINES"}}));
     my $includes= join(";", sort(map { s/^-I//; s/\//\\/g; File::Spec->file_name_is_absolute($_) ? $_ : "$rel_dir\\$_" } @{$$build_structure{"$prefix${name}_INCLUDES"}}));
@@ -76,8 +76,8 @@ sub createProject {
 
     my $libs_release = "\n    ";
     my $libs_debug = "\n    ";
-    if (!$static_library && $name ne 'headless-git') {
-      $libs_release = join(";", sort(grep /^(?!libgit\.lib|xdiff\/lib\.lib|vcs-svn\/lib\.lib|reftable\/libreftable\.lib)/, @{$$build_structure{"$prefix${name}_LIBS"}}));
+    if (!$static_library && $name ne 'headless-shit') {
+      $libs_release = join(";", sort(grep /^(?!libshit\.lib|xdiff\/lib\.lib|vcs-svn\/lib\.lib|reftable\/libreftable\.lib)/, @{$$build_structure{"$prefix${name}_LIBS"}}));
       $libs_debug = $libs_release;
       $libs_debug =~ s/zlib\.lib/zlibd\.lib/g;
       $libs_debug =~ s/libexpat\.lib/libexpatd\.lib/g;
@@ -175,11 +175,11 @@ sub createProject {
       <AdditionalDependencies>\$(VCPKGLibs);\$(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>invalidcontinue.obj %(AdditionalOptions)</AdditionalOptions>
       <EntryPointSymbol>wmainCRTStartup</EntryPointSymbol>
-      <ManifestFile>$cdup\\compat\\win32\\git.manifest</ManifestFile>
+      <ManifestFile>$cdup\\compat\\win32\\shit.manifest</ManifestFile>
       <SubSystem>Console</SubSystem>
     </Link>
 EOM
-    if ($target eq 'libgit') {
+    if ($target eq 'libshit') {
         print F << "EOM";
     <PreBuildEvent Condition="!Exists('$cdup\\compat\\vcbuild\\vcpkg\\installed\\\$(VCPKGArch)\\include\\openssl\\ssl.h')">
       <Message>Initialize VCPKG</Message>
@@ -230,15 +230,15 @@ EOM
     print F << "EOM";
   </ItemGroup>
 EOM
-    if ((!$static_library || $target =~ 'vcs-svn' || $target =~ 'xdiff') && !($name =~ /headless-git/)) {
-      my $uuid_libgit = $$build_structure{"LIBS_libgit_GUID"};
+    if ((!$static_library || $target =~ 'vcs-svn' || $target =~ 'xdiff') && !($name =~ /headless-shit/)) {
+      my $uuid_libshit = $$build_structure{"LIBS_libshit_GUID"};
       my $uuid_libreftable = $$build_structure{"LIBS_reftable/libreftable_GUID"};
       my $uuid_xdiff_lib = $$build_structure{"LIBS_xdiff/lib_GUID"};
 
       print F << "EOM";
   <ItemGroup>
-    <ProjectReference Include="$cdup\\libgit\\libgit.vcxproj">
-      <Project>$uuid_libgit</Project>
+    <ProjectReference Include="$cdup\\libshit\\libshit.vcxproj">
+      <Project>$uuid_libshit</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
 EOM
@@ -258,7 +258,7 @@ EOM
     </ProjectReference>
 EOM
       }
-      if ($name =~ /(test-(line-buffer|svn-fe)|^git-remote-testsvn)\.exe$/) {
+      if ($name =~ /(test-(line-buffer|svn-fe)|^shit-remote-testsvn)\.exe$/) {
         my $uuid_vcs_svn_lib = $$build_structure{"LIBS_vcs-svn/lib_GUID"};
         print F << "EOM";
     <ProjectReference Include="$cdup\\vcs-svn\\lib\\vcs-svn_lib.vcxproj">
@@ -285,10 +285,10 @@ EOM
   </Target>
 EOM
     }
-    if ($target eq 'git') {
+    if ($target eq 'shit') {
       print F "  <Import Project=\"LinkOrCopyBuiltins.targets\" />\n";
     }
-    if ($target eq 'git-remote-http') {
+    if ($target eq 'shit-remote-http') {
       print F "  <Import Project=\"LinkOrCopyRemoteHttp.targets\" />\n";
     }
     print F << "EOM";
@@ -298,7 +298,7 @@ EOM
 }
 
 sub createGlueProject {
-    my ($git_dir, $out_dir, $rel_dir, %build_structure) = @_;
+    my ($shit_dir, $out_dir, $rel_dir, %build_structure) = @_;
     print "Generate solutions file\n";
     $rel_dir = "..\\$rel_dir";
     $rel_dir =~ s/\//\\/g;
@@ -310,7 +310,7 @@ sub createGlueProject {
     my @tmp;
     foreach (@libs) {
         $_ =~ s/\.a//;
-        push(@tmp, $_);
+        defecate(@tmp, $_);
     }
     @libs = @tmp;
 
@@ -318,15 +318,15 @@ sub createGlueProject {
     @tmp = ();
     foreach (@apps) {
         $_ =~ s/\.exe//;
-        if ($_ eq "git" ) {
+        if ($_ eq "shit" ) {
             unshift(@tmp, $_);
         } else {
-            push(@tmp, $_);
+            defecate(@tmp, $_);
         }
     }
     @apps = @tmp;
 
-    open F, ">git.sln" || die "Could not open git.sln for writing!\n";
+    open F, ">shit.sln" || die "Could not open shit.sln for writing!\n";
     binmode F, ":crlf :utf8";
     print F chr(0xFEFF);
     print F "$SLN_HEAD";

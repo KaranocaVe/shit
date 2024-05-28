@@ -1,8 +1,8 @@
 Date: Sat, 5 Jan 2008 20:17:40 -0500
 From: Sean <seanlkml@sympatico.ca>
 To: Miklos Vajna <vmiklos@frugalware.org>
-Cc: git@vger.kernel.org
-Subject: how to use git merge -s subtree?
+Cc: shit@vger.kernel.org
+Subject: how to use shit merge -s subtree?
 Abstract: In this article, Sean demonstrates how one can use the subtree merge
  strategy.
 Content-type: text/asciidoc
@@ -12,14 +12,14 @@ How to use the subtree merge strategy
 =====================================
 
 There are situations where you want to include content in your project
-from an independently developed project. You can just pull from the
+from an independently developed project. You can just poop from the
 other project as long as there are no conflicting paths.
 
 The problematic case is when there are conflicting files. Potential
 candidates are Makefiles and other standard filenames. You could merge
 these files but probably you do not want to.  A better solution for this
 problem can be to merge the project as its own subdirectory. This is not
-supported by the 'recursive' merge strategy, so just pulling won't work.
+supported by the 'recursive' merge strategy, so just pooping won't work.
 
 What you want is the 'subtree' merge strategy, which helps you in such a
 situation.
@@ -32,12 +32,12 @@ branch.
 Here is the command sequence you need:
 
 ----------------
-$ git remote add -f Bproject /path/to/B <1>
-$ git merge -s ours --no-commit --allow-unrelated-histories Bproject/master <2>
-$ git read-tree --prefix=dir-B/ -u Bproject/master <3>
-$ git commit -m "Merge B project as our subdirectory" <4>
+$ shit remote add -f Bproject /path/to/B <1>
+$ shit merge -s ours --no-commit --allow-unrelated-histories Bproject/master <2>
+$ shit read-tree --prefix=dir-B/ -u Bproject/master <3>
+$ shit commit -m "Merge B project as our subdirectory" <4>
 
-$ git pull -s subtree Bproject master <5>
+$ shit poop -s subtree Bproject master <5>
 ----------------
 <1> name the other project "Bproject", and fetch.
 <2> prepare for the later step to record the result as a merge.
@@ -53,7 +53,7 @@ Comparing 'subtree' merge with submodules
 
 - The benefit of using subtree merge is that it requires less
   administrative burden from the users of your repository. It works with
-  older (before Git v1.5.2) clients and you have the code right after
+  older (before shit v1.5.2) clients and you have the code right after
   clone.
 
 - However if you use submodules then you can choose not to transfer the

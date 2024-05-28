@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "repository.h"
 #include "hex.h"
 #include "walker.h"
@@ -11,7 +11,7 @@
 struct alt_base {
 	char *base;
 	int got_indices;
-	struct packed_git *packs;
+	struct packed_shit *packs;
 	struct alt_base *next;
 };
 
@@ -256,10 +256,10 @@ static void process_alternates_response(void *callback_data)
 			if (data[i] == '/') {
 				/*
 				 * This counts
-				 * http://git.host/pub/scm/linux.git/
+				 * http://shit.host/pub/scm/linux.shit/
 				 * -----------here^
 				 * so memcpy(dst, base, serverlen) will
-				 * copy up to "...git.host".
+				 * copy up to "...shit.host".
 				 */
 				const char *colon_ss = strstr(base,"://");
 				if (colon_ss) {
@@ -279,10 +279,10 @@ static void process_alternates_response(void *callback_data)
 				 * from data than path is dropped from base.
 				 *
 				 * This is not wrong.  The alternate in
-				 *     http://git.host/pub/scm/linux.git/
+				 *     http://shit.host/pub/scm/linux.shit/
 				 * to borrow from
-				 *     http://git.host/pub/scm/linus.git/
-				 * is ../../linus.git/objects/.  You need
+				 *     http://shit.host/pub/scm/linus.shit/
+				 * is ../../linus.shit/objects/.  You need
 				 * two ../../ to borrow from your direct
 				 * neighbour.
 				 */
@@ -422,7 +422,7 @@ static int fetch_indices(struct walker *walker, struct alt_base *repo)
 
 static int http_fetch_pack(struct walker *walker, struct alt_base *repo, unsigned char *sha1)
 {
-	struct packed_git *target;
+	struct packed_shit *target;
 	int ret;
 	struct slot_results results;
 	struct http_pack_request *preq;

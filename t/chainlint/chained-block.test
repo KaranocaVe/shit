@@ -5,7 +5,7 @@ echo nobody home && {
 } &&
 
 # LINT: preceding command pipes to block on same line
-GIT_EXTERNAL_DIFF=echo git diff | {
+shit_EXTERNAL_DIFF=echo shit diff | {
 	read path oldfile oldhex oldmode newfile newhex newmode &&
 	test "z$oh" = "z$oldhex"
 }

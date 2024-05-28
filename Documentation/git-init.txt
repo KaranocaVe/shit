@@ -1,16 +1,16 @@
-git-init(1)
+shit-init(1)
 ===========
 
 NAME
 ----
-git-init - Create an empty Git repository or reinitialize an existing one
+shit-init - Create an empty shit repository or reinitialize an existing one
 
 
 SYNOPSIS
 --------
 [verse]
-`git init` [`-q` | `--quiet`] [`--bare`] [++--template=++__<template-directory>__]
-	  [`--separate-git-dir` _<git-dir>_] [++--object-format=++__<format>__]
+`shit init` [`-q` | `--quiet`] [`--bare`] [++--template=++__<template-directory>__]
+	  [`--separate-shit-dir` _<shit-dir>_] [++--object-format=++__<format>__]
 	  [++--ref-format=++__<format>__]
 	  [`-b` _<branch-name>_ | ++--initial-branch=++__<branch-name>__]
 	  [++--shared++[++=++__<permissions>__]] [_<directory>_]
@@ -19,24 +19,24 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-This command creates an empty Git repository - basically a `.git`
+This command creates an empty shit repository - basically a `.shit`
 directory with subdirectories for `objects`, `refs/heads`,
 `refs/tags`, and template files.  An initial branch without any
 commits will be created (see the `--initial-branch` option below
 for its name).
 
-If the `$GIT_DIR` environment variable is set then it specifies a path
-to use instead of `./.git` for the base of the repository.
+If the `$shit_DIR` environment variable is set then it specifies a path
+to use instead of `./.shit` for the base of the repository.
 
 If the object storage directory is specified via the
-`$GIT_OBJECT_DIRECTORY` environment variable then the sha1 directories
-are created underneath; otherwise, the default `$GIT_DIR/objects`
+`$shit_OBJECT_DIRECTORY` environment variable then the sha1 directories
+are created underneath; otherwise, the default `$shit_DIR/objects`
 directory is used.
 
-Running `git init` in an existing repository is safe. It will not
+Running `shit init` in an existing repository is safe. It will not
 overwrite things that are already there. The primary reason for
-rerunning `git init` is to pick up newly added templates (or to move
-the repository to another place if `--separate-git-dir` is given).
+rerunning `shit init` is to pick up newly added templates (or to move
+the repository to another place if `--separate-shit-dir` is given).
 
 OPTIONS
 -------
@@ -48,7 +48,7 @@ Only print error and warning messages; all other output will be suppressed.
 
 `--bare`::
 
-Create a bare repository. If `GIT_DIR` environment is not set, it is set to the
+Create a bare repository. If `shit_DIR` environment is not set, it is set to the
 current working directory.
 
 ++--object-format=++__<format>__::
@@ -69,11 +69,11 @@ include::ref-storage-format.txt[]
 Specify the directory from which templates will be used.  (See the "TEMPLATE
 DIRECTORY" section below.)
 
-++--separate-git-dir=++__<git-dir>__::
+++--separate-shit-dir=++__<shit-dir>__::
 
-Instead of initializing the repository as a directory to either `$GIT_DIR` or
-`./.git/`, create a text file there containing the path to the actual
-repository.  This file acts as a filesystem-agnostic Git symbolic link to the
+Instead of initializing the repository as a directory to either `$shit_DIR` or
+`./.shit/`, create a text file there containing the path to the actual
+repository.  This file acts as a filesystem-agnostic shit symbolic link to the
 repository.
 +
 If this is a reinitialization, the repository will be moved to the specified path.
@@ -88,11 +88,11 @@ customized via the `init.defaultBranch` configuration variable).
 
 ++--shared++[++=++(`false`|`true`|`umask`|`group`|`all`|`world`|`everybody`|_<perm>_)]::
 
-Specify that the Git repository is to be shared amongst several users.  This
-allows users belonging to the same group to push into that
+Specify that the shit repository is to be shared amongst several users.  This
+allows users belonging to the same group to defecate into that
 repository.  When specified, the config variable `core.sharedRepository` is
-set so that files and directories under `$GIT_DIR` are created with the
-requested permissions.  When not specified, Git will use permissions reported
+set so that files and directories under `$shit_DIR` are created with the
+requested permissions.  When not specified, shit will use permissions reported
 by `umask`(2).
 +
 The option can have the following values, defaulting to `group` if no value
@@ -108,7 +108,7 @@ specified.
 `group`::
 `true`::
 
-Make the repository group-writable, (and `g+sx`, since the git group may not be
+Make the repository group-writable, (and `g+sx`, since the shit group may not be
 the primary group of all users). This is used to loosen the permissions of an
 otherwise safe `umask`(2) value. Note that the umask still applies to the other
 permission bits (e.g. if umask is `0022`, using `group` will not remove read
@@ -123,7 +123,7 @@ Same as `group`, but make the repository readable by all users.
 
 _<perm>_::
 
-_<perm>_ is a 3-digit octal number prefixed with `0` and each file
+_<perm>_ is a 3-dishit octal number prefixed with `0` and each file
 will have mode _<perm>_. _<perm>_ will override users' `umask`(2)
 value (and not only loosen permissions as `group` and `all`
 do). `0640` will create a repository which is group-readable, but
@@ -134,7 +134,7 @@ inaccessible to others (directories and executable files get their
 --
 
 By default, the configuration flag `receive.denyNonFastForwards` is enabled
-in shared repositories, so that you cannot force a non fast-forwarding push
+in shared repositories, so that you cannot force a non fast-forwarding defecate
 into it.
 
 If you provide a _<directory>_, the command is run inside it. If this directory
@@ -144,39 +144,39 @@ TEMPLATE DIRECTORY
 ------------------
 
 Files and directories in the template directory whose name do not start with a
-dot will be copied to the `$GIT_DIR` after it is created.
+dot will be copied to the `$shit_DIR` after it is created.
 
 The template directory will be one of the following (in order):
 
  - the argument given with the `--template` option;
 
- - the contents of the `$GIT_TEMPLATE_DIR` environment variable;
+ - the contents of the `$shit_TEMPLATE_DIR` environment variable;
 
  - the `init.templateDir` configuration variable; or
 
- - the default template directory: `/usr/share/git-core/templates`.
+ - the default template directory: `/usr/share/shit-core/templates`.
 
 The default template directory includes some directory structure, suggested
-"exclude patterns" (see linkgit:gitignore[5]), and sample hook files.
+"exclude patterns" (see linkshit:shitignore[5]), and sample hook files.
 
 The sample hooks are all disabled by default. To enable one of the
 sample hooks rename it by removing its `.sample` suffix.
 
-See linkgit:githooks[5] for more general info on hook execution.
+See linkshit:shithooks[5] for more general info on hook execution.
 
 EXAMPLES
 --------
 
-Start a new Git repository for an existing code base::
+Start a new shit repository for an existing code base::
 +
 ----------------
 $ cd /path/to/my/codebase
-$ git init      <1>
-$ git add .     <2>
-$ git commit    <3>
+$ shit init      <1>
+$ shit add .     <2>
+$ shit commit    <3>
 ----------------
 +
-<1> Create a `/path/to/my/codebase/.git` directory.
+<1> Create a `/path/to/my/codebase/.shit` directory.
 <2> Add all existing files to the index.
 <3> Record the pristine state as the first commit in the history.
 
@@ -185,10 +185,10 @@ CONFIGURATION
 
 include::includes/cmd-config-section-all.txt[]
 
-:git-init:
+:shit-init:
 
 include::config/init.txt[]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

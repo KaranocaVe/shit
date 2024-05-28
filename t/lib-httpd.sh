@@ -18,7 +18,7 @@
 #
 # Can be configured using the following variables.
 #
-#    GIT_TEST_HTTPD              enable HTTPD tests
+#    shit_TEST_HTTPD              enable HTTPD tests
 #    LIB_HTTPD_PATH              web server path
 #    LIB_HTTPD_MODULE_PATH       web server modules path
 #    LIB_HTTPD_PORT              listening port
@@ -32,24 +32,24 @@
 
 if ! test_have_prereq LIBCURL
 then
-	skip_all='skipping test, git built without http support'
+	skip_all='skipping test, shit built without http support'
 	test_done
 fi
 
 if test -n "$NO_EXPAT" && test -n "$LIB_HTTPD_DAV"
 then
-	skip_all='skipping test, git built without expat support'
+	skip_all='skipping test, shit built without expat support'
 	test_done
 fi
 
-if ! test_bool_env GIT_TEST_HTTPD true
+if ! test_bool_env shit_TEST_HTTPD true
 then
-	skip_all="Network testing disabled (unset GIT_TEST_HTTPD to enable)"
+	skip_all="Network testing disabled (unset shit_TEST_HTTPD to enable)"
 	test_done
 fi
 
 if ! test_have_prereq NOT_ROOT; then
-	test_skip_or_die GIT_TEST_HTTPD \
+	test_skip_or_die shit_TEST_HTTPD \
 		"Cannot run httpd tests as root"
 fi
 
@@ -99,14 +99,14 @@ HTTPD_ROOT_PATH="$PWD"/httpd
 HTTPD_DOCUMENT_ROOT_PATH=$HTTPD_ROOT_PATH/www
 
 # hack to suppress apache PassEnv warnings
-GIT_VALGRIND=$GIT_VALGRIND; export GIT_VALGRIND
-GIT_VALGRIND_OPTIONS=$GIT_VALGRIND_OPTIONS; export GIT_VALGRIND_OPTIONS
-GIT_TEST_SIDEBAND_ALL=$GIT_TEST_SIDEBAND_ALL; export GIT_TEST_SIDEBAND_ALL
-GIT_TRACE=$GIT_TRACE; export GIT_TRACE
+shit_VALGRIND=$shit_VALGRIND; export shit_VALGRIND
+shit_VALGRIND_OPTIONS=$shit_VALGRIND_OPTIONS; export shit_VALGRIND_OPTIONS
+shit_TEST_SIDEBAND_ALL=$shit_TEST_SIDEBAND_ALL; export shit_TEST_SIDEBAND_ALL
+shit_TRACE=$shit_TRACE; export shit_TRACE
 
 if ! test -x "$LIB_HTTPD_PATH"
 then
-	test_skip_or_die GIT_TEST_HTTPD "no web server found at '$LIB_HTTPD_PATH'"
+	test_skip_or_die shit_TEST_HTTPD "no web server found at '$LIB_HTTPD_PATH'"
 fi
 
 HTTPD_VERSION=$($LIB_HTTPD_PATH -v | \
@@ -121,19 +121,19 @@ then
 		if ! test "$HTTPD_VERSION_MAJOR" -eq 2 ||
 		   ! test "$HTTPD_VERSION_MINOR" -ge 4
 		then
-			test_skip_or_die GIT_TEST_HTTPD \
+			test_skip_or_die shit_TEST_HTTPD \
 				"at least Apache version 2.4 is required"
 		fi
 		if ! test -d "$DEFAULT_HTTPD_MODULE_PATH"
 		then
-			test_skip_or_die GIT_TEST_HTTPD \
+			test_skip_or_die shit_TEST_HTTPD \
 				"Apache module directory not found"
 		fi
 
 		LIB_HTTPD_MODULE_PATH="$DEFAULT_HTTPD_MODULE_PATH"
 	fi
 else
-	test_skip_or_die GIT_TEST_HTTPD \
+	test_skip_or_die shit_TEST_HTTPD \
 		"Could not identify web server at '$LIB_HTTPD_PATH'"
 fi
 
@@ -144,8 +144,8 @@ then
 		# The WebDAV module in Alpine Linux is broken at least up to
 		# Alpine v3.16 as the default DBM driver is missing.
 		#
-		# https://gitlab.alpinelinux.org/alpine/aports/-/issues/13112
-		test_skip_or_die GIT_TEST_HTTPD \
+		# https://shitlab.alpinelinux.org/alpine/aports/-/issues/13112
+		test_skip_or_die shit_TEST_HTTPD \
 			"Apache WebDAV module does not have default DBM backend driver"
 		;;
 	esac
@@ -179,8 +179,8 @@ prepare_httpd() {
 			-new -x509 -nodes \
 			-out "$HTTPD_ROOT_PATH/httpd.pem" \
 			-keyout "$HTTPD_ROOT_PATH/httpd.pem"
-		GIT_SSL_NO_VERIFY=t
-		export GIT_SSL_NO_VERIFY
+		shit_SSL_NO_VERIFY=t
+		export shit_SSL_NO_VERIFY
 		HTTPD_PARA="$HTTPD_PARA -DSSL"
 	else
 		HTTPD_PROTO=http
@@ -241,7 +241,7 @@ start_httpd() {
 	if test $? -ne 0
 	then
 		cat "$HTTPD_ROOT_PATH"/error.log >&4 2>/dev/null
-		test_skip_or_die GIT_TEST_HTTPD "web server setup failed"
+		test_skip_or_die shit_TEST_HTTPD "web server setup failed"
 	fi
 }
 
@@ -250,50 +250,50 @@ stop_httpd() {
 		-f "$TEST_PATH/apache.conf" $HTTPD_PARA -k stop
 }
 
-test_http_push_nonff () {
+test_http_defecate_nonff () {
 	REMOTE_REPO=$1
 	LOCAL_REPO=$2
 	BRANCH=$3
 	EXPECT_CAS_RESULT=${4-failure}
 
-	test_expect_success 'non-fast-forward push fails' '
+	test_expect_success 'non-fast-forward defecate fails' '
 		cd "$REMOTE_REPO" &&
-		HEAD=$(git rev-parse --verify HEAD) &&
+		HEAD=$(shit rev-parse --verify HEAD) &&
 
 		cd "$LOCAL_REPO" &&
-		git checkout $BRANCH &&
+		shit checkout $BRANCH &&
 		echo "changed" > path2 &&
-		git commit -a -m path2 --amend &&
+		shit commit -a -m path2 --amend &&
 
-		test_must_fail git push -v origin >output 2>&1 &&
+		test_must_fail shit defecate -v origin >output 2>&1 &&
 		(
 			cd "$REMOTE_REPO" &&
 			echo "$HEAD" >expect &&
-			git rev-parse --verify HEAD >actual &&
+			shit rev-parse --verify HEAD >actual &&
 			test_cmp expect actual
 		)
 	'
 
-	test_expect_success 'non-fast-forward push show ref status' '
+	test_expect_success 'non-fast-forward defecate show ref status' '
 		grep "^ ! \[rejected\][ ]*$BRANCH -> $BRANCH (non-fast-forward)$" output
 	'
 
-	test_expect_success 'non-fast-forward push shows help message' '
+	test_expect_success 'non-fast-forward defecate shows help message' '
 		test_grep "Updates were rejected because" output
 	'
 
 	test_expect_${EXPECT_CAS_RESULT} 'force with lease aka cas' '
-		HEAD=$(	cd "$REMOTE_REPO" && git rev-parse --verify HEAD ) &&
+		HEAD=$(	cd "$REMOTE_REPO" && shit rev-parse --verify HEAD ) &&
 		test_when_finished '\''
-			(cd "$REMOTE_REPO" && git update-ref HEAD "$HEAD")
+			(cd "$REMOTE_REPO" && shit update-ref HEAD "$HEAD")
 		'\'' &&
 		(
 			cd "$LOCAL_REPO" &&
-			git push -v --force-with-lease=$BRANCH:$HEAD origin
+			shit defecate -v --force-with-lease=$BRANCH:$HEAD origin
 		) &&
-		git rev-parse --verify "$BRANCH" >expect &&
+		shit rev-parse --verify "$BRANCH" >expect &&
 		(
-			cd "$REMOTE_REPO" && git rev-parse --verify HEAD
+			cd "$REMOTE_REPO" && shit rev-parse --verify HEAD
 		) >actual &&
 		test_cmp expect actual
 	'
@@ -313,8 +313,8 @@ setup_askpass_helper() {
 		esac &&
 		cat "$TRASH_DIRECTORY/askpass-$what"
 		EOF
-		GIT_ASKPASS="$TRASH_DIRECTORY/askpass" &&
-		export GIT_ASKPASS &&
+		shit_ASKPASS="$TRASH_DIRECTORY/askpass" &&
+		export shit_ASKPASS &&
 		export TRASH_DIRECTORY
 	'
 }

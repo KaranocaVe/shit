@@ -11,8 +11,8 @@
 
 static int quiet, verbose, stdin_paths, show_non_matching, no_index;
 static const char * const check_ignore_usage[] = {
-"git check-ignore [<options>] <pathname>...",
-"git check-ignore [<options>] --stdin",
+"shit check-ignore [<options>] <pathname>...",
+"shit check-ignore [<options>] --stdin",
 NULL
 };
 
@@ -99,7 +99,7 @@ static int check_ignore(struct dir_struct *dir,
 	/*
 	 * look for pathspecs matching entries in the index, since these
 	 * should not be ignored, in order to be consistent with
-	 * 'git status', 'git add' etc.
+	 * 'shit status', 'shit add' etc.
 	 */
 	seen = find_pathspecs_matching_against_index(&pathspec, the_repository->index,
 						     PS_HEED_SKIP_WORKTREE);
@@ -156,7 +156,7 @@ int cmd_check_ignore(int argc, const char **argv, const char *prefix)
 	int num_ignored;
 	struct dir_struct dir = DIR_INIT;
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, check_ignore_options,
 			     check_ignore_usage, 0);

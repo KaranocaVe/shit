@@ -1,29 +1,29 @@
-Git v2.2.1 Release Notes
+shit v2.2.1 Release Notes
 ========================
 
 Fixes since v2.2
 ----------------
 
- * We used to allow committing a path ".Git/config" with Git that is
+ * We used to allow committing a path ".shit/config" with shit that is
    running on a case sensitive filesystem, but an attempt to check out
-   such a path with Git that runs on a case insensitive filesystem
-   would have clobbered ".git/config", which is definitely not what
-   the user would have expected.  Git now prevents you from tracking
-   a path with ".Git" (in any case combination) as a path component.
+   such a path with shit that runs on a case insensitive filesystem
+   would have clobbered ".shit/config", which is definitely not what
+   the user would have expected.  shit now prevents you from tracking
+   a path with ".shit" (in any case combination) as a path component.
 
- * On Windows, certain path components that are different from ".git"
-   are mapped to ".git", e.g. "git~1/config" is treated as if it were
-   ".git/config".  HFS+ has a similar issue, where certain unicode
+ * On Windows, certain path components that are different from ".shit"
+   are mapped to ".shit", e.g. "shit~1/config" is treated as if it were
+   ".shit/config".  HFS+ has a similar issue, where certain unicode
    codepoints are ignored, e.g. ".g\u200cit/config" is treated as if
-   it were ".git/config".  Pathnames with these potential issues are
-   rejected on the affected systems.  Git on systems that are not
+   it were ".shit/config".  Pathnames with these potential issues are
+   rejected on the affected systems.  shit on systems that are not
    affected by this issue (e.g. Linux) can also be configured to
    reject them to ensure cross platform interoperability of the hosted
    projects.
 
- * "git fsck" notices a tree object that records such a path that can
-   be confused with ".git", and with receive.fsckObjects configuration
-   set to true, an attempt to "git push" such a tree object will be
+ * "shit fsck" notices a tree object that records such a path that can
+   be confused with ".shit", and with receive.fsckObjects configuration
+   set to true, an attempt to "shit defecate" such a tree object will be
    rejected.  Such a path may not be a problem on a well behaving
    filesystem but in order to protect those on HFS+ and on case
    insensitive filesystems, this check is enabled on all platforms.

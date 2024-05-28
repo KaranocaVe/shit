@@ -7,21 +7,21 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success 'setup' '
 	test_seq 2 9 >foo &&
-	git add foo &&
-	git commit -m orig &&
+	shit add foo &&
+	shit commit -m orig &&
 
-	git branch A &&
-	git branch B &&
+	shit branch A &&
+	shit branch B &&
 
-	git checkout A &&
+	shit checkout A &&
 	test_seq 1 9 >foo &&
-	git add foo &&
-	git commit -m A &&
+	shit add foo &&
+	shit commit -m A &&
 
-	git checkout B &&
+	shit checkout B &&
 	echo "q qfoo();" | q_to_tab >>foo &&
-	git add foo &&
-	git commit -m B
+	shit add foo &&
+	shit commit -m B
 '
 
 #
@@ -36,92 +36,92 @@ test_rebase_am_only () {
 	opt=$1
 	shift
 	test_expect_success "$opt incompatible with --merge" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --merge A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --merge A
 	"
 
 	test_expect_success "$opt incompatible with --strategy=ours" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --strategy=ours A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --strategy=ours A
 	"
 
 	test_expect_success "$opt incompatible with --strategy-option=ours" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --strategy-option=ours A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --strategy-option=ours A
 	"
 
 	test_expect_success "$opt incompatible with --autosquash" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --autosquash A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --autosquash A
 	"
 
 	test_expect_success "$opt incompatible with --interactive" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --interactive A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --interactive A
 	"
 
 	test_expect_success "$opt incompatible with --exec" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --exec 'true' A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --exec 'true' A
 	"
 
 	test_expect_success "$opt incompatible with --keep-empty" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --keep-empty A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --keep-empty A
 	"
 
 	test_expect_success "$opt incompatible with --empty=..." "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --empty=ask A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --empty=ask A
 	"
 
 	test_expect_success "$opt incompatible with --no-reapply-cherry-picks" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --no-reapply-cherry-picks A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --no-reapply-cherry-picks A
 	"
 
 	test_expect_success "$opt incompatible with --reapply-cherry-picks" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --reapply-cherry-picks A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --reapply-cherry-picks A
 	"
 
 	test_expect_success "$opt incompatible with --rebase-merges" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --rebase-merges A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --rebase-merges A
 	"
 
 	test_expect_success "$opt incompatible with --update-refs" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --update-refs A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --update-refs A
 	"
 
 	test_expect_success "$opt incompatible with --root without --onto" "
-		git checkout B^0 &&
-		test_must_fail git rebase $opt --root A
+		shit checkout B^0 &&
+		test_must_fail shit rebase $opt --root A
 	"
 
 	test_expect_success "$opt incompatible with rebase.rebaseMerges" "
-		git checkout B^0 &&
-		test_must_fail git -c rebase.rebaseMerges=true rebase $opt A 2>err &&
+		shit checkout B^0 &&
+		test_must_fail shit -c rebase.rebaseMerges=true rebase $opt A 2>err &&
 		grep -e --no-rebase-merges err
 	"
 
 	test_expect_success "$opt incompatible with rebase.updateRefs" "
-		git checkout B^0 &&
-		test_must_fail git -c rebase.updateRefs=true rebase $opt A 2>err &&
+		shit checkout B^0 &&
+		test_must_fail shit -c rebase.updateRefs=true rebase $opt A 2>err &&
 		grep -e --no-update-refs err
 	"
 
 	test_expect_success "$opt okay with overridden rebase.rebaseMerges" "
-		test_when_finished \"git reset --hard B^0\" &&
-		git checkout B^0 &&
-		git -c rebase.rebaseMerges=true rebase --no-rebase-merges $opt A
+		test_when_finished \"shit reset --hard B^0\" &&
+		shit checkout B^0 &&
+		shit -c rebase.rebaseMerges=true rebase --no-rebase-merges $opt A
 	"
 
 	test_expect_success "$opt okay with overridden rebase.updateRefs" "
-		test_when_finished \"git reset --hard B^0\" &&
-		git checkout B^0 &&
-		git -c rebase.updateRefs=true rebase --no-update-refs $opt A
+		test_when_finished \"shit reset --hard B^0\" &&
+		shit checkout B^0 &&
+		shit -c rebase.updateRefs=true rebase --no-update-refs $opt A
 	"
 }
 

@@ -2,10 +2,10 @@
 #
 # Copyright (c) 2007 Junio C Hamano
 
-test_description='git checkout to switch between branches with symlink<->dir'
+test_description='shit checkout to switch between branches with symlink<->dir'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -14,42 +14,42 @@ test_expect_success setup '
 
 	mkdir frotz &&
 	echo hello >frotz/filfre &&
-	git add frotz/filfre &&
+	shit add frotz/filfre &&
 	test_tick &&
-	git commit -m "main has file frotz/filfre" &&
+	shit commit -m "main has file frotz/filfre" &&
 
-	git branch side &&
+	shit branch side &&
 
 	echo goodbye >nitfol &&
-	git add nitfol &&
+	shit add nitfol &&
 	test_tick &&
-	git commit -m "main adds file nitfol" &&
+	shit commit -m "main adds file nitfol" &&
 
-	git checkout side &&
+	shit checkout side &&
 
-	git rm --cached frotz/filfre &&
+	shit rm --cached frotz/filfre &&
 	mv frotz xyzzy &&
 	test_ln_s_add xyzzy frotz &&
-	git add xyzzy/filfre &&
+	shit add xyzzy/filfre &&
 	test_tick &&
-	git commit -m "side moves frotz/ to xyzzy/ and adds frotz->xyzzy/"
+	shit commit -m "side moves frotz/ to xyzzy/ and adds frotz->xyzzy/"
 
 '
 
 test_expect_success 'switch from symlink to dir' '
 
-	git checkout main
+	shit checkout main
 
 '
 
 test_expect_success 'Remove temporary directories & switch to main' '
 	rm -fr frotz xyzzy nitfol &&
-	git checkout -f main
+	shit checkout -f main
 '
 
 test_expect_success 'switch from dir to symlink' '
 
-	git checkout side
+	shit checkout side
 
 '
 

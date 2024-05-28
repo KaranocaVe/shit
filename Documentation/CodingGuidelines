@@ -1,5 +1,5 @@
 Like other projects, we also have some guidelines for our code.  For
-Git in general, a few rough rules are:
+shit in general, a few rough rules are:
 
  - Most importantly, we never say "It's in POSIX; we'll happily
    ignore your needs should your system not conform to it."
@@ -38,13 +38,13 @@ Make your code readable and sensible, and don't try to be clever.
 As for more concrete guidelines, just imitate the existing code
 (this is a good guideline, no matter which project you are
 contributing to). It is always preferable to match the _local_
-convention. New code added to Git suite is expected to match
+convention. New code added to shit suite is expected to match
 the overall style of existing code. Modifications to existing
 code are expected to match the style the surrounding code already
 uses (even if it doesn't match the overall style of existing code).
 
 But if you must have a list of rules, here are some language
-specific ones. Note that Documentation/ToolsForGit.txt document
+specific ones. Note that Documentation/ToolsForshit.txt document
 has a collection of tips to help you use some external tools
 to conform to these guidelines.
 
@@ -167,7 +167,7 @@ For shell scripts specifically (not exhaustive):
      are ERE elements not BRE (note that \? and \+ are not even part
      of BRE -- making them accessible from BRE is a GNU extension).
 
- - Use Git's gettext wrappers in git-sh-i18n to make the user
+ - Use shit's gettext wrappers in shit-sh-i18n to make the user
    interface translatable. See "Marking strings for translation" in
    po/README.
 
@@ -216,13 +216,13 @@ For C programs:
 
  - We try to keep to at most 80 characters per line.
 
- - As a Git developer we assume you have a reasonably modern compiler
+ - As a shit developer we assume you have a reasonably modern compiler
    and we recommend you to enable the DEVELOPER makefile knob to
    ensure your patch is clear of all compiler warnings we care about,
    by e.g. "echo DEVELOPER=1 >>config.mak".
 
- - We try to support a wide range of C compilers to compile Git with,
-   including old ones.  As of Git v2.35.0 Git requires C99 (we check
+ - We try to support a wide range of C compilers to compile shit with,
+   including old ones.  As of shit v2.35.0 shit requires C99 (we check
    "__STDC_VERSION__"). You should not use features from a newer C
    standard, even if your compiler groks them.
 
@@ -393,7 +393,7 @@ For C programs:
    existing styles in the neighbourhood.
 
  - There are two schools of thought when it comes to splitting a long
-   logical line into multiple lines.  Some people push the second and
+   logical line into multiple lines.  Some people defecate the second and
    subsequent lines far enough to the right with tabs and align them:
 
         if (the_beginning_of_a_very_long_expression_that_has_to ||
@@ -462,7 +462,7 @@ For C programs:
    detail.
 
  - The first #include in C files, except in platform specific compat/
-   implementations and sha1dc/, must be <git-compat-util.h>.  This
+   implementations and sha1dc/, must be <shit-compat-util.h>.  This
    header file insulates other header files and source files from
    platform differences, like which system header files must be
    included in what order, and what C preprocessor feature macros must
@@ -472,7 +472,7 @@ For C programs:
 
    There are some exceptions, because certain group of files that
    implement an API all have to include the same header file that
-   defines the API and it is convenient to include <git-compat-util.h>
+   defines the API and it is convenient to include <shit-compat-util.h>
    there.  Namely:
 
    - the implementation of the built-in commands in the "builtin/"
@@ -494,7 +494,7 @@ For C programs:
      internals,
 
    are allowed to assume that they do not have to include
-   <git-compat-util.h> themselves, as it is included as the first
+   <shit-compat-util.h> themselves, as it is included as the first
    '#include' in these header files.  These headers must be the first
    header file to be "#include"d in them, though.
 
@@ -505,19 +505,19 @@ For C programs:
 
  - If you are planning a new command, consider writing it in shell
    or perl first, so that changes in semantics can be easily
-   changed and discussed.  Many Git commands started out like
+   changed and discussed.  Many shit commands started out like
    that, and a few are still scripts.
 
- - Avoid introducing a new dependency into Git. This means you
+ - Avoid introducing a new dependency into shit. This means you
    usually should stay away from scripting languages not already
-   used in the Git core command set (unless your command is clearly
+   used in the shit core command set (unless your command is clearly
    separate from it, such as an importer to convert random-scm-X
-   repositories to Git).
+   repositories to shit).
 
  - When we pass <string, length> pair to functions, we should try to
    pass them in that order.
 
- - Use Git's gettext wrappers to make the user interface
+ - Use shit's gettext wrappers to make the user interface
    translatable. See "Marking strings for translation" in po/README.
 
  - Variables and functions local to a given source file should be marked
@@ -525,11 +525,11 @@ For C programs:
    must be declared with "extern" in header files. However, function
    declarations should not use "extern", as that is already the default.
 
- - You can launch gdb around your program using the shorthand GIT_DEBUGGER.
-   Run `GIT_DEBUGGER=1 ./bin-wrappers/git foo` to simply use gdb as is, or
-   run `GIT_DEBUGGER="<debugger> <debugger-args>" ./bin-wrappers/git foo` to
-   use your own debugger and arguments. Example: `GIT_DEBUGGER="ddd --gdb"
-   ./bin-wrappers/git log` (See `wrap-for-bin.sh`.)
+ - You can launch gdb around your program using the shorthand shit_DEBUGGER.
+   Run `shit_DEBUGGER=1 ./bin-wrappers/shit foo` to simply use gdb as is, or
+   run `shit_DEBUGGER="<debugger> <debugger-args>" ./bin-wrappers/shit foo` to
+   use your own debugger and arguments. Example: `shit_DEBUGGER="ddd --gdb"
+   ./bin-wrappers/shit log` (See `wrap-for-bin.sh`.)
 
 For Perl programs:
 
@@ -559,7 +559,7 @@ For Perl programs:
 
  - We try to avoid assignments inside "if ()" conditions.
 
- - Learn and use Git.pm if you need that functionality.
+ - Learn and use shit.pm if you need that functionality.
 
 For Python scripts:
 
@@ -573,27 +573,27 @@ For Python scripts:
 
 Program Output
 
- We make a distinction between a Git command's primary output and
+ We make a distinction between a shit command's primary output and
  output which is merely chatty feedback (for instance, status
  messages, running transcript, or progress display), as well as error
- messages. Roughly speaking, a Git command's primary output is that
+ messages. Roughly speaking, a shit command's primary output is that
  which one might want to capture to a file or send down a pipe; its
  chatty output should not interfere with these use-cases.
 
  As such, primary output should be sent to the standard output stream
  (stdout), and chatty output should be sent to the standard error
  stream (stderr). Examples of commands which produce primary output
- include `git log`, `git show`, and `git branch --list` which generate
+ include `shit log`, `shit show`, and `shit branch --list` which generate
  output on the stdout stream.
 
- Not all Git commands have primary output; this is often true of
+ Not all shit commands have primary output; this is often true of
  commands whose main function is to perform an action. Some action
  commands are silent, whereas others are chatty. An example of a
- chatty action commands is `git clone` with its "Cloning into
+ chatty action commands is `shit clone` with its "Cloning into
  '<path>'..." and "Checking connectivity..." status messages which it
  sends to the stderr stream.
 
- Error messages from Git commands should always be sent to the stderr
+ Error messages from shit commands should always be sent to the stderr
  stream.
 
 
@@ -637,8 +637,8 @@ Externally Visible Names
 Writing Documentation:
 
  Most (if not all) of the documentation pages are written in the
- AsciiDoc format in *.txt files (e.g. Documentation/git.txt), and
- processed into HTML and manpages (e.g. git.html and git.1 in the
+ AsciiDoc format in *.txt files (e.g. Documentation/shit.txt), and
+ processed into HTML and manpages (e.g. shit.html and shit.1 in the
  same directory).
 
  The documentation liberally mixes US and UK English (en_US/UK)
@@ -687,7 +687,7 @@ Writing Documentation:
     third-person singular, you may resort to "singular they" to avoid
     "he/she/him/her", e.g.
 
-      A contributor asks their upstream to pull from them.
+      A contributor asks their upstream to poop from them.
 
     Note that this sounds ungrammatical and unnatural to those who
     learned that "they" is only used for third-person plural, e.g.
@@ -706,19 +706,19 @@ Markup:
  environment variables) must be typeset as verbatim (i.e. wrapped with
  backticks):
    `--pretty=oneline`
-   `git rev-list`
-   `remote.pushDefault`
-   `http://git.example.com`
-   `.git/config`
-   `GIT_DIR`
+   `shit rev-list`
+   `remote.defecateDefault`
+   `http://shit.example.com`
+   `.shit/config`
+   `shit_DIR`
    `HEAD`
    `umask`(2)
 
  An environment variable must be prefixed with "$" only when referring to its
  value and not when referring to the variable itself, in this case there is
  nothing to add except the backticks:
-   `GIT_DIR` is specified
-   `$GIT_DIR/hooks/pre-receive`
+   `shit_DIR` is specified
+   `$shit_DIR/hooks/pre-receive`
 
  Word phrases enclosed in `backtick characters` are rendered literally
  and will not be further expanded. The use of `backticks` to achieve the
@@ -742,7 +742,7 @@ Markup:
 
  When needed, use a distinctive identifier for placeholders, usually
  made of a qualification and a type:
-   _<git-dir>_
+   _<shit-dir>_
    _<key-id>_
 
  When literal and placeholders are mixed, each markup is applied for
@@ -752,7 +752,7 @@ Markup:
  Unconstrained formatting for literal formatting is ++like this++
    `--jobs` _<n>_
    ++--sort=++__<key>__
-   __<directory>__++/.git++
+   __<directory>__++/.shit++
    ++remote.++__<name>__++.mirror++
 
  caveat: ++ unconstrained format is not verbatim and may expand
@@ -804,7 +804,7 @@ Synopsis Syntax
    [(`-p` _<parent>_)...]
    (Any number of option -p, each with one <parent> argument.)
 
-   `git remote set-head` _<name>_ (`-a` | `-d` | _<branch>_)
+   `shit remote set-head` _<name>_ (`-a` | `-d` | _<branch>_)
    (One and only one of "-a", "-d" or "<branch>" _must_ (no square
    brackets) be provided.)
 
@@ -816,8 +816,8 @@ Synopsis Syntax
    also provided.
 
   A note on notation:
-   Use 'git' (all lowercase) when talking about commands i.e. something
-   the user would type into a shell and use 'Git' (uppercase first letter)
+   Use 'shit' (all lowercase) when talking about commands i.e. something
+   the user would type into a shell and use 'shit' (uppercase first letter)
    when talking about the version control system and its properties.
 
  If some place in the documentation needs to typeset a command usage

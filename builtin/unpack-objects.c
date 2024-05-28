@@ -3,7 +3,7 @@
 #include "config.h"
 #include "environment.h"
 #include "gettext.h"
-#include "git-zlib.h"
+#include "shit-zlib.h"
 #include "hex.h"
 #include "object-store-ll.h"
 #include "object.h"
@@ -17,14 +17,14 @@
 #include "fsck.h"
 
 static int dry_run, quiet, recover, has_errors, strict;
-static const char unpack_usage[] = "git unpack-objects [-n] [-q] [-r] [--strict]";
+static const char unpack_usage[] = "shit unpack-objects [-n] [-q] [-r] [--strict]";
 
 /* We always read in 4kB chunks. */
 static unsigned char buffer[4096];
 static unsigned int offset, len;
 static off_t consumed_bytes;
 static off_t max_input_size;
-static git_hash_ctx ctx;
+static shit_hash_ctx ctx;
 static struct fsck_options fsck_options = FSCK_OPTIONS_STRICT;
 static struct progress *progress;
 
@@ -111,7 +111,7 @@ static void use(int bytes)
  */
 static void *get_data(unsigned long size)
 {
-	git_zstream stream;
+	shit_zstream stream;
 	unsigned long bufsize = dry_run && size > 8192 ? 8192 : size;
 	void *buf = xmallocz(bufsize);
 
@@ -121,10 +121,10 @@ static void *get_data(unsigned long size)
 	stream.avail_out = bufsize;
 	stream.next_in = fill(1);
 	stream.avail_in = len;
-	git_inflate_init(&stream);
+	shit_inflate_init(&stream);
 
 	for (;;) {
-		int ret = git_inflate(&stream, 0);
+		int ret = shit_inflate(&stream, 0);
 		use(len - stream.avail_in);
 		if (stream.total_out == size && ret == Z_STREAM_END)
 			break;
@@ -146,7 +146,7 @@ static void *get_data(unsigned long size)
 						   bufsize;
 		}
 	}
-	git_inflate_end(&stream);
+	shit_inflate_end(&stream);
 	if (dry_run)
 		FREE_AND_NULL(buf);
 	return buf;
@@ -354,7 +354,7 @@ static void unpack_non_delta_entry(enum object_type type, unsigned long size,
 }
 
 struct input_zstream_data {
-	git_zstream *zstream;
+	shit_zstream *zstream;
 	unsigned char buf[8192];
 	int status;
 };
@@ -363,7 +363,7 @@ static const void *feed_input_zstream(struct input_stream *in_stream,
 				      unsigned long *readlen)
 {
 	struct input_zstream_data *data = in_stream->data;
-	git_zstream *zstream = data->zstream;
+	shit_zstream *zstream = data->zstream;
 	void *in = fill(1);
 
 	if (in_stream->is_finished) {
@@ -376,7 +376,7 @@ static const void *feed_input_zstream(struct input_stream *in_stream,
 	zstream->next_in = in;
 	zstream->avail_in = len;
 
-	data->status = git_inflate(zstream, 0);
+	data->status = shit_inflate(zstream, 0);
 
 	in_stream->is_finished = data->status != Z_OK;
 	use(len - zstream->avail_in);
@@ -387,7 +387,7 @@ static const void *feed_input_zstream(struct input_stream *in_stream,
 
 static void stream_blob(unsigned long size, unsigned nr)
 {
-	git_zstream zstream = { 0 };
+	shit_zstream zstream = { 0 };
 	struct input_zstream_data data = { 0 };
 	struct input_stream in_stream = {
 		.read = feed_input_zstream,
@@ -396,14 +396,14 @@ static void stream_blob(unsigned long size, unsigned nr)
 	struct obj_info *info = &obj_list[nr];
 
 	data.zstream = &zstream;
-	git_inflate_init(&zstream);
+	shit_inflate_init(&zstream);
 
 	if (stream_loose_object(&in_stream, size, &info->oid))
 		die(_("failed to write object in stream"));
 
 	if (data.status != Z_STREAM_END)
 		die(_("inflate returned (%d)"), data.status);
-	git_inflate_end(&zstream);
+	shit_inflate_end(&zstream);
 
 	if (strict) {
 		struct blob *blob = lookup_blob(the_repository, &info->oid);
@@ -605,11 +605,11 @@ int cmd_unpack_objects(int argc, const char **argv, const char *prefix UNUSED)
 {
 	int i;
 	struct object_id oid;
-	git_hash_ctx tmp_ctx;
+	shit_hash_ctx tmp_ctx;
 
 	disable_replace_refs();
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	quiet = !isatty(2);
 

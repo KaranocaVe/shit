@@ -1,4 +1,4 @@
-Git v2.0.1 Release Notes
+shit v2.0.1 Release Notes
 ========================
 
  * We used to unconditionally disable the pager in the pager process
@@ -13,7 +13,7 @@ Git v2.0.1 Release Notes
    loose object file due to e.g. permission issues; it was reported as
    the object being corrupt, but that is not quite true.
 
- * "git log -2master" is a common typo that shows two commits starting
+ * "shit log -2master" is a common typo that shows two commits starting
    from whichever random branch that is not 'master' that happens to
    be checked out currently.
 
@@ -27,85 +27,85 @@ Git v2.0.1 Release Notes
    expansion (i.e. ~user/path and ~/path).
 
  * The completion scripts (in contrib/) did not know about quite a few
-   options that are common between "git merge" and "git pull", and a
-   couple of options unique to "git merge".
+   options that are common between "shit merge" and "shit poop", and a
+   couple of options unique to "shit merge".
 
- * "--ignore-space-change" option of "git apply" ignored the spaces
+ * "--ignore-space-change" option of "shit apply" ignored the spaces
    at the beginning of line too aggressively, which is inconsistent
-   with the option of the same name "diff" and "git diff" have.
+   with the option of the same name "diff" and "shit diff" have.
 
- * "git blame" miscounted number of columns needed to show localized
+ * "shit blame" miscounted number of columns needed to show localized
    timestamps, resulting in jaggy left-side-edge of the source code
    lines in its output.
 
- * "git blame" assigned the blame to the copy in the working-tree if
+ * "shit blame" assigned the blame to the copy in the working-tree if
    the repository is set to core.autocrlf=input and the file used CRLF
    line endings.
 
- * "git commit --allow-empty-message -C $commit" did not work when the
+ * "shit commit --allow-empty-message -C $commit" did not work when the
    commit did not have any log message.
 
- * "git diff --find-copies-harder" sometimes pretended as if the mode
+ * "shit diff --find-copies-harder" sometimes pretended as if the mode
    bits have changed for paths that are marked with assume-unchanged
    bit.
 
- * "git format-patch" did not enforce the rule that the "--follow"
+ * "shit format-patch" did not enforce the rule that the "--follow"
    option from the log/diff family of commands must be used with
    exactly one pathspec.
 
- * "git gc --auto" was recently changed to run in the background to
+ * "shit gc --auto" was recently changed to run in the background to
    give control back early to the end-user sitting in front of the
    terminal, but it forgot that housekeeping involving reflogs should
    be done without other processes competing for accesses to the refs.
 
- * "git grep -O" to show the lines that hit in the pager did not work
+ * "shit grep -O" to show the lines that hit in the pager did not work
    well with case insensitive search.  We now spawn "less" with its
    "-I" option when it is used as the pager (which is the default).
 
- * We used to disable threaded "git index-pack" on platforms without
+ * We used to disable threaded "shit index-pack" on platforms without
    thread-safe pread(); use a different workaround for such
-   platforms to allow threaded "git index-pack".
+   platforms to allow threaded "shit index-pack".
 
- * The error reporting from "git index-pack" has been improved to
+ * The error reporting from "shit index-pack" has been improved to
    distinguish missing objects from type errors.
 
- * "git mailinfo" used to read beyond the end of header string while
+ * "shit mailinfo" used to read beyond the end of header string while
    parsing an incoming e-mail message to extract the patch.
 
  * On a case insensitive filesystem, merge-recursive incorrectly
    deleted the file that is to be renamed to a name that is the same
    except for case differences.
 
- * "git pack-objects" unnecessarily copied the previous contents when
+ * "shit pack-objects" unnecessarily copied the previous contents when
    extending the hashtable, even though it will populate the table
    from scratch anyway.
 
- * "git rerere forget" did not work well when merge.conflictstyle
+ * "shit rerere forget" did not work well when merge.conflictstyle
    was set to a non-default value.
 
- * "git remote rm" and "git remote prune" can involve removing many
+ * "shit remote rm" and "shit remote prune" can involve removing many
    refs at once, which is not a very efficient thing to do when very
    many refs exist in the packed-refs file.
 
- * "git log --exclude=<glob> --all | git shortlog" worked as expected,
-   but "git shortlog --exclude=<glob> --all", which is supposed to be
+ * "shit log --exclude=<glob> --all | shit shortlog" worked as expected,
+   but "shit shortlog --exclude=<glob> --all", which is supposed to be
    identical to the above pipeline, was not accepted at the command
    line argument parser level.
 
- * The autostash mode of "git rebase -i" did not restore the dirty
+ * The autostash mode of "shit rebase -i" did not restore the dirty
    working tree state if the user aborted the interactive rebase by
    emptying the insn sheet.
 
- * "git show -s" (i.e. show log message only) used to incorrectly emit
+ * "shit show -s" (i.e. show log message only) used to incorrectly emit
    an extra blank line after a merge commit.
 
- * "git status", even though it is a read-only operation, tries to
+ * "shit status", even though it is a read-only operation, tries to
    update the index with refreshed lstat(2) info to optimize future
    accesses to the working tree opportunistically, but this could
    race with a "read-write" operation that modify the index while it
    is running.  Detect such a race and avoid overwriting the index.
 
- * "git status" (and "git commit") behaved as if changes in a modified
+ * "shit status" (and "shit commit") behaved as if changes in a modified
    submodule are not there if submodule.*.ignore configuration is set,
    which was misleading.  The configuration is only to unclutter diff
    output during the course of development, and should not to hide

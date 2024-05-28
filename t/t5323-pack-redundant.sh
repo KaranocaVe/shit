@@ -3,10 +3,10 @@
 # Copyright (c) 2018 Jiang Xin
 #
 
-test_description='Test git pack-redundant
+test_description='Test shit pack-redundant
 
-In order to test git-pack-redundant, we will create a number of objects and
-packs in the repository `main.git`. The relationship between packs (P1-P8)
+In order to test shit-pack-redundant, we will create a number of objects and
+packs in the repository `main.shit`. The relationship between packs (P1-P8)
 and objects (T, A-R) is showed in the following chart. Objects of a pack will
 be marked with letter x, while objects of redundant packs will be marked with
 exclamation point, and redundant pack itself will be marked with asterisk.
@@ -24,8 +24,8 @@ exclamation point, and redundant pack itself will be marked with asterisk.
     ----+--------------------------------------
     ALL | x x x x x x x x x x x x x x x x x x x
 
-Another repository `shared.git` has unique objects (X-Z), while other objects
-(marked with letter s) are shared through alt-odb (of `main.git`). The
+Another repository `shared.shit` has unique objects (X-Z), while other objects
+(marked with letter s) are shared through alt-odb (of `main.shit`). The
 relationship between packs and objects is as follows:
 
 	| T A B C D E F G H I J K L M N O P Q R   X Y Z
@@ -36,10 +36,10 @@ relationship between packs and objects is as follows:
 
 . ./test-lib.sh
 
-main_repo=main.git
-shared_repo=shared.git
+main_repo=main.shit
+shared_repo=shared.shit
 
-git_pack_redundant='git pack-redundant --i-still-use-this'
+shit_pack_redundant='shit pack-redundant --i-still-use-this'
 
 # Create commits in <repo> and assign each commit's oid to shell variables
 # given in the arguments (A, B, and C). E.g.:
@@ -50,11 +50,11 @@ git_pack_redundant='git pack-redundant --i-still-use-this'
 # assignments will disappear when subshell exits.
 create_commits_in () {
 	repo="$1" &&
-	if ! parent=$(git -C "$repo" rev-parse HEAD^{} 2>/dev/null)
+	if ! parent=$(shit -C "$repo" rev-parse HEAD^{} 2>/dev/null)
 	then
 		parent=
 	fi &&
-	T=$(git -C "$repo" write-tree) &&
+	T=$(shit -C "$repo" write-tree) &&
 	shift &&
 	while test $# -gt 0
 	do
@@ -62,16 +62,16 @@ create_commits_in () {
 		test_tick &&
 		if test -z "$parent"
 		then
-			oid=$(echo $name | git -C "$repo" commit-tree $T)
+			oid=$(echo $name | shit -C "$repo" commit-tree $T)
 		else
-			oid=$(echo $name | git -C "$repo" commit-tree -p $parent $T)
+			oid=$(echo $name | shit -C "$repo" commit-tree -p $parent $T)
 		fi &&
 		eval $name=$oid &&
 		parent=$oid &&
 		shift ||
 		return 1
 	done &&
-	git -C "$repo" update-ref refs/heads/main $oid
+	shit -C "$repo" update-ref refs/heads/main $oid
 }
 
 # Create pack in <repo> and assign pack id to variable given in the 2nd argument
@@ -87,7 +87,7 @@ create_commits_in () {
 create_pack_in () {
 	repo="$1" &&
 	name="$2" &&
-	pack=$(git -C "$repo/objects/pack" pack-objects -q pack) &&
+	pack=$(shit -C "$repo/objects/pack" pack-objects -q pack) &&
 	eval $name=$pack &&
 	eval P$pack=$name:$pack
 }
@@ -110,7 +110,7 @@ format_packfiles () {
 }
 
 test_expect_success 'setup main repo' '
-	git init --bare "$main_repo" &&
+	shit init --bare "$main_repo" &&
 	create_commits_in "$main_repo" A B C D E F G H I J K L M N O P Q R
 '
 
@@ -120,7 +120,7 @@ test_expect_success 'main: pack-redundant works with no packfile' '
 		cat >expect <<-EOF &&
 			fatal: Zero packs found!
 			EOF
-		test_must_fail $git_pack_redundant --all >actual 2>&1 &&
+		test_must_fail $shit_pack_redundant --all >actual 2>&1 &&
 		test_cmp expect actual
 	)
 '
@@ -148,7 +148,7 @@ test_expect_success 'main: pack-redundant works with one packfile' '
 		EOF
 	(
 		cd "$main_repo" &&
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all >out &&
 		test_must_be_empty out
 	)
 '
@@ -185,7 +185,7 @@ test_expect_success 'main: no redundant for pack 1, 2, 3' '
 		EOF
 	(
 		cd "$main_repo" &&
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all >out &&
 		test_must_be_empty out
 	)
 '
@@ -223,7 +223,7 @@ test_expect_success 'main: one of pack-2/pack-3 is redundant' '
 		cat >expect <<-EOF &&
 			P3:$P3
 			EOF
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all >out &&
 		format_packfiles <out >actual &&
 		test_cmp expect actual
 	)
@@ -262,7 +262,7 @@ test_expect_success 'main: pack 2, 4, and 6 are redundant' '
 			P4:$P4
 			P6:$P6
 			EOF
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all >out &&
 		format_packfiles <out >actual &&
 		test_cmp expect actual
 	)
@@ -297,7 +297,7 @@ test_expect_success 'main: pack-8 (subset of pack-1) is also redundant' '
 			P6:$P6
 			P8:$P8
 			EOF
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all >out &&
 		format_packfiles <out >actual &&
 		test_cmp expect actual
 	)
@@ -306,7 +306,7 @@ test_expect_success 'main: pack-8 (subset of pack-1) is also redundant' '
 test_expect_success 'main: clean loose objects' '
 	(
 		cd "$main_repo" &&
-		git prune-packed &&
+		shit prune-packed &&
 		find objects -type f | sed -e "/objects\/pack\//d" >out &&
 		test_must_be_empty out
 	)
@@ -315,17 +315,17 @@ test_expect_success 'main: clean loose objects' '
 test_expect_success 'main: remove redundant packs and pass fsck' '
 	(
 		cd "$main_repo" &&
-		$git_pack_redundant --all | xargs rm &&
-		git fsck &&
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all | xargs rm &&
+		shit fsck &&
+		$shit_pack_redundant --all >out &&
 		test_must_be_empty out
 	)
 '
 
-# The following test cases will execute inside `shared.git`, instead of
-# inside `main.git`.
-test_expect_success 'setup shared.git' '
-	git clone --mirror "$main_repo" "$shared_repo" &&
+# The following test cases will execute inside `shared.shit`, instead of
+# inside `main.shit`.
+test_expect_success 'setup shared.shit' '
+	shit clone --mirror "$main_repo" "$shared_repo" &&
 	(
 		cd "$shared_repo" &&
 		printf "../../$main_repo/objects\n" >objects/info/alternates
@@ -335,7 +335,7 @@ test_expect_success 'setup shared.git' '
 test_expect_success 'shared: all packs are redundant, but no output without --alt-odb' '
 	(
 		cd "$shared_repo" &&
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all >out &&
 		test_must_be_empty out
 	)
 '
@@ -343,7 +343,7 @@ test_expect_success 'shared: all packs are redundant, but no output without --al
 #############################################################################
 # Chart of packs and objects for this test case
 #
-#     ================= main.git ================
+#     ================= main.shit ================
 #         | T A B C D E F G H I J K L M N O P Q R  <----------+
 #     ----+--------------------------------------             |
 #     P1  | x x x x x x x                       x             |
@@ -354,7 +354,7 @@ test_expect_success 'shared: all packs are redundant, but no output without --al
 #     ALL | x x x x x x x x x x x x x x x x x x x             |
 #                                                             |
 #                                                             |
-#     ================ shared.git ===============             |
+#     ================ shared.shit ===============             |
 #         | T A B C D E F G H I J K L M N O P Q R  <objects/info/alternates>
 #     ----+--------------------------------------
 #     P1* | s s s s s s s                       s
@@ -374,7 +374,7 @@ test_expect_success 'shared: show redundant packs in stderr for verbose mode' '
 			P5:$P5
 			P7:$P7
 			EOF
-		$git_pack_redundant --all --verbose >out 2>out.err &&
+		$shit_pack_redundant --all --verbose >out 2>out.err &&
 		test_must_be_empty out &&
 		grep "pack$" out.err | format_packfiles >actual &&
 		test_cmp expect actual
@@ -387,9 +387,9 @@ test_expect_success 'shared: remove redundant packs, no packs left' '
 		cat >expect <<-EOF &&
 			fatal: Zero packs found!
 			EOF
-		$git_pack_redundant --all --alt-odb | xargs rm &&
-		git fsck &&
-		test_must_fail $git_pack_redundant --all --alt-odb >actual 2>&1 &&
+		$shit_pack_redundant --all --alt-odb | xargs rm &&
+		shit fsck &&
+		test_must_fail $shit_pack_redundant --all --alt-odb >actual 2>&1 &&
 		test_cmp expect actual
 	)
 '
@@ -417,7 +417,7 @@ test_expect_success 'shared: create new objects and packs' '
 test_expect_success 'shared: no redundant without --alt-odb' '
 	(
 		cd "$shared_repo" &&
-		$git_pack_redundant --all >out &&
+		$shit_pack_redundant --all >out &&
 		test_must_be_empty out
 	)
 '
@@ -425,7 +425,7 @@ test_expect_success 'shared: no redundant without --alt-odb' '
 #############################################################################
 # Chart of packs and objects for this test case
 #
-#     ================= main.git ================
+#     ================= main.shit ================
 #         | T A B C D E F G H I J K L M N O P Q R  <----------------+
 #     ----+--------------------------------------                   |
 #     P1  | x x x x x x x                       x                   |
@@ -436,7 +436,7 @@ test_expect_success 'shared: no redundant without --alt-odb' '
 #     ALL | x x x x x x x x x x x x x x x x x x x                   |
 #                                                                   |
 #                                                                   |
-#     ================ shared.git =======================           |
+#     ================ shared.shit =======================           |
 #         | T A B C D E F G H I J K L M N O P Q R   X Y Z <objects/info/alternates>
 #     ----+----------------------------------------------
 #     Px1 |   s s s                                 x x x
@@ -448,7 +448,7 @@ test_expect_success 'shared: no redundant without --alt-odb' '
 test_expect_success 'shared: one pack is redundant with --alt-odb' '
 	(
 		cd "$shared_repo" &&
-		$git_pack_redundant --all --alt-odb >out &&
+		$shit_pack_redundant --all --alt-odb >out &&
 		format_packfiles <out >actual &&
 		test_line_count = 1 actual
 	)
@@ -457,7 +457,7 @@ test_expect_success 'shared: one pack is redundant with --alt-odb' '
 #############################################################################
 # Chart of packs and objects for this test case
 #
-#     ================= main.git ================
+#     ================= main.shit ================
 #         | T A B C D E F G H I J K L M N O P Q R  <----------------+
 #     ----+--------------------------------------                   |
 #     P1  | x x x x x x x                       x                   |
@@ -468,7 +468,7 @@ test_expect_success 'shared: one pack is redundant with --alt-odb' '
 #     ALL | x x x x x x x x x x x x x x x x x x x                   |
 #                                                                   |
 #                                                                   |
-#     ================ shared.git =======================           |
+#     ================ shared.shit =======================           |
 #         | T A B C D E F G H I J K L M N O P Q R   X Y Z <objects/info/alternates>
 #     ----+----------------------------------------------
 #     Px1*|   s s s                                 i i i
@@ -485,7 +485,7 @@ test_expect_success 'shared: ignore unique objects and all two packs are redunda
 			Px1:$Px1
 			Px2:$Px2
 			EOF
-		$git_pack_redundant --all --alt-odb >out <<-EOF &&
+		$shit_pack_redundant --all --alt-odb >out <<-EOF &&
 			$X
 			$Y
 			$Z

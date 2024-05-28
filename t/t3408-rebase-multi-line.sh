@@ -2,8 +2,8 @@
 
 test_description='rebasing a commit with multi-line first paragraph.'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,48 +11,48 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success setup '
 
 	>file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m initial &&
+	shit commit -m initial &&
 
 	echo hello >file &&
 	test_tick &&
-	git commit -a -m "A sample commit log message that has a long
+	shit commit -a -m "A sample commit log message that has a long
 summary that spills over multiple lines.
 
 But otherwise with a sane description." &&
 
-	git branch side &&
+	shit branch side &&
 
-	git reset --hard HEAD^ &&
+	shit reset --hard HEAD^ &&
 	>elif &&
-	git add elif &&
+	shit add elif &&
 	test_tick &&
-	git commit -m second &&
+	shit commit -m second &&
 
-	git checkout -b side2 &&
+	shit checkout -b side2 &&
 	>afile &&
-	git add afile &&
+	shit add afile &&
 	test_tick &&
-	git commit -m third &&
+	shit commit -m third &&
 	echo hello >afile &&
 	test_tick &&
-	git commit -a -m fourth &&
-	git checkout -b side-merge &&
-	git reset --hard HEAD^^ &&
-	git merge --no-ff -m "A merge commit log message that has a long
+	shit commit -a -m fourth &&
+	shit checkout -b side-merge &&
+	shit reset --hard HEAD^^ &&
+	shit merge --no-ff -m "A merge commit log message that has a long
 summary that spills over multiple lines.
 
 But otherwise with a sane description." side2 &&
-	git branch side-merge-original
+	shit branch side-merge-original
 '
 
 test_expect_success rebase '
 
-	git checkout side &&
-	git rebase main &&
-	git cat-file commit HEAD | sed -e "1,/^\$/d" >actual &&
-	git cat-file commit side@{1} | sed -e "1,/^\$/d" >expect &&
+	shit checkout side &&
+	shit rebase main &&
+	shit cat-file commit HEAD | sed -e "1,/^\$/d" >actual &&
+	shit cat-file commit side@{1} | sed -e "1,/^\$/d" >expect &&
 	test_cmp expect actual
 
 '

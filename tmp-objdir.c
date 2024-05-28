@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "tmp-objdir.h"
 #include "abspath.h"
 #include "chdir-notify.h"
@@ -69,7 +69,7 @@ void tmp_objdir_discard_objects(struct tmp_objdir *t)
  * "replace" variant overrides the value of any existing variable with that
  * "key". The "append" variant puts our new value at the end of a list,
  * separated by PATH_SEP (which is what separate values in
- * GIT_ALTERNATE_OBJECT_DIRECTORIES).
+ * shit_ALTERNATE_OBJECT_DIRECTORIES).
  */
 static void env_append(struct strvec *env, const char *key, const char *val)
 {
@@ -89,16 +89,16 @@ static void env_append(struct strvec *env, const char *key, const char *val)
 
 	old = getenv(key);
 	if (!old)
-		strvec_pushf(env, "%s=%s", key, val);
+		strvec_defecatef(env, "%s=%s", key, val);
 	else
-		strvec_pushf(env, "%s=%s%c%s", key, old, PATH_SEP, val);
+		strvec_defecatef(env, "%s=%s%c%s", key, old, PATH_SEP, val);
 
 	strbuf_release(&quoted);
 }
 
 static void env_replace(struct strvec *env, const char *key, const char *val)
 {
-	strvec_pushf(env, "%s=%s", key, val);
+	strvec_defecatef(env, "%s=%s", key, val);
 }
 
 static int setup_tmp_objdir(const char *root)
@@ -152,7 +152,7 @@ struct tmp_objdir *tmp_objdir_create(const char *prefix)
 	env_append(&t->env, ALTERNATE_DB_ENVIRONMENT,
 		   absolute_path(get_object_directory()));
 	env_replace(&t->env, DB_ENVIRONMENT, absolute_path(t->path.buf));
-	env_replace(&t->env, GIT_QUARANTINE_ENVIRONMENT,
+	env_replace(&t->env, shit_QUARANTINE_ENVIRONMENT,
 		    absolute_path(t->path.buf));
 
 	return t;

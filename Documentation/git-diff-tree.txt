@@ -1,15 +1,15 @@
-git-diff-tree(1)
+shit-diff-tree(1)
 ================
 
 NAME
 ----
-git-diff-tree - Compares the content and mode of blobs found via two tree objects
+shit-diff-tree - Compares the content and mode of blobs found via two tree objects
 
 
 SYNOPSIS
 --------
 [verse]
-'git diff-tree' [--stdin] [-m] [-s] [-v] [--no-commit-id] [--pretty]
+'shit diff-tree' [--stdin] [-m] [-s] [-v] [--no-commit-id] [--pretty]
 	      [-t] [-r] [-c | --cc] [--combined-all-paths] [--root] [--merge-base]
 	      [<common-diff-options>] <tree-ish> [<tree-ish>] [<path>...]
 
@@ -20,7 +20,7 @@ Compare the content and mode of blobs found via two tree objects.
 If there is only one <tree-ish> given, the commit is compared with its parents
 (see --stdin below).
 
-Note that 'git diff-tree' can use the tree encapsulated in a commit object.
+Note that 'shit diff-tree' can use the tree encapsulated in a commit object.
 
 OPTIONS
 -------
@@ -69,25 +69,25 @@ The following flags further affect the behavior when comparing
 commits (but not trees).
 
 -m::
-	By default, 'git diff-tree --stdin' does not show
+	By default, 'shit diff-tree --stdin' does not show
 	differences for merge commits.  With this flag, it shows
 	differences to that commit from all of its parents. See
 	also `-c`.
 
 -s::
-	By default, 'git diff-tree --stdin' shows differences,
+	By default, 'shit diff-tree --stdin' shows differences,
 	either in machine-readable form (without `-p`) or in patch
 	form (with `-p`).  This output can be suppressed.  It is
 	only useful with the `-v` flag.
 
 -v::
-	This flag causes 'git diff-tree --stdin' to also show
+	This flag causes 'shit diff-tree --stdin' to also show
 	the commit message before the differences.
 
 include::pretty-options.txt[]
 
 --no-commit-id::
-	'git diff-tree' outputs a line with the commit ID when
+	'shit diff-tree' outputs a line with the commit ID when
 	applicable.  This flag suppressed the commit ID output.
 
 -c::
@@ -126,6 +126,6 @@ include::pretty-formats.txt[]
 
 include::diff-format.txt[]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

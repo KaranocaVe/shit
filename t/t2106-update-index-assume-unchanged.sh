@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git update-index --assume-unchanged test.
+test_description='shit update-index --assume-unchanged test.
 '
 
 TEST_PASSES_SANITIZE_LEAK=true
@@ -8,20 +8,20 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success 'setup' '
 	: >file &&
-	git add file &&
-	git commit -m initial &&
-	git branch other &&
+	shit add file &&
+	shit commit -m initial &&
+	shit branch other &&
 	echo upstream >file &&
-	git add file &&
-	git commit -m upstream
+	shit add file &&
+	shit commit -m upstream
 '
 
 test_expect_success 'do not switch branches with dirty file' '
-	git reset --hard &&
-	git checkout other &&
+	shit reset --hard &&
+	shit checkout other &&
 	echo dirt >file &&
-	git update-index --assume-unchanged file &&
-	test_must_fail git checkout - 2>err &&
+	shit update-index --assume-unchanged file &&
+	test_must_fail shit checkout - 2>err &&
 	test_grep overwritten err
 '
 

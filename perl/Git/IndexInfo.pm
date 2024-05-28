@@ -1,11 +1,11 @@
-package Git::IndexInfo;
+package shit::IndexInfo;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
-use Git qw/command_input_pipe command_close_pipe/;
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use shit qw/command_input_pipe command_close_pipe/;
 
 sub new {
 	my ($class) = @_;
-	my $hash_algo = Git::config('extensions.objectformat') || 'sha1';
+	my $hash_algo = shit::config('extensions.objectformat') || 'sha1';
 	my ($gui, $ctx) = command_input_pipe(qw/update-index -z --index-info/);
 	bless { gui => $gui, ctx => $ctx, nr => 0, hash_algo => $hash_algo}, $class;
 }

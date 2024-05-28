@@ -1,14 +1,14 @@
-git-cherry(1)
+shit-cherry(1)
 =============
 
 NAME
 ----
-git-cherry - Find commits yet to be applied to upstream
+shit-cherry - Find commits yet to be applied to upstream
 
 SYNOPSIS
 --------
 [verse]
-'git cherry' [-v] [<upstream> [<head> [<limit>]]]
+'shit cherry' [-v] [<upstream> [<head> [<limit>]]]
 
 DESCRIPTION
 -----------
@@ -16,9 +16,9 @@ Determine whether there are commits in `<head>..<upstream>` that are
 equivalent to those in the range `<limit>..<head>`.
 
 The equivalence test is based on the diff, after removing whitespace
-and line numbers.  git-cherry therefore detects when commits have been
-"copied" by means of linkgit:git-cherry-pick[1], linkgit:git-am[1] or
-linkgit:git-rebase[1].
+and line numbers.  shit-cherry therefore detects when commits have been
+"copied" by means of linkshit:shit-cherry-pick[1], linkshit:shit-am[1] or
+linkshit:shit-rebase[1].
 
 Outputs the SHA1 of every commit in `<limit>..<head>`, prefixed with
 `-` for commits that have an equivalent in <upstream>, and `+` for
@@ -45,24 +45,24 @@ EXAMPLES
 Patch workflows
 ~~~~~~~~~~~~~~~
 
-git-cherry is frequently used in patch-based workflows (see
-linkgit:gitworkflows[7]) to determine if a series of patches has been
+shit-cherry is frequently used in patch-based workflows (see
+linkshit:shitworkflows[7]) to determine if a series of patches has been
 applied by the upstream maintainer.  In such a workflow you might
 create and send a topic branch like this:
 
 ------------
-$ git checkout -b topic origin/master
+$ shit checkout -b topic origin/master
 # work and create some commits
-$ git format-patch origin/master
-$ git send-email ... 00*
+$ shit format-patch origin/master
+$ shit send-email ... 00*
 ------------
 
 Later, you can see whether your changes have been applied by saying
 (still on `topic`):
 
 ------------
-$ git fetch  # update your notion of origin/master
-$ git cherry -v
+$ shit fetch  # update your notion of origin/master
+$ shit cherry -v
 ------------
 
 Concrete example
@@ -72,7 +72,7 @@ In a situation where topic consisted of three commits, and the
 maintainer applied two of them, the situation might look like:
 
 ------------
-$ git log --graph --oneline --decorate --boundary origin/master...topic
+$ shit log --graph --oneline --decorate --boundary origin/master...topic
 * 7654321 (origin/master) upstream tip commit
 [... snip some other commits ...]
 * cccc111 cherry-pick of C
@@ -85,11 +85,11 @@ $ git log --graph --oneline --decorate --boundary origin/master...topic
 o 1234567 branch point
 ------------
 
-In such cases, git-cherry shows a concise summary of what has yet to
+In such cases, shit-cherry shows a concise summary of what has yet to
 be applied:
 
 ------------
-$ git cherry origin/master topic
+$ shit cherry origin/master topic
 - cccc000... commit C
 + bbbb000... commit B
 - aaaa000... commit A
@@ -109,7 +109,7 @@ other work that is not in upstream.  Expanding on the previous
 example, this might look like:
 
 ------------
-$ git log --graph --oneline --decorate --boundary origin/master...topic
+$ shit log --graph --oneline --decorate --boundary origin/master...topic
 * 7654321 (origin/master) upstream tip commit
 [... snip some other commits ...]
 * cccc111 cherry-pick of C
@@ -129,7 +129,7 @@ By specifying `base` as the limit, you can avoid listing commits
 between `base` and `topic`:
 
 ------------
-$ git cherry origin/master topic base
+$ shit cherry origin/master topic base
 - cccc000... commit C
 + bbbb000... commit B
 - aaaa000... commit A
@@ -138,8 +138,8 @@ $ git cherry origin/master topic base
 
 SEE ALSO
 --------
-linkgit:git-patch-id[1]
+linkshit:shit-patch-id[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

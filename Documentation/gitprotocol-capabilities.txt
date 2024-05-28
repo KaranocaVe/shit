@@ -1,9 +1,9 @@
-gitprotocol-capabilities(5)
+shitprotocol-capabilities(5)
 ===========================
 
 NAME
 ----
-gitprotocol-capabilities - Protocol v0 and v1 capabilities
+shitprotocol-capabilities - Protocol v0 and v1 capabilities
 
 SYNOPSIS
 --------
@@ -14,7 +14,7 @@ DESCRIPTION
 -----------
 
 NOTE: this document describes capabilities for versions 0 and 1 of the pack
-protocol. For version 2, please refer to the linkgit:gitprotocol-v2[5]
+protocol. For version 2, please refer to the linkshit:shitprotocol-v2[5]
 doc.
 
 Servers SHOULD support all capabilities defined in this document.
@@ -35,8 +35,8 @@ and server advertised.  As a consequence of these rules, server MUST
 NOT advertise capabilities it does not understand.
 
 The 'atomic', 'report-status', 'report-status-v2', 'delete-refs', 'quiet',
-and 'push-cert' capabilities are sent and recognized by the receive-pack
-(push to server) process.
+and 'defecate-cert' capabilities are sent and recognized by the receive-pack
+(defecate to server) process.
 
 The 'ofs-delta' and 'side-band-64k' capabilities are sent and recognized
 by both upload-pack and receive-pack protocols.  The 'agent' and 'session-id'
@@ -89,7 +89,7 @@ interleaved with S-R-Q.
 multi_ack_detailed
 ------------------
 This is an extension of multi_ack that permits the client to better
-understand the server's in-memory state. See linkgit:gitprotocol-pack[5],
+understand the server's in-memory state. See linkshit:shitprotocol-pack[5],
 section "Packfile Negotiation" for more information.
 
 no-done
@@ -183,7 +183,7 @@ optionally return its own agent string by responding with an `agent=Y`
 capability (but it MUST NOT do so if the server did not mention the
 agent capability). The `X` and `Y` strings may contain any printable
 ASCII characters except space (i.e., the byte range 32 < x < 127), and
-are typically of the form "package/version" (e.g., "git/1.8.3.1"). The
+are typically of the form "package/version" (e.g., "shit/1.8.3.1"). The
 agent strings are purely informative for statistics and debugging
 purposes, and MUST NOT be used to programmatically assume the presence
 or absence of particular features.
@@ -252,7 +252,7 @@ the current shallow boundary, instead of the depth from remote refs.
 no-progress
 -----------
 
-The client was started with "git clone -q" or something similar, and doesn't
+The client was started with "shit clone -q" or something similar, and doesn't
 want that side band 2.  Basically the client just says "I do not
 wish to receive stream 2 on sideband, so do not send it to me, and if
 you did, I will drop it on the floor anyway".  However, the sideband
@@ -289,11 +289,11 @@ report-status
 
 The receive-pack process can receive a 'report-status' capability,
 which tells it that the client wants a report of what happened after
-a packfile upload and reference update.  If the pushing client requests
+a packfile upload and reference update.  If the defecateing client requests
 this capability, after unpacking and updating references the server
 will respond with whether the packfile unpacked successfully and if
 each reference was updated successfully.  If any of those were not
-successful, it will send back an error message.  See linkgit:gitprotocol-pack[5]
+successful, it will send back an error message.  See linkshit:shitprotocol-pack[5]
 for example messages.
 
 report-status-v2
@@ -304,7 +304,7 @@ adding new "option" directives in order to support reference rewritten by
 the "proc-receive" hook.  The "proc-receive" hook may handle a command
 for a pseudo-reference which may create or update a reference with
 different name, new-oid, and old-oid.  While the capability
-'report-status' cannot report for such case.  See linkgit:gitprotocol-pack[5]
+'report-status' cannot report for such case.  See linkshit:shitprotocol-pack[5]
 for details.
 
 delete-refs
@@ -324,24 +324,24 @@ capable of silencing human-readable progress output which otherwise may
 be shown when processing the received pack. A send-pack client should
 respond with the 'quiet' capability to suppress server-side progress
 reporting if the local progress reporting is also being suppressed
-(e.g., via `push -q`, or if stderr does not go to a tty).
+(e.g., via `defecate -q`, or if stderr does not go to a tty).
 
 atomic
 ------
 
 If the server sends the 'atomic' capability it is capable of accepting
-atomic pushes. If the pushing client requests this capability, the server
+atomic defecatees. If the defecateing client requests this capability, the server
 will update the refs in one atomic transaction. Either all refs are
 updated or none.
 
-push-options
+defecate-options
 ------------
 
-If the server sends the 'push-options' capability it is able to accept
-push options after the update commands have been sent, but before the
-packfile is streamed. If the pushing client requests this capability,
+If the server sends the 'defecate-options' capability it is able to accept
+defecate options after the update commands have been sent, but before the
+packfile is streamed. If the defecateing client requests this capability,
 the server will pass the options to the pre- and post- receive hooks
-that process this push request.
+that process this defecate request.
 
 allow-tip-sha1-in-want
 ----------------------
@@ -361,13 +361,13 @@ advertised by upload-pack. For historical reasons, the name of this
 capability contains "sha1". Object names are always given using the
 object format negotiated through the 'object-format' capability.
 
-push-cert=<nonce>
+defecate-cert=<nonce>
 -----------------
 
 The receive-pack server that advertises this capability is willing
-to accept a signed push certificate, and asks the <nonce> to be
-included in the push certificate.  A send-pack client MUST NOT
-send a push-cert packet unless the receive-pack server advertises
+to accept a signed defecate certificate, and asks the <nonce> to be
+included in the defecate certificate.  A send-pack client MUST NOT
+send a defecate-cert packet unless the receive-pack server advertises
 this capability.
 
 filter
@@ -391,6 +391,6 @@ current implementation uses trace2 session IDs (see
 link:technical/api-trace2.html[api-trace2] for details), but this may change
 and users of the session ID should not rely on this fact.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

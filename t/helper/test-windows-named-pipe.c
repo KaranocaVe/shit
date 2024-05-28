@@ -1,8 +1,8 @@
 #include "test-tool.h"
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "strbuf.h"
 
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 static const char *usage_string = "<pipe-filename>";
 
 #define TEST_BUFSIZE (4096)

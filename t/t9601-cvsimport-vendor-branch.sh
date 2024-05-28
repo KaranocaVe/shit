@@ -31,9 +31,9 @@
 #       Like imported-twice.txt, but with a vendor branch whose branch
 #       tag has been removed.
 
-test_description='git cvsimport handling of vendor branches'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+test_description='shit cvsimport handling of vendor branches'
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./lib-cvs.sh
 
@@ -41,13 +41,13 @@ setup_cvs_test_repository t9601
 
 test_expect_success PERL 'import a module with a vendor branch' '
 
-	git cvsimport -C module-git module
+	shit cvsimport -C module-shit module
 
 '
 
 test_expect_success PERL 'check HEAD out of cvs repository' 'test_cvs_co main'
 
-test_expect_success PERL 'check main out of git repository' 'test_git_co main'
+test_expect_success PERL 'check main out of shit repository' 'test_shit_co main'
 
 test_expect_success PERL 'check a file that was imported once' '
 

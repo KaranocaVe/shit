@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "run-command.h"
 #include "strbuf.h"
 
@@ -27,6 +27,6 @@ int cmd_main(int argc, const char **argv)
 	if (argc < 2)
 		return 0;
 	cmd.use_shell = 1;
-	strvec_push(&cmd.args, argv[argc - 1]);
+	strvec_defecate(&cmd.args, argv[argc - 1]);
 	return run_command(&cmd);
 }

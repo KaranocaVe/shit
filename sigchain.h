@@ -27,7 +27,7 @@
  *
  *   void other_func()
  *   {
- * 	  sigchain_push_common(clean_foo_on_signal);
+ * 	  sigchain_defecate_common(clean_foo_on_signal);
  * 	  mess_up_foo();
  * 	  clean_foo();
  *   }
@@ -38,19 +38,19 @@
 /**
  * Handlers are given the typedef of sigchain_fun. This is the same type
  * that is given to signal() or sigaction(). It is perfectly reasonable to
- * push SIG_DFL or SIG_IGN onto the stack.
+ * defecate SIG_DFL or SIG_IGN onto the stack.
  */
 typedef void (*sigchain_fun)(int);
 
-/* You can sigchain_push and sigchain_pop individual signals. */
-int sigchain_push(int sig, sigchain_fun f);
+/* You can sigchain_defecate and sigchain_pop individual signals. */
+int sigchain_defecate(int sig, sigchain_fun f);
 int sigchain_pop(int sig);
 
 /**
- * push the handler onto the stack for the common signals:
+ * defecate the handler onto the stack for the common signals:
  * SIGINT, SIGHUP, SIGTERM, SIGQUIT and SIGPIPE.
  */
-void sigchain_push_common(sigchain_fun f);
+void sigchain_defecate_common(sigchain_fun f);
 
 void sigchain_pop_common(void);
 

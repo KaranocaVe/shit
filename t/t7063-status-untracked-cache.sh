@@ -2,8 +2,8 @@
 
 test_description='test untracked cache'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -17,8 +17,8 @@ export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
 # See <20160803174522.5571-1-pclouds@gmail.com> if you want to know
 # more.
 
-GIT_FORCE_UNTRACKED_CACHE=true
-export GIT_FORCE_UNTRACKED_CACHE
+shit_FORCE_UNTRACKED_CACHE=true
+export shit_FORCE_UNTRACKED_CACHE
 
 sync_mtime () {
 	find . -type d -exec ls -ld {} + >/dev/null
@@ -29,36 +29,36 @@ avoid_racy() {
 }
 
 status_is_clean() {
-	git status --porcelain >../status.actual &&
+	shit status --porcelain >../status.actual &&
 	test_must_be_empty ../status.actual
 }
 
 # Ignore_Untracked_Cache, abbreviated to 3 letters because then people can
 # compare commands side-by-side, e.g.
 #    iuc status --porcelain >expect &&
-#    git status --porcelain >actual &&
+#    shit status --porcelain >actual &&
 #    test_cmp expect actual
 iuc () {
-	git ls-files -s >../current-index-entries
-	git ls-files -t | sed -ne s/^S.//p >../current-sparse-entries
+	shit ls-files -s >../current-index-entries
+	shit ls-files -t | sed -ne s/^S.//p >../current-sparse-entries
 
-	GIT_INDEX_FILE=.git/tmp_index
-	export GIT_INDEX_FILE
-	git update-index --index-info <../current-index-entries
-	git update-index --skip-worktree $(cat ../current-sparse-entries)
+	shit_INDEX_FILE=.shit/tmp_index
+	export shit_INDEX_FILE
+	shit update-index --index-info <../current-index-entries
+	shit update-index --skip-worktree $(cat ../current-sparse-entries)
 
-	git -c core.untrackedCache=false "$@"
+	shit -c core.untrackedCache=false "$@"
 	ret=$?
 
 	rm ../current-index-entries
-	rm $GIT_INDEX_FILE
-	unset GIT_INDEX_FILE
+	rm $shit_INDEX_FILE
+	unset shit_INDEX_FILE
 
 	return $ret
 }
 
 get_relevant_traces () {
-	# From the GIT_TRACE2_PERF data of the form
+	# From the shit_TRACE2_PERF data of the form
 	#    $TIME $FILE:$LINE | d0 | main | data | r1 | ? | ? | read_directo | $RELEVANT_STAT
 	# extract the $RELEVANT_STAT fields.  We don't care about region_enter
 	# or region_leave, or stats for things outside read_directory.
@@ -72,7 +72,7 @@ get_relevant_traces () {
 
 
 test_lazy_prereq UNTRACKED_CACHE '
-	{ git update-index --test-untracked-cache; ret=$?; } &&
+	{ shit update-index --test-untracked-cache; ret=$?; } &&
 	test $ret -ne 1
 '
 
@@ -82,21 +82,21 @@ if ! test_have_prereq UNTRACKED_CACHE; then
 fi
 
 test_expect_success 'core.untrackedCache is unset' '
-	test_must_fail git config --get core.untrackedCache
+	test_must_fail shit config --get core.untrackedCache
 '
 
 test_expect_success 'setup' '
-	git init --template= worktree &&
+	shit init --template= worktree &&
 	cd worktree &&
 	mkdir done dtwo dthree &&
 	touch one two three done/one dtwo/two dthree/three &&
 	test-tool chmtime =-300 one two three done/one dtwo/two dthree/three &&
 	test-tool chmtime =-300 done dtwo dthree &&
 	test-tool chmtime =-300 . &&
-	git add one two done/one &&
-	mkdir .git/info &&
-	: >.git/info/exclude &&
-	git update-index --untracked-cache &&
+	shit add one two done/one &&
+	mkdir .shit/info &&
+	: >.shit/info/exclude &&
+	shit update-index --untracked-cache &&
 	test_oid_cache <<-EOF
 	root sha1:e6fcc8f2ee31bae321d66afd183fcb7237afae6e
 	root sha256:b90c672088c015b9c83876e919da311bad4cd39639fb139f988af6a11493b974
@@ -114,7 +114,7 @@ test_expect_success 'untracked cache is empty' '
 	cat >../expect-empty <<EOF &&
 info/exclude $ZERO_OID
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 EOF
 	test_cmp ../expect-empty ../actual
@@ -132,7 +132,7 @@ EOF
 cat >../dump.expect <<EOF &&
 info/exclude $EMPTY_BLOB
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $ZERO_OID recurse valid
 dthree/
@@ -147,8 +147,8 @@ EOF
 
 test_expect_success 'status first time (empty cache)' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	test_cmp ../status.expect ../status.iuc &&
 	test_cmp ../status.expect ../actual &&
@@ -156,7 +156,7 @@ test_expect_success 'status first time (empty cache)' '
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:3
- ....gitignore-invalidation:1
+ ....shitignore-invalidation:1
  ....directory-invalidation:0
  ....opendir:4
 EOF
@@ -170,8 +170,8 @@ test_expect_success 'untracked cache after first status' '
 
 test_expect_success 'status second time (fully populated cache)' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	test_cmp ../status.expect ../status.iuc &&
 	test_cmp ../status.expect ../actual &&
@@ -179,7 +179,7 @@ test_expect_success 'status second time (fully populated cache)' '
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:0
  ....opendir:0
 EOF
@@ -206,8 +206,8 @@ EOF
 # correctly used in a -uall run - it would yield incorrect output.
 test_expect_success 'untracked cache is bypassed with -uall' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status -uall --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status -uall --porcelain >../actual &&
 	iuc status -uall --porcelain >../status.iuc &&
 	test_cmp ../status_uall.expect ../status.iuc &&
 	test_cmp ../status_uall.expect ../actual &&
@@ -226,8 +226,8 @@ test_expect_success 'untracked cache remains after bypass' '
 test_expect_success 'if -uall is configured, untracked cache gets populated by default' '
 	test_config status.showuntrackedfiles all &&
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	test_cmp ../status_uall.expect ../status.iuc &&
 	test_cmp ../status_uall.expect ../actual &&
@@ -235,7 +235,7 @@ test_expect_success 'if -uall is configured, untracked cache gets populated by d
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:3
- ....gitignore-invalidation:1
+ ....shitignore-invalidation:1
  ....directory-invalidation:0
  ....opendir:4
 EOF
@@ -245,7 +245,7 @@ EOF
 cat >../dump_uall.expect <<EOF &&
 info/exclude $EMPTY_BLOB
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000000
 / $ZERO_OID recurse valid
 three
@@ -264,8 +264,8 @@ test_expect_success 'if -uall was configured, untracked cache is populated' '
 test_expect_success 'if -uall is configured, untracked cache is used by default' '
 	test_config status.showuntrackedfiles all &&
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	test_cmp ../status_uall.expect ../status.iuc &&
 	test_cmp ../status_uall.expect ../actual &&
@@ -273,7 +273,7 @@ test_expect_success 'if -uall is configured, untracked cache is used by default'
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:0
  ....opendir:0
 EOF
@@ -288,8 +288,8 @@ EOF
 test_expect_success 'if -uall is configured, untracked cache is bypassed with -unormal' '
 	test_config status.showuntrackedfiles all &&
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status -unormal --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status -unormal --porcelain >../actual &&
 	iuc status -unormal --porcelain >../status.iuc &&
 	test_cmp ../status.expect ../status.iuc &&
 	test_cmp ../status.expect ../actual &&
@@ -301,15 +301,15 @@ EOF
 '
 
 test_expect_success 'repopulate untracked cache for -unormal' '
-	git status --porcelain
+	shit status --porcelain
 '
 
 test_expect_success 'modify in root directory, one dir invalidation' '
 	: >four &&
 	test-tool chmtime =-240 four &&
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
 A  done/one
@@ -326,7 +326,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:1
  ....opendir:1
 EOF
@@ -339,7 +339,7 @@ test_expect_success 'verify untracked cache dump' '
 	cat >../expect <<EOF &&
 info/exclude $EMPTY_BLOB
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $ZERO_OID recurse valid
 dthree/
@@ -355,17 +355,17 @@ EOF
 	test_cmp ../expect ../actual
 '
 
-test_expect_success 'new .gitignore invalidates recursively' '
-	echo four >.gitignore &&
+test_expect_success 'new .shitignore invalidates recursively' '
+	echo four >.shitignore &&
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
 A  done/one
 A  one
 A  two
-?? .gitignore
+?? .shitignore
 ?? dthree/
 ?? dtwo/
 ?? three
@@ -376,7 +376,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:1
+ ....shitignore-invalidation:1
  ....directory-invalidation:1
  ....opendir:4
 EOF
@@ -389,10 +389,10 @@ test_expect_success 'verify untracked cache dump' '
 	cat >../expect <<EOF &&
 info/exclude $EMPTY_BLOB
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse valid
-.gitignore
+.shitignore
 dthree/
 dtwo/
 three
@@ -406,16 +406,16 @@ EOF
 '
 
 test_expect_success 'new info/exclude invalidates everything' '
-	echo three >>.git/info/exclude &&
+	echo three >>.shit/info/exclude &&
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
 A  done/one
 A  one
 A  two
-?? .gitignore
+?? .shitignore
 ?? dtwo/
 EOF
 	test_cmp ../status.expect ../status.iuc &&
@@ -424,7 +424,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:1
+ ....shitignore-invalidation:1
  ....directory-invalidation:0
  ....opendir:4
 EOF
@@ -436,10 +436,10 @@ test_expect_success 'verify untracked cache dump' '
 	cat >../expect <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse valid
-.gitignore
+.shitignore
 dtwo/
 /done/ $ZERO_OID recurse valid
 /dthree/ $ZERO_OID recurse check_only valid
@@ -450,12 +450,12 @@ EOF
 '
 
 test_expect_success 'move two from tracked to untracked' '
-	git rm --cached two &&
+	shit rm --cached two &&
 	test-tool dump-untracked-cache >../actual &&
 	cat >../expect <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse
 /done/ $ZERO_OID recurse valid
@@ -468,13 +468,13 @@ EOF
 
 test_expect_success 'status after the move' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
 A  done/one
 A  one
-?? .gitignore
+?? .shitignore
 ?? dtwo/
 ?? two
 EOF
@@ -484,7 +484,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:0
  ....opendir:1
 EOF
@@ -496,10 +496,10 @@ test_expect_success 'verify untracked cache dump' '
 	cat >../expect <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse valid
-.gitignore
+.shitignore
 dtwo/
 two
 /done/ $ZERO_OID recurse valid
@@ -511,12 +511,12 @@ EOF
 '
 
 test_expect_success 'move two from untracked to tracked' '
-	git add two &&
+	shit add two &&
 	test-tool dump-untracked-cache >../actual &&
 	cat >../expect <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse
 /done/ $ZERO_OID recurse valid
@@ -529,14 +529,14 @@ EOF
 
 test_expect_success 'status after the move' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
 A  done/one
 A  one
 A  two
-?? .gitignore
+?? .shitignore
 ?? dtwo/
 EOF
 	test_cmp ../status.expect ../status.iuc &&
@@ -545,7 +545,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:0
  ....opendir:1
 EOF
@@ -557,10 +557,10 @@ test_expect_success 'verify untracked cache dump' '
 	cat >../expect <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse valid
-.gitignore
+.shitignore
 dtwo/
 /done/ $ZERO_OID recurse valid
 /dthree/ $ZERO_OID recurse check_only valid
@@ -571,20 +571,20 @@ EOF
 '
 
 test_expect_success 'set up for sparse checkout testing' '
-	echo two >done/.gitignore &&
-	echo three >>done/.gitignore &&
+	echo two >done/.shitignore &&
+	echo three >>done/.shitignore &&
 	echo two >done/two &&
-	git add -f done/two done/.gitignore &&
-	git commit -m "first commit"
+	shit add -f done/two done/.shitignore &&
+	shit commit -m "first commit"
 '
 
 test_expect_success 'status after commit' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
-?? .gitignore
+?? .shitignore
 ?? dtwo/
 EOF
 	test_cmp ../status.expect ../status.iuc &&
@@ -593,7 +593,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:0
  ....opendir:2
 EOF
@@ -605,10 +605,10 @@ test_expect_success 'untracked cache correct after commit' '
 	cat >../expect <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse valid
-.gitignore
+.shitignore
 dtwo/
 /done/ $ZERO_OID recurse valid
 /dthree/ $ZERO_OID recurse check_only valid
@@ -619,20 +619,20 @@ EOF
 '
 
 test_expect_success 'set up sparse checkout' '
-	echo "done/[a-z]*" >.git/info/sparse-checkout &&
+	echo "done/[a-z]*" >.shit/info/sparse-checkout &&
 	test_config core.sparsecheckout true &&
-	git checkout main &&
-	git update-index --force-untracked-cache &&
-	git status --porcelain >/dev/null && # prime the cache
-	test_path_is_missing done/.gitignore &&
+	shit checkout main &&
+	shit update-index --force-untracked-cache &&
+	shit status --porcelain >/dev/null && # prime the cache
+	test_path_is_missing done/.shitignore &&
 	test_path_is_file done/one
 '
 
-test_expect_success 'create/modify files, some of which are gitignored' '
+test_expect_success 'create/modify files, some of which are shitignored' '
 	echo two bis >done/two &&
-	echo three >done/three && # three is gitignored
-	echo four >done/four && # four is gitignored at a higher level
-	echo five >done/five && # five is not gitignored
+	echo three >done/three && # three is shitignored
+	echo four >done/four && # four is shitignored at a higher level
+	echo five >done/five && # five is not shitignored
 	test-tool chmtime =-180 done/two done/three done/four done/five done &&
 	# we need to ensure that the root dir is touched (in the past);
 	test-tool chmtime =-180 . &&
@@ -641,12 +641,12 @@ test_expect_success 'create/modify files, some of which are gitignored' '
 
 test_expect_success 'test sparse status with untracked cache' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../status.actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../status.actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
  M done/two
-?? .gitignore
+?? .shitignore
 ?? done/five
 ?? dtwo/
 EOF
@@ -656,7 +656,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:1
+ ....shitignore-invalidation:1
  ....directory-invalidation:2
  ....opendir:2
 EOF
@@ -668,10 +668,10 @@ test_expect_success 'untracked cache correct after status' '
 	cat >../expect <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse valid
-.gitignore
+.shitignore
 dtwo/
 /done/ $(test_oid done) recurse valid
 five
@@ -684,12 +684,12 @@ EOF
 
 test_expect_success 'test sparse status again with untracked cache' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../status.actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../status.actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
  M done/two
-?? .gitignore
+?? .shitignore
 ?? done/five
 ?? dtwo/
 EOF
@@ -699,7 +699,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:0
  ....opendir:0
 EOF
@@ -715,12 +715,12 @@ test_expect_success 'set up for test of subdir and sparse checkouts' '
 
 test_expect_success 'test sparse status with untracked cache and subdir' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../status.actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../status.actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
  M done/two
-?? .gitignore
+?? .shitignore
 ?? done/five
 ?? done/sub/
 ?? dtwo/
@@ -731,7 +731,7 @@ EOF
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:2
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:1
  ....opendir:3
 EOF
@@ -743,10 +743,10 @@ test_expect_success 'verify untracked cache dump (sparse/subdirs)' '
 	cat >../expect-from-test-dump <<EOF &&
 info/exclude $(test_oid exclude)
 core.excludesfile $ZERO_OID
-exclude_per_dir .gitignore
+exclude_per_dir .shitignore
 flags 00000006
 / $(test_oid root) recurse valid
-.gitignore
+.shitignore
 dtwo/
 /done/ $(test_oid done) recurse valid
 five
@@ -764,8 +764,8 @@ EOF
 
 test_expect_success 'test sparse status again with untracked cache and subdir' '
 	: >../trace.output &&
-	GIT_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
-	git status --porcelain >../status.actual &&
+	shit_TRACE2_PERF="$TRASH_DIRECTORY/trace.output" \
+	shit status --porcelain >../status.actual &&
 	iuc status --porcelain >../status.iuc &&
 	test_cmp ../status.expect ../status.iuc &&
 	test_cmp ../status.expect ../status.actual &&
@@ -773,7 +773,7 @@ test_expect_success 'test sparse status again with untracked cache and subdir' '
 	cat >../trace.expect <<EOF &&
  ....path:
  ....node-creation:0
- ....gitignore-invalidation:0
+ ....shitignore-invalidation:0
  ....directory-invalidation:0
  ....opendir:0
 EOF
@@ -781,13 +781,13 @@ EOF
 '
 
 test_expect_success 'move entry in subdir from untracked to cached' '
-	git add dtwo/two &&
-	git status --porcelain >../status.actual &&
+	shit add dtwo/two &&
+	shit status --porcelain >../status.actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
  M done/two
 A  dtwo/two
-?? .gitignore
+?? .shitignore
 ?? done/five
 ?? done/sub/
 EOF
@@ -796,12 +796,12 @@ EOF
 '
 
 test_expect_success 'move entry in subdir from cached to untracked' '
-	git rm --cached dtwo/two &&
-	git status --porcelain >../status.actual &&
+	shit rm --cached dtwo/two &&
+	shit status --porcelain >../status.actual &&
 	iuc status --porcelain >../status.iuc &&
 	cat >../status.expect <<EOF &&
  M done/two
-?? .gitignore
+?? .shitignore
 ?? done/five
 ?? done/sub/
 ?? dtwo/
@@ -811,66 +811,66 @@ EOF
 '
 
 test_expect_success '--no-untracked-cache removes the cache' '
-	git update-index --no-untracked-cache &&
+	shit update-index --no-untracked-cache &&
 	test-tool dump-untracked-cache >../actual &&
 	echo "no untracked cache" >../expect-no-uc &&
 	test_cmp ../expect-no-uc ../actual
 '
 
-test_expect_success 'git status does not change anything' '
-	git status &&
+test_expect_success 'shit status does not change anything' '
+	shit status &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-no-uc ../actual
 '
 
-test_expect_success 'setting core.untrackedCache to true and using git status creates the cache' '
-	git config core.untrackedCache true &&
+test_expect_success 'setting core.untrackedCache to true and using shit status creates the cache' '
+	shit config core.untrackedCache true &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-no-uc ../actual &&
-	git status &&
+	shit status &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-from-test-dump ../actual
 '
 
 test_expect_success 'using --no-untracked-cache does not fail when core.untrackedCache is true' '
-	git update-index --no-untracked-cache &&
+	shit update-index --no-untracked-cache &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-no-uc ../actual &&
-	git update-index --untracked-cache &&
+	shit update-index --untracked-cache &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-empty ../actual
 '
 
-test_expect_success 'setting core.untrackedCache to false and using git status removes the cache' '
-	git config core.untrackedCache false &&
+test_expect_success 'setting core.untrackedCache to false and using shit status removes the cache' '
+	shit config core.untrackedCache false &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-empty ../actual &&
-	git status &&
+	shit status &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-no-uc ../actual
 '
 
 test_expect_success 'using --untracked-cache does not fail when core.untrackedCache is false' '
-	git update-index --untracked-cache &&
+	shit update-index --untracked-cache &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-empty ../actual
 '
 
 test_expect_success 'setting core.untrackedCache to keep' '
-	git config core.untrackedCache keep &&
-	git update-index --untracked-cache &&
+	shit config core.untrackedCache keep &&
+	shit update-index --untracked-cache &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-empty ../actual &&
-	git status &&
+	shit status &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-from-test-dump ../actual &&
-	git update-index --no-untracked-cache &&
+	shit update-index --no-untracked-cache &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-no-uc ../actual &&
-	git update-index --force-untracked-cache &&
+	shit update-index --force-untracked-cache &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-empty ../actual &&
-	git status &&
+	shit status &&
 	test-tool dump-untracked-cache >../actual &&
 	test_cmp ../expect-from-test-dump ../actual
 '
@@ -878,29 +878,29 @@ test_expect_success 'setting core.untrackedCache to keep' '
 test_expect_success 'test ident field is working' '
 	mkdir ../other_worktree &&
 	cp -R done dthree dtwo four three ../other_worktree &&
-	GIT_WORK_TREE=../other_worktree git status 2>../err &&
+	shit_WORK_TREE=../other_worktree shit status 2>../err &&
 	echo "warning: untracked cache is disabled on this system or location" >../expect &&
 	test_cmp ../expect ../err
 '
 
 test_expect_success 'untracked cache survives a checkout' '
-	git commit --allow-empty -m empty &&
+	shit commit --allow-empty -m empty &&
 	test-tool dump-untracked-cache >../before &&
-	test_when_finished  "git checkout main" &&
-	git checkout -b other_branch &&
+	test_when_finished  "shit checkout main" &&
+	shit checkout -b other_branch &&
 	test-tool dump-untracked-cache >../after &&
 	test_cmp ../before ../after &&
 	test_commit test &&
 	test-tool dump-untracked-cache >../before &&
-	git checkout main &&
+	shit checkout main &&
 	test-tool dump-untracked-cache >../after &&
 	test_cmp ../before ../after
 '
 
 test_expect_success 'untracked cache survives a commit' '
 	test-tool dump-untracked-cache >../before &&
-	git add done/two &&
-	git commit -m commit &&
+	shit add done/two &&
+	shit commit -m commit &&
 	test-tool dump-untracked-cache >../after &&
 	test_cmp ../before ../after
 '
@@ -910,59 +910,59 @@ test_expect_success 'teardown worktree' '
 '
 
 test_expect_success SYMLINKS 'setup worktree for symlink test' '
-	git init worktree-symlink &&
+	shit init worktree-symlink &&
 	cd worktree-symlink &&
-	git config core.untrackedCache true &&
+	shit config core.untrackedCache true &&
 	mkdir one two &&
 	touch one/file two/file &&
-	git add one/file two/file &&
-	git commit -m"first commit" &&
-	git rm -rf one &&
+	shit add one/file two/file &&
+	shit commit -m"first commit" &&
+	shit rm -rf one &&
 	ln -s two one &&
-	git add one &&
-	git commit -m"second commit"
+	shit add one &&
+	shit commit -m"second commit"
 '
 
 test_expect_success SYMLINKS '"status" after symlink replacement should be clean with UC=true' '
-	git checkout HEAD~ &&
+	shit checkout HEAD~ &&
 	status_is_clean &&
 	status_is_clean &&
-	git checkout main &&
+	shit checkout main &&
 	avoid_racy &&
 	status_is_clean &&
 	status_is_clean
 '
 
 test_expect_success SYMLINKS '"status" after symlink replacement should be clean with UC=false' '
-	git config core.untrackedCache false &&
-	git checkout HEAD~ &&
+	shit config core.untrackedCache false &&
+	shit checkout HEAD~ &&
 	status_is_clean &&
 	status_is_clean &&
-	git checkout main &&
+	shit checkout main &&
 	avoid_racy &&
 	status_is_clean &&
 	status_is_clean
 '
 
 test_expect_success 'setup worktree for non-symlink test' '
-	git init worktree-non-symlink &&
+	shit init worktree-non-symlink &&
 	cd worktree-non-symlink &&
-	git config core.untrackedCache true &&
+	shit config core.untrackedCache true &&
 	mkdir one two &&
 	touch one/file two/file &&
-	git add one/file two/file &&
-	git commit -m"first commit" &&
-	git rm -rf one &&
+	shit add one/file two/file &&
+	shit commit -m"first commit" &&
+	shit rm -rf one &&
 	cp two/file one &&
-	git add one &&
-	git commit -m"second commit"
+	shit add one &&
+	shit commit -m"second commit"
 '
 
 test_expect_success '"status" after file replacement should be clean with UC=true' '
-	git checkout HEAD~ &&
+	shit checkout HEAD~ &&
 	status_is_clean &&
 	status_is_clean &&
-	git checkout main &&
+	shit checkout main &&
 	avoid_racy &&
 	status_is_clean &&
 	test-tool dump-untracked-cache >../actual &&
@@ -976,19 +976,19 @@ EOF
 '
 
 test_expect_success '"status" after file replacement should be clean with UC=false' '
-	git config core.untrackedCache false &&
-	git checkout HEAD~ &&
+	shit config core.untrackedCache false &&
+	shit checkout HEAD~ &&
 	status_is_clean &&
 	status_is_clean &&
-	git checkout main &&
+	shit checkout main &&
 	avoid_racy &&
 	status_is_clean &&
 	status_is_clean
 '
 
 test_expect_success 'empty repo (no index) and core.untrackedCache' '
-	git init emptyrepo &&
-	git -C emptyrepo -c core.untrackedCache=true write-tree
+	shit init emptyrepo &&
+	shit -C emptyrepo -c core.untrackedCache=true write-tree
 '
 
 test_done

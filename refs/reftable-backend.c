@@ -1,4 +1,4 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 #include "../abspath.h"
 #include "../chdir-notify.h"
 #include "../environment.h"
@@ -36,7 +36,7 @@ struct reftable_ref_store {
 	 */
 	struct reftable_stack *main_stack;
 	/*
-	 * The worktree stack refers to the gitdir in case the refdb is opened
+	 * The worktree stack refers to the shitdir in case the refdb is opened
 	 * via a worktree. It thus contains the per-worktree refs.
 	 */
 	struct reftable_stack *worktree_stack;
@@ -229,7 +229,7 @@ done:
 }
 
 static struct ref_store *reftable_be_init(struct repository *repo,
-					  const char *gitdir,
+					  const char *shitdir,
 					  unsigned int store_flags)
 {
 	struct reftable_ref_store *refs = xcalloc(1, sizeof(*refs));
@@ -240,26 +240,26 @@ static struct ref_store *reftable_be_init(struct repository *repo,
 	mask = umask(0);
 	umask(mask);
 
-	base_ref_store_init(&refs->base, repo, gitdir, &refs_be_reftable);
+	base_ref_store_init(&refs->base, repo, shitdir, &refs_be_reftable);
 	strmap_init(&refs->worktree_stacks);
 	refs->store_flags = store_flags;
 	refs->write_options.block_size = 4096;
 	refs->write_options.hash_id = repo->hash_algo->format_id;
 	refs->write_options.default_permissions = calc_shared_perm(0666 & ~mask);
 	refs->write_options.disable_auto_compact =
-		!git_env_bool("GIT_TEST_REFTABLE_AUTOCOMPACTION", 1);
+		!shit_env_bool("shit_TEST_REFTABLE_AUTOCOMPACTION", 1);
 
 	/*
-	 * Set up the main reftable stack that is hosted in GIT_COMMON_DIR.
+	 * Set up the main reftable stack that is hosted in shit_COMMON_DIR.
 	 * This stack contains both the shared and the main worktree refs.
 	 *
 	 * Note that we don't try to resolve the path in case we have a
 	 * worktree because `get_common_dir_noenv()` already does it for us.
 	 */
-	is_worktree = get_common_dir_noenv(&path, gitdir);
+	is_worktree = get_common_dir_noenv(&path, shitdir);
 	if (!is_worktree) {
 		strbuf_reset(&path);
-		strbuf_realpath(&path, gitdir, 0);
+		strbuf_realpath(&path, shitdir, 0);
 	}
 	strbuf_addstr(&path, "/reftable");
 	refs->err = reftable_new_stack(&refs->main_stack, path.buf,
@@ -269,7 +269,7 @@ static struct ref_store *reftable_be_init(struct repository *repo,
 
 	/*
 	 * If we're in a worktree we also need to set up the worktree reftable
-	 * stack that is contained in the per-worktree GIT_DIR.
+	 * stack that is contained in the per-worktree shit_DIR.
 	 *
 	 * Ideally, we would also add the stack to our worktree stack map. But
 	 * we have no way to figure out the worktree name here and thus can't
@@ -277,7 +277,7 @@ static struct ref_store *reftable_be_init(struct repository *repo,
 	 */
 	if (is_worktree) {
 		strbuf_reset(&path);
-		strbuf_addf(&path, "%s/reftable", gitdir);
+		strbuf_addf(&path, "%s/reftable", shitdir);
 
 		refs->err = reftable_new_stack(&refs->worktree_stack, path.buf,
 					       refs->write_options);
@@ -285,7 +285,7 @@ static struct ref_store *reftable_be_init(struct repository *repo,
 			goto done;
 	}
 
-	chdir_notify_reparent("reftables-backend $GIT_DIR", &refs->base.gitdir);
+	chdir_notify_reparent("reftables-backend $shit_DIR", &refs->base.shitdir);
 
 done:
 	assert(refs->err != REFTABLE_API_ERROR);
@@ -301,20 +301,20 @@ static int reftable_be_init_db(struct ref_store *ref_store,
 		reftable_be_downcast(ref_store, REF_STORE_WRITE, "init_db");
 	struct strbuf sb = STRBUF_INIT;
 
-	strbuf_addf(&sb, "%s/reftable", refs->base.gitdir);
+	strbuf_addf(&sb, "%s/reftable", refs->base.shitdir);
 	safe_create_dir(sb.buf, 1);
 	strbuf_reset(&sb);
 
-	strbuf_addf(&sb, "%s/HEAD", refs->base.gitdir);
+	strbuf_addf(&sb, "%s/HEAD", refs->base.shitdir);
 	write_file(sb.buf, "ref: refs/heads/.invalid");
 	adjust_shared_perm(sb.buf);
 	strbuf_reset(&sb);
 
-	strbuf_addf(&sb, "%s/refs", refs->base.gitdir);
+	strbuf_addf(&sb, "%s/refs", refs->base.shitdir);
 	safe_create_dir(sb.buf, 1);
 	strbuf_reset(&sb);
 
-	strbuf_addf(&sb, "%s/refs/heads", refs->base.gitdir);
+	strbuf_addf(&sb, "%s/refs/heads", refs->base.shitdir);
 	write_file(sb.buf, "this repository uses the reftable format");
 	adjust_shared_perm(sb.buf);
 
@@ -1021,7 +1021,7 @@ static int write_transaction_table(struct reftable_writer *writer, void *cb_data
 	const char *committer_info;
 	int ret = 0;
 
-	committer_info = git_committer_info(0);
+	committer_info = shit_committer_info(0);
 	if (split_ident_line(&committer_ident, committer_info, strlen(committer_info)))
 		BUG("failed splitting committer info");
 
@@ -1110,9 +1110,9 @@ static int write_transaction_table(struct reftable_writer *writer, void *cb_data
 				log->update_index = ts;
 				log->refname = xstrdup(u->refname);
 				memcpy(log->value.update.new_hash,
-				       u->new_oid.hash, GIT_MAX_RAWSZ);
+				       u->new_oid.hash, shit_MAX_RAWSZ);
 				memcpy(log->value.update.old_hash,
-				       tx_update->current_oid.hash, GIT_MAX_RAWSZ);
+				       tx_update->current_oid.hash, shit_MAX_RAWSZ);
 				log->value.update.message =
 					xstrndup(u->msg, arg->refs->write_options.block_size / 2);
 			}
@@ -1153,11 +1153,11 @@ static int write_transaction_table(struct reftable_writer *writer, void *cb_data
 			peel_error = peel_object(&u->new_oid, &peeled);
 			if (!peel_error) {
 				ref.value_type = REFTABLE_REF_VAL2;
-				memcpy(ref.value.val2.target_value, peeled.hash, GIT_MAX_RAWSZ);
-				memcpy(ref.value.val2.value, u->new_oid.hash, GIT_MAX_RAWSZ);
+				memcpy(ref.value.val2.target_value, peeled.hash, shit_MAX_RAWSZ);
+				memcpy(ref.value.val2.value, u->new_oid.hash, shit_MAX_RAWSZ);
 			} else if (!is_null_oid(&u->new_oid)) {
 				ref.value_type = REFTABLE_REF_VAL1;
-				memcpy(ref.value.val1, u->new_oid.hash, GIT_MAX_RAWSZ);
+				memcpy(ref.value.val1, u->new_oid.hash, shit_MAX_RAWSZ);
 			}
 
 			ret = reftable_writer_add_ref(writer, &ref);
@@ -1288,7 +1288,7 @@ static int write_copy_table(struct reftable_writer *writer, void *cb_data)
 	const char *committer_info;
 	int ret;
 
-	committer_info = git_committer_info(0);
+	committer_info = shit_committer_info(0);
 	if (split_ident_line(&committer_ident, committer_info, strlen(committer_info)))
 		BUG("failed splitting committer info");
 
@@ -1371,7 +1371,7 @@ static int write_copy_table(struct reftable_writer *writer, void *cb_data)
 		logs[logs_nr].update_index = deletion_ts;
 		logs[logs_nr].value.update.message =
 			xstrndup(arg->logmsg, arg->refs->write_options.block_size / 2);
-		memcpy(logs[logs_nr].value.update.old_hash, old_ref.value.val1, GIT_MAX_RAWSZ);
+		memcpy(logs[logs_nr].value.update.old_hash, old_ref.value.val1, shit_MAX_RAWSZ);
 		logs_nr++;
 
 		ret = read_ref_without_reload(arg->stack, "HEAD", &head_oid, &head_referent, &head_type);
@@ -1403,7 +1403,7 @@ static int write_copy_table(struct reftable_writer *writer, void *cb_data)
 	logs[logs_nr].update_index = creation_ts;
 	logs[logs_nr].value.update.message =
 		xstrndup(arg->logmsg, arg->refs->write_options.block_size / 2);
-	memcpy(logs[logs_nr].value.update.new_hash, old_ref.value.val1, GIT_MAX_RAWSZ);
+	memcpy(logs[logs_nr].value.update.new_hash, old_ref.value.val1, shit_MAX_RAWSZ);
 	logs_nr++;
 
 	/*
@@ -1977,11 +1977,11 @@ static int write_reflog_expiry_table(struct reftable_writer *writer, void *cb_da
 
 		if (!peel_object(&arg->update_oid, &peeled)) {
 			ref.value_type = REFTABLE_REF_VAL2;
-			memcpy(ref.value.val2.target_value, peeled.hash, GIT_MAX_RAWSZ);
-			memcpy(ref.value.val2.value, arg->update_oid.hash, GIT_MAX_RAWSZ);
+			memcpy(ref.value.val2.target_value, peeled.hash, shit_MAX_RAWSZ);
+			memcpy(ref.value.val2.value, arg->update_oid.hash, shit_MAX_RAWSZ);
 		} else {
 			ref.value_type = REFTABLE_REF_VAL1;
-			memcpy(ref.value.val1, arg->update_oid.hash, GIT_MAX_RAWSZ);
+			memcpy(ref.value.val1, arg->update_oid.hash, shit_MAX_RAWSZ);
 		}
 
 		ret = reftable_writer_add_ref(writer, &ref);
@@ -2128,7 +2128,7 @@ static int reftable_be_reflog_expire(struct ref_store *ref_store,
 			dest->value_type = REFTABLE_LOG_DELETION;
 		} else {
 			if ((flags & EXPIRE_REFLOGS_REWRITE) && last_hash)
-				memcpy(dest->value.update.old_hash, last_hash, GIT_MAX_RAWSZ);
+				memcpy(dest->value.update.old_hash, last_hash, shit_MAX_RAWSZ);
 			last_hash = logs[i].value.update.new_hash;
 		}
 	}

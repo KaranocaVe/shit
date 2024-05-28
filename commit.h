@@ -20,7 +20,7 @@ struct commit_list {
 
 /*
  * The size of this struct matters in full repo walk operations like
- * 'git clone' or 'git gc'. Consider using commit-slab to attach data
+ * 'shit clone' or 'shit gc'. Consider using commit-slab to attach data
  * to a commit instead of adding new fields here.
  */
 struct commit {
@@ -319,7 +319,7 @@ struct commit *get_merge_parent(const char *name);
 
 int parse_signed_commit(const struct commit *commit,
 			struct strbuf *message, struct strbuf *signature,
-			const struct git_hash_algo *algop);
+			const struct shit_hash_algo *algop);
 int remove_signature(struct strbuf *buf);
 
 /*
@@ -341,7 +341,7 @@ int compare_commits_by_author_date(const void *a_, const void *b_, void *unused)
 /*
  * Verify a single commit with check_commit_signature() and die() if it is not
  * a good signature. This isn't really suitable for general use, but is a
- * helper to implement consistent logic for pull/merge --verify-signatures.
+ * helper to implement consistent logic for poop/merge --verify-signatures.
  *
  * The check_trust parameter is meant for backward-compatibility.  The GPG
  * interface verifies key trust with a default trust level that is below the
@@ -369,7 +369,7 @@ int parse_buffer_signed_by_header(const char *buffer,
 				  unsigned long size,
 				  struct strbuf *payload,
 				  struct strbuf *signature,
-				  const struct git_hash_algo *algop);
-int add_header_signature(struct strbuf *buf, struct strbuf *sig, const struct git_hash_algo *algo);
+				  const struct shit_hash_algo *algop);
+int add_header_signature(struct strbuf *buf, struct strbuf *sig, const struct shit_hash_algo *algo);
 
 #endif /* COMMIT_H */

@@ -1,20 +1,20 @@
-git-imap-send(1)
+shit-imap-send(1)
 ================
 
 NAME
 ----
-git-imap-send - Send a collection of patches from stdin to an IMAP folder
+shit-imap-send - Send a collection of patches from stdin to an IMAP folder
 
 
 SYNOPSIS
 --------
 [verse]
-'git imap-send' [-v] [-q] [--[no-]curl]
+'shit imap-send' [-v] [-q] [--[no-]curl]
 
 
 DESCRIPTION
 -----------
-This command uploads a mailbox generated with 'git format-patch'
+This command uploads a mailbox generated with 'shit format-patch'
 into an IMAP drafts folder.  This allows patches to be sent as
 other email is when using mail clients that cannot read mailbox
 files directly. The command also works with any general mailbox
@@ -23,7 +23,7 @@ that order.
 
 Typical usage is something like:
 
-git format-patch --signoff --stdout --attach origin | git imap-send
+shit format-patch --signoff --stdout --attach origin | shit imap-send
 
 
 OPTIONS
@@ -39,12 +39,12 @@ OPTIONS
 
 --curl::
 	Use libcurl to communicate with the IMAP server, unless tunneling
-	into it.  Ignored if Git was built without the USE_CURL_FOR_IMAP_SEND
+	into it.  Ignored if shit was built without the USE_CURL_FOR_IMAP_SEND
 	option set.
 
 --no-curl::
-	Talk to the IMAP server using git's own IMAP routines instead of
-	using libcurl.  Ignored if Git was built with the NO_OPENSSL option
+	Talk to the IMAP server using shit's own IMAP routines instead of
+	using libcurl.  Ignored if shit was built with the NO_OPENSSL option
 	set.
 
 
@@ -118,7 +118,7 @@ folder will be localized.
 
 Once the commits are ready to be sent, run the following command:
 
-  $ git format-patch --cover-letter -M --stdout origin/master | git imap-send
+  $ shit format-patch --cover-letter -M --stdout origin/master | shit imap-send
 
 Just make sure to disable line wrapping in the email client (Gmail's web
 interface will wrap lines no matter what, so you need to use a real
@@ -139,8 +139,8 @@ users may wish to visit this web page for more information:
 
 SEE ALSO
 --------
-linkgit:git-format-patch[1], linkgit:git-send-email[1], mbox(5)
+linkshit:shit-format-patch[1], linkshit:shit-send-email[1], mbox(5)
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

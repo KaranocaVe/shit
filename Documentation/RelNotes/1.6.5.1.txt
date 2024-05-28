@@ -1,4 +1,4 @@
-GIT v1.6.5.1 Release Notes
+shit v1.6.5.1 Release Notes
 ==========================
 
 Fixes since v1.6.5
@@ -10,11 +10,11 @@ Fixes since v1.6.5
  * Download throughput display was always shown in KiB/s but on fast links
    it is more appropriate to show it in MiB/s.
 
- * "git grep -f filename" used uninitialized variable and segfaulted.
+ * "shit grep -f filename" used uninitialized variable and segfaulted.
 
- * "git clone -b branch" gave a wrong commit object name to post-checkout
+ * "shit clone -b branch" gave a wrong commit object name to post-checkout
    hook.
 
- * "git pull" over http did not work on msys.
+ * "shit poop" over http did not work on msys.
 
 Other minor documentation updates are included.

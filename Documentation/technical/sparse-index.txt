@@ -1,4 +1,4 @@
-Git Sparse-Index Design Document
+shit Sparse-Index Design Document
 ================================
 
 The sparse-checkout feature allows users to focus a working directory on
@@ -6,7 +6,7 @@ a subset of the files at HEAD. The cone mode patterns, enabled by
 `core.sparseCheckoutCone`, allow for very fast pattern matching to
 discover which files at HEAD belong in the sparse-checkout cone.
 
-Three important scale dimensions for a Git working directory are:
+Three important scale dimensions for a shit working directory are:
 
 * `HEAD`: How many files are present at `HEAD`?
 
@@ -22,7 +22,7 @@ fewer files than are populated, and we can only populate files at `HEAD`.
 
 Problems occur if there is an extreme imbalance in these dimensions. For
 example, if `HEAD` contains millions of paths but the populated set has
-only tens of thousands, then commands like `git status` and `git add` can
+only tens of thousands, then commands like `shit status` and `shit add` can
 be dominated by operations that require O(`HEAD`) operations instead of
 O(Populated). Primarily, the cost is in parsing and rewriting the index,
 which is filled primarily with files at `HEAD` that are marked with the
@@ -53,7 +53,7 @@ tree parsing is unnecessary and they use fewer resources than when using a
 full index.
 
 The implementation plan below follows four phases to slowly integrate with
-the sparse-index. The intention is to incrementally update Git commands to
+the sparse-index. The intention is to incrementally update shit commands to
 interact safely with the sparse-index without significant slowdowns. This
 may not always be possible, but the hope is that the primary commands that
 users need in their daily work are dramatically improved.
@@ -61,7 +61,7 @@ users need in their daily work are dramatically improved.
 Phase I: Format and initial speedups
 ------------------------------------
 
-During this phase, Git learns to enable the sparse-index and safely parse
+During this phase, shit learns to enable the sparse-index and safely parse
 one. Protections are put in place so that every consumer of the in-memory
 data structure can operate with its current assumption of every file at
 `HEAD`.
@@ -75,7 +75,7 @@ file contains sparse-directory entries.
 
 To start, we use a new required index extension, `sdir`, to allow
 inserting sparse-directory entries into indexes with file format
-versions 2, 3, and 4. This prevents Git versions that do not understand
+versions 2, 3, and 4. This prevents shit versions that do not understand
 the sparse-index from operating on one, while allowing tools that do not
 understand the sparse-index to operate on repositories as long as they do
 not interact with the index. A new format, index v5, will be introduced
@@ -122,12 +122,12 @@ needs an `ensure_full_index()` check. The basic reasons include:
    feature, so no effort is made to protect the split-index API.
 
 Even after inserting these guards, we will keep expanding sparse-indexes
-for most Git commands using the `command_requires_full_index` repository
+for most shit commands using the `command_requires_full_index` repository
 setting. This setting will be on by default and disabled one builtin at a
 time until we have sufficient confidence that all of the index operations
 are properly guarded.
 
-To complete this phase, the commands `git status` and `git add` will be
+To complete this phase, the commands `shit status` and `shit add` will be
 integrated with the sparse-index so that they operate with O(Populated)
 performance. They will be carefully tested for operations within and
 outside the sparse-checkout definition.
@@ -161,23 +161,23 @@ the most common builtins that use the index to operate as O(Populated).
 Here is a potential list of commands that could be valuable to integrate
 at this point:
 
-* `git commit`
-* `git checkout`
-* `git merge`
-* `git rebase`
+* `shit commit`
+* `shit checkout`
+* `shit merge`
+* `shit rebase`
 
-Hopefully, commands such as `git merge` and `git rebase` can benefit
+Hopefully, commands such as `shit merge` and `shit rebase` can benefit
 instead from merge algorithms that do not use the index as a data
 structure, such as the merge-ORT strategy. As these topics mature, we
 may enable the ORT strategy by default for repositories using the
 sparse-index feature.
 
-Along with `git status` and `git add`, these commands cover the majority
+Along with `shit status` and `shit add`, these commands cover the majority
 of users' interactions with the working directory. In addition, we can
 integrate with these commands:
 
-* `git grep`
-* `git rm`
+* `shit grep`
+* `shit rm`
 
 These have been proposed as some whose behavior could change when in a
 repo with a sparse-checkout definition. It would be good to include this
@@ -196,13 +196,13 @@ the previous work.
 To start, the `command_requires_full_index` option could be removed in
 favor of expanding only when hitting an API guard.
 
-There are many Git commands that could use special attention to operate as
+There are many shit commands that could use special attention to operate as
 O(Populated), while some might be so rare that it is acceptable to leave
 them with additional overhead when a sparse-index is present.
 
 Here are some commands that might be useful to update:
 
-* `git sparse-checkout set`
-* `git am`
-* `git clean`
-* `git stash`
+* `shit sparse-checkout set`
+* `shit am`
+* `shit clean`
+* `shit stash`

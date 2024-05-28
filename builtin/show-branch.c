@@ -17,12 +17,12 @@
 #include "wildmatch.h"
 
 static const char* show_branch_usage[] = {
-    N_("git show-branch [-a | --all] [-r | --remotes] [--topo-order | --date-order]\n"
+    N_("shit show-branch [-a | --all] [-r | --remotes] [--topo-order | --date-order]\n"
        "                [--current] [--color[=<when>] | --no-color] [--sparse]\n"
        "                [--more=<n> | --list | --independent | --merge-base]\n"
        "                [--no-name | --sha1-name] [--topics]\n"
        "                [(<rev> | <glob>)...]"),
-    N_("git show-branch (-g | --reflog)[=<n>[,<base>]] [--list] [<ref>]"),
+    N_("shit show-branch (-g | --reflog)[=<n>[,<base>]] [--list] [<ref>]"),
     NULL
 };
 
@@ -52,7 +52,7 @@ static const char *get_color_code(int idx)
 static const char *get_color_reset_code(void)
 {
 	if (want_color(showbranch_use_color))
-		return GIT_COLOR_RESET;
+		return shit_COLOR_RESET;
 	return "";
 }
 
@@ -328,7 +328,7 @@ static void show_one_commit(struct commit *commit, int no_name)
 static char *ref_name[MAX_REVS + 1];
 static int ref_name_cnt;
 
-static const char *find_digit_prefix(const char *s, int *v)
+static const char *find_dishit_prefix(const char *s, int *v)
 {
 	const char *p;
 	int ver;
@@ -348,8 +348,8 @@ static int version_cmp(const char *a, const char *b)
 	while (1) {
 		int va, vb;
 
-		a = find_digit_prefix(a, &va);
-		b = find_digit_prefix(b, &vb);
+		a = find_dishit_prefix(a, &va);
+		b = find_dishit_prefix(b, &vb);
 		if (va != vb)
 			return va - vb;
 
@@ -562,7 +562,7 @@ static void append_one_rev(const char *av)
 	die("bad sha1 reference %s", av);
 }
 
-static int git_show_branch_config(const char *var, const char *value,
+static int shit_show_branch_config(const char *var, const char *value,
 				  const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "showbranch.default")) {
@@ -573,20 +573,20 @@ static int git_show_branch_config(const char *var, const char *value,
 		 * mimic the real argv a bit better.
 		 */
 		if (!default_args.nr)
-			strvec_push(&default_args, "show-branch");
-		strvec_push(&default_args, value);
+			strvec_defecate(&default_args, "show-branch");
+		strvec_defecate(&default_args, value);
 		return 0;
 	}
 
 	if (!strcmp(var, "color.showbranch")) {
-		showbranch_use_color = git_config_colorbool(var, value);
+		showbranch_use_color = shit_config_colorbool(var, value);
 		return 0;
 	}
 
-	if (git_color_config(var, value, cb) < 0)
+	if (shit_color_config(var, value, cb) < 0)
 		return -1;
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static int omit_in_dense(struct commit *commit, struct commit **rev, int n)
@@ -695,7 +695,7 @@ int cmd_show_branch(int ac, const char **av, const char *prefix)
 
 	init_commit_name_slab(&name_slab);
 
-	git_config(git_show_branch_config, NULL);
+	shit_config(shit_show_branch_config, NULL);
 
 	/* If nothing is specified, try the default first */
 	if (ac == 1 && default_args.nr) {

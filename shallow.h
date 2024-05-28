@@ -14,7 +14,7 @@ int unregister_shallow(const struct object_id *oid);
 int is_repository_shallow(struct repository *r);
 
 /*
- * Lock for updating the $GIT_DIR/shallow file.
+ * Lock for updating the $shit_DIR/shallow file.
  *
  * Use `commit_shallow_file()` to commit an update, or
  * `rollback_shallow_file()` to roll it back. In either case, any
@@ -29,9 +29,9 @@ struct shallow_lock {
 	.lock = LOCK_INIT, \
 }
 
-/* commit $GIT_DIR/shallow and reset stat-validity checks */
+/* commit $shit_DIR/shallow and reset stat-validity checks */
 int commit_shallow_file(struct repository *r, struct shallow_lock *lk);
-/* rollback $GIT_DIR/shallow and reset stat-validity checks */
+/* rollback $shit_DIR/shallow and reset stat-validity checks */
 void rollback_shallow_file(struct repository *r, struct shallow_lock *lk);
 
 struct commit_list *get_shallow_commits(struct object_array *heads,

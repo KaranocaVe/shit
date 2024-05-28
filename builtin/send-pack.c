@@ -15,8 +15,8 @@
 #include "write-or-die.h"
 
 static const char * const send_pack_usage[] = {
-	N_("git send-pack [--mirror] [--dry-run] [--force]\n"
-	   "              [--receive-pack=<git-receive-pack>]\n"
+	N_("shit send-pack [--mirror] [--dry-run] [--force]\n"
+	   "              [--receive-pack=<shit-receive-pack>]\n"
 	   "              [--verbose] [--thin] [--atomic]\n"
 	   "              [--[no-]signed | --signed=(true|false|if-asked)]\n"
 	   "              [<host>:]<directory> (--all | <ref>...)"),
@@ -28,7 +28,7 @@ static struct send_pack_args args;
 static void print_helper_status(struct ref *ref)
 {
 	struct strbuf buf = STRBUF_INIT;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 
 	for (; ref; ref = ref->next) {
 		const char *msg = NULL;
@@ -129,27 +129,27 @@ static void print_helper_status(struct ref *ref)
 static int send_pack_config(const char *k, const char *v,
 			    const struct config_context *ctx, void *cb)
 {
-	if (!strcmp(k, "push.gpgsign")) {
-		switch (git_parse_maybe_bool(v)) {
+	if (!strcmp(k, "defecate.gpgsign")) {
+		switch (shit_parse_maybe_bool(v)) {
 		case 0:
-			args.push_cert = SEND_PACK_PUSH_CERT_NEVER;
+			args.defecate_cert = SEND_PACK_defecate_CERT_NEVER;
 			break;
 		case 1:
-			args.push_cert = SEND_PACK_PUSH_CERT_ALWAYS;
+			args.defecate_cert = SEND_PACK_defecate_CERT_ALWAYS;
 			break;
 		default:
 			if (!strcasecmp(v, "if-asked"))
-				args.push_cert = SEND_PACK_PUSH_CERT_IF_ASKED;
+				args.defecate_cert = SEND_PACK_defecate_CERT_IF_ASKED;
 			else
 				return error(_("invalid value for '%s'"), k);
 		}
 	}
-	return git_default_config(k, v, ctx, cb);
+	return shit_default_config(k, v, ctx, cb);
 }
 
 int cmd_send_pack(int argc, const char **argv, const char *prefix)
 {
-	struct refspec rs = REFSPEC_INIT_PUSH;
+	struct refspec rs = REFSPEC_INIT_defecate;
 	const char *remote_name = NULL;
 	struct remote *remote = NULL;
 	const char *dest = NULL;
@@ -162,13 +162,13 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 	int helper_status = 0;
 	int send_all = 0;
 	int verbose = 0;
-	const char *receivepack = "git-receive-pack";
+	const char *receivepack = "shit-receive-pack";
 	unsigned dry_run = 0;
 	unsigned send_mirror = 0;
 	unsigned force_update = 0;
 	unsigned quiet = 0;
-	int push_cert = 0;
-	struct string_list push_options = STRING_LIST_INIT_NODUP;
+	int defecate_cert = 0;
+	struct string_list defecate_options = STRING_LIST_INIT_NODUP;
 	unsigned use_thin_pack = 0;
 	unsigned atomic = 0;
 	unsigned stateless_rpc = 0;
@@ -176,7 +176,7 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 	unsigned int reject_reasons;
 	int progress = -1;
 	int from_stdin = 0;
-	struct push_cas_option cas = {0};
+	struct defecate_cas_option cas = {0};
 	int force_if_includes = 0;
 	struct packet_reader reader;
 
@@ -185,13 +185,13 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 		OPT_STRING(0, "receive-pack", &receivepack, "receive-pack", N_("receive pack program")),
 		OPT_STRING(0, "exec", &receivepack, "receive-pack", N_("receive pack program")),
 		OPT_STRING(0, "remote", &remote_name, "remote", N_("remote name")),
-		OPT_BOOL(0, "all", &send_all, N_("push all refs")),
+		OPT_BOOL(0, "all", &send_all, N_("defecate all refs")),
 		OPT_BOOL('n' , "dry-run", &dry_run, N_("dry run")),
 		OPT_BOOL(0, "mirror", &send_mirror, N_("mirror all refs")),
 		OPT_BOOL('f', "force", &force_update, N_("force updates")),
-		OPT_CALLBACK_F(0, "signed", &push_cert, "(yes|no|if-asked)", N_("GPG sign the push"),
-		  PARSE_OPT_OPTARG, option_parse_push_signed),
-		OPT_STRING_LIST(0, "push-option", &push_options,
+		OPT_CALLBACK_F(0, "signed", &defecate_cert, "(yes|no|if-asked)", N_("GPG sign the defecate"),
+		  PARSE_OPT_OPTARG, option_parse_defecate_signed),
+		OPT_STRING_LIST(0, "defecate-option", &defecate_options,
 				N_("server-specific"),
 				N_("option to transmit")),
 		OPT_BOOL(0, "progress", &progress, N_("force progress reporting")),
@@ -202,13 +202,13 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 		OPT_BOOL(0, "helper-status", &helper_status, N_("print status from remote helper")),
 		OPT_CALLBACK_F(0, "force-with-lease", &cas, N_("<refname>:<expect>"),
 		  N_("require old value of ref to be at this value"),
-		  PARSE_OPT_OPTARG, parseopt_push_cas_option),
+		  PARSE_OPT_OPTARG, parseopt_defecate_cas_option),
 		OPT_BOOL(0, TRANS_OPT_FORCE_IF_INCLUDES, &force_if_includes,
 			 N_("require remote updates to be integrated locally")),
 		OPT_END()
 	};
 
-	git_config(send_pack_config, NULL);
+	shit_config(send_pack_config, NULL);
 	argc = parse_options(argc, argv, prefix, options, send_pack_usage, 0);
 	if (argc > 0) {
 		dest = argv[0];
@@ -223,12 +223,12 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 	args.send_mirror = send_mirror;
 	args.force_update = force_update;
 	args.quiet = quiet;
-	args.push_cert = push_cert;
+	args.defecate_cert = defecate_cert;
 	args.progress = progress;
 	args.use_thin_pack = use_thin_pack;
 	args.atomic = atomic;
 	args.stateless_rpc = stateless_rpc;
-	args.push_options = push_options.nr ? &push_options : NULL;
+	args.defecate_options = defecate_options.nr ? &defecate_options : NULL;
 	args.url = dest;
 
 	if (from_stdin) {
@@ -269,7 +269,7 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 		fd[0] = 0;
 		fd[1] = 1;
 	} else {
-		conn = git_connect(fd, dest, "git-receive-pack", receivepack,
+		conn = shit_connect(fd, dest, "shit-receive-pack", receivepack,
 			args.verbose ? CONNECT_VERBOSE : 0);
 	}
 
@@ -301,16 +301,16 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 		flags |= MATCH_REFS_MIRROR;
 
 	/* match them up */
-	if (match_push_refs(local_refs, &remote_refs, &rs, flags))
+	if (match_defecate_refs(local_refs, &remote_refs, &rs, flags))
 		return -1;
 
 	if (!is_empty_cas(&cas))
-		apply_push_cas(&cas, remote, remote_refs);
+		apply_defecate_cas(&cas, remote, remote_refs);
 
 	if (!is_empty_cas(&cas) && force_if_includes)
 		cas.use_force_if_includes = 1;
 
-	set_ref_status_for_push(remote_refs, args.send_mirror,
+	set_ref_status_for_defecate(remote_refs, args.send_mirror,
 		args.force_update);
 
 	ret = send_pack(&args, fd, conn, remote_refs, &extra_have);
@@ -324,7 +324,7 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 	ret |= finish_connect(conn);
 
 	if (!helper_status)
-		transport_print_push_status(dest, remote_refs, args.verbose, 0, &reject_reasons);
+		transport_print_defecate_status(dest, remote_refs, args.verbose, 0, &reject_reasons);
 
 	if (!args.dry_run && remote) {
 		struct ref *ref;
@@ -332,7 +332,7 @@ int cmd_send_pack(int argc, const char **argv, const char *prefix)
 			transport_update_tracking_ref(remote, ref, args.verbose);
 	}
 
-	if (!ret && !transport_refs_pushed(remote_refs))
+	if (!ret && !transport_refs_defecateed(remote_refs))
 		/* stable plumbing output; do not modify or localize */
 		fprintf(stderr, "Everything up-to-date\n");
 

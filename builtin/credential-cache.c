@@ -14,7 +14,7 @@
 #define FLAG_SPAWN 0x1
 #define FLAG_RELAY 0x2
 
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 
 static int connection_closed(int error)
 {
@@ -74,10 +74,10 @@ static void spawn_daemon(const char *socket)
 	char buf[128];
 	int r;
 
-	strvec_pushl(&daemon.args,
+	strvec_defecatel(&daemon.args,
 		     "credential-cache--daemon", socket,
 		     NULL);
-	daemon.git_cmd = 1;
+	daemon.shit_cmd = 1;
 	daemon.no_stdin = 1;
 	daemon.out = -1;
 
@@ -119,7 +119,7 @@ static char *get_socket_path(void)
 {
 	struct stat sb;
 	char *old_dir, *socket;
-	old_dir = interpolate_path("~/.git-credential-cache", 0);
+	old_dir = interpolate_path("~/.shit-credential-cache", 0);
 	if (old_dir && !stat(old_dir, &sb) && S_ISDIR(sb.st_mode))
 		socket = xstrfmt("%s/socket", old_dir);
 	else
@@ -141,7 +141,7 @@ int cmd_credential_cache(int argc, const char **argv, const char *prefix)
 	int timeout = 900;
 	const char *op;
 	const char * const usage[] = {
-		"git credential-cache [<options>] <action>",
+		"shit credential-cache [<options>] <action>",
 		NULL
 	};
 	struct option options[] = {
@@ -184,9 +184,9 @@ int cmd_credential_cache(int argc, const char **argv, const char *prefix)
 int cmd_credential_cache(int argc, const char **argv, const char *prefix)
 {
 	const char * const usage[] = {
-		"git credential-cache [options] <action>",
+		"shit credential-cache [options] <action>",
 		"",
-		"credential-cache is disabled in this build of Git",
+		"credential-cache is disabled in this build of shit",
 		NULL
 	};
 	struct option options[] = { OPT_END() };

@@ -2,7 +2,7 @@
 #
 #
 
-test_description='git mktag: tag object verify test'
+test_description='shit mktag: tag object verify test'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -34,13 +34,13 @@ check_verify_failure () {
 	done &&
 
 	test_expect_success "fail with [--[no-]strict]: $subject" '
-		test_must_fail git mktag <tag.sig 2>err &&
+		test_must_fail shit mktag <tag.sig 2>err &&
 		if test -z "$no_strict"
 		then
-			test_must_fail git mktag <tag.sig 2>err2 &&
+			test_must_fail shit mktag <tag.sig 2>err2 &&
 			test_cmp err err2
 		else
-			git mktag --no-strict <tag.sig
+			shit mktag --no-strict <tag.sig
 		fi
 	'
 
@@ -50,26 +50,26 @@ check_verify_failure () {
 		# Reset any leftover state from the last $subject
 		rm -rf bad-tag &&
 
-		git init --bare bad-tag &&
-		bad_tag=$(git -C bad-tag hash-object -t tag -w --stdin --literally <tag.sig)
+		shit init --bare bad-tag &&
+		bad_tag=$(shit -C bad-tag hash-object -t tag -w --stdin --literally <tag.sig)
 	'
 
 	test_expect_success "hash-object & fsck unreachable: $subject" '
 		if test -n "$fsck_obj_ok"
 		then
-			git -C bad-tag fsck
+			shit -C bad-tag fsck
 		else
-			test_must_fail git -C bad-tag fsck
+			test_must_fail shit -C bad-tag fsck
 		fi
 	'
 
 	test_expect_success "update-ref & fsck reachable: $subject" '
 		# Make sure the earlier test created it for us
-		git rev-parse "$bad_tag" &&
+		shit rev-parse "$bad_tag" &&
 
 		# The update-ref of the bad content will fail, do it
 		# anyway to see if it segfaults
-		test_might_fail git -C bad-tag update-ref "$tag_ref" "$bad_tag" &&
+		test_might_fail shit -C bad-tag update-ref "$tag_ref" "$bad_tag" &&
 
 		# Manually create the broken, we cannot do it with
 		# update-ref
@@ -78,42 +78,42 @@ check_verify_failure () {
 
 		# Unlike fsck-ing unreachable content above, this
 		# will always fail.
-		test_must_fail git -C bad-tag fsck
+		test_must_fail shit -C bad-tag fsck
 	'
 
 	test_expect_success "for-each-ref: $subject" '
 		# Make sure the earlier test created it for us
-		git rev-parse "$bad_tag" &&
+		shit rev-parse "$bad_tag" &&
 
 		test-tool -C bad-tag ref-store main delete-refs 0 msg "$tag_ref" &&
 		test-tool -C bad-tag ref-store main update-ref msg "$tag_ref" $bad_tag $ZERO_OID REF_SKIP_OID_VERIFICATION &&
 
 		printf "%s tag\t%s\n" "$bad_tag" "$tag_ref" >expected &&
-		git -C bad-tag for-each-ref "$tag_ref" >actual &&
+		shit -C bad-tag for-each-ref "$tag_ref" >actual &&
 		test_cmp expected actual &&
 
-		test_must_fail git -C bad-tag for-each-ref --format="%(*objectname)"
+		test_must_fail shit -C bad-tag for-each-ref --format="%(*objectname)"
 	'
 
 	test_expect_success "fast-export & fast-import: $subject" '
 		# Make sure the earlier test created it for us
-		git rev-parse "$bad_tag" &&
+		shit rev-parse "$bad_tag" &&
 
-		test_must_fail git -C bad-tag fast-export --all &&
-		test_must_fail git -C bad-tag fast-export "$bad_tag"
+		test_must_fail shit -C bad-tag fast-export --all &&
+		test_must_fail shit -C bad-tag fast-export "$bad_tag"
 	'
 }
 
 test_expect_mktag_success() {
 	test_expect_success "$1" '
-		git hash-object -t tag -w --stdin <tag.sig >expected &&
-		git fsck --strict &&
+		shit hash-object -t tag -w --stdin <tag.sig >expected &&
+		shit fsck --strict &&
 
-		git mktag <tag.sig >hash &&
+		shit mktag <tag.sig >hash &&
 		test_cmp expected hash &&
-		test_when_finished "git update-ref -d refs/tags/mytag $(cat hash)" &&
-		git update-ref refs/tags/mytag $(cat hash) $(test_oid zero) &&
-		git fsck --strict
+		test_when_finished "shit update-ref -d refs/tags/mytag $(cat hash)" &&
+		shit update-ref refs/tags/mytag $(cat hash) $(test_oid zero) &&
+		shit fsck --strict
 	'
 }
 
@@ -123,10 +123,10 @@ test_expect_mktag_success() {
 test_expect_success 'setup' '
 	test_commit A &&
 	test_commit B &&
-	head=$(git rev-parse --verify HEAD) &&
-	head_parent=$(git rev-parse --verify HEAD~) &&
-	tree=$(git rev-parse HEAD^{tree}) &&
-	blob=$(git rev-parse --verify HEAD:B.t)
+	head=$(shit rev-parse --verify HEAD) &&
+	head_parent=$(shit rev-parse --verify HEAD~) &&
+	tree=$(shit rev-parse HEAD^{tree}) &&
+	blob=$(shit rev-parse --verify HEAD:B.t)
 '
 
 test_expect_success 'basic usage' '
@@ -136,9 +136,9 @@ test_expect_success 'basic usage' '
 	tag mytag
 	tagger T A Gger <tagger@example.com> 1206478233 -0500
 	EOF
-	git mktag <tag.sig &&
-	git mktag --end-of-options <tag.sig &&
-	test_expect_code 129 git mktag --unknown-option
+	shit mktag <tag.sig &&
+	shit mktag --end-of-options <tag.sig &&
+	test_expect_code 129 shit mktag --unknown-option
 '
 
 ############################################################
@@ -289,8 +289,8 @@ check_verify_failure 'verify object (hash/type) check -- mismatched type, valid 
 #  9.5. verify object (hash/type) check -- replacement
 
 test_expect_success 'setup replacement of commit -> commit and tree -> blob' '
-	git replace $head_parent $head &&
-	git replace -f $tree $blob
+	shit replace $head_parent $head &&
+	shit replace -f $tree $blob
 '
 
 cat >tag.sig <<EOF
@@ -522,22 +522,22 @@ check_verify_failure 'detect invalid header entry' \
 	--fsck-obj-ok
 
 test_expect_success 'invalid header entry config & fsck' '
-	test_must_fail git mktag <tag.sig &&
-	git mktag --no-strict <tag.sig &&
+	test_must_fail shit mktag <tag.sig &&
+	shit mktag --no-strict <tag.sig &&
 
-	test_must_fail git -c fsck.extraHeaderEntry=error mktag <tag.sig &&
-	test_must_fail git -c fsck.extraHeaderEntry=error mktag --no-strict <tag.sig &&
+	test_must_fail shit -c fsck.extraHeaderEntry=error mktag <tag.sig &&
+	test_must_fail shit -c fsck.extraHeaderEntry=error mktag --no-strict <tag.sig &&
 
-	test_must_fail git -c fsck.extraHeaderEntry=warn mktag <tag.sig &&
-	git -c fsck.extraHeaderEntry=warn mktag --no-strict <tag.sig &&
+	test_must_fail shit -c fsck.extraHeaderEntry=warn mktag <tag.sig &&
+	shit -c fsck.extraHeaderEntry=warn mktag --no-strict <tag.sig &&
 
-	git -c fsck.extraHeaderEntry=ignore mktag <tag.sig &&
-	git -c fsck.extraHeaderEntry=ignore mktag --no-strict <tag.sig &&
+	shit -c fsck.extraHeaderEntry=ignore mktag <tag.sig &&
+	shit -c fsck.extraHeaderEntry=ignore mktag --no-strict <tag.sig &&
 
-	git fsck &&
-	git -c fsck.extraHeaderEntry=warn fsck 2>err &&
+	shit fsck &&
+	shit -c fsck.extraHeaderEntry=warn fsck 2>err &&
 	grep "warning .*extraHeaderEntry:" err &&
-	test_must_fail git -c fsck.extraHeaderEntry=error 2>err fsck &&
+	test_must_fail shit -c fsck.extraHeaderEntry=error 2>err fsck &&
 	grep "error .* extraHeaderEntry:" err
 '
 

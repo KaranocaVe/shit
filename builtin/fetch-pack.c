@@ -10,8 +10,8 @@
 #include "protocol.h"
 
 static const char fetch_pack_usage[] =
-"git fetch-pack [--all] [--stdin] [--quiet | -q] [--keep | -k] [--thin] "
-"[--include-tag] [--upload-pack=<git-upload-pack>] [--depth=<n>] "
+"shit fetch-pack [--all] [--stdin] [--quiet | -q] [--keep | -k] [--thin] "
+"[--include-tag] [--upload-pack=<shit-upload-pack>] [--depth=<n>] "
 "[--no-progress] [--diag-url] [-v] [<host>:]<directory> [<refs>...]";
 
 static void add_sought_entry(struct ref ***sought, int *nr, int *alloc,
@@ -66,7 +66,7 @@ int cmd_fetch_pack(int argc, const char **argv, const char *prefix UNUSED)
 
 	memset(&args, 0, sizeof(args));
 	list_objects_filter_init(&args.filter_options);
-	args.uploadpack = "git-upload-pack";
+	args.uploadpack = "shit-upload-pack";
 
 	for (i = 1; i < argc && *argv[i] == '-'; i++) {
 		const char *arg = argv[i];
@@ -214,7 +214,7 @@ int cmd_fetch_pack(int argc, const char **argv, const char *prefix UNUSED)
 		int flags = args.verbose ? CONNECT_VERBOSE : 0;
 		if (args.diag_url)
 			flags |= CONNECT_DIAG_URL;
-		conn = git_connect(fd, dest, "git-upload-pack",
+		conn = shit_connect(fd, dest, "shit-upload-pack",
 				   args.uploadpack, flags);
 		if (!conn)
 			return args.diag_url ? 0 : 1;
@@ -263,8 +263,8 @@ int cmd_fetch_pack(int argc, const char **argv, const char *prefix UNUSED)
 	ret = !ref;
 
 	/*
-	 * If the heads to pull were given, we should have consumed
-	 * all of them by matching the remote.  Otherwise, 'git fetch
+	 * If the heads to poop were given, we should have consumed
+	 * all of them by matching the remote.  Otherwise, 'shit fetch
 	 * remote no-such-ref' would silently succeed without issuing
 	 * an error.
 	 */

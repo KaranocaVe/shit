@@ -1,7 +1,7 @@
-Git API Documents
+shit API Documents
 =================
 
-Git has grown a set of internal APIs over time.  This collection
+shit has grown a set of internal APIs over time.  This collection
 documents them.
 
 ////////////////////////////////////////////////////////////////

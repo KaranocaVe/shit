@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "object-store-ll.h"
 #include "dir.h"
 #include "environment.h"
@@ -334,7 +334,7 @@ static int write_entry(struct cache_entry *ce, char *path, struct conv_attrs *ca
 		}
 
 		/*
-		 * Convert from git internal format to working tree format
+		 * Convert from shit internal format to working tree format
 		 */
 		if (dco && dco->state != CE_NO_DELAY) {
 			ret = async_convert_to_working_tree_ca(ca, ce->name,
@@ -382,7 +382,7 @@ static int write_entry(struct cache_entry *ce, char *path, struct conv_attrs *ca
 			return error("unable to write file %s", path);
 		break;
 
-	case S_IFGITLINK:
+	case S_IFshitLINK:
 		if (to_tempfile)
 			return error("cannot create temporary submodule %s", ce->name);
 		if (mkdir(path, 0777) < 0)
@@ -433,7 +433,7 @@ static void mark_colliding_entries(const struct checkout *state,
 {
 	int i, trust_ino = check_stat;
 
-#if defined(GIT_WINDOWS_NATIVE) || defined(__CYGWIN__)
+#if defined(shit_WINDOWS_NATIVE) || defined(__CYGWIN__)
 	trust_ino = 0;
 #endif
 
@@ -544,8 +544,8 @@ int checkout_entry_ca(struct cache_entry *ce, struct conv_attrs *ca,
 		 * just do the right thing)
 		 */
 		if (S_ISDIR(st.st_mode)) {
-			/* If it is a gitlink, leave it alone! */
-			if (S_ISGITLINK(ce->ce_mode))
+			/* If it is a shitlink, leave it alone! */
+			if (S_ISshitLINK(ce->ce_mode))
 				return 0;
 			/*
 			 * We must avoid replacing submodules' leading
@@ -597,5 +597,5 @@ void unlink_entry(const struct cache_entry *ce, const char *super_prefix)
 
 int remove_or_warn(unsigned int mode, const char *file)
 {
-	return S_ISGITLINK(mode) ? rmdir_or_warn(file) : unlink_or_warn(file);
+	return S_ISshitLINK(mode) ? rmdir_or_warn(file) : unlink_or_warn(file);
 }

@@ -1,16 +1,16 @@
-Git v2.43 Release Notes
+shit v2.43 Release Notes
 =======================
 
 Backward Compatibility Notes
 
- * The "--rfc" option of "git format-patch" used to be a valid way to
+ * The "--rfc" option of "shit format-patch" used to be a valid way to
    override an earlier "--subject-prefix=<something>" on the command
    line and replace it with "[RFC PATCH]", but from this release, it
    merely prefixes the string "RFC " in front of the given subject
    prefix.  If you are negatively affected by this change, please use
    "--subject-prefix=PATCH --rfc" as a replacement.
 
- * In Git 2.42, "git rev-list --stdin" learned to take non-revisions
+ * In shit 2.42, "shit rev-list --stdin" learned to take non-revisions
    (like "--not") from the standard input, but the way such a "--not" was
    handled was quite confusing, which has been rethought.  The updated
    rule is that "--not" given from the command line only affects revs
@@ -28,10 +28,10 @@ UI, Workflows & Features
    with the same codepath.  The message has been rephrased to say that
    the branch is "in use" to avoid confusion.
 
- * Hourly and other schedules of "git maintenance" jobs are randomly
+ * Hourly and other schedules of "shit maintenance" jobs are randomly
    distributed now.
 
- * "git cmd -h" learned to signal which options can be negated by
+ * "shit cmd -h" learned to signal which options can be negated by
    listing such options like "--[no-]opt".
 
  * The way authentication related data other than passwords (e.g.,
@@ -42,9 +42,9 @@ UI, Workflows & Features
    match which credential to erase; they erased the wrong entry in
    some cases.
 
- * Git GUI updates.
+ * shit GUI updates.
 
- * "git format-patch" learned a new "--description-file" option that
+ * "shit format-patch" learned a new "--description-file" option that
    lets cover letter description to be fed; this can be used on
    detached HEAD where there is no branch description available, and
    also can override the branch description if there is one.
@@ -53,74 +53,74 @@ UI, Workflows & Features
    be created is now supported even when we are sending unreachable
    objects to cruft packs.
 
- * "git format-patch --rfc --subject-prefix=<foo>" used to ignore the
+ * "shit format-patch --rfc --subject-prefix=<foo>" used to ignore the
    "--subject-prefix" option and used "[RFC PATCH]"; now we will add
    "RFC" prefix to whatever subject prefix is specified.
 
- * "git log --format" has been taught the %(decorate) placeholder for
+ * "shit log --format" has been taught the %(decorate) placeholder for
    further customization over what the "--decorate" option offers.
 
- * The default log message created by "git revert", when reverting a
+ * The default log message created by "shit revert", when reverting a
    commit that records a revert, has been tweaked, to encourage people
    to describe complex "revert of revert of revert" situations better in
    their own words.
 
  * The command-line completion support (in contrib/) learned to
-   complete "git commit --trailer=" for possible trailer keys.
+   complete "shit commit --trailer=" for possible trailer keys.
 
- * "git update-index" learned the "--show-index-version" option to
+ * "shit update-index" learned the "--show-index-version" option to
    inspect the index format version used by the on-disk index file.
 
- * "git diff" learned the "diff.statNameWidth" configuration variable,
+ * "shit diff" learned the "diff.statNameWidth" configuration variable,
    to give the default width for the name part in the "--stat" output.
 
- * "git range-diff --notes=foo" compared "log --notes=foo --notes" of
+ * "shit range-diff --notes=foo" compared "log --notes=foo --notes" of
    the two ranges, instead of using just the specified notes tree,
    which has been corrected to use only the specified notes tree.
 
  * The command line completion script (in contrib/) can be told to
-   complete aliases by including ": git <cmd> ;" in the alias to tell
-   it that the alias should be completed in a similar way to how "git
+   complete aliases by including ": shit <cmd> ;" in the alias to tell
+   it that the alias should be completed in a similar way to how "shit
    <cmd>" is completed.  The parsing code for the alias has been
    loosened to allow ';' without an extra space before it.
 
- * "git for-each-ref" and friends learned to apply mailmap to
+ * "shit for-each-ref" and friends learned to apply mailmap to
    authorname and other fields in a more flexible way than using
    separate placeholder letters like %a[eElL] every time we want to
    come up with small variants.
 
- * "git repack" machinery learned to pay attention to the "--filter="
+ * "shit repack" machinery learned to pay attention to the "--filter="
    option.
 
- * "git repack" learned the "--max-cruft-size" option to prevent cruft
+ * "shit repack" learned the "--max-cruft-size" option to prevent cruft
    packs from growing without bounds.
 
- * "git merge-tree" learned to take strategy backend specific options
-   via the "-X" option, like "git merge" does.
+ * "shit merge-tree" learned to take strategy backend specific options
+   via the "-X" option, like "shit merge" does.
 
- * "git log" and friends learned the "--dd" option that is a
+ * "shit log" and friends learned the "--dd" option that is a
    short-hand for "--diff-merges=first-parent -p".
 
  * The attribute subsystem learned to honor the "attr.tree"
    configuration variable that specifies which tree to read the
-   .gitattributes files from.
+   .shitattributes files from.
 
- * "git merge-file" learns a mode to read three variants of the
+ * "shit merge-file" learns a mode to read three variants of the
    contents to be merged from blob objects.
 
 
 Performance, Internal Implementation, Development Support etc.
 
- * "git check-attr" has been taught to work better with sparse-index.
+ * "shit check-attr" has been taught to work better with sparse-index.
 
  * It may be tempting to leave the help text NULL for a command line
-   option that is either hidden or too obvious, but "git subcmd -h"
-   and "git subcmd --help-all" would have segfaulted if done so.  Now
+   option that is either hidden or too obvious, but "shit subcmd -h"
+   and "shit subcmd --help-all" would have segfaulted if done so.  Now
    the help text is truly optional.
 
  * Tests that are known to pass with LSan are now marked as such.
 
- * Flaky "git p4" tests, as well as "git svn" tests, are now skipped
+ * Flaky "shit p4" tests, as well as "shit svn" tests, are now skipped
    in the (rather expensive) sanitizer CI job.
 
  * Tests with LSan from time to time seem to emit harmless messages
@@ -137,7 +137,7 @@ Performance, Internal Implementation, Development Support etc.
    narrowed to take only blob objects for now, with no real loss of
    functionality.
 
- * GitHub CI workflow has learned to trigger Coverity check.
+ * shitHub CI workflow has learned to trigger Coverity check.
 
  * Test coverage for trailers has been improved.
 
@@ -147,7 +147,7 @@ Performance, Internal Implementation, Development Support etc.
  * The codepaths that read "chunk" formatted files have been corrected
    to pay attention to the chunk size and notice broken files.
 
- * Replace macos-12 used at GitHub CI with macos-13.
+ * Replace macos-12 used at shitHub CI with macos-13.
    (merge 682a868f67 js/ci-use-macos-13 later to maint).
 
 
@@ -159,14 +159,14 @@ Fixes since v2.42
 
  * Scalar updates.
 
- * Tweak GitHub Actions CI so that pushing the same commit to multiple
+ * Tweak shitHub Actions CI so that defecateing the same commit to multiple
    branch tips at the same time will not waste building and testing
    the same thing twice.
 
  * The commit-graph verification code that detects a mixture of zero and
    non-zero generation numbers has been updated.
 
- * "git diff -w --exit-code" with various options did not work
+ * "shit diff -w --exit-code" with various options did not work
    correctly, which has been corrected.
 
  * The "transfer.unpackLimit" configuration variable ought to be used
@@ -177,10 +177,10 @@ Fixes since v2.42
  * The use of API between two calls to require_clean_work_tree() from
    the sequencer code has been cleaned up for consistency.
 
- * "git diff --no-such-option" and other corner cases around the exit
+ * "shit diff --no-such-option" and other corner cases around the exit
    status of the "diff" command have been corrected.
 
- * "git for-each-ref --sort='contents:size'" sorted the refs according
+ * "shit for-each-ref --sort='contents:size'" sorted the refs according
    to size numerically, giving a ref that points at a blob twelve-byte
    (12) long before showing a blob hundred-byte (100) long, which has
    been corrected.
@@ -195,36 +195,36 @@ Fixes since v2.42
  * References from a description of the `--patch` option in various
    manual pages have been simplified and improved.
 
- * "git grep -e A --no-or -e B" is accepted, even though the negation
+ * "shit grep -e A --no-or -e B" is accepted, even though the negation
    of the "--or" option did not mean anything, which has been tightened.
 
  * The completion script (in contrib/) has been taught to treat the
-   "-t" option to "git checkout" and "git switch" just like the
+   "-t" option to "shit checkout" and "shit switch" just like the
    "--track" option, to complete remote-tracking branches.
 
- * "git diff --no-index -R <(one) <(two)" did not work correctly,
+ * "shit diff --no-index -R <(one) <(two)" did not work correctly,
    which has been corrected.
 
- * "git maintenance" timers' implementation has been updated, based on
+ * "shit maintenance" timers' implementation has been updated, based on
    systemd timers, to work with WSL.
 
- * "git diff --cached" codepath did not fill the necessary stat
+ * "shit diff --cached" codepath did not fill the necessary stat
    information for a file when fsmonitor knows it is clean and ended
    up behaving as if it were not clean, which has been corrected.
 
- * How "alias.foo = : git cmd ; aliased-command-string" should be
+ * How "alias.foo = : shit cmd ; aliased-command-string" should be
    spelled with necessary whitespace around punctuation marks to work
    has been more clearly documented (but this will be moot with newer
-   versions of Git where the parsing rules have been improved).
+   versions of shit where the parsing rules have been improved).
 
  * HTTP Header redaction code has been adjusted for a newer version of
    cURL library that shows its traces differently from earlier
    versions.
 
- * An error message given by "git send-email", when given a malformed
+ * An error message given by "shit send-email", when given a malformed
    address, did not show the offending address, which has been corrected.
 
- * UBSan options were not propagated through the test framework to git
+ * UBSan options were not propagated through the test framework to shit
    run via the httpd, unlike ASan options, which has been corrected.
 
  * "checkout --merge -- path" and "update-index --unresolve path" did
@@ -239,7 +239,7 @@ Fixes since v2.42
  * Update mailmap entry for Derrick.
    (merge 6e5457d8c7 ds/mailmap-entry-update later to maint).
 
- * In the ".gitmodules" files, submodules are keyed by their names,
+ * In the ".shitmodules" files, submodules are keyed by their names,
    and the path to the submodule whose name is $name is specified by
    the submodule.$name.path variable.  There were a few codepaths that
    mixed the name and path up when consulting the submodule database,
@@ -248,22 +248,22 @@ Fixes since v2.42
    the problem does not surface until it is moved to a different path,
    which apparently happens very rarely.
 
- * "git diff --merge-base X other args..." insisted that X must be a
+ * "shit diff --merge-base X other args..." insisted that X must be a
    commit and errored out when given an annotated tag that peels to a
    commit, but we only need it to be a committish.  This has been
    corrected.
    (merge 4adceb5a29 ar/diff-index-merge-base-fix later to maint).
 
- * "git merge-tree" used to segfault when the "--attr-source"
+ * "shit merge-tree" used to segfault when the "--attr-source"
    option is used, which has been corrected.
    (merge e95bafc52f jc/merge-ort-attr-index-fix later to maint).
 
- * Unlike "git log --pretty=%D", "git log --pretty="%(decorate)" did
+ * Unlike "shit log --pretty=%D", "shit log --pretty="%(decorate)" did
    not auto-initialize the decoration subsystem, which has been
    corrected.
 
- * Feeding "git stash store" with a random commit that was not created
-   by "git stash create" now errors out.
+ * Feeding "shit stash store" with a random commit that was not created
+   by "shit stash create" now errors out.
    (merge d9b6634589 jc/fail-stash-to-store-non-stash later to maint).
 
  * The index file has room only for the lower 32-bit of the file size in
@@ -273,27 +273,27 @@ Fixes since v2.42
    storing a bogus sd_size value instead for such files.
    (merge 5143ac07b1 bc/racy-4gb-files later to maint).
 
- * "git p4" tried to store symlinks to LFS when told, but has been
+ * "shit p4" tried to store symlinks to LFS when told, but has been
    fixed not to do so, because it does not make sense.
    (merge 10c89a02b0 mm/p4-symlink-with-lfs later to maint).
 
- * The codepath to handle recipient addresses `git send-email
+ * The codepath to handle recipient addresses `shit send-email
    --compose` learns from the user was completely broken, which has
    been corrected.
    (merge 3ec6167567 jk/send-email-fix-addresses-from-composed-messages later to maint).
 
- * "cd sub && git grep -f patterns" tried to read "patterns" file at
+ * "cd sub && shit grep -f patterns" tried to read "patterns" file at
    the top level of the working tree; it has been corrected to read
    "sub/patterns" instead.
 
- * "git reflog expire --single-worktree" has been broken for the past
+ * "shit reflog expire --single-worktree" has been broken for the past
    20 months or so, which has been corrected.
 
- * "git send-email" did not have certain pieces of data computed yet
+ * "shit send-email" did not have certain pieces of data computed yet
    when it tried to validate the outgoing messages and its recipient
    addresses, which has been sorted out.
 
- * "git bugreport" learned to complain when it received a command line
+ * "shit bugreport" learned to complain when it received a command line
    argument that it will not use.
 
  * The codepath to traverse the commit-graph learned to notice that a
@@ -302,10 +302,10 @@ Fixes since v2.42
    what is in commit-graph.
    (merge 7a5d604443 ps/do-not-trust-commit-graph-blindly-for-existence later to maint).
 
- * "git rev-list --missing" did not work for missing commit objects,
+ * "shit rev-list --missing" did not work for missing commit objects,
    which has been corrected.
 
- * "git rev-list --unpacked --objects" failed to exclude packed
+ * "shit rev-list --unpacked --objects" failed to exclude packed
    non-commit objects, which has been corrected.
    (merge 7b3c8e9f38 tb/rev-list-unpacked-fix later to maint).
 

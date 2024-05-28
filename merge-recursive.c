@@ -1,9 +1,9 @@
 /*
- * Recursive Merge algorithm stolen from git-merge-recursive.py by
+ * Recursive Merge algorithm stolen from shit-merge-recursive.py by
  * Fredrik Kuivinen.
  * The thieves were Alex Riesen and Johannes Schindelin, in June/July 2006
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "merge-recursive.h"
 
 #include "alloc.h"
@@ -504,7 +504,7 @@ static int get_tree_entry_if_blob(struct repository *r,
 
 /*
  * Returns an index_entry instance which doesn't have to correspond to
- * a real cache entry in Git's index.
+ * a real cache entry in shit's index.
  */
 static struct stage_data *insert_stage_data(struct repository *r,
 		const char *path,
@@ -946,7 +946,7 @@ static int update_file_flags(struct merge_options *opt,
 		void *buf;
 		unsigned long size;
 
-		if (S_ISGITLINK(contents->mode)) {
+		if (S_ISshitLINK(contents->mode)) {
 			/*
 			 * We may later decide to recursively descend into
 			 * the submodule directory and update its index
@@ -1013,7 +1013,7 @@ static int update_file_flags(struct merge_options *opt,
 update_index:
 	if (!ret && update_cache) {
 		int refresh = (!opt->priv->call_depth &&
-			       contents->mode != S_IFGITLINK);
+			       contents->mode != S_IFshitLINK);
 		if (add_cacheinfo(opt, contents, path, 0, refresh,
 				  ADD_CACHE_OK_TO_ADD))
 			return -1;
@@ -1119,7 +1119,7 @@ static int find_first_merges(struct repository *repo,
 	struct commit *commit;
 	int contains_another;
 
-	char merged_revision[GIT_MAX_HEXSZ + 2];
+	char merged_revision[shit_MAX_HEXSZ + 2];
 	const char *rev_args[] = { "rev-list", "--merges", "--ancestry-path",
 				   "--all", merged_revision, NULL };
 	struct rev_info revs;
@@ -1334,7 +1334,7 @@ static int merge_submodule(struct merge_options *opt,
 		       "If this is correct simply add it to the index "
 		       "for example\n"
 		       "by using:\n\n"
-		       "  git update-index --cacheinfo 160000 %s \"%s\"\n\n"
+		       "  shit update-index --cacheinfo 160000 %s \"%s\"\n\n"
 		       "which will accept this suggestion.\n"),
 		       oid_to_hex(&merges.objects[0].item->oid), path);
 		break;
@@ -1435,7 +1435,7 @@ static int merge_mode_and_contents(struct merge_options *opt,
 				return ret;
 			/* FIXME: bug, what if modes didn't match? */
 			result->clean = (merge_status == 0);
-		} else if (S_ISGITLINK(a->mode)) {
+		} else if (S_ISshitLINK(a->mode)) {
 			int clean = merge_submodule(opt, &result->blob.oid,
 						    o->path,
 						    &o->oid,
@@ -3162,7 +3162,7 @@ static int handle_content_merge(struct merge_file_info *mfi,
 
 	assert(o->path && a->path && b->path);
 	if (ci && dir_in_way(opt->repo->index, path, !opt->priv->call_depth,
-			     S_ISGITLINK(ci->ren1->pair->two->mode)))
+			     S_ISshitLINK(ci->ren1->pair->two->mode)))
 		df_conflict_remains = 1;
 
 	if (merge_mode_and_contents(opt, o, a, b, path,
@@ -3202,7 +3202,7 @@ static int handle_content_merge(struct merge_file_info *mfi,
 	}
 
 	if (!mfi->clean) {
-		if (S_ISGITLINK(mfi->blob.mode))
+		if (S_ISshitLINK(mfi->blob.mode))
 			reason = _("submodule");
 		output(opt, 1, _("CONFLICT (%s): Merge conflict in %s"),
 				reason, path);
@@ -3469,7 +3469,7 @@ static int process_entry(struct merge_options *opt,
 			conf = _("directory/file");
 		}
 		if (dir_in_way(opt->repo->index, path,
-			       !opt->priv->call_depth && !S_ISGITLINK(a->mode),
+			       !opt->priv->call_depth && !S_ISshitLINK(a->mode),
 			       0)) {
 			char *new_path = unique_path(opt, path, add_branch);
 			clean_merge = 0;
@@ -3902,21 +3902,21 @@ static void merge_recursive_config(struct merge_options *opt)
 {
 	char *value = NULL;
 	int renormalize = 0;
-	git_config_get_int("merge.verbosity", &opt->verbosity);
-	git_config_get_int("diff.renamelimit", &opt->rename_limit);
-	git_config_get_int("merge.renamelimit", &opt->rename_limit);
-	git_config_get_bool("merge.renormalize", &renormalize);
+	shit_config_get_int("merge.verbosity", &opt->verbosity);
+	shit_config_get_int("diff.renamelimit", &opt->rename_limit);
+	shit_config_get_int("merge.renamelimit", &opt->rename_limit);
+	shit_config_get_bool("merge.renormalize", &renormalize);
 	opt->renormalize = renormalize;
-	if (!git_config_get_string("diff.renames", &value)) {
-		opt->detect_renames = git_config_rename("diff.renames", value);
+	if (!shit_config_get_string("diff.renames", &value)) {
+		opt->detect_renames = shit_config_rename("diff.renames", value);
 		free(value);
 	}
-	if (!git_config_get_string("merge.renames", &value)) {
-		opt->detect_renames = git_config_rename("merge.renames", value);
+	if (!shit_config_get_string("merge.renames", &value)) {
+		opt->detect_renames = shit_config_rename("merge.renames", value);
 		free(value);
 	}
-	if (!git_config_get_string("merge.directoryrenames", &value)) {
-		int boolval = git_parse_maybe_bool(value);
+	if (!shit_config_get_string("merge.directoryrenames", &value)) {
+		int boolval = shit_parse_maybe_bool(value);
 		if (0 <= boolval) {
 			opt->detect_directory_renames = boolval ?
 				MERGE_DIRECTORY_RENAMES_TRUE :
@@ -3924,10 +3924,10 @@ static void merge_recursive_config(struct merge_options *opt)
 		} else if (!strcasecmp(value, "conflict")) {
 			opt->detect_directory_renames =
 				MERGE_DIRECTORY_RENAMES_CONFLICT;
-		} /* avoid erroring on values from future versions of git */
+		} /* avoid erroring on values from future versions of shit */
 		free(value);
 	}
-	git_config(git_xmerge_config, NULL);
+	shit_config(shit_xmerge_config, NULL);
 }
 
 void init_merge_options(struct merge_options *opt,
@@ -3951,7 +3951,7 @@ void init_merge_options(struct merge_options *opt,
 	opt->conflict_style = -1;
 
 	merge_recursive_config(opt);
-	merge_verbosity = getenv("GIT_MERGE_VERBOSITY");
+	merge_verbosity = getenv("shit_MERGE_VERBOSITY");
 	if (merge_verbosity)
 		opt->verbosity = strtol(merge_verbosity, NULL, 10);
 	if (opt->verbosity >= 5)
@@ -4026,8 +4026,8 @@ int parse_merge_opt(struct merge_options *opt, const char *s)
 		opt->detect_renames = 1;
 	}
 	/*
-	 * Please update $__git_merge_strategy_options in
-	 * git-completion.bash when you add new options
+	 * Please update $__shit_merge_strategy_options in
+	 * shit-completion.bash when you add new options
 	 */
 	else
 		return -1;

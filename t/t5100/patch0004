@@ -1,4 +1,4 @@
-diff --git a/connect.c b/connect.c
+diff --shit a/connect.c b/connect.c
 --- a/connect.c
 +++ b/connect.c
 @@ -96,42 +96,57 @@ static enum protocol get_protocol(const 
@@ -19,10 +19,10 @@ diff --git a/connect.c b/connect.c
 +#define STR_(s)	# s
 +#define STR(s)	STR_(s)
  
- static int git_tcp_connect(int fd[2], const char *prog, char *host, char *path)
+ static int shit_tcp_connect(int fd[2], const char *prog, char *host, char *path)
  {
 -	struct sockaddr addr;
--	int port = DEFAULT_GIT_PORT, sockfd;
+-	int port = DEFAULT_shit_PORT, sockfd;
 -	char *colon;
 -
 -	colon = strchr(host, ':');
@@ -34,7 +34,7 @@ diff --git a/connect.c b/connect.c
 -			port = n;
 +	int sockfd = -1;
 +	char *colon, *end;
-+	char *port = STR(DEFAULT_GIT_PORT);
++	char *port = STR(DEFAULT_shit_PORT);
 +	struct addrinfo hints, *ai0, *ai;
 +	int gai;
 +

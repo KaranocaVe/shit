@@ -1,24 +1,24 @@
-git-rev-parse(1)
+shit-rev-parse(1)
 ================
 
 NAME
 ----
-git-rev-parse - Pick out and massage parameters
+shit-rev-parse - Pick out and massage parameters
 
 
 SYNOPSIS
 --------
 [verse]
-'git rev-parse' [<options>] <arg>...
+'shit rev-parse' [<options>] <arg>...
 
 DESCRIPTION
 -----------
 
-Many Git porcelainish commands take a mixture of flags
+Many shit porcelainish commands take a mixture of flags
 (i.e. parameters that begin with a dash '-') and parameters
-meant for the underlying 'git rev-list' command they use internally
+meant for the underlying 'shit rev-list' command they use internally
 and flags and parameters for the other commands they use
-downstream of 'git rev-list'.  This command is used to
+downstream of 'shit rev-list'.  This command is used to
 distinguish between them.
 
 
@@ -31,10 +31,10 @@ Operation Modes
 Each of these options must appear first on the command line.
 
 --parseopt::
-	Use 'git rev-parse' in option parsing mode (see PARSEOPT section below).
+	Use 'shit rev-parse' in option parsing mode (see PARSEOPT section below).
 
 --sq-quote::
-	Use 'git rev-parse' in shell quoting mode (see SQ-QUOTE
+	Use 'shit rev-parse' in shell quoting mode (see SQ-QUOTE
 	section below). In contrast to the `--sq` option below, this
 	mode only does quoting. Nothing else is done to command input.
 
@@ -59,11 +59,11 @@ Options for Filtering
 
 --revs-only::
 	Do not output flags and parameters not meant for
-	'git rev-list' command.
+	'shit rev-list' command.
 
 --no-revs::
 	Do not output flags and parameters meant for
-	'git rev-list' command.
+	'shit rev-list' command.
 
 --flags::
 	Do not output non-flag parameters.
@@ -79,7 +79,7 @@ Options for Output
 	instead.
 
 --prefix <arg>::
-	Behave as if 'git rev-parse' was invoked from the `<arg>`
+	Behave as if 'shit rev-parse' was invoked from the `<arg>`
 	subdirectory of the working tree.  Any relative filenames are
 	resolved as if they are prefixed by `<arg>` and will be printed
 	in that form.
@@ -89,10 +89,10 @@ so that they can still be used after moving to the top-level of the
 repository.  For example:
 +
 ----
-prefix=$(git rev-parse --show-prefix)
-cd "$(git rev-parse --show-toplevel)"
+prefix=$(shit rev-parse --show-prefix)
+cd "$(shit rev-parse --show-toplevel)"
 # rev-parse provides the -- needed for 'set'
-eval "set $(git rev-parse --sq --prefix "$prefix" -- "$@")"
+eval "set $(shit rev-parse --sq --prefix "$prefix" -- "$@")"
 ----
 
 --verify::
@@ -104,10 +104,10 @@ eval "set $(git rev-parse --sq --prefix "$prefix" -- "$@")"
 If you want to make sure that the output actually names an object in
 your object database and/or can be used as a specific type of object
 you require, you can add the `^{type}` peeling operator to the parameter.
-For example, `git rev-parse "$VAR^{commit}"` will make sure `$VAR`
+For example, `shit rev-parse "$VAR^{commit}"` will make sure `$VAR`
 names an existing object that is a commit-ish (i.e. a commit, or an
 annotated tag that points at a commit).  To make sure that `$VAR`
-names an existing object of any type, `git rev-parse "$VAR^{object}"`
+names an existing object of any type, `shit rev-parse "$VAR^{object}"`
 can be used.
 +
 Note that if you are verifying a name from an untrusted source, it is
@@ -127,14 +127,14 @@ for another option.
 	properly quoted for consumption by shell.  Useful when
 	you expect your parameter to contain whitespaces and
 	newlines (e.g. when using pickaxe `-S` with
-	'git diff-{asterisk}'). In contrast to the `--sq-quote` option,
+	'shit diff-{asterisk}'). In contrast to the `--sq-quote` option,
 	the command input is still interpreted as usual.
 
 --short[=<length>]::
 	Same as `--verify` but shortens the object name to a unique
 	prefix with at least `length` characters. The minimum length
 	is 4, the default is the effective value of the `core.abbrev`
-	configuration variable (see linkgit:git-config[1]).
+	configuration variable (see linkshit:shit-config[1]).
 
 --not::
 	When showing object names, prefix them with '{caret}' and
@@ -210,16 +210,16 @@ or `--all`. If a trailing '/{asterisk}' is intended, it must be given
 explicitly.
 
 --exclude-hidden=(fetch|receive|uploadpack)::
-	Do not include refs that would be hidden by `git-fetch`,
-	`git-receive-pack` or `git-upload-pack` by consulting the appropriate
+	Do not include refs that would be hidden by `shit-fetch`,
+	`shit-receive-pack` or `shit-upload-pack` by consulting the appropriate
 	`fetch.hideRefs`, `receive.hideRefs` or `uploadpack.hideRefs`
 	configuration along with `transfer.hideRefs` (see
-	linkgit:git-config[1]). This option affects the next pseudo-ref option
+	linkshit:shit-config[1]). This option affects the next pseudo-ref option
 	`--all` or `--glob` and is cleared after processing them.
 
 --disambiguate=<prefix>::
 	Show every object whose name begins with the given prefix.
-	The <prefix> must be at least 4 hexadecimal digits long to
+	The <prefix> must be at least 4 hexadecimal dishits long to
 	avoid listing each and every object in the repository by
 	mistake.
 
@@ -227,8 +227,8 @@ Options for Files
 ~~~~~~~~~~~~~~~~~
 
 --local-env-vars::
-	List the GIT_* environment variables that are local to the
-	repository (e.g. GIT_DIR or GIT_WORK_TREE, but not GIT_EDITOR).
+	List the shit_* environment variables that are local to the
+	repository (e.g. shit_DIR or shit_WORK_TREE, but not shit_EDITOR).
 	Only the names of the variables are listed, not their value,
 	even if they are set.
 
@@ -244,30 +244,30 @@ instance of this option.
 
 The following options are modified by `--path-format`:
 
---git-dir::
-	Show `$GIT_DIR` if defined. Otherwise show the path to
-	the .git directory. The path shown, when relative, is
+--shit-dir::
+	Show `$shit_DIR` if defined. Otherwise show the path to
+	the .shit directory. The path shown, when relative, is
 	relative to the current working directory.
 +
-If `$GIT_DIR` is not defined and the current directory
-is not detected to lie in a Git repository or work tree
+If `$shit_DIR` is not defined and the current directory
+is not detected to lie in a shit repository or work tree
 print a message to stderr and exit with nonzero status.
 
---git-common-dir::
-	Show `$GIT_COMMON_DIR` if defined, else `$GIT_DIR`.
+--shit-common-dir::
+	Show `$shit_COMMON_DIR` if defined, else `$shit_DIR`.
 
---resolve-git-dir <path>::
-	Check if <path> is a valid repository or a gitfile that
+--resolve-shit-dir <path>::
+	Check if <path> is a valid repository or a shitfile that
 	points at a valid repository, and print the location of the
-	repository.  If <path> is a gitfile then the resolved path
+	repository.  If <path> is a shitfile then the resolved path
 	to the real repository is printed.
 
---git-path <path>::
-	Resolve "$GIT_DIR/<path>" and takes other path relocation
-	variables such as $GIT_OBJECT_DIRECTORY,
-	$GIT_INDEX_FILE... into account. For example, if
-	$GIT_OBJECT_DIRECTORY is set to /foo/bar then "git rev-parse
-	--git-path objects/abc" returns /foo/bar/abc.
+--shit-path <path>::
+	Resolve "$shit_DIR/<path>" and takes other path relocation
+	variables such as $shit_OBJECT_DIRECTORY,
+	$shit_INDEX_FILE... into account. For example, if
+	$shit_OBJECT_DIRECTORY is set to /foo/bar then "shit rev-parse
+	--shit-path objects/abc" returns /foo/bar/abc.
 
 --show-toplevel::
 	Show the (by default, absolute) path of the top-level directory
@@ -285,11 +285,11 @@ print a message to stderr and exit with nonzero status.
 
 The following options are unaffected by `--path-format`:
 
---absolute-git-dir::
-	Like `--git-dir`, but its output is always the canonicalized
+--absolute-shit-dir::
+	Like `--shit-dir`, but its output is always the canonicalized
 	absolute path.
 
---is-inside-git-dir::
+--is-inside-shit-dir::
 	When the current working directory is below the repository
 	directory print "true", otherwise "false".
 
@@ -315,7 +315,7 @@ The following options are unaffected by `--path-format`:
 
 --show-object-format[=(storage|input|output)]::
 	Show the object format (hash algorithm) used for the repository
-	for storage inside the `.git` directory, input, or output. For
+	for storage inside the `.shit` directory, input, or output. For
 	input, multiple algorithms may be printed, space-separated.
 	If not specified, the default is "storage".
 
@@ -329,12 +329,12 @@ Other Options
 --since=<datestring>::
 --after=<datestring>::
 	Parse the date string, and output the corresponding
-	--max-age= parameter for 'git rev-list'.
+	--max-age= parameter for 'shit rev-list'.
 
 --until=<datestring>::
 --before=<datestring>::
 	Parse the date string, and output the corresponding
-	--min-age= parameter for 'git rev-list'.
+	--min-age= parameter for 'shit rev-list'.
 
 <arg>...::
 	Flags and parameters to be parsed.
@@ -345,7 +345,7 @@ include::revisions.txt[]
 PARSEOPT
 --------
 
-In `--parseopt` mode, 'git rev-parse' helps massaging options to bring to shell
+In `--parseopt` mode, 'shit rev-parse' helps massaging options to bring to shell
 scripts the same facilities C builtins have. It works as an option normalizer
 (e.g. splits single switches aggregate values), a bit like `getopt(1)` does.
 
@@ -360,7 +360,7 @@ below for an example.
 Input Format
 ~~~~~~~~~~~~
 
-'git rev-parse --parseopt' input format is fully text based. It has two parts,
+'shit rev-parse --parseopt' input format is fully text based. It has two parts,
 separated by a line that contains only `--`. The lines before the separator
 (should be one or more) are used for the usage.
 The lines after the separator describe the options.
@@ -387,7 +387,7 @@ Each line of options has this format:
 
 	* Use `*` to mean that this option should not be listed in the usage
 	  generated for the `-h` argument. It's shown for `--help-all` as
-	  documented in linkgit:gitcli[7].
+	  documented in linkshit:shitcli[7].
 
 	* Use `!` to not make the corresponding negated long option available.
 
@@ -423,7 +423,7 @@ qux?path  qux may take a path argument but has meaning by itself
   An option group Header
 C?        option C with an optional argument"
 
-eval "$(echo "$OPTS_SPEC" | git rev-parse --parseopt -- "$@" || echo exit $?)"
+eval "$(echo "$OPTS_SPEC" | shit rev-parse --parseopt -- "$@" || echo exit $?)"
 ------------
 
 
@@ -451,28 +451,28 @@ An option group Header
 SQ-QUOTE
 --------
 
-In `--sq-quote` mode, 'git rev-parse' echoes on the standard output a
+In `--sq-quote` mode, 'shit rev-parse' echoes on the standard output a
 single line suitable for `sh(1)` `eval`. This line is made by
 normalizing the arguments following `--sq-quote`. Nothing other than
 quoting the arguments is done.
 
 If you want command input to still be interpreted as usual by
-'git rev-parse' before the output is shell quoted, see the `--sq`
+'shit rev-parse' before the output is shell quoted, see the `--sq`
 option.
 
 Example
 ~~~~~~~
 
 ------------
-$ cat >your-git-script.sh <<\EOF
+$ cat >your-shit-script.sh <<\EOF
 #!/bin/sh
-args=$(git rev-parse --sq-quote "$@")   # quote user-supplied arguments
-command="git frotz -n24 $args"          # and use it inside a handcrafted
+args=$(shit rev-parse --sq-quote "$@")   # quote user-supplied arguments
+command="shit frotz -n24 $args"          # and use it inside a handcrafted
 					# command line
 eval "$command"
 EOF
 
-$ sh your-git-script.sh "a b'c"
+$ sh your-shit-script.sh "a b'c"
 ------------
 
 EXAMPLES
@@ -481,13 +481,13 @@ EXAMPLES
 * Print the object name of the current commit:
 +
 ------------
-$ git rev-parse --verify HEAD
+$ shit rev-parse --verify HEAD
 ------------
 
 * Print the commit object name from the revision in the $REV shell variable:
 +
 ------------
-$ git rev-parse --verify --end-of-options $REV^{commit}
+$ shit rev-parse --verify --end-of-options $REV^{commit}
 ------------
 +
 This will error out if $REV is empty or not a valid revision.
@@ -495,11 +495,11 @@ This will error out if $REV is empty or not a valid revision.
 * Similar to above:
 +
 ------------
-$ git rev-parse --default master --verify --end-of-options $REV
+$ shit rev-parse --default master --verify --end-of-options $REV
 ------------
 +
 but if $REV is empty, the commit object name from master will be printed.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

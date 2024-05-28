@@ -1,11 +1,11 @@
-# Shell library to run git-daemon in tests.  Ends the test early if
-# GIT_TEST_GIT_DAEMON is not set.
+# Shell library to run shit-daemon in tests.  Ends the test early if
+# shit_TEST_shit_DAEMON is not set.
 #
 # Usage:
 #
 #	. ./test-lib.sh
-#	. "$TEST_DIRECTORY"/lib-git-daemon.sh
-#	start_git_daemon
+#	. "$TEST_DIRECTORY"/lib-shit-daemon.sh
+#	start_shit_daemon
 #
 #	test_expect_success '...' '
 #		...
@@ -15,86 +15,86 @@
 #
 #	test_done
 
-if ! test_bool_env GIT_TEST_GIT_DAEMON true
+if ! test_bool_env shit_TEST_shit_DAEMON true
 then
-	skip_all="git-daemon testing disabled (unset GIT_TEST_GIT_DAEMON to enable)"
+	skip_all="shit-daemon testing disabled (unset shit_TEST_shit_DAEMON to enable)"
 	test_done
 fi
 
 if test_have_prereq !PIPE
 then
-	test_skip_or_die GIT_TEST_GIT_DAEMON "file system does not support FIFOs"
+	test_skip_or_die shit_TEST_shit_DAEMON "file system does not support FIFOs"
 fi
 
-test_set_port LIB_GIT_DAEMON_PORT
+test_set_port LIB_shit_DAEMON_PORT
 
-GIT_DAEMON_PID=
-GIT_DAEMON_PIDFILE="$PWD"/daemon.pid
-GIT_DAEMON_DOCUMENT_ROOT_PATH="$PWD"/repo
-GIT_DAEMON_HOST_PORT=127.0.0.1:$LIB_GIT_DAEMON_PORT
-GIT_DAEMON_URL=git://$GIT_DAEMON_HOST_PORT
+shit_DAEMON_PID=
+shit_DAEMON_PIDFILE="$PWD"/daemon.pid
+shit_DAEMON_DOCUMENT_ROOT_PATH="$PWD"/repo
+shit_DAEMON_HOST_PORT=127.0.0.1:$LIB_shit_DAEMON_PORT
+shit_DAEMON_URL=shit://$shit_DAEMON_HOST_PORT
 
-registered_stop_git_daemon_atexit_handler=
-start_git_daemon() {
-	if test -n "$GIT_DAEMON_PID"
+registered_stop_shit_daemon_atexit_handler=
+start_shit_daemon() {
+	if test -n "$shit_DAEMON_PID"
 	then
-		error "start_git_daemon already called"
+		error "start_shit_daemon already called"
 	fi
 
-	mkdir -p "$GIT_DAEMON_DOCUMENT_ROOT_PATH"
+	mkdir -p "$shit_DAEMON_DOCUMENT_ROOT_PATH"
 
-	# One of the test scripts stops and then re-starts 'git daemon'.
+	# One of the test scripts stops and then re-starts 'shit daemon'.
 	# Don't register and then run the same atexit handlers several times.
-	if test -z "$registered_stop_git_daemon_atexit_handler"
+	if test -z "$registered_stop_shit_daemon_atexit_handler"
 	then
-		test_atexit 'stop_git_daemon'
-		registered_stop_git_daemon_atexit_handler=AlreadyDone
+		test_atexit 'stop_shit_daemon'
+		registered_stop_shit_daemon_atexit_handler=AlreadyDone
 	fi
 
-	say >&3 "Starting git daemon ..."
-	mkfifo git_daemon_output
-	${LIB_GIT_DAEMON_COMMAND:-git daemon} \
-		--listen=127.0.0.1 --port="$LIB_GIT_DAEMON_PORT" \
-		--reuseaddr --verbose --pid-file="$GIT_DAEMON_PIDFILE" \
-		--base-path="$GIT_DAEMON_DOCUMENT_ROOT_PATH" \
-		"$@" "$GIT_DAEMON_DOCUMENT_ROOT_PATH" \
-		>&3 2>git_daemon_output &
-	GIT_DAEMON_PID=$!
+	say >&3 "Starting shit daemon ..."
+	mkfifo shit_daemon_output
+	${LIB_shit_DAEMON_COMMAND:-shit daemon} \
+		--listen=127.0.0.1 --port="$LIB_shit_DAEMON_PORT" \
+		--reuseaddr --verbose --pid-file="$shit_DAEMON_PIDFILE" \
+		--base-path="$shit_DAEMON_DOCUMENT_ROOT_PATH" \
+		"$@" "$shit_DAEMON_DOCUMENT_ROOT_PATH" \
+		>&3 2>shit_daemon_output &
+	shit_DAEMON_PID=$!
 	{
 		read -r line <&7
 		printf "%s\n" "$line" >&4
 		cat <&7 >&4 &
-	} 7<git_daemon_output &&
+	} 7<shit_daemon_output &&
 
 	# Check expected output
 	if test x"$(expr "$line" : "\[[0-9]*\] \(.*\)")" != x"Ready to rumble"
 	then
-		kill "$GIT_DAEMON_PID"
-		wait "$GIT_DAEMON_PID"
-		unset GIT_DAEMON_PID
-		test_skip_or_die GIT_TEST_GIT_DAEMON \
-			"git daemon failed to start"
+		kill "$shit_DAEMON_PID"
+		wait "$shit_DAEMON_PID"
+		unset shit_DAEMON_PID
+		test_skip_or_die shit_TEST_shit_DAEMON \
+			"shit daemon failed to start"
 	fi
 }
 
-stop_git_daemon() {
-	if test -z "$GIT_DAEMON_PID"
+stop_shit_daemon() {
+	if test -z "$shit_DAEMON_PID"
 	then
 		return
 	fi
 
-	# kill git-daemon child of git
-	say >&3 "Stopping git daemon ..."
-	kill "$GIT_DAEMON_PID"
-	wait "$GIT_DAEMON_PID" >&3 2>&4
+	# kill shit-daemon child of shit
+	say >&3 "Stopping shit daemon ..."
+	kill "$shit_DAEMON_PID"
+	wait "$shit_DAEMON_PID" >&3 2>&4
 	ret=$?
 	if ! test_match_signal 15 $ret
 	then
-		error "git daemon exited with status: $ret"
+		error "shit daemon exited with status: $ret"
 	fi
-	kill "$(cat "$GIT_DAEMON_PIDFILE")" 2>/dev/null
-	GIT_DAEMON_PID=
-	rm -f git_daemon_output "$GIT_DAEMON_PIDFILE"
+	kill "$(cat "$shit_DAEMON_PIDFILE")" 2>/dev/null
+	shit_DAEMON_PID=
+	rm -f shit_daemon_output "$shit_DAEMON_PIDFILE"
 }
 
 # A stripped-down version of a netcat client, that connects to a "host:port"

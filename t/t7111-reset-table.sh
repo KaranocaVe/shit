@@ -18,11 +18,11 @@ test_expect_success 'creating initial commits' '
 while read W1 I1 H1 T opt W2 I2 H2
 do
     test_expect_success "check: $W1 $I1 $H1 $T --$opt $W2 $I2 $H2" '
-	git reset --hard C &&
+	shit reset --hard C &&
 	if test "$I1" != "$H1"
 	then
 	    echo "$I1" >file1 &&
-	    git add file1
+	    shit add file1
 	fi &&
 	if test "$W1" != "$I1"
 	then
@@ -30,14 +30,14 @@ do
 	fi &&
 	if test "$W2" != "XXXXX"
 	then
-	    git reset --$opt $T &&
+	    shit reset --$opt $T &&
 	    test "$(cat file1)" = "$W2" &&
-	    git checkout-index -f -- file1 &&
+	    shit checkout-index -f -- file1 &&
 	    test "$(cat file1)" = "$I2" &&
-	    git checkout -f HEAD -- file1 &&
+	    shit checkout -f HEAD -- file1 &&
 	    test "$(cat file1)" = "$H2"
 	else
-	    test_must_fail git reset --$opt $T
+	    test_must_fail shit reset --$opt $T
 	fi
     '
 done <<\EOF
@@ -74,36 +74,36 @@ B C C C keep   B C C
 EOF
 
 test_expect_success 'setting up branches to test with unmerged entries' '
-	git reset --hard C &&
-	git branch branch1 &&
-	git branch branch2 &&
-	git checkout branch1 &&
+	shit reset --hard C &&
+	shit branch branch1 &&
+	shit branch branch2 &&
+	shit checkout branch1 &&
 	test_commit B1 file1 &&
-	git checkout branch2 &&
+	shit checkout branch2 &&
 	test_commit B file1
 '
 
 while read W1 I1 H1 T opt W2 I2 H2
 do
     test_expect_success "check: $W1 $I1 $H1 $T --$opt $W2 $I2 $H2" '
-	git reset --hard B &&
-	test_must_fail git merge branch1 &&
+	shit reset --hard B &&
+	test_must_fail shit merge branch1 &&
 	cat file1 >X_file1 &&
 	if test "$W2" != "XXXXX"
 	then
-	    git reset --$opt $T &&
+	    shit reset --$opt $T &&
 	    if test "$W2" = "X"
 	    then
 		test_cmp file1 X_file1
 	    else
 		test "$(cat file1)" = "$W2"
 	    fi &&
-	    git checkout-index -f -- file1 &&
+	    shit checkout-index -f -- file1 &&
 	    test "$(cat file1)" = "$I2" &&
-	    git checkout -f HEAD -- file1 &&
+	    shit checkout -f HEAD -- file1 &&
 	    test "$(cat file1)" = "$H2"
 	else
-	    test_must_fail git reset --$opt $T
+	    test_must_fail shit reset --$opt $T
 	fi
     '
 done <<\EOF

@@ -1,4 +1,4 @@
-Git v2.7.6 Release Notes
+shit v2.7.6 Release Notes
 ========================
 
 Fixes since v2.7.5
@@ -10,9 +10,9 @@ Fixes since v2.7.5
    prevented by forbidding such a hostname (which will not be
    necessary in the real world).
 
- * Similarly, when GIT_PROXY_COMMAND is configured, the command is
+ * Similarly, when shit_PROXY_COMMAND is configured, the command is
    run with host and port that are parsed out from "ssh://..." URL;
-   a poorly written GIT_PROXY_COMMAND could be tricked into treating
+   a poorly written shit_PROXY_COMMAND could be tricked into treating
    a string that begins with a dash "-".  This is now prevented by
    forbidding such a hostname and port number (again, which will not
    be necessary in the real world).
@@ -20,6 +20,6 @@ Fixes since v2.7.5
  * In the same spirit, a repository name that begins with a dash "-"
    is also forbidden now.
 
-Credits go to Brian Neel at GitLab, Joern Schneeweisz of Recurity
-Labs and Jeff King at GitHub.
+Credits go to Brian Neel at shitLab, Joern Schneeweisz of Recurity
+Labs and Jeff King at shitHub.
 

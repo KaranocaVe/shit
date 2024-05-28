@@ -1,5 +1,5 @@
 /**
- * Copyright 2013, GitHub, Inc
+ * Copyright 2013, shitHub, Inc
  * Copyright 2009-2013, Daniel Lemire, Cliff Moon,
  *	David McIntosh, Robert Becho, Google Inc. and Veronika Zenz
  *

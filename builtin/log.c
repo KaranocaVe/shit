@@ -1,10 +1,10 @@
 /*
- * Builtin "git log" and related commands (show, whatchanged)
+ * Builtin "shit log" and related commands (show, whatchanged)
  *
  * (C) Copyright 2006 Linus Torvalds
  *		 2006 Junio Hamano
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "config.h"
 #include "environment.h"
@@ -48,7 +48,7 @@
 #define COVER_FROM_AUTO_MAX_SUBJECT_LEN 100
 #define FORMAT_PATCH_NAME_MAX_DEFAULT 64
 
-/* Set a default date-time format for git log ("log.date" config variable) */
+/* Set a default date-time format for shit log ("log.date" config variable) */
 static const char *default_date_mode = NULL;
 
 static int default_abbrev_commit;
@@ -67,8 +67,8 @@ static const char *fmt_pretty;
 static int format_no_prefix;
 
 static const char * const builtin_log_usage[] = {
-	N_("git log [<options>] [<revision-range>] [[--] <path>...]"),
-	N_("git show [<options>] <object>..."),
+	N_("shit log [<options>] [<revision-range>] [[--] <path>...]"),
+	N_("shit show [<options>] <object>..."),
 	NULL
 };
 
@@ -90,7 +90,7 @@ static int auto_decoration_style(void)
 
 static int parse_decoration_style(const char *value)
 {
-	switch (git_parse_maybe_bool(value)) {
+	switch (shit_parse_maybe_bool(value)) {
 	case 1:
 		return DECORATE_SHORT_REFS;
 	case 0:
@@ -105,7 +105,7 @@ static int parse_decoration_style(const char *value)
 	else if (!strcmp(value, "auto"))
 		return auto_decoration_style();
 	/*
-	 * Please update _git_log() in git-completion.bash when you
+	 * Please update _shit_log() in shit-completion.bash when you
 	 * add new decoration styles.
 	 */
 	return -1;
@@ -195,7 +195,7 @@ static void set_default_decoration_filter(struct decoration_filter *decoration_f
 	struct string_list *include = decoration_filter->include_ref_pattern;
 	const struct string_list *config_exclude;
 
-	if (!git_config_get_string_multi("log.excludeDecoration",
+	if (!shit_config_get_string_multi("log.excludeDecoration",
 					 &config_exclude)) {
 		struct string_list_item *item;
 		for_each_string_list_item(item, config_exclude)
@@ -209,7 +209,7 @@ static void set_default_decoration_filter(struct decoration_filter *decoration_f
 	 * since the command-line takes precedent.
 	 */
 	if (use_default_decoration_filter &&
-	    !git_config_get_string("log.initialdecorationset", &value) &&
+	    !shit_config_get_string("log.initialdecorationset", &value) &&
 	    !strcmp("all", value))
 		use_default_decoration_filter = 0;
 	free(value);
@@ -563,29 +563,29 @@ static int cmd_log_walk(struct rev_info *rev)
 	return retval;
 }
 
-static int git_log_config(const char *var, const char *value,
+static int shit_log_config(const char *var, const char *value,
 			  const struct config_context *ctx, void *cb)
 {
 	const char *slot_name;
 
 	if (!strcmp(var, "format.pretty"))
-		return git_config_string(&fmt_pretty, var, value);
+		return shit_config_string(&fmt_pretty, var, value);
 	if (!strcmp(var, "format.subjectprefix"))
-		return git_config_string(&fmt_patch_subject_prefix, var, value);
+		return shit_config_string(&fmt_patch_subject_prefix, var, value);
 	if (!strcmp(var, "format.filenamemaxlength")) {
-		fmt_patch_name_max = git_config_int(var, value, ctx->kvi);
+		fmt_patch_name_max = shit_config_int(var, value, ctx->kvi);
 		return 0;
 	}
 	if (!strcmp(var, "format.encodeemailheaders")) {
-		default_encode_email_headers = git_config_bool(var, value);
+		default_encode_email_headers = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "log.abbrevcommit")) {
-		default_abbrev_commit = git_config_bool(var, value);
+		default_abbrev_commit = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "log.date"))
-		return git_config_string(&default_date_mode, var, value);
+		return shit_config_string(&default_date_mode, var, value);
 	if (!strcmp(var, "log.decorate")) {
 		decoration_style = parse_decoration_style(value);
 		if (decoration_style < 0)
@@ -598,25 +598,25 @@ static int git_log_config(const char *var, const char *value,
 		return diff_merges_config(value);
 	}
 	if (!strcmp(var, "log.showroot")) {
-		default_show_root = git_config_bool(var, value);
+		default_show_root = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "log.follow")) {
-		default_follow = git_config_bool(var, value);
+		default_follow = shit_config_bool(var, value);
 		return 0;
 	}
 	if (skip_prefix(var, "color.decorate.", &slot_name))
 		return parse_decorate_color_config(var, slot_name, value);
 	if (!strcmp(var, "log.mailmap")) {
-		use_mailmap_config = git_config_bool(var, value);
+		use_mailmap_config = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "log.showsignature")) {
-		default_show_signature = git_config_bool(var, value);
+		default_show_signature = shit_config_bool(var, value);
 		return 0;
 	}
 
-	return git_diff_ui_config(var, value, ctx, cb);
+	return shit_diff_ui_config(var, value, ctx, cb);
 }
 
 int cmd_whatchanged(int argc, const char **argv, const char *prefix)
@@ -625,10 +625,10 @@ int cmd_whatchanged(int argc, const char **argv, const char *prefix)
 	struct setup_revision_opt opt;
 
 	init_log_defaults();
-	git_config(git_log_config, NULL);
+	shit_config(shit_log_config, NULL);
 
 	repo_init_revisions(the_repository, &rev, prefix);
-	git_config(grep_config, &rev.grep_filter);
+	shit_config(grep_config, &rev.grep_filter);
 
 	rev.diff = 1;
 	rev.simplify_history = 0;
@@ -677,7 +677,7 @@ static int show_blob_object(const struct object_id *oid, struct rev_info *rev, c
 	}
 
 	if (!buf)
-		die(_("git show %s: bad file"), obj_name);
+		die(_("shit show %s: bad file"), obj_name);
 
 	write_or_die(1, buf, size);
 	free(obj_context.path);
@@ -740,16 +740,16 @@ int cmd_show(int argc, const char **argv, const char *prefix)
 	int ret = 0;
 
 	init_log_defaults();
-	git_config(git_log_config, NULL);
+	shit_config(shit_log_config, NULL);
 
-	if (the_repository->gitdir) {
+	if (the_repository->shitdir) {
 		prepare_repo_settings(the_repository);
 		the_repository->settings.command_requires_full_index = 0;
 	}
 
 	memset(&match_all, 0, sizeof(match_all));
 	repo_init_revisions(the_repository, &rev, prefix);
-	git_config(grep_config, &rev.grep_filter);
+	shit_config(grep_config, &rev.grep_filter);
 
 	rev.diff = 1;
 	rev.always_show_header = 1;
@@ -837,7 +837,7 @@ int cmd_show(int argc, const char **argv, const char *prefix)
 }
 
 /*
- * This is equivalent to "git log -g --abbrev-commit --pretty=oneline"
+ * This is equivalent to "shit log -g --abbrev-commit --pretty=oneline"
  */
 int cmd_log_reflog(int argc, const char **argv, const char *prefix)
 {
@@ -845,11 +845,11 @@ int cmd_log_reflog(int argc, const char **argv, const char *prefix)
 	struct setup_revision_opt opt;
 
 	init_log_defaults();
-	git_config(git_log_config, NULL);
+	shit_config(shit_log_config, NULL);
 
 	repo_init_revisions(the_repository, &rev, prefix);
 	init_reflog_walk(&rev.reflog_info);
-	git_config(grep_config, &rev.grep_filter);
+	shit_config(grep_config, &rev.grep_filter);
 
 	rev.verbose_header = 1;
 	memset(&opt, 0, sizeof(opt));
@@ -880,10 +880,10 @@ int cmd_log(int argc, const char **argv, const char *prefix)
 	struct setup_revision_opt opt;
 
 	init_log_defaults();
-	git_config(git_log_config, NULL);
+	shit_config(shit_log_config, NULL);
 
 	repo_init_revisions(the_repository, &rev, prefix);
-	git_config(grep_config, &rev.grep_filter);
+	shit_config(grep_config, &rev.grep_filter);
 
 	rev.always_show_header = 1;
 	memset(&opt, 0, sizeof(opt));
@@ -956,7 +956,7 @@ static enum thread_level thread;
 static int do_signoff;
 static enum auto_base_setting auto_base;
 static char *from;
-static const char *signature = git_version_string;
+static const char *signature = shit_version_string;
 static const char *signature_file;
 static enum cover_setting config_cover_letter;
 static const char *config_output_directory;
@@ -980,7 +980,7 @@ static enum cover_from_description parse_cover_from_description(const char *arg)
 		die(_("%s: invalid cover from description mode"), arg);
 }
 
-static int git_format_config(const char *var, const char *value,
+static int shit_format_config(const char *var, const char *value,
 			     const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "format.headers")) {
@@ -990,7 +990,7 @@ static int git_format_config(const char *var, const char *value,
 		return 0;
 	}
 	if (!strcmp(var, "format.suffix"))
-		return git_config_string(&fmt_patch_suffix, var, value);
+		return shit_config_string(&fmt_patch_suffix, var, value);
 	if (!strcmp(var, "format.to")) {
 		if (!value)
 			return config_error_nonbool(var);
@@ -1012,7 +1012,7 @@ static int git_format_config(const char *var, const char *value,
 			auto_number = 1;
 			return 0;
 		}
-		numbered = git_config_bool(var, value);
+		numbered = shit_config_bool(var, value);
 		auto_number = auto_number && numbered;
 		return 0;
 	}
@@ -1022,7 +1022,7 @@ static int git_format_config(const char *var, const char *value,
 		else if (value && !*value)
 			FREE_AND_NULL(default_attach);
 		else
-			default_attach = xstrdup(git_version_string);
+			default_attach = xstrdup(shit_version_string);
 		return 0;
 	}
 	if (!strcmp(var, "format.thread")) {
@@ -1034,52 +1034,52 @@ static int git_format_config(const char *var, const char *value,
 			thread = THREAD_SHALLOW;
 			return 0;
 		}
-		thread = git_config_bool(var, value) ? THREAD_SHALLOW : THREAD_UNSET;
+		thread = shit_config_bool(var, value) ? THREAD_SHALLOW : THREAD_UNSET;
 		return 0;
 	}
 	if (!strcmp(var, "format.signoff")) {
-		do_signoff = git_config_bool(var, value);
+		do_signoff = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "format.signature"))
-		return git_config_string(&signature, var, value);
+		return shit_config_string(&signature, var, value);
 	if (!strcmp(var, "format.signaturefile"))
-		return git_config_pathname(&signature_file, var, value);
+		return shit_config_pathname(&signature_file, var, value);
 	if (!strcmp(var, "format.coverletter")) {
 		if (value && !strcasecmp(value, "auto")) {
 			config_cover_letter = COVER_AUTO;
 			return 0;
 		}
-		config_cover_letter = git_config_bool(var, value) ? COVER_ON : COVER_OFF;
+		config_cover_letter = shit_config_bool(var, value) ? COVER_ON : COVER_OFF;
 		return 0;
 	}
 	if (!strcmp(var, "format.outputdirectory"))
-		return git_config_string(&config_output_directory, var, value);
+		return shit_config_string(&config_output_directory, var, value);
 	if (!strcmp(var, "format.useautobase")) {
 		if (value && !strcasecmp(value, "whenAble")) {
 			auto_base = AUTO_BASE_WHEN_ABLE;
 			return 0;
 		}
-		auto_base = git_config_bool(var, value) ? AUTO_BASE_ALWAYS : AUTO_BASE_NEVER;
+		auto_base = shit_config_bool(var, value) ? AUTO_BASE_ALWAYS : AUTO_BASE_NEVER;
 		return 0;
 	}
 	if (!strcmp(var, "format.from")) {
-		int b = git_parse_maybe_bool(value);
+		int b = shit_parse_maybe_bool(value);
 		free(from);
 		if (b < 0)
 			from = xstrdup(value);
 		else if (b)
-			from = xstrdup(git_committer_info(IDENT_NO_DATE));
+			from = xstrdup(shit_committer_info(IDENT_NO_DATE));
 		else
 			from = NULL;
 		return 0;
 	}
 	if (!strcmp(var, "format.forceinbodyfrom")) {
-		force_in_body_from = git_config_bool(var, value);
+		force_in_body_from = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "format.notes")) {
-		int b = git_parse_maybe_bool(value);
+		int b = shit_parse_maybe_bool(value);
 		if (b < 0)
 			enable_ref_display_notes(&notes_opt, &show_notes, value);
 		else if (b)
@@ -1093,7 +1093,7 @@ static int git_format_config(const char *var, const char *value,
 		return 0;
 	}
 	if (!strcmp(var, "format.mboxrd")) {
-		stdout_mboxrd = git_config_bool(var, value);
+		stdout_mboxrd = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "format.noprefix")) {
@@ -1103,14 +1103,14 @@ static int git_format_config(const char *var, const char *value,
 
 	/*
 	 * ignore some porcelain config which would otherwise be parsed by
-	 * git_diff_ui_config(), via git_log_config(); we can't just avoid
+	 * shit_diff_ui_config(), via shit_log_config(); we can't just avoid
 	 * diff_ui_config completely, because we do care about some ui options
 	 * like color.
 	 */
 	if (!strcmp(var, "diff.noprefix"))
 		return 0;
 
-	return git_log_config(var, value, ctx, cb);
+	return shit_log_config(var, value, ctx, cb);
 }
 
 static const char *output_directory = NULL;
@@ -1192,9 +1192,9 @@ static void get_patch_ids(struct rev_info *rev, struct patch_ids *ids)
 static void gen_message_id(struct rev_info *info, char *base)
 {
 	struct strbuf buf = STRBUF_INIT;
-	strbuf_addf(&buf, "%s.%"PRItime".git.%s", base,
+	strbuf_addf(&buf, "%s.%"PRItime".shit.%s", base,
 		    (timestamp_t) time(NULL),
-		    git_committer_info(IDENT_NO_NAME|IDENT_NO_DATE|IDENT_STRICT));
+		    shit_committer_info(IDENT_NO_NAME|IDENT_NO_DATE|IDENT_STRICT));
 	info->message_id = strbuf_detach(&buf, NULL);
 }
 
@@ -1306,18 +1306,18 @@ do_pp:
 
 static int get_notes_refs(struct string_list_item *item, void *arg)
 {
-	strvec_pushf(arg, "--notes=%s", item->string);
+	strvec_defecatef(arg, "--notes=%s", item->string);
 	return 0;
 }
 
 static void get_notes_args(struct strvec *arg, struct rev_info *rev)
 {
 	if (!rev->show_notes) {
-		strvec_push(arg, "--no-notes");
+		strvec_defecate(arg, "--no-notes");
 	} else if (rev->notes_opt.use_default_notes > 0 ||
 		   (rev->notes_opt.use_default_notes == -1 &&
 		    !rev->notes_opt.extra_notes_refs.nr)) {
-		strvec_push(arg, "--notes");
+		strvec_defecate(arg, "--notes");
 	} else {
 		for_each_string_list(&rev->notes_opt.extra_notes_refs, get_notes_refs, arg);
 	}
@@ -1342,7 +1342,7 @@ static void make_cover_letter(struct rev_info *rev, int use_separate_file,
 	if (!cmit_fmt_is_mail(rev->commit_format))
 		die(_("cover letter needs email format"));
 
-	committer = git_committer_info(0);
+	committer = shit_committer_info(0);
 
 	if (use_separate_file &&
 	    open_next_file(NULL, rev->numbered_files ? NULL : "cover-letter", rev, quiet))
@@ -1464,7 +1464,7 @@ static const char *set_outdir(const char *prefix, const char *output_directory)
 }
 
 static const char * const builtin_format_patch_usage[] = {
-	N_("git format-patch [<options>] [<since> | <revision-range>]"),
+	N_("shit format-patch [<options>] [<since> | <revision-range>]"),
 	NULL
 };
 
@@ -1547,7 +1547,7 @@ static int thread_callback(const struct option *opt, const char *arg, int unset)
 	else if (!strcmp(arg, "deep"))
 		*thread = THREAD_DEEP;
 	/*
-	 * Please update _git_formatpatch() in git-completion.bash
+	 * Please update _shit_formatpatch() in shit-completion.bash
 	 * when you add new options.
 	 */
 	else
@@ -1563,7 +1563,7 @@ static int attach_callback(const struct option *opt, const char *arg, int unset)
 	else if (arg)
 		rev->mime_boundary = arg;
 	else
-		rev->mime_boundary = git_version_string;
+		rev->mime_boundary = shit_version_string;
 	rev->no_inline = unset ? 0 : 1;
 	return 0;
 }
@@ -1576,7 +1576,7 @@ static int inline_callback(const struct option *opt, const char *arg, int unset)
 	else if (arg)
 		rev->mime_boundary = arg;
 	else
-		rev->mime_boundary = git_version_string;
+		rev->mime_boundary = shit_version_string;
 	rev->no_inline = 0;
 	return 0;
 }
@@ -1605,7 +1605,7 @@ static int from_callback(const struct option *opt, const char *arg, int unset)
 	else if (arg)
 		*from = xstrdup(arg);
 	else
-		*from = xstrdup(git_committer_info(IDENT_NO_DATE));
+		*from = xstrdup(shit_committer_info(IDENT_NO_DATE));
 	return 0;
 }
 
@@ -1700,7 +1700,7 @@ static struct commit *get_base_commit(const char *base_commit,
 		} else {
 			if (die_on_failure)
 				die(_("failed to get upstream, if you want to record base commit automatically,\n"
-				      "please use git branch --set-upstream-to to track a remote branch.\n"
+				      "please use shit branch --set-upstream-to to track a remote branch.\n"
 				      "Or you could specify base commit by --base=<base-commit-id> manually"));
 			else
 				return NULL;
@@ -2019,9 +2019,9 @@ int cmd_format_patch(int argc, const char **argv, const char *prefix)
 
 	init_log_defaults();
 	init_display_notes(&notes_opt);
-	git_config(git_format_config, NULL);
+	shit_config(shit_format_config, NULL);
 	repo_init_revisions(the_repository, &rev, prefix);
-	git_config(grep_config, &rev.grep_filter);
+	shit_config(grep_config, &rev.grep_filter);
 
 	rev.show_notes = show_notes;
 	memcpy(&rev.notes_opt, &notes_opt, sizeof(notes_opt));
@@ -2048,7 +2048,7 @@ int cmd_format_patch(int argc, const char **argv, const char *prefix)
 
 	/*
 	 * Parse the arguments before setup_revisions(), or something
-	 * like "git format-patch -o a123 HEAD^.." may fail; a123 is
+	 * like "shit format-patch -o a123 HEAD^.." may fail; a123 is
 	 * possibly a valid SHA1.
 	 */
 	argc = parse_options(argc, argv, prefix, builtin_format_patch_options,
@@ -2180,10 +2180,10 @@ int cmd_format_patch(int argc, const char **argv, const char *prefix)
 			output_directory = config_output_directory;
 		output_directory = set_outdir(prefix, output_directory);
 
-		if (rev.diffopt.use_color != GIT_COLOR_ALWAYS)
-			rev.diffopt.use_color = GIT_COLOR_NEVER;
+		if (rev.diffopt.use_color != shit_COLOR_ALWAYS)
+			rev.diffopt.use_color = shit_COLOR_NEVER;
 		/*
-		 * We consider <outdir> as 'outside of gitdir', therefore avoid
+		 * We consider <outdir> as 'outside of shitdir', therefore avoid
 		 * applying adjust_shared_perm in s-c-l-d.
 		 */
 		saved = get_shared_repository();
@@ -2207,7 +2207,7 @@ int cmd_format_patch(int argc, const char **argv, const char *prefix)
 
 		if (rev.max_count < 0 && !rev.show_root_diff) {
 			/*
-			 * This is traditional behaviour of "git format-patch
+			 * This is traditional behaviour of "shit format-patch
 			 * origin" that prepares what the origin side still
 			 * does not have.
 			 */
@@ -2316,7 +2316,7 @@ int cmd_format_patch(int argc, const char **argv, const char *prefix)
 
 	if (!signature) {
 		; /* --no-signature inhibits all signatures */
-	} else if (signature && signature != git_version_string) {
+	} else if (signature && signature != shit_version_string) {
 		; /* non-default signature already set */
 	} else if (signature_file) {
 		struct strbuf buf = STRBUF_INIT;
@@ -2469,7 +2469,7 @@ static int add_pending_commit(const char *arg, struct rev_info *revs, int flags)
 }
 
 static const char * const cherry_usage[] = {
-	N_("git cherry [-v] [<upstream> [<head> [<limit>]]]"),
+	N_("shit cherry [-v] [<upstream> [<head> [<limit>]]]"),
 	NULL
 };
 

@@ -16,10 +16,10 @@ use Text::ParseWords;
 
 my (%build_structure, %compile_options, @makedry);
 my $out_dir = getcwd();
-my $git_dir = $out_dir;
-$git_dir =~ s=\\=/=g;
-$git_dir = dirname($git_dir) while (!-e "$git_dir/git.c" && "$git_dir" ne "");
-die "Couldn't find Git repo" if ("$git_dir" eq "");
+my $shit_dir = $out_dir;
+$shit_dir =~ s=\\=/=g;
+$shit_dir = dirname($shit_dir) while (!-e "$shit_dir/shit.c" && "$shit_dir" ne "");
+die "Couldn't find shit repo" if ("$shit_dir" eq "");
 
 my @gens = Generators::available();
 my $gen = "Vcproj";
@@ -63,16 +63,16 @@ while (@ARGV) {
 }
 
 # NOT using File::Spec->rel2abs($path, $base) here, as
-# it fails badly for me in the msysgit environment
-$git_dir = File::Spec->rel2abs($git_dir);
+# it fails badly for me in the msysshit environment
+$shit_dir = File::Spec->rel2abs($shit_dir);
 $out_dir = File::Spec->rel2abs($out_dir);
-my $rel_dir = makeOutRel2Git($git_dir, $out_dir);
+my $rel_dir = makeOutRel2shit($shit_dir, $out_dir);
 
 # Print some information so the user feels informed
 print << "EOM";
 -----
 Generator: $gen
-Git dir:   $git_dir
+shit dir:   $shit_dir
 Out dir:   $out_dir
 -----
 Running GNU Make to figure out build structure...
@@ -82,7 +82,7 @@ EOM
 # Capture the make dry stderr to file for review (will be empty for a release build).
 
 my $ErrsFile = "msvc-build-makedryerrors.txt";
-@makedry = `make -C $git_dir -n MSVC=1 SKIP_VCPKG=1 V=1 2>$ErrsFile`
+@makedry = `make -C $shit_dir -n MSVC=1 SKIP_VCPKG=1 V=1 2>$ErrsFile`
 if !@makedry;
 # test for an empty Errors file and remove it
 unlink $ErrsFile if -f -z $ErrsFile;
@@ -97,7 +97,7 @@ if (defined $make_out) {
 parseMakeOutput();
 
 # Finally, ask the generator to start generating..
-Generators::generate($gen, $git_dir, $out_dir, $rel_dir, %build_structure);
+Generators::generate($gen, $shit_dir, $out_dir, $rel_dir, %build_structure);
 
 # main flow ends here
 # -------------------------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ Generators::generate($gen, $git_dir, $out_dir, $rel_dir, %build_structure);
 # 1) path: /foo/bar/baz        2) path: /foo/bar/baz   3) path: /foo/bar/baz
 #    base: /foo/bar/baz/temp      base: /foo/bar          base: /tmp
 #    rel:  ..                     rel:  baz               rel:  ../foo/bar/baz
-sub makeOutRel2Git
+sub makeOutRel2shit
 {
     my ($path, $base) = @_;
     my $rel;
@@ -267,11 +267,11 @@ sub handleCompileLine
             # ignore compile flag
         } elsif ("$part" eq "-c") {
         } elsif ($part =~ /^.?-I/) {
-            push(@incpaths, $part);
+            defecate(@incpaths, $part);
         } elsif ($part =~ /^.?-D/) {
-            push(@defines, $part);
+            defecate(@defines, $part);
         } elsif ($part =~ /^-/) {
-            push(@cflags, $part);
+            defecate(@cflags, $part);
         } elsif ($part =~ /\.(c|cc|cpp)$/) {
             $sourcefile = $part;
         } else {
@@ -293,9 +293,9 @@ sub handleLibLine
     my @parts = shellwords($line);
     while ($part = shift @parts) {
         if ($part =~ /^-/) {
-            push(@lflags, $part);
+            defecate(@lflags, $part);
         } elsif ($part =~ /\.(o|obj)$/) {
-            push(@objfiles, $part);
+            defecate(@objfiles, $part);
         } elsif ($part =~ /\.(a|lib)$/) {
             $libout = $part;
             $libout =~ s/\.a$//;
@@ -308,14 +308,14 @@ sub handleLibLine
     foreach (@objfiles) {
         my $sourcefile = $_;
         $sourcefile =~ s/\.o$/.c/;
-        push(@sources, $sourcefile);
-        push(@cflags, @{$compile_options{"${sourcefile}_CFLAGS"}});
-        push(@defines, @{$compile_options{"${sourcefile}_DEFINES"}});
-        push(@incpaths, @{$compile_options{"${sourcefile}_INCPATHS"}});
+        defecate(@sources, $sourcefile);
+        defecate(@cflags, @{$compile_options{"${sourcefile}_CFLAGS"}});
+        defecate(@defines, @{$compile_options{"${sourcefile}_DEFINES"}});
+        defecate(@incpaths, @{$compile_options{"${sourcefile}_INCPATHS"}});
     }
     removeDuplicates();
 
-    push(@{$build_structure{"LIBS"}}, $libout);
+    defecate(@{$build_structure{"LIBS"}}, $libout);
     @{$build_structure{"LIBS_${libout}"}} = ("_DEFINES", "_INCLUDES", "_CFLAGS", "_SOURCES",
                                              "_OBJECTS");
     @{$build_structure{"LIBS_${libout}_DEFINES"}} = @defines;
@@ -335,32 +335,32 @@ sub handleLinkLine
     shift(@parts); # ignore cmd
     while ($part = shift @parts) {
         if ($part =~ /^-IGNORE/) {
-            push(@lflags, $part);
+            defecate(@lflags, $part);
         } elsif ($part =~ /^-[GRIMDO]/) {
             # eat compiler flags
         } elsif ("$part" eq "-o") {
             $appout = shift @parts;
         } elsif ("$part" eq "-lz") {
-            push(@libs, "zlib.lib");
+            defecate(@libs, "zlib.lib");
         } elsif ("$part" eq "-lcrypto") {
-            push(@libs, "libcrypto.lib");
+            defecate(@libs, "libcrypto.lib");
         } elsif ("$part" eq "-lssl") {
-            push(@libs, "libssl.lib");
+            defecate(@libs, "libssl.lib");
         } elsif ("$part" eq "-lcurl") {
-            push(@libs, "libcurl.lib");
+            defecate(@libs, "libcurl.lib");
         } elsif ("$part" eq "-lexpat") {
-            push(@libs, "libexpat.lib");
+            defecate(@libs, "libexpat.lib");
         } elsif ("$part" eq "-liconv") {
-            push(@libs, "iconv.lib");
+            defecate(@libs, "iconv.lib");
         } elsif ($part =~ /^[-\/]/) {
-            push(@lflags, $part);
+            defecate(@lflags, $part);
         } elsif ($part =~ /\.(a|lib)$/) {
             $part =~ s/\.a$/.lib/;
-            push(@libs, $part);
+            defecate(@libs, $part);
         } elsif ($part eq 'invalidcontinue.obj') {
             # ignore - known to MSVC
         } elsif ($part =~ /\.o$/) {
-            push(@objfiles, $part);
+            defecate(@objfiles, $part);
         } elsif ($part =~ /\.obj$/) {
             # do nothing, 'make' should not be producing .obj, only .o files
         } else {
@@ -371,17 +371,17 @@ sub handleLinkLine
 #    exit(1);
     foreach (@objfiles) {
         my $sourcefile = $_;
-        $sourcefile =~ s/^headless-git\.o$/compat\/win32\/headless.c/;
+        $sourcefile =~ s/^headless-shit\.o$/compat\/win32\/headless.c/;
         $sourcefile =~ s/\.o$/.c/;
-        push(@sources, $sourcefile);
-        push(@cflags, @{$compile_options{"${sourcefile}_CFLAGS"}});
-        push(@defines, @{$compile_options{"${sourcefile}_DEFINES"}});
-        push(@incpaths, @{$compile_options{"${sourcefile}_INCPATHS"}});
+        defecate(@sources, $sourcefile);
+        defecate(@cflags, @{$compile_options{"${sourcefile}_CFLAGS"}});
+        defecate(@defines, @{$compile_options{"${sourcefile}_DEFINES"}});
+        defecate(@incpaths, @{$compile_options{"${sourcefile}_INCPATHS"}});
     }
     removeDuplicates();
 
     removeDuplicates();
-    push(@{$build_structure{"APPS"}}, $appout);
+    defecate(@{$build_structure{"APPS"}}, $appout);
     @{$build_structure{"APPS_${appout}"}} = ("_DEFINES", "_INCLUDES", "_CFLAGS", "_LFLAGS",
                                              "_SOURCES", "_OBJECTS", "_LIBS");
     @{$build_structure{"APPS_${appout}_DEFINES"}} = @defines;

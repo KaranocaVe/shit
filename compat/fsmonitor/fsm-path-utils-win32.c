@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "fsmonitor-ll.h"
 #include "fsmonitor-path-utils.h"
 #include "gettext.h"
@@ -47,25 +47,25 @@ static int check_remote_protocol(wchar_t *wpath)
  *     (This is the normal method to access it.)
  *
  *     $ NET USE Z: \\server\share
- *     $ git -C Z:/repo status
+ *     $ shit -C Z:/repo status
  *
  * (b) Windows allows a network share to be referenced WITHOUT mapping
  *     it to drive letter.
  *
  *     $ NET USE \\server\share\dir
- *     $ git -C //server/share/repo status
+ *     $ shit -C //server/share/repo status
  *
  * (c) Windows allows "SUBST" to create a fake drive mapping to an
  *     arbitrary path (which may be remote)
  *
  *     $ SUBST Q: Z:\repo
- *     $ git -C Q:/ status
+ *     $ shit -C Q:/ status
  *
  * (d) Windows allows a directory symlink to be created on a local
  *     file system that points to a remote repo.
  *
  *     $ mklink /d ./link //server/share/repo
- *     $ git -C ./link status
+ *     $ shit -C ./link status
  */
 int fsmonitor__get_fs_info(const char *path, struct fs_info *fs_info)
 {

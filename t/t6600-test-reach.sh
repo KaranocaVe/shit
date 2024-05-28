@@ -31,47 +31,47 @@ test_expect_success 'setup' '
 	for i in $(test_seq 1 10)
 	do
 		test_commit "1-$i" &&
-		git branch -f commit-1-$i &&
-		git tag -a -m "1-$i" tag-1-$i commit-1-$i || return 1
+		shit branch -f commit-1-$i &&
+		shit tag -a -m "1-$i" tag-1-$i commit-1-$i || return 1
 	done &&
 	for j in $(test_seq 1 9)
 	do
-		git reset --hard commit-$j-1 &&
+		shit reset --hard commit-$j-1 &&
 		x=$(($j + 1)) &&
 		test_commit "$x-1" &&
-		git branch -f commit-$x-1 &&
-		git tag -a -m "$x-1" tag-$x-1 commit-$x-1 &&
+		shit branch -f commit-$x-1 &&
+		shit tag -a -m "$x-1" tag-$x-1 commit-$x-1 &&
 
 		for i in $(test_seq 2 10)
 		do
-			git merge commit-$j-$i -m "$x-$i" &&
-			git branch -f commit-$x-$i &&
-			git tag -a -m "$x-$i" tag-$x-$i commit-$x-$i || return 1
+			shit merge commit-$j-$i -m "$x-$i" &&
+			shit branch -f commit-$x-$i &&
+			shit tag -a -m "$x-$i" tag-$x-$i commit-$x-$i || return 1
 		done
 	done &&
-	git commit-graph write --reachable &&
-	mv .git/objects/info/commit-graph commit-graph-full &&
+	shit commit-graph write --reachable &&
+	mv .shit/objects/info/commit-graph commit-graph-full &&
 	chmod u+w commit-graph-full &&
-	git show-ref -s commit-5-5 | git commit-graph write --stdin-commits &&
-	mv .git/objects/info/commit-graph commit-graph-half &&
+	shit show-ref -s commit-5-5 | shit commit-graph write --stdin-commits &&
+	mv .shit/objects/info/commit-graph commit-graph-half &&
 	chmod u+w commit-graph-half &&
-	git -c commitGraph.generationVersion=1 commit-graph write --reachable &&
-	mv .git/objects/info/commit-graph commit-graph-no-gdat &&
+	shit -c commitGraph.generationVersion=1 commit-graph write --reachable &&
+	mv .shit/objects/info/commit-graph commit-graph-no-gdat &&
 	chmod u+w commit-graph-no-gdat &&
-	git config core.commitGraph true
+	shit config core.commitGraph true
 '
 
 run_all_modes () {
-	test_when_finished rm -rf .git/objects/info/commit-graph &&
+	test_when_finished rm -rf .shit/objects/info/commit-graph &&
 	"$@" <input >actual &&
 	test_cmp expect actual &&
-	cp commit-graph-full .git/objects/info/commit-graph &&
+	cp commit-graph-full .shit/objects/info/commit-graph &&
 	"$@" <input >actual &&
 	test_cmp expect actual &&
-	cp commit-graph-half .git/objects/info/commit-graph &&
+	cp commit-graph-half .shit/objects/info/commit-graph &&
 	"$@" <input >actual &&
 	test_cmp expect actual &&
-	cp commit-graph-no-gdat .git/objects/info/commit-graph &&
+	cp commit-graph-no-gdat .shit/objects/info/commit-graph &&
 	"$@" <input >actual &&
 	test_cmp expect actual
 }
@@ -177,7 +177,7 @@ test_expect_success 'get_merge_bases_many' '
 	EOF
 	{
 		echo "get_merge_bases_many(A,X):" &&
-		git rev-parse commit-5-6 \
+		shit rev-parse commit-5-6 \
 			      commit-4-7 | sort
 	} >expect &&
 	test_all_modes get_merge_bases_many
@@ -196,7 +196,7 @@ test_expect_success 'reduce_heads' '
 	EOF
 	{
 		echo "reduce_heads(X):" &&
-		git rev-parse commit-5-1 \
+		shit rev-parse commit-5-1 \
 			      commit-4-4 \
 			      commit-3-6 \
 			      commit-2-8 \
@@ -308,7 +308,7 @@ test_expect_success 'commit_contains:miss' '
 '
 
 test_expect_success 'rev-list: basic topo-order' '
-	git rev-parse \
+	shit rev-parse \
 		commit-6-6 commit-5-6 commit-4-6 commit-3-6 commit-2-6 commit-1-6 \
 		commit-6-5 commit-5-5 commit-4-5 commit-3-5 commit-2-5 commit-1-5 \
 		commit-6-4 commit-5-4 commit-4-4 commit-3-4 commit-2-4 commit-1-4 \
@@ -316,11 +316,11 @@ test_expect_success 'rev-list: basic topo-order' '
 		commit-6-2 commit-5-2 commit-4-2 commit-3-2 commit-2-2 commit-1-2 \
 		commit-6-1 commit-5-1 commit-4-1 commit-3-1 commit-2-1 commit-1-1 \
 	>expect &&
-	run_all_modes git rev-list --topo-order commit-6-6
+	run_all_modes shit rev-list --topo-order commit-6-6
 '
 
 test_expect_success 'rev-list: first-parent topo-order' '
-	git rev-parse \
+	shit rev-parse \
 		commit-6-6 \
 		commit-6-5 \
 		commit-6-4 \
@@ -328,11 +328,11 @@ test_expect_success 'rev-list: first-parent topo-order' '
 		commit-6-2 \
 		commit-6-1 commit-5-1 commit-4-1 commit-3-1 commit-2-1 commit-1-1 \
 	>expect &&
-	run_all_modes git rev-list --first-parent --topo-order commit-6-6
+	run_all_modes shit rev-list --first-parent --topo-order commit-6-6
 '
 
 test_expect_success 'rev-list: range topo-order' '
-	git rev-parse \
+	shit rev-parse \
 		commit-6-6 commit-5-6 commit-4-6 commit-3-6 commit-2-6 commit-1-6 \
 		commit-6-5 commit-5-5 commit-4-5 commit-3-5 commit-2-5 commit-1-5 \
 		commit-6-4 commit-5-4 commit-4-4 commit-3-4 commit-2-4 commit-1-4 \
@@ -340,11 +340,11 @@ test_expect_success 'rev-list: range topo-order' '
 		commit-6-2 commit-5-2 commit-4-2 \
 		commit-6-1 commit-5-1 commit-4-1 \
 	>expect &&
-	run_all_modes git rev-list --topo-order commit-3-3..commit-6-6
+	run_all_modes shit rev-list --topo-order commit-3-3..commit-6-6
 '
 
 test_expect_success 'rev-list: range topo-order' '
-	git rev-parse \
+	shit rev-parse \
 		commit-6-6 commit-5-6 commit-4-6 \
 		commit-6-5 commit-5-5 commit-4-5 \
 		commit-6-4 commit-5-4 commit-4-4 \
@@ -352,11 +352,11 @@ test_expect_success 'rev-list: range topo-order' '
 		commit-6-2 commit-5-2 commit-4-2 \
 		commit-6-1 commit-5-1 commit-4-1 \
 	>expect &&
-	run_all_modes git rev-list --topo-order commit-3-8..commit-6-6
+	run_all_modes shit rev-list --topo-order commit-3-8..commit-6-6
 '
 
 test_expect_success 'rev-list: first-parent range topo-order' '
-	git rev-parse \
+	shit rev-parse \
 		commit-6-6 \
 		commit-6-5 \
 		commit-6-4 \
@@ -364,21 +364,21 @@ test_expect_success 'rev-list: first-parent range topo-order' '
 		commit-6-2 \
 		commit-6-1 commit-5-1 commit-4-1 \
 	>expect &&
-	run_all_modes git rev-list --first-parent --topo-order commit-3-8..commit-6-6
+	run_all_modes shit rev-list --first-parent --topo-order commit-3-8..commit-6-6
 '
 
 test_expect_success 'rev-list: ancestry-path topo-order' '
-	git rev-parse \
+	shit rev-parse \
 		commit-6-6 commit-5-6 commit-4-6 commit-3-6 \
 		commit-6-5 commit-5-5 commit-4-5 commit-3-5 \
 		commit-6-4 commit-5-4 commit-4-4 commit-3-4 \
 		commit-6-3 commit-5-3 commit-4-3 \
 	>expect &&
-	run_all_modes git rev-list --topo-order --ancestry-path commit-3-3..commit-6-6
+	run_all_modes shit rev-list --topo-order --ancestry-path commit-3-3..commit-6-6
 '
 
 test_expect_success 'rev-list: symmetric difference topo-order' '
-	git rev-parse \
+	shit rev-parse \
 		commit-6-6 commit-5-6 commit-4-6 \
 		commit-6-5 commit-5-5 commit-4-5 \
 		commit-6-4 commit-5-4 commit-4-4 \
@@ -388,7 +388,7 @@ test_expect_success 'rev-list: symmetric difference topo-order' '
 		commit-3-8 commit-2-8 commit-1-8 \
 		commit-3-7 commit-2-7 commit-1-7 \
 	>expect &&
-	run_all_modes git rev-list --topo-order commit-3-8...commit-6-6
+	run_all_modes shit rev-list --topo-order commit-3-8...commit-6-6
 '
 
 test_expect_success 'get_reachable_subset:all' '
@@ -404,7 +404,7 @@ test_expect_success 'get_reachable_subset:all' '
 	EOF
 	(
 		echo "get_reachable_subset(X,Y)" &&
-		git rev-parse commit-3-3 \
+		shit rev-parse commit-3-3 \
 			      commit-1-7 \
 			      commit-5-6 | sort
 	) >expect &&
@@ -423,7 +423,7 @@ test_expect_success 'get_reachable_subset:some' '
 	EOF
 	(
 		echo "get_reachable_subset(X,Y)" &&
-		git rev-parse commit-3-3 \
+		shit rev-parse commit-3-3 \
 			      commit-1-7 | sort
 	) >expect &&
 	test_all_modes get_reachable_subset
@@ -456,7 +456,7 @@ test_expect_success 'for-each-ref ahead-behind:linear' '
 	refs/heads/commit-1-5 0 4
 	refs/heads/commit-1-8 0 1
 	EOF
-	run_all_modes git for-each-ref \
+	run_all_modes shit for-each-ref \
 		--format="%(refname) %(ahead-behind:commit-1-9)" --stdin
 '
 
@@ -473,7 +473,7 @@ test_expect_success 'for-each-ref ahead-behind:all' '
 	refs/heads/commit-4-2 0 17
 	refs/heads/commit-4-4 0 9
 	EOF
-	run_all_modes git for-each-ref \
+	run_all_modes shit for-each-ref \
 		--format="%(refname) %(ahead-behind:commit-5-5)" --stdin
 '
 
@@ -490,7 +490,7 @@ test_expect_success 'for-each-ref ahead-behind:some' '
 	refs/heads/commit-5-3 0 39
 	refs/heads/commit-9-9 27 0
 	EOF
-	run_all_modes git for-each-ref \
+	run_all_modes shit for-each-ref \
 		--format="%(refname) %(ahead-behind:commit-9-6)" --stdin
 '
 
@@ -509,7 +509,7 @@ test_expect_success 'for-each-ref ahead-behind:some, multibase' '
 	refs/heads/commit-7-8 14 12 8 6
 	refs/heads/commit-9-9 27 0 27 0
 	EOF
-	run_all_modes git for-each-ref \
+	run_all_modes shit for-each-ref \
 		--format="%(refname) %(ahead-behind:commit-9-6) %(ahead-behind:commit-6-9)" \
 		--stdin
 '
@@ -525,7 +525,7 @@ test_expect_success 'for-each-ref ahead-behind:none' '
 	refs/heads/commit-7-5 7 4
 	refs/heads/commit-9-9 49 0
 	EOF
-	run_all_modes git for-each-ref \
+	run_all_modes shit for-each-ref \
 		--format="%(refname) %(ahead-behind:commit-8-4)" --stdin
 '
 
@@ -545,7 +545,7 @@ test_expect_success 'for-each-ref merged:linear' '
 	refs/heads/commit-1-5
 	refs/heads/commit-1-8
 	EOF
-	run_all_modes git for-each-ref --merged=commit-1-9 \
+	run_all_modes shit for-each-ref --merged=commit-1-9 \
 		--format="%(refname)" --stdin
 '
 
@@ -562,7 +562,7 @@ test_expect_success 'for-each-ref merged:all' '
 	refs/heads/commit-4-2
 	refs/heads/commit-4-4
 	EOF
-	run_all_modes git for-each-ref --merged=commit-5-5 \
+	run_all_modes shit for-each-ref --merged=commit-5-5 \
 		--format="%(refname)" --stdin
 '
 
@@ -577,7 +577,7 @@ test_expect_success 'for-each-ref ahead-behind:some' '
 	refs/heads/commit-1-1
 	refs/heads/commit-5-3
 	EOF
-	run_all_modes git for-each-ref --merged=commit-9-6 \
+	run_all_modes shit for-each-ref --merged=commit-9-6 \
 		--format="%(refname)" --stdin
 '
 
@@ -594,7 +594,7 @@ test_expect_success 'for-each-ref merged:some, multibase' '
 	refs/heads/commit-4-8
 	refs/heads/commit-5-3
 	EOF
-	run_all_modes git for-each-ref \
+	run_all_modes shit for-each-ref \
 		--merged=commit-5-8 \
 		--merged=commit-8-5 \
 		--format="%(refname)" \
@@ -608,7 +608,7 @@ test_expect_success 'for-each-ref merged:none' '
 	refs/heads/commit-9-9
 	EOF
 	>expect &&
-	run_all_modes git for-each-ref --merged=commit-8-4 \
+	run_all_modes shit for-each-ref --merged=commit-8-4 \
 		--format="%(refname)" --stdin
 '
 

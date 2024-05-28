@@ -1,4 +1,4 @@
-all: git-credential-wincred.exe
+all: shit-credential-wincred.exe
 
 -include ../../../config.mak.autogen
 -include ../../../config.mak
@@ -8,15 +8,15 @@ RM ?= rm -f
 CFLAGS ?= -O2 -Wall
 
 prefix ?= /usr/local
-libexecdir ?= $(prefix)/libexec/git-core
+libexecdir ?= $(prefix)/libexec/shit-core
 
 INSTALL ?= install
 
-git-credential-wincred.exe : git-credential-wincred.c
+shit-credential-wincred.exe : shit-credential-wincred.c
 	$(LINK.c) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
-install: git-credential-wincred.exe
+install: shit-credential-wincred.exe
 	$(INSTALL) -m 755 $^ $(libexecdir)
 
 clean:
-	$(RM) git-credential-wincred.exe
+	$(RM) shit-credential-wincred.exe

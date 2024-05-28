@@ -14,7 +14,7 @@ test_expect_success 'setup' '
 '
 
 test_expect_success 'repack everything into a single packfile' '
-	git repack -a -d --no-write-bitmap-index &&
+	shit repack -a -d --no-write-bitmap-index &&
 
 	head_commit_pack=$(test-tool find-pack HEAD) &&
 	head_tree_pack=$(test-tool find-pack HEAD^{tree}) &&
@@ -30,7 +30,7 @@ test_expect_success 'repack everything into a single packfile' '
 
 	# Packfile exists at the right path
 	case "$head_commit_pack" in
-		".git/objects/pack/pack-"*".pack") true ;;
+		".shit/objects/pack/pack-"*".pack") true ;;
 		*) false ;;
 	esac &&
 	test -f "$head_commit_pack" &&
@@ -43,11 +43,11 @@ test_expect_success 'repack everything into a single packfile' '
 '
 
 test_expect_success 'add more packfiles' '
-	git rev-parse HEAD^{tree} HEAD:two.t HEAD:four.t >objects &&
-	git pack-objects .git/objects/pack/mypackname1 >packhash1 <objects &&
+	shit rev-parse HEAD^{tree} HEAD:two.t HEAD:four.t >objects &&
+	shit pack-objects .shit/objects/pack/mypackname1 >packhash1 <objects &&
 
-	git rev-parse HEAD~ HEAD~^{tree} HEAD:five.t >objects &&
-	git pack-objects .git/objects/pack/mypackname2 >packhash2 <objects &&
+	shit rev-parse HEAD~ HEAD~^{tree} HEAD:five.t >objects &&
+	shit pack-objects .shit/objects/pack/mypackname2 >packhash2 <objects &&
 
 	head_commit_pack=$(test-tool find-pack HEAD) &&
 

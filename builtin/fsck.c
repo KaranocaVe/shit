@@ -248,7 +248,7 @@ static int mark_loose_unreachable_referents(const struct object_id *oid,
 }
 
 static int mark_packed_unreachable_referents(const struct object_id *oid,
-					     struct packed_git *pack UNUSED,
+					     struct packed_shit *pack UNUSED,
 					     uint32_t pos UNUSED,
 					     void *data UNUSED)
 {
@@ -322,7 +322,7 @@ static void check_unreachable_object(struct object *obj)
 				  printable_type(&obj->oid, obj->type),
 				  describe_object(&obj->oid));
 		if (write_lost_and_found) {
-			char *filename = git_pathdup("lost-found/%s/%s",
+			char *filename = shit_pathdup("lost-found/%s/%s",
 				obj->type == OBJ_COMMIT ? "commit" : "other",
 				describe_object(&obj->oid));
 			FILE *f;
@@ -822,7 +822,7 @@ static void fsck_index(struct index_state *istate, const char *index_path,
 		struct object *obj;
 
 		mode = istate->cache[i]->ce_mode;
-		if (S_ISGITLINK(mode))
+		if (S_ISshitLINK(mode))
 			continue;
 		blob = lookup_blob(the_repository,
 				   &istate->cache[i]->oid);
@@ -856,7 +856,7 @@ static int mark_loose_for_connectivity(const struct object_id *oid,
 }
 
 static int mark_packed_for_connectivity(const struct object_id *oid,
-					struct packed_git *pack UNUSED,
+					struct packed_shit *pack UNUSED,
 					uint32_t pos UNUSED,
 					void *data UNUSED)
 {
@@ -871,13 +871,13 @@ static int check_pack_rev_indexes(struct repository *r, int show_progress)
 	int res = 0;
 
 	if (show_progress) {
-		for (struct packed_git *p = get_all_packs(r); p; p = p->next)
+		for (struct packed_shit *p = get_all_packs(r); p; p = p->next)
 			pack_count++;
 		progress = start_delayed_progress("Verifying reverse pack-indexes", pack_count);
 		pack_count = 0;
 	}
 
-	for (struct packed_git *p = get_all_packs(r); p; p = p->next) {
+	for (struct packed_shit *p = get_all_packs(r); p; p = p->next) {
 		int load_error = load_pack_revindex_from_disk(p);
 
 		if (load_error < 0) {
@@ -897,7 +897,7 @@ static int check_pack_rev_indexes(struct repository *r, int show_progress)
 }
 
 static char const * const fsck_usage[] = {
-	N_("git fsck [--tags] [--root] [--unreachable] [--cache] [--no-reflogs]\n"
+	N_("shit fsck [--tags] [--root] [--unreachable] [--cache] [--no-reflogs]\n"
 	   "         [--[no-]full] [--strict] [--verbose] [--lost-found]\n"
 	   "         [--[no-]dangling] [--[no-]progress] [--connectivity-only]\n"
 	   "         [--[no-]name-objects] [<object>...]"),
@@ -916,7 +916,7 @@ static struct option fsck_opts[] = {
 	OPT_BOOL(0, "connectivity-only", &connectivity_only, N_("check only connectivity")),
 	OPT_BOOL(0, "strict", &check_strict, N_("enable more strict checking")),
 	OPT_BOOL(0, "lost-found", &write_lost_and_found,
-				N_("write dangling objects in .git/lost-found")),
+				N_("write dangling objects in .shit/lost-found")),
 	OPT_BOOL(0, "progress", &show_progress, N_("show progress")),
 	OPT_BOOL(0, "name-objects", &name_objects, N_("show verbose names for reachable objects")),
 	OPT_END(),
@@ -955,7 +955,7 @@ int cmd_fsck(int argc, const char **argv, const char *prefix)
 	if (name_objects)
 		fsck_enable_object_names(&fsck_walk_options);
 
-	git_config(git_fsck_config, &fsck_obj_options);
+	shit_config(shit_fsck_config, &fsck_obj_options);
 	prepare_repo_settings(the_repository);
 
 	if (connectivity_only) {
@@ -967,7 +967,7 @@ int cmd_fsck(int argc, const char **argv, const char *prefix)
 			fsck_object_dir(odb->path);
 
 		if (check_full) {
-			struct packed_git *p;
+			struct packed_shit *p;
 			uint32_t total = 0, count = 0;
 			struct progress *progress = NULL;
 
@@ -1024,7 +1024,7 @@ int cmd_fsck(int argc, const char **argv, const char *prefix)
 
 	/*
 	 * If we've not been given any explicit head information, do the
-	 * default ones from .git/refs. We also consider the index file
+	 * default ones from .shit/refs. We also consider the index file
 	 * in this case (ie this implies --cache).
 	 */
 	if (!argc) {
@@ -1050,8 +1050,8 @@ int cmd_fsck(int argc, const char **argv, const char *prefix)
 			 * and may get overwritten by other calls
 			 * while we're examining the index.
 			 */
-			path = xstrdup(worktree_git_path(wt, "index"));
-			read_index_from(&istate, path, get_worktree_git_dir(wt));
+			path = xstrdup(worktree_shit_path(wt, "index"));
+			read_index_from(&istate, path, get_worktree_shit_dir(wt));
 			fsck_index(&istate, path, wt->is_current);
 			discard_index(&istate);
 			free(path);
@@ -1071,13 +1071,13 @@ int cmd_fsck(int argc, const char **argv, const char *prefix)
 		prepare_alt_odb(the_repository);
 		for (odb = the_repository->objects->odb; odb; odb = odb->next) {
 			child_process_init(&commit_graph_verify);
-			commit_graph_verify.git_cmd = 1;
-			strvec_pushl(&commit_graph_verify.args, "commit-graph",
+			commit_graph_verify.shit_cmd = 1;
+			strvec_defecatel(&commit_graph_verify.args, "commit-graph",
 				     "verify", "--object-dir", odb->path, NULL);
 			if (show_progress)
-				strvec_push(&commit_graph_verify.args, "--progress");
+				strvec_defecate(&commit_graph_verify.args, "--progress");
 			else
-				strvec_push(&commit_graph_verify.args, "--no-progress");
+				strvec_defecate(&commit_graph_verify.args, "--no-progress");
 			if (run_command(&commit_graph_verify))
 				errors_found |= ERROR_COMMIT_GRAPH;
 		}
@@ -1089,13 +1089,13 @@ int cmd_fsck(int argc, const char **argv, const char *prefix)
 		prepare_alt_odb(the_repository);
 		for (odb = the_repository->objects->odb; odb; odb = odb->next) {
 			child_process_init(&midx_verify);
-			midx_verify.git_cmd = 1;
-			strvec_pushl(&midx_verify.args, "multi-pack-index",
+			midx_verify.shit_cmd = 1;
+			strvec_defecatel(&midx_verify.args, "multi-pack-index",
 				     "verify", "--object-dir", odb->path, NULL);
 			if (show_progress)
-				strvec_push(&midx_verify.args, "--progress");
+				strvec_defecate(&midx_verify.args, "--progress");
 			else
-				strvec_push(&midx_verify.args, "--no-progress");
+				strvec_defecate(&midx_verify.args, "--no-progress");
 			if (run_command(&midx_verify))
 				errors_found |= ERROR_MULTI_PACK_INDEX;
 		}

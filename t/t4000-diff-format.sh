@@ -23,26 +23,26 @@ mkdir path2
 >path2/path3
 
 test_expect_success 'update-index --add two files with and without +x.' '
-	git update-index --add path0 path1 path2/path3
+	shit update-index --add path0 path1 path2/path3
 '
 
 mv path0 path0-
 sed -e 's/line/Line/' <path0- >path0
 chmod +x path0
 rm -f path1
-test_expect_success 'git diff-files -p after editing work tree.' '
-	git diff-files -p >actual
+test_expect_success 'shit diff-files -p after editing work tree.' '
+	shit diff-files -p >actual
 '
 
 # that's as far as it comes
-if [ "$(git config --get core.filemode)" = false ]
+if [ "$(shit config --get core.filemode)" = false ]
 then
 	say 'filemode disabled on the filesystem'
 	test_done
 fi
 
 cat >expected <<\EOF
-diff --git a/path0 b/path0
+diff --shit a/path0 b/path0
 old mode 100644
 new mode 100755
 --- a/path0
@@ -52,7 +52,7 @@ new mode 100755
  Line 2
 -line 3
 +Line 3
-diff --git a/path1 b/path1
+diff --shit a/path1 b/path1
 deleted file mode 100755
 --- a/path1
 +++ /dev/null
@@ -62,36 +62,36 @@ deleted file mode 100755
 -line 3
 EOF
 
-test_expect_success 'validate git diff-files -p output.' '
+test_expect_success 'validate shit diff-files -p output.' '
 	compare_diff_patch expected actual
 '
 
-test_expect_success 'git diff-files -s after editing work tree' '
-	git diff-files -s >actual 2>err &&
+test_expect_success 'shit diff-files -s after editing work tree' '
+	shit diff-files -s >actual 2>err &&
 	test_must_be_empty actual &&
 	test_must_be_empty err
 '
 
-test_expect_success 'git diff-files --no-patch as synonym for -s' '
-	git diff-files --no-patch >actual 2>err &&
+test_expect_success 'shit diff-files --no-patch as synonym for -s' '
+	shit diff-files --no-patch >actual 2>err &&
 	test_must_be_empty actual &&
 	test_must_be_empty err
 '
 
-test_expect_success 'git diff-files --no-patch --patch shows the patch' '
-	git diff-files --no-patch --patch >actual &&
+test_expect_success 'shit diff-files --no-patch --patch shows the patch' '
+	shit diff-files --no-patch --patch >actual &&
 	compare_diff_patch expected actual
 '
 
-test_expect_success 'git diff-files --no-patch --patch-with-raw shows the patch and raw data' '
-	git diff-files --no-patch --patch-with-raw >actual &&
+test_expect_success 'shit diff-files --no-patch --patch-with-raw shows the patch and raw data' '
+	shit diff-files --no-patch --patch-with-raw >actual &&
 	grep -q "^:100644 100755 .* $ZERO_OID M	path0\$" actual &&
 	tail -n +4 actual >actual-patch &&
 	compare_diff_patch expected actual-patch
 '
 
-test_expect_success 'git diff-files --patch --no-patch does not show the patch' '
-	git diff-files --patch --no-patch >actual 2>err &&
+test_expect_success 'shit diff-files --patch --no-patch does not show the patch' '
+	shit diff-files --patch --no-patch >actual 2>err &&
 	test_must_be_empty actual &&
 	test_must_be_empty err
 '
@@ -104,21 +104,21 @@ for format in stat raw numstat shortstat summary \
 	dirstat cumulative dirstat-by-file \
 	patch-with-raw patch-with-stat compact-summary
 do
-	test_expect_success "--no-patch in 'git diff-files --no-patch --$format' is a no-op" '
-		git diff-files --no-patch "--$format" >actual &&
-		git diff-files "--$format" >expect &&
+	test_expect_success "--no-patch in 'shit diff-files --no-patch --$format' is a no-op" '
+		shit diff-files --no-patch "--$format" >actual &&
+		shit diff-files "--$format" >expect &&
 		test_cmp expect actual
 	'
 
 	test_expect_success "--no-patch clears all previous ones" '
-		git diff-files --$format -s -p >actual &&
-		git diff-files -p >expect &&
+		shit diff-files --$format -s -p >actual &&
+		shit diff-files -p >expect &&
 		test_cmp expect actual
 	'
 
-	test_expect_success "--no-patch in 'git diff --no-patch --$format' is a no-op" '
-		git diff --no-patch "--$format" >actual &&
-		git diff "--$format" >expect &&
+	test_expect_success "--no-patch in 'shit diff --no-patch --$format' is a no-op" '
+		shit diff --no-patch "--$format" >actual &&
+		shit diff "--$format" >expect &&
 		test_cmp expect actual
 	'
 done

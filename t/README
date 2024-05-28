@@ -1,7 +1,7 @@
-Core Git Tests
+Core shit Tests
 ==============
 
-This directory holds many test scripts for core Git tools.  The
+This directory holds many test scripts for core shit tools.  The
 first part of this short document describes how to run the tests
 and read their output.
 
@@ -18,8 +18,8 @@ The easiest way to run tests is to say "make".  This runs all
 the tests.
 
     *** t0000-basic.sh ***
-    ok 1 - .git/objects should be empty after git init in an empty repo.
-    ok 2 - .git/objects should have 3 subdirectories.
+    ok 1 - .shit/objects should be empty after shit init in an empty repo.
+    ok 2 - .shit/objects should have 3 subdirectories.
     ok 3 - success is reported like this
     ...
     ok 43 - very long name in the index handled sanely
@@ -29,7 +29,7 @@ the tests.
     1..43
     *** t0001-init.sh ***
     ok 1 - plain
-    ok 2 - plain with GIT_WORK_TREE
+    ok 2 - plain with shit_WORK_TREE
     ok 3 - plain bare
 
 t/Makefile defines a target for each test file, such that you can also use
@@ -48,7 +48,7 @@ powered by a recent version of prove(1):
     [19:17:33] ./t0022-crlf-rename.sh ............................... ok       69 ms
     [19:17:33] ./t0024-crlf-archive.sh .............................. ok      154 ms
     [19:17:33] ./t0004-unwritable.sh ................................ ok      289 ms
-    [19:17:33] ./t0002-gitfile.sh ................................... ok      480 ms
+    [19:17:33] ./t0002-shitfile.sh ................................... ok      480 ms
     ===(     102;0  25/?  6/?  5/?  16/?  1/?  4/?  2/?  1/?  3/?  1... )===
 
 prove and other harnesses come with a lot of useful options. The
@@ -59,23 +59,23 @@ prove and other harnesses come with a lot of useful options. The
 
 You can give DEFAULT_TEST_TARGET=prove on the make command (or define it
 in config.mak) to cause "make test" to run tests under prove.
-GIT_PROVE_OPTS can be used to pass additional options, e.g.
+shit_PROVE_OPTS can be used to pass additional options, e.g.
 
-    $ make DEFAULT_TEST_TARGET=prove GIT_PROVE_OPTS='--timer --jobs 16' test
+    $ make DEFAULT_TEST_TARGET=prove shit_PROVE_OPTS='--timer --jobs 16' test
 
 You can also run each test individually from command line, like this:
 
     $ sh ./t3010-ls-files-killed-modified.sh
-    ok 1 - git update-index --add to add various paths.
-    ok 2 - git ls-files -k to show killed files.
-    ok 3 - validate git ls-files -k output.
-    ok 4 - git ls-files -m to show modified files.
-    ok 5 - validate git ls-files -m output.
+    ok 1 - shit update-index --add to add various paths.
+    ok 2 - shit ls-files -k to show killed files.
+    ok 3 - validate shit ls-files -k output.
+    ok 4 - shit ls-files -m to show modified files.
+    ok 5 - validate shit ls-files -m output.
     # passed all 5 test(s)
     1..5
 
 You can pass --verbose (or -v), --debug (or -d), and --immediate
-(or -i) command line argument to the test, or by setting GIT_TEST_OPTS
+(or -i) command line argument to the test, or by setting shit_TEST_OPTS
 appropriately before running "make". Short options can be bundled, i.e.
 '-d -v' is the same as '-dv'.
 
@@ -126,7 +126,7 @@ appropriately before running "make". Short options can be bundled, i.e.
 	<test-selector> syntax.
 
 --valgrind=<tool>::
-	Execute all Git binaries under valgrind tool <tool> and exit
+	Execute all shit binaries under valgrind tool <tool> and exit
 	with status 126 on errors (just like regular tests, this will
 	only stop the test script when running under -i).
 
@@ -145,9 +145,9 @@ appropriately before running "make". Short options can be bundled, i.e.
 	issues.
 
 	Note that memcheck is run with the option --leak-check=no,
-	as the git process is short-lived and some errors are not
+	as the shit process is short-lived and some errors are not
 	interesting. In order to run a single command under the same
-	conditions manually, you should set GIT_VALGRIND to point to
+	conditions manually, you should set shit_VALGRIND to point to
 	the 't/valgrind/' directory and use the commands under
 	't/valgrind/bin/'.
 
@@ -171,19 +171,19 @@ appropriately before running "make". Short options can be bundled, i.e.
 
 --with-dashes::
 	By default tests are run without dashed forms of
-	commands (like git-commit) in the PATH (it only uses
+	commands (like shit-commit) in the PATH (it only uses
 	wrappers from ../bin-wrappers).  Use this option to include
 	the build directory (..) in the PATH, which contains all
 	the dashed forms of commands.  This option is currently
 	implied by other options like --valgrind and
-	GIT_TEST_INSTALLED.
+	shit_TEST_INSTALLED.
 
 --no-bin-wrappers::
 	By default, the test suite uses the wrappers in
-	`../bin-wrappers/` to execute `git` and friends. With this option,
-	`../git` and friends are run directly. This is not recommended
+	`../bin-wrappers/` to execute `shit` and friends. With this option,
+	`../shit` and friends are run directly. This is not recommended
 	in general, as the wrappers contain safeguards to ensure that no
-	files from an installed Git are used, but can speed up test runs
+	files from an installed shit are used, but can speed up test runs
 	especially on platforms where running shell scripts is expensive
 	(most notably, Windows).
 
@@ -200,14 +200,14 @@ appropriately before running "make". Short options can be bundled, i.e.
 	that a failure in the middle does not go unnoticed by the final
 	exit code of the test). This check is performed in addition to
 	running the tests themselves. You may also enable or disable
-	this feature by setting the GIT_TEST_CHAIN_LINT environment
+	this feature by setting the shit_TEST_CHAIN_LINT environment
 	variable to "1" or "0", respectively.
 
 --stress::
 	Run the test script repeatedly in multiple parallel jobs until
 	one of them fails.  Useful for reproducing rare failures in
 	flaky tests.  The number of parallel jobs is, in order of
-	precedence: the value of the GIT_TEST_STRESS_LOAD
+	precedence: the value of the shit_TEST_STRESS_LOAD
 	environment variable, or twice the number of available
 	processors (as shown by the 'getconf' utility),	or 8.
 	Implies `--verbose -x --immediate` to get the most information
@@ -226,17 +226,17 @@ appropriately before running "make". Short options can be bundled, i.e.
 	this many times in each of the parallel jobs or until one of
 	them fails, whichever comes first. Implies `--stress`.
 
-You can also set the GIT_TEST_INSTALLED environment variable to
-the bindir of an existing git installation to test that installation.
-You still need to have built this git sandbox, from which various
+You can also set the shit_TEST_INSTALLED environment variable to
+the bindir of an existing shit installation to test that installation.
+You still need to have built this shit sandbox, from which various
 test-* support programs, templates, and perl libraries are used.
-If your installed git is incomplete, it will silently test parts of
+If your installed shit is incomplete, it will silently test parts of
 your built version instead.
 
-When using GIT_TEST_INSTALLED, you can also set GIT_TEST_EXEC_PATH to
+When using shit_TEST_INSTALLED, you can also set shit_TEST_EXEC_PATH to
 override the location of the dashed-form subcommands (what
-GIT_EXEC_PATH would be used for during normal operation).
-GIT_TEST_EXEC_PATH defaults to `$GIT_TEST_INSTALLED/git --exec-path`.
+shit_EXEC_PATH would be used for during normal operation).
+shit_TEST_EXEC_PATH defaults to `$shit_TEST_INSTALLED/shit --exec-path`.
 
 
 Skipping Tests
@@ -249,11 +249,11 @@ as pathnames.
 
 You should be able to say something like
 
-    $ GIT_SKIP_TESTS=t9200.8 sh ./t9200-git-cvsexport-commit.sh
+    $ shit_SKIP_TESTS=t9200.8 sh ./t9200-shit-cvsexport-commit.sh
 
 and even:
 
-    $ GIT_SKIP_TESTS='t[0-4]??? t91?? t9200.8' make
+    $ shit_SKIP_TESTS='t[0-4]??? t91?? t9200.8' make
 
 to omit such tests.  The value of the environment variable is a
 SP separated list of patterns that tells which tests to skip,
@@ -290,41 +290,41 @@ the set one by one, from left to right.
 For example, to run only tests up to a specific test (21), one
 could do this:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run='1-21'
+    $ sh ./t9200-shit-cvsexport-commit.sh --run='1-21'
 
 or this:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run='-21'
+    $ sh ./t9200-shit-cvsexport-commit.sh --run='-21'
 
 Common case is to run several setup tests (1, 2, 3) and then a
 specific test (21) that relies on that setup:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run='1,2,3,21'
+    $ sh ./t9200-shit-cvsexport-commit.sh --run='1,2,3,21'
 
 or:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run=1,2,3,21
+    $ sh ./t9200-shit-cvsexport-commit.sh --run=1,2,3,21
 
 or:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run='-3,21'
+    $ sh ./t9200-shit-cvsexport-commit.sh --run='-3,21'
 
 As noted above, the test set is built by going through the items
 from left to right, so this:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run='1-4,!3'
+    $ sh ./t9200-shit-cvsexport-commit.sh --run='1-4,!3'
 
 will run tests 1, 2, and 4.  Items that come later have higher
 precedence.  It means that this:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run='!3,1-4'
+    $ sh ./t9200-shit-cvsexport-commit.sh --run='!3,1-4'
 
 would just run tests from 1 to 4, including 3.
 
 You may use negation with ranges.  The following will run all
 test in the test suite except from 7 up to 11:
 
-    $ sh ./t9200-git-cvsexport-commit.sh --run='!7-11'
+    $ sh ./t9200-shit-cvsexport-commit.sh --run='!7-11'
 
 Sometimes there may be multiple tests with e.g. "setup" in their name
 that are needed and rather than figuring out the number for all of them
@@ -353,10 +353,10 @@ Running tests with special setups
 
 The whole test suite could be run to test some special features
 that cannot be easily covered by a few specific test cases. These
-could be enabled by running the test suite with correct GIT_TEST_
+could be enabled by running the test suite with correct shit_TEST_
 environment set.
 
-GIT_TEST_FAIL_PREREQS=<boolean> fails all prerequisites. This is
+shit_TEST_FAIL_PREREQS=<boolean> fails all prerequisites. This is
 useful for discovering issues with the tests where say a later test
 implicitly depends on an optional earlier test.
 
@@ -365,148 +365,148 @@ whether this mode is active, and e.g. skip some tests that are hard to
 refactor to deal with it. The "SYMLINKS" prerequisite is currently
 excluded as so much relies on it, but this might change in the future.
 
-GIT_TEST_SPLIT_INDEX=<boolean> forces split-index mode on the whole
-test suite. Accept any boolean values that are accepted by git-config.
+shit_TEST_SPLIT_INDEX=<boolean> forces split-index mode on the whole
+test suite. Accept any boolean values that are accepted by shit-config.
 
-GIT_TEST_PASSING_SANITIZE_LEAK=true skips those tests that haven't
+shit_TEST_PASSING_SANITIZE_LEAK=true skips those tests that haven't
 declared themselves as leak-free by setting
 "TEST_PASSES_SANITIZE_LEAK=true" before sourcing "test-lib.sh". This
 test mode is used by the "linux-leaks" CI target.
 
-GIT_TEST_PASSING_SANITIZE_LEAK=check checks that our
+shit_TEST_PASSING_SANITIZE_LEAK=check checks that our
 "TEST_PASSES_SANITIZE_LEAK=true" markings are current. Rather than
 skipping those tests that haven't set "TEST_PASSES_SANITIZE_LEAK=true"
 before sourcing "test-lib.sh" this mode runs them with
 "--invert-exit-code". This is used to check that there's a one-to-one
 mapping between "TEST_PASSES_SANITIZE_LEAK=true" and those tests that
 pass under "SANITIZE=leak". This is especially useful when testing a
-series that fixes various memory leaks with "git rebase -x".
+series that fixes various memory leaks with "shit rebase -x".
 
-GIT_TEST_SANITIZE_LEAK_LOG=true will log memory leaks to
+shit_TEST_SANITIZE_LEAK_LOG=true will log memory leaks to
 "test-results/$TEST_NAME.leak/trace.*" files. The logs include a
-"dedup_token" (see +"ASAN_OPTIONS=help=1 ./git") and other options to
+"dedup_token" (see +"ASAN_OPTIONS=help=1 ./shit") and other options to
 make logs +machine-readable.
 
-With GIT_TEST_SANITIZE_LEAK_LOG=true we'll look at the leak logs
+With shit_TEST_SANITIZE_LEAK_LOG=true we'll look at the leak logs
 before exiting and exit on failure if the logs showed that we had a
 memory leak, even if the test itself would have otherwise passed. This
 allows us to catch e.g. missing &&-chaining. This is especially useful
-when combined with "GIT_TEST_PASSING_SANITIZE_LEAK", see below.
+when combined with "shit_TEST_PASSING_SANITIZE_LEAK", see below.
 
-GIT_TEST_PASSING_SANITIZE_LEAK=check when combined with "--immediate"
+shit_TEST_PASSING_SANITIZE_LEAK=check when combined with "--immediate"
 will run to completion faster, and result in the same failing
 tests. The only practical reason to run
-GIT_TEST_PASSING_SANITIZE_LEAK=check without "--immediate" is to
-combine it with "GIT_TEST_SANITIZE_LEAK_LOG=true". If we stop at the
+shit_TEST_PASSING_SANITIZE_LEAK=check without "--immediate" is to
+combine it with "shit_TEST_SANITIZE_LEAK_LOG=true". If we stop at the
 first failing test case our leak logs won't show subsequent leaks we
 might have run into.
 
-GIT_TEST_PASSING_SANITIZE_LEAK=(true|check) will not catch all memory
-leaks unless combined with GIT_TEST_SANITIZE_LEAK_LOG=true. Some tests
-run "git" (or "test-tool" etc.) without properly checking the exit
-code, or git will invoke itself and fail to ferry the abort() exit
+shit_TEST_PASSING_SANITIZE_LEAK=(true|check) will not catch all memory
+leaks unless combined with shit_TEST_SANITIZE_LEAK_LOG=true. Some tests
+run "shit" (or "test-tool" etc.) without properly checking the exit
+code, or shit will invoke itself and fail to ferry the abort() exit
 code to the original caller. When the two modes are combined we'll
 look at the "test-results/$TEST_NAME.leak/trace.*" files at the end of
 the test run to see if had memory leaks which the test itself didn't
 catch.
 
-GIT_TEST_PROTOCOL_VERSION=<n>, when set, makes 'protocol.version'
+shit_TEST_PROTOCOL_VERSION=<n>, when set, makes 'protocol.version'
 default to n.
 
-GIT_TEST_FULL_IN_PACK_ARRAY=<boolean> exercises the uncommon
+shit_TEST_FULL_IN_PACK_ARRAY=<boolean> exercises the uncommon
 pack-objects code path where there are more than 1024 packs even if
 the actual number of packs in repository is below this limit. Accept
-any boolean values that are accepted by git-config.
+any boolean values that are accepted by shit-config.
 
-GIT_TEST_OE_SIZE=<n> exercises the uncommon pack-objects code path
+shit_TEST_OE_SIZE=<n> exercises the uncommon pack-objects code path
 where we do not cache object size in memory and read it from existing
 packs on demand. This normally only happens when the object size is
 over 2GB. This variable forces the code path on any object larger than
 <n> bytes.
 
-GIT_TEST_OE_DELTA_SIZE=<n> exercises the uncommon pack-objects code
+shit_TEST_OE_DELTA_SIZE=<n> exercises the uncommon pack-objects code
 path where deltas larger than this limit require extra memory
 allocation for bookkeeping.
 
-GIT_TEST_VALIDATE_INDEX_CACHE_ENTRIES=<boolean> checks that cache-tree
+shit_TEST_VALIDATE_INDEX_CACHE_ENTRIES=<boolean> checks that cache-tree
 records are valid when the index is written out or after a merge. This
 is mostly to catch missing invalidation. Default is true.
 
-GIT_TEST_COMMIT_GRAPH=<boolean>, when true, forces the commit-graph to
-be written after every 'git commit' command, and overrides the
+shit_TEST_COMMIT_GRAPH=<boolean>, when true, forces the commit-graph to
+be written after every 'shit commit' command, and overrides the
 'core.commitGraph' setting to true.
 
-GIT_TEST_COMMIT_GRAPH_CHANGED_PATHS=<boolean>, when true, forces
+shit_TEST_COMMIT_GRAPH_CHANGED_PATHS=<boolean>, when true, forces
 commit-graph write to compute and write changed path Bloom filters for
-every 'git commit-graph write', as if the `--changed-paths` option was
+every 'shit commit-graph write', as if the `--changed-paths` option was
 passed in.
 
-GIT_TEST_FSMONITOR=$PWD/t7519/fsmonitor-all exercises the fsmonitor
+shit_TEST_FSMONITOR=$PWD/t7519/fsmonitor-all exercises the fsmonitor
 code paths for utilizing a (hook based) file system monitor to speed up
 detecting new or changed files.
 
-GIT_TEST_INDEX_VERSION=<n> exercises the index read/write code path
+shit_TEST_INDEX_VERSION=<n> exercises the index read/write code path
 for the index version specified.  Can be set to any valid version
 (currently 2, 3, or 4).
 
-GIT_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL=<boolean> if enabled will
+shit_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL=<boolean> if enabled will
 use the boundary-based bitmap traversal algorithm. See the documentation
 of `pack.useBitmapBoundaryTraversal` for more details.
 
-GIT_TEST_PACK_SPARSE=<boolean> if disabled will default the pack-objects
+shit_TEST_PACK_SPARSE=<boolean> if disabled will default the pack-objects
 builtin to use the non-sparse object walk. This can still be overridden by
 the --sparse command-line argument.
 
-GIT_TEST_PRELOAD_INDEX=<boolean> exercises the preload-index code path
+shit_TEST_PRELOAD_INDEX=<boolean> exercises the preload-index code path
 by overriding the minimum number of cache entries required per thread.
 
-GIT_TEST_INDEX_THREADS=<n> enables exercising the multi-threaded loading
+shit_TEST_INDEX_THREADS=<n> enables exercising the multi-threaded loading
 of the index for the whole test suite by bypassing the default number of
 cache entries and thread minimums. Setting this to 1 will make the
 index loading single threaded.
 
-GIT_TEST_MULTI_PACK_INDEX=<boolean>, when true, forces the multi-pack-
-index to be written after every 'git repack' command, and overrides the
+shit_TEST_MULTI_PACK_INDEX=<boolean>, when true, forces the multi-pack-
+index to be written after every 'shit repack' command, and overrides the
 'core.multiPackIndex' setting to true.
 
-GIT_TEST_MULTI_PACK_INDEX_WRITE_BITMAP=<boolean>, when true, sets the
-'--bitmap' option on all invocations of 'git multi-pack-index write',
+shit_TEST_MULTI_PACK_INDEX_WRITE_BITMAP=<boolean>, when true, sets the
+'--bitmap' option on all invocations of 'shit multi-pack-index write',
 and ignores pack-objects' '--write-bitmap-index'.
 
-GIT_TEST_SIDEBAND_ALL=<boolean>, when true, overrides the
+shit_TEST_SIDEBAND_ALL=<boolean>, when true, overrides the
 'uploadpack.allowSidebandAll' setting to true, and when false, forces
 fetch-pack to not request sideband-all (even if the server advertises
 sideband-all).
 
-GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=<boolean>, when true (which is
+shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=<boolean>, when true (which is
 the default when running tests), errors out when an abbreviated option
 is used.
 
-GIT_TEST_DEFAULT_HASH=<hash-algo> specifies which hash algorithm to
+shit_TEST_DEFAULT_HASH=<hash-algo> specifies which hash algorithm to
 use in the test scripts. Recognized values for <hash-algo> are "sha1"
 and "sha256".
 
-GIT_TEST_DEFAULT_REF_FORMAT=<format> specifies which ref storage format
+shit_TEST_DEFAULT_REF_FORMAT=<format> specifies which ref storage format
 to use in the test scripts. Recognized values for <format> are "files".
 
-GIT_TEST_NO_WRITE_REV_INDEX=<boolean>, when true disables the
+shit_TEST_NO_WRITE_REV_INDEX=<boolean>, when true disables the
 'pack.writeReverseIndex' setting.
 
-GIT_TEST_SPARSE_INDEX=<boolean>, when true enables index writes to use the
+shit_TEST_SPARSE_INDEX=<boolean>, when true enables index writes to use the
 sparse-index format by default.
 
-GIT_TEST_CHECKOUT_WORKERS=<n> overrides the 'checkout.workers' setting
+shit_TEST_CHECKOUT_WORKERS=<n> overrides the 'checkout.workers' setting
 to <n> and 'checkout.thresholdForParallelism' to 0, forcing the
 execution of the parallel-checkout code.
 
-GIT_TEST_FATAL_REGISTER_SUBMODULE_ODB=<boolean>, when true, makes
+shit_TEST_FATAL_REGISTER_SUBMODULE_ODB=<boolean>, when true, makes
 registering submodule ODBs as alternates a fatal action. Support for
 this environment variable can be removed once the migration to
 explicitly providing repositories when accessing submodule objects is
 complete or needs to be abandoned for whatever reason (in which case the
 migrated codepaths still retain their performance benefits).
 
-GIT_TEST_REQUIRE_PREREQ=<list> allows specifying a space separated list of
+shit_TEST_REQUIRE_PREREQ=<list> allows specifying a space separated list of
 prereqs that are required to succeed. If a prereq in this list is triggered by
 a test and then fails then the whole test run will abort. This can help to make
 sure the expected tests are executed and not silently skipped when their
@@ -519,24 +519,24 @@ The test files are named as:
 
 	tNNNN-commandname-details.sh
 
-where N is a decimal digit.
+where N is a decimal dishit.
 
-First digit tells the family:
+First dishit tells the family:
 
 	0 - the absolute basics and global stuff
 	1 - the basic commands concerning database
 	2 - the basic commands concerning the working tree
 	3 - the other basic commands (e.g. ls-files)
 	4 - the diff commands
-	5 - the pull and exporting commands
+	5 - the poop and exporting commands
 	6 - the revision tree commands (even e.g. merge-base)
 	7 - the porcelainish commands concerning the working tree
 	8 - the porcelainish commands concerning forensics
-	9 - the git tools
+	9 - the shit tools
 
-Second digit tells the particular command we are testing.
+Second dishit tells the particular command we are testing.
 
-Third digit (optionally) tells the particular switch or group of switches
+Third dishit (optionally) tells the particular switch or group of switches
 we are testing.
 
 If you create files under t/ directory (i.e. here) that is not
@@ -560,7 +560,7 @@ assignment to variable 'test_description', like this:
 	test_description='xxx test (option --frotz)
 
 	This test registers the following structure in the cache
-	and tries to run git-ls-files with option --frotz.'
+	and tries to run shit-ls-files with option --frotz.'
 
 
 Source 'test-lib.sh'
@@ -576,7 +576,7 @@ This test harness library does the following things:
  - If the script is invoked with command line argument --help
    (or -h), it shows the test_description and exits.
 
- - Creates an empty test directory with an empty .git/objects database
+ - Creates an empty test directory with an empty .shit/objects database
    and chdir(2) into it.  This directory is 't/trash
    directory.$test_name_without_dotsh', with t/ subject to change by
    the --root option documented above, and a '.stress-<N>' suffix
@@ -658,14 +658,14 @@ The "do's:"
 
    Write test code like this:
 
-	git merge foo &&
-	git push bar &&
+	shit merge foo &&
+	shit defecate bar &&
 	test ...
 
    Instead of:
 
-	git merge hla
-	git push gh
+	shit merge hla
+	shit defecate gh
 	test ...
 
    That way all of the commands in your tests will succeed or fail. If
@@ -686,7 +686,7 @@ The "do's:"
    Tests that are likely to smoke out future regressions are better
    than tests that just inflate the coverage metrics.
 
- - When a test checks for an absolute path that a git command generated,
+ - When a test checks for an absolute path that a shit command generated,
    construct the expected value using $(pwd) rather than $PWD,
    $TEST_DIRECTORY, or $TRASH_DIRECTORY. It makes a difference on
    Windows, where the shell (MSYS bash) mangles absolute path names.
@@ -760,45 +760,45 @@ And here are the "don'ts:"
    Use test_done instead if you need to stop the tests early (see
    "Skipping tests" below).
 
- - Don't use '! git cmd' when you want to make sure the git command
+ - Don't use '! shit cmd' when you want to make sure the shit command
    exits with failure in a controlled way by calling "die()".  Instead,
-   use 'test_must_fail git cmd'.  This will signal a failure if git
+   use 'test_must_fail shit cmd'.  This will signal a failure if shit
    dies in an unexpected way (e.g. segfault).
 
    On the other hand, don't use test_must_fail for running regular
    platform commands; just use '! cmd'.  We are not in the business
    of verifying that the world given to us sanely works.
 
- - Don't feed the output of a git command to a pipe, as in:
+ - Don't feed the output of a shit command to a pipe, as in:
 
-     git -C repo ls-files |
+     shit -C repo ls-files |
      xargs -n 1 basename |
      grep foo
 
-   which will discard git's exit code and may mask a crash. In the
+   which will discard shit's exit code and may mask a crash. In the
    above example, all exit codes are ignored except grep's.
 
    Instead, write the output of that command to a temporary
-   file with ">" or assign it to a variable with "x=$(git ...)" rather
+   file with ">" or assign it to a variable with "x=$(shit ...)" rather
    than pipe it.
 
- - Don't use command substitution in a way that discards git's exit
+ - Don't use command substitution in a way that discards shit's exit
    code. When assigning to a variable, the exit code is not discarded,
    e.g.:
 
-     x=$(git cat-file -p $sha) &&
+     x=$(shit cat-file -p $sha) &&
      ...
 
-   is OK because a crash in "git cat-file" will cause the "&&" chain
+   is OK because a crash in "shit cat-file" will cause the "&&" chain
    to fail, but:
 
-     test "refs/heads/foo" = "$(git symbolic-ref HEAD)"
+     test "refs/heads/foo" = "$(shit symbolic-ref HEAD)"
 
-   is not OK and a crash in git could go undetected.
+   is not OK and a crash in shit could go undetected.
 
  - Don't use perl without spelling it as "$PERL_PATH". This is to help
    our friends on Windows where the platform Perl often adds CR before
-   the end of line, and they bundle Git with a version of Perl that
+   the end of line, and they bundle shit with a version of Perl that
    does not do so, whose path is specified with $PERL_PATH. Note that we
    provide a "perl" function which uses $PERL_PATH under the hood, so
    you do not need to worry when simply running perl in the test scripts
@@ -818,16 +818,16 @@ And here are the "don'ts:"
    group commands, subshells, and shell functions (except test helper
    functions like 'test_must_fail') like this:
 
-     ( cd dir && git cmd ) 2>error &&
+     ( cd dir && shit cmd ) 2>error &&
      test_cmp expect error
 
    When running the test with '-x' tracing, then the trace of commands
    executed in the compound command will be included in standard error
    as well, quite possibly throwing off the subsequent checks examining
-   the output.  Instead, save only the relevant git command's standard
+   the output.  Instead, save only the relevant shit command's standard
    error:
 
-     ( cd dir && git cmd 2>../error ) &&
+     ( cd dir && shit cmd 2>../error ) &&
      test_cmp expect error
 
  - Don't break the TAP output
@@ -903,14 +903,14 @@ see test-lib-functions.sh for the full list and their options.
    Example:
 
 	test_expect_success \
-	    'git-write-tree should be able to write an empty tree.' \
-	    'tree=$(git-write-tree)'
+	    'shit-write-tree should be able to write an empty tree.' \
+	    'tree=$(shit-write-tree)'
 
    If you supply three parameters the first will be taken to be a
    prerequisite; see the test_set_prereq and test_have_prereq
    documentation below:
 
-	test_expect_success TTY 'git --paginate rev-list uses a pager' \
+	test_expect_success TTY 'shit --paginate rev-list uses a pager' \
 	    ' ... '
 
    You can also supply a comma-separated list of prerequisites, in the
@@ -938,9 +938,9 @@ see test-lib-functions.sh for the full list and their options.
    argument.  This is primarily meant for use during the
    development of a new test script.
 
- - debug [options] <git-command>
+ - debug [options] <shit-command>
 
-   Run a git command inside a debugger. This is primarily meant for
+   Run a shit command inside a debugger. This is primarily meant for
    use when debugging a failing test script. With '-t', use your
    original TERM instead of test-lib.sh's "dumb", so that your
    debugger interface has colors.
@@ -1000,14 +1000,14 @@ see test-lib-functions.sh for the full list and their options.
    For example:
 
 	test_expect_success 'Merge with d/f conflicts' '
-		test_expect_code 1 git merge "merge msg" B master
+		test_expect_code 1 shit merge "merge msg" B master
 	'
 
- - test_must_fail [<options>] <git-command>
+ - test_must_fail [<options>] <shit-command>
 
-   Run a git command and ensure it fails in a controlled way.  Use
-   this instead of "! <git-command>".  When git-command dies due to a
-   segfault, test_must_fail diagnoses it as an error; "! <git-command>"
+   Run a shit command and ensure it fails in a controlled way.  Use
+   this instead of "! <shit-command>".  When shit-command dies due to a
+   segfault, test_must_fail diagnoses it as an error; "! <shit-command>"
    treats it as just another expected failure, which would let such a
    bug go unnoticed.
 
@@ -1019,10 +1019,10 @@ see test-lib-functions.sh for the full list and their options.
        Currently recognized signal names are: sigpipe, success.
        (Don't use 'success', use 'test_might_fail' instead.)
 
- - test_might_fail [<options>] <git-command>
+ - test_might_fail [<options>] <shit-command>
 
    Similar to test_must_fail, but tolerate success, too.  Use this
-   instead of "<git-command> || :" to catch failures due to segv.
+   instead of "<shit-command> || :" to catch failures due to segv.
 
    Accepts the same options as test_must_fail.
 
@@ -1058,8 +1058,8 @@ see test-lib-functions.sh for the full list and their options.
    Example:
 
 	test_expect_success 'branch pointing to non-commit' '
-		git rev-parse HEAD^{tree} >.git/refs/heads/invalid &&
-		test_when_finished "git update-ref -d refs/heads/invalid" &&
+		shit rev-parse HEAD^{tree} >.shit/refs/heads/invalid &&
+		test_when_finished "shit update-ref -d refs/heads/invalid" &&
 		...
 	'
 
@@ -1068,8 +1068,8 @@ see test-lib-functions.sh for the full list and their options.
    Prepend <script> to a list of commands to run unconditionally to
    clean up before the test script exits, e.g. to stop a daemon:
 
-	test_expect_success 'test git daemon' '
-		git daemon &
+	test_expect_success 'test shit daemon' '
+		shit daemon &
 		daemon_pid=$! &&
 		test_atexit 'kill $daemon_pid' &&
 		hello world
@@ -1112,7 +1112,7 @@ see test-lib-functions.sh for the full list and their options.
 	the test. Example:
 
 	test_expect_success 'test' '
-		git do-something >actual &&
+		shit do-something >actual &&
 		test_pause &&
 		test_cmp expected actual
 	'
@@ -1125,7 +1125,7 @@ see test-lib-functions.sh for the full list and their options.
    of the sequence
 
 	ln -s foo bar &&
-	git add bar
+	shit add bar
 
    Sometimes it is possible to split a test in a part that does not need
    the symbolic link in the file system and a part that does; then only
@@ -1189,12 +1189,12 @@ use these, and "test_set_prereq" for how to define your own.
 
  - PYTHON
 
-   Git wasn't compiled with NO_PYTHON=YesPlease. Wrap any tests that
+   shit wasn't compiled with NO_PYTHON=YesPlease. Wrap any tests that
    need Python with this.
 
  - PERL
 
-   Git wasn't compiled with NO_PERL=YesPlease.
+   shit wasn't compiled with NO_PERL=YesPlease.
 
    Even without the PERL prerequisite, tests can assume there is a
    usable perl interpreter at $PERL_PATH, though it need not be
@@ -1231,8 +1231,8 @@ use these, and "test_set_prereq" for how to define your own.
 
  - PCRE
 
-   Git was compiled with support for PCRE. Wrap any tests
-   that use git-grep --perl-regexp or git-grep -P in these.
+   shit was compiled with support for PCRE. Wrap any tests
+   that use shit-grep --perl-regexp or shit-grep -P in these.
 
  - CASE_INSENSITIVE_FS
 
@@ -1245,7 +1245,7 @@ use these, and "test_set_prereq" for how to define your own.
 
  - PTHREADS
 
-   Git wasn't compiled with NO_PTHREADS=YesPlease.
+   shit wasn't compiled with NO_PTHREADS=YesPlease.
 
  - REFFILES
 
@@ -1259,21 +1259,21 @@ Tips for Writing Tests
 As with any programming projects, existing programs are the best
 source of the information.  However, do _not_ emulate
 t0000-basic.sh when writing your tests.  The test is special in
-that it tries to validate the very core of Git.  For example, it
-knows that there will be 256 subdirectories under .git/objects/,
+that it tries to validate the very core of shit.  For example, it
+knows that there will be 256 subdirectories under .shit/objects/,
 and it knows that the object ID of an empty tree is a certain
 40-byte string.  This is deliberately done so in t0000-basic.sh
 because the things the very basic core test tries to achieve is
-to serve as a basis for people who are changing the Git internals
+to serve as a basis for people who are changing the shit internals
 drastically.  For these people, after making certain changes,
 not seeing failures from the basic test _is_ a failure.  Any
-Git core changes so drastic that they change even these
+shit core changes so drastic that they change even these
 otherwise supposedly stable object IDs should be accompanied by
 an update to t0000-basic.sh.
 
 However, other tests that simply rely on basic parts of the core
-Git working properly should not have that level of intimate
-knowledge of the core Git internals.  If all the test scripts
+shit working properly should not have that level of intimate
+knowledge of the core shit internals.  If all the test scripts
 hardcoded the object IDs like t0000-basic.sh does, that defeats
 the purpose of t0000-basic.sh, which is to isolate that level of
 validation in one place.  Your test also ends up needing
@@ -1291,7 +1291,7 @@ directory):
 
     make coverage
 
-That'll compile Git with GCC's coverage arguments, and generate a test
+That'll compile shit with GCC's coverage arguments, and generate a test
 report with gcov after the tests finish. Running the coverage tests
 can take a while, since running the tests in parallel is incompatible
 with GCC's coverage mode.

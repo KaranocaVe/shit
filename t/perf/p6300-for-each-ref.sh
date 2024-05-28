@@ -14,7 +14,7 @@ test_expect_success "setup" '
 	# Create refs
 	test_seq $ref_count_per_type |
 		sed "s,.*,update refs/heads/branch_& HEAD~&\nupdate refs/custom/special_& HEAD~&," |
-		git update-ref --stdin &&
+		shit update-ref --stdin &&
 
 	# Create annotated tags
 	for i in $(test_seq $ref_count_per_type)
@@ -24,9 +24,9 @@ test_expect_success "setup" '
 		echo "mark :$i" &&
 		echo "from HEAD~$i" &&
 		printf "tagger %s <%s> %s\n" \
-			"$GIT_COMMITTER_NAME" \
-			"$GIT_COMMITTER_EMAIL" \
-			"$GIT_COMMITTER_DATE" &&
+			"$shit_COMMITTER_NAME" \
+			"$shit_COMMITTER_EMAIL" \
+			"$shit_COMMITTER_DATE" &&
 		echo "data <<EOF" &&
 		echo "tag $i" &&
 		echo "EOF" &&
@@ -35,13 +35,13 @@ test_expect_success "setup" '
 		echo "tag nested_$i" &&
 		echo "from :$i" &&
 		printf "tagger %s <%s> %s\n" \
-			"$GIT_COMMITTER_NAME" \
-			"$GIT_COMMITTER_EMAIL" \
-			"$GIT_COMMITTER_DATE" &&
+			"$shit_COMMITTER_NAME" \
+			"$shit_COMMITTER_EMAIL" \
+			"$shit_COMMITTER_DATE" &&
 		echo "data <<EOF" &&
 		echo "nested tag $i" &&
 		echo "EOF" || return 1
-	done | git fast-import
+	done | shit fast-import
 '
 
 test_for_each_ref () {
@@ -54,7 +54,7 @@ test_for_each_ref () {
 
 	test_perf "$title" "
 		for i in \$(test_seq $test_iteration_count); do
-			git for-each-ref $args >/dev/null
+			shit for-each-ref $args >/dev/null
 		done
 	"
 }
@@ -71,8 +71,8 @@ run_tests () {
 
 	test_perf "for-each-ref ($1, tags) + cat-file --batch-check (dereferenced)" "
 		for i in \$(test_seq $test_iteration_count); do
-			git for-each-ref --format='%(objectname)^{} %(refname) %(objectname)' refs/tags/ | \
-				git cat-file --batch-check='%(objectname) %(rest)' >/dev/null
+			shit for-each-ref --format='%(objectname)^{} %(refname) %(objectname)' refs/tags/ | \
+				shit cat-file --batch-check='%(objectname) %(rest)' >/dev/null
 		done
 	"
 }
@@ -80,7 +80,7 @@ run_tests () {
 run_tests "loose"
 
 test_expect_success 'pack refs' '
-	git pack-refs --all
+	shit pack-refs --all
 '
 run_tests "packed"
 

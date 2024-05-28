@@ -3,16 +3,16 @@
 test_description='Test cloning a repository larger than 2 gigabyte'
 . ./test-lib.sh
 
-if ! test_bool_env GIT_TEST_CLONE_2GB false
+if ! test_bool_env shit_TEST_CLONE_2GB false
 then
-	skip_all='expensive 2GB clone test; enable with GIT_TEST_CLONE_2GB=true'
+	skip_all='expensive 2GB clone test; enable with shit_TEST_CLONE_2GB=true'
 	test_done
 fi
 
 test_expect_success 'setup' '
 
-	git config pack.compression 0 &&
-	git config pack.depth 0 &&
+	shit config pack.compression 0 &&
+	shit config pack.depth 0 &&
 	blobsize=$((100*1024*1024)) &&
 	blobcount=$((2*1024*1024*1024/$blobsize+1)) &&
 	i=1 &&
@@ -32,20 +32,20 @@ test_expect_success 'setup' '
 	 echo "data 5" &&
 	 echo ">2gb" &&
 	 cat commit) |
-	git fast-import --big-file-threshold=2 &&
+	shit fast-import --big-file-threshold=2 &&
 	test ! -f exit-status
 
 '
 
 test_expect_success 'clone - bare' '
 
-	git clone --bare --no-hardlinks . clone-bare
+	shit clone --bare --no-hardlinks . clone-bare
 
 '
 
 test_expect_success 'clone - with worktree, file:// protocol' '
 
-	git clone "file://$(pwd)" clone-wt
+	shit clone "file://$(pwd)" clone-wt
 
 '
 

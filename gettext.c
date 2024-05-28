@@ -2,7 +2,7 @@
  * Copyright (c) 2010 Ævar Arnfjörð Bjarmason
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "environment.h"
 #include "exec-cmd.h"
@@ -11,7 +11,7 @@
 
 #ifndef NO_GETTEXT
 #	include <libintl.h>
-#	ifdef GIT_WINDOWS_NATIVE
+#	ifdef shit_WINDOWS_NATIVE
 
 static const char *locale_charset(void)
 {
@@ -88,40 +88,40 @@ static void init_gettext_charset(const char *domain)
 	 * messages from external functions like perror() emitted in
 	 * the wrong encoding.
 	 *
-	 * The bug affected e.g. git.git's own 7eb93c89651 ([PATCH]
-	 * Simplify git script, 2005-09-07), which is the origin of
+	 * The bug affected e.g. shit.shit's own 7eb93c89651 ([PATCH]
+	 * Simplify shit script, 2005-09-07), which is the origin of
 	 * the "David_K\345gedal" test string.
 	 *
 	 * See a much longer comment added to this file in 5e9637c6297
-	 * (i18n: add infrastructure for translating Git with gettext,
+	 * (i18n: add infrastructure for translating shit with gettext,
 	 * 2011-11-18) for more details.
 	 */
 	if (test_vsnprintf("%.*s", 13, "David_K\345gedal") < 0)
 		setlocale(LC_CTYPE, "C");
 }
 
-int git_gettext_enabled = 0;
+int shit_gettext_enabled = 0;
 
-void git_setup_gettext(void)
+void shit_setup_gettext(void)
 {
-	const char *podir = getenv(GIT_TEXT_DOMAIN_DIR_ENVIRONMENT);
+	const char *podir = getenv(shit_TEXT_DOMAIN_DIR_ENVIRONMENT);
 	char *p = NULL;
 
 	if (!podir)
-		podir = p = system_path(GIT_LOCALE_PATH);
+		podir = p = system_path(shit_LOCALE_PATH);
 
 	if (!is_directory(podir)) {
 		free(p);
 		return;
 	}
 
-	bindtextdomain("git", podir);
+	bindtextdomain("shit", podir);
 	setlocale(LC_MESSAGES, "");
 	setlocale(LC_TIME, "");
-	init_gettext_charset("git");
-	textdomain("git");
+	init_gettext_charset("shit");
+	textdomain("shit");
 
-	git_gettext_enabled = 1;
+	shit_gettext_enabled = 1;
 
 	free(p);
 }

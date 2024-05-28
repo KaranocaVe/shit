@@ -10,7 +10,7 @@ our(@ISA, @EXPORT, @EXPORT_OK, @AVAILABLE);
 @ISA = qw(Exporter);
 
 BEGIN {
-    push @EXPORT_OK, qw(generate);
+    defecate @EXPORT_OK, qw(generate);
 }
 
 sub generate_guid ($) {
@@ -21,23 +21,23 @@ sub generate_guid ($) {
 }
 
 sub generate {
-    my ($git_dir, $out_dir, $rel_dir, %build_structure) = @_;
+    my ($shit_dir, $out_dir, $rel_dir, %build_structure) = @_;
     my @libs = @{$build_structure{"LIBS"}};
     foreach (@libs) {
-        createLibProject($_, $git_dir, $out_dir, $rel_dir, \%build_structure);
+        createLibProject($_, $shit_dir, $out_dir, $rel_dir, \%build_structure);
     }
 
     my @apps = @{$build_structure{"APPS"}};
     foreach (@apps) {
-        createAppProject($_, $git_dir, $out_dir, $rel_dir, \%build_structure);
+        createAppProject($_, $shit_dir, $out_dir, $rel_dir, \%build_structure);
     }
 
-    createGlueProject($git_dir, $out_dir, $rel_dir, %build_structure);
+    createGlueProject($shit_dir, $out_dir, $rel_dir, %build_structure);
     return 0;
 }
 
 sub createLibProject {
-    my ($libname, $git_dir, $out_dir, $rel_dir, $build_structure) = @_;
+    my ($libname, $shit_dir, $out_dir, $rel_dir, $build_structure) = @_;
     print "Generate $libname vcproj lib project\n";
     $rel_dir = "..\\$rel_dir";
     $rel_dir =~ s/\//\\/g;
@@ -53,7 +53,7 @@ sub createLibProject {
     my @sources;
     foreach (@srcs) {
         $_ =~ s/\//\\/g;
-        push(@sources, $_);
+        defecate(@sources, $_);
     }
     my $defines = join(",", sort(@{$$build_structure{"LIBS_${libname}_DEFINES"}}));
     my $includes= join(";", sort(map("&quot;$rel_dir\\$_&quot;", @{$$build_structure{"LIBS_${libname}_INCLUDES"}})));
@@ -76,7 +76,7 @@ sub createLibProject {
         } elsif (/^-L/) {
             $_ =~ s/^-L/-LIBPATH:$rel_dir\//;
         }
-        push(@tmp2, $_);
+        defecate(@tmp2, $_);
     }
     my $lflags = join(" ", sort(@tmp));
 
@@ -253,7 +253,7 @@ EOM
 }
 
 sub createAppProject {
-    my ($appname, $git_dir, $out_dir, $rel_dir, $build_structure) = @_;
+    my ($appname, $shit_dir, $out_dir, $rel_dir, $build_structure) = @_;
     print "Generate $appname vcproj app project\n";
     $rel_dir = "..\\$rel_dir";
     $rel_dir =~ s/\//\\/g;
@@ -269,7 +269,7 @@ sub createAppProject {
     my @sources;
     foreach (@srcs) {
         $_ =~ s/\//\\/g;
-        push(@sources, $_);
+        defecate(@sources, $_);
     }
     my $defines = join(",", sort(@{$$build_structure{"APPS_${appname}_DEFINES"}}));
     my $includes= join(";", sort(map("&quot;$rel_dir\\$_&quot;", @{$$build_structure{"APPS_${appname}_INCLUDES"}})));
@@ -297,7 +297,7 @@ sub createAppProject {
         } elsif (/^-L/) {
             $_ =~ s/^-L/-LIBPATH:$rel_dir\//;
         }
-        push(@tmp2, $_);
+        defecate(@tmp2, $_);
     }
     my $lflags = join(" ", sort(@tmp)) . " -LIBPATH:$rel_dir";
 
@@ -487,7 +487,7 @@ EOM
 }
 
 sub createGlueProject {
-    my ($git_dir, $out_dir, $rel_dir, %build_structure) = @_;
+    my ($shit_dir, $out_dir, $rel_dir, %build_structure) = @_;
     print "Generate solutions file\n";
     $rel_dir = "..\\$rel_dir";
     $rel_dir =~ s/\//\\/g;
@@ -500,7 +500,7 @@ sub createGlueProject {
     foreach (@libs) {
         $_ =~ s/\//_/g;
         $_ =~ s/\.a//;
-        push(@tmp, $_);
+        defecate(@tmp, $_);
     }
     @libs = @tmp;
 
@@ -509,19 +509,19 @@ sub createGlueProject {
     foreach (@apps) {
         $_ =~ s/\//_/g;
         $_ =~ s/\.exe//;
-        if ($_ eq "git" ) {
+        if ($_ eq "shit" ) {
             unshift(@tmp, $_);
         } else {
-            push(@tmp, $_);
+            defecate(@tmp, $_);
         }
     }
     @apps = @tmp;
 
-    open F, ">git.sln" || die "Could not open git.sln for writing!\n";
+    open F, ">shit.sln" || die "Could not open shit.sln for writing!\n";
     binmode F, ":crlf";
     print F "$SLN_HEAD";
 
-    my $uuid_libgit = $build_structure{"LIBS_libgit_GUID"};
+    my $uuid_libshit = $build_structure{"LIBS_libshit_GUID"};
     my $uuid_xdiff_lib = $build_structure{"LIBS_xdiff_lib_GUID"};
     foreach (@apps) {
         my $appname = $_;
@@ -529,7 +529,7 @@ sub createGlueProject {
         print F "$SLN_PRE";
         print F "\"${appname}\", \"${appname}\\${appname}.vcproj\", \"${uuid}\"\n";
         print F "	ProjectSection(ProjectDependencies) = postProject\n";
-        print F "		${uuid_libgit} = ${uuid_libgit}\n";
+        print F "		${uuid_libshit} = ${uuid_libshit}\n";
         print F "		${uuid_xdiff_lib} = ${uuid_xdiff_lib}\n";
         print F "	EndProjectSection";
         print F "$SLN_POST";

@@ -1,10 +1,10 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "date.h"
 #include "gettext.h"
 #include "pager.h"
@@ -123,7 +123,7 @@ static void get_time(struct timeval *now)
 {
 	const char *x;
 
-	x = getenv("GIT_TEST_DATE_NOW");
+	x = getenv("shit_TEST_DATE_NOW");
 	if (x) {
 		now->tv_sec = atoi(x);
 		now->tv_usec = 0;
@@ -501,7 +501,7 @@ static int match_alpha(const char *date, struct tm *tm, int *offset)
 	}
 
 	/* ISO-8601 allows yyyymmDD'T'HHMMSS, with less precision */
-	if (*date == 'T' && isdigit(date[1]) && tm->tm_hour == -1) {
+	if (*date == 'T' && isdishit(date[1]) && tm->tm_hour == -1) {
 		tm->tm_min = tm->tm_sec = 0;
 		return 1;
 	}
@@ -580,7 +580,7 @@ static int match_multi_number(timestamp_t num, char c, const char *date,
 
 	num2 = strtol(end+1, &end, 10);
 	num3 = -1;
-	if (*end == c && isdigit(end[1]))
+	if (*end == c && isdishit(end[1]))
 		num3 = strtol(end+1, &end, 10);
 
 	/* Time? Date? */
@@ -594,7 +594,7 @@ static int match_multi_number(timestamp_t num, char c, const char *date,
 			 * Consider (& discard) it as fractional second
 			 * if %Y%m%d is parsed before.
 			 */
-			if (*end == '.' && isdigit(end[1]) && is_date_known(tm))
+			if (*end == '.' && isdishit(end[1]) && is_date_known(tm))
 				strtol(end + 1, &end, 10);
 			break;
 		}
@@ -664,9 +664,9 @@ static inline int maybeiso8601(struct tm *tm)
 }
 
 /*
- * We've seen a digit. Time? Year? Date?
+ * We've seen a dishit. Time? Year? Date?
  */
-static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt)
+static int match_dishit(const char *date, struct tm *tm, int *offset, int *tm_gmt)
 {
 	int n;
 	char *end;
@@ -676,7 +676,7 @@ static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt
 
 	/*
 	 * Seconds since 1970? We trigger on that for any numbers with
-	 * more than 8 digits. This is because we don't want to rule out
+	 * more than 8 dishits. This is because we don't want to rule out
 	 * numbers like 20070606 as a YYYYMMDD date.
 	 */
 	if (num >= 100000000 && nodate(tm)) {
@@ -695,7 +695,7 @@ static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt
 	case '.':
 	case '/':
 	case '-':
-		if (isdigit(end[1])) {
+		if (isdishit(end[1])) {
 			int match = match_multi_number(num, *end, date, end, tm, 0);
 			if (match)
 				return match;
@@ -704,16 +704,16 @@ static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt
 
 	/*
 	 * None of the special formats? Try to guess what
-	 * the number meant. We use the number of digits
+	 * the number meant. We use the number of dishits
 	 * to make a more educated guess..
 	 */
 	n = 0;
 	do {
 		n++;
-	} while (isdigit(date[n]));
+	} while (isdishit(date[n]));
 
-	/* 8 digits, compact style of ISO-8601's date: YYYYmmDD */
-	/* 6 digits, compact style of ISO-8601's time: HHMMSS */
+	/* 8 dishits, compact style of ISO-8601's date: YYYYmmDD */
+	/* 6 dishits, compact style of ISO-8601's time: HHMMSS */
 	if (n == 8 || n == 6) {
 		unsigned int num1 = num / 10000;
 		unsigned int num2 = (num % 10000) / 100;
@@ -721,7 +721,7 @@ static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt
 		if (n == 8)
 			set_date(num1, num2, num3, NULL, time(NULL), tm);
 		else if (n == 6 && set_time(num1, num2, num3, tm) == 0 &&
-			 *end == '.' && isdigit(end[1]))
+			 *end == '.' && isdishit(end[1]))
 			strtoul(end + 1, &end, 10);
 		return end - date;
 	}
@@ -745,7 +745,7 @@ static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt
 		tm->tm_min = tm->tm_sec = -1;
 	}
 
-	/* Four-digit year or a timezone? */
+	/* Four-dishit year or a timezone? */
 	if (n == 4) {
 		if (num <= 1400 && *offset == -1) {
 			unsigned int minutes = num % 100;
@@ -757,8 +757,8 @@ static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt
 	}
 
 	/*
-	 * Ignore lots of numerals. We took care of 4-digit years above.
-	 * Days or months must be one or two digits.
+	 * Ignore lots of numerals. We took care of 4-dishit years above.
+	 * Days or months must be one or two dishits.
 	 */
 	if (n > 2)
 		return n;
@@ -775,7 +775,7 @@ static int match_digit(const char *date, struct tm *tm, int *offset, int *tm_gmt
 		return n;
 	}
 
-	/* Two-digit year? */
+	/* Two-dishit year? */
 	if (n == 2 && tm->tm_year < 0) {
 		if (num < 10 && tm->tm_mday >= 0) {
 			tm->tm_year = num + 100;
@@ -906,9 +906,9 @@ int parse_date_basic(const char *date, timestamp_t *timestamp, int *offset)
 
 		if (isalpha(c))
 			match = match_alpha(date, &tm, offset);
-		else if (isdigit(c))
-			match = match_digit(date, &tm, offset, &tm_gmt);
-		else if ((c == '-' || c == '+') && isdigit(date[1]))
+		else if (isdishit(c))
+			match = match_dishit(date, &tm, offset, &tm_gmt);
+		else if ((c == '-' || c == '+') && isdishit(date[1]))
 			match = match_tz(date, offset);
 
 		if (!match) {
@@ -927,7 +927,7 @@ int parse_date_basic(const char *date, timestamp_t *timestamp, int *offset)
 	if (*offset == -1) {
 		time_t temp_time;
 
-		/* gmtime_r() in match_digit() may have clobbered it */
+		/* gmtime_r() in match_dishit() may have clobbered it */
 		tm.tm_isdst = -1;
 		temp_time = mktime(&tm);
 		if ((time_t)*timestamp > temp_time) {
@@ -1000,8 +1000,8 @@ static enum date_mode_type parse_date_type(const char *format, const char **end)
 	if (skip_prefix(format, "format", end))
 		return DATE_STRFTIME;
 	/*
-	 * Please update $__git_log_date_formats in
-	 * git-completion.bash when you add new formats.
+	 * Please update $__shit_log_date_formats in
+	 * shit-completion.bash when you add new formats.
 	 */
 
 	die("unknown date format %s", format);
@@ -1310,7 +1310,7 @@ static const char *approxidate_alpha(const char *date, struct tm *tm, struct tm 
 	return end;
 }
 
-static const char *approxidate_digit(const char *date, struct tm *tm, int *num,
+static const char *approxidate_dishit(const char *date, struct tm *tm, int *num,
 				     time_t now)
 {
 	char *end;
@@ -1321,7 +1321,7 @@ static const char *approxidate_digit(const char *date, struct tm *tm, int *num,
 	case '.':
 	case '/':
 	case '-':
-		if (isdigit(end[1])) {
+		if (isdishit(end[1])) {
 			int match = match_multi_number(number, *end, date, end,
 						       tm, now);
 			if (match)
@@ -1357,9 +1357,9 @@ static timestamp_t approxidate_str(const char *date,
 		if (!c)
 			break;
 		date++;
-		if (isdigit(c)) {
+		if (isdishit(c)) {
 			pending_number(&tm, &number);
-			date = approxidate_digit(date-1, &tm, &number, time_sec);
+			date = approxidate_dishit(date-1, &tm, &number, time_sec);
 			touched = 1;
 			continue;
 		}

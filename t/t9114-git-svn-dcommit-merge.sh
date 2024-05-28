@@ -3,9 +3,9 @@
 # Copyright (c) 2007 Eric Wong
 # Based on a script by Joakim Tjernlund <joakim.tjernlund@transmode.se>
 
-test_description='git svn dcommit handles merges'
+test_description='shit svn dcommit handles merges'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 big_text_block () {
 cat << EOF
@@ -43,52 +43,52 @@ test_expect_success 'setup svn repository' '
 	)
 	'
 
-test_expect_success 'setup git mirror and merge' '
-	git svn init "$svnrepo" -t tags -T trunk -b branches &&
-	git svn fetch &&
-	git checkout -b svn remotes/origin/trunk &&
-	git checkout -b merge &&
+test_expect_success 'setup shit mirror and merge' '
+	shit svn init "$svnrepo" -t tags -T trunk -b branches &&
+	shit svn fetch &&
+	shit checkout -b svn remotes/origin/trunk &&
+	shit checkout -b merge &&
 	echo new file > new_file &&
-	git add new_file &&
-	git commit -a -m "New file" &&
+	shit add new_file &&
+	shit commit -a -m "New file" &&
 	echo hello >> README &&
-	git commit -a -m "hello" &&
+	shit commit -a -m "hello" &&
 	echo add some stuff >> new_file &&
-	git commit -a -m "add some stuff" &&
-	git checkout svn &&
+	shit commit -a -m "add some stuff" &&
+	shit checkout svn &&
 	mv -f README tmp &&
 	echo friend > README &&
 	cat tmp >> README &&
-	git commit -a -m "friend" &&
-	git merge merge
+	shit commit -a -m "friend" &&
+	shit merge merge
 	'
 
-test_debug 'gitk --all & sleep 1'
+test_debug 'shitk --all & sleep 1'
 
 test_expect_success 'verify pre-merge ancestry' "
-	test x\$(git rev-parse --verify refs/heads/svn^2) = \
-	     x\$(git rev-parse --verify refs/heads/merge) &&
-	git cat-file commit refs/heads/svn^ >actual &&
+	test x\$(shit rev-parse --verify refs/heads/svn^2) = \
+	     x\$(shit rev-parse --verify refs/heads/merge) &&
+	shit cat-file commit refs/heads/svn^ >actual &&
 	grep '^friend$' actual
 	"
 
-test_expect_success 'git svn dcommit merges' "
-	git svn dcommit
+test_expect_success 'shit svn dcommit merges' "
+	shit svn dcommit
 	"
 
-test_debug 'gitk --all & sleep 1'
+test_debug 'shitk --all & sleep 1'
 
 test_expect_success 'verify post-merge ancestry' "
-	test x\$(git rev-parse --verify refs/heads/svn) = \
-	     x\$(git rev-parse --verify refs/remotes/origin/trunk) &&
-	test x\$(git rev-parse --verify refs/heads/svn^2) = \
-	     x\$(git rev-parse --verify refs/heads/merge) &&
-	git cat-file commit refs/heads/svn^ >actual &&
+	test x\$(shit rev-parse --verify refs/heads/svn) = \
+	     x\$(shit rev-parse --verify refs/remotes/origin/trunk) &&
+	test x\$(shit rev-parse --verify refs/heads/svn^2) = \
+	     x\$(shit rev-parse --verify refs/heads/merge) &&
+	shit cat-file commit refs/heads/svn^ >actual &&
 	grep '^friend$' actual
 	"
 
 test_expect_success 'verify merge commit message' "
-	git rev-list --pretty=raw -1 refs/heads/svn >actual &&
+	shit rev-list --pretty=raw -1 refs/heads/svn >actual &&
 	grep \"    Merge branch 'merge' into svn\" actual
 	"
 

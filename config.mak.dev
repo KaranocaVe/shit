@@ -99,4 +99,4 @@ ifneq ($(filter gcc12,$(COMPILER_FEATURES)),)
 DEVELOPER_CFLAGS += -Wno-error=stringop-overread
 endif
 
-GIT_TEST_PERL_FATAL_WARNINGS = YesPlease
+shit_TEST_PERL_FATAL_WARNINGS = YesPlease

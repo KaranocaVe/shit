@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "tag.h"
 #include "commit.h"
 #include "commit-graph.h"
@@ -143,11 +143,11 @@ static timestamp_t parse_commit_date(const char *buf, const char *tail)
 	 */
 	while (dateptr < eol && isspace(*dateptr))
 		dateptr++;
-	if (!isdigit(*dateptr) && *dateptr != '-')
+	if (!isdishit(*dateptr) && *dateptr != '-')
 		return 0;
 
 	/*
-	 * We know there is at least one digit (or dash), so we'll begin
+	 * We know there is at least one dishit (or dash), so we'll begin
 	 * parsing there and stop at worst case at eol.
 	 *
 	 * Note that we may feed parse_timestamp() extra characters here if the
@@ -261,14 +261,14 @@ static int read_graft_file(struct repository *r, const char *graft_file)
 		return -1;
 	if (!no_graft_file_deprecated_advice &&
 	    advice_enabled(ADVICE_GRAFT_FILE_DEPRECATED))
-		advise(_("Support for <GIT_DIR>/info/grafts is deprecated\n"
-			 "and will be removed in a future Git version.\n"
+		advise(_("Support for <shit_DIR>/info/grafts is deprecated\n"
+			 "and will be removed in a future shit version.\n"
 			 "\n"
-			 "Please use \"git replace --convert-graft-file\"\n"
+			 "Please use \"shit replace --convert-graft-file\"\n"
 			 "to convert the grafts into replace refs.\n"
 			 "\n"
 			 "Turn this message off by running\n"
-			 "\"git config advice.graftFileDeprecated false\""));
+			 "\"shit config advice.graftFileDeprecated false\""));
 	while (!strbuf_getwholeline(&buf, fp, '\n')) {
 		/* The format is just "Commit Parent1 Parent2 ...\n" */
 		struct commit_graft *graft = read_graft_line(&buf);
@@ -561,7 +561,7 @@ int repo_parse_commit_internal(struct repository *r,
 		.contentp = &buffer,
 	};
 	/*
-	 * Git does not support partial clones that exclude commits, so set
+	 * shit does not support partial clones that exclude commits, so set
 	 * OBJECT_INFO_SKIP_FETCH_OBJECT to fail fast when an object is missing.
 	 */
 	int flags = OBJECT_INFO_LOOKUP_REPLACE | OBJECT_INFO_SKIP_FETCH_OBJECT |
@@ -576,7 +576,7 @@ int repo_parse_commit_internal(struct repository *r,
 		static int commit_graph_paranoia = -1;
 
 		if (commit_graph_paranoia == -1)
-			commit_graph_paranoia = git_env_bool(GIT_COMMIT_GRAPH_PARANOIA, 0);
+			commit_graph_paranoia = shit_env_bool(shit_COMMIT_GRAPH_PARANOIA, 0);
 
 		if (commit_graph_paranoia && !has_object(r, &item->object.oid, 0)) {
 			unparse_commit(r, &item->object.oid);
@@ -1115,7 +1115,7 @@ static const char *gpg_sig_headers[] = {
 	"gpgsig-sha256",
 };
 
-int add_header_signature(struct strbuf *buf, struct strbuf *sig, const struct git_hash_algo *algo)
+int add_header_signature(struct strbuf *buf, struct strbuf *sig, const struct shit_hash_algo *algo)
 {
 	int inspos, copypos;
 	const char *eoh;
@@ -1157,7 +1157,7 @@ static int sign_commit_to_strbuf(struct strbuf *sig, struct strbuf *buf, const c
 
 int parse_signed_commit(const struct commit *commit,
 			struct strbuf *payload, struct strbuf *signature,
-			const struct git_hash_algo *algop)
+			const struct shit_hash_algo *algop)
 {
 	unsigned long size;
 	const char *buffer = repo_get_commit_buffer(the_repository, commit,
@@ -1172,7 +1172,7 @@ int parse_buffer_signed_by_header(const char *buffer,
 				  unsigned long size,
 				  struct strbuf *payload,
 				  struct strbuf *signature,
-				  const struct git_hash_algo *algop)
+				  const struct shit_hash_algo *algop)
 {
 	int in_signature = 0, saw_signature = 0, other_signature = 0;
 	const char *line, *tail, *p;
@@ -1235,7 +1235,7 @@ int remove_signature(struct strbuf *buf)
 			sigp->end = next;
 		else if (starts_with(line, "gpgsig")) {
 			int i;
-			for (i = 1; i < GIT_HASH_NALGOS; i++) {
+			for (i = 1; i < shit_HASH_NALGOS; i++) {
 				const char *p;
 				if (skip_prefix(line, gpg_sig_headers[i], &p) &&
 				    *p == ' ') {
@@ -1331,7 +1331,7 @@ int check_commit_signature(const struct commit *commit, struct signature_check *
 void verify_merge_signature(struct commit *commit, int verbosity,
 			    int check_trust)
 {
-	char hex[GIT_MAX_HEXSZ + 1];
+	char hex[shit_MAX_HEXSZ + 1];
 	struct signature_check signature_check;
 	int ret;
 	memset(&signature_check, 0, sizeof(signature_check));
@@ -1372,8 +1372,8 @@ void append_merge_tag_headers(struct commit_list *parents,
 static int convert_commit_extra_headers(struct commit_extra_header *orig,
 					struct commit_extra_header **result)
 {
-	const struct git_hash_algo *compat = the_repository->compat_hash_algo;
-	const struct git_hash_algo *algo = the_repository->hash_algo;
+	const struct shit_hash_algo *compat = the_repository->compat_hash_algo;
+	const struct shit_hash_algo *algo = the_repository->hash_algo;
 	struct commit_extra_header *extra = NULL, **tail = &extra;
 	struct strbuf out = STRBUF_INIT;
 	while (orig) {
@@ -1655,7 +1655,7 @@ static void write_commit_tree(struct strbuf *buffer, const char *msg, size_t msg
 	size_t i;
 
 	/* Not having i18n.commitencoding is the same as having utf-8 */
-	encoding_is_utf8 = is_encoding_utf8(git_commit_encoding);
+	encoding_is_utf8 = is_encoding_utf8(shit_commit_encoding);
 
 	strbuf_grow(buffer, 8192); /* should avoid reallocs for the headers */
 	strbuf_addf(buffer, "tree %s\n", oid_to_hex(tree));
@@ -1670,13 +1670,13 @@ static void write_commit_tree(struct strbuf *buffer, const char *msg, size_t msg
 
 	/* Person/date information */
 	if (!author)
-		author = git_author_info(IDENT_STRICT);
+		author = shit_author_info(IDENT_STRICT);
 	strbuf_addf(buffer, "author %s\n", author);
 	if (!committer)
-		committer = git_committer_info(IDENT_STRICT);
+		committer = shit_committer_info(IDENT_STRICT);
 	strbuf_addf(buffer, "committer %s\n", committer);
 	if (!encoding_is_utf8)
-		strbuf_addf(buffer, "encoding %s\n", git_commit_encoding);
+		strbuf_addf(buffer, "encoding %s\n", shit_commit_encoding);
 
 	while (extra) {
 		add_extra_header(buffer, extra);
@@ -1705,7 +1705,7 @@ int commit_tree_extended(const char *msg, size_t msg_len,
 	size_t i, nparents;
 
 	/* Not having i18n.commitencoding is the same as having utf-8 */
-	encoding_is_utf8 = is_encoding_utf8(git_commit_encoding);
+	encoding_is_utf8 = is_encoding_utf8(shit_commit_encoding);
 
 	assert_oid_type(tree, OBJ_TREE);
 
@@ -1762,7 +1762,7 @@ int commit_tree_extended(const char *msg, size_t msg_len,
 	if (sign_commit) {
 		struct sig_pairs {
 			struct strbuf *sig;
-			const struct git_hash_algo *algo;
+			const struct shit_hash_algo *algo;
 		} bufs [2] = {
 			{ &compat_sig, r->compat_hash_algo },
 			{ &sig, r->hash_algo },
@@ -1771,7 +1771,7 @@ int commit_tree_extended(const char *msg, size_t msg_len,
 
 		/*
 		 * We write algorithms in the order they were implemented in
-		 * Git to produce a stable hash when multiple algorithms are
+		 * shit to produce a stable hash when multiple algorithms are
 		 * used.
 		 */
 		if (r->compat_hash_algo && hash_algo_by_ptr(bufs[0].algo) > hash_algo_by_ptr(bufs[1].algo))
@@ -1907,9 +1907,9 @@ const char *find_commit_header(const char *msg, const char *key, size_t *out_len
 /*
  * Inspect the given string and determine the true "end" of the log message, in
  * order to find where to put a new Signed-off-by trailer.  Ignored are
- * trailing comment lines and blank lines.  To support "git commit -s
+ * trailing comment lines and blank lines.  To support "shit commit -s
  * --amend" on an existing commit, we also ignore "Conflicts:".  To
- * support "git commit -v", we truncate at cut lines.
+ * support "shit commit -v", we truncate at cut lines.
  *
  * Returns the number of bytes from the tail to ignore, to be fed as
  * the second parameter to append_signoff().
@@ -1958,17 +1958,17 @@ int run_commit_hook(int editor_is_used, const char *index_file,
 	va_list args;
 	const char *arg;
 
-	strvec_pushf(&opt.env, "GIT_INDEX_FILE=%s", index_file);
+	strvec_defecatef(&opt.env, "shit_INDEX_FILE=%s", index_file);
 
 	/*
 	 * Let the hook know that no editor will be launched.
 	 */
 	if (!editor_is_used)
-		strvec_push(&opt.env, "GIT_EDITOR=:");
+		strvec_defecate(&opt.env, "shit_EDITOR=:");
 
 	va_start(args, name);
 	while ((arg = va_arg(args, const char *)))
-		strvec_push(&opt.args, arg);
+		strvec_defecate(&opt.args, arg);
 	va_end(args);
 
 	opt.invoked_hook = invoked_hook;

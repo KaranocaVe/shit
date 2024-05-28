@@ -1,22 +1,22 @@
 #!/bin/sh
 
-test_description='git am handling submodules'
+test_description='shit am handling submodules'
 
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-submodule-update.sh
 
 am () {
-	git format-patch --stdout --ignore-submodules=dirty "..$1" >patch &&
+	shit format-patch --stdout --ignore-submodules=dirty "..$1" >patch &&
 	may_only_be_test_must_fail "$2" &&
-	$2 git am patch
+	$2 shit am patch
 }
 
 test_submodule_switch_func "am"
 
 am_3way () {
-	git format-patch --stdout --ignore-submodules=dirty "..$1" >patch &&
+	shit format-patch --stdout --ignore-submodules=dirty "..$1" >patch &&
 	may_only_be_test_must_fail "$2" &&
-	$2 git am --3way patch
+	$2 shit am --3way patch
 }
 
 KNOWN_FAILURE_NOFF_MERGE_ATTEMPTS_TO_MERGE_REMOVED_SUBMODULE_FILES=1
@@ -24,37 +24,37 @@ test_submodule_switch_func "am_3way"
 
 test_expect_success 'setup diff.submodule' '
 	test_commit one &&
-	INITIAL=$(git rev-parse HEAD) &&
+	INITIAL=$(shit rev-parse HEAD) &&
 
-	git init submodule &&
+	shit init submodule &&
 	(
 		cd submodule &&
 		test_commit two &&
-		git rev-parse HEAD >../initial-submodule
+		shit rev-parse HEAD >../initial-submodule
 	) &&
-	git submodule add ./submodule &&
-	git commit -m first &&
+	shit submodule add ./submodule &&
+	shit commit -m first &&
 
 	(
 		cd submodule &&
 		test_commit three &&
-		git rev-parse HEAD >../first-submodule
+		shit rev-parse HEAD >../first-submodule
 	) &&
-	git add submodule &&
-	git commit -m second &&
-	SECOND=$(git rev-parse HEAD) &&
+	shit add submodule &&
+	shit commit -m second &&
+	SECOND=$(shit rev-parse HEAD) &&
 
 	(
 		cd submodule &&
-		git mv two.t four.t &&
-		git commit -m "second submodule" &&
-		git rev-parse HEAD >../second-submodule
+		shit mv two.t four.t &&
+		shit commit -m "second submodule" &&
+		shit rev-parse HEAD >../second-submodule
 	) &&
 	test_commit four &&
-	git add submodule &&
-	git commit --amend --no-edit &&
-	THIRD=$(git rev-parse HEAD) &&
-	git submodule update --init
+	shit add submodule &&
+	shit commit --amend --no-edit &&
+	THIRD=$(shit rev-parse HEAD) &&
+	shit submodule update --init
 '
 
 run_test() {
@@ -62,15 +62,15 @@ run_test() {
 	EXPECT=$2 &&
 	# Abort any merges in progress: the previous
 	# test may have failed, and we should clean up.
-	test_might_fail git am --abort &&
-	git reset --hard $START_COMMIT &&
+	test_might_fail shit am --abort &&
+	shit reset --hard $START_COMMIT &&
 	rm -f *.patch &&
-	git format-patch -1 &&
-	git reset --hard $START_COMMIT^ &&
-	git submodule update &&
-	git am *.patch &&
-	git submodule update &&
-	git -C submodule rev-parse HEAD >actual &&
+	shit format-patch -1 &&
+	shit reset --hard $START_COMMIT^ &&
+	shit submodule update &&
+	shit am *.patch &&
+	shit submodule update &&
+	shit -C submodule rev-parse HEAD >actual &&
 	test_cmp $EXPECT actual
 }
 

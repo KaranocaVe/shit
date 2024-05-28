@@ -1,4 +1,4 @@
-# Helpers for running git commands under sudo.
+# Helpers for running shit commands under sudo.
 
 # Runs a scriplet passed through stdin under sudo.
 run_with_sudo () {

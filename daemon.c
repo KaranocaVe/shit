@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "config.h"
 #include "environment.h"
@@ -25,7 +25,7 @@ static int reuseaddr;
 static int informative_errors;
 
 static const char daemon_usage[] =
-"git daemon [--verbose] [--syslog] [--export-all]\n"
+"shit daemon [--verbose] [--syslog] [--export-all]\n"
 "           [--timeout=<n>] [--init-timeout=<n>] [--max-connections=<n>]\n"
 "           [--strict-paths] [--base-path=<path>] [--base-path-relaxed]\n"
 "           [--user-path | --user-path=<path>]\n"
@@ -42,7 +42,7 @@ static const char daemon_usage[] =
 static const char **ok_paths;
 static int strict_paths;
 
-/* If this is set, git-daemon-export-ok is not required */
+/* If this is set, shit-daemon-export-ok is not required */
 static int export_all_trees;
 
 /* Take all paths relative to this one if non-NULL */
@@ -51,8 +51,8 @@ static const char *interpolated_path;
 static int base_path_relaxed;
 
 /* If defined, ~user notation is allowed and the string is inserted
- * after ~user/.  E.g. a request to git://host/~alice/frotz would
- * go to /home/alice/pub_git/frotz with --user-path=pub_git.
+ * after ~user/.  E.g. a request to shit://host/~alice/frotz would
+ * go to /home/alice/pub_shit/frotz with --user-path=pub_shit.
  */
 static const char *user_path;
 
@@ -250,7 +250,7 @@ static const char *path_ok(const char *directory, struct hostinfo *hi)
 	}
 
 	if (!path) {
-		logerror("'%s' does not appear to be a git repository", dir);
+		logerror("'%s' does not appear to be a shit repository", dir);
 		return NULL;
 	}
 
@@ -259,7 +259,7 @@ static const char *path_ok(const char *directory, struct hostinfo *hi)
 		int pathlen = strlen(path);
 
 		/* The validation is done on the paths after enter_repo
-		 * appends optional {.git,.git/.git} and friends, but
+		 * appends optional {.shit,.shit/.shit} and friends, but
 		 * it does not use getcwd().  So if your /pub is
 		 * a symlink to /mnt/pub, you can include /pub and
 		 * do not have to say /mnt/pub.
@@ -311,13 +311,13 @@ static int run_access_hook(struct daemon_service *service, const char *dir,
 	char *eol;
 	int seen_errors = 0;
 
-	strvec_push(&child.args, access_hook);
-	strvec_push(&child.args, service->name);
-	strvec_push(&child.args, path);
-	strvec_push(&child.args, hi->hostname.buf);
-	strvec_push(&child.args, get_canon_hostname(hi));
-	strvec_push(&child.args, get_ip_address(hi));
-	strvec_push(&child.args, hi->tcp_port.buf);
+	strvec_defecate(&child.args, access_hook);
+	strvec_defecate(&child.args, service->name);
+	strvec_defecate(&child.args, path);
+	strvec_defecate(&child.args, hi->hostname.buf);
+	strvec_defecate(&child.args, get_canon_hostname(hi));
+	strvec_defecate(&child.args, get_ip_address(hi));
+	strvec_defecate(&child.args, hi->tcp_port.buf);
 
 	child.use_shell = 1;
 	child.no_stdin = 1;
@@ -382,14 +382,14 @@ static int run_service(const char *dir, struct daemon_service *service,
 	 * Security on the cheap.
 	 *
 	 * We want a readable HEAD, usable "objects" directory, and
-	 * a "git-daemon-export-ok" flag that says that the other side
+	 * a "shit-daemon-export-ok" flag that says that the other side
 	 * is ok with us doing this.
 	 *
 	 * path_ok() uses enter_repo() and checks for included directories.
 	 * We only need to make sure the repository is exported.
 	 */
 
-	if (!export_all_trees && access("git-daemon-export-ok", F_OK)) {
+	if (!export_all_trees && access("shit-daemon-export-ok", F_OK)) {
 		logerror("'%s': repository not exported.", path);
 		errno = EACCES;
 		return daemon_error(dir, "repository not exported");
@@ -397,7 +397,7 @@ static int run_service(const char *dir, struct daemon_service *service,
 
 	if (service->overridable) {
 		strbuf_addf(&var, "daemon.%s", service->config_name);
-		git_config_get_bool(var.buf, &enabled);
+		shit_config_get_bool(var.buf, &enabled);
 		strbuf_release(&var);
 	}
 	if (!enabled) {
@@ -446,8 +446,8 @@ static void copy_to_log(int fd)
 
 static int run_service_command(struct child_process *cld)
 {
-	strvec_push(&cld->args, ".");
-	cld->git_cmd = 1;
+	strvec_defecate(&cld->args, ".");
+	cld->shit_cmd = 1;
 	cld->err = -1;
 	if (start_command(cld))
 		return -1;
@@ -463,10 +463,10 @@ static int run_service_command(struct child_process *cld)
 static int upload_pack(const struct strvec *env)
 {
 	struct child_process cld = CHILD_PROCESS_INIT;
-	strvec_pushl(&cld.args, "upload-pack", "--strict", NULL);
-	strvec_pushf(&cld.args, "--timeout=%u", timeout);
+	strvec_defecatel(&cld.args, "upload-pack", "--strict", NULL);
+	strvec_defecatef(&cld.args, "--timeout=%u", timeout);
 
-	strvec_pushv(&cld.env, env->v);
+	strvec_defecatev(&cld.env, env->v);
 
 	return run_service_command(&cld);
 }
@@ -474,9 +474,9 @@ static int upload_pack(const struct strvec *env)
 static int upload_archive(const struct strvec *env)
 {
 	struct child_process cld = CHILD_PROCESS_INIT;
-	strvec_push(&cld.args, "upload-archive");
+	strvec_defecate(&cld.args, "upload-archive");
 
-	strvec_pushv(&cld.env, env->v);
+	strvec_defecatev(&cld.env, env->v);
 
 	return run_service_command(&cld);
 }
@@ -484,9 +484,9 @@ static int upload_archive(const struct strvec *env)
 static int receive_pack(const struct strvec *env)
 {
 	struct child_process cld = CHILD_PROCESS_INIT;
-	strvec_push(&cld.args, "receive-pack");
+	strvec_defecate(&cld.args, "receive-pack");
 
-	strvec_pushv(&cld.env, env->v);
+	strvec_defecatev(&cld.env, env->v);
 
 	return run_service_command(&cld);
 }
@@ -621,7 +621,7 @@ static void parse_extra_args(struct hostinfo *hi, struct strvec *env,
 			     char *extra_args, int buflen)
 {
 	const char *end = extra_args + buflen;
-	struct strbuf git_protocol = STRBUF_INIT;
+	struct strbuf shit_protocol = STRBUF_INIT;
 
 	/* First look for the host argument */
 	extra_args = parse_host_arg(hi, extra_args, buflen);
@@ -631,27 +631,27 @@ static void parse_extra_args(struct hostinfo *hi, struct strvec *env,
 		const char *arg = extra_args;
 
 		/*
-		 * Parse the extra arguments, adding most to 'git_protocol'
-		 * which will be used to set the 'GIT_PROTOCOL' envvar in the
+		 * Parse the extra arguments, adding most to 'shit_protocol'
+		 * which will be used to set the 'shit_PROTOCOL' envvar in the
 		 * service that will be run.
 		 *
 		 * If there ends up being a particular arg in the future that
-		 * git-daemon needs to parse specifically (like the 'host' arg)
-		 * then it can be parsed here and not added to 'git_protocol'.
+		 * shit-daemon needs to parse specifically (like the 'host' arg)
+		 * then it can be parsed here and not added to 'shit_protocol'.
 		 */
 		if (*arg) {
-			if (git_protocol.len > 0)
-				strbuf_addch(&git_protocol, ':');
-			strbuf_addstr(&git_protocol, arg);
+			if (shit_protocol.len > 0)
+				strbuf_addch(&shit_protocol, ':');
+			strbuf_addstr(&shit_protocol, arg);
 		}
 	}
 
-	if (git_protocol.len > 0) {
-		loginfo("Extended attribute \"protocol\": %s", git_protocol.buf);
-		strvec_pushf(env, GIT_PROTOCOL_ENVIRONMENT "=%s",
-			     git_protocol.buf);
+	if (shit_protocol.len > 0) {
+		loginfo("Extended attribute \"protocol\": %s", shit_protocol.buf);
+		strvec_defecatef(env, shit_PROTOCOL_ENVIRONMENT "=%s",
+			     shit_protocol.buf);
 	}
-	strbuf_release(&git_protocol);
+	strbuf_release(&shit_protocol);
 }
 
 /*
@@ -758,7 +758,7 @@ static int execute(void)
 		struct daemon_service *s = &(daemon_service[i]);
 		const char *arg;
 
-		if (skip_prefix(line, "git-", &arg) &&
+		if (skip_prefix(line, "shit-", &arg) &&
 		    skip_prefix(arg, s->name, &arg) &&
 		    *arg++ == ' ') {
 			/*
@@ -886,21 +886,21 @@ static void handle(int incoming, struct sockaddr *addr, socklen_t addrlen)
 		char buf[128] = "";
 		struct sockaddr_in *sin_addr = (void *) addr;
 		inet_ntop(addr->sa_family, &sin_addr->sin_addr, buf, sizeof(buf));
-		strvec_pushf(&cld.env, "REMOTE_ADDR=%s", buf);
-		strvec_pushf(&cld.env, "REMOTE_PORT=%d",
+		strvec_defecatef(&cld.env, "REMOTE_ADDR=%s", buf);
+		strvec_defecatef(&cld.env, "REMOTE_PORT=%d",
 			     ntohs(sin_addr->sin_port));
 #ifndef NO_IPV6
 	} else if (addr->sa_family == AF_INET6) {
 		char buf[128] = "";
 		struct sockaddr_in6 *sin6_addr = (void *) addr;
 		inet_ntop(AF_INET6, &sin6_addr->sin6_addr, buf, sizeof(buf));
-		strvec_pushf(&cld.env, "REMOTE_ADDR=[%s]", buf);
-		strvec_pushf(&cld.env, "REMOTE_PORT=%d",
+		strvec_defecatef(&cld.env, "REMOTE_ADDR=[%s]", buf);
+		strvec_defecatef(&cld.env, "REMOTE_PORT=%d",
 			     ntohs(sin6_addr->sin6_port));
 #endif
 	}
 
-	strvec_pushv(&cld.args, cld_argv.v);
+	strvec_defecatev(&cld.args, cld_argv.v);
 	cld.in = incoming;
 	cld.out = dup(incoming);
 
@@ -1406,7 +1406,7 @@ int cmd_main(int argc, const char **argv)
 	}
 
 	if (log_destination == LOG_DESTINATION_SYSLOG) {
-		openlog("git-daemon", LOG_PID, LOG_DAEMON);
+		openlog("shit-daemon", LOG_PID, LOG_DAEMON);
 		set_die_routine(daemon_die);
 	} else
 		/* avoid splitting a message in the middle */
@@ -1418,7 +1418,7 @@ int cmd_main(int argc, const char **argv)
 	if (inetd_mode && (listen_port || (listen_addr.nr > 0)))
 		die("--listen= and --port= are incompatible with --inetd");
 	else if (listen_port == 0)
-		listen_port = DEFAULT_GIT_PORT;
+		listen_port = DEFAULT_shit_PORT;
 
 	if (group_name && !user_name)
 		die("--group supplied without --user");
@@ -1450,10 +1450,10 @@ int cmd_main(int argc, const char **argv)
 			write_file(pid_file, "%"PRIuMAX, (uintmax_t) getpid());
 
 		/* prepare argv for serving-processes */
-		strvec_push(&cld_argv, argv[0]); /* git-daemon */
-		strvec_push(&cld_argv, "--serve");
+		strvec_defecate(&cld_argv, argv[0]); /* shit-daemon */
+		strvec_defecate(&cld_argv, "--serve");
 		for (i = 1; i < argc; ++i)
-			strvec_push(&cld_argv, argv[i]);
+			strvec_defecate(&cld_argv, argv[i]);
 
 		ret = serve(&listen_addr, listen_port, cred);
 	}

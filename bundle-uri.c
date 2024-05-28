@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "bundle-uri.h"
 #include "bundle.h"
 #include "copy.h"
@@ -147,7 +147,7 @@ static int bundle_list_update(const char *key, const char *value,
 	if (!subsection_len) {
 		if (!strcmp(subkey, "version")) {
 			int version;
-			if (!git_parse_int(value, &version))
+			if (!shit_parse_int(value, &version))
 				return -1;
 			if (version != 1)
 				return -1;
@@ -252,7 +252,7 @@ int bundle_uri_parse_config_format(const char *uri,
 		strbuf_strip_file_from_path(&baseURI);
 		list->baseURI = strbuf_detach(&baseURI, NULL);
 	}
-	result = git_config_from_file_with_options(config_to_bundle_list,
+	result = shit_config_from_file_with_options(config_to_bundle_list,
 						   filename, list,
 						   CONFIG_SCOPE_UNKNOWN,
 						   &opts);
@@ -292,7 +292,7 @@ static int download_https_uri_to_file(const char *file, const char *uri)
 	struct strbuf line = STRBUF_INIT;
 	int found_get = 0;
 
-	strvec_pushl(&cp.args, "git-remote-https", uri, NULL);
+	strvec_defecatel(&cp.args, "shit-remote-https", uri, NULL);
 	cp.err = -1;
 	cp.in = -1;
 	cp.out = -1;

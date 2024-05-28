@@ -1,5 +1,5 @@
 /*
- * headless Git - run Git without opening a console window on Windows
+ * headless shit - run shit without opening a console window on Windows
  */
 
 #define STRICT
@@ -12,13 +12,13 @@
 #include <wchar.h>
 
 /*
- * If `dir` contains the path to a Git exec directory, extend `PATH` to
+ * If `dir` contains the path to a shit exec directory, extend `PATH` to
  * include the corresponding `bin/` directory (which is where all those
- * `.dll` files needed by `git.exe` are, on Windows).
+ * `.dll` files needed by `shit.exe` are, on Windows).
  */
 static int extend_path(wchar_t *dir, size_t dir_len)
 {
-	const wchar_t *suffix = L"\\libexec\\git-core";
+	const wchar_t *suffix = L"\\libexec\\shit-core";
 	size_t suffix_len = wcslen(suffix);
 	wchar_t *env;
 	DWORD len;
@@ -48,8 +48,8 @@ int WINAPI wWinMain(_In_ HINSTANCE instance,
 		    _In_opt_ HINSTANCE previous_instance,
 		    _In_ LPWSTR command_line, _In_ int show)
 {
-	wchar_t git_command_line[32768];
-	size_t size = sizeof(git_command_line) / sizeof(wchar_t);
+	wchar_t shit_command_line[32768];
+	size_t size = sizeof(shit_command_line) / sizeof(wchar_t);
 	const wchar_t *needs_quotes = L"";
 	int slash = 0, i;
 
@@ -73,18 +73,18 @@ int WINAPI wWinMain(_In_ HINSTANCE instance,
 	if (slash >= size - 11)
 		return 127; /* Too long path */
 
-	/* If it is in Git's exec path, add the bin/ directory to the PATH */
+	/* If it is in shit's exec path, add the bin/ directory to the PATH */
 	extend_path(_wpgmptr, slash);
 
-	/* Then, add the full path of `git.exe` as argv[0] */
-	i = swprintf_s(git_command_line, size, L"%ls%.*ls\\git.exe%ls",
+	/* Then, add the full path of `shit.exe` as argv[0] */
+	i = swprintf_s(shit_command_line, size, L"%ls%.*ls\\shit.exe%ls",
 		       needs_quotes, slash, _wpgmptr, needs_quotes);
 	if (i < 0)
 		return 127; /* Too long path */
 
 	if (*command_line) {
 		/* Now, append the command-line arguments */
-		i = swprintf_s(git_command_line + i, size - i,
+		i = swprintf_s(shit_command_line + i, size - i,
 			       L" %ls", command_line);
 		if (i < 0)
 			return 127;
@@ -95,7 +95,7 @@ int WINAPI wWinMain(_In_ HINSTANCE instance,
 	startup_info.hStdError = GetStdHandle(STD_ERROR_HANDLE);
 
 	if (!CreateProcess(NULL, /* infer argv[0] from the command line */
-			   git_command_line, /* modified command line */
+			   shit_command_line, /* modified command line */
 			   NULL, /* inherit process handles? */
 			   NULL, /* inherit thread handles? */
 			   FALSE, /* handles inheritable? */

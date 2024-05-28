@@ -22,12 +22,12 @@ test_expect_success POSIXPERM,SANITY 'mktemp to unwritable directory prints file
 	grep "cannotwrite/test" err
 '
 
-test_expect_success 'git_mkstemps_mode does not fail if fd 0 is not open' '
-	git commit --allow-empty -m message <&-
+test_expect_success 'shit_mkstemps_mode does not fail if fd 0 is not open' '
+	shit commit --allow-empty -m message <&-
 '
 
 test_expect_success 'check for a bug in the regex routines' '
-	# if this test fails, re-build git with NO_REGEX=1
+	# if this test fails, re-build shit with NO_REGEX=1
 	test-tool regex --bug
 '
 

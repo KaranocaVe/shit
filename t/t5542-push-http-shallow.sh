@@ -1,9 +1,9 @@
 #!/bin/sh
 
-test_description='push from/to a shallow clone over http'
+test_description='defecate from/to a shallow clone over http'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 . "$TEST_DIRECTORY"/lib-httpd.sh
@@ -11,33 +11,33 @@ start_httpd
 
 commit() {
 	echo "$1" >tracked &&
-	git add tracked &&
-	git commit -m "$1"
+	shit add tracked &&
+	shit commit -m "$1"
 }
 
 test_expect_success 'setup' '
-	git config --global transfer.fsckObjects true &&
+	shit config --global transfer.fsckObjects true &&
 	commit 1 &&
 	commit 2 &&
 	commit 3 &&
 	commit 4 &&
-	git clone . full &&
+	shit clone . full &&
 	(
-	git init full-abc &&
+	shit init full-abc &&
 	cd full-abc &&
 	commit a &&
 	commit b &&
 	commit c
 	) &&
-	git clone --no-local --depth=2 .git shallow &&
-	git --git-dir=shallow/.git log --format=%s >actual &&
+	shit clone --no-local --depth=2 .shit shallow &&
+	shit --shit-dir=shallow/.shit log --format=%s >actual &&
 	cat <<EOF >expect &&
 4
 3
 EOF
 	test_cmp expect actual &&
-	git clone --no-local --depth=2 full-abc/.git shallow2 &&
-	git --git-dir=shallow2/.git log --format=%s >actual &&
+	shit clone --no-local --depth=2 full-abc/.shit shallow2 &&
+	shit --shit-dir=shallow2/.shit log --format=%s >actual &&
 	cat <<EOF >expect &&
 c
 b
@@ -45,21 +45,21 @@ EOF
 	test_cmp expect actual
 '
 
-test_expect_success 'push to shallow repo via http' '
-	git clone --bare --no-local shallow "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" &&
+test_expect_success 'defecate to shallow repo via http' '
+	shit clone --bare --no-local shallow "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" &&
 	(
-	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" &&
-	git config http.receivepack true
+	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" &&
+	shit config http.receivepack true
 	) &&
 	(
 	cd full &&
 	commit 9 &&
-	git push $HTTPD_URL/smart/repo.git +main:refs/remotes/top/main
+	shit defecate $HTTPD_URL/smart/repo.shit +main:refs/remotes/top/main
 	) &&
 	(
-	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" &&
-	git fsck &&
-	git log --format=%s top/main >actual &&
+	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" &&
+	shit fsck &&
+	shit log --format=%s top/main >actual &&
 	cat <<EOF >expect &&
 9
 4
@@ -69,19 +69,19 @@ EOF
 	)
 '
 
-test_expect_success 'push from shallow repo via http' '
-	mv "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" shallow-upstream.git &&
-	git clone --bare --no-local full "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" &&
+test_expect_success 'defecate from shallow repo via http' '
+	mv "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" shallow-upstream.shit &&
+	shit clone --bare --no-local full "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" &&
 	(
-	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" &&
-	git config http.receivepack true
+	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" &&
+	shit config http.receivepack true
 	) &&
 	commit 10 &&
-	git push $HTTPD_URL/smart/repo.git +main:refs/remotes/top/main &&
+	shit defecate $HTTPD_URL/smart/repo.shit +main:refs/remotes/top/main &&
 	(
-	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.git" &&
-	git fsck &&
-	git log --format=%s top/main >actual &&
+	cd "$HTTPD_DOCUMENT_ROOT_PATH/repo.shit" &&
+	shit fsck &&
+	shit log --format=%s top/main >actual &&
 	cat <<EOF >expect &&
 10
 4

@@ -1,5 +1,5 @@
 sha1_file() {
-	echo "$*" | sed "s#..#.git/objects/&/#"
+	echo "$*" | sed "s#..#.shit/objects/&/#"
 } &&
 
 remove_object() {

@@ -175,13 +175,13 @@ static void test_reftable_stack_add_one(void)
 	EXPECT(st->readers_len > 0);
 
 	printf("testing print functionality:\n");
-	err = reftable_stack_print_directory(dir, GIT_SHA1_FORMAT_ID);
+	err = reftable_stack_print_directory(dir, shit_SHA1_FORMAT_ID);
 	EXPECT_ERR(err);
 
-	err = reftable_stack_print_directory(dir, GIT_SHA256_FORMAT_ID);
+	err = reftable_stack_print_directory(dir, shit_SHA256_FORMAT_ID);
 	EXPECT(err == REFTABLE_FORMAT_ERROR);
 
-#ifndef GIT_WINDOWS_NATIVE
+#ifndef shit_WINDOWS_NATIVE
 	strbuf_addstr(&scratch, dir);
 	strbuf_addstr(&scratch, "/tables.list");
 	err = stat(scratch.buf, &stat_result);
@@ -510,7 +510,7 @@ static void test_reftable_stack_add(void)
 		int err = reftable_stack_read_ref(st, refs[i].refname, &dest);
 		EXPECT_ERR(err);
 		EXPECT(reftable_ref_record_equal(&dest, refs + i,
-						 GIT_SHA1_RAWSZ));
+						 shit_SHA1_RAWSZ));
 		reftable_ref_record_release(&dest);
 	}
 
@@ -519,11 +519,11 @@ static void test_reftable_stack_add(void)
 		int err = reftable_stack_read_log(st, refs[i].refname, &dest);
 		EXPECT_ERR(err);
 		EXPECT(reftable_log_record_equal(&dest, logs + i,
-						 GIT_SHA1_RAWSZ));
+						 shit_SHA1_RAWSZ));
 		reftable_log_record_release(&dest);
 	}
 
-#ifndef GIT_WINDOWS_NATIVE
+#ifndef shit_WINDOWS_NATIVE
 	strbuf_addstr(&path, dir);
 	strbuf_addstr(&path, "/tables.list");
 	err = stat(path.buf, &stat_result);
@@ -702,7 +702,7 @@ static void test_reftable_stack_hash_id(void)
 		.value.symref = "target",
 		.update_index = 1,
 	};
-	struct reftable_write_options cfg32 = { .hash_id = GIT_SHA256_FORMAT_ID };
+	struct reftable_write_options cfg32 = { .hash_id = shit_SHA256_FORMAT_ID };
 	struct reftable_stack *st32 = NULL;
 	struct reftable_write_options cfg_default = { 0 };
 	struct reftable_stack *st_default = NULL;
@@ -725,7 +725,7 @@ static void test_reftable_stack_hash_id(void)
 	err = reftable_stack_read_ref(st_default, "master", &dest);
 	EXPECT_ERR(err);
 
-	EXPECT(reftable_ref_record_equal(&ref, &dest, GIT_SHA1_RAWSZ));
+	EXPECT(reftable_ref_record_equal(&ref, &dest, shit_SHA1_RAWSZ));
 	reftable_ref_record_release(&dest);
 	reftable_stack_destroy(st);
 	reftable_stack_destroy(st_default);

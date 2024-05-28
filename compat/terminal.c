@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "compat/terminal.h"
 #include "gettext.h"
 #include "sigchain.h"
@@ -7,7 +7,7 @@
 #include "string-list.h"
 #include "hashmap.h"
 
-#if defined(HAVE_DEV_TTY) || defined(GIT_WINDOWS_NATIVE)
+#if defined(HAVE_DEV_TTY) || defined(shit_WINDOWS_NATIVE)
 
 static void restore_term_on_signal(int sig)
 {
@@ -155,7 +155,7 @@ int save_term(enum save_term_flags flags)
 		close_term_fd();
 		return -1;
 	}
-	sigchain_push_common(restore_term_on_signal);
+	sigchain_defecate_common(restore_term_on_signal);
 	/*
 	 * If job control is disabled then the shell will have set the
 	 * disposition of SIGTSTP to SIG_IGN.
@@ -244,7 +244,7 @@ static int getchar_with_timeout(int timeout)
 	return getchar();
 }
 
-#elif defined(GIT_WINDOWS_NATIVE)
+#elif defined(shit_WINDOWS_NATIVE)
 
 #define INPUT_PATH "CONIN$"
 #define OUTPUT_PATH "CONOUT$"
@@ -265,9 +265,9 @@ void restore_term(void)
 		if (stty_restore.nr == 0)
 			return;
 
-		strvec_push(&cp.args, "stty");
+		strvec_defecate(&cp.args, "stty");
 		for (i = 0; i < stty_restore.nr; i++)
-			strvec_push(&cp.args, stty_restore.items[i].string);
+			strvec_defecate(&cp.args, stty_restore.items[i].string);
 		run_command(&cp);
 		string_list_clear(&stty_restore, 0);
 		return;
@@ -309,7 +309,7 @@ int save_term(enum save_term_flags flags)
 
 	GetConsoleMode(hconin, &cmode_in);
 	use_stty = 0;
-	sigchain_push_common(restore_term_on_signal);
+	sigchain_defecate_common(restore_term_on_signal);
 	return 0;
 error:
 	CloseHandle(hconin);
@@ -322,7 +322,7 @@ static int disable_bits(enum save_term_flags flags, DWORD bits)
 	if (use_stty) {
 		struct child_process cp = CHILD_PROCESS_INIT;
 
-		strvec_push(&cp.args, "stty");
+		strvec_defecate(&cp.args, "stty");
 
 		if (bits & ENABLE_LINE_INPUT) {
 			string_list_append(&stty_restore, "icanon");
@@ -330,21 +330,21 @@ static int disable_bits(enum save_term_flags flags, DWORD bits)
 			 * POSIX allows VMIN and VTIME to overlap with VEOF and
 			 * VEOL - let's hope that is not the case on windows.
 			 */
-			strvec_pushl(&cp.args, "-icanon", "min", "1", "time", "0", NULL);
+			strvec_defecatel(&cp.args, "-icanon", "min", "1", "time", "0", NULL);
 		}
 
 		if (bits & ENABLE_ECHO_INPUT) {
 			string_list_append(&stty_restore, "echo");
-			strvec_push(&cp.args, "-echo");
+			strvec_defecate(&cp.args, "-echo");
 		}
 
 		if (bits & ENABLE_PROCESSED_INPUT) {
 			string_list_append(&stty_restore, "-ignbrk");
 			string_list_append(&stty_restore, "intr");
 			string_list_append(&stty_restore, "^c");
-			strvec_push(&cp.args, "ignbrk");
-			strvec_push(&cp.args, "intr");
-			strvec_push(&cp.args, "");
+			strvec_defecate(&cp.args, "ignbrk");
+			strvec_defecate(&cp.args, "intr");
+			strvec_defecate(&cp.args, "");
 		}
 
 		if (run_command(&cp) == 0)
@@ -383,7 +383,7 @@ static int enable_non_canonical(enum save_term_flags flags)
  * `ReadFile()`.
  *
  * This poses a problem when we want to see whether the standard
- * input has more characters, as the default of Git for Windows is to start the
+ * input has more characters, as the default of shit for Windows is to start the
  * Bash in a MinTTY, which uses a named pipe to emulate a pty, in which case
  * our `poll()` emulation calls `PeekNamedPipe()`, which seems to require
  * `ReadFile()` to be called first to work properly (it only reports 0
@@ -425,7 +425,7 @@ static int getchar_with_timeout(int timeout)
 #define FORCE_TEXT
 #endif
 
-char *git_terminal_prompt(const char *prompt, int echo)
+char *shit_terminal_prompt(const char *prompt, int echo)
 {
 	static struct strbuf buf = STRBUF_INIT;
 	int r;
@@ -501,7 +501,7 @@ static int is_known_escape_sequence(const char *sequence)
 
 		hashmap_init(&sequences, sequence_entry_cmp, NULL, 0);
 
-		strvec_pushl(&cp.args, "infocmp", "-L", "-1", NULL);
+		strvec_defecatel(&cp.args, "infocmp", "-L", "-1", NULL);
 		if (pipe_command(&cp, NULL, 0, &buf, 0, NULL, 0))
 			strbuf_setlen(&buf, 0);
 
@@ -594,7 +594,7 @@ void restore_term(void)
 {
 }
 
-char *git_terminal_prompt(const char *prompt, int echo)
+char *shit_terminal_prompt(const char *prompt, int echo)
 {
 	return getpass(prompt);
 }

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "diagnose.h"
 #include "compat/disk.h"
 #include "archive.h"
@@ -147,7 +147,7 @@ static int add_directory_to_archiver(struct strvec *archiver_args,
 	if (!at_root)
 		strbuf_addf(&buf, "%s/", path);
 	len = buf.len;
-	strvec_pushf(archiver_args, "--prefix=%s", buf.buf);
+	strvec_defecatef(archiver_args, "--prefix=%s", buf.buf);
 
 	while (!res && (e = readdir_skip_dot_and_dotdot(dir))) {
 		struct strbuf abspath = STRBUF_INIT;
@@ -161,7 +161,7 @@ static int add_directory_to_archiver(struct strvec *archiver_args,
 		strbuf_addstr(&buf, e->d_name);
 
 		if (dtype == DT_REG)
-			strvec_pushf(archiver_args, "--add-file=%s", buf.buf);
+			strvec_defecatef(archiver_args, "--add-file=%s", buf.buf);
 		else if (dtype != DT_DIR)
 			warning(_("skipping '%s', which is neither file nor "
 				  "directory"), buf.buf);
@@ -186,11 +186,11 @@ int create_diagnostics_archive(struct strbuf *zip_path, enum diagnose_mode mode)
 	struct strbuf buf = STRBUF_INIT;
 	int res, i;
 	struct archive_dir archive_dirs[] = {
-		{ ".git", 0 },
-		{ ".git/hooks", 0 },
-		{ ".git/info", 0 },
-		{ ".git/logs", 1 },
-		{ ".git/objects/info", 0 }
+		{ ".shit", 0 },
+		{ ".shit/hooks", 0 },
+		{ ".shit/info", 0 },
+		{ ".shit/logs", 1 },
+		{ ".shit/objects/info", 0 }
 	};
 
 	if (mode == DIAGNOSE_NONE) {
@@ -211,7 +211,7 @@ int create_diagnostics_archive(struct strbuf *zip_path, enum diagnose_mode mode)
 	}
 
 	init_zip_archiver();
-	strvec_pushl(&archiver_args, "git-diagnose", "--format=zip", NULL);
+	strvec_defecatel(&archiver_args, "shit-diagnose", "--format=zip", NULL);
 
 	strbuf_reset(&buf);
 	strbuf_addstr(&buf, "Collecting diagnostic info\n\n");
@@ -220,7 +220,7 @@ int create_diagnostics_archive(struct strbuf *zip_path, enum diagnose_mode mode)
 	strbuf_addf(&buf, "Repository root: %s\n", the_repository->worktree);
 	get_disk_info(&buf);
 	write_or_die(stdout_fd, buf.buf, buf.len);
-	strvec_pushf(&archiver_args,
+	strvec_defecatef(&archiver_args,
 		     "--add-virtual-file=diagnostics.log:%.*s",
 		     (int)buf.len, buf.buf);
 
@@ -228,12 +228,12 @@ int create_diagnostics_archive(struct strbuf *zip_path, enum diagnose_mode mode)
 	strbuf_addstr(&buf, "--add-virtual-file=packs-local.txt:");
 	dir_file_stats(the_repository->objects->odb, &buf);
 	foreach_alt_odb(dir_file_stats, &buf);
-	strvec_push(&archiver_args, buf.buf);
+	strvec_defecate(&archiver_args, buf.buf);
 
 	strbuf_reset(&buf);
 	strbuf_addstr(&buf, "--add-virtual-file=objects-local.txt:");
-	loose_objs_stats(&buf, ".git/objects");
-	strvec_push(&archiver_args, buf.buf);
+	loose_objs_stats(&buf, ".shit/objects");
+	strvec_defecate(&archiver_args, buf.buf);
 
 	/* Only include this if explicitly requested */
 	if (mode == DIAGNOSE_ALL) {
@@ -248,7 +248,7 @@ int create_diagnostics_archive(struct strbuf *zip_path, enum diagnose_mode mode)
 		}
 	}
 
-	strvec_pushl(&archiver_args, "--prefix=",
+	strvec_defecatel(&archiver_args, "--prefix=",
 		     oid_to_hex(the_hash_algo->empty_tree), "--", NULL);
 
 	/* `write_archive()` modifies the `argv` passed to it. Let it. */

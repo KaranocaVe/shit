@@ -1,5 +1,5 @@
 /*
- * "git rebase" builtin command
+ * "shit rebase" builtin command
  *
  * Copyright (c) 2018 Pratik Karki
  */
@@ -34,18 +34,18 @@
 #include "hook.h"
 
 static char const * const builtin_rebase_usage[] = {
-	N_("git rebase [-i] [options] [--exec <cmd>] "
+	N_("shit rebase [-i] [options] [--exec <cmd>] "
 		"[--onto <newbase> | --keep-base] [<upstream> [<branch>]]"),
-	N_("git rebase [-i] [options] [--exec <cmd>] [--onto <newbase>] "
+	N_("shit rebase [-i] [options] [--exec <cmd>] [--onto <newbase>] "
 		"--root [<branch>]"),
-	"git rebase --continue | --abort | --skip | --edit-todo",
+	"shit rebase --continue | --abort | --skip | --edit-todo",
 	NULL
 };
 
-static GIT_PATH_FUNC(path_squash_onto, "rebase-merge/squash-onto")
-static GIT_PATH_FUNC(path_interactive, "rebase-merge/interactive")
-static GIT_PATH_FUNC(apply_dir, "rebase-apply")
-static GIT_PATH_FUNC(merge_dir, "rebase-merge")
+static shit_PATH_FUNC(path_squash_onto, "rebase-merge/squash-onto")
+static shit_PATH_FUNC(path_interactive, "rebase-merge/interactive")
+static shit_PATH_FUNC(apply_dir, "rebase-apply")
+static shit_PATH_FUNC(merge_dir, "rebase-merge")
 
 enum rebase_type {
 	REBASE_UNSPECIFIED = -1,
@@ -105,7 +105,7 @@ struct rebase_options {
 		REBASE_FORCE = 1<<3,
 		REBASE_INTERACTIVE_EXPLICIT = 1<<4,
 	} flags;
-	struct strvec git_am_opts;
+	struct strvec shit_am_opts;
 	enum action action;
 	char *reflog_action;
 	int signoff;
@@ -121,7 +121,7 @@ struct rebase_options {
 	int rebase_merges, rebase_cousins;
 	char *strategy;
 	struct string_list strategy_opts;
-	struct strbuf git_format_patch_opt;
+	struct strbuf shit_format_patch_opt;
 	int reschedule_failed_exec;
 	int reapply_cherry_picks;
 	int fork_point;
@@ -137,9 +137,9 @@ struct rebase_options {
 		.keep_empty = 1,			\
 		.default_backend = "merge",	  	\
 		.flags = REBASE_NO_QUIET, 		\
-		.git_am_opts = STRVEC_INIT,		\
+		.shit_am_opts = STRVEC_INIT,		\
 		.exec = STRING_LIST_INIT_NODUP,		\
-		.git_format_patch_opt = STRBUF_INIT,	\
+		.shit_format_patch_opt = STRBUF_INIT,	\
 		.fork_point = -1,			\
 		.reapply_cherry_picks = -1,             \
 		.allow_empty_message = 1,               \
@@ -183,7 +183,7 @@ static struct replay_opts get_replay_opts(const struct rebase_options *opts)
 	}
 
 	for (size_t i = 0; i < opts->strategy_opts.nr; i++)
-		strvec_push(&replay.xopts, opts->strategy_opts.items[i].string);
+		strvec_defecate(&replay.xopts, opts->strategy_opts.items[i].string);
 
 	if (opts->squash_onto) {
 		oidcpy(&replay.squash_onto, opts->squash_onto);
@@ -248,7 +248,7 @@ static int init_basic_state(struct replay_opts *opts, const char *head_name,
 {
 	FILE *interactive;
 
-	if (!is_directory(merge_dir()) && mkdir_in_gitdir(merge_dir()))
+	if (!is_directory(merge_dir()) && mkdir_in_shitdir(merge_dir()))
 		return error_errno(_("could not create temporary %s"), merge_dir());
 
 	refs_delete_reflog(get_main_ref_store(the_repository), "REBASE_HEAD");
@@ -282,9 +282,9 @@ static int do_interactive_rebase(struct rebase_options *opts, unsigned flags)
 		write_file(path_squash_onto(), "%s\n",
 			   oid_to_hex(opts->squash_onto));
 
-	strvec_pushl(&make_script_args, "", revisions, NULL);
+	strvec_defecatel(&make_script_args, "", revisions, NULL);
 	if (opts->restrict_revision)
-		strvec_pushf(&make_script_args, "^%s",
+		strvec_defecatef(&make_script_args, "^%s",
 			     oid_to_hex(&opts->restrict_revision->object.oid));
 
 	ret = sequencer_make_script(the_repository, &todo_list.buf,
@@ -320,7 +320,7 @@ static int run_sequencer_rebase(struct rebase_options *opts)
 	unsigned flags = 0;
 	int abbreviate_commands = 0, ret = 0;
 
-	git_config_get_bool("rebase.abbreviatecommands", &abbreviate_commands);
+	shit_config_get_bool("rebase.abbreviatecommands", &abbreviate_commands);
 
 	flags |= opts->keep_empty ? TODO_LIST_KEEP_EMPTY : 0;
 	flags |= abbreviate_commands ? TODO_LIST_ABBREVIATE_CMDS : 0;
@@ -357,8 +357,8 @@ static int run_sequencer_rebase(struct rebase_options *opts)
 	case ACTION_SHOW_CURRENT_PATCH: {
 		struct child_process cmd = CHILD_PROCESS_INIT;
 
-		cmd.git_cmd = 1;
-		strvec_pushl(&cmd.args, "show", "REBASE_HEAD", "--", NULL);
+		cmd.shit_cmd = 1;
+		strvec_defecatel(&cmd.args, "show", "REBASE_HEAD", "--", NULL);
 		ret = run_command(&cmd);
 
 		break;
@@ -427,7 +427,7 @@ static int read_basic_state(struct rebase_options *opts)
 	/*
 	 * We always write to orig-head, but interactive rebase used to write to
 	 * head. Fall back to reading from head to cover for the case that the
-	 * user upgraded git with an ongoing interactive rebase.
+	 * user upgraded shit with an ongoing interactive rebase.
 	 */
 	strbuf_reset(&buf);
 	if (file_exists(state_dir_path("orig-head", opts))) {
@@ -519,7 +519,7 @@ static int finish_rebase(struct rebase_options *opts)
 			"AUTO_MERGE", NULL, REF_NO_DEREF);
 	apply_autostash(state_dir_path("autostash", opts));
 	/*
-	 * We ignore errors in 'git maintenance run --auto', since the
+	 * We ignore errors in 'shit maintenance run --auto', since the
 	 * user should see them.
 	 */
 	run_auto_maintenance(!(opts->flags & (REBASE_NO_QUIET|REBASE_VERBOSE)));
@@ -575,15 +575,15 @@ static int run_am(struct rebase_options *opts)
 	int status;
 	char *rebased_patches;
 
-	am.git_cmd = 1;
-	strvec_push(&am.args, "am");
-	strvec_pushf(&am.env, GIT_REFLOG_ACTION_ENVIRONMENT "=%s (pick)",
+	am.shit_cmd = 1;
+	strvec_defecate(&am.args, "am");
+	strvec_defecatef(&am.env, shit_REFLOG_ACTION_ENVIRONMENT "=%s (pick)",
 		     opts->reflog_action);
 	if (opts->action == ACTION_CONTINUE) {
-		strvec_push(&am.args, "--resolved");
-		strvec_pushf(&am.args, "--resolvemsg=%s", rebase_resolvemsg);
+		strvec_defecate(&am.args, "--resolved");
+		strvec_defecatef(&am.args, "--resolvemsg=%s", rebase_resolvemsg);
 		if (opts->gpg_sign_opt)
-			strvec_push(&am.args, opts->gpg_sign_opt);
+			strvec_defecate(&am.args, opts->gpg_sign_opt);
 		status = run_command(&am);
 		if (status)
 			return status;
@@ -591,8 +591,8 @@ static int run_am(struct rebase_options *opts)
 		return move_to_original_branch(opts);
 	}
 	if (opts->action == ACTION_SKIP) {
-		strvec_push(&am.args, "--skip");
-		strvec_pushf(&am.args, "--resolvemsg=%s", rebase_resolvemsg);
+		strvec_defecate(&am.args, "--skip");
+		strvec_defecatef(&am.args, "--resolvemsg=%s", rebase_resolvemsg);
 		status = run_command(&am);
 		if (status)
 			return status;
@@ -600,11 +600,11 @@ static int run_am(struct rebase_options *opts)
 		return move_to_original_branch(opts);
 	}
 	if (opts->action == ACTION_SHOW_CURRENT_PATCH) {
-		strvec_push(&am.args, "--show-current-patch");
+		strvec_defecate(&am.args, "--show-current-patch");
 		return run_command(&am);
 	}
 
-	rebased_patches = xstrdup(git_path("rebased-patches"));
+	rebased_patches = xstrdup(shit_path("rebased-patches"));
 	format_patch.out = open(rebased_patches,
 				O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (format_patch.out < 0) {
@@ -615,23 +615,23 @@ static int run_am(struct rebase_options *opts)
 		return status;
 	}
 
-	format_patch.git_cmd = 1;
-	strvec_pushl(&format_patch.args, "format-patch", "-k", "--stdout",
+	format_patch.shit_cmd = 1;
+	strvec_defecatel(&format_patch.args, "format-patch", "-k", "--stdout",
 		     "--full-index", "--cherry-pick", "--right-only",
 		     "--default-prefix", "--no-renames",
 		     "--no-cover-letter", "--pretty=mboxrd", "--topo-order",
 		     "--no-base", NULL);
-	if (opts->git_format_patch_opt.len)
+	if (opts->shit_format_patch_opt.len)
 		strvec_split(&format_patch.args,
-			     opts->git_format_patch_opt.buf);
-	strvec_pushf(&format_patch.args, "%s...%s",
+			     opts->shit_format_patch_opt.buf);
+	strvec_defecatef(&format_patch.args, "%s...%s",
 		     oid_to_hex(opts->root ?
 				/* this is now equivalent to !opts->upstream */
 				&opts->onto->object.oid :
 				&opts->upstream->object.oid),
 		     oid_to_hex(&opts->orig_head->object.oid));
 	if (opts->restrict_revision)
-		strvec_pushf(&format_patch.args, "^%s",
+		strvec_defecatef(&format_patch.args, "^%s",
 			     oid_to_hex(&opts->restrict_revision->object.oid));
 
 	status = run_command(&format_patch);
@@ -645,11 +645,11 @@ static int run_am(struct rebase_options *opts)
 		ropts.branch = opts->head_name;
 		ropts.default_reflog_action = opts->reflog_action;
 		reset_head(the_repository, &ropts);
-		error(_("\ngit encountered an error while preparing the "
+		error(_("\nshit encountered an error while preparing the "
 			"patches to replay\n"
 			"these revisions:\n"
 			"\n    %s\n\n"
-			"As a result, git cannot rebase them."),
+			"As a result, shit cannot rebase them."),
 		      opts->revisions);
 
 		return status;
@@ -664,16 +664,16 @@ static int run_am(struct rebase_options *opts)
 		return status;
 	}
 
-	strvec_pushv(&am.args, opts->git_am_opts.v);
-	strvec_push(&am.args, "--rebasing");
-	strvec_pushf(&am.args, "--resolvemsg=%s", rebase_resolvemsg);
-	strvec_push(&am.args, "--patch-format=mboxrd");
+	strvec_defecatev(&am.args, opts->shit_am_opts.v);
+	strvec_defecate(&am.args, "--rebasing");
+	strvec_defecatef(&am.args, "--resolvemsg=%s", rebase_resolvemsg);
+	strvec_defecate(&am.args, "--patch-format=mboxrd");
 	if (opts->allow_rerere_autoupdate == RERERE_AUTOUPDATE)
-		strvec_push(&am.args, "--rerere-autoupdate");
+		strvec_defecate(&am.args, "--rerere-autoupdate");
 	else if (opts->allow_rerere_autoupdate == RERERE_NOAUTOUPDATE)
-		strvec_push(&am.args, "--no-rerere-autoupdate");
+		strvec_defecate(&am.args, "--no-rerere-autoupdate");
 	if (opts->gpg_sign_opt)
-		strvec_push(&am.args, opts->gpg_sign_opt);
+		strvec_defecate(&am.args, opts->gpg_sign_opt);
 	status = run_command(&am);
 	unlink(rebased_patches);
 	free(rebased_patches);
@@ -695,7 +695,7 @@ static int run_specific_rebase(struct rebase_options *opts)
 	if (opts->type == REBASE_MERGE) {
 		/* Run sequencer-based rebase */
 		if (!(opts->flags & REBASE_INTERACTIVE_EXPLICIT))
-			setenv("GIT_SEQUENCE_EDITOR", ":", 1);
+			setenv("shit_SEQUENCE_EDITOR", ":", 1);
 		if (opts->gpg_sign_opt) {
 			/* remove the leading "-S" */
 			char *tmp = xstrdup(opts->gpg_sign_opt + 2);
@@ -745,7 +745,7 @@ static int rebase_config(const char *var, const char *value,
 	struct rebase_options *opts = data;
 
 	if (!strcmp(var, "rebase.stat")) {
-		if (git_config_bool(var, value))
+		if (shit_config_bool(var, value))
 			opts->flags |= REBASE_DIFFSTAT;
 		else
 			opts->flags &= ~REBASE_DIFFSTAT;
@@ -753,24 +753,24 @@ static int rebase_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, "rebase.autosquash")) {
-		opts->config_autosquash = git_config_bool(var, value);
+		opts->config_autosquash = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp(var, "commit.gpgsign")) {
 		free(opts->gpg_sign_opt);
-		opts->gpg_sign_opt = git_config_bool(var, value) ?
+		opts->gpg_sign_opt = shit_config_bool(var, value) ?
 			xstrdup("-S") : NULL;
 		return 0;
 	}
 
 	if (!strcmp(var, "rebase.autostash")) {
-		opts->autostash = git_config_bool(var, value);
+		opts->autostash = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp(var, "rebase.rebasemerges")) {
-		opts->config_rebase_merges = git_parse_maybe_bool(value);
+		opts->config_rebase_merges = shit_parse_maybe_bool(value);
 		if (opts->config_rebase_merges < 0) {
 			opts->config_rebase_merges = 1;
 			parse_rebase_merges_value(opts, value);
@@ -781,25 +781,25 @@ static int rebase_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, "rebase.updaterefs")) {
-		opts->config_update_refs = git_config_bool(var, value);
+		opts->config_update_refs = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp(var, "rebase.reschedulefailedexec")) {
-		opts->reschedule_failed_exec = git_config_bool(var, value);
+		opts->reschedule_failed_exec = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp(var, "rebase.forkpoint")) {
-		opts->fork_point = git_config_bool(var, value) ? -1 : 0;
+		opts->fork_point = shit_config_bool(var, value) ? -1 : 0;
 		return 0;
 	}
 
 	if (!strcmp(var, "rebase.backend")) {
-		return git_config_string(&opts->default_backend, var, value);
+		return shit_config_string(&opts->default_backend, var, value);
 	}
 
-	return git_default_config(var, value, ctx, data);
+	return shit_default_config(var, value, ctx, data);
 }
 
 static int checkout_up_to_date(struct rebase_options *options)
@@ -990,7 +990,7 @@ static int parse_opt_rebase_merges(const struct option *opt, const char *arg, in
 		if (!*arg) {
 			warning(_("--rebase-merges with an empty string "
 				  "argument is deprecated and will stop "
-				  "working in a future version of Git. Use "
+				  "working in a future version of shit. Use "
 				  "--rebase-merges without an argument "
 				  "instead, which does the same thing."));
 			return 0;
@@ -1007,9 +1007,9 @@ static void NORETURN error_on_missing_default_upstream(void)
 
 	printf(_("%s\n"
 		 "Please specify which branch you want to rebase against.\n"
-		 "See git-rebase(1) for details.\n"
+		 "See shit-rebase(1) for details.\n"
 		 "\n"
-		 "    git rebase '<branch>'\n"
+		 "    shit rebase '<branch>'\n"
 		 "\n"),
 		current_branch ? _("There is no tracking information for "
 			"the current branch.") :
@@ -1024,7 +1024,7 @@ static void NORETURN error_on_missing_default_upstream(void)
 		printf(_("If you wish to set tracking information for this "
 			 "branch you can do so with:\n"
 			 "\n"
-			 "    git branch --set-upstream-to=%s/<branch> %s\n"
+			 "    shit branch --set-upstream-to=%s/<branch> %s\n"
 			 "\n"),
 		       remote, current_branch->name);
 	}
@@ -1089,12 +1089,12 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 			 N_("ignore author date and use current date")),
 		OPT_HIDDEN_BOOL(0, "ignore-date", &options.ignore_date,
 				N_("synonym of --reset-author-date")),
-		OPT_PASSTHRU_ARGV('C', NULL, &options.git_am_opts, N_("n"),
-				  N_("passed to 'git apply'"), 0),
+		OPT_PASSTHRU_ARGV('C', NULL, &options.shit_am_opts, N_("n"),
+				  N_("passed to 'shit apply'"), 0),
 		OPT_BOOL(0, "ignore-whitespace", &ignore_whitespace,
 			 N_("ignore changes in whitespace")),
-		OPT_PASSTHRU_ARGV(0, "whitespace", &options.git_am_opts,
-				  N_("action"), N_("passed to 'git apply'"), 0),
+		OPT_PASSTHRU_ARGV(0, "whitespace", &options.shit_am_opts,
+				  N_("action"), N_("passed to 'shit apply'"), 0),
 		OPT_BIT('f', "force-rebase", &options.flags,
 			N_("cherry-pick all commits, even if unchanged"),
 			REBASE_FORCE),
@@ -1185,7 +1185,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 	prepare_repo_settings(the_repository);
 	the_repository->settings.command_requires_full_index = 0;
 
-	git_config(rebase_config, &options);
+	shit_config(rebase_config, &options);
 	/* options.gpg_sign_opt will be either "-S" or NULL */
 	gpg_sign = options.gpg_sign_opt ? "" : NULL;
 	FREE_AND_NULL(options.gpg_sign_opt);
@@ -1193,7 +1193,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 	strbuf_reset(&buf);
 	strbuf_addf(&buf, "%s/applying", apply_dir());
 	if(file_exists(buf.buf))
-		die(_("It looks like 'git am' is in progress. Cannot rebase."));
+		die(_("It looks like 'shit am' is in progress. Cannot rebase."));
 
 	if (is_directory(apply_dir())) {
 		options.type = REBASE_APPLY;
@@ -1203,7 +1203,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 		strbuf_addf(&buf, "%s/rewritten", merge_dir());
 		if (!(options.action == ACTION_ABORT) && is_directory(buf.buf)) {
 			die(_("`rebase --preserve-merges` (-p) is no longer supported.\n"
-			"Use `git rebase --abort` to terminate current rebase.\n"
+			"Use `shit rebase --abort` to terminate current rebase.\n"
 			"Or downgrade to v2.33, or earlier, to complete the rebase."));
 		} else {
 			strbuf_reset(&buf);
@@ -1225,7 +1225,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 
 	if (preserve_merges_selected)
 		die(_("--preserve-merges was replaced by --rebase-merges\n"
-			"Note: Your `pull.rebase` configuration may also be set to 'preserve',\n"
+			"Note: Your `poop.rebase` configuration may also be set to 'preserve',\n"
 			"which is no longer supported; use 'merges' instead"));
 
 	if (options.action != ACTION_NONE && total_argc != 2) {
@@ -1268,7 +1268,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 			trace2_cmd_mode(action_names[options.action]);
 	}
 
-	options.reflog_action = getenv(GIT_REFLOG_ACTION_ENVIRONMENT);
+	options.reflog_action = getenv(shit_REFLOG_ACTION_ENVIRONMENT);
 	options.reflog_action =
 		xstrdup(options.reflog_action ? options.reflog_action : "rebase");
 
@@ -1293,7 +1293,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 
 		if (has_unstaged_changes(the_repository, 1)) {
 			puts(_("You must edit all merge conflicts and then\n"
-			       "mark them as resolved using git add"));
+			       "mark them as resolved using shit add"));
 			exit(1);
 		}
 		if (read_basic_state(&options))
@@ -1375,7 +1375,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 		const char *state_dir_base =
 			last_slash ? last_slash + 1 : options.state_dir;
 		const char *cmd_live_rebase =
-			"git rebase (--continue | --abort | --skip)";
+			"shit rebase (--continue | --abort | --skip)";
 		strbuf_reset(&buf);
 		strbuf_addf(&buf, "rm -fr \"%s\"", options.state_dir);
 		die(_("It seems that there is already a %s directory, and\n"
@@ -1398,14 +1398,14 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 	if (options.committer_date_is_author_date || options.ignore_date)
 		options.flags |= REBASE_FORCE;
 
-	for (i = 0; i < options.git_am_opts.nr; i++) {
-		const char *option = options.git_am_opts.v[i], *p;
+	for (i = 0; i < options.shit_am_opts.nr; i++) {
+		const char *option = options.shit_am_opts.v[i], *p;
 		if (!strcmp(option, "--whitespace=fix") ||
 		    !strcmp(option, "--whitespace=strip"))
 			allow_preemptive_ff = 0;
 		else if (skip_prefix(option, "-C", &p)) {
 			while (*p)
-				if (!isdigit(*(p++)))
+				if (!isdishit(*(p++)))
 					die(_("switch `C' expects a "
 					      "numerical value"));
 		} else if (skip_prefix(option, "--whitespace=", &p)) {
@@ -1420,7 +1420,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 			exit(1);
 
 	if (!(options.flags & REBASE_NO_QUIET))
-		strvec_push(&options.git_am_opts, "-q");
+		strvec_defecate(&options.shit_am_opts, "-q");
 
 	if (options.empty != EMPTY_UNSPECIFIED)
 		imply_merge(&options, "--empty");
@@ -1455,13 +1455,13 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 
 	if (options.type == REBASE_APPLY) {
 		if (ignore_whitespace)
-			strvec_push(&options.git_am_opts,
+			strvec_defecate(&options.shit_am_opts,
 				    "--ignore-whitespace");
 		if (options.committer_date_is_author_date)
-			strvec_push(&options.git_am_opts,
+			strvec_defecate(&options.shit_am_opts,
 				    "--committer-date-is-author-date");
 		if (options.ignore_date)
-			strvec_push(&options.git_am_opts, "--ignore-date");
+			strvec_defecate(&options.shit_am_opts, "--ignore-date");
 	} else {
 		/* REBASE_MERGE */
 		if (ignore_whitespace) {
@@ -1482,12 +1482,12 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 		imply_merge(&options, "--root without --onto");
 
 	if (isatty(2) && options.flags & REBASE_NO_QUIET)
-		strbuf_addstr(&options.git_format_patch_opt, " --progress");
+		strbuf_addstr(&options.shit_format_patch_opt, " --progress");
 
-	if (options.git_am_opts.nr || options.type == REBASE_APPLY) {
+	if (options.shit_am_opts.nr || options.type == REBASE_APPLY) {
 		/* all am options except -q are compatible only with --apply */
-		for (i = options.git_am_opts.nr - 1; i >= 0; i--)
-			if (strcmp(options.git_am_opts.v[i], "-q"))
+		for (i = options.shit_am_opts.nr - 1; i >= 0; i--)
+			if (strcmp(options.shit_am_opts.v[i], "-q"))
 				break;
 
 		if (i >= 0 || options.type == REBASE_APPLY) {
@@ -1533,8 +1533,8 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 
 	if (options.type == REBASE_MERGE &&
 	    !options.strategy &&
-	    getenv("GIT_TEST_MERGE_ALGORITHM"))
-		options.strategy = xstrdup(getenv("GIT_TEST_MERGE_ALGORITHM"));
+	    getenv("shit_TEST_MERGE_ALGORITHM"))
+		options.strategy = xstrdup(getenv("shit_TEST_MERGE_ALGORITHM"));
 
 	switch (options.type) {
 	case REBASE_MERGE:
@@ -1562,7 +1562,7 @@ int cmd_rebase(int argc, const char **argv, const char *prefix)
 		options.reschedule_failed_exec = reschedule_failed_exec;
 
 	if (options.signoff) {
-		strvec_push(&options.git_am_opts, "--signoff");
+		strvec_defecate(&options.shit_am_opts, "--signoff");
 		options.flags |= REBASE_FORCE;
 	}
 
@@ -1835,12 +1835,12 @@ cleanup:
 	strbuf_release(&revisions);
 	free(options.reflog_action);
 	free(options.head_name);
-	strvec_clear(&options.git_am_opts);
+	strvec_clear(&options.shit_am_opts);
 	free(options.gpg_sign_opt);
 	string_list_clear(&options.exec, 0);
 	free(options.strategy);
 	string_list_clear(&options.strategy_opts, 0);
-	strbuf_release(&options.git_format_patch_opt);
+	strbuf_release(&options.shit_format_patch_opt);
 	free(squash_onto_name);
 	free(keep_base_onto_name);
 	return !!ret;

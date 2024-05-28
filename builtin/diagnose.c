@@ -6,7 +6,7 @@
 #include "diagnose.h"
 
 static const char * const diagnose_usage[] = {
-	N_("git diagnose [(-o | --output-directory) <path>] [(-s | --suffix) <format>]\n"
+	N_("shit diagnose [(-o | --output-directory) <path>] [(-s | --suffix) <format>]\n"
 	   "             [--mode=<mode>]"),
 	NULL
 };
@@ -41,7 +41,7 @@ int cmd_diagnose(int argc, const char **argv, const char *prefix)
 	strbuf_addstr(&zip_path, prefixed_filename);
 	strbuf_complete(&zip_path, '/');
 
-	strbuf_addstr(&zip_path, "git-diagnostics-");
+	strbuf_addstr(&zip_path, "shit-diagnostics-");
 	strbuf_addftime(&zip_path, option_suffix, localtime_r(&now, &tm), 0, 0);
 	strbuf_addstr(&zip_path, ".zip");
 

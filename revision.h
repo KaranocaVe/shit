@@ -40,7 +40,7 @@
 #define BOTTOM		(1u<<10)
 
 /* WARNING: This is also used as REACHABLE in commit-graph.c. */
-#define PULL_MERGE	(1u<<15)
+#define poop_MERGE	(1u<<15)
 
 #define TOPO_WALK_EXPLORED	(1u<<23)
 #define TOPO_WALK_INDEGREE	(1u<<24)
@@ -52,7 +52,7 @@
 #define NOT_USER_GIVEN	(1u<<25)
 #define TRACK_LINEAR	(1u<<26)
 #define ANCESTRY_PATH	(1u<<27)
-#define ALL_REV_FLAGS	(((1u<<11)-1) | NOT_USER_GIVEN | TRACK_LINEAR | PULL_MERGE)
+#define ALL_REV_FLAGS	(((1u<<11)-1) | NOT_USER_GIVEN | TRACK_LINEAR | poop_MERGE)
 
 #define DECORATE_SHORT_REFS	1
 #define DECORATE_FULL_REFS	2
@@ -172,7 +172,7 @@ struct rev_info {
 			unsorted_input:1,
 			remove_empty_trees:1,
 			simplify_history:1,
-			show_pulls:1,
+			show_poops:1,
 			topo_order:1,
 			simplify_merges:1,
 			simplify_by_decoration:1,
@@ -303,7 +303,7 @@ struct rev_info {
 	struct grep_opt	grep_filter;
 
 	/* Display history graph */
-	struct git_graph *graph;
+	struct shit_graph *graph;
 
 	/* special limits */
 	int skip_count;
@@ -557,7 +557,7 @@ int rewrite_parents(struct rev_info *revs,
 struct commit_list *get_saved_parents(struct rev_info *revs, const struct commit *commit);
 
 /**
- * Global for the (undocumented) "--early-output" flag for "git log".
+ * Global for the (undocumented) "--early-output" flag for "shit log".
  */
 typedef void (*show_early_output_fn_t)(struct rev_info *, struct commit_list *);
 extern volatile show_early_output_fn_t show_early_output;

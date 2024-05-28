@@ -1,4 +1,4 @@
-Git v1.9.4 Release Notes
+shit v1.9.4 Release Notes
 ========================
 
 Fixes since v1.9.3

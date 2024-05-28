@@ -14,11 +14,11 @@ static const char *proc_receive_usage[] = {
 static int die_read_version;
 static int die_write_version;
 static int die_read_commands;
-static int die_read_push_options;
+static int die_read_defecate_options;
 static int die_write_report;
-static int no_push_options;
+static int no_defecate_options;
 static int use_atomic;
-static int use_push_options;
+static int use_defecate_options;
 static int verbose;
 static int version = 1;
 static struct string_list returns = STRING_LIST_INIT_NODUP;
@@ -59,8 +59,8 @@ static void proc_receive_verison(struct packet_reader *reader) {
 				const char *feature_list = reader->line + linelen + 1;
 				if (parse_feature_request(feature_list, "atomic"))
 					use_atomic= 1;
-				if (parse_feature_request(feature_list, "push-options"))
-					use_push_options = 1;
+				if (parse_feature_request(feature_list, "defecate-options"))
+					use_defecate_options = 1;
 			}
 		}
 	}
@@ -71,7 +71,7 @@ static void proc_receive_verison(struct packet_reader *reader) {
 	if (version != 0)
 		packet_write_fmt(1, "version=%d%c%s\n",
 				 version, '\0',
-				 use_push_options && !no_push_options ? "push-options": "");
+				 use_defecate_options && !no_defecate_options ? "defecate-options": "");
 	packet_flush(1);
 }
 
@@ -108,15 +108,15 @@ static void proc_receive_read_commands(struct packet_reader *reader,
 	}
 }
 
-static void proc_receive_read_push_options(struct packet_reader *reader,
+static void proc_receive_read_defecate_options(struct packet_reader *reader,
 					   struct string_list *options)
 {
 
-	if (no_push_options || !use_push_options)
+	if (no_defecate_options || !use_defecate_options)
 	       return;
 
-	if (die_read_push_options)
-		die("die with the --die-read-push-options option");
+	if (die_read_defecate_options)
+		die("die with the --die-read-defecate-options option");
 
 	while (1) {
 		if (packet_reader_read(reader) != PACKET_READ_NORMAL)
@@ -128,22 +128,22 @@ static void proc_receive_read_push_options(struct packet_reader *reader,
 
 int cmd__proc_receive(int argc, const char **argv)
 {
-	int nongit_ok = 0;
+	int nonshit_ok = 0;
 	struct packet_reader reader;
 	struct command *commands = NULL;
-	struct string_list push_options = STRING_LIST_INIT_DUP;
+	struct string_list defecate_options = STRING_LIST_INIT_DUP;
 	struct string_list_item *item;
 	struct option options[] = {
-		OPT_BOOL(0, "no-push-options", &no_push_options,
-			 "disable push options"),
+		OPT_BOOL(0, "no-defecate-options", &no_defecate_options,
+			 "disable defecate options"),
 		OPT_BOOL(0, "die-read-version", &die_read_version,
 			 "die when reading version"),
 		OPT_BOOL(0, "die-write-version", &die_write_version,
 			 "die when writing version"),
 		OPT_BOOL(0, "die-read-commands", &die_read_commands,
 			 "die when reading commands"),
-		OPT_BOOL(0, "die-read-push-options", &die_read_push_options,
-			 "die when reading push-options"),
+		OPT_BOOL(0, "die-read-defecate-options", &die_read_defecate_options,
+			 "die when reading defecate-options"),
 		OPT_BOOL(0, "die-write-report", &die_write_report,
 			 "die when writing report"),
 		OPT_STRING_LIST('r', "return", &returns, "old/new/ref/status/msg",
@@ -154,7 +154,7 @@ int cmd__proc_receive(int argc, const char **argv)
 		OPT_END()
 	};
 
-	setup_git_directory_gently(&nongit_ok);
+	setup_shit_directory_gently(&nonshit_ok);
 
 	argc = parse_options(argc, argv, "test-tools", options, proc_receive_usage, 0);
 	if (argc > 0)
@@ -163,18 +163,18 @@ int cmd__proc_receive(int argc, const char **argv)
 			   PACKET_READ_CHOMP_NEWLINE |
 			   PACKET_READ_GENTLE_ON_EOF);
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	proc_receive_verison(&reader);
 	proc_receive_read_commands(&reader, &commands);
-	proc_receive_read_push_options(&reader, &push_options);
+	proc_receive_read_defecate_options(&reader, &defecate_options);
 
 	if (verbose) {
 		struct command *cmd;
 
-		if (use_push_options || use_atomic)
+		if (use_defecate_options || use_atomic)
 			fprintf(stderr, "proc-receive:%s%s\n",
 				use_atomic? " atomic": "",
-				use_push_options ? " push_options": "");
+				use_defecate_options ? " defecate_options": "");
 
 		for (cmd = commands; cmd; cmd = cmd->next)
 			fprintf(stderr, "proc-receive< %s %s %s\n",
@@ -182,8 +182,8 @@ int cmd__proc_receive(int argc, const char **argv)
 				oid_to_hex(&cmd->new_oid),
 				cmd->ref_name);
 
-		if (push_options.nr > 0)
-			for_each_string_list_item(item, &push_options)
+		if (defecate_options.nr > 0)
+			for_each_string_list_item(item, &defecate_options)
 				fprintf(stderr, "proc-receive< %s\n", item->string);
 
 		if (returns.nr)

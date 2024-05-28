@@ -1,4 +1,4 @@
-GIT v1.5.0.4 Release Notes
+shit v1.5.0.4 Release Notes
 ==========================
 
 Fixes since v1.5.0.3
@@ -6,16 +6,16 @@ Fixes since v1.5.0.3
 
 * Bugfixes
 
-  - git.el does not add duplicate sign-off lines.
+  - shit.el does not add duplicate sign-off lines.
 
-  - git-commit shows the full stat of the resulting commit, not
+  - shit-commit shows the full stat of the resulting commit, not
     just about the files in the current directory, when run from
     a subdirectory.
 
-  - "git-checkout -m '@{8 hours ago}'" had a funny failure from
+  - "shit-checkout -m '@{8 hours ago}'" had a funny failure from
     eval; fixed.
 
-  - git-gui updates.
+  - shit-gui updates.
 
 * Documentation updates
 

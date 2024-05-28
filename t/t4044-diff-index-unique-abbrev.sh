@@ -35,13 +35,13 @@ test_expect_success 'setup' '
 	EOF
 
 	test_oid val1 > foo &&
-	git add foo &&
-	git commit -m "initial" &&
-	git cat-file -p HEAD: > actual &&
+	shit add foo &&
+	shit commit -m "initial" &&
+	shit cat-file -p HEAD: > actual &&
 	test_cmp expect_initial actual &&
 	test_oid val2 > foo &&
-	git commit -a -m "update" &&
-	git cat-file -p HEAD: > actual &&
+	shit commit -a -m "update" &&
+	shit cat-file -p HEAD: > actual &&
 	test_cmp expect_update actual
 '
 
@@ -50,7 +50,7 @@ index $(test_oid hasht1)..$(test_oid hasht2) 100644
 EOF
 
 test_expect_success 'diff does not produce ambiguous index line' '
-	git diff HEAD^..HEAD | grep index > actual &&
+	shit diff HEAD^..HEAD | grep index > actual &&
 	test_cmp expect actual
 '
 

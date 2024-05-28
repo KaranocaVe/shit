@@ -1,7 +1,7 @@
 /*
  * Generic implementation of background process infrastructure.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "sub-process.h"
 #include "sigchain.h"
 #include "pkt-line.h"
@@ -66,7 +66,7 @@ void subprocess_stop(struct hashmap *hashmap, struct subprocess_entry *entry)
 
 static void subprocess_exit_handler(struct child_process *process)
 {
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	/* Closing the pipe signals the subprocess to initiate a shutdown. */
 	close(process->in);
 	close(process->out);
@@ -85,7 +85,7 @@ int subprocess_start(struct hashmap *hashmap, struct subprocess_entry *entry, co
 	process = &entry->process;
 
 	child_process_init(process);
-	strvec_push(&process->args, cmd);
+	strvec_defecate(&process->args, cmd);
 	process->use_shell = 1;
 	process->in = -1;
 	process->out = -1;
@@ -205,7 +205,7 @@ int subprocess_handshake(struct subprocess_entry *entry,
 	int retval;
 	struct child_process *process = &entry->process;
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 
 	retval = handshake_version(process, welcome_prefix, versions,
 				   chosen_version) ||

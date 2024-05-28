@@ -2,7 +2,7 @@
  * Copyright (c) 2005, Junio C Hamano
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "gettext.h"
 #include "lockfile.h"
@@ -152,9 +152,9 @@ void unable_to_lock_message(const char *path, int err, struct strbuf *buf)
 {
 	if (err == EEXIST) {
 		strbuf_addf(buf, _("Unable to create '%s.lock': %s.\n\n"
-		    "Another git process seems to be running in this repository, e.g.\n"
-		    "an editor opened by 'git commit'. Please make sure all processes\n"
-		    "are terminated then try again. If it still fails, a git process\n"
+		    "Another shit process seems to be running in this repository, e.g.\n"
+		    "an editor opened by 'shit commit'. Please make sure all processes\n"
+		    "are terminated then try again. If it still fails, a shit process\n"
 		    "may have crashed in this repository earlier:\n"
 		    "remove the file manually to continue."),
 			    absolute_path(path), strerror(err));

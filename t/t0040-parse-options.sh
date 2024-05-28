@@ -51,7 +51,7 @@ Magic arguments
     --no-ambiguous        negative ambiguity
 
 Standard options
-    --[no-]abbrev[=<n>]   use <n> digits to display object names
+    --[no-]abbrev[=<n>]   use <n> dishits to display object names
     -v, --[no-]verbose    be verbose
     -n, --[no-]dry-run    dry run
     -q, --[no-]quiet      be quiet
@@ -214,14 +214,14 @@ test_expect_success 'superfluous value provided: boolean, abbreviated' '
 	cat >expect <<-\EOF &&
 	error: option `yes'\'' takes no value
 	EOF
-	test_expect_code 129 env GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	test_expect_code 129 env shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --ye=hi 2>actual &&
 	test_cmp expect actual &&
 
 	cat >expect <<-\EOF &&
 	error: option `no-yes'\'' takes no value
 	EOF
-	test_expect_code 129 env GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	test_expect_code 129 env shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --no-ye=hi 2>actual &&
 	test_cmp expect actual
 '
@@ -271,24 +271,24 @@ file: (not set)
 EOF
 
 test_expect_success 'unambiguously abbreviated option' '
-	GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --int 2 --boolean --no-bo >output 2>output.err &&
 	test_must_be_empty output.err &&
 	test_cmp expect output
 '
 
 test_expect_success 'unambiguously abbreviated option with "="' '
-	GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --expect="integer: 2" --int=2
 '
 
 test_expect_success 'ambiguously abbreviated option' '
-	test_expect_code 129 env GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	test_expect_code 129 env shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --strin 123
 '
 
 test_expect_success 'non ambiguous option (after two options it abbreviates)' '
-	GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --expect="string: 123" --st 123
 '
 
@@ -298,7 +298,7 @@ test_expect_success 'Alias options do not contribute to abbreviation' '
 	test-tool parse-options --alias-target 123 >output &&
 	grep "^string: 123" output &&
 	test_must_fail test-tool parse-options --alias &&
-	GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --alias 123 >output &&
 	grep "^string: 123" output
 '
@@ -442,7 +442,7 @@ file: (not set)
 EOF
 
 test_expect_success 'negation of OPT_NONEG flags is not ambiguous' '
-	GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+	shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 	test-tool parse-options --no-ambig >output 2>output.err &&
 	test_must_be_empty output.err &&
 	test_cmp expect output
@@ -488,10 +488,10 @@ test_expect_success '--no-verbose resets multiple verbose to 0' '
 	test-tool parse-options --expect="verbose: 0" -v -v -v --no-verbose
 '
 
-test_expect_success 'GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS works' '
-	GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
+test_expect_success 'shit_TEST_DISALLOW_ABBREVIATED_OPTIONS works' '
+	shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=false \
 		test-tool parse-options --ye &&
-	test_must_fail env GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=true \
+	test_must_fail env shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=true \
 		test-tool parse-options --ye
 '
 
@@ -735,7 +735,7 @@ test_expect_success 'subcommand - SUBCOMMAND_OPTIONAL | KEEP_UNKNOWN_OPT | KEEP_
 '
 
 test_expect_success 'subcommand - completion helper' '
-	test-tool parse-subcommand cmd --git-completion-helper >actual &&
+	test-tool parse-subcommand cmd --shit-completion-helper >actual &&
 	echo "subcmd-one subcmd-two --opt= --no-opt" >expect &&
 	test_cmp expect actual
 '

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git svn authorship'
+test_description='shit svn authorship'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 test_expect_success 'setup svn repository' '
 	svn_cmd checkout "$svnrepo" work.svn &&
@@ -14,39 +14,39 @@ test_expect_success 'setup svn repository' '
 	)
 '
 
-test_expect_success 'interact with it via git svn' '
-	mkdir work.git &&
+test_expect_success 'interact with it via shit svn' '
+	mkdir work.shit &&
 	(
-		cd work.git &&
-		git svn init "$svnrepo" &&
-		git svn fetch &&
+		cd work.shit &&
+		shit svn init "$svnrepo" &&
+		shit svn fetch &&
 
 		echo modification >file &&
 		test_tick &&
-		git commit -a -m second &&
+		shit commit -a -m second &&
 
 		test_tick &&
-		git svn dcommit &&
+		shit svn dcommit &&
 
 		echo "further modification" >file &&
 		test_tick &&
-		git commit -a -m third &&
+		shit commit -a -m third &&
 
 		test_tick &&
-		git svn --add-author-from dcommit &&
+		shit svn --add-author-from dcommit &&
 
 		echo "yet further modification" >file &&
 		test_tick &&
-		git commit -a -m fourth &&
+		shit commit -a -m fourth &&
 
 		test_tick &&
-		git svn --add-author-from --use-log-author dcommit &&
+		shit svn --add-author-from --use-log-author dcommit &&
 
-		git log &&
+		shit log &&
 
-		git show -s HEAD^^ >../actual.2 &&
-		git show -s HEAD^  >../actual.3 &&
-		git show -s HEAD   >../actual.4
+		shit show -s HEAD^^ >../actual.2 &&
+		shit show -s HEAD^  >../actual.3 &&
+		shit show -s HEAD   >../actual.4
 
 	) &&
 

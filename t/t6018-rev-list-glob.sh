@@ -2,8 +2,8 @@
 
 test_description='rev-list/rev-parse --glob'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,42 +11,42 @@ TEST_PASSES_SANITIZE_LEAK=true
 commit () {
 	test_tick &&
 	echo $1 > foo &&
-	git add foo &&
-	git commit -m "$1"
+	shit add foo &&
+	shit commit -m "$1"
 }
 
 compare () {
 	# Split arguments on whitespace.
-	git $1 $2 >expected &&
-	git $1 $3 >actual &&
+	shit $1 $2 >expected &&
+	shit $1 $3 >actual &&
 	test_cmp expected actual
 }
 
 test_expect_success 'setup' '
 
 	commit main &&
-	git checkout -b subspace/one main &&
+	shit checkout -b subspace/one main &&
 	commit one &&
-	git checkout -b subspace/two main &&
+	shit checkout -b subspace/two main &&
 	commit two &&
-	git checkout -b subspace-x main &&
+	shit checkout -b subspace-x main &&
 	commit subspace-x &&
-	git checkout -b other/three main &&
+	shit checkout -b other/three main &&
 	commit three &&
-	git checkout -b someref main &&
+	shit checkout -b someref main &&
 	commit some &&
-	git checkout main &&
+	shit checkout main &&
 	commit topic_2 &&
-	git tag foo/bar main &&
+	shit tag foo/bar main &&
 	commit topic_3 &&
-	git update-ref refs/remotes/foo/baz main &&
+	shit update-ref refs/remotes/foo/baz main &&
 	commit topic_4 &&
-	git update-ref refs/remotes/upstream/one subspace/one &&
-	git update-ref refs/remotes/upstream/two subspace/two &&
-	git update-ref refs/remotes/upstream/x subspace-x &&
-	git tag qux/one subspace/one &&
-	git tag qux/two subspace/two &&
-	git tag qux/x subspace-x
+	shit update-ref refs/remotes/upstream/one subspace/one &&
+	shit update-ref refs/remotes/upstream/two subspace/two &&
+	shit update-ref refs/remotes/upstream/x subspace-x &&
+	shit tag qux/one subspace/one &&
+	shit tag qux/two subspace/two &&
+	shit tag qux/x subspace-x
 '
 
 test_expect_success 'rev-parse --glob=refs/heads/subspace/*' '
@@ -207,19 +207,19 @@ do
 
 	test_expect_success "rev-parse --exclude-hidden=$section can only be passed once per pseudo-ref" '
 		echo "fatal: --exclude-hidden= passed more than once" >expected &&
-		test_must_fail git rev-parse --exclude-hidden=$section --exclude-hidden=$section 2>err &&
+		test_must_fail shit rev-parse --exclude-hidden=$section --exclude-hidden=$section 2>err &&
 		test_cmp expected err
 	'
 
 	for pseudoopt in branches tags remotes
 	do
 		test_expect_success "rev-parse --exclude-hidden=$section fails with --$pseudoopt" '
-			test_must_fail git rev-parse --exclude-hidden=$section --$pseudoopt 2>err &&
+			test_must_fail shit rev-parse --exclude-hidden=$section --$pseudoopt 2>err &&
 			test_grep "error: options .--exclude-hidden. and .--$pseudoopt. cannot be used together" err
 		'
 
 		test_expect_success "rev-parse --exclude-hidden=$section fails with --$pseudoopt=pattern" '
-			test_must_fail git rev-parse --exclude-hidden=$section --$pseudoopt=pattern 2>err &&
+			test_must_fail shit rev-parse --exclude-hidden=$section --$pseudoopt=pattern 2>err &&
 			test_grep "error: options .--exclude-hidden. and .--$pseudoopt. cannot be used together" err
 		'
 	done
@@ -364,12 +364,12 @@ test_expect_success 'rev-list accumulates multiple --exclude' '
 '
 
 test_expect_success 'rev-list should succeed with empty output on empty stdin' '
-	git rev-list --stdin </dev/null >actual &&
+	shit rev-list --stdin </dev/null >actual &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'rev-list should succeed with empty output with all refs excluded' '
-	git rev-list --exclude=* --all >actual &&
+	shit rev-list --exclude=* --all >actual &&
 	test_must_be_empty actual
 '
 
@@ -377,18 +377,18 @@ test_expect_success 'rev-list should succeed with empty output with empty --all'
 	(
 		test_create_repo empty &&
 		cd empty &&
-		git rev-list --all >actual &&
+		shit rev-list --all >actual &&
 		test_must_be_empty actual
 	)
 '
 
 test_expect_success 'rev-list should succeed with empty output with empty glob' '
-	git rev-list --glob=does-not-match-anything >actual &&
+	shit rev-list --glob=does-not-match-anything >actual &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'rev-list should succeed with empty output when ignoring missing' '
-	git rev-list --ignore-missing $ZERO_OID >actual &&
+	shit rev-list --ignore-missing $ZERO_OID >actual &&
 	test_must_be_empty actual
 '
 

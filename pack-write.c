@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "gettext.h"
 #include "hex.h"
@@ -379,7 +379,7 @@ void fixup_pack_header_footer(int pack_fd,
 			 off_t partial_pack_offset)
 {
 	int aligned_sz, buf_sz = 8 * 1024;
-	git_hash_ctx old_hash_ctx, new_hash_ctx;
+	shit_hash_ctx old_hash_ctx, new_hash_ctx;
 	struct pack_header hdr;
 	char *buf;
 	ssize_t read_result;
@@ -426,7 +426,7 @@ void fixup_pack_header_footer(int pack_fd,
 		the_hash_algo->update_fn(&old_hash_ctx, buf, n);
 		partial_pack_offset -= n;
 		if (partial_pack_offset == 0) {
-			unsigned char hash[GIT_MAX_RAWSZ];
+			unsigned char hash[shit_MAX_RAWSZ];
 			the_hash_algo->final_fn(hash, &old_hash_ctx);
 			if (!hasheq(hash, partial_pack_hash))
 				die("Unexpected checksum for %s "
@@ -452,7 +452,7 @@ void fixup_pack_header_footer(int pack_fd,
 
 char *index_pack_lockfile(int ip_out, int *is_well_formed)
 {
-	char packname[GIT_MAX_HEXSZ + 6];
+	char packname[shit_MAX_HEXSZ + 6];
 	const int len = the_hash_algo->hexsz + 6;
 
 	/*

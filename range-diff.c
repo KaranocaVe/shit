@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "gettext.h"
 #include "range-diff.h"
@@ -47,7 +47,7 @@ static int read_patches(const char *range, struct string_list *list,
 	size_t size;
 	int ret = -1;
 
-	strvec_pushl(&cp.args, "log", "--no-color", "-p", "--no-merges",
+	strvec_defecatel(&cp.args, "log", "--no-color", "-p", "--no-merges",
 		     "--reverse", "--date-order", "--decorate=no",
 		     "--no-prefix", "--submodule=short",
 		     /*
@@ -62,12 +62,12 @@ static int read_patches(const char *range, struct string_list *list,
 		     "--pretty=medium",
 		     "--show-notes-by-default",
 		     NULL);
-	strvec_push(&cp.args, range);
+	strvec_defecate(&cp.args, range);
 	if (other_arg)
-		strvec_pushv(&cp.args, other_arg->v);
+		strvec_defecatev(&cp.args, other_arg->v);
 	cp.out = -1;
 	cp.no_stdin = 1;
-	cp.git_cmd = 1;
+	cp.shit_cmd = 1;
 
 	if (start_command(&cp))
 		return error_errno(_("could not start `log`"));
@@ -118,7 +118,7 @@ static int read_patches(const char *range, struct string_list *list,
 			goto cleanup;
 		}
 
-		if (starts_with(line, "diff --git")) {
+		if (starts_with(line, "diff --shit")) {
 			struct patch patch = { 0 };
 			struct strbuf root = STRBUF_INIT;
 			int linenr = 0;
@@ -131,10 +131,10 @@ static int read_patches(const char *range, struct string_list *list,
 			if (eol)
 				*eol = '\n';
 			orig_len = len;
-			len = parse_git_diff_header(&root, &linenr, 0, line,
+			len = parse_shit_diff_header(&root, &linenr, 0, line,
 						    len, size, &patch);
 			if (len < 0) {
-				error(_("could not parse git header '%.*s'"),
+				error(_("could not parse shit header '%.*s'"),
 				      orig_len, line);
 				FREE_AND_NULL(util);
 				string_list_clear(list, 1);
@@ -195,7 +195,7 @@ static int read_patches(const char *range, struct string_list *list,
 			 * A completely blank (not ' \n', which is context)
 			 * line is not valid in a diff.  We skip it
 			 * silently, because this neatly handles the blank
-			 * separator line between commits in git-log
+			 * separator line between commits in shit-log
 			 * output.
 			 */
 			continue;

@@ -18,8 +18,8 @@ int cmd__read_cache(int argc, const char **argv)
 
 	if (argc == 2)
 		cnt = strtol(argv[1], NULL, 0);
-	setup_git_directory();
-	git_config(git_default_config, NULL);
+	setup_shit_directory();
+	shit_config(shit_default_config, NULL);
 
 	for (i = 0; i < cnt; i++) {
 		repo_read_index(the_repository);

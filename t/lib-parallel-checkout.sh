@@ -1,7 +1,7 @@
 # Helpers for tests invoking parallel-checkout
 
 # Parallel checkout tests need full control of the number of workers
-unset GIT_TEST_CHECKOUT_WORKERS
+unset shit_TEST_CHECKOUT_WORKERS
 
 set_checkout_config () {
 	if test $# -ne 2
@@ -26,12 +26,12 @@ test_checkout_workers () {
 	local trace_file=trace-test-checkout-workers &&
 	rm -f "$trace_file" &&
 	(
-		GIT_TRACE2="$(pwd)/$trace_file" &&
-		export GIT_TRACE2 &&
+		shit_TRACE2="$(pwd)/$trace_file" &&
+		export shit_TRACE2 &&
 		"$@" 2>&8
 	) &&
 
-	local workers="$(grep "child_start\[..*\] git checkout--worker" "$trace_file" | wc -l)" &&
+	local workers="$(grep "child_start\[..*\] shit checkout--worker" "$trace_file" | wc -l)" &&
 	test $workers -eq $expected_workers &&
 	rm "$trace_file"
 } 8>&2 2>&4
@@ -43,7 +43,7 @@ verify_checkout () {
 		BUG "usage: verify_checkout <repository path>"
 	fi &&
 
-	git -C "$1" diff-index --ignore-submodules=none --exit-code HEAD -- &&
-	git -C "$1" status --porcelain >"$1".status &&
+	shit -C "$1" diff-index --ignore-submodules=none --exit-code HEAD -- &&
+	shit -C "$1" status --porcelain >"$1".status &&
 	test_must_be_empty "$1".status
 }

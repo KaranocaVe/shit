@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "config.h"
 #include "hex.h"
@@ -314,26 +314,26 @@ int parse_conflict_style_name(const char *value)
 	else if (!strcmp(value, "merge"))
 		return 0;
 	/*
-	 * Please update _git_checkout() in git-completion.bash when
+	 * Please update _shit_checkout() in shit-completion.bash when
 	 * you add new merge config
 	 */
 	else
 		return -1;
 }
 
-int git_xmerge_style = -1;
+int shit_xmerge_style = -1;
 
-int git_xmerge_config(const char *var, const char *value,
+int shit_xmerge_config(const char *var, const char *value,
 		      const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "merge.conflictstyle")) {
 		if (!value)
 			return config_error_nonbool(var);
-		git_xmerge_style = parse_conflict_style_name(value);
-		if (git_xmerge_style == -1)
+		shit_xmerge_style = parse_conflict_style_name(value);
+		if (shit_xmerge_style == -1)
 			return error(_("unknown style '%s' given for '%s'"),
 				     value, var);
 		return 0;
 	}
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }

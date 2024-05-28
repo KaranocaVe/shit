@@ -1,4 +1,4 @@
-# Initialization and Icelandic locale for basic git i18n tests,
+# Initialization and Icelandic locale for basic shit i18n tests,
 # which source this scriptlet instead of ./test-lib.sh.
 #
 # Copyright (c) 2010 Ævar Arnfjörð Bjarmason
@@ -6,15 +6,15 @@
 
 . ./test-lib.sh
 
-GIT_TEXTDOMAINDIR="$GIT_BUILD_DIR/po/build/locale"
-GIT_PO_PATH="$GIT_BUILD_DIR/po"
-export GIT_TEXTDOMAINDIR GIT_PO_PATH
+shit_TEXTDOMAINDIR="$shit_BUILD_DIR/po/build/locale"
+shit_PO_PATH="$shit_BUILD_DIR/po"
+export shit_TEXTDOMAINDIR shit_PO_PATH
 
-if test -n "$GIT_TEST_INSTALLED"
+if test -n "$shit_TEST_INSTALLED"
 then
-	. "$(git --exec-path)"/git-sh-i18n
+	. "$(shit --exec-path)"/shit-sh-i18n
 else
-	. "$GIT_BUILD_DIR"/git-sh-i18n
+	. "$shit_BUILD_DIR"/shit-sh-i18n
 fi
 
 if test_have_prereq GETTEXT
@@ -37,7 +37,7 @@ then
 	export is_IS_locale is_IS_iso_locale
 
 	if test -n "$is_IS_locale" &&
-		test $GIT_INTERNAL_GETTEXT_SH_SCHEME != "fallthrough"
+		test $shit_INTERNAL_GETTEXT_SH_SCHEME != "fallthrough"
 	then
 		# Some of the tests need the reference Icelandic locale
 		test_set_prereq GETTEXT_LOCALE
@@ -51,7 +51,7 @@ then
 	fi
 
 	if test -n "$is_IS_iso_locale" &&
-		test $GIT_INTERNAL_GETTEXT_SH_SCHEME != "fallthrough"
+		test $shit_INTERNAL_GETTEXT_SH_SCHEME != "fallthrough"
 	then
 		# Some of the tests need the reference Icelandic locale
 		test_set_prereq GETTEXT_ISO_LOCALE

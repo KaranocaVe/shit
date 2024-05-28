@@ -19,11 +19,11 @@
  * the logging or masking below.  This should be harmless since older
  * versions of macOS won't ever emit this FS event anyway.
  */
-#define kFSEventStreamEventFlagItemCloned         0x00400000
+#define kFSEventStreamEventFlashitemCloned         0x00400000
 #endif
 #endif
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "fsmonitor-ll.h"
 #include "fsm-listen.h"
 #include "fsmonitor--daemon.h"
@@ -36,7 +36,7 @@
 struct fsm_listen_data
 {
 	CFStringRef cfsr_worktree_path;
-	CFStringRef cfsr_gitdir_path;
+	CFStringRef cfsr_shitdir_path;
 
 	CFArrayRef cfar_paths_to_watch;
 	int nr_paths_watching;
@@ -77,35 +77,35 @@ static void log_flags_set(const char *path, const FSEventStreamEventFlags flag)
 		strbuf_addstr(&msg, "Mount|");
 	if (flag & kFSEventStreamEventFlagUnmount)
 		strbuf_addstr(&msg, "Unmount|");
-	if (flag & kFSEventStreamEventFlagItemChangeOwner)
+	if (flag & kFSEventStreamEventFlashitemChangeOwner)
 		strbuf_addstr(&msg, "ItemChangeOwner|");
-	if (flag & kFSEventStreamEventFlagItemCreated)
+	if (flag & kFSEventStreamEventFlashitemCreated)
 		strbuf_addstr(&msg, "ItemCreated|");
-	if (flag & kFSEventStreamEventFlagItemFinderInfoMod)
+	if (flag & kFSEventStreamEventFlashitemFinderInfoMod)
 		strbuf_addstr(&msg, "ItemFinderInfoMod|");
-	if (flag & kFSEventStreamEventFlagItemInodeMetaMod)
+	if (flag & kFSEventStreamEventFlashitemInodeMetaMod)
 		strbuf_addstr(&msg, "ItemInodeMetaMod|");
-	if (flag & kFSEventStreamEventFlagItemIsDir)
+	if (flag & kFSEventStreamEventFlashitemIsDir)
 		strbuf_addstr(&msg, "ItemIsDir|");
-	if (flag & kFSEventStreamEventFlagItemIsFile)
+	if (flag & kFSEventStreamEventFlashitemIsFile)
 		strbuf_addstr(&msg, "ItemIsFile|");
-	if (flag & kFSEventStreamEventFlagItemIsHardlink)
+	if (flag & kFSEventStreamEventFlashitemIsHardlink)
 		strbuf_addstr(&msg, "ItemIsHardlink|");
-	if (flag & kFSEventStreamEventFlagItemIsLastHardlink)
+	if (flag & kFSEventStreamEventFlashitemIsLastHardlink)
 		strbuf_addstr(&msg, "ItemIsLastHardlink|");
-	if (flag & kFSEventStreamEventFlagItemIsSymlink)
+	if (flag & kFSEventStreamEventFlashitemIsSymlink)
 		strbuf_addstr(&msg, "ItemIsSymlink|");
-	if (flag & kFSEventStreamEventFlagItemModified)
+	if (flag & kFSEventStreamEventFlashitemModified)
 		strbuf_addstr(&msg, "ItemModified|");
-	if (flag & kFSEventStreamEventFlagItemRemoved)
+	if (flag & kFSEventStreamEventFlashitemRemoved)
 		strbuf_addstr(&msg, "ItemRemoved|");
-	if (flag & kFSEventStreamEventFlagItemRenamed)
+	if (flag & kFSEventStreamEventFlashitemRenamed)
 		strbuf_addstr(&msg, "ItemRenamed|");
-	if (flag & kFSEventStreamEventFlagItemXattrMod)
+	if (flag & kFSEventStreamEventFlashitemXattrMod)
 		strbuf_addstr(&msg, "ItemXattrMod|");
 	if (flag & kFSEventStreamEventFlagOwnEvent)
 		strbuf_addstr(&msg, "OwnEvent|");
-	if (flag & kFSEventStreamEventFlagItemCloned)
+	if (flag & kFSEventStreamEventFlashitemCloned)
 		strbuf_addstr(&msg, "ItemCloned|");
 
 	trace_printf_key(&trace_fsmonitor, "fsevent: '%s', flags=0x%x %s",
@@ -121,14 +121,14 @@ static int ef_is_root_changed(const FSEventStreamEventFlags ef)
 
 static int ef_is_root_delete(const FSEventStreamEventFlags ef)
 {
-	return (ef & kFSEventStreamEventFlagItemIsDir &&
-		ef & kFSEventStreamEventFlagItemRemoved);
+	return (ef & kFSEventStreamEventFlashitemIsDir &&
+		ef & kFSEventStreamEventFlashitemRemoved);
 }
 
 static int ef_is_root_renamed(const FSEventStreamEventFlags ef)
 {
-	return (ef & kFSEventStreamEventFlagItemIsDir &&
-		ef & kFSEventStreamEventFlagItemRenamed);
+	return (ef & kFSEventStreamEventFlashitemIsDir &&
+		ef & kFSEventStreamEventFlashitemRenamed);
 }
 
 static int ef_is_dropped(const FSEventStreamEventFlags ef)
@@ -140,7 +140,7 @@ static int ef_is_dropped(const FSEventStreamEventFlags ef)
 
 /*
  * If an `xattr` change is the only reason we received this event,
- * then silently ignore it.  Git doesn't care about xattr's.  We
+ * then silently ignore it.  shit doesn't care about xattr's.  We
  * have to be careful here because the kernel can combine multiple
  * events for a single path.  And because events always have certain
  * bits set, such as `ItemIsFile` or `ItemIsDir`.
@@ -150,17 +150,17 @@ static int ef_is_dropped(const FSEventStreamEventFlags ef)
 static int ef_ignore_xattr(const FSEventStreamEventFlags ef)
 {
 	static const FSEventStreamEventFlags mask =
-		kFSEventStreamEventFlagItemChangeOwner |
-		kFSEventStreamEventFlagItemCreated |
-		kFSEventStreamEventFlagItemFinderInfoMod |
-		kFSEventStreamEventFlagItemInodeMetaMod |
-		kFSEventStreamEventFlagItemModified |
-		kFSEventStreamEventFlagItemRemoved |
-		kFSEventStreamEventFlagItemRenamed |
-		kFSEventStreamEventFlagItemXattrMod |
-		kFSEventStreamEventFlagItemCloned;
+		kFSEventStreamEventFlashitemChangeOwner |
+		kFSEventStreamEventFlashitemCreated |
+		kFSEventStreamEventFlashitemFinderInfoMod |
+		kFSEventStreamEventFlashitemInodeMetaMod |
+		kFSEventStreamEventFlashitemModified |
+		kFSEventStreamEventFlashitemRemoved |
+		kFSEventStreamEventFlashitemRenamed |
+		kFSEventStreamEventFlashitemXattrMod |
+		kFSEventStreamEventFlashitemCloned;
 
-	return ((ef & mask) == kFSEventStreamEventFlagItemXattrMod);
+	return ((ef & mask) == kFSEventStreamEventFlashitemXattrMod);
 }
 
 /*
@@ -226,7 +226,7 @@ static void fsevent_callback(ConstFSEventStreamRef streamRef UNUSED,
 			path_k = paths[k];
 
 		/*
-		 * If you want to debug FSEvents, log them to GIT_TRACE_FSMONITOR.
+		 * If you want to debug FSEvents, log them to shit_TRACE_FSMONITOR.
 		 * Please don't log them to Trace2.
 		 *
 		 * trace_printf_key(&trace_fsmonitor, "Path: '%s'", path_k);
@@ -259,7 +259,7 @@ static void fsevent_callback(ConstFSEventStreamRef streamRef UNUSED,
 			 * in this callback after this dropped event
 			 * may still be valid, so we continue rather
 			 * than break.  (And just in case there is a
-			 * delete of ".git" hiding in there.)
+			 * delete of ".shit" hiding in there.)
 			 */
 			continue;
 		}
@@ -276,7 +276,7 @@ static void fsevent_callback(ConstFSEventStreamRef streamRef UNUSED,
 			 *
 			 * Force a shutdown now and avoid things getting
 			 * out of sync.  The Unix domain socket is inside
-			 * the .git directory and a spelling change will make
+			 * the .shit directory and a spelling change will make
 			 * it hard for clients to rendezvous with us.
 			 */
 			trace_printf_key(&trace_fsmonitor,
@@ -293,9 +293,9 @@ static void fsevent_callback(ConstFSEventStreamRef streamRef UNUSED,
 
 		switch (fsmonitor_classify_path_absolute(state, path_k)) {
 
-		case IS_INSIDE_DOT_GIT_WITH_COOKIE_PREFIX:
-		case IS_INSIDE_GITDIR_WITH_COOKIE_PREFIX:
-			/* special case cookie files within .git or gitdir */
+		case IS_INSIDE_DOT_shit_WITH_COOKIE_PREFIX:
+		case IS_INSIDE_shitDIR_WITH_COOKIE_PREFIX:
+			/* special case cookie files within .shit or shitdir */
 
 			/* Use just the filename of the cookie file. */
 			slash = find_last_dir_sep(path_k);
@@ -303,25 +303,25 @@ static void fsevent_callback(ConstFSEventStreamRef streamRef UNUSED,
 					   slash ? slash + 1 : path_k);
 			break;
 
-		case IS_INSIDE_DOT_GIT:
-		case IS_INSIDE_GITDIR:
-			/* ignore all other paths inside of .git or gitdir */
+		case IS_INSIDE_DOT_shit:
+		case IS_INSIDE_shitDIR:
+			/* ignore all other paths inside of .shit or shitdir */
 			break;
 
-		case IS_DOT_GIT:
-		case IS_GITDIR:
+		case IS_DOT_shit:
+		case IS_shitDIR:
 			/*
-			 * If .git directory is deleted or renamed away,
+			 * If .shit directory is deleted or renamed away,
 			 * we have to quit.
 			 */
 			if (ef_is_root_delete(event_flags[k])) {
 				trace_printf_key(&trace_fsmonitor,
-						 "event: gitdir removed");
+						 "event: shitdir removed");
 				goto force_shutdown;
 			}
 			if (ef_is_root_renamed(event_flags[k])) {
 				trace_printf_key(&trace_fsmonitor,
-						 "event: gitdir renamed");
+						 "event: shitdir renamed");
 				goto force_shutdown;
 			}
 			break;
@@ -343,7 +343,7 @@ static void fsevent_callback(ConstFSEventStreamRef streamRef UNUSED,
 			 * know how much to invalidate/refresh.
 			 */
 
-			if (event_flags[k] & (kFSEventStreamEventFlagItemIsFile | kFSEventStreamEventFlagItemIsSymlink)) {
+			if (event_flags[k] & (kFSEventStreamEventFlashitemIsFile | kFSEventStreamEventFlashitemIsSymlink)) {
 				const char *rel = path_k +
 					state->path_worktree_watch.len + 1;
 
@@ -352,7 +352,7 @@ static void fsevent_callback(ConstFSEventStreamRef streamRef UNUSED,
 				my_add_path(batch, rel);
 			}
 
-			if (event_flags[k] & kFSEventStreamEventFlagItemIsDir) {
+			if (event_flags[k] & kFSEventStreamEventFlashitemIsDir) {
 				const char *rel = path_k +
 					state->path_worktree_watch.len + 1;
 
@@ -435,10 +435,10 @@ int fsm_listen__ctor(struct fsmonitor_daemon_state *state)
 	dir_array[data->nr_paths_watching++] = data->cfsr_worktree_path;
 
 	if (state->nr_paths_watching > 1) {
-		data->cfsr_gitdir_path = CFStringCreateWithCString(
-			NULL, state->path_gitdir_watch.buf,
+		data->cfsr_shitdir_path = CFStringCreateWithCString(
+			NULL, state->path_shitdir_watch.buf,
 			kCFStringEncodingUTF8);
-		dir_array[data->nr_paths_watching++] = data->cfsr_gitdir_path;
+		dir_array[data->nr_paths_watching++] = data->cfsr_shitdir_path;
 	}
 
 	data->cfar_paths_to_watch = CFArrayCreate(NULL, dir_array,

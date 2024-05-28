@@ -6,15 +6,15 @@ that removed them from this directory.
 
 They're interesting for their reference value to any aspiring plumbing
 users who want to learn how pieces can be fit together, but in many
-cases have drifted enough from the actual implementations Git uses to
+cases have drifted enough from the actual implementations shit uses to
 be instructive.
 
 Other things that can be useful:
 
- * Some commands such as git-gc wrap other commands, and what they're
+ * Some commands such as shit-gc wrap other commands, and what they're
    doing behind the scenes can be seen by running them under
-   GIT_TRACE=1
+   shit_TRACE=1
 
- * Doing `git log` on paths matching '*--helper.c' will show
+ * Doing `shit log` on paths matching '*--helper.c' will show
    incremental effort in the direction of moving existing shell
    scripts to C.

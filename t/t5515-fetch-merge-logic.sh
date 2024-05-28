@@ -8,11 +8,11 @@ test_description='Merge logic in fetch'
 
 # NEEDSWORK: If the overspecification of the expected result is reduced, we
 # might be able to run this test in all protocol versions.
-GIT_TEST_PROTOCOL_VERSION=0
-export GIT_TEST_PROTOCOL_VERSION
+shit_TEST_PROTOCOL_VERSION=0
+export shit_TEST_PROTOCOL_VERSION
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -33,9 +33,9 @@ convert_expected () {
 }
 
 test_expect_success setup '
-	GIT_AUTHOR_DATE="2006-06-26 00:00:00 +0000" &&
-	GIT_COMMITTER_DATE="2006-06-26 00:00:00 +0000" &&
-	export GIT_AUTHOR_DATE GIT_COMMITTER_DATE &&
+	shit_AUTHOR_DATE="2006-06-26 00:00:00 +0000" &&
+	shit_COMMITTER_DATE="2006-06-26 00:00:00 +0000" &&
+	export shit_AUTHOR_DATE shit_COMMITTER_DATE &&
 
 	test_oid_cache <<-EOF &&
 	one sha1:8e32a6d901327a23ef831511badce7bf3bf46689
@@ -67,79 +67,79 @@ test_expect_success setup '
 	EOF
 
 	echo >file original &&
-	git add file &&
-	git commit -a -m One &&
-	git tag tag-one &&
-	git tag tag-one-tree HEAD^{tree} &&
-	git branch one &&
+	shit add file &&
+	shit commit -a -m One &&
+	shit tag tag-one &&
+	shit tag tag-one-tree HEAD^{tree} &&
+	shit branch one &&
 
 	echo two >> file &&
-	git commit -a -m Two &&
-	git tag -a -m "Tag Two" tag-two &&
-	git branch two &&
+	shit commit -a -m Two &&
+	shit tag -a -m "Tag Two" tag-two &&
+	shit branch two &&
 
 	echo three >> file &&
-	git commit -a -m Three &&
-	git tag -a -m "Tag Three" tag-three &&
-	git tag -a -m "Tag Three file" tag-three-file HEAD^{tree}:file &&
-	git branch three &&
+	shit commit -a -m Three &&
+	shit tag -a -m "Tag Three" tag-three &&
+	shit tag -a -m "Tag Three file" tag-three-file HEAD^{tree}:file &&
+	shit branch three &&
 
 	echo main >> file &&
-	git commit -a -m Main &&
-	git tag -a -m "Tag Main" tag-main &&
+	shit commit -a -m Main &&
+	shit tag -a -m "Tag Main" tag-main &&
 
-	git checkout three &&
+	shit checkout three &&
 
-	git clone . cloned &&
+	shit clone . cloned &&
 	cd cloned &&
-	git config remote.origin.url ../.git/ &&
+	shit config remote.origin.url ../.shit/ &&
 
-	git config remote.config-explicit.url ../.git/ &&
-	git config remote.config-explicit.fetch refs/heads/main:remotes/rem/main &&
-	git config --add remote.config-explicit.fetch refs/heads/one:remotes/rem/one &&
-	git config --add remote.config-explicit.fetch two:remotes/rem/two &&
-	git config --add remote.config-explicit.fetch refs/heads/three:remotes/rem/three &&
+	shit config remote.config-explicit.url ../.shit/ &&
+	shit config remote.config-explicit.fetch refs/heads/main:remotes/rem/main &&
+	shit config --add remote.config-explicit.fetch refs/heads/one:remotes/rem/one &&
+	shit config --add remote.config-explicit.fetch two:remotes/rem/two &&
+	shit config --add remote.config-explicit.fetch refs/heads/three:remotes/rem/three &&
 	remotes="config-explicit" &&
 
-	git config remote.config-glob.url ../.git/ &&
-	git config remote.config-glob.fetch refs/heads/*:refs/remotes/rem/* &&
+	shit config remote.config-glob.url ../.shit/ &&
+	shit config remote.config-glob.fetch refs/heads/*:refs/remotes/rem/* &&
 	remotes="$remotes config-glob" &&
 
-	mkdir -p .git/remotes &&
-	cat >.git/remotes/remote-explicit <<-\EOF &&
-	URL: ../.git/
-	Pull: refs/heads/main:remotes/rem/main
-	Pull: refs/heads/one:remotes/rem/one
-	Pull: two:remotes/rem/two
-	Pull: refs/heads/three:remotes/rem/three
+	mkdir -p .shit/remotes &&
+	cat >.shit/remotes/remote-explicit <<-\EOF &&
+	URL: ../.shit/
+	poop: refs/heads/main:remotes/rem/main
+	poop: refs/heads/one:remotes/rem/one
+	poop: two:remotes/rem/two
+	poop: refs/heads/three:remotes/rem/three
 	EOF
 	remotes="$remotes remote-explicit" &&
 
-	cat >.git/remotes/remote-glob <<-\EOF &&
-	URL: ../.git/
-	Pull: refs/heads/*:refs/remotes/rem/*
+	cat >.shit/remotes/remote-glob <<-\EOF &&
+	URL: ../.shit/
+	poop: refs/heads/*:refs/remotes/rem/*
 	EOF
 	remotes="$remotes remote-glob" &&
 
-	mkdir -p .git/branches &&
-	echo "../.git" > .git/branches/branches-default &&
+	mkdir -p .shit/branches &&
+	echo "../.shit" > .shit/branches/branches-default &&
 	remotes="$remotes branches-default" &&
 
-	echo "../.git#one" > .git/branches/branches-one &&
+	echo "../.shit#one" > .shit/branches/branches-one &&
 	remotes="$remotes branches-one" &&
 
 	for remote in $remotes ; do
-		git config branch.br-$remote.remote $remote &&
-		git config branch.br-$remote-merge.remote $remote &&
-		git config branch.br-$remote-merge.merge refs/heads/three &&
-		git config branch.br-$remote-octopus.remote $remote &&
-		git config branch.br-$remote-octopus.merge refs/heads/one &&
-		git config --add branch.br-$remote-octopus.merge two || return 1
+		shit config branch.br-$remote.remote $remote &&
+		shit config branch.br-$remote-merge.remote $remote &&
+		shit config branch.br-$remote-merge.merge refs/heads/three &&
+		shit config branch.br-$remote-octopus.remote $remote &&
+		shit config branch.br-$remote-octopus.merge refs/heads/one &&
+		shit config --add branch.br-$remote-octopus.merge two || return 1
 	done &&
 	build_script sed_script
 '
 
-# Merge logic depends on branch properties and Pull: or .fetch lines
+# Merge logic depends on branch properties and poop: or .fetch lines
 for remote in $remotes ; do
     for branch in "" "-merge" "-octopus" ; do
 cat <<EOF
@@ -150,7 +150,7 @@ EOF
 done > tests
 
 # Merge logic does not depend on branch properties,
-# but does depend on Pull: or fetch lines.
+# but does depend on poop: or fetch lines.
 # Use two branches completely unrelated from the arguments,
 # the clone default and one without branch properties
 for branch in main br-unconfig ; do
@@ -161,16 +161,16 @@ for branch in main br-unconfig ; do
 done >> tests
 
 # Merge logic does not depend on branch properties
-# neither in the Pull: or .fetch config
+# neither in the poop: or .fetch config
 for branch in main br-unconfig ; do
     cat <<EOF
-$branch ../.git
-$branch ../.git one
-$branch ../.git one two
-$branch --tags ../.git
-$branch ../.git tag tag-one tag tag-three
-$branch ../.git tag tag-one-tree tag tag-three-file
-$branch ../.git one tag tag-one tag tag-three-file
+$branch ../.shit
+$branch ../.shit one
+$branch ../.shit one two
+$branch --tags ../.shit
+$branch ../.shit tag tag-one tag tag-three
+$branch ../.shit tag tag-one-tree tag tag-three-file
+$branch ../.shit one tag tag-one tag tag-three-file
 EOF
 done >> tests
 
@@ -194,18 +194,18 @@ do
 		{
 			echo "# $cmd" &&
 			set x $cmd && shift &&
-			git symbolic-ref HEAD refs/heads/$1 && shift &&
-			rm -f .git/FETCH_HEAD &&
-			git for-each-ref \
+			shit symbolic-ref HEAD refs/heads/$1 && shift &&
+			rm -f .shit/FETCH_HEAD &&
+			shit for-each-ref \
 				refs/heads refs/remotes/rem refs/tags |
 			while read val type refname
 			do
-				git update-ref -d "$refname" "$val" || return 1
+				shit update-ref -d "$refname" "$val" || return 1
 			done &&
-			git fetch "$@" >/dev/null &&
-			cat .git/FETCH_HEAD
+			shit fetch "$@" >/dev/null &&
+			cat .shit/FETCH_HEAD
 		} >"$actual_f" &&
-		git show-ref >"$actual_r" &&
+		shit show-ref >"$actual_r" &&
 		if test -f "expect_f"
 		then
 			test_cmp "expect_f" "$actual_f" &&

@@ -1,17 +1,17 @@
-git-hash-object(1)
+shit-hash-object(1)
 ==================
 
 NAME
 ----
-git-hash-object - Compute object ID and optionally create an object from a file
+shit-hash-object - Compute object ID and optionally create an object from a file
 
 
 SYNOPSIS
 --------
 [verse]
-'git hash-object' [-t <type>] [-w] [--path=<file> | --no-filters]
+'shit hash-object' [-t <type>] [-w] [--path=<file> | --no-filters]
 		[--stdin [--literally]] [--] <file>...
-'git hash-object' [-t <type>] [-w] --stdin-paths [--no-filters]
+'shit hash-object' [-t <type>] [-w] --stdin-paths [--no-filters]
 
 DESCRIPTION
 -----------
@@ -41,7 +41,7 @@ OPTIONS
 --path::
 	Hash object as if it were located at the given path. The location of
 	the file does not directly influence the hash value, but the path is
-	used to determine which Git filters should be applied to the object
+	used to determine which shit filters should be applied to the object
 	before it can be placed in the object database.  As a result of
 	applying filters, the actual blob put into the object database may
 	differ from the given file. This option is mainly useful for hashing
@@ -56,10 +56,10 @@ OPTIONS
 
 --literally::
 	Allow `--stdin` to hash any garbage into a loose object which might not
-	otherwise pass standard object parsing or git-fsck checks. Useful for
-	stress-testing Git itself or reproducing characteristics of corrupt or
+	otherwise pass standard object parsing or shit-fsck checks. Useful for
+	stress-testing shit itself or reproducing characteristics of corrupt or
 	bogus objects encountered in the wild.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

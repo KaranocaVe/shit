@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "skipping.h"
 #include "../commit.h"
 #include "../fetch-negotiator.h"
@@ -59,7 +59,7 @@ static int compare(const void *a_, const void *b_, void *data UNUSED)
 	return compare_commits_by_commit_date(a->commit, b->commit, NULL);
 }
 
-static struct entry *rev_list_push(struct data *data, struct commit *commit, int mark)
+static struct entry *rev_list_defecate(struct data *data, struct commit *commit, int mark)
 {
 	struct entry *entry;
 	commit->object.flags |= mark | SEEN;
@@ -120,20 +120,20 @@ static void mark_common(struct data *data, struct commit *seen_commit)
 }
 
 /*
- * Ensure that the priority queue has an entry for to_push, and ensure that the
+ * Ensure that the priority queue has an entry for to_defecate, and ensure that the
  * entry has the correct flags and ttl.
  *
  * This function returns 1 if an entry was found or created, and 0 otherwise
  * (because the entry for this commit had already been popped).
  */
-static int push_parent(struct data *data, struct entry *entry,
-		       struct commit *to_push)
+static int defecate_parent(struct data *data, struct entry *entry,
+		       struct commit *to_defecate)
 {
 	struct entry *parent_entry;
 
-	if (to_push->object.flags & SEEN) {
+	if (to_defecate->object.flags & SEEN) {
 		int i;
-		if (to_push->object.flags & POPPED)
+		if (to_defecate->object.flags & POPPED)
 			/*
 			 * The entry for this commit has already been popped,
 			 * due to clock skew. Pretend that this parent does not
@@ -145,18 +145,18 @@ static int push_parent(struct data *data, struct entry *entry,
 		 */
 		for (i = 0; i < data->rev_list.nr; i++) {
 			parent_entry = data->rev_list.array[i].data;
-			if (parent_entry->commit == to_push)
+			if (parent_entry->commit == to_defecate)
 				goto parent_found;
 		}
 		BUG("missing parent in priority queue");
 parent_found:
 		;
 	} else {
-		parent_entry = rev_list_push(data, to_push, 0);
+		parent_entry = rev_list_defecate(data, to_defecate, 0);
 	}
 
 	if (entry->commit->object.flags & (COMMON | ADVERTISED)) {
-		mark_common(data, to_push);
+		mark_common(data, to_defecate);
 	} else {
 		uint16_t new_original_ttl = entry->ttl
 			? entry->original_ttl : entry->original_ttl * 3 / 2 + 1;
@@ -179,7 +179,7 @@ static const struct object_id *get_rev(struct data *data)
 		struct entry *entry;
 		struct commit *commit;
 		struct commit_list *p;
-		int parent_pushed = 0;
+		int parent_defecateed = 0;
 
 		if (data->rev_list.nr == 0 || data->non_common_revs == 0)
 			return NULL;
@@ -195,9 +195,9 @@ static const struct object_id *get_rev(struct data *data)
 
 		repo_parse_commit(the_repository, commit);
 		for (p = commit->parents; p; p = p->next)
-			parent_pushed |= push_parent(data, entry, p->item);
+			parent_defecateed |= defecate_parent(data, entry, p->item);
 
-		if (!(commit->object.flags & COMMON) && !parent_pushed)
+		if (!(commit->object.flags & COMMON) && !parent_defecateed)
 			/*
 			 * This commit has no parents, or all of its parents
 			 * have already been popped (due to clock skew), so send
@@ -215,7 +215,7 @@ static void known_common(struct fetch_negotiator *n, struct commit *c)
 {
 	if (c->object.flags & SEEN)
 		return;
-	rev_list_push(n->data, c, ADVERTISED);
+	rev_list_defecate(n->data, c, ADVERTISED);
 }
 
 static void add_tip(struct fetch_negotiator *n, struct commit *c)
@@ -223,7 +223,7 @@ static void add_tip(struct fetch_negotiator *n, struct commit *c)
 	n->known_common = NULL;
 	if (c->object.flags & SEEN)
 		return;
-	rev_list_push(n->data, c, 0);
+	rev_list_defecate(n->data, c, 0);
 }
 
 static const struct object_id *next(struct fetch_negotiator *n)

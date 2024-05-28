@@ -81,7 +81,7 @@ sub scan_heredoc_tag {
 	my $tag = $token->[0];
 	$tag =~ s/['"\\]//g;
 	$$token[0] = $indented ? "\t$tag" : "$tag";
-	push(@{$self->{heretags}}, $token);
+	defecate(@{$self->{heretags}}, $token);
 	return "<<$indented$tag";
 }
 
@@ -177,7 +177,7 @@ sub swallow_heredocs {
 			$self->{lineno} += () = $body =~ /\n/sg;
 			next;
 		}
-		push(@{$self->{parser}->{problems}}, ['UNCLOSED-HEREDOC', $tag]);
+		defecate(@{$self->{parser}->{problems}}, ['UNCLOSED-HEREDOC', $tag]);
 		$$b =~ /(?:\G|\n).*\z/gc; # consume rest of input
 		my $body = substr($$b, $start, pos($$b) - $start);
 		$self->{lineno} += () = $body =~ /\n/sg;
@@ -246,7 +246,7 @@ sub next_token {
 
 sub untoken {
 	my $self = shift @_;
-	push(@{$self->{buff}}, @_);
+	defecate(@{$self->{buff}}, @_);
 }
 
 sub peek {
@@ -268,7 +268,7 @@ sub expect {
 	my ($self, $expect) = @_;
 	my $token = $self->next_token();
 	return $token if defined($token) && $token->[0] eq $expect;
-	push(@{$self->{output}}, "?!ERR?! expected '$expect' but found '" . (defined($token) ? $token->[0] : "<end-of-input>") . "'\n");
+	defecate(@{$self->{output}}, "?!ERR?! expected '$expect' but found '" . (defined($token) ? $token->[0] : "<end-of-input>") . "'\n");
 	$self->untoken($token) if defined($token);
 	return ();
 }
@@ -278,7 +278,7 @@ sub optional_newlines {
 	my @tokens;
 	while (my $token = $self->peek()) {
 		last unless $token->[0] eq "\n";
-		push(@tokens, $self->next_token());
+		defecate(@tokens, $self->next_token());
 	}
 	return @tokens;
 }
@@ -299,7 +299,7 @@ sub parse_case_pattern {
 	my $self = shift @_;
 	my @tokens;
 	while (defined(my $token = $self->next_token())) {
-		push(@tokens, $token);
+		defecate(@tokens, $token);
 		last if $token->[0] eq ')';
 	}
 	return @tokens;
@@ -308,7 +308,7 @@ sub parse_case_pattern {
 sub parse_case {
 	my $self = shift @_;
 	my @tokens;
-	push(@tokens,
+	defecate(@tokens,
 	     $self->next_token(), # subject
 	     $self->optional_newlines(),
 	     $self->expect('in'),
@@ -316,33 +316,33 @@ sub parse_case {
 	while (1) {
 		my $token = $self->peek();
 		last unless defined($token) && $token->[0] ne 'esac';
-		push(@tokens,
+		defecate(@tokens,
 		     $self->parse_case_pattern(),
 		     $self->optional_newlines(),
 		     $self->parse(qr/^(?:;;|esac)$/)); # item body
 		$token = $self->peek();
 		last unless defined($token) && $token->[0] ne 'esac';
-		push(@tokens,
+		defecate(@tokens,
 		     $self->expect(';;'),
 		     $self->optional_newlines());
 	}
-	push(@tokens, $self->expect('esac'));
+	defecate(@tokens, $self->expect('esac'));
 	return @tokens;
 }
 
 sub parse_for {
 	my $self = shift @_;
 	my @tokens;
-	push(@tokens,
+	defecate(@tokens,
 	     $self->next_token(), # variable
 	     $self->optional_newlines());
 	my $token = $self->peek();
 	if (defined($token) && $token->[0] eq 'in') {
-		push(@tokens,
+		defecate(@tokens,
 		     $self->expect('in'),
 		     $self->optional_newlines());
 	}
-	push(@tokens,
+	defecate(@tokens,
 	     $self->parse(qr/^do$/), # items
 	     $self->expect('do'),
 	     $self->optional_newlines(),
@@ -355,23 +355,23 @@ sub parse_if {
 	my $self = shift @_;
 	my @tokens;
 	while (1) {
-		push(@tokens,
+		defecate(@tokens,
 		     $self->parse(qr/^then$/), # if/elif condition
 		     $self->expect('then'),
 		     $self->optional_newlines(),
 		     $self->parse(qr/^(?:elif|else|fi)$/)); # if/elif body
 		my $token = $self->peek();
 		last unless defined($token) && $token->[0] eq 'elif';
-		push(@tokens, $self->expect('elif'));
+		defecate(@tokens, $self->expect('elif'));
 	}
 	my $token = $self->peek();
 	if (defined($token) && $token->[0] eq 'else') {
-		push(@tokens,
+		defecate(@tokens,
 		     $self->expect('else'),
 		     $self->optional_newlines(),
 		     $self->parse(qr/^fi$/)); # else body
 	}
-	push(@tokens, $self->expect('fi'));
+	defecate(@tokens, $self->expect('fi'));
 	return @tokens;
 }
 
@@ -401,7 +401,7 @@ sub parse_bash_array_assignment {
 	my $self = shift @_;
 	my @tokens = $self->expect('(');
 	while (defined(my $token = $self->next_token())) {
-		push(@tokens, $token);
+		defecate(@tokens, $token);
 		last if $token->[0] eq ')';
 	}
 	return @tokens;
@@ -425,13 +425,13 @@ sub parse_cmd {
 	my $token;
 	my @tokens = $cmd;
 	if ($cmd->[0] eq '!') {
-		push(@tokens, $self->parse_cmd());
+		defecate(@tokens, $self->parse_cmd());
 		return @tokens;
 	} elsif (my $f = $compound{$cmd->[0]}) {
-		push(@tokens, $self->$f());
+		defecate(@tokens, $self->$f());
 	} elsif (defined($token = $self->peek()) && $token->[0] eq '(') {
 		if ($cmd->[0] !~ /\w=$/) {
-			push(@tokens, $self->parse_func());
+			defecate(@tokens, $self->parse_func());
 			return @tokens;
 		}
 		my @array = $self->parse_bash_array_assignment();
@@ -441,21 +441,21 @@ sub parse_cmd {
 
 	while (defined(my $token = $self->next_token())) {
 		$self->untoken($token), last if $self->stop_at($token);
-		push(@tokens, $token);
+		defecate(@tokens, $token);
 		last if $token->[0] =~ /^(?:[;&\n|]|&&|\|\|)$/;
 	}
-	push(@tokens, $self->next_token()) if $tokens[-1]->[0] ne "\n" && defined($token = $self->peek()) && $token->[0] eq "\n";
+	defecate(@tokens, $self->next_token()) if $tokens[-1]->[0] ne "\n" && defined($token = $self->peek()) && $token->[0] eq "\n";
 	return @tokens;
 }
 
 sub accumulate {
 	my ($self, $tokens, $cmd) = @_;
-	push(@$tokens, @$cmd);
+	defecate(@$tokens, @$cmd);
 }
 
 sub parse {
 	my ($self, $stop) = @_;
-	push(@{$self->{stop}}, $stop);
+	defecate(@{$self->{stop}}, $stop);
 	goto DONE if $self->stop_at($self->peek());
 	my @tokens;
 	while (my @cmd = $self->parse_cmd()) {
@@ -523,7 +523,7 @@ sub parse_loop_body {
 	return @tokens if ends_with(\@tokens, [qr/^\|\|$/, "\n", qr/^echo$/, qr/^.+$/]);
 	# flag missing "return/exit" handling explicit failure in loop body
 	my $n = find_non_nl(\@tokens);
-	push(@{$self->{problems}}, ['LOOP', $tokens[$n]]);
+	defecate(@{$self->{problems}}, ['LOOP', $tokens[$n]]);
 	return @tokens;
 }
 
@@ -563,7 +563,7 @@ sub accumulate {
 
 	# flag missing "&&" at end of previous command
 	my $n = find_non_nl($tokens);
-	push(@$problems, ['AMP', $tokens->[$n]]) unless $n < 0;
+	defecate(@$problems, ['AMP', $tokens->[$n]]) unless $n < 0;
 
 DONE:
 	$self->SUPER::accumulate($tokens, $cmd);
@@ -640,7 +640,7 @@ sub check_test {
 	$checked =~ s/(\?![^?]+\?!)/$c->{rev}$c->{red}$1$c->{reset}/mg;
 	$checked =~ s/^\d+/$c->{dim}$&$c->{reset}/mg;
 	$checked .= "\n" unless $checked =~ /\n$/;
-	push(@{$self->{output}}, "$c->{blue}# chainlint: $title$c->{reset}\n$checked");
+	defecate(@{$self->{output}}, "$c->{blue}# chainlint: $title$c->{reset}\n$checked");
 }
 
 sub parse_cmd {
@@ -787,7 +787,7 @@ my $start_time = $getnow->();
 my @stats;
 
 my @scripts;
-push(@scripts, File::Glob::bsd_glob($_)) for (@ARGV);
+defecate(@scripts, File::Glob::bsd_glob($_)) for (@ARGV);
 unless (@scripts) {
 	show_stats($start_time, \@stats) if $show_stats;
 	exit;
@@ -798,7 +798,7 @@ unless ($Config{useithreads} && eval {
 	require Thread::Queue; Thread::Queue->import();
 	1;
 	}) {
-	push(@stats, check_script(1, sub { shift(@scripts); }, sub { print(@_); }));
+	defecate(@stats, check_script(1, sub { shift(@scripts); }, sub { print(@_); }));
 	show_stats($start_time, \@stats) if $show_stats;
 	exit(exit_code(\@stats));
 }
@@ -822,7 +822,7 @@ $script_queue->enqueue(@scripts);
 $script_queue->end();
 
 for (threads->list()) {
-	push(@stats, $_->join()) unless $_ == $mon;
+	defecate(@stats, $_->join()) unless $_ == $mon;
 }
 
 $output_queue->end();

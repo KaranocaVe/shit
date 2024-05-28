@@ -1,5 +1,5 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
@@ -40,7 +40,7 @@ static int list_tree(struct object_id *oid)
 }
 
 static const char * const read_tree_usage[] = {
-	N_("git read-tree [(-m [--trivial] [--aggressive] | --reset | --prefix=<prefix>)\n"
+	N_("shit read-tree [(-m [--trivial] [--aggressive] | --reset | --prefix=<prefix>)\n"
 	   "              [-u | -i]] [--index-output=<file>] [--no-sparse-checkout]\n"
 	   "              (--empty | <tree-ish1> [<tree-ish2> [<tree-ish3>]])"),
 	NULL
@@ -65,8 +65,8 @@ static int exclude_per_directory_cb(const struct option *opt, const char *arg,
 
 	if (!opts->update)
 		die("--exclude-per-directory is meaningless unless -u");
-	if (strcmp(arg, ".gitignore"))
-		die("--exclude-per-directory argument must be .gitignore");
+	if (strcmp(arg, ".shitignore"))
+		die("--exclude-per-directory argument must be .shitignore");
 	return 0;
 }
 
@@ -99,13 +99,13 @@ static int debug_merge(const struct cache_entry * const *stages,
 	return 0;
 }
 
-static int git_read_tree_config(const char *var, const char *value,
+static int shit_read_tree_config(const char *var, const char *value,
 				const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "submodule.recurse"))
-		return git_default_submodule_config(var, value, cb);
+		return shit_default_submodule_config(var, value, cb);
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 int cmd_read_tree(int argc, const char **argv, const char *cmd_prefix)
@@ -139,7 +139,7 @@ int cmd_read_tree(int argc, const char **argv, const char *cmd_prefix)
 		OPT_BOOL('u', NULL, &opts.update,
 			 N_("update working tree with merge result")),
 		OPT_CALLBACK_F(0, "exclude-per-directory", &opts,
-		  N_("gitignore"),
+		  N_("shitignore"),
 		  N_("allow explicitly ignored files to be overwritten"),
 		  PARSE_OPT_NONEG, exclude_per_directory_cb),
 		OPT_BOOL('i', NULL, &opts.index_only,
@@ -161,7 +161,7 @@ int cmd_read_tree(int argc, const char **argv, const char *cmd_prefix)
 	opts.src_index = the_repository->index;
 	opts.dst_index = the_repository->index;
 
-	git_config(git_read_tree_config, NULL);
+	shit_config(shit_read_tree_config, NULL);
 
 	argc = parse_options(argc, argv, cmd_prefix, read_tree_options,
 			     read_tree_usage, 0);

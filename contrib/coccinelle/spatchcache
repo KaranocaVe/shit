@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-# spatchcache: a poor-man's "ccache"-alike for "spatch" in git.git
+# spatchcache: a poor-man's "ccache"-alike for "spatch" in shit.shit
 #
 # This caching command relies on the peculiarities of the Makefile
-# driving "spatch" in git.git, in particular if we invoke:
+# driving "spatch" in shit.shit, in particular if we invoke:
 #
 #	make
 #	# See "spatchCache.cacheWhenStderr" for why "--very-quiet" is
@@ -85,13 +85,13 @@
 # spatchCache.cacheWhenStderr=true and deferring to the defaults for
 # the rest is:
 #
-#	export GIT_CONTRIB_SPATCHCACHE_DEBUG=default
-#	export GIT_CONTRIB_SPATCHCACHE_TRACE=default
-#	export GIT_CONTRIB_SPATCHCACHE_CACHEWHENSTDERR=true
-#	export GIT_CONTRIB_SPATCHCACHE_SPATCH=default
-#	export GIT_CONTRIB_SPATCHCACHE_DEPENDFORMAT=default
-#	export GIT_CONTRIB_SPATCHCACHE_SETCMD=default
-#	export GIT_CONTRIB_SPATCHCACHE_GETCMD=default
+#	export shit_CONTRIB_SPATCHCACHE_DEBUG=default
+#	export shit_CONTRIB_SPATCHCACHE_TRACE=default
+#	export shit_CONTRIB_SPATCHCACHE_CACHEWHENSTDERR=true
+#	export shit_CONTRIB_SPATCHCACHE_SPATCH=default
+#	export shit_CONTRIB_SPATCHCACHE_DEPENDFORMAT=default
+#	export shit_CONTRIB_SPATCHCACHE_SETCMD=default
+#	export shit_CONTRIB_SPATCHCACHE_GETCMD=default
 
 set -e
 
@@ -100,18 +100,18 @@ env_or_config () {
 	shift
 	if test "$env" = "default"
 	then
-		# Avoid expensive "git config" invocation
+		# Avoid expensive "shit config" invocation
 		return
 	elif test -n "$env"
 	then
 		echo "$env"
 	else
-		git config $@ || :
+		shit config $@ || :
 	fi
 }
 
 ## Our own configuration & options
-debug=$(env_or_config "$GIT_CONTRIB_SPATCHCACHE_DEBUG" --bool "spatchCache.debug")
+debug=$(env_or_config "$shit_CONTRIB_SPATCHCACHE_DEBUG" --bool "spatchCache.debug")
 if test "$debug" != "true"
 then
 	debug=
@@ -121,7 +121,7 @@ then
 	set -x
 fi
 
-trace=$(env_or_config "$GIT_CONTRIB_SPATCHCACHE_TRACE" --bool "spatchCache.trace")
+trace=$(env_or_config "$shit_CONTRIB_SPATCHCACHE_TRACE" --bool "spatchCache.trace")
 if test "$trace" != "true"
 then
 	trace=
@@ -132,7 +132,7 @@ then
 	trace=true
 fi
 
-cacheWhenStderr=$(env_or_config "$GIT_CONTRIB_SPATCHCACHE_CACHEWHENSTDERR" --bool "spatchCache.cacheWhenStderr")
+cacheWhenStderr=$(env_or_config "$shit_CONTRIB_SPATCHCACHE_CACHEWHENSTDERR" --bool "spatchCache.cacheWhenStderr")
 if test "$cacheWhenStderr" != "true"
 then
 	cacheWhenStderr=
@@ -146,7 +146,7 @@ trace_it () {
 	echo "$@" >&2
 }
 
-spatch=$(env_or_config "$GIT_CONTRIB_SPATCHCACHE_SPATCH" --path "spatchCache.spatch")
+spatch=$(env_or_config "$shit_CONTRIB_SPATCHCACHE_SPATCH" --path "spatchCache.spatch")
 if test -n "$spatch"
 then
 	if test -n "$debug"
@@ -158,14 +158,14 @@ else
 fi
 
 dependFormat='$dirname/.depend/${basename%.c}.o.d'
-dependFormatCfg=$(env_or_config "$GIT_CONTRIB_SPATCHCACHE_DEPENDFORMAT" "spatchCache.dependFormat")
+dependFormatCfg=$(env_or_config "$shit_CONTRIB_SPATCHCACHE_DEPENDFORMAT" "spatchCache.dependFormat")
 if test -n "$dependFormatCfg"
 then
 	dependFormat="$dependFormatCfg"
 fi
 
-set=$(env_or_config "$GIT_CONTRIB_SPATCHCACHE_SETCMD" "spatchCache.setCmd")
-get=$(env_or_config "$GIT_CONTRIB_SPATCHCACHE_GETCMD" "spatchCache.getCmd")
+set=$(env_or_config "$shit_CONTRIB_SPATCHCACHE_SETCMD" "spatchCache.setCmd")
+get=$(env_or_config "$shit_CONTRIB_SPATCHCACHE_GETCMD" "spatchCache.getCmd")
 
 ## Parse spatch()-like command-line for caching info
 arg_sp=
@@ -199,7 +199,7 @@ hash_for_cache() {
 	echo
 
 	# Our target file and its dependencies
-	git hash-object "$1" "$2" $(grep -E -o '^[^:]+:$' "$3" | tr -d ':')
+	shit hash-object "$1" "$2" $(grep -E -o '^[^:]+:$' "$3" | tr -d ':')
 }
 
 # Sanity checks
@@ -225,7 +225,7 @@ then
 	trace_it "$0: The full cache input for '$arg_sp' '$arg_file' '$dep'"
 	hash_for_cache "$arg_sp" "$arg_file" "$dep" >&2
 fi
-sum=$(hash_for_cache "$arg_sp" "$arg_file" "$dep" | git hash-object --stdin)
+sum=$(hash_for_cache "$arg_sp" "$arg_file" "$dep" | shit hash-object --stdin)
 
 trace_it "$0: processing '$arg_file' with '$arg_sp' rule, and got hash '$sum' for it + '$dep'"
 

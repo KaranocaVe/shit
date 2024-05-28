@@ -2,8 +2,8 @@
 
 test_description='test automatic tag following'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -20,22 +20,22 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success setup '
 	test_tick &&
 	echo ichi >file &&
-	git add file &&
-	git commit -m L &&
-	L=$(git rev-parse --verify HEAD) &&
+	shit add file &&
+	shit commit -m L &&
+	L=$(shit rev-parse --verify HEAD) &&
 
 	(
 		mkdir cloned &&
 		cd cloned &&
-		git init-db &&
-		git remote add -f origin ..
+		shit init-db &&
+		shit remote add -f origin ..
 	) &&
 
 	test_tick &&
 	echo A >file &&
-	git add file &&
-	git commit -m A &&
-	A=$(git rev-parse --verify HEAD)
+	shit add file &&
+	shit commit -m A &&
+	A=$(shit rev-parse --verify HEAD)
 '
 
 U=UPLOAD_LOG
@@ -60,23 +60,23 @@ test_expect_success 'fetch A (new commit : 1 connection)' '
 	rm -f $U &&
 	(
 		cd cloned &&
-		GIT_TRACE_PACKET=$UPATH git fetch &&
-		test $A = $(git rev-parse --verify origin/main)
+		shit_TRACE_PACKET=$UPATH shit fetch &&
+		test $A = $(shit rev-parse --verify origin/main)
 	) &&
 	get_needs $U >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success "create tag T on A, create C on branch cat" '
-	git tag -a -m tag1 tag1 $A &&
-	T=$(git rev-parse --verify tag1) &&
+	shit tag -a -m tag1 tag1 $A &&
+	T=$(shit rev-parse --verify tag1) &&
 
-	git checkout -b cat &&
+	shit checkout -b cat &&
 	echo C >file &&
-	git add file &&
-	git commit -m C &&
-	C=$(git rev-parse --verify HEAD) &&
-	git checkout main
+	shit add file &&
+	shit commit -m C &&
+	C=$(shit rev-parse --verify HEAD) &&
+	shit checkout main
 '
 
 test_expect_success 'setup expect' '
@@ -90,10 +90,10 @@ test_expect_success 'fetch C, T (new branch, tag : 1 connection)' '
 	rm -f $U &&
 	(
 		cd cloned &&
-		GIT_TRACE_PACKET=$UPATH git fetch &&
-		test $C = $(git rev-parse --verify origin/cat) &&
-		test $T = $(git rev-parse --verify tag1) &&
-		test $A = $(git rev-parse --verify tag1^0)
+		shit_TRACE_PACKET=$UPATH shit fetch &&
+		test $C = $(shit rev-parse --verify origin/cat) &&
+		test $T = $(shit rev-parse --verify tag1) &&
+		test $A = $(shit rev-parse --verify tag1^0)
 	) &&
 	get_needs $U >actual &&
 	test_cmp expect actual
@@ -102,17 +102,17 @@ test_expect_success 'fetch C, T (new branch, tag : 1 connection)' '
 test_expect_success "create commits O, B, tag S on B" '
 	test_tick &&
 	echo O >file &&
-	git add file &&
-	git commit -m O &&
+	shit add file &&
+	shit commit -m O &&
 
 	test_tick &&
 	echo B >file &&
-	git add file &&
-	git commit -m B &&
-	B=$(git rev-parse --verify HEAD) &&
+	shit add file &&
+	shit commit -m B &&
+	B=$(shit rev-parse --verify HEAD) &&
 
-	git tag -a -m tag2 tag2 $B &&
-	S=$(git rev-parse --verify tag2)
+	shit tag -a -m tag2 tag2 $B &&
+	S=$(shit rev-parse --verify tag2)
 '
 
 test_expect_success 'setup expect' '
@@ -126,10 +126,10 @@ test_expect_success 'fetch B, S (commit and tag : 1 connection)' '
 	rm -f $U &&
 	(
 		cd cloned &&
-		GIT_TRACE_PACKET=$UPATH git fetch &&
-		test $B = $(git rev-parse --verify origin/main) &&
-		test $B = $(git rev-parse --verify tag2^0) &&
-		test $S = $(git rev-parse --verify tag2)
+		shit_TRACE_PACKET=$UPATH shit fetch &&
+		test $B = $(shit rev-parse --verify origin/main) &&
+		test $B = $(shit rev-parse --verify tag2^0) &&
+		test $S = $(shit rev-parse --verify tag2)
 	) &&
 	get_needs $U >actual &&
 	test_cmp expect actual
@@ -143,19 +143,19 @@ EOF
 '
 
 test_expect_success 'new clone fetch main and tags' '
-	test_might_fail git branch -D cat &&
+	test_might_fail shit branch -D cat &&
 	rm -f $U &&
 	(
 		mkdir clone2 &&
 		cd clone2 &&
-		git init &&
-		git remote add origin .. &&
-		GIT_TRACE_PACKET=$UPATH git fetch &&
-		test $B = $(git rev-parse --verify origin/main) &&
-		test $S = $(git rev-parse --verify tag2) &&
-		test $B = $(git rev-parse --verify tag2^0) &&
-		test $T = $(git rev-parse --verify tag1) &&
-		test $A = $(git rev-parse --verify tag1^0)
+		shit init &&
+		shit remote add origin .. &&
+		shit_TRACE_PACKET=$UPATH shit fetch &&
+		test $B = $(shit rev-parse --verify origin/main) &&
+		test $S = $(shit rev-parse --verify tag2) &&
+		test $B = $(shit rev-parse --verify tag2^0) &&
+		test $T = $(shit rev-parse --verify tag1) &&
+		test $A = $(shit rev-parse --verify tag1^0)
 	) &&
 	get_needs $U >actual &&
 	test_cmp expect actual

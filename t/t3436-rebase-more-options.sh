@@ -9,116 +9,116 @@ test_description='tests to ensure compatibility between am and interactive backe
 
 . "$TEST_DIRECTORY"/lib-rebase.sh
 
-GIT_AUTHOR_DATE="1999-04-02T08:03:20+05:30"
-export GIT_AUTHOR_DATE
+shit_AUTHOR_DATE="1999-04-02T08:03:20+05:30"
+export shit_AUTHOR_DATE
 
 # This is a special case in which both am and interactive backends
 # provide the same output. It was done intentionally because
 # both the backends fall short of optimal behaviour.
 test_expect_success 'setup' '
-	git checkout -b topic &&
+	shit checkout -b topic &&
 	test_write_lines "line 1" "	line 2" "line 3" >file &&
-	git add file &&
-	git commit -m "add file" &&
+	shit add file &&
+	shit commit -m "add file" &&
 
 	test_write_lines "line 1" "new line 2" "line 3" >file &&
-	git commit -am "update file" &&
-	git tag side &&
+	shit commit -am "update file" &&
+	shit tag side &&
 	test_commit commit1 foo foo1 &&
 	test_commit commit2 foo foo2 &&
 	test_commit commit3 foo foo3 &&
 
-	git checkout --orphan main &&
+	shit checkout --orphan main &&
 	rm foo &&
 	test_write_lines "line 1" "        line 2" "line 3" >file &&
-	git commit -am "add file" &&
-	git tag main &&
+	shit commit -am "add file" &&
+	shit tag main &&
 
 	mkdir test-bin &&
-	write_script test-bin/git-merge-test <<-\EOF
-	exec git merge-recursive "$@"
+	write_script test-bin/shit-merge-test <<-\EOF
+	exec shit merge-recursive "$@"
 	EOF
 '
 
 test_expect_success '--ignore-whitespace works with apply backend' '
-	test_must_fail git rebase --apply main side &&
-	git rebase --abort &&
-	git rebase --apply --ignore-whitespace main side &&
-	git diff --exit-code side
+	test_must_fail shit rebase --apply main side &&
+	shit rebase --abort &&
+	shit rebase --apply --ignore-whitespace main side &&
+	shit diff --exit-code side
 '
 
 test_expect_success '--ignore-whitespace works with merge backend' '
-	test_must_fail git rebase --merge main side &&
-	git rebase --abort &&
-	git rebase --merge --ignore-whitespace main side &&
-	git diff --exit-code side
+	test_must_fail shit rebase --merge main side &&
+	shit rebase --abort &&
+	shit rebase --merge --ignore-whitespace main side &&
+	shit diff --exit-code side
 '
 
 test_expect_success '--ignore-whitespace is remembered when continuing' '
 	(
 		set_fake_editor &&
-		FAKE_LINES="break 1" git rebase -i --ignore-whitespace \
+		FAKE_LINES="break 1" shit rebase -i --ignore-whitespace \
 			main side &&
-		git rebase --continue
+		shit rebase --continue
 	) &&
-	git diff --exit-code side
+	shit diff --exit-code side
 '
 
 test_ctime_is_atime () {
-	git log $1 --format="$GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> %ai" >authortime &&
-	git log $1 --format="%cn <%ce> %ci" >committertime &&
+	shit log $1 --format="$shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> %ai" >authortime &&
+	shit log $1 --format="%cn <%ce> %ci" >committertime &&
 	test_cmp authortime committertime
 }
 
 test_expect_success '--committer-date-is-author-date works with apply backend' '
-	GIT_AUTHOR_DATE="@1234 +0300" git commit --amend --reset-author &&
-	git rebase --apply --committer-date-is-author-date HEAD^ &&
+	shit_AUTHOR_DATE="@1234 +0300" shit commit --amend --reset-author &&
+	shit rebase --apply --committer-date-is-author-date HEAD^ &&
 	test_ctime_is_atime -1
 '
 
 test_expect_success '--committer-date-is-author-date works with merge backend' '
-	GIT_AUTHOR_DATE="@1234 +0300" git commit --amend --reset-author &&
-	git rebase -m --committer-date-is-author-date HEAD^ &&
+	shit_AUTHOR_DATE="@1234 +0300" shit commit --amend --reset-author &&
+	shit rebase -m --committer-date-is-author-date HEAD^ &&
 	test_ctime_is_atime -1
 '
 
 test_expect_success '--committer-date-is-author-date works when rewording' '
-	GIT_AUTHOR_DATE="@1234 +0300" git commit --amend --reset-author &&
+	shit_AUTHOR_DATE="@1234 +0300" shit commit --amend --reset-author &&
 	(
 		set_fake_editor &&
 		FAKE_COMMIT_MESSAGE=edited \
 			FAKE_LINES="reword 1" \
-			git rebase -i --committer-date-is-author-date HEAD^
+			shit rebase -i --committer-date-is-author-date HEAD^
 	) &&
 	test_write_lines edited "" >expect &&
-	git log --format="%B" -1 >actual &&
+	shit log --format="%B" -1 >actual &&
 	test_cmp expect actual &&
 	test_ctime_is_atime -1
 '
 
 test_expect_success '--committer-date-is-author-date works with rebase -r' '
-	git checkout side &&
-	GIT_AUTHOR_DATE="@1234 +0300" git merge --no-ff commit3 &&
-	git rebase -r --root --committer-date-is-author-date &&
+	shit checkout side &&
+	shit_AUTHOR_DATE="@1234 +0300" shit merge --no-ff commit3 &&
+	shit rebase -r --root --committer-date-is-author-date &&
 	test_ctime_is_atime
 '
 
 test_expect_success '--committer-date-is-author-date works when forking merge' '
-	git checkout side &&
-	GIT_AUTHOR_DATE="@1234 +0300" git merge --no-ff commit3 &&
-	PATH="./test-bin:$PATH" git rebase -r --root --strategy=test \
+	shit checkout side &&
+	shit_AUTHOR_DATE="@1234 +0300" shit merge --no-ff commit3 &&
+	PATH="./test-bin:$PATH" shit rebase -r --root --strategy=test \
 					--committer-date-is-author-date &&
 	test_ctime_is_atime
 '
 
 test_expect_success '--committer-date-is-author-date works when committing conflict resolution' '
-	git checkout commit2 &&
-	GIT_AUTHOR_DATE="@1980 +0000" git commit --amend --only --reset-author &&
-	test_must_fail git rebase -m --committer-date-is-author-date \
+	shit checkout commit2 &&
+	shit_AUTHOR_DATE="@1980 +0000" shit commit --amend --only --reset-author &&
+	test_must_fail shit rebase -m --committer-date-is-author-date \
 		--onto HEAD^^ HEAD^ &&
 	echo resolved > foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	test_ctime_is_atime -1
 '
 
@@ -127,66 +127,66 @@ test_expect_success '--committer-date-is-author-date works when committing confl
 # +0530. The inverted logic in the grep is necessary to check all the
 # author dates in the file.
 test_atime_is_ignored () {
-	git log $1 --format=%ai >authortime &&
+	shit log $1 --format=%ai >authortime &&
 	! grep -v +0000 authortime
 }
 
 test_expect_success '--reset-author-date works with apply backend' '
-	git commit --amend --date="$GIT_AUTHOR_DATE" &&
-	git rebase --apply --reset-author-date HEAD^ &&
+	shit commit --amend --date="$shit_AUTHOR_DATE" &&
+	shit rebase --apply --reset-author-date HEAD^ &&
 	test_atime_is_ignored -1
 '
 
 test_expect_success '--reset-author-date works with merge backend' '
-	git commit --amend --date="$GIT_AUTHOR_DATE" &&
-	git rebase --reset-author-date -m HEAD^ &&
+	shit commit --amend --date="$shit_AUTHOR_DATE" &&
+	shit rebase --reset-author-date -m HEAD^ &&
 	test_atime_is_ignored -1
 '
 
 test_expect_success '--reset-author-date works after conflict resolution' '
-	test_must_fail git rebase --reset-author-date -m \
+	test_must_fail shit rebase --reset-author-date -m \
 		--onto commit2^^ commit2^ commit2 &&
 	echo resolved >foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit add foo &&
+	shit rebase --continue &&
 	test_atime_is_ignored -1
 '
 
 test_expect_success '--reset-author-date works with rebase -r' '
-	git checkout side &&
-	git merge --no-ff commit3 &&
-	git rebase -r --root --reset-author-date &&
+	shit checkout side &&
+	shit merge --no-ff commit3 &&
+	shit rebase -r --root --reset-author-date &&
 	test_atime_is_ignored
 '
 
 test_expect_success '--reset-author-date with --committer-date-is-author-date works' '
-	test_must_fail git rebase -m --committer-date-is-author-date \
+	test_must_fail shit rebase -m --committer-date-is-author-date \
 		--reset-author-date --onto commit2^^ commit2^ commit3 &&
-	git checkout --theirs foo &&
-	git add foo &&
-	git rebase --continue &&
+	shit checkout --theirs foo &&
+	shit add foo &&
+	shit rebase --continue &&
 	test_ctime_is_atime -2 &&
 	test_atime_is_ignored -2
 '
 
 test_expect_success 'reset-author-date with --committer-date-is-author-date works when rewording' '
-	GIT_AUTHOR_DATE="@1234 +0300" git commit --amend --reset-author &&
+	shit_AUTHOR_DATE="@1234 +0300" shit commit --amend --reset-author &&
 	(
 		set_fake_editor &&
 		FAKE_COMMIT_MESSAGE=edited \
 			FAKE_LINES="reword 1" \
-			git rebase -i --committer-date-is-author-date \
+			shit rebase -i --committer-date-is-author-date \
 				--reset-author-date HEAD^
 	) &&
 	test_write_lines edited "" >expect &&
-	git log --format="%B" -1 >actual &&
+	shit log --format="%B" -1 >actual &&
 	test_cmp expect actual &&
 	test_atime_is_ignored -1
 '
 
 test_expect_success '--reset-author-date --committer-date-is-author-date works when forking merge' '
-	GIT_SEQUENCE_EDITOR="echo \"merge -C $(git rev-parse HEAD) commit3\">" \
-		PATH="./test-bin:$PATH" git rebase -i --strategy=test \
+	shit_SEQUENCE_EDITOR="echo \"merge -C $(shit rev-parse HEAD) commit3\">" \
+		PATH="./test-bin:$PATH" shit rebase -i --strategy=test \
 				--reset-author-date \
 				--committer-date-is-author-date side side &&
 	test_ctime_is_atime -1 &&
@@ -194,10 +194,10 @@ test_expect_success '--reset-author-date --committer-date-is-author-date works w
  '
 
 test_expect_success '--ignore-date is an alias for --reset-author-date' '
-	git commit --amend --date="$GIT_AUTHOR_DATE" &&
-	git rebase --apply --ignore-date HEAD^ &&
-	git commit --allow-empty -m empty --date="$GIT_AUTHOR_DATE" &&
-	git rebase -m --ignore-date HEAD^ &&
+	shit commit --amend --date="$shit_AUTHOR_DATE" &&
+	shit rebase --apply --ignore-date HEAD^ &&
+	shit commit --allow-empty -m empty --date="$shit_AUTHOR_DATE" &&
+	shit rebase -m --ignore-date HEAD^ &&
 	test_atime_is_ignored -2
 '
 

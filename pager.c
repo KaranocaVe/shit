@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "editor.h"
 #include "pager.h"
@@ -47,18 +47,18 @@ static int core_pager_config(const char *var, const char *value,
 			     void *data UNUSED)
 {
 	if (!strcmp(var, "core.pager"))
-		return git_config_string(&pager_program, var, value);
+		return shit_config_string(&pager_program, var, value);
 	return 0;
 }
 
-const char *git_pager(int stdout_is_tty)
+const char *shit_pager(int stdout_is_tty)
 {
 	const char *pager;
 
 	if (!stdout_is_tty)
 		return NULL;
 
-	pager = getenv("GIT_PAGER");
+	pager = getenv("shit_PAGER");
 	if (!pager) {
 		if (!pager_program)
 			read_early_config(core_pager_config, NULL);
@@ -94,7 +94,7 @@ static void setup_pager_env(struct strvec *env)
 		*cp = '\0';
 		if (!getenv(argv[i])) {
 			*cp = '=';
-			strvec_push(env, argv[i]);
+			strvec_defecate(env, argv[i]);
 		}
 	}
 	free(pager_env);
@@ -103,7 +103,7 @@ static void setup_pager_env(struct strvec *env)
 
 void prepare_pager_args(struct child_process *pager_process, const char *pager)
 {
-	strvec_push(&pager_process->args, pager);
+	strvec_defecate(&pager_process->args, pager);
 	pager_process->use_shell = 1;
 	setup_pager_env(&pager_process->env);
 	pager_process->trace2_child_class = "pager";
@@ -111,7 +111,7 @@ void prepare_pager_args(struct child_process *pager_process, const char *pager)
 
 void setup_pager(void)
 {
-	const char *pager = git_pager(isatty(1));
+	const char *pager = shit_pager(isatty(1));
 
 	if (!pager)
 		return;
@@ -128,14 +128,14 @@ void setup_pager(void)
 			setenv("COLUMNS", buf, 0);
 	}
 
-	setenv("GIT_PAGER_IN_USE", "true", 1);
+	setenv("shit_PAGER_IN_USE", "true", 1);
 
 	child_process_init(&pager_process);
 
 	/* spawn the pager */
 	prepare_pager_args(&pager_process, pager);
 	pager_process.in = -1;
-	strvec_push(&pager_process.env, "GIT_PAGER_IN_USE");
+	strvec_defecate(&pager_process.env, "shit_PAGER_IN_USE");
 	if (start_command(&pager_process))
 		return;
 
@@ -146,13 +146,13 @@ void setup_pager(void)
 	close(pager_process.in);
 
 	/* this makes sure that the parent terminates after the pager */
-	sigchain_push_common(wait_for_pager_signal);
+	sigchain_defecate_common(wait_for_pager_signal);
 	atexit(wait_for_pager_atexit);
 }
 
 int pager_in_use(void)
 {
-	return git_env_bool("GIT_PAGER_IN_USE", 0);
+	return shit_env_bool("shit_PAGER_IN_USE", 0);
 }
 
 /*
@@ -237,7 +237,7 @@ static int pager_command_config(const char *var, const char *value,
 	const char *cmd;
 
 	if (skip_prefix(var, "pager.", &cmd) && !strcmp(cmd, data->cmd)) {
-		int b = git_parse_maybe_bool(value);
+		int b = shit_parse_maybe_bool(value);
 		if (b >= 0)
 			data->want = b;
 		else {

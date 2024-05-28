@@ -10,7 +10,7 @@ test_expect_success 'bundle_uri_parse_line() just URIs' '
 	cat >in <<-\EOF &&
 	bundle.one.uri=http://example.com/bundle.bdl
 	bundle.two.uri=https://example.com/bundle.bdl
-	bundle.three.uri=file:///usr/share/git/bundle.bdl
+	bundle.three.uri=file:///usr/share/shit/bundle.bdl
 	EOF
 
 	cat >expect <<-\EOF &&
@@ -22,7 +22,7 @@ test_expect_success 'bundle_uri_parse_line() just URIs' '
 	[bundle "two"]
 		uri = https://example.com/bundle.bdl
 	[bundle "three"]
-		uri = file:///usr/share/git/bundle.bdl
+		uri = file:///usr/share/shit/bundle.bdl
 	EOF
 
 	test-tool bundle-uri parse-key-values in >actual 2>err &&
@@ -75,7 +75,7 @@ test_expect_success 'bundle_uri_parse_line(): relative URIs and parent paths' '
 
 	# TODO: We would prefer if parsing a bundle list would not cause
 	# a die() and instead would give a warning and allow the rest of
-	# a Git command to continue. This test_must_fail is necessary for
+	# a shit command to continue. This test_must_fail is necessary for
 	# now until the interface for relative_url() allows for reporting
 	# an error instead of die()ing.
 	test_must_fail test-tool bundle-uri parse-key-values in >actual 2>err &&
@@ -112,7 +112,7 @@ test_expect_success 'bundle_uri_parse_line() parsing edge cases: empty lines' '
 
 	bundle.two.uri=https://example.com/bundle.bdl
 
-	bundle.three.uri=file:///usr/share/git/bundle.bdl
+	bundle.three.uri=file:///usr/share/shit/bundle.bdl
 	EOF
 
 	cat >err.expect <<-\EOF &&
@@ -132,7 +132,7 @@ test_expect_success 'bundle_uri_parse_line() parsing edge cases: empty lines' '
 	[bundle "two"]
 		uri = https://example.com/bundle.bdl
 	[bundle "three"]
-		uri = file:///usr/share/git/bundle.bdl
+		uri = file:///usr/share/shit/bundle.bdl
 	EOF
 
 	test_must_fail test-tool bundle-uri parse-key-values in >actual 2>err &&
@@ -145,7 +145,7 @@ test_expect_success 'bundle_uri_parse_line() parsing edge cases: duplicate lines
 	bundle.one.uri=http://example.com/bundle.bdl
 	bundle.two.uri=https://example.com/bundle.bdl
 	bundle.one.uri=https://example.com/bundle-2.bdl
-	bundle.three.uri=file:///usr/share/git/bundle.bdl
+	bundle.three.uri=file:///usr/share/shit/bundle.bdl
 	EOF
 
 	cat >err.expect <<-\EOF &&
@@ -162,7 +162,7 @@ test_expect_success 'bundle_uri_parse_line() parsing edge cases: duplicate lines
 	[bundle "two"]
 		uri = https://example.com/bundle.bdl
 	[bundle "three"]
-		uri = file:///usr/share/git/bundle.bdl
+		uri = file:///usr/share/shit/bundle.bdl
 	EOF
 
 	test_must_fail test-tool bundle-uri parse-key-values in >actual 2>err &&
@@ -180,7 +180,7 @@ test_expect_success 'parse config format: just URIs' '
 	[bundle "two"]
 		uri = https://example.com/bundle.bdl
 	[bundle "three"]
-		uri = file:///usr/share/git/bundle.bdl
+		uri = file:///usr/share/shit/bundle.bdl
 	EOF
 
 	test-tool bundle-uri parse-config expect >actual 2>err &&
@@ -263,7 +263,7 @@ test_expect_success 'parse config format: creationToken heuristic' '
 		uri = https://example.com/bundle.bdl
 		creationToken = 12345678901234567890
 	[bundle "three"]
-		uri = file:///usr/share/git/bundle.bdl
+		uri = file:///usr/share/shit/bundle.bdl
 		creationToken = 1
 	EOF
 

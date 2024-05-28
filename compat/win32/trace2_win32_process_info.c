@@ -1,4 +1,4 @@
-#include "../../git-compat-util.h"
+#include "../../shit-compat-util.h"
 #include "../../json-writer.h"
 #include "../../repository.h"
 #include "../../trace2.h"
@@ -8,7 +8,7 @@
 
 /*
  * An arbitrarily chosen value to limit the size of the ancestor
- * array built in git_processes().
+ * array built in shit_processes().
  */
 #define NR_PIDS_LIMIT 10
 
@@ -60,7 +60,7 @@ static int find_pid(DWORD pid, HANDLE hSnapshot, PROCESSENTRY32 *pe32)
  *
  * Note: for completeness, the "System Idle" process has PID=0 and
  *       PPID=0 and could cause another PPID-cycle.  We don't expect
- *       Git to be a descendant of the idle process, but because of
+ *       shit to be a descendant of the idle process, but because of
  *       PID recycling, it might be possible to get a PPID link value
  *       of 0.  This too would cause an infinite loop.
  *
@@ -131,7 +131,7 @@ static void get_ancestry(void)
  * This will catch debug runs (where the debugger started the process).
  * This is the normal case.  Since this code is called during our startup,
  * it will not report instances where a debugger is attached dynamically
- * to a running git process, but that is relatively rare.
+ * to a running shit process, but that is relatively rare.
  */
 static void get_is_being_debugged(void)
 {

@@ -1,5 +1,5 @@
 /*
- * Builtin "git diff"
+ * Builtin "shit diff"
  *
  * Copyright (c) 2006 Junio C Hamano
  */
@@ -27,12 +27,12 @@
 #define DIFF_NO_INDEX_IMPLICIT 2
 
 static const char builtin_diff_usage[] =
-"git diff [<options>] [<commit>] [--] [<path>...]\n"
-"   or: git diff [<options>] --cached [--merge-base] [<commit>] [--] [<path>...]\n"
-"   or: git diff [<options>] [--merge-base] <commit> [<commit>...] <commit> [--] [<path>...]\n"
-"   or: git diff [<options>] <commit>...<commit> [--] [<path>...]\n"
-"   or: git diff [<options>] <blob> <blob>\n"
-"   or: git diff [<options>] --no-index [--] <path> <path>"
+"shit diff [<options>] [<commit>] [--] [<path>...]\n"
+"   or: shit diff [<options>] --cached [--merge-base] [<commit>] [--] [<path>...]\n"
+"   or: shit diff [<options>] [--merge-base] <commit> [<commit>...] <commit> [--] [<path>...]\n"
+"   or: shit diff [<options>] <commit>...<commit> [--] [<path>...]\n"
+"   or: shit diff [<options>] <blob> <blob>\n"
+"   or: shit diff [<options>] --no-index [--] <path> <path>"
 "\n"
 COMMON_DIFF_OPTIONS_HELP;
 
@@ -296,7 +296,7 @@ struct symdiff {
  * Check for symmetric-difference arguments, and if present, arrange
  * everything we need to know to handle them correctly.  As a bonus,
  * weed out all bogus range-based revision specifications, e.g.,
- * "git diff A..B C..D" or "git diff A..B C" get rejected.
+ * "shit diff A..B C..D" or "shit diff A..B C" get rejected.
  *
  * For an actual symmetric diff, *symdiff is set this way:
  *
@@ -322,8 +322,8 @@ static void symdiff_prepare(struct rev_info *rev, struct symdiff *sym)
 	 * right parts of symmetric difference, so that we do not
 	 * depend on the order that revisions are parsed.  If there
 	 * are any revs that aren't from these sources, we have a
-	 * "git diff C A...B" or "git diff A...B C" case.  Or we
-	 * could even get "git diff A...B C...E", for instance.
+	 * "shit diff C A...B" or "shit diff A...B C" case.  Or we
+	 * could even get "shit diff A...B C...E", for instance.
 	 *
 	 * If we don't have just one merge base, we pick one
 	 * at random.
@@ -396,7 +396,7 @@ int cmd_diff(int argc, const char **argv, const char *prefix)
 	int first_non_parent = -1;
 	int blobs = 0, paths = 0;
 	struct object_array_entry *blob[2];
-	int nongit = 0, no_index = 0;
+	int nonshit = 0, no_index = 0;
 	int result;
 	struct symdiff sdiff;
 
@@ -444,29 +444,29 @@ int cmd_diff(int argc, const char **argv, const char *prefix)
 			break;
 	}
 
-	prefix = setup_git_directory_gently(&nongit);
+	prefix = setup_shit_directory_gently(&nonshit);
 
-	if (!nongit) {
+	if (!nonshit) {
 		prepare_repo_settings(the_repository);
 		the_repository->settings.command_requires_full_index = 0;
 	}
 
 	if (!no_index) {
 		/*
-		 * Treat git diff with at least one path outside of the
+		 * Treat shit diff with at least one path outside of the
 		 * repo the same as if the command would have been executed
-		 * outside of a git repository.  In this case it behaves
-		 * the same way as "git diff --no-index <a> <b>", which acts
+		 * outside of a shit repository.  In this case it behaves
+		 * the same way as "shit diff --no-index <a> <b>", which acts
 		 * as a colourful "diff" replacement.
 		 */
-		if (nongit || ((argc == i + 2) &&
+		if (nonshit || ((argc == i + 2) &&
 			       (!path_inside_repo(prefix, argv[i]) ||
 				!path_inside_repo(prefix, argv[i + 1]))))
 			no_index = DIFF_NO_INDEX_IMPLICIT;
 	}
 
 	init_diff_ui_defaults();
-	git_config(git_diff_ui_config, NULL);
+	shit_config(shit_diff_ui_config, NULL);
 	prefix = precompose_argv_prefix(argc, argv, prefix);
 
 	repo_init_revisions(the_repository, &rev, prefix);
@@ -483,7 +483,7 @@ int cmd_diff(int argc, const char **argv, const char *prefix)
 
 
 	/*
-	 * Otherwise, we are doing the usual "git" diff; set up any
+	 * Otherwise, we are doing the usual "shit" diff; set up any
 	 * further defaults that apply to regular diffs.
 	 */
 	rev.diffopt.skip_stat_unmatch = !!diff_auto_refresh_index;
@@ -495,8 +495,8 @@ int cmd_diff(int argc, const char **argv, const char *prefix)
 	 */
 	rev.diffopt.ita_invisible_in_index = 1;
 
-	if (nongit)
-		die(_("Not a git repository"));
+	if (nonshit)
+		die(_("Not a shit repository"));
 	argc = setup_revisions(argc, argv, &rev, NULL);
 	if (!rev.diffopt.output_format) {
 		rev.diffopt.output_format = DIFF_FORMAT_PATCH;

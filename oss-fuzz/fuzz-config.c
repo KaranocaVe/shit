@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 
 int LLVMFuzzerTestOneInput(const uint8_t *, size_t);
@@ -26,7 +26,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, const size_t size)
 	struct config_options config_opts = { 0 };
 
 	config_opts.error_action = CONFIG_ERROR_SILENT;
-	git_config_from_mem(config_parser_callback, CONFIG_ORIGIN_BLOB,
+	shit_config_from_mem(config_parser_callback, CONFIG_ORIGIN_BLOB,
 				"fuzztest-config", (const char *)data, size, NULL,
 				CONFIG_SCOPE_UNKNOWN, &config_opts);
 	return 0;

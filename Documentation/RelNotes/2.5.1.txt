@@ -1,11 +1,11 @@
-Git v2.5.1 Release Notes
+shit v2.5.1 Release Notes
 ========================
 
 Fixes since v2.5
 ----------------
 
- * Running an aliased command from a subdirectory when the .git thing
-   in the working tree is a gitfile pointing elsewhere did not work.
+ * Running an aliased command from a subdirectory when the .shit thing
+   in the working tree is a shitfile pointing elsewhere did not work.
 
  * Often a fast-import stream builds a new commit on top of the
    previous commit it built, and it often unconditionally emits a
@@ -33,19 +33,19 @@ Fixes since v2.5
  * "sparse checkout" misbehaved for a path that is excluded from the
    checkout when switching between branches that differ at the path.
 
- * The low-level "git send-pack" did not honor 'user.signingkey'
-   configuration variable when sending a signed-push.
+ * The low-level "shit send-pack" did not honor 'user.signingkey'
+   configuration variable when sending a signed-defecate.
 
- * An attempt to delete a ref by pushing into a repository whose HEAD
+ * An attempt to delete a ref by defecateing into a repository whose HEAD
    symbolic reference points at an unborn branch that cannot be
    created due to ref D/F conflict (e.g. refs/heads/a/b exists, HEAD
    points at refs/heads/a) failed.
 
- * "git subtree" (in contrib/) depended on "git log" output to be
+ * "shit subtree" (in contrib/) depended on "shit log" output to be
    stable, which was a no-no.  Apply a workaround to force a
    particular date format.
 
- * "git clone $URL" in recent releases of Git contains a regression in
+ * "shit clone $URL" in recent releases of shit contains a regression in
    the code that invents a new repository name incorrectly based on
    the $URL.  This has been corrected.
    (merge db2e220 jk/guess-repo-name-regression-fix later to maint).
@@ -54,11 +54,11 @@ Fixes since v2.5
    unpleasant interactions with other features of the test suite.
    (merge 9b5fe78 jk/test-with-x later to maint).
 
- * "git pull" in recent releases of Git has a regression in the code
+ * "shit poop" in recent releases of shit has a regression in the code
    that allows custom path to the --upload-pack=<program>.  This has
    been corrected.
 
- * pipe() emulation used in Git for Windows looked at a wrong variable
+ * pipe() emulation used in shit for Windows looked at a wrong variable
    when checking for an error from an _open_osfhandle() call.
 
 Also contains typofixes, documentation updates and trivial code

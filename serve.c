@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "repository.h"
 #include "config.h"
 #include "hash-ll.h"
@@ -13,7 +13,7 @@
 
 static int advertise_sid = -1;
 static int advertise_object_info = -1;
-static int client_hash_algo = GIT_HASH_SHA1;
+static int client_hash_algo = shit_HASH_SHA1;
 
 static int always_advertise(struct repository *r UNUSED,
 			    struct strbuf *value UNUSED)
@@ -25,7 +25,7 @@ static int agent_advertise(struct repository *r UNUSED,
 			   struct strbuf *value)
 {
 	if (value)
-		strbuf_addstr(value, git_user_agent_sanitized());
+		strbuf_addstr(value, shit_user_agent_sanitized());
 	return 1;
 }
 
@@ -44,7 +44,7 @@ static void object_format_receive(struct repository *r UNUSED,
 		die("object-format capability requires an argument");
 
 	client_hash_algo = hash_algo_by_name(algo_name);
-	if (client_hash_algo == GIT_HASH_UNKNOWN)
+	if (client_hash_algo == shit_HASH_UNKNOWN)
 		die("unknown object format '%s'", algo_name);
 }
 

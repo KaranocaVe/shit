@@ -25,7 +25,7 @@ static inline int ce_to_dtype(const struct cache_entry *ce)
 	unsigned ce_mode = ntohl(ce->ce_mode);
 	if (S_ISREG(ce_mode))
 		return DT_REG;
-	else if (S_ISDIR(ce_mode) || S_ISGITLINK(ce_mode))
+	else if (S_ISDIR(ce_mode) || S_ISshitLINK(ce_mode))
 		return DT_DIR;
 	else if (S_ISLNK(ce_mode))
 		return DT_LNK;
@@ -39,7 +39,7 @@ static inline int ce_path_match(struct index_state *istate,
 				char *seen)
 {
 	return match_pathspec(istate, pathspec, ce->name, ce_namelen(ce), 0, seen,
-			      S_ISDIR(ce->ce_mode) || S_ISGITLINK(ce->ce_mode));
+			      S_ISDIR(ce->ce_mode) || S_ISshitLINK(ce->ce_mode));
 }
 
 #endif /* READ_CACHE_H */

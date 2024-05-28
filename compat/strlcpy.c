@@ -1,6 +1,6 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
-size_t gitstrlcpy(char *dest, const char *src, size_t size)
+size_t shitstrlcpy(char *dest, const char *src, size_t size)
 {
 	size_t ret = strlen(src);
 

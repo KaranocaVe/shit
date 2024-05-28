@@ -1,5 +1,5 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
@@ -16,7 +16,7 @@
 #include "pathspec.h"
 
 static const char * const ls_tree_usage[] = {
-	N_("git ls-tree [<options>] <tree-ish> [<path>...]"),
+	N_("shit ls-tree [<options>] <tree-ish> [<path>...]"),
 	NULL
 };
 
@@ -370,7 +370,7 @@ int cmd_ls_tree(int argc, const char **argv, const char *prefix)
 	struct object_context obj_context;
 	int ret;
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, ls_tree_options,
 			     ls_tree_usage, 0);

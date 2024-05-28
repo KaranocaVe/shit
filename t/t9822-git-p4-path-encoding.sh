@@ -2,7 +2,7 @@
 
 test_description='Clone repositories with non ASCII paths'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 UTF8_ESCAPED="a-\303\244_o-\303\266_u-\303\274.txt"
 ISO8859_ESCAPED="a-\344_o-\366_u-\374.txt"
@@ -29,27 +29,27 @@ test_expect_success 'Create a repo containing iso8859-1 encoded paths' '
 '
 
 test_expect_failure 'Clone auto-detects depot with iso8859-1 paths' '
-	git p4 clone --destination="$git" //depot &&
-	test_when_finished cleanup_git &&
+	shit p4 clone --destination="$shit" //depot &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
+		cd "$shit" &&
 		UTF8="$(printf "$UTF8_ESCAPED")" &&
 		echo "$UTF8" >expect &&
-		git -c core.quotepath=false ls-files >actual &&
+		shit -c core.quotepath=false ls-files >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'Clone repo containing iso8859-1 encoded paths with git-p4.pathEncoding' '
-	test_when_finished cleanup_git &&
+test_expect_success 'Clone repo containing iso8859-1 encoded paths with shit-p4.pathEncoding' '
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
-		git init . &&
-		git config git-p4.pathEncoding iso8859-1 &&
-		git p4 clone --use-client-spec --destination="$git" //depot &&
+		cd "$shit" &&
+		shit init . &&
+		shit config shit-p4.pathEncoding iso8859-1 &&
+		shit p4 clone --use-client-spec --destination="$shit" //depot &&
 		UTF8="$(printf "$UTF8_ESCAPED")" &&
 		echo "$UTF8" >expect &&
-		git -c core.quotepath=false ls-files >actual &&
+		shit -c core.quotepath=false ls-files >actual &&
 		test_cmp expect actual &&
 
 		echo content123 >expect &&
@@ -65,11 +65,11 @@ test_expect_success 'Delete iso8859-1 encoded paths and clone' '
 		p4 delete "$ISO8859" &&
 		p4 submit -d "remove file"
 	) &&
-	git p4 clone --destination="$git" //depot@all &&
-	test_when_finished cleanup_git &&
+	shit p4 clone --destination="$shit" //depot@all &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
-		git -c core.quotepath=false ls-files >actual &&
+		cd "$shit" &&
+		shit -c core.quotepath=false ls-files >actual &&
 		test_must_be_empty actual
 	)
 '

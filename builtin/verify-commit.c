@@ -1,9 +1,9 @@
 /*
- * Builtin "git commit-commit"
+ * Builtin "shit commit-commit"
  *
- * Copyright (c) 2014 Michael J Gruber <git@drmicha.warpmail.net>
+ * Copyright (c) 2014 Michael J Gruber <shit@drmicha.warpmail.net>
  *
- * Based on git-verify-tag
+ * Based on shit-verify-tag
  */
 #include "builtin.h"
 #include "config.h"
@@ -15,7 +15,7 @@
 #include "gpg-interface.h"
 
 static const char * const verify_commit_usage[] = {
-		N_("git verify-commit [-v | --verbose] [--raw] <commit>..."),
+		N_("shit verify-commit [-v | --verbose] [--raw] <commit>..."),
 		NULL
 };
 
@@ -61,7 +61,7 @@ int cmd_verify_commit(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, verify_commit_options,
 			     verify_commit_usage, PARSE_OPT_KEEP_ARGV0);

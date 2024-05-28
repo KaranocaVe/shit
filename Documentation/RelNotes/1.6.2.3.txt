@@ -1,4 +1,4 @@
-GIT v1.6.2.3 Release Notes
+shit v1.6.2.3 Release Notes
 ==========================
 
 Fixes since v1.6.2.2
@@ -11,10 +11,10 @@ Fixes since v1.6.2.2
 * A fairly large and trivial memory leak while rev-list shows list of
   reachable objects has been identified and plugged.
 
-* "git-commit --interactive" did not abort when underlying "git-add -i"
+* "shit-commit --interactive" did not abort when underlying "shit-add -i"
   signaled a failure.
 
-* git-repack (invoked from git-gc) did not work as nicely as it should in
+* shit-repack (invoked from shit-gc) did not work as nicely as it should in
   a repository that borrows objects from neighbours via alternates
   mechanism especially when some packs are marked with the ".keep" flag
   to prevent them from being repacked.

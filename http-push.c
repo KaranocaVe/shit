@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "hex.h"
 #include "repository.h"
@@ -26,8 +26,8 @@
 #include <expat.h>
 #endif
 
-static const char http_push_usage[] =
-"git http-push [--all] [--dry-run] [--force] [--verbose] <remote> [<head>...]\n";
+static const char http_defecate_usage[] =
+"shit http-defecate [--all] [--dry-run] [--force] [--verbose] <remote> [<head>...]\n";
 
 #ifndef XML_STATUS_OK
 enum XML_Status {
@@ -77,17 +77,17 @@ enum XML_Status {
 #define LOCAL    (1u<<11)
 #define REMOTE   (1u<<12)
 #define FETCHING (1u<<13)
-#define PUSHING  (1u<<14)
+#define defecateING  (1u<<14)
 
 /* We allow "recursive" symbolic refs. Only within reason, though */
 #define MAXDEPTH 5
 
-static int pushing;
+static int defecateing;
 static int aborted;
 static signed char remote_dir_exists[256];
 
-static int push_verbosely;
-static int push_all = MATCH_REFS_NONE;
+static int defecate_verbosely;
+static int defecate_all = MATCH_REFS_NONE;
 static int force_all;
 static int dry_run;
 static int helper_status;
@@ -101,7 +101,7 @@ struct repo {
 	int has_info_refs;
 	int can_update_info_refs;
 	int has_info_packs;
-	struct packed_git *packs;
+	struct packed_shit *packs;
 	struct remote_lock *locks;
 };
 
@@ -111,7 +111,7 @@ enum transfer_state {
 	NEED_FETCH,
 	RUN_FETCH_LOOSE,
 	RUN_FETCH_PACKED,
-	NEED_PUSH,
+	NEED_defecate,
 	RUN_MKCOL,
 	RUN_PUT,
 	RUN_MOVE,
@@ -121,7 +121,7 @@ enum transfer_state {
 
 struct transfer_request {
 	struct object *obj;
-	struct packed_git *target;
+	struct packed_shit *target;
 	char *url;
 	char *dest;
 	struct remote_lock *lock;
@@ -150,7 +150,7 @@ struct remote_lock {
 	char *url;
 	char *owner;
 	char *token;
-	char tmpfile_suffix[GIT_MAX_HEXSZ + 1];
+	char tmpfile_suffix[shit_MAX_HEXSZ + 1];
 	time_t start_time;
 	long timeout;
 	int refreshing;
@@ -302,7 +302,7 @@ static void start_mkcol(struct transfer_request *request)
 
 static void start_fetch_packed(struct transfer_request *request)
 {
-	struct packed_git *target;
+	struct packed_shit *target;
 
 	struct transfer_request *check_request = request_queue_head;
 	struct http_pack_request *preq;
@@ -364,15 +364,15 @@ static void start_put(struct transfer_request *request)
 	unsigned long len;
 	int hdrlen;
 	ssize_t size;
-	git_zstream stream;
+	shit_zstream stream;
 
 	unpacked = repo_read_object_file(the_repository, &request->obj->oid,
 					 &type, &len);
 	hdrlen = format_object_header(hdr, sizeof(hdr), type, len);
 
 	/* Set it up */
-	git_deflate_init(&stream, zlib_compression_level);
-	size = git_deflate_bound(&stream, len + hdrlen);
+	shit_deflate_init(&stream, zlib_compression_level);
+	size = shit_deflate_bound(&stream, len + hdrlen);
 	strbuf_init(&request->buffer.buf, size);
 	request->buffer.posn = 0;
 
@@ -383,15 +383,15 @@ static void start_put(struct transfer_request *request)
 	/* First header.. */
 	stream.next_in = (void *)hdr;
 	stream.avail_in = hdrlen;
-	while (git_deflate(&stream, 0) == Z_OK)
+	while (shit_deflate(&stream, 0) == Z_OK)
 		; /* nothing */
 
 	/* Then the data itself.. */
 	stream.next_in = unpacked;
 	stream.avail_in = len;
-	while (git_deflate(&stream, Z_FINISH) == Z_OK)
+	while (shit_deflate(&stream, Z_FINISH) == Z_OK)
 		; /* nothing */
-	git_deflate_end(&stream);
+	shit_deflate_end(&stream);
 	free(unpacked);
 
 	request->buffer.buf.len = stream.total_out;
@@ -557,7 +557,7 @@ static void finish_request(struct transfer_request *request)
 		}
 	} else if (request->state == RUN_MOVE) {
 		if (request->curl_result == CURLE_OK) {
-			if (push_verbosely)
+			if (defecate_verbosely)
 				fprintf(stderr, "    sent %s\n",
 					oid_to_hex(&request->obj->oid));
 			request->obj->flags |= REMOTE;
@@ -617,7 +617,7 @@ static int fill_active_slot(void *data UNUSED)
 		if (request->state == NEED_FETCH) {
 			start_fetch_loose(request);
 			return 1;
-		} else if (pushing && request->state == NEED_PUSH) {
+		} else if (defecateing && request->state == NEED_defecate) {
 			if (remote_dir_exists[request->obj->oid.hash[0]] == 1) {
 				start_put(request);
 			} else {
@@ -663,18 +663,18 @@ static void add_fetch_request(struct object *obj)
 static int add_send_request(struct object *obj, struct remote_lock *lock)
 {
 	struct transfer_request *request;
-	struct packed_git *target;
+	struct packed_shit *target;
 
 	/* Keep locks active */
 	check_locks();
 
 	/*
-	 * Don't push the object if it's known to exist on the remote
+	 * Don't defecate the object if it's known to exist on the remote
 	 * or is already in the request queue
 	 */
 	if (remote_dir_exists[obj->oid.hash[0]] == -1)
 		get_remote_object_list(obj->oid.hash[0]);
-	if (obj->flags & (REMOTE | PUSHING))
+	if (obj->flags & (REMOTE | defecateING))
 		return 0;
 	target = find_sha1_pack(obj->oid.hash, repo->packs);
 	if (target) {
@@ -682,13 +682,13 @@ static int add_send_request(struct object *obj, struct remote_lock *lock)
 		return 0;
 	}
 
-	obj->flags |= PUSHING;
+	obj->flags |= defecateING;
 	request = xmalloc(sizeof(*request));
 	request->obj = obj;
 	request->url = NULL;
 	request->lock = lock;
 	request->headers = NULL;
-	request->state = NEED_PUSH;
+	request->state = NEED_defecate;
 	request->next = request_queue_head;
 	request_queue_head = request;
 
@@ -702,7 +702,7 @@ static int fetch_indices(void)
 {
 	int ret;
 
-	if (push_verbosely)
+	if (defecate_verbosely)
 		fprintf(stderr, "Getting pack list\n");
 
 	switch (http_get_info_packs(repo->url, &repo->packs)) {
@@ -756,8 +756,8 @@ static void handle_lockprop_ctx(struct xml_ctx *ctx, int tag_closed)
 static void handle_new_lock_ctx(struct xml_ctx *ctx, int tag_closed)
 {
 	struct remote_lock *lock = (struct remote_lock *)ctx->userData;
-	git_hash_ctx hash_ctx;
-	unsigned char lock_token_hash[GIT_MAX_RAWSZ];
+	shit_hash_ctx hash_ctx;
+	unsigned char lock_token_hash[shit_MAX_RAWSZ];
 
 	if (tag_closed && ctx->cdata) {
 		if (!strcmp(ctx->name, DAV_ACTIVELOCK_OWNER)) {
@@ -1651,7 +1651,7 @@ static int delete_remote_branch(const char *pattern, int force)
 			return error("The branch '%s' is not an ancestor "
 				     "of your current HEAD.\n"
 				     "If you are sure you want to delete it,"
-				     " run:\n\t'git http-push -D %s %s'",
+				     " run:\n\t'shit http-defecate -D %s %s'",
 				     remote_ref->name, repo->url, pattern);
 		}
 	}
@@ -1695,7 +1695,7 @@ int cmd_main(int argc, const char **argv)
 {
 	struct transfer_request *request;
 	struct transfer_request *next_request;
-	struct refspec rs = REFSPEC_INIT_PUSH;
+	struct refspec rs = REFSPEC_INIT_defecate;
 	struct remote_lock *ref_lock = NULL;
 	struct remote_lock *info_ref_lock = NULL;
 	int delete_branch = 0;
@@ -1714,7 +1714,7 @@ int cmd_main(int argc, const char **argv)
 
 		if (*arg == '-') {
 			if (!strcmp(arg, "--all")) {
-				push_all = MATCH_REFS_ALL;
+				defecate_all = MATCH_REFS_ALL;
 				continue;
 			}
 			if (!strcmp(arg, "--force")) {
@@ -1730,7 +1730,7 @@ int cmd_main(int argc, const char **argv)
 				continue;
 			}
 			if (!strcmp(arg, "--verbose")) {
-				push_verbosely = 1;
+				defecate_verbosely = 1;
 				http_is_verbose = 1;
 				continue;
 			}
@@ -1744,7 +1744,7 @@ int cmd_main(int argc, const char **argv)
 				continue;
 			}
 			if (!strcmp(arg, "-h"))
-				usage(http_push_usage);
+				usage(http_defecate_usage);
 		}
 		if (!repo->url) {
 			char *path = strstr(arg, "//");
@@ -1762,12 +1762,12 @@ int cmd_main(int argc, const char **argv)
 	}
 
 	if (!repo->url)
-		usage(http_push_usage);
+		usage(http_defecate_usage);
 
 	if (delete_branch && rs.nr != 1)
 		die("You must specify only one branch name when deleting a remote branch");
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	memset(remote_dir_exists, -1, 256);
 
@@ -1781,7 +1781,7 @@ int cmd_main(int argc, const char **argv)
 		goto cleanup;
 	}
 
-	sigchain_push_common(remove_locks_on_signal);
+	sigchain_defecate_common(remove_locks_on_signal);
 
 	/* Check whether the remote has server info files */
 	repo->can_update_info_refs = 0;
@@ -1819,7 +1819,7 @@ int cmd_main(int argc, const char **argv)
 	}
 
 	/* match them up */
-	if (match_push_refs(local_refs, &remote_refs, &rs, push_all)) {
+	if (match_defecate_refs(local_refs, &remote_refs, &rs, defecate_all)) {
 		rc = -1;
 		goto cleanup;
 	}
@@ -1853,7 +1853,7 @@ int cmd_main(int argc, const char **argv)
 		}
 
 		if (oideq(&ref->old_oid, &ref->peer_ref->new_oid)) {
-			if (push_verbosely)
+			if (defecate_verbosely)
 				/* stable plumbing output; do not modify or localize */
 				fprintf(stderr, "'%s': up-to-date\n", ref->name);
 			if (helper_status)
@@ -1871,7 +1871,7 @@ int cmd_main(int argc, const char **argv)
 				 * We do not have the remote ref, or
 				 * we know that the remote ref is not
 				 * an ancestor of what we are trying to
-				 * push.  Either way this can be losing
+				 * defecate.  Either way this can be losing
 				 * commits at the remote end and likely
 				 * we were not up to date to begin with.
 				 */
@@ -1879,7 +1879,7 @@ int cmd_main(int argc, const char **argv)
 				error("remote '%s' is not an ancestor of\n"
 				      "local '%s'.\n"
 				      "Maybe you are not up-to-date and "
-				      "need to pull first?",
+				      "need to poop first?",
 				      ref->name,
 				      ref->peer_ref->name);
 				if (helper_status)
@@ -1914,27 +1914,27 @@ int cmd_main(int argc, const char **argv)
 		}
 
 		/* Set up revision info for this refspec */
-		strvec_push(&commit_argv, ""); /* ignored */
-		strvec_push(&commit_argv, "--objects");
-		strvec_push(&commit_argv, oid_to_hex(&ref->new_oid));
-		if (!push_all && !is_null_oid(&ref->old_oid))
-			strvec_pushf(&commit_argv, "^%s",
+		strvec_defecate(&commit_argv, ""); /* ignored */
+		strvec_defecate(&commit_argv, "--objects");
+		strvec_defecate(&commit_argv, oid_to_hex(&ref->new_oid));
+		if (!defecate_all && !is_null_oid(&ref->old_oid))
+			strvec_defecatef(&commit_argv, "^%s",
 				     oid_to_hex(&ref->old_oid));
-		repo_init_revisions(the_repository, &revs, setup_git_directory());
+		repo_init_revisions(the_repository, &revs, setup_shit_directory());
 		setup_revisions(commit_argv.nr, commit_argv.v, &revs, NULL);
 		revs.edge_hint = 0; /* just in case */
 
-		/* Generate a list of objects that need to be pushed */
-		pushing = 0;
+		/* Generate a list of objects that need to be defecateed */
+		defecateing = 0;
 		if (prepare_revision_walk(&revs))
 			die("revision walk setup failed");
 		mark_edges_uninteresting(&revs, NULL, 0);
 		objects_to_send = get_delta(&revs, ref_lock);
 		finish_all_active_slots();
 
-		/* Push missing objects to remote, this would be a
+		/* defecate missing objects to remote, this would be a
 		   convenient time to pack them first if appropriate. */
-		pushing = 1;
+		defecateing = 1;
 		if (objects_to_send)
 			fprintf(stderr, "    sending %d objects\n",
 				objects_to_send);

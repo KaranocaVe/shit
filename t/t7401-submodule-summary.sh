@@ -5,10 +5,10 @@
 
 test_description='Summary support for submodules
 
-This test script tries to verify the sanity of summary subcommand of git submodule.
+This test script tries to verify the sanity of summary subcommand of shit submodule.
 '
 
-# NOTE: This test script uses 'git add' instead of 'git submodule add' to add
+# NOTE: This test script uses 'shit add' instead of 'shit submodule add' to add
 # submodules to the superproject. Some submodule subcommands such as init and
 # deinit might not work as expected in this script. t7421 does not have this
 # caveat.
@@ -27,16 +27,16 @@ add_file () {
 	cd "$sm"
 	for name; do
 		echo "$name" >"$name" &&
-		git add "$name" &&
+		shit add "$name" &&
 		test_tick &&
-		git commit -m "Add $name"
+		shit commit -m "Add $name"
 	done >/dev/null
-	git rev-parse --short HEAD
+	shit rev-parse --short HEAD
 	cd "$owd"
 }
 commit_file () {
 	test_tick &&
-	git commit "$@" -m "Commit $*" >/dev/null
+	shit commit "$@" -m "Commit $*" >/dev/null
 }
 
 test_create_repo sm1 &&
@@ -45,8 +45,8 @@ add_file . foo >/dev/null
 head1=$(add_file sm1 foo1 foo2)
 
 test_expect_success 'added submodule' "
-	git add sm1 &&
-	git submodule summary >actual &&
+	shit add sm1 &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 0000000...$head1 (2):
 	  > Add foo2
@@ -59,7 +59,7 @@ test_expect_success 'added submodule (subdirectory)' "
 	mkdir sub &&
 	(
 		cd sub &&
-		git submodule summary >../actual
+		shit submodule summary >../actual
 	) &&
 	cat >expected <<-EOF &&
 	* ../sm1 0000000...$head1 (2):
@@ -72,7 +72,7 @@ test_expect_success 'added submodule (subdirectory)' "
 test_expect_success 'added submodule (subdirectory only)' "
 	(
 		cd sub &&
-		git submodule summary . >../actual
+		shit submodule summary . >../actual
 	) &&
 	test_must_be_empty actual
 "
@@ -80,7 +80,7 @@ test_expect_success 'added submodule (subdirectory only)' "
 test_expect_success 'added submodule (subdirectory with explicit path)' "
 	(
 		cd sub &&
-		git submodule summary ../sm1 >../actual
+		shit submodule summary ../sm1 >../actual
 	) &&
 	cat >expected <<-EOF &&
 	* ../sm1 0000000...$head1 (2):
@@ -94,7 +94,7 @@ commit_file sm1 &&
 head2=$(add_file sm1 foo3)
 
 test_expect_success 'modified submodule(forward)' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head1...$head2 (1):
 	  > Add foo3
@@ -104,7 +104,7 @@ test_expect_success 'modified submodule(forward)' "
 "
 
 test_expect_success 'modified submodule(forward), --files' "
-	git submodule summary --files >actual &&
+	shit submodule summary --files >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head1...$head2 (1):
 	  > Add foo3
@@ -114,32 +114,32 @@ test_expect_success 'modified submodule(forward), --files' "
 "
 
 test_expect_success 'no ignore=all setting has any effect' "
-	git config -f .gitmodules submodule.sm1.path sm1 &&
-	git config -f .gitmodules submodule.sm1.ignore all &&
-	git config submodule.sm1.ignore all &&
-	git config diff.ignoreSubmodules all &&
-	git submodule summary >actual &&
+	shit config -f .shitmodules submodule.sm1.path sm1 &&
+	shit config -f .shitmodules submodule.sm1.ignore all &&
+	shit config submodule.sm1.ignore all &&
+	shit config diff.ignoreSubmodules all &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head1...$head2 (1):
 	  > Add foo3
 
 	EOF
 	test_cmp expected actual &&
-	git config --unset diff.ignoreSubmodules &&
-	git config --remove-section submodule.sm1 &&
-	git config -f .gitmodules --remove-section submodule.sm1
+	shit config --unset diff.ignoreSubmodules &&
+	shit config --remove-section submodule.sm1 &&
+	shit config -f .shitmodules --remove-section submodule.sm1
 "
 
 
 commit_file sm1 &&
 head3=$(
 	cd sm1 &&
-	git reset --hard HEAD~2 >/dev/null &&
-	git rev-parse --short HEAD
+	shit reset --hard HEAD~2 >/dev/null &&
+	shit rev-parse --short HEAD
 )
 
 test_expect_success 'modified submodule(backward)' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head2...$head3 (2):
 	  < Add foo3
@@ -150,9 +150,9 @@ test_expect_success 'modified submodule(backward)' "
 "
 
 head4=$(add_file sm1 foo4 foo5) &&
-head4_full=$(GIT_DIR=sm1/.git git rev-parse --verify HEAD)
+head4_full=$(shit_DIR=sm1/.shit shit rev-parse --verify HEAD)
 test_expect_success 'modified submodule(backward and forward)' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head2...$head4 (4):
 	  > Add foo5
@@ -165,7 +165,7 @@ test_expect_success 'modified submodule(backward and forward)' "
 "
 
 test_expect_success '--summary-limit' "
-	git submodule summary -n 3 >actual &&
+	shit submodule summary -n 3 >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head2...$head4 (4):
 	  > Add foo5
@@ -179,13 +179,13 @@ test_expect_success '--summary-limit' "
 commit_file sm1 &&
 mv sm1 sm1-bak &&
 echo sm1 >sm1 &&
-head5=$(git hash-object sm1 | cut -c1-7) &&
-git add sm1 &&
+head5=$(shit hash-object sm1 | cut -c1-7) &&
+shit add sm1 &&
 rm -f sm1 &&
 mv sm1-bak sm1
 
 test_expect_success 'typechanged submodule(submodule->blob), --cached' "
-	git submodule summary --cached >actual &&
+	shit submodule summary --cached >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head4(submodule)->$head5(blob) (3):
 	  < Add foo5
@@ -195,7 +195,7 @@ test_expect_success 'typechanged submodule(submodule->blob), --cached' "
 "
 
 test_expect_success 'typechanged submodule(submodule->blob), --files' "
-	git submodule summary --files >actual &&
+	shit submodule summary --files >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head5(blob)->$head4(submodule) (3):
 	  > Add foo5
@@ -205,9 +205,9 @@ test_expect_success 'typechanged submodule(submodule->blob), --files' "
 "
 
 rm -rf sm1 &&
-git checkout-index sm1
+shit checkout-index sm1
 test_expect_success 'typechanged submodule(submodule->blob)' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head4(submodule)->$head5(blob):
 
@@ -219,7 +219,7 @@ rm -f sm1 &&
 test_create_repo sm1 &&
 head6=$(add_file sm1 foo6 foo7)
 test_expect_success 'nonexistent commit' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head4...$head6:
 	  Warn: sm1 doesn't contain commit $head4_full
@@ -230,7 +230,7 @@ test_expect_success 'nonexistent commit' "
 
 commit_file
 test_expect_success 'typechanged submodule(blob->submodule)' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head5(blob)->$head6(submodule) (2):
 	  > Add foo7
@@ -242,7 +242,7 @@ test_expect_success 'typechanged submodule(blob->submodule)' "
 commit_file sm1 &&
 rm -rf sm1
 test_expect_success 'deleted submodule' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head6...0000000:
 
@@ -253,11 +253,11 @@ test_expect_success 'deleted submodule' "
 test_expect_success 'create second submodule' '
 	test_create_repo sm2 &&
 	head7=$(add_file sm2 foo8 foo9) &&
-	git add sm2
+	shit add sm2
 '
 
 test_expect_success 'multiple submodules' "
-	git submodule summary >actual &&
+	shit submodule summary >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head6...0000000:
 
@@ -269,7 +269,7 @@ test_expect_success 'multiple submodules' "
 "
 
 test_expect_success 'path filter' "
-	git submodule summary sm2 >actual &&
+	shit submodule summary sm2 >actual &&
 	cat >expected <<-EOF &&
 	* sm2 0000000...$head7 (2):
 	  > Add foo9
@@ -280,7 +280,7 @@ test_expect_success 'path filter' "
 
 commit_file sm2
 test_expect_success 'given commit' "
-	git submodule summary HEAD^ >actual &&
+	shit submodule summary HEAD^ >actual &&
 	cat >expected <<-EOF &&
 	* sm1 $head6...0000000:
 
@@ -292,7 +292,7 @@ test_expect_success 'given commit' "
 "
 
 test_expect_success '--for-status' "
-	git submodule summary --for-status HEAD^ >actual &&
+	shit submodule summary --for-status HEAD^ >actual &&
 	test_cmp - actual <<-EOF
 	* sm1 $head6...0000000:
 
@@ -303,13 +303,13 @@ test_expect_success '--for-status' "
 "
 
 test_expect_success 'fail when using --files together with --cached' "
-	test_must_fail git submodule summary --files --cached
+	test_must_fail shit submodule summary --files --cached
 "
 
 test_expect_success 'should not fail in an empty repo' "
-	git init xyzzy &&
+	shit init xyzzy &&
 	cd xyzzy &&
-	git submodule summary >output 2>&1 &&
+	shit submodule summary >output 2>&1 &&
 	test_must_be_empty output
 "
 

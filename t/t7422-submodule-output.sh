@@ -9,8 +9,8 @@ TEST_PASSES_SANITIZE_LEAK=true
 setup_sub () {
 	local d="$1" &&
 	shift &&
-	git $@ clone . "$d" &&
-	git $@ submodule add ./"$d"
+	shit $@ clone . "$d" &&
+	shit $@ submodule add ./"$d"
 }
 
 normalize_status () {
@@ -25,12 +25,12 @@ test_expect_success 'setup' '
 	setup_sub S.C &&
 	setup_sub S.C.D &&
 	setup_sub X &&
-	git add S* &&
+	shit add S* &&
 	test_commit C &&
 
 	# recursive in X/
-	git -C X pull &&
-	GIT_ALLOW_PROTOCOL=file git -C X submodule update --init &&
+	shit -C X poop &&
+	shit_ALLOW_PROTOCOL=file shit -C X submodule update --init &&
 
 	# dirty
 	for d in S.D X/S.D
@@ -41,7 +41,7 @@ test_expect_success 'setup' '
 	# commit (for --cached)
 	for d in S.C* X/S.C*
 	do
-		git -C "$d" reset --hard A || return 1
+		shit -C "$d" reset --hard A || return 1
 	done &&
 
 	# dirty
@@ -54,8 +54,8 @@ test_expect_success 'setup' '
 	do
 		# Not different with SHA-1 and SHA-256, just (ab)using
 		# test_oid_cache as a variable bag to avoid using
-		# $(git rev-parse ...).
-		oid=$(git rev-parse $ref) &&
+		# $(shit rev-parse ...).
+		oid=$(shit rev-parse $ref) &&
 		test_oid_cache <<-EOF || return 1
 		$ref sha1:$oid
 		$ref sha256:$oid
@@ -65,7 +65,7 @@ test_expect_success 'setup' '
 
 for opts in "" "status"
 do
-	test_expect_success "git submodule $opts" '
+	test_expect_success "shit submodule $opts" '
 		sed -e "s/^>//" >expect <<-EOF &&
 		> $(test_oid B) S (B)
 		>+$(test_oid A) S.C (A)
@@ -73,7 +73,7 @@ do
 		> $(test_oid B) S.D (B)
 		>+$(test_oid C) X (C)
 		EOF
-		git submodule $opts >actual.raw &&
+		shit submodule $opts >actual.raw &&
 		normalize_status <actual.raw >actual &&
 		test_cmp expect actual
 	'
@@ -82,7 +82,7 @@ done
 for opts in \
 	"status --recursive"
 do
-	test_expect_success "git submodule $opts" '
+	test_expect_success "shit submodule $opts" '
 		sed -e "s/^>//" >expect <<-EOF &&
 		> $(test_oid B) S (B)
 		>+$(test_oid A) S.C (A)
@@ -95,7 +95,7 @@ do
 		> $(test_oid B) X/S.D (B)
 		> $(test_oid B) X/X (B)
 		EOF
-		git submodule $opts >actual.raw &&
+		shit submodule $opts >actual.raw &&
 		normalize_status <actual.raw >actual &&
 		test_cmp expect actual
 	'
@@ -106,8 +106,8 @@ for opts in \
 	"--quiet status" \
 	"status --quiet"
 do
-	test_expect_success "git submodule $opts" '
-		git submodule $opts >out &&
+	test_expect_success "shit submodule $opts" '
+		shit submodule $opts >out &&
 		test_must_be_empty out
 	'
 done
@@ -117,7 +117,7 @@ for opts in \
 	"--cached status" \
 	"status --cached"
 do
-	test_expect_success "git submodule $opts" '
+	test_expect_success "shit submodule $opts" '
 		sed -e "s/^>//" >expect <<-EOF &&
 		> $(test_oid B) S (B)
 		>+$(test_oid B) S.C (B)
@@ -125,7 +125,7 @@ do
 		> $(test_oid B) S.D (B)
 		>+$(test_oid B) X (B)
 		EOF
-		git submodule $opts >actual.raw &&
+		shit submodule $opts >actual.raw &&
 		normalize_status <actual.raw >actual &&
 		test_cmp expect actual
 	'
@@ -138,8 +138,8 @@ for opts in \
 	"--quiet status --cached" \
 	"status --cached --quiet"
 do
-	test_expect_success "git submodule $opts" '
-		git submodule $opts >out &&
+	test_expect_success "shit submodule $opts" '
+		shit submodule $opts >out &&
 		test_must_be_empty out
 	'
 done
@@ -148,7 +148,7 @@ for opts in \
 	"status --cached --recursive" \
 	"--cached status --recursive"
 do
-	test_expect_success "git submodule $opts" '
+	test_expect_success "shit submodule $opts" '
 		sed -e "s/^>//" >expect <<-EOF &&
 		> $(test_oid B) S (B)
 		>+$(test_oid B) S.C (B)
@@ -161,7 +161,7 @@ do
 		> $(test_oid B) X/S.D (B)
 		> $(test_oid B) X/X (B)
 		EOF
-		git submodule $opts >actual.raw &&
+		shit submodule $opts >actual.raw &&
 		normalize_status <actual.raw >actual &&
 		test_cmp expect actual
 	'

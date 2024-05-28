@@ -17,8 +17,8 @@ static void get_system_info(struct strbuf *sys_info)
 	struct utsname uname_info;
 	char *shell = NULL;
 
-	/* get git version from native cmd */
-	strbuf_addstr(sys_info, _("git version:\n"));
+	/* get shit version from native cmd */
+	strbuf_addstr(sys_info, _("shit version:\n"));
 	get_version_info(sys_info, 1);
 
 	/* system call for other version info */
@@ -45,13 +45,13 @@ static void get_system_info(struct strbuf *sys_info)
 		    shell ? shell : "<unset>");
 }
 
-static void get_populated_hooks(struct strbuf *hook_info, int nongit)
+static void get_populated_hooks(struct strbuf *hook_info, int nonshit)
 {
 	const char **p;
 
-	if (nongit) {
+	if (nonshit) {
 		strbuf_addstr(hook_info,
-			_("not run from a git repository - no hooks to show\n"));
+			_("not run from a shit repository - no hooks to show\n"));
 		return;
 	}
 
@@ -64,7 +64,7 @@ static void get_populated_hooks(struct strbuf *hook_info, int nongit)
 }
 
 static const char * const bugreport_usage[] = {
-	N_("git bugreport [(-o | --output-directory) <path>]\n"
+	N_("shit bugreport [(-o | --output-directory) <path>]\n"
 	   "              [(-s | --suffix) <format> | --no-suffix]\n"
 	   "              [--diagnose[=<mode>]]"),
 	NULL
@@ -73,7 +73,7 @@ static const char * const bugreport_usage[] = {
 static int get_bug_template(struct strbuf *template)
 {
 	const char template_text[] = N_(
-"Thank you for filling out a Git bug report!\n"
+"Thank you for filling out a shit bug report!\n"
 "Please answer the following questions to help us understand your issue.\n"
 "\n"
 "What did you do before the bug happened? (Steps to reproduce your issue)\n"
@@ -139,7 +139,7 @@ int cmd_bugreport(int argc, const char **argv, const char *prefix)
 	strbuf_complete(&report_path, '/');
 	output_path_len = report_path.len;
 
-	strbuf_addstr(&report_path, "git-bugreport");
+	strbuf_addstr(&report_path, "shit-bugreport");
 	if (option_suffix) {
 		strbuf_addch(&report_path, '-');
 		strbuf_addftime(&report_path, option_suffix, localtime_r(&now, &tm), 0, 0);
@@ -159,7 +159,7 @@ int cmd_bugreport(int argc, const char **argv, const char *prefix)
 	if (diagnose != DIAGNOSE_NONE) {
 		struct strbuf zip_path = STRBUF_INIT;
 		strbuf_add(&zip_path, report_path.buf, output_path_len);
-		strbuf_addstr(&zip_path, "git-diagnostics-");
+		strbuf_addstr(&zip_path, "shit-diagnostics-");
 		strbuf_addftime(&zip_path, option_suffix, localtime_r(&now, &tm), 0, 0);
 		strbuf_addstr(&zip_path, ".zip");
 

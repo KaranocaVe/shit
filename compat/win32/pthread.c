@@ -1,13 +1,13 @@
 /*
  * Copyright (C) 2009 Andrzej K. Haczewski <ahaczewski@gmail.com>
  *
- * DISCLAIMER: The implementation is Git-specific, it is subset of original
- * Pthreads API, without lots of other features that Git doesn't use.
- * Git also makes sure that the passed arguments are valid, so there's
+ * DISCLAIMER: The implementation is shit-specific, it is subset of original
+ * Pthreads API, without lots of other features that shit doesn't use.
+ * shit also makes sure that the passed arguments are valid, so there's
  * no need for double-checking.
  */
 
-#include "../../git-compat-util.h"
+#include "../../shit-compat-util.h"
 #include "pthread.h"
 
 #include <errno.h>

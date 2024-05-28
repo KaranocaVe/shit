@@ -47,12 +47,12 @@ int cmd__dump_untracked_cache(int ac UNUSED, const char **av UNUSED)
 	struct untracked_cache *uc;
 	struct strbuf base = STRBUF_INIT;
 
-	/* Set core.untrackedCache=keep before setup_git_directory() */
-	xsetenv("GIT_CONFIG_COUNT", "1", 1);
-	xsetenv("GIT_CONFIG_KEY_0", "core.untrackedCache", 1);
-	xsetenv("GIT_CONFIG_VALUE_0", "keep", 1);
+	/* Set core.untrackedCache=keep before setup_shit_directory() */
+	xsetenv("shit_CONFIG_COUNT", "1", 1);
+	xsetenv("shit_CONFIG_KEY_0", "core.untrackedCache", 1);
+	xsetenv("shit_CONFIG_VALUE_0", "keep", 1);
 
-	setup_git_directory();
+	setup_shit_directory();
 	if (repo_read_index(the_repository) < 0)
 		die("unable to read index file");
 	uc = the_repository->index->untracked;

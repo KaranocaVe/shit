@@ -1,6 +1,6 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
-void *gitmemmem(const void *haystack, size_t haystack_len,
+void *shitmemmem(const void *haystack, size_t haystack_len,
                 const void *needle, size_t needle_len)
 {
 	const char *begin = haystack;

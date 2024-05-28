@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git p4 with server triggers'
+test_description='shit p4 with server triggers'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 test_expect_success 'start p4d' '
 	start_p4d
@@ -21,7 +21,7 @@ test_expect_success 'init depot' '
 '
 
 test_expect_success 'clone with extra info lines from verbose p4 trigger' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	(
 		p4 triggers -i <<-EOF
 		Triggers: p4triggertest-command command pre-user-change "echo verbose trigger"
@@ -30,7 +30,7 @@ test_expect_success 'clone with extra info lines from verbose p4 trigger' '
 	(
 		p4 change -o |  grep -s "verbose trigger"
 	) &&
-	git p4 clone --dest="$git" //depot/@all &&
+	shit p4 clone --dest="$shit" //depot/@all &&
 	(
 		p4 triggers -i <<-EOF
 		Triggers:
@@ -39,7 +39,7 @@ test_expect_success 'clone with extra info lines from verbose p4 trigger' '
 '
 
 test_expect_success 'import with extra info lines from verbose p4 trigger' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	(
 		cd "$cli" &&
 		echo file3 >file3 &&
@@ -54,10 +54,10 @@ test_expect_success 'import with extra info lines from verbose p4 trigger' '
 	(
 		p4 describe 1 |  grep -s "verbose trigger"
 	) &&
-	git p4 clone --dest="$git" //depot/@all &&
+	shit p4 clone --dest="$shit" //depot/@all &&
 	(
-		cd "$git" &&
-		git p4 sync
+		cd "$shit" &&
+		shit p4 sync
 	) &&
 	(
 		p4 triggers -i <<-EOF
@@ -67,7 +67,7 @@ test_expect_success 'import with extra info lines from verbose p4 trigger' '
 '
 
 test_expect_success 'submit description with extra info lines from verbose p4 change trigger' '
-	test_when_finished cleanup_git &&
+	test_when_finished cleanup_shit &&
 	(
 		p4 triggers -i <<-EOF
 		Triggers: p4triggertest-command command pre-user-change "echo verbose trigger"
@@ -76,14 +76,14 @@ test_expect_success 'submit description with extra info lines from verbose p4 ch
 	(
 		p4 change -o |  grep -s "verbose trigger"
 	) &&
-	git p4 clone --dest="$git" //depot &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		git config git-p4.skipSubmitEdit true &&
+		cd "$shit" &&
+		shit config shit-p4.skipSubmitEdit true &&
 		echo file4 >file4 &&
-		git add file4 &&
-		git commit -m file4 &&
-		git p4 submit
+		shit add file4 &&
+		shit commit -m file4 &&
+		shit p4 submit
 	) &&
 	(
 		p4 triggers -i <<-EOF

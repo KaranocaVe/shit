@@ -9,7 +9,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'setup: list of builtins' '
-	git --list-cmds=builtins >builtins
+	shit --list-cmds=builtins >builtins
 '
 
 test_expect_success 'list of txt and help mismatches is sorted' '
@@ -30,7 +30,7 @@ help_to_synopsis () {
 		return 0
 	fi &&
 	mkdir -p "$out_dir" &&
-	test_expect_code 129 git $builtin -h >"$out.raw" 2>&1 &&
+	test_expect_code 129 shit $builtin -h >"$out.raw" 2>&1 &&
 	sed -n \
 		-e '1,/^$/ {
 			/^$/d;
@@ -42,7 +42,7 @@ help_to_synopsis () {
 }
 
 builtin_to_txt () {
-       echo "$GIT_BUILD_DIR/Documentation/git-$1.txt"
+       echo "$shit_BUILD_DIR/Documentation/shit-$1.txt"
 }
 
 txt_to_synopsis () {
@@ -63,7 +63,7 @@ txt_to_synopsis () {
 			s/++//g;
 			s/`//g;
 			s/{litdd}/--/g;
-			s/'\''\(git[ a-z-]*\)'\''/\1/g;
+			s/'\''\(shit[ a-z-]*\)'\''/\1/g;
 
 			p;
 		}' \
@@ -79,7 +79,7 @@ HT="	"
 
 align_after_nl () {
 	builtin="$1" &&
-	len=$(printf "git %s " "$builtin" | wc -c) &&
+	len=$(printf "shit %s " "$builtin" | wc -c) &&
 	pad=$(printf "%${len}s" "") &&
 
 	sed "s/^[ $HT][ $HT]*/$pad/"

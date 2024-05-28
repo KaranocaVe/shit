@@ -83,7 +83,7 @@ struct ref *fetch_pack(struct fetch_pack_args *args,
 		       enum protocol_version version);
 
 /*
- * Execute the --negotiate-only mode of "git fetch", adding all known common
+ * Execute the --negotiate-only mode of "shit fetch", adding all known common
  * commits to acked_commits.
  *
  * In the capability advertisement that has happened prior to invoking this

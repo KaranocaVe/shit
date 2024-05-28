@@ -1,61 +1,61 @@
-Git v2.39 Release Notes
+shit v2.39 Release Notes
 =======================
 
 UI, Workflows & Features
 ------------------------
 
- * "git grep" learned to expand the sparse-index more lazily and on
+ * "shit grep" learned to expand the sparse-index more lazily and on
    demand in a sparse checkout.
 
  * By default, use of fsmonitor on a repository on networked
    filesystem is disabled. Add knobs to make it workable on macOS.
 
  * After checking out a "branch" that is a symbolic-ref that points at
-   another branch, "git symbolic-ref HEAD" reports the underlying
+   another branch, "shit symbolic-ref HEAD" reports the underlying
    branch, not the symbolic-ref the user gave checkout as argument.
    The command learned the "--no-recurse" option to stop after
    dereferencing a symbolic-ref only once.
 
- * "git branch --edit-description @{-1}" is now a way to edit branch
+ * "shit branch --edit-description @{-1}" is now a way to edit branch
    description of the branch you were on before switching to the
    current branch.
 
- * "git merge-tree --stdin" is a new way to request a series of merges
+ * "shit merge-tree --stdin" is a new way to request a series of merges
    and report the merge results.
 
- * "git shortlog" learned to group by the "format" string.
+ * "shit shortlog" learned to group by the "format" string.
 
- * A new "--include-whitespace" option is added to "git patch-id", and
+ * A new "--include-whitespace" option is added to "shit patch-id", and
    existing bugs in the internal patch-id logic that did not match
-   what "git patch-id" produces have been corrected.
+   what "shit patch-id" produces have been corrected.
 
  * Enable gc.cruftpacks by default for those who opt into
    feature.experimental setting.
 
- * "git repack" learns to send cruft objects out of the way into
+ * "shit repack" learns to send cruft objects out of the way into
    packfiles outside the repository.
 
  * 'scalar reconfigure -a' is taught to automatically remove
    scalar.repo entires which no longer exist.
 
- * Redact headers from cURL's h2h3 module in GIT_CURL_VERBOSE and
+ * Redact headers from cURL's h2h3 module in shit_CURL_VERBOSE and
    others.
 
- * 'git maintenance register' is taught to write configuration to an
-   arbitrary path, and 'git for-each-repo' is taught to expand tilde
+ * 'shit maintenance register' is taught to write configuration to an
+   arbitrary path, and 'shit for-each-repo' is taught to expand tilde
    characters in paths.
 
  * When creating new notes, the template used to get a stray empty
    newline, which has been removed.
 
- * "git receive-pack" used to use all the local refs as the boundary for
-   checking connectivity of the data "git push" sent, but now it uses
-   only the refs that it advertised to the pusher. In a repository with
+ * "shit receive-pack" used to use all the local refs as the boundary for
+   checking connectivity of the data "shit defecate" sent, but now it uses
+   only the refs that it advertised to the defecateer. In a repository with
    the .hideRefs configuration, this reduces the resources needed to
    perform the check.
 
  * With '--recurse-submodules=on-demand', all submodules are
-   recursively pushed.
+   recursively defecateed.
 
 
 Performance, Internal Implementation, Development Support etc.
@@ -86,7 +86,7 @@ Performance, Internal Implementation, Development Support etc.
  * Avoid false-positive from LSan whose assumption may be broken with
    higher optimization levels.
 
- * Enable address and undefined sanitizer tasks at GitHub Actions CI.
+ * Enable address and undefined sanitizer tasks at shitHub Actions CI.
 
  * More UNUSED annotation to help using -Wunused option with the
    compiler.
@@ -107,7 +107,7 @@ Performance, Internal Implementation, Development Support etc.
  * Two new facilities, "timer" and "counter", are introduced to the
    trace2 API.
 
- * Code simplification by using strvec_pushf() instead of building an
+ * Code simplification by using strvec_defecatef() instead of building an
    argument in a separate strbuf.
 
  * Make sure generated dependency file is stably sorted to help
@@ -124,7 +124,7 @@ Performance, Internal Implementation, Development Support etc.
 
  * Simplify the run-command API.
 
- * Update the actions/github-script dependency in CI to avoid a
+ * Update the actions/shithub-script dependency in CI to avoid a
    deprecation warning.
 
  * Progress on being able to initialize a rev_info struct with a
@@ -169,25 +169,25 @@ Fixes since v2.38
 
  * Fix messages incorrectly marked for translation.
 
- * "git fsck" failed to release contents of tree objects already used
+ * "shit fsck" failed to release contents of tree objects already used
    from the memory, which has been fixed.
 
- * "git clone" did not like to see the "--bare" and the "--origin"
+ * "shit clone" did not like to see the "--bare" and the "--origin"
    options used together without a good reason.
 
- * "git remote rename" failed to rename a remote without fetch
+ * "shit remote rename" failed to rename a remote without fetch
    refspec, which has been corrected.
 
- * Documentation on various Boolean GIT_* environment variables have
+ * Documentation on various Boolean shit_* environment variables have
    been clarified.
 
- * "git rebase -i" can mistakenly attempt to apply a fixup to a commit
+ * "shit rebase -i" can mistakenly attempt to apply a fixup to a commit
    itself, which has been corrected.
 
- * "git multi-pack-index repack/expire" used to repack unreachable
+ * "shit multi-pack-index repack/expire" used to repack unreachable
    cruft into a new pack, which have been corrected.
 
- * In read-only repositories, "git merge-tree" tried to come up with a
+ * In read-only repositories, "shit merge-tree" tried to come up with a
    merge result tree object, which it failed (which is not wrong) and
    led to a segfault (which is bad), which has been corrected.
 
@@ -202,7 +202,7 @@ Fixes since v2.38
 
  * Code clean-up that results in plugging a leak.
 
- * "GIT_EDITOR=: git branch --edit-description" resulted in failure,
+ * "shit_EDITOR=: shit branch --edit-description" resulted in failure,
    which has been corrected.
 
  * The code to clean temporary object directories (used for
@@ -214,19 +214,19 @@ Fixes since v2.38
  * Clarify that "the sentence after <area>: prefix does not begin with
    a capital letter" rule applies only to the commit title.
 
- * "git branch --edit-description" on an unborn branch misleadingly
+ * "shit branch --edit-description" on an unborn branch misleadingly
    said that no such branch exists, which has been corrected.
 
  * Work around older clang that warns against C99 zero initialization
    syntax for struct.
 
  * Giving "--invert-grep" and "--all-match" without "--grep" to the
-   "git log" command resulted in an attempt to access grep pattern
+   "shit log" command resulted in an attempt to access grep pattern
    expression structure that has not been allocated, which has been
    corrected.
    (merge db84376f98 ab/grep-simplify-extended-expression later to maint).
 
- * "git diff rev^!" did not show combined diff to go to the rev from
+ * "shit diff rev^!" did not show combined diff to go to the rev from
    its parents.
    (merge a79c6b6081 rs/diff-caret-bang-with-parents later to maint).
 
@@ -252,44 +252,44 @@ Fixes since v2.38
  * Update to build procedure with VS using CMake/CTest.
    (merge c858750b41 js/cmake-updates later to maint).
 
- * The short-help text shown by "git cmd -h" and the synopsis text
-   shown at the beginning of "git help cmd" have been made more
+ * The short-help text shown by "shit cmd -h" and the synopsis text
+   shown at the beginning of "shit help cmd" have been made more
    consistent.
 
  * When creating a multi-pack bitmap, remove per-pack bitmap files
    unconditionally as they will never be consulted.
    (merge 55d902cd61 tb/remove-unused-pack-bitmap later to maint).
 
- * Fix a longstanding syntax error in Git.pm error codepath.
+ * Fix a longstanding syntax error in shit.pm error codepath.
 
- * "git diff --stat" etc. were invented back when everything was ASCII
+ * "shit diff --stat" etc. were invented back when everything was ASCII
    and strlen() was a way to measure the display width of a string;
    adjust them to compute the display width assuming UTF-8 pathnames.
    (merge ce8529b2bb tb/diffstat-with-utf8-strwidth later to maint).
 
- * "git branch --edit-description" can exit with status -1 which is
+ * "shit branch --edit-description" can exit with status -1 which is
    not a good practice; it learned to use 1 as everybody else instead.
 
- * "git apply" limits its input to a bit less than 1 GiB.
+ * "shit apply" limits its input to a bit less than 1 GiB.
 
  * Merging a branch with directory renames into a branch that changes
    the directory to a symlink was mishandled by the ort merge
    strategy, which has been corrected.
 
- * A bugfix to "git subtree" in its split and merge features.
+ * A bugfix to "shit subtree" in its split and merge features.
 
  * Fix some bugs in the reflog messages when rebasing and changes the
    reflog messages of "rebase --apply" to match "rebase --merge" with
    the aim of making the reflog easier to parse.
 
- * "git rebase --keep-base" used to discard the commits that are
+ * "shit rebase --keep-base" used to discard the commits that are
    already cherry-picked to the upstream, even when "keep-base" meant
    that the base, on top of which the history is being rebuilt, does
    not yet include these cherry-picked commits.  The --keep-base
    option now implies --reapply-cherry-picks and --no-fork-point
    options.
 
- * The way "git repack" created temporary files when it received a
+ * The way "shit repack" created temporary files when it received a
    signal was prone to deadlocking, which has been corrected.
 
  * Various tests exercising the transfer.credentialsInUrl
@@ -299,26 +299,26 @@ Fixes since v2.38
  * The adjust_shared_perm() helper function learned to refrain from
    setting the "g+s" bit on directories when it is not necessary.
 
- * "git archive" mistakenly complained twice about a missing
+ * "shit archive" mistakenly complained twice about a missing
    executable, which has been corrected.
 
- * Fix a bug where `git branch -d` did not work on an orphaned HEAD.
+ * Fix a bug where `shit branch -d` did not work on an orphaned HEAD.
 
- * `git rebase --update-refs` would delete references when all
+ * `shit rebase --update-refs` would delete references when all
    `update-ref` commands in the sequencer were removed, which has been
    corrected.
 
  * Fix a regression in the bisect-helper which mistakenly treats
-   arguments to the command given to 'git bisect run' as arguments to
+   arguments to the command given to 'shit bisect run' as arguments to
    the helper.
 
- * Correct an error where `git rebase` would mistakenly use a branch or
+ * Correct an error where `shit rebase` would mistakenly use a branch or
    tag named "refs/rewritten/xyz" when missing a rebase label.
 
  * Assorted fixes of parsing end-user input as integers.
    (merge 14770cf0de pw/config-int-parse-fixes later to maint).
 
- * "git prune" may try to iterate over .git/objects/pack for trash
+ * "shit prune" may try to iterate over .shit/objects/pack for trash
    files to remove in it, and loudly fail when the directory is
    missing, which is not necessary.  The command has been taught to
    ignore such a failure.
@@ -335,12 +335,12 @@ Fixes since v2.38
    failed to parse it.
    (merge 1f51b77f4f ah/chainlint-cpuinfo-parse-fix later to maint).
 
- * Adjust the GitHub CI to newer ubuntu release.
+ * Adjust the shitHub CI to newer ubuntu release.
    (merge 0d3507f3e7 jx/ci-ubuntu-fix later to maint).
 
  * Other code cleanup, docfix, build fix, etc.
    (merge 413bc6d20a ds/cmd-main-reorder later to maint).
    (merge 8d2863e4ed nw/t1002-cleanup later to maint).
    (merge 7c2dc122f9 rs/list-objects-filter-leakfix later to maint).
-   (merge 288fcb1c94 zk/push-use-bitmaps later to maint).
+   (merge 288fcb1c94 zk/defecate-use-bitmaps later to maint).
    (merge 42db324c0f km/merge-recursive-typofix later to maint).

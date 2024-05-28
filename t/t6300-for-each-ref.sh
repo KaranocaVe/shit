@@ -13,16 +13,16 @@ GNUPGHOME_NOT_USED=$GNUPGHOME
 # Mon Jul 3 23:18:43 2006 +0000
 datestamp=1151968723
 setdate_and_increment () {
-    GIT_COMMITTER_DATE="$datestamp +0200"
+    shit_COMMITTER_DATE="$datestamp +0200"
     datestamp=$(expr "$datestamp" + 1)
-    GIT_AUTHOR_DATE="$datestamp +0200"
+    shit_AUTHOR_DATE="$datestamp +0200"
     datestamp=$(expr "$datestamp" + 1)
-    export GIT_COMMITTER_DATE GIT_AUTHOR_DATE
+    export shit_COMMITTER_DATE shit_AUTHOR_DATE
 }
 
 test_object_file_size () {
-	oid=$(git rev-parse "$1")
-	path=".git/objects/$(test_oid_to_path $oid)"
+	oid=$(shit rev-parse "$1")
+	path=".shit/objects/$(test_oid_to_path $oid)"
 	test_file_size "$path"
 }
 
@@ -35,18 +35,18 @@ test_expect_success setup '
 
 	setdate_and_increment &&
 	echo "Using $datestamp" > one &&
-	git add one &&
-	git commit -m "Initial" &&
-	git branch -M main &&
+	shit add one &&
+	shit commit -m "Initial" &&
+	shit branch -M main &&
 	setdate_and_increment &&
-	git tag -a -m "Tagging at $datestamp" testtag &&
-	git update-ref refs/remotes/origin/main main &&
-	git remote add origin nowhere &&
-	git config branch.main.remote origin &&
-	git config branch.main.merge refs/heads/main &&
-	git remote add myfork elsewhere &&
-	git config remote.pushdefault myfork &&
-	git config push.default current
+	shit tag -a -m "Tagging at $datestamp" testtag &&
+	shit update-ref refs/remotes/origin/main main &&
+	shit remote add origin nowhere &&
+	shit config branch.main.remote origin &&
+	shit config branch.main.merge refs/heads/main &&
+	shit remote add myfork elsewhere &&
+	shit config remote.defecatedefault myfork &&
+	shit config defecate.default current
 '
 
 test_atom () {
@@ -61,7 +61,7 @@ test_atom () {
 
 	printf '%s\n' "$3" >expected
 	$test_do $PREREQ "basic atom: $ref $format" '
-		git for-each-ref --format="%($format)" "$ref" >actual &&
+		shit for-each-ref --format="%($format)" "$ref" >actual &&
 		sanitize_pgp <actual >actual.clean &&
 		test_cmp expected actual.clean
 	'
@@ -72,11 +72,11 @@ test_atom () {
 		# for commit leg, $3 is changed there
 		expect=$(printf '%s' "$3" | wc -c)
 		$test_do $PREREQ "basic atom: $ref contents:size" '
-			type=$(git cat-file -t "$ref") &&
+			type=$(shit cat-file -t "$ref") &&
 			case $type in
 			tag)
 				# We cannot use $3 as it expects sanitize_pgp to run
-				git cat-file tag $ref >out &&
+				shit cat-file tag $ref >out &&
 				expect=$(tail -n +6 out | wc -c) &&
 				rm -f out ;;
 			tree | blob)
@@ -88,7 +88,7 @@ test_atom () {
 			esac &&
 			# Leave $expect unquoted to lose possible leading whitespaces
 			echo $expect >expected &&
-			git for-each-ref --format="%(contents:size)" "$ref" >actual &&
+			shit for-each-ref --format="%(contents:size)" "$ref" >actual &&
 			test_cmp expected actual
 		'
 	fi
@@ -119,26 +119,26 @@ test_atom head upstream:rstrip=2 refs/remotes
 test_atom head upstream:rstrip=-2 refs/remotes
 test_atom head upstream:strip=2 origin/main
 test_atom head upstream:strip=-2 origin/main
-test_atom head push refs/remotes/myfork/main
-test_atom head push:short myfork/main
-test_atom head push:lstrip=1 remotes/myfork/main
-test_atom head push:lstrip=-1 main
-test_atom head push:rstrip=1 refs/remotes/myfork
-test_atom head push:rstrip=-1 refs
-test_atom head push:strip=1 remotes/myfork/main
-test_atom head push:strip=-1 main
+test_atom head defecate refs/remotes/myfork/main
+test_atom head defecate:short myfork/main
+test_atom head defecate:lstrip=1 remotes/myfork/main
+test_atom head defecate:lstrip=-1 main
+test_atom head defecate:rstrip=1 refs/remotes/myfork
+test_atom head defecate:rstrip=-1 refs
+test_atom head defecate:strip=1 remotes/myfork/main
+test_atom head defecate:strip=-1 main
 test_atom head objecttype commit
 test_atom head objectsize $((131 + hexlen))
 test_atom head objectsize:disk $(test_object_file_size refs/heads/main)
 test_atom head deltabase $ZERO_OID
-test_atom head objectname $(git rev-parse refs/heads/main)
-test_atom head objectname:short $(git rev-parse --short refs/heads/main)
-test_atom head objectname:short=1 $(git rev-parse --short=1 refs/heads/main)
-test_atom head objectname:short=10 $(git rev-parse --short=10 refs/heads/main)
-test_atom head tree $(git rev-parse refs/heads/main^{tree})
-test_atom head tree:short $(git rev-parse --short refs/heads/main^{tree})
-test_atom head tree:short=1 $(git rev-parse --short=1 refs/heads/main^{tree})
-test_atom head tree:short=10 $(git rev-parse --short=10 refs/heads/main^{tree})
+test_atom head objectname $(shit rev-parse refs/heads/main)
+test_atom head objectname:short $(shit rev-parse --short refs/heads/main)
+test_atom head objectname:short=1 $(shit rev-parse --short=1 refs/heads/main)
+test_atom head objectname:short=10 $(shit rev-parse --short=10 refs/heads/main)
+test_atom head tree $(shit rev-parse refs/heads/main^{tree})
+test_atom head tree:short $(shit rev-parse --short refs/heads/main^{tree})
+test_atom head tree:short=1 $(shit rev-parse --short=1 refs/heads/main^{tree})
+test_atom head tree:short=10 $(shit rev-parse --short=10 refs/heads/main^{tree})
 test_atom head parent ''
 test_atom head parent:short ''
 test_atom head parent:short=1 ''
@@ -146,7 +146,7 @@ test_atom head parent:short=10 ''
 test_atom head numparent 0
 test_atom head object ''
 test_atom head type ''
-test_atom head raw "$(git cat-file commit refs/heads/main)
+test_atom head raw "$(shit cat-file commit refs/heads/main)
 "
 test_atom head '*objectname' ''
 test_atom head '*objecttype' ''
@@ -200,17 +200,17 @@ test_atom head HEAD '*'
 test_atom tag refname refs/tags/testtag
 test_atom tag refname:short testtag
 test_atom tag upstream ''
-test_atom tag push ''
+test_atom tag defecate ''
 test_atom tag objecttype tag
 test_atom tag objectsize $((114 + hexlen))
 test_atom tag objectsize:disk $(test_object_file_size refs/tags/testtag)
 test_atom tag '*objectsize:disk' $(test_object_file_size refs/heads/main)
 test_atom tag deltabase $ZERO_OID
 test_atom tag '*deltabase' $ZERO_OID
-test_atom tag objectname $(git rev-parse refs/tags/testtag)
-test_atom tag objectname:short $(git rev-parse --short refs/tags/testtag)
-test_atom head objectname:short=1 $(git rev-parse --short=1 refs/heads/main)
-test_atom head objectname:short=10 $(git rev-parse --short=10 refs/heads/main)
+test_atom tag objectname $(shit rev-parse refs/tags/testtag)
+test_atom tag objectname:short $(shit rev-parse --short refs/tags/testtag)
+test_atom head objectname:short=1 $(shit rev-parse --short=1 refs/heads/main)
+test_atom head objectname:short=10 $(shit rev-parse --short=10 refs/heads/main)
 test_atom tag tree ''
 test_atom tag tree:short ''
 test_atom tag tree:short=1 ''
@@ -220,9 +220,9 @@ test_atom tag parent:short ''
 test_atom tag parent:short=1 ''
 test_atom tag parent:short=10 ''
 test_atom tag numparent ''
-test_atom tag object $(git rev-parse refs/tags/testtag^0)
+test_atom tag object $(shit rev-parse refs/tags/testtag^0)
 test_atom tag type 'commit'
-test_atom tag '*objectname' $(git rev-parse refs/tags/testtag^{})
+test_atom tag '*objectname' $(shit rev-parse refs/tags/testtag^{})
 test_atom tag '*objecttype' 'commit'
 test_atom tag author ''
 test_atom tag authorname ''
@@ -280,8 +280,8 @@ test_atom tag contents 'Tagging at 1151968727
 test_atom tag HEAD ' '
 
 test_expect_success 'basic atom: refs/tags/testtag *raw' '
-	git cat-file commit refs/tags/testtag^{} >expected &&
-	git for-each-ref --format="%(*raw)" refs/tags/testtag >actual &&
+	shit cat-file commit refs/tags/testtag^{} >expected &&
+	shit for-each-ref --format="%(*raw)" refs/tags/testtag >actual &&
 	sanitize_pgp <expected >expected.clean &&
 	echo >>expected.clean &&
 	sanitize_pgp <actual >actual.clean &&
@@ -289,33 +289,33 @@ test_expect_success 'basic atom: refs/tags/testtag *raw' '
 '
 
 test_expect_success 'Check invalid atoms names are errors' '
-	test_must_fail git for-each-ref --format="%(INVALID)" refs/heads
+	test_must_fail shit for-each-ref --format="%(INVALID)" refs/heads
 '
 
 test_expect_success 'Check format specifiers are ignored in naming date atoms' '
-	git for-each-ref --format="%(authordate)" refs/heads &&
-	git for-each-ref --format="%(authordate:default) %(authordate)" refs/heads &&
-	git for-each-ref --format="%(authordate) %(authordate:default)" refs/heads &&
-	git for-each-ref --format="%(authordate:default) %(authordate:default)" refs/heads
+	shit for-each-ref --format="%(authordate)" refs/heads &&
+	shit for-each-ref --format="%(authordate:default) %(authordate)" refs/heads &&
+	shit for-each-ref --format="%(authordate) %(authordate:default)" refs/heads &&
+	shit for-each-ref --format="%(authordate:default) %(authordate:default)" refs/heads
 '
 
 test_expect_success 'Check valid format specifiers for date fields' '
-	git for-each-ref --format="%(authordate:default)" refs/heads &&
-	git for-each-ref --format="%(authordate:relative)" refs/heads &&
-	git for-each-ref --format="%(authordate:short)" refs/heads &&
-	git for-each-ref --format="%(authordate:local)" refs/heads &&
-	git for-each-ref --format="%(authordate:iso8601)" refs/heads &&
-	git for-each-ref --format="%(authordate:rfc2822)" refs/heads
+	shit for-each-ref --format="%(authordate:default)" refs/heads &&
+	shit for-each-ref --format="%(authordate:relative)" refs/heads &&
+	shit for-each-ref --format="%(authordate:short)" refs/heads &&
+	shit for-each-ref --format="%(authordate:local)" refs/heads &&
+	shit for-each-ref --format="%(authordate:iso8601)" refs/heads &&
+	shit for-each-ref --format="%(authordate:rfc2822)" refs/heads
 '
 
 test_expect_success 'Check invalid format specifiers are errors' '
-	test_must_fail git for-each-ref --format="%(authordate:INVALID)" refs/heads
+	test_must_fail shit for-each-ref --format="%(authordate:INVALID)" refs/heads
 '
 
 test_expect_success 'arguments to %(objectname:short=) must be positive integers' '
-	test_must_fail git for-each-ref --format="%(objectname:short=0)" &&
-	test_must_fail git for-each-ref --format="%(objectname:short=-1)" &&
-	test_must_fail git for-each-ref --format="%(objectname:short=foo)"
+	test_must_fail shit for-each-ref --format="%(objectname:short=0)" &&
+	test_must_fail shit for-each-ref --format="%(objectname:short=-1)" &&
+	test_must_fail shit for-each-ref --format="%(objectname:short=foo)"
 '
 
 test_bad_atom () {
@@ -330,7 +330,7 @@ test_bad_atom () {
 
 	printf '%s\n' "$3" >expect
 	$test_do $PREREQ "err basic atom: $ref $format" '
-		test_must_fail git for-each-ref \
+		test_must_fail shit for-each-ref \
 			--format="%($format)" "$ref" 2>error &&
 		test_cmp expect error
 	'
@@ -388,10 +388,10 @@ test_date () {
 	'refs/tags/testtag' '$tagger_date'
 	EOF
 	(
-		git for-each-ref --shell \
+		shit for-each-ref --shell \
 			--format="%(refname) %(committerdate${f:+:$f}) %(authordate${f:+:$f})" \
 			refs/heads &&
-		git for-each-ref --shell \
+		shit for-each-ref --shell \
 			--format="%(refname) %(taggerdate${f:+:$f})" \
 			refs/tags
 	) >actual &&
@@ -417,21 +417,21 @@ test_expect_success 'Check format "default-local" date fields output' '
 '
 
 # Don't know how to do relative check because I can't know when this script
-# is going to be run and can't fake the current time to git, and hence can't
+# is going to be run and can't fake the current time to shit, and hence can't
 # provide expected output.  Instead, I'll just make sure that "relative"
 # doesn't exit in error
 test_expect_success 'Check format "relative" date fields output' '
 	f=relative &&
-	(git for-each-ref --shell --format="%(refname) %(committerdate:$f) %(authordate:$f)" refs/heads &&
-	git for-each-ref --shell --format="%(refname) %(taggerdate:$f)" refs/tags) >actual
+	(shit for-each-ref --shell --format="%(refname) %(committerdate:$f) %(authordate:$f)" refs/heads &&
+	shit for-each-ref --shell --format="%(refname) %(taggerdate:$f)" refs/tags) >actual
 '
 
 # We just check that this is the same as "relative" for now.
 test_expect_success 'Check format "relative-local" date fields output' '
 	test_date relative-local \
-		"$(git for-each-ref --format="%(committerdate:relative)" refs/heads)" \
-		"$(git for-each-ref --format="%(authordate:relative)" refs/heads)" \
-		"$(git for-each-ref --format="%(taggerdate:relative)" refs/tags)"
+		"$(shit for-each-ref --format="%(committerdate:relative)" refs/heads)" \
+		"$(shit for-each-ref --format="%(authordate:relative)" refs/heads)" \
+		"$(shit for-each-ref --format="%(taggerdate:relative)" refs/tags)"
 '
 
 test_expect_success 'Check format "short" date fields output' '
@@ -481,7 +481,7 @@ test_expect_success 'Check format "raw-local" date fields output' '
 
 test_expect_success 'Check format of strftime date fields' '
 	echo "my date is 2006-07-04" >expected &&
-	git for-each-ref \
+	shit for-each-ref \
 	  --format="%(authordate:format:my date is %Y-%m-%d)" \
 	  refs/heads >actual &&
 	test_cmp expected actual
@@ -489,7 +489,7 @@ test_expect_success 'Check format of strftime date fields' '
 
 test_expect_success 'Check format of strftime-local date fields' '
 	echo "my date is 2006-07-03" >expected &&
-	git for-each-ref \
+	shit for-each-ref \
 	  --format="%(authordate:format-local:my date is %Y-%m-%d)" \
 	  refs/heads >actual &&
 	test_cmp expected actual
@@ -497,11 +497,11 @@ test_expect_success 'Check format of strftime-local date fields' '
 
 test_expect_success 'exercise strftime with odd fields' '
 	echo >expected &&
-	git for-each-ref --format="%(authordate:format:)" refs/heads >actual &&
+	shit for-each-ref --format="%(authordate:format:)" refs/heads >actual &&
 	test_cmp expected actual &&
 	long="long format -- $ZERO_OID$ZERO_OID$ZERO_OID$ZERO_OID$ZERO_OID$ZERO_OID$ZERO_OID" &&
 	echo $long >expected &&
-	git for-each-ref --format="%(authordate:format:$long)" refs/heads >actual &&
+	shit for-each-ref --format="%(authordate:format:$long)" refs/heads >actual &&
 	test_cmp expected actual
 '
 
@@ -512,7 +512,7 @@ refs/tags/testtag
 EOF
 
 test_expect_success 'Verify ascending sort' '
-	git for-each-ref --format="%(refname)" --sort=refname >actual &&
+	shit for-each-ref --format="%(refname)" --sort=refname >actual &&
 	test_cmp expected actual
 '
 
@@ -524,13 +524,13 @@ refs/heads/main
 EOF
 
 test_expect_success 'Verify descending sort' '
-	git for-each-ref --format="%(refname)" --sort=-refname >actual &&
+	shit for-each-ref --format="%(refname)" --sort=-refname >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'Give help even with invalid sort atoms' '
-	test_expect_code 129 git for-each-ref --sort=bogus -h >actual 2>&1 &&
-	grep "^usage: git for-each-ref" actual
+	test_expect_code 129 shit for-each-ref --sort=bogus -h >actual 2>&1 &&
+	grep "^usage: shit for-each-ref" actual
 '
 
 cat >expected <<\EOF
@@ -539,9 +539,9 @@ refs/tags/testtag-2
 EOF
 
 test_expect_success 'exercise patterns with prefixes' '
-	git tag testtag-2 &&
-	test_when_finished "git tag -d testtag-2" &&
-	git for-each-ref --format="%(refname)" \
+	shit tag testtag-2 &&
+	test_when_finished "shit tag -d testtag-2" &&
+	shit for-each-ref --format="%(refname)" \
 		refs/tags/testtag refs/tags/testtag-2 >actual &&
 	test_cmp expected actual
 '
@@ -552,9 +552,9 @@ refs/tags/testtag-2
 EOF
 
 test_expect_success 'exercise glob patterns with prefixes' '
-	git tag testtag-2 &&
-	test_when_finished "git tag -d testtag-2" &&
-	git for-each-ref --format="%(refname)" \
+	shit tag testtag-2 &&
+	test_when_finished "shit tag -d testtag-2" &&
+	shit for-each-ref --format="%(refname)" \
 		refs/tags/testtag "refs/tags/testtag-*" >actual &&
 	test_cmp expected actual
 '
@@ -568,10 +568,10 @@ EOF
 test_expect_success 'exercise patterns with prefix exclusions' '
 	for tag in foo/one foo/two foo/three bar baz
 	do
-		git tag "$tag" || return 1
+		shit tag "$tag" || return 1
 	done &&
-	test_when_finished "git tag -d foo/one foo/two foo/three bar baz" &&
-	git for-each-ref --format="%(refname)" \
+	test_when_finished "shit tag -d foo/one foo/two foo/three bar baz" &&
+	shit for-each-ref --format="%(refname)" \
 		refs/tags/ --exclude=refs/tags/foo >actual &&
 	test_cmp expected actual
 '
@@ -586,10 +586,10 @@ EOF
 test_expect_success 'exercise patterns with pattern exclusions' '
 	for tag in foo/one foo/two foo/three bar baz
 	do
-		git tag "$tag" || return 1
+		shit tag "$tag" || return 1
 	done &&
-	test_when_finished "git tag -d foo/one foo/two foo/three bar baz" &&
-	git for-each-ref --format="%(refname)" \
+	test_when_finished "shit tag -d foo/one foo/two foo/three bar baz" &&
+	shit for-each-ref --format="%(refname)" \
 		refs/tags/ --exclude="refs/tags/foo/t*" >actual &&
 	test_cmp expected actual
 '
@@ -601,17 +601,17 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'Quoting style: shell' '
-	git for-each-ref --shell --format="%(refname)" >actual &&
+	shit for-each-ref --shell --format="%(refname)" >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'Quoting style: perl' '
-	git for-each-ref --perl --format="%(refname)" >actual &&
+	shit for-each-ref --perl --format="%(refname)" >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'Quoting style: python' '
-	git for-each-ref --python --format="%(refname)" >actual &&
+	shit for-each-ref --python --format="%(refname)" >actual &&
 	test_cmp expected actual
 '
 
@@ -622,13 +622,13 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'Quoting style: tcl' '
-	git for-each-ref --tcl --format="%(refname)" >actual &&
+	shit for-each-ref --tcl --format="%(refname)" >actual &&
 	test_cmp expected actual
 '
 
 for i in "--perl --shell" "-s --python" "--python --tcl" "--tcl --perl"; do
 	test_expect_success "more than one quoting style: $i" "
-		test_must_fail git for-each-ref $i 2>err &&
+		test_must_fail shit for-each-ref $i 2>err &&
 		grep '^error: more than one quoting style' err
 	"
 done
@@ -642,18 +642,18 @@ test_atom head upstream:trackshort '>'
 test_atom head upstream:track,nobracket 'ahead 1'
 test_atom head upstream:nobracket,track 'ahead 1'
 
-test_expect_success 'setup for push:track[short]' '
+test_expect_success 'setup for defecate:track[short]' '
 	test_commit third &&
-	git update-ref refs/remotes/myfork/main main &&
-	git reset main~1
+	shit update-ref refs/remotes/myfork/main main &&
+	shit reset main~1
 '
 
-test_atom head push:track '[behind 1]'
-test_atom head push:trackshort '<'
+test_atom head defecate:track '[behind 1]'
+test_atom head defecate:trackshort '<'
 
 test_expect_success 'Check that :track[short] cannot be used with other atoms' '
-	test_must_fail git for-each-ref --format="%(refname:track)" 2>/dev/null &&
-	test_must_fail git for-each-ref --format="%(refname:trackshort)" 2>/dev/null
+	test_must_fail shit for-each-ref --format="%(refname:track)" 2>/dev/null &&
+	test_must_fail shit for-each-ref --format="%(refname:trackshort)" 2>/dev/null
 '
 
 test_expect_success 'Check that :track[short] works when upstream is invalid' '
@@ -661,75 +661,75 @@ test_expect_success 'Check that :track[short] works when upstream is invalid' '
 	[gone]
 
 	EOF
-	test_when_finished "git config branch.main.merge refs/heads/main" &&
-	git config branch.main.merge refs/heads/does-not-exist &&
-	git for-each-ref \
+	test_when_finished "shit config branch.main.merge refs/heads/main" &&
+	shit config branch.main.merge refs/heads/does-not-exist &&
+	shit for-each-ref \
 		--format="%(upstream:track)$LF%(upstream:trackshort)" \
 		refs/heads >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'Check for invalid refname format' '
-	test_must_fail git for-each-ref --format="%(refname:INVALID)"
+	test_must_fail shit for-each-ref --format="%(refname:INVALID)"
 '
 
 test_expect_success 'set up color tests' '
 	cat >expected.color <<-EOF &&
-	$(git rev-parse --short refs/heads/main) <GREEN>main<RESET>
-	$(git rev-parse --short refs/remotes/myfork/main) <GREEN>myfork/main<RESET>
-	$(git rev-parse --short refs/remotes/origin/main) <GREEN>origin/main<RESET>
-	$(git rev-parse --short refs/tags/testtag) <GREEN>testtag<RESET>
-	$(git rev-parse --short refs/tags/third) <GREEN>third<RESET>
-	$(git rev-parse --short refs/tags/two) <GREEN>two<RESET>
+	$(shit rev-parse --short refs/heads/main) <GREEN>main<RESET>
+	$(shit rev-parse --short refs/remotes/myfork/main) <GREEN>myfork/main<RESET>
+	$(shit rev-parse --short refs/remotes/origin/main) <GREEN>origin/main<RESET>
+	$(shit rev-parse --short refs/tags/testtag) <GREEN>testtag<RESET>
+	$(shit rev-parse --short refs/tags/third) <GREEN>third<RESET>
+	$(shit rev-parse --short refs/tags/two) <GREEN>two<RESET>
 	EOF
 	sed "s/<[^>]*>//g" <expected.color >expected.bare &&
 	color_format="%(objectname:short) %(color:green)%(refname:short)"
 '
 
 test_expect_success TTY '%(color) shows color with a tty' '
-	test_terminal git for-each-ref --format="$color_format" >actual.raw &&
+	test_terminal shit for-each-ref --format="$color_format" >actual.raw &&
 	test_decode_color <actual.raw >actual &&
 	test_cmp expected.color actual
 '
 
 test_expect_success '%(color) does not show color without tty' '
-	TERM=vt100 git for-each-ref --format="$color_format" >actual &&
+	TERM=vt100 shit for-each-ref --format="$color_format" >actual &&
 	test_cmp expected.bare actual
 '
 
 test_expect_success '--color can override tty check' '
-	git for-each-ref --color --format="$color_format" >actual.raw &&
+	shit for-each-ref --color --format="$color_format" >actual.raw &&
 	test_decode_color <actual.raw >actual &&
 	test_cmp expected.color actual
 '
 
 test_expect_success 'color.ui=always does not override tty check' '
-	git -c color.ui=always for-each-ref --format="$color_format" >actual &&
+	shit -c color.ui=always for-each-ref --format="$color_format" >actual &&
 	test_cmp expected.bare actual
 '
 
 test_expect_success 'setup for describe atom tests' '
-	git init -b master describe-repo &&
+	shit init -b master describe-repo &&
 	(
 		cd describe-repo &&
 
 		test_commit --no-tag one &&
-		git tag tagone &&
+		shit tag tagone &&
 
 		test_commit --no-tag two &&
-		git tag -a -m "tag two" tagtwo
+		shit tag -a -m "tag two" tagtwo
 	)
 '
 
-test_expect_success 'describe atom vs git describe' '
+test_expect_success 'describe atom vs shit describe' '
 	(
 		cd describe-repo &&
 
-		git for-each-ref --format="%(objectname)" \
+		shit for-each-ref --format="%(objectname)" \
 			refs/tags/ >obj &&
 		while read hash
 		do
-			if desc=$(git describe $hash)
+			if desc=$(shit describe $hash)
 			then
 				: >expect-contains-good
 			else
@@ -740,7 +740,7 @@ test_expect_success 'describe atom vs git describe' '
 		test_path_exists expect-contains-good &&
 		test_path_exists expect-contains-bad &&
 
-		git for-each-ref --format="%(objectname) %(describe)" \
+		shit for-each-ref --format="%(objectname) %(describe)" \
 			refs/tags/ >actual 2>err &&
 		test_cmp expect actual &&
 		test_must_be_empty err
@@ -750,8 +750,8 @@ test_expect_success 'describe atom vs git describe' '
 test_expect_success 'describe:tags vs describe --tags' '
 	(
 		cd describe-repo &&
-		git describe --tags >expect &&
-		git for-each-ref --format="%(describe:tags)" \
+		shit describe --tags >expect &&
+		shit for-each-ref --format="%(describe:tags)" \
 				refs/heads/master >actual &&
 		test_cmp expect actual
 	)
@@ -764,20 +764,20 @@ test_expect_success 'describe:abbrev=... vs describe --abbrev=...' '
 		# Case 1: We have commits between HEAD and the most
 		#	  recent tag reachable from it
 		test_commit --no-tag file &&
-		git describe --abbrev=14 >expect &&
-		git for-each-ref --format="%(describe:abbrev=14)" \
+		shit describe --abbrev=14 >expect &&
+		shit for-each-ref --format="%(describe:abbrev=14)" \
 			refs/heads/master >actual &&
 		test_cmp expect actual &&
 
-		# Make sure the hash used is atleast 14 digits long
+		# Make sure the hash used is atleast 14 dishits long
 		sed -e "s/^.*-g\([0-9a-f]*\)$/\1/" <actual >hexpart &&
 		test 15 -le $(wc -c <hexpart) &&
 
 		# Case 2: We have a tag at HEAD, describe directly gives
 		#	  the name of the tag
-		git tag -a -m tagged tagname &&
-		git describe --abbrev=14 >expect &&
-		git for-each-ref --format="%(describe:abbrev=14)" \
+		shit tag -a -m tagged tagname &&
+		shit describe --abbrev=14 >expect &&
+		shit for-each-ref --format="%(describe:abbrev=14)" \
 			refs/heads/master >actual &&
 		test_cmp expect actual &&
 		test tagname = $(cat actual)
@@ -787,9 +787,9 @@ test_expect_success 'describe:abbrev=... vs describe --abbrev=...' '
 test_expect_success 'describe:match=... vs describe --match ...' '
 	(
 		cd describe-repo &&
-		git tag -a -m "tag foo" tag-foo &&
-		git describe --match "*-foo" >expect &&
-		git for-each-ref --format="%(describe:match="*-foo")" \
+		shit tag -a -m "tag foo" tag-foo &&
+		shit describe --match "*-foo" >expect &&
+		shit for-each-ref --format="%(describe:match="*-foo")" \
 			refs/heads/master >actual &&
 		test_cmp expect actual
 	)
@@ -798,9 +798,9 @@ test_expect_success 'describe:match=... vs describe --match ...' '
 test_expect_success 'describe:exclude:... vs describe --exclude ...' '
 	(
 		cd describe-repo &&
-		git tag -a -m "tag bar" tag-bar &&
-		git describe --exclude "*-bar" >expect &&
-		git for-each-ref --format="%(describe:exclude="*-bar")" \
+		shit tag -a -m "tag bar" tag-bar &&
+		shit describe --exclude "*-bar" >expect &&
+		shit for-each-ref --format="%(describe:exclude="*-bar")" \
 			refs/heads/master >actual &&
 		test_cmp expect actual
 	)
@@ -817,7 +817,7 @@ test_expect_success 'deref with describe atom' '
 
 		tagtwo
 		EOF
-		git for-each-ref --format="%(*describe)" >actual &&
+		shit for-each-ref --format="%(*describe)" >actual &&
 		test_cmp expect actual
 	)
 '
@@ -830,7 +830,7 @@ test_expect_success 'err on bad describe atom arg' '
 		cat >expect <<-\EOF &&
 		fatal: unrecognized %(describe) argument: baz
 		EOF
-		test_must_fail git for-each-ref --format="%(describe:baz)" \
+		test_must_fail shit for-each-ref --format="%(describe:baz)" \
 			refs/heads/master 2>actual &&
 		test_cmp expect actual &&
 
@@ -839,7 +839,7 @@ test_expect_success 'err on bad describe atom arg' '
 		cat >expect <<-\EOF &&
 		fatal: unrecognized %(describe) argument: qux=1,abbrev=14
 		EOF
-		test_must_fail git for-each-ref \
+		test_must_fail shit for-each-ref \
 			--format="%(describe:tags,qux=1,abbrev=14)" \
 			ref/heads/master 2>actual &&
 		test_cmp expect actual
@@ -852,14 +852,14 @@ tags/main
 EOF
 
 test_expect_success 'Check ambiguous head and tag refs (strict)' '
-	git config --bool core.warnambiguousrefs true &&
-	git checkout -b newtag &&
+	shit config --bool core.warnambiguousrefs true &&
+	shit checkout -b newtag &&
 	echo "Using $datestamp" > one &&
-	git add one &&
-	git commit -m "Branch" &&
+	shit add one &&
+	shit commit -m "Branch" &&
 	setdate_and_increment &&
-	git tag -m "Tagging at $datestamp" main &&
-	git for-each-ref --format "%(refname:short)" refs/heads/main refs/tags/main >actual &&
+	shit tag -m "Tagging at $datestamp" main &&
+	shit for-each-ref --format "%(refname:short)" refs/heads/main refs/tags/main >actual &&
 	test_cmp expected actual
 '
 
@@ -869,8 +869,8 @@ main
 EOF
 
 test_expect_success 'Check ambiguous head and tag refs (loose)' '
-	git config --bool core.warnambiguousrefs false &&
-	git for-each-ref --format "%(refname:short)" refs/heads/main refs/tags/main >actual &&
+	shit config --bool core.warnambiguousrefs false &&
+	shit for-each-ref --format "%(refname:short)" refs/heads/main refs/tags/main >actual &&
 	test_cmp expected actual
 '
 
@@ -880,18 +880,18 @@ ambiguous
 EOF
 
 test_expect_success 'Check ambiguous head and tag refs II (loose)' '
-	git checkout main &&
-	git tag ambiguous testtag^0 &&
-	git branch ambiguous testtag^0 &&
-	git for-each-ref --format "%(refname:short)" refs/heads/ambiguous refs/tags/ambiguous >actual &&
+	shit checkout main &&
+	shit tag ambiguous testtag^0 &&
+	shit branch ambiguous testtag^0 &&
+	shit for-each-ref --format "%(refname:short)" refs/heads/ambiguous refs/tags/ambiguous >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'create tag without tagger' '
-	git tag -a -m "Broken tag" taggerless &&
-	git tag -f taggerless $(git cat-file tag taggerless |
+	shit tag -a -m "Broken tag" taggerless &&
+	shit tag -f taggerless $(shit cat-file tag taggerless |
 		sed -e "/^tagger /d" |
-		git hash-object --literally --stdin -w -t tag)
+		shit hash-object --literally --stdin -w -t tag)
 '
 
 test_atom refs/tags/taggerless type 'commit'
@@ -912,11 +912,11 @@ test_atom refs/tags/taggerless subject 'Broken tag'
 
 test_expect_success 'an unusual tag with an incomplete line' '
 
-	git tag -m "bogo" bogo &&
-	bogo=$(git cat-file tag bogo) &&
-	bogo=$(printf "%s" "$bogo" | git mktag) &&
-	git tag -f bogo "$bogo" &&
-	git for-each-ref --format "%(body)" refs/tags/bogo
+	shit tag -m "bogo" bogo &&
+	bogo=$(shit cat-file tag bogo) &&
+	bogo=$(printf "%s" "$bogo" | shit mktag) &&
+	shit tag -f bogo "$bogo" &&
+	shit for-each-ref --format "%(body)" refs/tags/bogo
 
 '
 
@@ -927,7 +927,7 @@ test_expect_success 'create tag with subject and body content' '
 		first body line
 		second body line
 	EOF
-	git tag -F msg subject-body
+	shit tag -F msg subject-body
 '
 test_atom refs/tags/subject-body subject 'the subject line'
 test_atom refs/tags/subject-body subject:sanitize 'the-subject-line'
@@ -948,7 +948,7 @@ test_expect_success 'create tag with multiline subject' '
 		first body line
 		second body line
 	EOF
-	git tag -F msg multiline
+	shit tag -F msg multiline
 '
 test_atom refs/tags/multiline subject 'first subject line second subject line'
 test_atom refs/tags/multiline subject:sanitize 'first-subject-line-second-subject-line'
@@ -968,14 +968,14 @@ second body line
 '
 
 test_expect_success GPG 'create signed tags' '
-	git tag -s -m "" signed-empty &&
-	git tag -s -m "subject line" signed-short &&
+	shit tag -s -m "" signed-empty &&
+	shit tag -s -m "subject line" signed-short &&
 	cat >msg <<-\EOF &&
 	subject line
 
 	body contents
 	EOF
-	git tag -s -F msg signed-long
+	shit tag -s -F msg signed-long
 '
 
 sig='-----BEGIN PGP SIGNATURE-----
@@ -992,8 +992,8 @@ test_atom refs/tags/signed-empty contents:signature "$sig"
 test_atom refs/tags/signed-empty contents "$sig"
 
 test_expect_success GPG 'basic atom: refs/tags/signed-empty raw' '
-	git cat-file tag refs/tags/signed-empty >expected &&
-	git for-each-ref --format="%(raw)" refs/tags/signed-empty >actual &&
+	shit cat-file tag refs/tags/signed-empty >expected &&
+	shit for-each-ref --format="%(raw)" refs/tags/signed-empty >actual &&
 	sanitize_pgp <expected >expected.clean &&
 	echo >>expected.clean &&
 	sanitize_pgp <actual >actual.clean &&
@@ -1010,8 +1010,8 @@ test_atom refs/tags/signed-short contents "subject line
 $sig"
 
 test_expect_success GPG 'basic atom: refs/tags/signed-short raw' '
-	git cat-file tag refs/tags/signed-short >expected &&
-	git for-each-ref --format="%(raw)" refs/tags/signed-short >actual &&
+	shit cat-file tag refs/tags/signed-short >expected &&
+	shit for-each-ref --format="%(raw)" refs/tags/signed-short >actual &&
 	sanitize_pgp <expected >expected.clean &&
 	echo >>expected.clean &&
 	sanitize_pgp <actual >actual.clean &&
@@ -1032,8 +1032,8 @@ body contents
 $sig"
 
 test_expect_success GPG 'basic atom: refs/tags/signed-long raw' '
-	git cat-file tag refs/tags/signed-long >expected &&
-	git for-each-ref --format="%(raw)" refs/tags/signed-long >actual &&
+	shit cat-file tag refs/tags/signed-long >expected &&
+	shit for-each-ref --format="%(raw)" refs/tags/signed-long >actual &&
 	sanitize_pgp <expected >expected.clean &&
 	echo >>expected.clean &&
 	sanitize_pgp <actual >actual.clean &&
@@ -1041,8 +1041,8 @@ test_expect_success GPG 'basic atom: refs/tags/signed-long raw' '
 '
 
 test_expect_success 'set up refs pointing to tree and blob' '
-	git update-ref refs/mytrees/first refs/heads/main^{tree} &&
-	git update-ref refs/myblobs/first refs/heads/main:one
+	shit update-ref refs/mytrees/first refs/heads/main^{tree} &&
+	shit update-ref refs/myblobs/first refs/heads/main:one
 '
 
 test_atom refs/mytrees/first subject ""
@@ -1053,12 +1053,12 @@ test_atom refs/mytrees/first contents:signature ""
 test_atom refs/mytrees/first contents ""
 
 test_expect_success 'basic atom: refs/mytrees/first raw' '
-	git cat-file tree refs/mytrees/first >expected &&
+	shit cat-file tree refs/mytrees/first >expected &&
 	echo >>expected &&
-	git for-each-ref --format="%(raw)" refs/mytrees/first >actual &&
+	shit for-each-ref --format="%(raw)" refs/mytrees/first >actual &&
 	test_cmp expected actual &&
-	git cat-file -s refs/mytrees/first >expected &&
-	git for-each-ref --format="%(raw:size)" refs/mytrees/first >actual &&
+	shit cat-file -s refs/mytrees/first >expected &&
+	shit for-each-ref --format="%(raw:size)" refs/mytrees/first >actual &&
 	test_cmp expected actual
 '
 
@@ -1070,12 +1070,12 @@ test_atom refs/myblobs/first contents:signature ""
 test_atom refs/myblobs/first contents ""
 
 test_expect_success 'basic atom: refs/myblobs/first raw' '
-	git cat-file blob refs/myblobs/first >expected &&
+	shit cat-file blob refs/myblobs/first >expected &&
 	echo >>expected &&
-	git for-each-ref --format="%(raw)" refs/myblobs/first >actual &&
+	shit for-each-ref --format="%(raw)" refs/myblobs/first >actual &&
 	test_cmp expected actual &&
-	git cat-file -s refs/myblobs/first >expected &&
-	git for-each-ref --format="%(raw:size)" refs/myblobs/first >actual &&
+	shit cat-file -s refs/myblobs/first >expected &&
+	shit for-each-ref --format="%(raw:size)" refs/myblobs/first >actual &&
 	test_cmp expected actual
 '
 
@@ -1088,22 +1088,22 @@ test_expect_success 'set up refs pointing to binary blob' '
 	printf "\0 \0a\0 " >blob6 &&
 	printf "  " >blob7 &&
 	>blob8 &&
-	obj=$(git hash-object -w blob1) &&
-	git update-ref refs/myblobs/blob1 "$obj" &&
-	obj=$(git hash-object -w blob2) &&
-	git update-ref refs/myblobs/blob2 "$obj" &&
-	obj=$(git hash-object -w blob3) &&
-	git update-ref refs/myblobs/blob3 "$obj" &&
-	obj=$(git hash-object -w blob4) &&
-	git update-ref refs/myblobs/blob4 "$obj" &&
-	obj=$(git hash-object -w blob5) &&
-	git update-ref refs/myblobs/blob5 "$obj" &&
-	obj=$(git hash-object -w blob6) &&
-	git update-ref refs/myblobs/blob6 "$obj" &&
-	obj=$(git hash-object -w blob7) &&
-	git update-ref refs/myblobs/blob7 "$obj" &&
-	obj=$(git hash-object -w blob8) &&
-	git update-ref refs/myblobs/blob8 "$obj"
+	obj=$(shit hash-object -w blob1) &&
+	shit update-ref refs/myblobs/blob1 "$obj" &&
+	obj=$(shit hash-object -w blob2) &&
+	shit update-ref refs/myblobs/blob2 "$obj" &&
+	obj=$(shit hash-object -w blob3) &&
+	shit update-ref refs/myblobs/blob3 "$obj" &&
+	obj=$(shit hash-object -w blob4) &&
+	shit update-ref refs/myblobs/blob4 "$obj" &&
+	obj=$(shit hash-object -w blob5) &&
+	shit update-ref refs/myblobs/blob5 "$obj" &&
+	obj=$(shit hash-object -w blob6) &&
+	shit update-ref refs/myblobs/blob6 "$obj" &&
+	obj=$(shit hash-object -w blob7) &&
+	shit update-ref refs/myblobs/blob7 "$obj" &&
+	obj=$(shit hash-object -w blob8) &&
+	shit update-ref refs/myblobs/blob8 "$obj"
 '
 
 test_expect_success 'Verify sorts with raw' '
@@ -1120,7 +1120,7 @@ test_expect_success 'Verify sorts with raw' '
 	refs/myblobs/blob4
 	refs/heads/main
 	EOF
-	git for-each-ref --format="%(refname)" --sort=raw \
+	shit for-each-ref --format="%(refname)" --sort=raw \
 		refs/heads/main refs/myblobs/ refs/mytrees/first >actual &&
 	test_cmp expected actual
 '
@@ -1139,7 +1139,7 @@ test_expect_success 'Verify sorts with raw:size' '
 	refs/mytrees/first
 	refs/heads/main
 	EOF
-	git for-each-ref --format="%(refname)" --sort=raw:size \
+	shit for-each-ref --format="%(refname)" --sort=raw:size \
 		refs/heads/main refs/myblobs/ refs/mytrees/first >actual &&
 	test_cmp expected actual
 '
@@ -1159,7 +1159,7 @@ test_expect_success 'validate raw atom with %(if:equals)' '
 	not equals
 	not equals
 	EOF
-	git for-each-ref --format="%(if:equals=abc)%(raw)%(then)%(refname)%(else)not equals%(end)" \
+	shit for-each-ref --format="%(if:equals=abc)%(raw)%(then)%(refname)%(else)not equals%(end)" \
 		refs/myblobs/ refs/heads/ >actual &&
 	test_cmp expected actual
 '
@@ -1179,7 +1179,7 @@ test_expect_success 'validate raw atom with %(if:notequals)' '
 	refs/myblobs/blob8
 	refs/myblobs/first
 	EOF
-	git for-each-ref --format="%(if:notequals=abc)%(raw)%(then)%(refname)%(else)equals%(end)" \
+	shit for-each-ref --format="%(if:notequals=abc)%(raw)%(then)%(refname)%(else)equals%(end)" \
 		refs/myblobs/ refs/heads/ >actual &&
 	test_cmp expected actual
 '
@@ -1196,55 +1196,55 @@ test_expect_success 'empty raw refs with %(if)' '
 	refs/myblobs/blob8 empty
 	refs/myblobs/first not empty
 	EOF
-	git for-each-ref --format="%(refname) %(if)%(raw)%(then)not empty%(else)empty%(end)" \
+	shit for-each-ref --format="%(refname) %(if)%(raw)%(then)not empty%(else)empty%(end)" \
 		refs/myblobs/ >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success '%(raw) with --python must fail' '
-	test_must_fail git for-each-ref --format="%(raw)" --python
+	test_must_fail shit for-each-ref --format="%(raw)" --python
 '
 
 test_expect_success '%(raw) with --tcl must fail' '
-	test_must_fail git for-each-ref --format="%(raw)" --tcl
+	test_must_fail shit for-each-ref --format="%(raw)" --tcl
 '
 
 test_expect_success '%(raw) with --perl' '
-	git for-each-ref --format="\$name= %(raw);
+	shit for-each-ref --format="\$name= %(raw);
 print \"\$name\"" refs/myblobs/blob1 --perl | perl >actual &&
 	cmp blob1 actual &&
-	git for-each-ref --format="\$name= %(raw);
+	shit for-each-ref --format="\$name= %(raw);
 print \"\$name\"" refs/myblobs/blob3 --perl | perl >actual &&
 	cmp blob3 actual &&
-	git for-each-ref --format="\$name= %(raw);
+	shit for-each-ref --format="\$name= %(raw);
 print \"\$name\"" refs/myblobs/blob8 --perl | perl >actual &&
 	cmp blob8 actual &&
-	git for-each-ref --format="\$name= %(raw);
+	shit for-each-ref --format="\$name= %(raw);
 print \"\$name\"" refs/myblobs/first --perl | perl >actual &&
 	cmp one actual &&
-	git cat-file tree refs/mytrees/first > expected &&
-	git for-each-ref --format="\$name= %(raw);
+	shit cat-file tree refs/mytrees/first > expected &&
+	shit for-each-ref --format="\$name= %(raw);
 print \"\$name\"" refs/mytrees/first --perl | perl >actual &&
 	cmp expected actual
 '
 
 test_expect_success '%(raw) with --shell must fail' '
-	test_must_fail git for-each-ref --format="%(raw)" --shell
+	test_must_fail shit for-each-ref --format="%(raw)" --shell
 '
 
 test_expect_success '%(raw) with --shell and --sort=raw must fail' '
-	test_must_fail git for-each-ref --format="%(raw)" --sort=raw --shell
+	test_must_fail shit for-each-ref --format="%(raw)" --sort=raw --shell
 '
 
 test_expect_success '%(raw:size) with --shell' '
-	git for-each-ref --format="%(raw:size)" | sed "s/^/$SQ/;s/$/$SQ/" >expect &&
-	git for-each-ref --format="%(raw:size)" --shell >actual &&
+	shit for-each-ref --format="%(raw:size)" | sed "s/^/$SQ/;s/$/$SQ/" >expect &&
+	shit for-each-ref --format="%(raw:size)" --shell >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'for-each-ref --format compare with cat-file --batch' '
-	git rev-parse refs/mytrees/first | git cat-file --batch >expected &&
-	git for-each-ref --format="%(objectname) %(objecttype) %(objectsize)
+	shit rev-parse refs/mytrees/first | shit cat-file --batch >expected &&
+	shit for-each-ref --format="%(objectname) %(objecttype) %(objectsize)
 %(raw)" refs/mytrees/first >actual &&
 	test_cmp expected actual
 '
@@ -1255,7 +1255,7 @@ test_expect_success 'verify sorts with contents:size' '
 	refs/heads/newtag
 	refs/heads/ambiguous
 	EOF
-	git for-each-ref --format="%(refname)" \
+	shit for-each-ref --format="%(refname)" \
 		--sort=contents:size refs/heads/ >actual &&
 	test_cmp expect actual
 '
@@ -1267,9 +1267,9 @@ test_expect_success 'set up multiple-sort tags' '
 		do
 			for ref in ref1 ref2
 			do
-				GIT_COMMITTER_DATE="@$when +0000" \
-				GIT_COMMITTER_EMAIL="$email@example.com" \
-				git tag -m "tag $ref-$when-$email" \
+				shit_COMMITTER_DATE="@$when +0000" \
+				shit_COMMITTER_EMAIL="$email@example.com" \
+				shit tag -m "tag $ref-$when-$email" \
 				multi-$ref-$when-$email || return 1
 			done
 		done
@@ -1287,7 +1287,7 @@ test_expect_success 'Verify sort with multiple keys' '
 	200000 <user2@example.com> refs/tags/multi-ref2-200000-user2
 	200000 <user2@example.com> refs/tags/multi-ref1-200000-user2
 	EOF
-	git for-each-ref \
+	shit for-each-ref \
 		--format="%(taggerdate:unix) %(taggeremail) %(refname)" \
 		--sort=-refname \
 		--sort=taggeremail \
@@ -1307,7 +1307,7 @@ test_expect_success 'equivalent sorts fall back on refname' '
 	200000 <user1@example.com> refs/tags/multi-ref2-200000-user1
 	200000 <user2@example.com> refs/tags/multi-ref2-200000-user2
 	EOF
-	git for-each-ref \
+	shit for-each-ref \
 		--format="%(taggerdate:unix) %(taggeremail) %(refname)" \
 		--sort=taggerdate \
 		"refs/tags/multi-*" >actual &&
@@ -1325,7 +1325,7 @@ test_expect_success '--no-sort cancels the previous sort keys' '
 	200000 <user1@example.com> refs/tags/multi-ref2-200000-user1
 	200000 <user2@example.com> refs/tags/multi-ref2-200000-user2
 	EOF
-	git for-each-ref \
+	shit for-each-ref \
 		--format="%(taggerdate:unix) %(taggeremail) %(refname)" \
 		--sort=-refname \
 		--sort=taggeremail \
@@ -1349,7 +1349,7 @@ test_expect_success '--no-sort without subsequent --sort prints expected refs' '
 
 	# Sort the results with `sort` for a consistent comparison against
 	# expected
-	git for-each-ref \
+	shit for-each-ref \
 		--format="%(refname)" \
 		--no-sort \
 		"refs/tags/multi-*" | sort >actual &&
@@ -1365,9 +1365,9 @@ test_expect_success 'set up custom date sorting' '
 	i=1 &&
 	for when in 1707341660 945129922 1622806011 1169484241
 	do
-		GIT_COMMITTER_DATE="@$when +0000" \
-		GIT_COMMITTER_EMAIL="user@example.com" \
-		git tag -m "tag $when" custom-dates-$i &&
+		shit_COMMITTER_DATE="@$when +0000" \
+		shit_COMMITTER_EMAIL="user@example.com" \
+		shit tag -m "tag $when" custom-dates-$i &&
 		i=$(($i+1)) || return 1
 	done
 '
@@ -1380,7 +1380,7 @@ test_expect_success 'sort by date defaults to full timestamp' '
 	1707341660 refs/tags/custom-dates-1
 	EOF
 
-	git for-each-ref \
+	shit for-each-ref \
 		--format="%(creatordate:unix) %(refname)" \
 		--sort=creatordate \
 		"refs/tags/custom-dates-*" >actual &&
@@ -1395,7 +1395,7 @@ test_expect_success 'sort by custom date format' '
 	21:34:20 refs/tags/custom-dates-1
 	EOF
 
-	git for-each-ref \
+	shit for-each-ref \
 		--format="%(creatordate:format:%H:%M:%S) %(refname)" \
 		--sort="creatordate:format:%H:%M:%S" \
 		"refs/tags/custom-dates-*" >actual &&
@@ -1403,11 +1403,11 @@ test_expect_success 'sort by custom date format' '
 '
 
 test_expect_success 'do not dereference NULL upon %(HEAD) on unborn branch' '
-	test_when_finished "git checkout main" &&
-	git for-each-ref --format="%(HEAD) %(refname:short)" refs/heads/ >actual &&
+	test_when_finished "shit checkout main" &&
+	shit for-each-ref --format="%(HEAD) %(refname:short)" refs/heads/ >actual &&
 	sed -e "s/^\* /  /" actual >expect &&
-	git checkout --orphan orphaned-branch &&
-	git for-each-ref --format="%(HEAD) %(refname:short)" refs/heads/ >actual &&
+	shit checkout --orphan orphaned-branch &&
+	shit for-each-ref --format="%(HEAD) %(refname:short)" refs/heads/ >actual &&
 	test_cmp expect actual
 '
 
@@ -1425,8 +1425,8 @@ unfold () {
 
 test_expect_success 'set up trailers for next test' '
 	echo "Some contents" > two &&
-	git add two &&
-	git commit -F - <<-EOF
+	shit add two &&
+	shit commit -F - <<-EOF
 	trailers: this commit message has trailers
 
 	Some message contents
@@ -1439,9 +1439,9 @@ test_trailer_option () {
 	title=$1 option=$2
 	cat >expect
 	test_expect_success "$title" '
-		git for-each-ref --format="%($option)" refs/heads/main >actual &&
+		shit for-each-ref --format="%($option)" refs/heads/main >actual &&
 		test_cmp expect actual &&
-		git for-each-ref --format="%(contents:$option)" refs/heads/main >actual &&
+		shit for-each-ref --format="%(contents:$option)" refs/heads/main >actual &&
 		test_cmp expect actual
 	'
 }
@@ -1565,9 +1565,9 @@ test_failing_trailer_option () {
 	cat >expect
 	test_expect_success "$title" '
 		# error message cannot be checked under i18n
-		test_must_fail git for-each-ref --format="%($option)" refs/heads/main 2>actual &&
+		test_must_fail shit for-each-ref --format="%($option)" refs/heads/main 2>actual &&
 		test_cmp expect actual &&
-		test_must_fail git for-each-ref --format="%(contents:$option)" refs/heads/main 2>actual &&
+		test_must_fail shit for-each-ref --format="%(contents:$option)" refs/heads/main 2>actual &&
 		test_cmp expect actual
 	'
 }
@@ -1586,14 +1586,14 @@ test_expect_success 'if arguments, %(contents:trailers) shows error if colon is 
 	cat >expect <<-EOF &&
 	fatal: unrecognized %(contents) argument: trailersonly
 	EOF
-	test_must_fail git for-each-ref --format="%(contents:trailersonly)" 2>actual &&
+	test_must_fail shit for-each-ref --format="%(contents:trailersonly)" 2>actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'basic atom: head contents:trailers' '
-	git for-each-ref --format="%(contents:trailers)" refs/heads/main >actual &&
+	shit for-each-ref --format="%(contents:trailers)" refs/heads/main >actual &&
 	sanitize_pgp <actual >actual.clean &&
-	# git for-each-ref ends with a blank line
+	# shit for-each-ref ends with a blank line
 	cat >expect <<-EOF &&
 	$(cat trailers)
 
@@ -1602,29 +1602,29 @@ test_expect_success 'basic atom: head contents:trailers' '
 '
 
 test_expect_success 'basic atom: rest must fail' '
-	test_must_fail git for-each-ref --format="%(rest)" refs/heads/main
+	test_must_fail shit for-each-ref --format="%(rest)" refs/heads/main
 '
 
 test_expect_success 'HEAD atom does not take arguments' '
-	test_must_fail git for-each-ref --format="%(HEAD:foo)" 2>err &&
+	test_must_fail shit for-each-ref --format="%(HEAD:foo)" 2>err &&
 	echo "fatal: %(HEAD) does not take arguments" >expect &&
 	test_cmp expect err
 '
 
 test_expect_success 'subject atom rejects unknown arguments' '
-	test_must_fail git for-each-ref --format="%(subject:foo)" 2>err &&
+	test_must_fail shit for-each-ref --format="%(subject:foo)" 2>err &&
 	echo "fatal: unrecognized %(subject) argument: foo" >expect &&
 	test_cmp expect err
 '
 
 test_expect_success 'refname atom rejects unknown arguments' '
-	test_must_fail git for-each-ref --format="%(refname:foo)" 2>err &&
+	test_must_fail shit for-each-ref --format="%(refname:foo)" 2>err &&
 	echo "fatal: unrecognized %(refname) argument: foo" >expect &&
 	test_cmp expect err
 '
 
 test_expect_success 'trailer parsing not fooled by --- line' '
-	git commit --allow-empty -F - <<-\EOF &&
+	shit commit --allow-empty -F - <<-\EOF &&
 	this is the subject
 
 	This is the body. The message has a "---" line which would confuse a
@@ -1642,12 +1642,12 @@ test_expect_success 'trailer parsing not fooled by --- line' '
 		echo "trailer: right" &&
 		echo
 	} >expect &&
-	git for-each-ref --format="%(trailers)" refs/heads/main >actual &&
+	shit for-each-ref --format="%(trailers)" refs/heads/main >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'Add symbolic ref for the following tests' '
-	git symbolic-ref refs/heads/sym refs/heads/main
+	shit symbolic-ref refs/heads/sym refs/heads/main
 '
 
 cat >expected <<EOF
@@ -1655,7 +1655,7 @@ refs/heads/main
 EOF
 
 test_expect_success 'Verify usage of %(symref) atom' '
-	git for-each-ref --format="%(symref)" refs/heads/sym >actual &&
+	shit for-each-ref --format="%(symref)" refs/heads/sym >actual &&
 	test_cmp expected actual
 '
 
@@ -1664,7 +1664,7 @@ heads/main
 EOF
 
 test_expect_success 'Verify usage of %(symref:short) atom' '
-	git for-each-ref --format="%(symref:short)" refs/heads/sym >actual &&
+	shit for-each-ref --format="%(symref:short)" refs/heads/sym >actual &&
 	test_cmp expected actual
 '
 
@@ -1674,12 +1674,12 @@ heads/main
 EOF
 
 test_expect_success 'Verify usage of %(symref:lstrip) atom' '
-	git for-each-ref --format="%(symref:lstrip=2)" refs/heads/sym > actual &&
-	git for-each-ref --format="%(symref:lstrip=-2)" refs/heads/sym >> actual &&
+	shit for-each-ref --format="%(symref:lstrip=2)" refs/heads/sym > actual &&
+	shit for-each-ref --format="%(symref:lstrip=-2)" refs/heads/sym >> actual &&
 	test_cmp expected actual &&
 
-	git for-each-ref --format="%(symref:strip=2)" refs/heads/sym > actual &&
-	git for-each-ref --format="%(symref:strip=-2)" refs/heads/sym >> actual &&
+	shit for-each-ref --format="%(symref:strip=2)" refs/heads/sym > actual &&
+	shit for-each-ref --format="%(symref:strip=-2)" refs/heads/sym >> actual &&
 	test_cmp expected actual
 '
 
@@ -1689,58 +1689,58 @@ refs/heads
 EOF
 
 test_expect_success 'Verify usage of %(symref:rstrip) atom' '
-	git for-each-ref --format="%(symref:rstrip=2)" refs/heads/sym > actual &&
-	git for-each-ref --format="%(symref:rstrip=-2)" refs/heads/sym >> actual &&
+	shit for-each-ref --format="%(symref:rstrip=2)" refs/heads/sym > actual &&
+	shit for-each-ref --format="%(symref:rstrip=-2)" refs/heads/sym >> actual &&
 	test_cmp expected actual
 '
 
 test_expect_success ':remotename and :remoteref' '
-	git init remote-tests &&
+	shit init remote-tests &&
 	(
 		cd remote-tests &&
 		test_commit initial &&
-		git branch -M main &&
-		git remote add from fifth.coffee:blub &&
-		git config branch.main.remote from &&
-		git config branch.main.merge refs/heads/stable &&
-		git remote add to southridge.audio:repo &&
-		git config remote.to.push "refs/heads/*:refs/heads/pushed/*" &&
-		git config branch.main.pushRemote to &&
+		shit branch -M main &&
+		shit remote add from fifth.coffee:blub &&
+		shit config branch.main.remote from &&
+		shit config branch.main.merge refs/heads/stable &&
+		shit remote add to southridge.audio:repo &&
+		shit config remote.to.defecate "refs/heads/*:refs/heads/defecateed/*" &&
+		shit config branch.main.defecateRemote to &&
 		for pair in "%(upstream)=refs/remotes/from/stable" \
 			"%(upstream:remotename)=from" \
 			"%(upstream:remoteref)=refs/heads/stable" \
-			"%(push)=refs/remotes/to/pushed/main" \
-			"%(push:remotename)=to" \
-			"%(push:remoteref)=refs/heads/pushed/main"
+			"%(defecate)=refs/remotes/to/defecateed/main" \
+			"%(defecate:remotename)=to" \
+			"%(defecate:remoteref)=refs/heads/defecateed/main"
 		do
 			echo "${pair#*=}" >expect &&
-			git for-each-ref --format="${pair%=*}" \
+			shit for-each-ref --format="${pair%=*}" \
 				refs/heads/main >actual &&
 			test_cmp expect actual || exit 1
 		done &&
-		git branch push-simple &&
-		git config branch.push-simple.pushRemote from &&
-		actual="$(git for-each-ref \
-			--format="%(push:remotename),%(push:remoteref)" \
-			refs/heads/push-simple)" &&
+		shit branch defecate-simple &&
+		shit config branch.defecate-simple.defecateRemote from &&
+		actual="$(shit for-each-ref \
+			--format="%(defecate:remotename),%(defecate:remoteref)" \
+			refs/heads/defecate-simple)" &&
 		test from, = "$actual"
 	)
 '
 
 test_expect_success 'for-each-ref --ignore-case ignores case' '
-	git for-each-ref --format="%(refname)" refs/heads/MAIN >actual &&
+	shit for-each-ref --format="%(refname)" refs/heads/MAIN >actual &&
 	test_must_be_empty actual &&
 
 	echo refs/heads/main >expect &&
-	git for-each-ref --format="%(refname)" --ignore-case \
+	shit for-each-ref --format="%(refname)" --ignore-case \
 		refs/heads/MAIN >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'for-each-ref --omit-empty works' '
-	git for-each-ref --format="%(refname)" >actual &&
+	shit for-each-ref --format="%(refname)" >actual &&
 	test_line_count -gt 1 actual &&
-	git for-each-ref --format="%(if:equals=refs/heads/main)%(refname)%(then)%(refname)%(end)" --omit-empty >actual &&
+	shit for-each-ref --format="%(if:equals=refs/heads/main)%(refname)%(then)%(refname)%(end)" --omit-empty >actual &&
 	echo refs/heads/main >expect &&
 	test_cmp expect actual
 '
@@ -1752,13 +1752,13 @@ test_expect_success 'for-each-ref --ignore-case works on multiple sort keys' '
 	do
 		for subject in a A b B
 		do
-			GIT_COMMITTER_EMAIL="$email@example.com" \
-			git tag -m "tag $subject" icase-$(printf %02d $nr) &&
+			shit_COMMITTER_EMAIL="$email@example.com" \
+			shit tag -m "tag $subject" icase-$(printf %02d $nr) &&
 			nr=$((nr+1))||
 			return 1
 		done
 	done &&
-	git for-each-ref --ignore-case \
+	shit for-each-ref --ignore-case \
 		--format="%(taggeremail) %(subject) %(refname)" \
 		--sort=refname \
 		--sort=subject \
@@ -1786,17 +1786,17 @@ test_expect_success 'for-each-ref --ignore-case works on multiple sort keys' '
 '
 
 test_expect_success 'for-each-ref reports broken tags' '
-	git tag -m "good tag" broken-tag-good HEAD &&
-	git cat-file tag broken-tag-good >good &&
+	shit tag -m "good tag" broken-tag-good HEAD &&
+	shit cat-file tag broken-tag-good >good &&
 	sed s/commit/blob/ <good >bad &&
-	bad=$(git hash-object -w -t tag bad) &&
-	git update-ref refs/tags/broken-tag-bad $bad &&
-	test_must_fail git for-each-ref --format="%(*objectname)" \
+	bad=$(shit hash-object -w -t tag bad) &&
+	shit update-ref refs/tags/broken-tag-bad $bad &&
+	test_must_fail shit for-each-ref --format="%(*objectname)" \
 		refs/tags/broken-tag-*
 '
 
 test_expect_success 'set up tag with signature and no blank lines' '
-	git tag -F - fake-sig-no-blanks <<-\EOF
+	shit tag -F - fake-sig-no-blanks <<-\EOF
 	this is the subject
 	-----BEGIN PGP SIGNATURE-----
 	not a real signature, but we just care about the
@@ -1821,7 +1821,7 @@ test_expect_success 'set up tag with CRLF signature' '
 	from the signature header.
 	-----END PGP SIGNATURE-----
 	EOF
-	git tag -F - --cleanup=verbatim fake-sig-crlf
+	shit tag -F - --cleanup=verbatim fake-sig-crlf
 '
 
 test_atom refs/tags/fake-sig-crlf contents:subject 'this is the subject'
@@ -1835,21 +1835,21 @@ sig_crlf="$(printf "%s" "$sig" | append_cr; echo dummy)"
 sig_crlf=${sig_crlf%dummy}
 test_atom refs/tags/fake-sig-crlf contents:signature "$sig_crlf"
 
-test_expect_success 'git for-each-ref --stdin: empty' '
+test_expect_success 'shit for-each-ref --stdin: empty' '
 	>in &&
-	git for-each-ref --format="%(refname)" --stdin <in >actual &&
-	git for-each-ref --format="%(refname)" >expect &&
+	shit for-each-ref --format="%(refname)" --stdin <in >actual &&
+	shit for-each-ref --format="%(refname)" >expect &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git for-each-ref --stdin: fails if extra args' '
+test_expect_success 'shit for-each-ref --stdin: fails if extra args' '
 	>in &&
-	test_must_fail git for-each-ref --format="%(refname)" \
+	test_must_fail shit for-each-ref --format="%(refname)" \
 		--stdin refs/heads/extra <in 2>err &&
 	grep "unknown arguments supplied with --stdin" err
 '
 
-test_expect_success 'git for-each-ref --stdin: matches' '
+test_expect_success 'shit for-each-ref --stdin: matches' '
 	cat >in <<-EOF &&
 	refs/tags/multi*
 	refs/heads/amb*
@@ -1868,32 +1868,32 @@ test_expect_success 'git for-each-ref --stdin: matches' '
 	refs/tags/multiline
 	EOF
 
-	git for-each-ref --format="%(refname)" --stdin <in >actual &&
+	shit for-each-ref --format="%(refname)" --stdin <in >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git for-each-ref with non-existing refs' '
+test_expect_success 'shit for-each-ref with non-existing refs' '
 	cat >in <<-EOF &&
 	refs/heads/this-ref-does-not-exist
 	refs/tags/bogus
 	EOF
 
-	git for-each-ref --format="%(refname)" --stdin <in >actual &&
+	shit for-each-ref --format="%(refname)" --stdin <in >actual &&
 	test_must_be_empty actual &&
 
-	xargs git for-each-ref --format="%(refname)" <in >actual &&
+	xargs shit for-each-ref --format="%(refname)" <in >actual &&
 	test_must_be_empty actual
 '
 
-test_expect_success 'git for-each-ref with nested tags' '
-	git tag -am "Normal tag" nested/base HEAD &&
-	git tag -am "Nested tag" nested/nest1 refs/tags/nested/base &&
-	git tag -am "Double nested tag" nested/nest2 refs/tags/nested/nest1 &&
+test_expect_success 'shit for-each-ref with nested tags' '
+	shit tag -am "Normal tag" nested/base HEAD &&
+	shit tag -am "Nested tag" nested/nest1 refs/tags/nested/base &&
+	shit tag -am "Double nested tag" nested/nest2 refs/tags/nested/nest1 &&
 
-	head_oid="$(git rev-parse HEAD)" &&
-	base_tag_oid="$(git rev-parse refs/tags/nested/base)" &&
-	nest1_tag_oid="$(git rev-parse refs/tags/nested/nest1)" &&
-	nest2_tag_oid="$(git rev-parse refs/tags/nested/nest2)" &&
+	head_oid="$(shit rev-parse HEAD)" &&
+	base_tag_oid="$(shit rev-parse refs/tags/nested/base)" &&
+	nest1_tag_oid="$(shit rev-parse refs/tags/nested/nest1)" &&
+	nest2_tag_oid="$(shit rev-parse refs/tags/nested/nest2)" &&
 
 	cat >expect <<-EOF &&
 	refs/tags/nested/base $base_tag_oid tag $head_oid commit
@@ -1901,7 +1901,7 @@ test_expect_success 'git for-each-ref with nested tags' '
 	refs/tags/nested/nest2 $nest2_tag_oid tag $head_oid commit
 	EOF
 
-	git for-each-ref \
+	shit for-each-ref \
 		--format="%(refname) %(objectname) %(objecttype) %(*objectname) %(*objecttype)" \
 		refs/tags/nested/ >actual &&
 	test_cmp expect actual
@@ -1911,54 +1911,54 @@ GRADE_FORMAT="%(signature:grade)%0a%(signature:key)%0a%(signature:signer)%0a%(si
 TRUSTLEVEL_FORMAT="%(signature:trustlevel)%0a%(signature:key)%0a%(signature:signer)%0a%(signature:fingerprint)%0a%(signature:primarykeyfingerprint)"
 
 test_expect_success GPG 'setup for signature atom using gpg' '
-	git checkout -b signed &&
+	shit checkout -b signed &&
 
 	test_when_finished "test_unconfig commit.gpgSign" &&
 
 	echo "1" >file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -S -m "file: 1" &&
-	git tag first-signed &&
+	shit commit -S -m "file: 1" &&
+	shit tag first-signed &&
 
 	echo "2" >file &&
 	test_tick &&
-	git commit -a -m "file: 2" &&
-	git tag second-unsigned &&
+	shit commit -a -m "file: 2" &&
+	shit tag second-unsigned &&
 
-	git config commit.gpgSign 1 &&
+	shit config commit.gpgSign 1 &&
 	echo "3" >file &&
 	test_tick &&
-	git commit -a --no-gpg-sign -m "file: 3" &&
-	git tag third-unsigned &&
+	shit commit -a --no-gpg-sign -m "file: 3" &&
+	shit tag third-unsigned &&
 
 	test_tick &&
-	git rebase -f HEAD^^ && git tag second-signed HEAD^ &&
-	git tag third-signed &&
+	shit rebase -f HEAD^^ && shit tag second-signed HEAD^ &&
+	shit tag third-signed &&
 
 	echo "4" >file &&
 	test_tick &&
-	git commit -a -SB7227189 -m "file: 4" &&
-	git tag fourth-signed &&
+	shit commit -a -SB7227189 -m "file: 4" &&
+	shit tag fourth-signed &&
 
 	echo "5" >file &&
 	test_tick &&
-	git commit -a --no-gpg-sign -m "file: 5" &&
-	git tag fifth-unsigned &&
+	shit commit -a --no-gpg-sign -m "file: 5" &&
+	shit tag fifth-unsigned &&
 
 	echo "6" >file &&
 	test_tick &&
-	git commit -a --no-gpg-sign -m "file: 6" &&
+	shit commit -a --no-gpg-sign -m "file: 6" &&
 
 	test_tick &&
-	git rebase -f HEAD^^ &&
-	git tag fifth-signed HEAD^ &&
-	git tag sixth-signed &&
+	shit rebase -f HEAD^^ &&
+	shit tag fifth-signed HEAD^ &&
+	shit tag sixth-signed &&
 
 	echo "7" >file &&
 	test_tick &&
-	git commit -a --no-gpg-sign -m "file: 7" &&
-	git tag seventh-unsigned
+	shit commit -a --no-gpg-sign -m "file: 7" &&
+	shit tag seventh-unsigned
 '
 
 test_expect_success GPGSSH 'setup for signature atom using ssh' '
@@ -1968,21 +1968,21 @@ test_expect_success GPGSSH 'setup for signature atom using ssh' '
 	test_config user.signingkey "${GPGSSH_KEY_PRIMARY}" &&
 	echo "8" >file &&
 	test_tick &&
-	git add file &&
-	git commit -S -m "file: 8" &&
-	git tag eighth-signed-ssh
+	shit add file &&
+	shit commit -S -m "file: 8" &&
+	shit tag eighth-signed-ssh
 '
 
 test_expect_success GPG2 'bare signature atom' '
-	git verify-commit first-signed 2>expect &&
+	shit verify-commit first-signed 2>expect &&
 	echo  >>expect &&
-	git for-each-ref refs/tags/first-signed \
+	shit for-each-ref refs/tags/first-signed \
 		--format="%(signature)" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success GPG 'show good signature with custom format' '
-	git verify-commit first-signed &&
+	shit verify-commit first-signed &&
 	cat >expect <<-\EOF &&
 	G
 	13B6F51ECDDE430D
@@ -1990,7 +1990,7 @@ test_expect_success GPG 'show good signature with custom format' '
 	73D758744BE721698EC54E8713B6F51ECDDE430D
 	73D758744BE721698EC54E8713B6F51ECDDE430D
 	EOF
-	git for-each-ref refs/tags/first-signed \
+	shit for-each-ref refs/tags/first-signed \
 		--format="$GRADE_FORMAT" >actual &&
 	test_cmp expect actual
 '
@@ -2006,17 +2006,17 @@ test_expect_success GPGSSH 'show good signature with custom format
 
 	EOF
 	sed "s|FINGERPRINT|$FINGERPRINT|g" expect.tmpl >expect &&
-	git for-each-ref refs/tags/eighth-signed-ssh \
+	shit for-each-ref refs/tags/eighth-signed-ssh \
 		--format="$GRADE_FORMAT" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success GPG 'signature atom with grade option and bad signature' '
-	git cat-file commit third-signed >raw &&
+	shit cat-file commit third-signed >raw &&
 	sed -e "s/^file: 3/file: 3 forged/" raw >forged1 &&
-	FORGED1=$(git hash-object -w -t commit forged1) &&
-	git update-ref refs/tags/third-signed "$FORGED1" &&
-	test_must_fail git verify-commit "$FORGED1" &&
+	FORGED1=$(shit hash-object -w -t commit forged1) &&
+	shit update-ref refs/tags/third-signed "$FORGED1" &&
+	test_must_fail shit verify-commit "$FORGED1" &&
 
 	cat >expect <<-\EOF &&
 	B
@@ -2025,7 +2025,7 @@ test_expect_success GPG 'signature atom with grade option and bad signature' '
 
 
 	EOF
-	git for-each-ref refs/tags/third-signed \
+	shit for-each-ref refs/tags/third-signed \
 		--format="$GRADE_FORMAT" >actual &&
 	test_cmp expect actual
 '
@@ -2038,7 +2038,7 @@ test_expect_success GPG 'show untrusted signature with custom format' '
 	F8364A59E07FFE9F4D63005A65A0EEA02E30CAD7
 	D4BE22311AD3131E5EDA29A461092E85B7227189
 	EOF
-	git for-each-ref refs/tags/fourth-signed \
+	shit for-each-ref refs/tags/fourth-signed \
 		--format="$GRADE_FORMAT" >actual &&
 	test_cmp expect actual
 '
@@ -2051,7 +2051,7 @@ test_expect_success GPG 'show untrusted signature with undefined trust level' '
 	F8364A59E07FFE9F4D63005A65A0EEA02E30CAD7
 	D4BE22311AD3131E5EDA29A461092E85B7227189
 	EOF
-	git for-each-ref refs/tags/fourth-signed \
+	shit for-each-ref refs/tags/fourth-signed \
 		--format="$TRUSTLEVEL_FORMAT" >actual &&
 	test_cmp expect actual
 '
@@ -2064,7 +2064,7 @@ test_expect_success GPG 'show untrusted signature with ultimate trust level' '
 	73D758744BE721698EC54E8713B6F51ECDDE430D
 	73D758744BE721698EC54E8713B6F51ECDDE430D
 	EOF
-	git for-each-ref refs/tags/sixth-signed \
+	shit for-each-ref refs/tags/sixth-signed \
 		--format="$TRUSTLEVEL_FORMAT" >actual &&
 	test_cmp expect actual
 '
@@ -2077,7 +2077,7 @@ test_expect_success GPG 'show unknown signature with custom format' '
 
 
 	EOF
-	GNUPGHOME="$GNUPGHOME_NOT_USED" git for-each-ref \
+	GNUPGHOME="$GNUPGHOME_NOT_USED" shit for-each-ref \
 		refs/tags/sixth-signed --format="$GRADE_FORMAT" >actual &&
 	test_cmp expect actual
 '
@@ -2090,7 +2090,7 @@ test_expect_success GPG 'show lack of signature with custom format' '
 
 
 	EOF
-	git for-each-ref refs/tags/seventh-unsigned \
+	shit for-each-ref refs/tags/seventh-unsigned \
 		--format="$GRADE_FORMAT" >actual &&
 	test_cmp expect actual
 '

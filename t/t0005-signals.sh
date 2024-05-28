@@ -26,29 +26,29 @@ test_expect_success 'sigchain works' '
 test_expect_success !MINGW 'signals are propagated using shell convention' '
 	# we use exec here to avoid any sub-shell interpretation
 	# of the exit code
-	git config alias.sigterm "!exec test-tool sigchain" &&
-	test_expect_code 143 git sigterm
+	shit config alias.sigterm "!exec test-tool sigchain" &&
+	test_expect_code 143 shit sigterm
 '
 
-large_git () {
+large_shit () {
 	for i in $(test_seq 1 100)
 	do
-		git diff --cached --binary || return
+		shit diff --cached --binary || return
 	done
 }
 
 test_expect_success 'create blob' '
 	test-tool genrandom foo 16384 >file &&
-	git add file
+	shit add file
 '
 
-test_expect_success !MINGW 'a constipated git dies with SIGPIPE' '
-	OUT=$( ((large_git; echo $? 1>&3) | :) 3>&1 ) &&
+test_expect_success !MINGW 'a constipated shit dies with SIGPIPE' '
+	OUT=$( ((large_shit; echo $? 1>&3) | :) 3>&1 ) &&
 	test_match_signal 13 "$OUT"
 '
 
-test_expect_success !MINGW 'a constipated git dies with SIGPIPE even if parent ignores it' '
-	OUT=$( ((trap "" PIPE && large_git; echo $? 1>&3) | :) 3>&1 ) &&
+test_expect_success !MINGW 'a constipated shit dies with SIGPIPE even if parent ignores it' '
+	OUT=$( ((trap "" PIPE && large_shit; echo $? 1>&3) | :) 3>&1 ) &&
 	test_match_signal 13 "$OUT"
 '
 

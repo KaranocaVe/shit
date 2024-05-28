@@ -12,52 +12,52 @@ ARTICLES =
 SP_ARTICLES =
 OBSOLETE_HTML =
 
--include GIT-EXCLUDED-PROGRAMS
+-include shit-EXCLUDED-PROGRAMS
 
 MAN1_TXT += $(filter-out \
 		$(patsubst %,%.txt,$(EXCLUDED_PROGRAMS)) \
 		$(addsuffix .txt, $(ARTICLES) $(SP_ARTICLES)), \
-		$(wildcard git-*.txt))
-MAN1_TXT += git.txt
-MAN1_TXT += gitk.txt
-MAN1_TXT += gitweb.txt
+		$(wildcard shit-*.txt))
+MAN1_TXT += shit.txt
+MAN1_TXT += shitk.txt
+MAN1_TXT += shitweb.txt
 MAN1_TXT += scalar.txt
 
 # man5 / man7 guides (note: new guides should also be added to command-list.txt)
-MAN5_TXT += gitattributes.txt
-MAN5_TXT += gitformat-bundle.txt
-MAN5_TXT += gitformat-chunk.txt
-MAN5_TXT += gitformat-commit-graph.txt
-MAN5_TXT += gitformat-index.txt
-MAN5_TXT += gitformat-pack.txt
-MAN5_TXT += gitformat-signature.txt
-MAN5_TXT += githooks.txt
-MAN5_TXT += gitignore.txt
-MAN5_TXT += gitmailmap.txt
-MAN5_TXT += gitmodules.txt
-MAN5_TXT += gitprotocol-capabilities.txt
-MAN5_TXT += gitprotocol-common.txt
-MAN5_TXT += gitprotocol-http.txt
-MAN5_TXT += gitprotocol-pack.txt
-MAN5_TXT += gitprotocol-v2.txt
-MAN5_TXT += gitrepository-layout.txt
-MAN5_TXT += gitweb.conf.txt
+MAN5_TXT += shitattributes.txt
+MAN5_TXT += shitformat-bundle.txt
+MAN5_TXT += shitformat-chunk.txt
+MAN5_TXT += shitformat-commit-graph.txt
+MAN5_TXT += shitformat-index.txt
+MAN5_TXT += shitformat-pack.txt
+MAN5_TXT += shitformat-signature.txt
+MAN5_TXT += shithooks.txt
+MAN5_TXT += shitignore.txt
+MAN5_TXT += shitmailmap.txt
+MAN5_TXT += shitmodules.txt
+MAN5_TXT += shitprotocol-capabilities.txt
+MAN5_TXT += shitprotocol-common.txt
+MAN5_TXT += shitprotocol-http.txt
+MAN5_TXT += shitprotocol-pack.txt
+MAN5_TXT += shitprotocol-v2.txt
+MAN5_TXT += shitrepository-layout.txt
+MAN5_TXT += shitweb.conf.txt
 
-MAN7_TXT += gitcli.txt
-MAN7_TXT += gitcore-tutorial.txt
-MAN7_TXT += gitcredentials.txt
-MAN7_TXT += gitcvs-migration.txt
-MAN7_TXT += gitdiffcore.txt
-MAN7_TXT += giteveryday.txt
-MAN7_TXT += gitfaq.txt
-MAN7_TXT += gitglossary.txt
-MAN7_TXT += gitnamespaces.txt
-MAN7_TXT += gitremote-helpers.txt
-MAN7_TXT += gitrevisions.txt
-MAN7_TXT += gitsubmodules.txt
-MAN7_TXT += gittutorial-2.txt
-MAN7_TXT += gittutorial.txt
-MAN7_TXT += gitworkflows.txt
+MAN7_TXT += shitcli.txt
+MAN7_TXT += shitcore-tutorial.txt
+MAN7_TXT += shitcredentials.txt
+MAN7_TXT += shitcvs-migration.txt
+MAN7_TXT += shitdiffcore.txt
+MAN7_TXT += shiteveryday.txt
+MAN7_TXT += shitfaq.txt
+MAN7_TXT += shitglossary.txt
+MAN7_TXT += shitnamespaces.txt
+MAN7_TXT += shitremote-helpers.txt
+MAN7_TXT += shitrevisions.txt
+MAN7_TXT += shitsubmodules.txt
+MAN7_TXT += shittutorial-2.txt
+MAN7_TXT += shittutorial.txt
+MAN7_TXT += shitworkflows.txt
 
 HOWTO_TXT += $(wildcard howto/*.txt)
 
@@ -74,23 +74,23 @@ endif
 
 MAN_XML = $(patsubst %.txt,%.xml,$(MAN_TXT))
 MAN_HTML = $(patsubst %.txt,%.html,$(MAN_TXT))
-GIT_MAN_REF = master
+shit_MAN_REF = master
 
 OBSOLETE_HTML += everyday.html
-OBSOLETE_HTML += git-remote-helpers.html
+OBSOLETE_HTML += shit-remote-helpers.html
 
 ARTICLES += howto-index
-ARTICLES += git-tools
-ARTICLES += git-bisect-lk2009
+ARTICLES += shit-tools
+ARTICLES += shit-bisect-lk2009
 # with their own formatting rules.
 SP_ARTICLES += user-manual
 SP_ARTICLES += howto/new-command
 SP_ARTICLES += howto/revert-branch-rebase
 SP_ARTICLES += howto/using-merge-subtree
-SP_ARTICLES += howto/using-signed-tag-in-pull-request
-SP_ARTICLES += howto/use-git-daemon
+SP_ARTICLES += howto/using-signed-tag-in-poop-request
+SP_ARTICLES += howto/use-shit-daemon
 SP_ARTICLES += howto/update-hook-example
-SP_ARTICLES += howto/setup-git-server-over-http
+SP_ARTICLES += howto/setup-shit-server-over-http
 SP_ARTICLES += howto/separating-topic-branches
 SP_ARTICLES += howto/revert-a-faulty-merge
 SP_ARTICLES += howto/recover-corrupted-blob-object
@@ -98,7 +98,7 @@ SP_ARTICLES += howto/recover-corrupted-object-harder
 SP_ARTICLES += howto/rebuild-from-update-hook
 SP_ARTICLES += howto/rebase-from-internal-branch
 SP_ARTICLES += howto/keep-canonical-history-correct
-SP_ARTICLES += howto/maintain-git
+SP_ARTICLES += howto/maintain-shit
 SP_ARTICLES += howto/coordinate-embargoed-releases
 API_DOCS = $(patsubst %.txt,%,$(filter-out technical/api-index-skel.txt technical/api-index.txt, $(wildcard technical/api-*.txt)))
 SP_ARTICLES += $(API_DOCS)
@@ -107,7 +107,7 @@ TECH_DOCS += ReviewingGuidelines
 TECH_DOCS += MyFirstContribution
 TECH_DOCS += MyFirstObjectWalk
 TECH_DOCS += SubmittingPatches
-TECH_DOCS += ToolsForGit
+TECH_DOCS += ToolsForshit
 TECH_DOCS += technical/bitmap-format
 TECH_DOCS += technical/bundle-uri
 TECH_DOCS += technical/hash-function-transition
@@ -116,7 +116,7 @@ TECH_DOCS += technical/multi-pack-index
 TECH_DOCS += technical/pack-heuristics
 TECH_DOCS += technical/parallel-checkout
 TECH_DOCS += technical/partial-clone
-TECH_DOCS += technical/racy-git
+TECH_DOCS += technical/racy-shit
 TECH_DOCS += technical/reftable
 TECH_DOCS += technical/scalar
 TECH_DOCS += technical/send-pack-pipeline
@@ -136,16 +136,16 @@ DOC_MAN7 = $(patsubst %.txt,%.7,$(filter $(MAN_FILTER),$(MAN7_TXT)))
 
 prefix ?= $(HOME)
 bindir ?= $(prefix)/bin
-htmldir ?= $(prefix)/share/doc/git-doc
+htmldir ?= $(prefix)/share/doc/shit-doc
 infodir ?= $(prefix)/share/info
-pdfdir ?= $(prefix)/share/doc/git-doc
+pdfdir ?= $(prefix)/share/doc/shit-doc
 mandir ?= $(prefix)/share/man
 man1dir = $(mandir)/man1
 man5dir = $(mandir)/man5
 man7dir = $(mandir)/man7
 # DESTDIR =
 
-GIT_DATE := $(shell git show --quiet --pretty='%as')
+shit_DATE := $(shell shit show --quiet --pretty='%as')
 
 ASCIIDOC = asciidoc
 ASCIIDOC_EXTRA =
@@ -153,9 +153,9 @@ ASCIIDOC_HTML = xhtml11
 ASCIIDOC_DOCBOOK = docbook
 ASCIIDOC_CONF = -f asciidoc.conf
 ASCIIDOC_COMMON = $(ASCIIDOC) $(ASCIIDOC_EXTRA) $(ASCIIDOC_CONF) \
-		-amanmanual='Git Manual' -amansource='Git $(GIT_VERSION)' \
-		-arevdate='$(GIT_DATE)'
-ASCIIDOC_DEPS = asciidoc.conf GIT-ASCIIDOCFLAGS
+		-amanmanual='shit Manual' -amansource='shit $(shit_VERSION)' \
+		-arevdate='$(shit_DATE)'
+ASCIIDOC_DEPS = asciidoc.conf shit-ASCIIDOCFLAGS
 TXT_TO_HTML = $(ASCIIDOC_COMMON) -b $(ASCIIDOC_HTML)
 TXT_TO_XML = $(ASCIIDOC_COMMON) -b $(ASCIIDOC_DOCBOOK)
 MANPAGE_XSL = manpage-normal.xsl
@@ -163,8 +163,8 @@ XMLTO = xmlto
 XMLTO_EXTRA =
 INSTALL ?= install
 RM ?= rm -f
-MAN_REPO = ../../git-manpages
-HTML_REPO = ../../git-htmldocs
+MAN_REPO = ../../shit-manpages
+HTML_REPO = ../../shit-htmldocs
 
 MAKEINFO = makeinfo
 INSTALL_INFO = install-info
@@ -187,7 +187,7 @@ endif
 # this is not set, and if set it shows an absolute link.  Older
 # stylesheets simply ignore this parameter.
 #
-# Distros may want to use MAN_BASE_URL=file:///path/to/git/docs/
+# Distros may want to use MAN_BASE_URL=file:///path/to/shit/docs/
 # or similar.
 ifndef MAN_BASE_URL
 MAN_BASE_URL = file://$(htmldir)/
@@ -202,7 +202,7 @@ ASCIIDOC_DOCBOOK = docbook5
 ASCIIDOC_EXTRA += -acompat-mode -atabsize=8
 ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
 ASCIIDOC_EXTRA += -alitdd='&\#x2d;&\#x2d;'
-ASCIIDOC_DEPS = asciidoctor-extensions.rb GIT-ASCIIDOCFLAGS
+ASCIIDOC_DEPS = asciidoctor-extensions.rb shit-ASCIIDOCFLAGS
 DBLATEX_COMMON =
 XMLTO_EXTRA += --skip-validation
 XMLTO_EXTRA += -x manpage.xsl
@@ -214,12 +214,12 @@ SHELL_PATH_SQ = $(subst ','\'',$(SHELL_PATH))
 
 ifdef DEFAULT_PAGER
 DEFAULT_PAGER_SQ = $(subst ','\'',$(DEFAULT_PAGER))
-ASCIIDOC_EXTRA += -a 'git-default-pager=$(DEFAULT_PAGER_SQ)'
+ASCIIDOC_EXTRA += -a 'shit-default-pager=$(DEFAULT_PAGER_SQ)'
 endif
 
 ifdef DEFAULT_EDITOR
 DEFAULT_EDITOR_SQ = $(subst ','\'',$(DEFAULT_EDITOR))
-ASCIIDOC_EXTRA += -a 'git-default-editor=$(DEFAULT_EDITOR_SQ)'
+ASCIIDOC_EXTRA += -a 'shit-default-editor=$(DEFAULT_EDITOR_SQ)'
 endif
 
 all: html man
@@ -231,7 +231,7 @@ man1: $(DOC_MAN1)
 man5: $(DOC_MAN5)
 man7: $(DOC_MAN7)
 
-info: git.info gitman.info
+info: shit.info shitman.info
 
 pdf: user-manual.pdf
 
@@ -247,10 +247,10 @@ install-man: man
 
 install-info: info
 	$(INSTALL) -d -m 755 $(DESTDIR)$(infodir)
-	$(INSTALL) -m 644 git.info gitman.info $(DESTDIR)$(infodir)
+	$(INSTALL) -m 644 shit.info shitman.info $(DESTDIR)$(infodir)
 	if test -r $(DESTDIR)$(infodir)/dir; then \
-	  $(INSTALL_INFO) --info-dir=$(DESTDIR)$(infodir) git.info ;\
-	  $(INSTALL_INFO) --info-dir=$(DESTDIR)$(infodir) gitman.info ;\
+	  $(INSTALL_INFO) --info-dir=$(DESTDIR)$(infodir) shit.info ;\
+	  $(INSTALL_INFO) --info-dir=$(DESTDIR)$(infodir) shitman.info ;\
 	else \
 	  echo "No directory found in $(DESTDIR)$(infodir)" >&2 ; \
 	fi
@@ -262,11 +262,11 @@ install-pdf: pdf
 install-html: html
 	'$(SHELL_PATH_SQ)' ./install-webdoc.sh $(DESTDIR)$(htmldir)
 
-../GIT-VERSION-FILE: FORCE
-	$(QUIET_SUBDIR0)../ $(QUIET_SUBDIR1) GIT-VERSION-FILE
+../shit-VERSION-FILE: FORCE
+	$(QUIET_SUBDIR0)../ $(QUIET_SUBDIR1) shit-VERSION-FILE
 
 ifneq ($(filter-out lint-docs clean,$(MAKECMDGOALS)),)
--include ../GIT-VERSION-FILE
+-include ../shit-VERSION-FILE
 endif
 
 #
@@ -306,35 +306,35 @@ mergetools_txt = mergetools-diff.txt mergetools-merge.txt
 
 $(mergetools_txt): mergetools-list.made
 
-mergetools-list.made: ../git-mergetool--lib.sh $(wildcard ../mergetools/*)
+mergetools-list.made: ../shit-mergetool--lib.sh $(wildcard ../mergetools/*)
 	$(QUIET_GEN) \
 	$(SHELL_PATH) -c 'MERGE_TOOLS_DIR=../mergetools && TOOL_MODE=diff && \
-		. ../git-mergetool--lib.sh && \
+		. ../shit-mergetool--lib.sh && \
 		show_tool_names can_diff' | sed -e "s/\([a-z0-9]*\)/\`\1\`;;/" >mergetools-diff.txt && \
 	$(SHELL_PATH) -c 'MERGE_TOOLS_DIR=../mergetools && TOOL_MODE=merge && \
-		. ../git-mergetool--lib.sh && \
+		. ../shit-mergetool--lib.sh && \
 		show_tool_names can_merge' | sed -e "s/\([a-z0-9]*\)/\`\1\`;;/" >mergetools-merge.txt && \
 	date >$@
 
 TRACK_ASCIIDOCFLAGS = $(subst ','\'',$(ASCIIDOC_COMMON):$(ASCIIDOC_HTML):$(ASCIIDOC_DOCBOOK))
 
-GIT-ASCIIDOCFLAGS: FORCE
+shit-ASCIIDOCFLAGS: FORCE
 	@FLAGS='$(TRACK_ASCIIDOCFLAGS)'; \
-	    if test x"$$FLAGS" != x"`cat GIT-ASCIIDOCFLAGS 2>/dev/null`" ; then \
+	    if test x"$$FLAGS" != x"`cat shit-ASCIIDOCFLAGS 2>/dev/null`" ; then \
 		echo >&2 "    * new asciidoc flags"; \
-		echo "$$FLAGS" >GIT-ASCIIDOCFLAGS; \
+		echo "$$FLAGS" >shit-ASCIIDOCFLAGS; \
             fi
 
 clean:
 	$(RM) -rf .build/
 	$(RM) *.xml *.xml+ *.html *.html+ *.1 *.5 *.7
-	$(RM) *.texi *.texi+ *.texi++ git.info gitman.info
+	$(RM) *.texi *.texi+ *.texi++ shit.info shitman.info
 	$(RM) *.pdf
 	$(RM) howto-index.txt howto/*.html doc.dep
 	$(RM) technical/*.html technical/api-index.txt
 	$(RM) SubmittingPatches.txt
 	$(RM) $(cmds_txt) $(mergetools_txt) *.made
-	$(RM) GIT-ASCIIDOCFLAGS
+	$(RM) shit-ASCIIDOCFLAGS
 
 $(MAN_HTML): %.html : %.txt $(ASCIIDOC_DEPS)
 	$(QUIET_ASCIIDOC)$(TXT_TO_HTML) -d manpage -o $@ $<
@@ -355,16 +355,16 @@ manpage-cmd = $(QUIET_XMLTO)$(XMLTO) -m $(MANPAGE_XSL) $(XMLTO_EXTRA) man $<
 %.xml : %.txt $(ASCIIDOC_DEPS)
 	$(QUIET_ASCIIDOC)$(TXT_TO_XML) -d manpage -o $@ $<
 
-user-manual.xml: user-manual.txt user-manual.conf asciidoctor-extensions.rb GIT-ASCIIDOCFLAGS
+user-manual.xml: user-manual.txt user-manual.conf asciidoctor-extensions.rb shit-ASCIIDOCFLAGS
 	$(QUIET_ASCIIDOC)$(TXT_TO_XML) -d book -o $@ $<
 
 technical/api-index.txt: technical/api-index-skel.txt \
 	technical/api-index.sh $(patsubst %,%.txt,$(API_DOCS))
 	$(QUIET_GEN)cd technical && '$(SHELL_PATH_SQ)' ./api-index.sh
 
-technical/%.html: ASCIIDOC_EXTRA += -a git-relative-html-prefix=../
+technical/%.html: ASCIIDOC_EXTRA += -a shit-relative-html-prefix=../
 $(patsubst %,%.html,$(API_DOCS) technical/api-index $(TECH_DOCS)): %.html : %.txt \
-	asciidoc.conf GIT-ASCIIDOCFLAGS
+	asciidoc.conf shit-ASCIIDOCFLAGS
 	$(QUIET_ASCIIDOC)$(TXT_TO_HTML) $*.txt
 
 SubmittingPatches.txt: SubmittingPatches
@@ -379,7 +379,7 @@ XSLTOPTS += --param generate.consistent.ids 1
 user-manual.html: user-manual.xml $(XSLT)
 	$(QUIET_XSLTPROC)xsltproc $(XSLTOPTS) -o $@ $(XSLT) $<
 
-git.info: user-manual.texi
+shit.info: user-manual.texi
 	$(QUIET_MAKEINFO)$(MAKEINFO) --no-split -o $@ user-manual.texi
 
 user-manual.texi: user-manual.xml
@@ -390,7 +390,7 @@ user-manual.texi: user-manual.xml
 user-manual.pdf: user-manual.xml
 	$(QUIET_DBLATEX)$(DBLATEX) -o $@ $(DBLATEX_COMMON) $<
 
-gitman.texi: $(MAN_XML) cat-texi.perl texi.xsl
+shitman.texi: $(MAN_XML) cat-texi.perl texi.xsl
 	$(QUIET_DB2TEXI) \
 	($(foreach xml,$(sort $(MAN_XML)),xsltproc -o $(xml)+ texi.xsl $(xml) && \
 		$(DOCBOOK2X_TEXI) --encoding=UTF-8 --to-stdout $(xml)+ && \
@@ -398,7 +398,7 @@ gitman.texi: $(MAN_XML) cat-texi.perl texi.xsl
 	$(PERL_PATH) cat-texi.perl $@ <$@+ >$@ && \
 	$(RM) $@+
 
-gitman.info: gitman.texi
+shitman.info: shitman.texi
 	$(QUIET_MAKEINFO)$(MAKEINFO) --no-split --no-validate $<
 
 $(patsubst %.txt,%.texi,$(MAN_TXT)): %.texi : %.xml
@@ -410,10 +410,10 @@ howto-index.txt: howto-index.sh $(HOWTO_TXT)
 $(patsubst %,%.html,$(ARTICLES)) : %.html : %.txt
 	$(QUIET_ASCIIDOC)$(TXT_TO_HTML) $*.txt
 
-WEBDOC_DEST = /pub/software/scm/git/docs
+WEBDOC_DEST = /pub/software/scm/shit/docs
 
-howto/%.html: ASCIIDOC_EXTRA += -a git-relative-html-prefix=../
-$(patsubst %.txt,%.html,$(HOWTO_TXT)): %.html : %.txt GIT-ASCIIDOCFLAGS
+howto/%.html: ASCIIDOC_EXTRA += -a shit-relative-html-prefix=../
+$(patsubst %.txt,%.html,$(HOWTO_TXT)): %.html : %.txt shit-ASCIIDOCFLAGS
 	$(QUIET_ASCIIDOC) \
 	sed -e '1,/^$$/d' $< | \
 	$(TXT_TO_HTML) - >$@
@@ -421,41 +421,41 @@ $(patsubst %.txt,%.html,$(HOWTO_TXT)): %.html : %.txt GIT-ASCIIDOCFLAGS
 install-webdoc : html
 	'$(SHELL_PATH_SQ)' ./install-webdoc.sh $(WEBDOC_DEST)
 
-# You must have a clone of 'git-htmldocs' and 'git-manpages' repositories
-# next to the 'git' repository itself for the following to work.
+# You must have a clone of 'shit-htmldocs' and 'shit-manpages' repositories
+# next to the 'shit' repository itself for the following to work.
 
 quick-install: quick-install-man
 
 require-manrepo::
 	@if test ! -d $(MAN_REPO); \
-	then echo "git-manpages repository must exist at $(MAN_REPO)"; exit 1; fi
+	then echo "shit-manpages repository must exist at $(MAN_REPO)"; exit 1; fi
 
 quick-install-man: require-manrepo
-	'$(SHELL_PATH_SQ)' ./install-doc-quick.sh $(MAN_REPO) $(DESTDIR)$(mandir) $(GIT_MAN_REF)
+	'$(SHELL_PATH_SQ)' ./install-doc-quick.sh $(MAN_REPO) $(DESTDIR)$(mandir) $(shit_MAN_REF)
 
 require-htmlrepo::
 	@if test ! -d $(HTML_REPO); \
-	then echo "git-htmldocs repository must exist at $(HTML_REPO)"; exit 1; fi
+	then echo "shit-htmldocs repository must exist at $(HTML_REPO)"; exit 1; fi
 
 quick-install-html: require-htmlrepo
-	'$(SHELL_PATH_SQ)' ./install-doc-quick.sh $(HTML_REPO) $(DESTDIR)$(htmldir) $(GIT_MAN_REF)
+	'$(SHELL_PATH_SQ)' ./install-doc-quick.sh $(HTML_REPO) $(DESTDIR)$(htmldir) $(shit_MAN_REF)
 
 print-man1:
 	@for i in $(MAN1_TXT); do echo $$i; done
 
-## Lint: gitlink
-LINT_DOCS_GITLINK = $(patsubst %.txt,.build/lint-docs/gitlink/%.ok,$(HOWTO_TXT) $(DOC_DEP_TXT))
-$(LINT_DOCS_GITLINK): lint-gitlink.perl
-$(LINT_DOCS_GITLINK): .build/lint-docs/gitlink/%.ok: %.txt
+## Lint: shitlink
+LINT_DOCS_shitLINK = $(patsubst %.txt,.build/lint-docs/shitlink/%.ok,$(HOWTO_TXT) $(DOC_DEP_TXT))
+$(LINT_DOCS_shitLINK): lint-shitlink.perl
+$(LINT_DOCS_shitLINK): .build/lint-docs/shitlink/%.ok: %.txt
 	$(call mkdir_p_parent_template)
-	$(QUIET_LINT_GITLINK)$(PERL_PATH) lint-gitlink.perl \
+	$(QUIET_LINT_shitLINK)$(PERL_PATH) lint-shitlink.perl \
 		$< \
 		$(HOWTO_TXT) $(DOC_DEP_TXT) \
 		--section=1 $(MAN1_TXT) \
 		--section=5 $(MAN5_TXT) \
 		--section=7 $(MAN7_TXT) >$@
-.PHONY: lint-docs-gitlink
-lint-docs-gitlink: $(LINT_DOCS_GITLINK)
+.PHONY: lint-docs-shitlink
+lint-docs-shitlink: $(LINT_DOCS_shitLINK)
 
 ## Lint: man-end-blurb
 LINT_DOCS_MAN_END_BLURB = $(patsubst %.txt,.build/lint-docs/man-end-blurb/%.ok,$(MAN_TXT))
@@ -487,7 +487,7 @@ lint-docs-fsck-msgids: $(LINT_DOCS_FSCK_MSGIDS)
 ## Lint: list of targets above
 .PHONY: lint-docs
 lint-docs: lint-docs-fsck-msgids
-lint-docs: lint-docs-gitlink
+lint-docs: lint-docs-shitlink
 lint-docs: lint-docs-man-end-blurb
 lint-docs: lint-docs-man-section-order
 

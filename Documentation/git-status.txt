@@ -1,25 +1,25 @@
-git-status(1)
+shit-status(1)
 =============
 
 NAME
 ----
-git-status - Show the working tree status
+shit-status - Show the working tree status
 
 
 SYNOPSIS
 --------
 [verse]
-'git status' [<options>] [--] [<pathspec>...]
+'shit status' [<options>] [--] [<pathspec>...]
 
 DESCRIPTION
 -----------
 Displays paths that have differences between the index file and the
 current HEAD commit, paths that have differences between the working
 tree and the index file, and paths in the working tree that are not
-tracked by Git (and are not ignored by linkgit:gitignore[5]). The first
-are what you _would_ commit by running `git commit`; the second and
-third are what you _could_ commit by running 'git add' before running
-`git commit`.
+tracked by shit (and are not ignored by linkshit:shitignore[5]). The first
+are what you _would_ commit by running `shit commit`; the second and
+third are what you _could_ commit by running 'shit add' before running
+`shit commit`.
 
 OPTIONS
 -------
@@ -38,7 +38,7 @@ OPTIONS
 --porcelain[=<version>]::
 	Give the output in an easy-to-parse format for scripts.
 	This is similar to the short output, but will remain stable
-	across Git versions and regardless of user configuration. See
+	across shit versions and regardless of user configuration. See
 	below for details.
 +
 The version parameter is used to specify the format version.
@@ -51,9 +51,9 @@ This is optional and defaults to the original version 'v1' format.
 --verbose::
 	In addition to the names of files that have been changed, also
 	show the textual changes that are staged to be committed
-	(i.e., like the output of `git diff --cached`). If `-v` is specified
+	(i.e., like the output of `shit diff --cached`). If `-v` is specified
 	twice, then also show the changes in the working tree that
-	have not yet been staged (i.e., like the output of `git diff`).
+	have not yet been staged (i.e., like the output of `shit diff`).
 
 -u[<mode>]::
 --untracked-files[=<mode>]::
@@ -76,14 +76,14 @@ forgetting to add newly created files.  Because it takes extra work
 to find untracked files in the filesystem, this mode may take some
 time in a large working tree.
 Consider enabling untracked cache and split index if supported (see
-`git update-index --untracked-cache` and `git update-index
---split-index`), Otherwise you can use `no` to have `git status`
+`shit update-index --untracked-cache` and `shit update-index
+--split-index`), Otherwise you can use `no` to have `shit status`
 return more quickly without showing untracked files.
 All usual spellings for Boolean value `true` are taken as `normal`
 and `false` as `no`.
 
 The default can be changed using the status.showUntrackedFiles
-configuration variable documented in linkgit:git-config[1].
+configuration variable documented in linkshit:shit-config[1].
 --
 
 --ignore-submodules[=<when>]::
@@ -92,7 +92,7 @@ configuration variable documented in linkgit:git-config[1].
 	Using "none" will consider the submodule modified when it either contains
 	untracked or modified files or its HEAD differs from the commit recorded
 	in the superproject and can be used to override any settings of the
-	'ignore' option in linkgit:git-config[1] or linkgit:gitmodules[5]. When
+	'ignore' option in linkshit:shit-config[1] or linkshit:shitmodules[5]. When
 	"untracked" is used submodules are not considered dirty when they only
 	contain untracked content (but they are still scanned for modified
 	content). Using "dirty" ignores all changes to the work tree of submodules,
@@ -144,15 +144,15 @@ ignored, then the directory is not shown, but all contents are shown.
 --renames::
 --no-renames::
 	Turn on/off rename detection regardless of user configuration.
-	See also linkgit:git-diff[1] `--no-renames`.
+	See also linkshit:shit-diff[1] `--no-renames`.
 
 --find-renames[=<n>]::
 	Turn on rename detection, optionally setting the similarity
 	threshold.
-	See also linkgit:git-diff[1] `--find-renames`.
+	See also linkshit:shit-diff[1] `--find-renames`.
 
 <pathspec>...::
-	See the 'pathspec' entry in linkgit:gitglossary[7].
+	See the 'pathspec' entry in linkshit:shitglossary[7].
 
 OUTPUT
 ------
@@ -162,7 +162,7 @@ The default, long format, is designed to be human readable,
 verbose and descriptive.  Its contents and format are subject to change
 at any time.
 
-The paths mentioned in the output, unlike many other Git commands, are
+The paths mentioned in the output, unlike many other shit commands, are
 made relative to the current directory if you are working in a
 subdirectory (this is on purpose, to help cutting and pasting). See
 the status.relativePaths config option below.
@@ -253,7 +253,7 @@ Submodules have more state and instead report
 * '?' = the submodule has untracked files
 
 This is since modified content or untracked files in a submodule cannot be added
-via `git add` in the superproject to prepare a commit.
+via `shit add` in the superproject to prepare a commit.
 
 'm' and '?' are applied recursively. For example if a nested submodule
 in a submodule contains an untracked file, this is reported as '?' as well.
@@ -266,7 +266,7 @@ Porcelain Format Version 1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Version 1 porcelain format is similar to the short format, but is guaranteed
-not to change in a backwards-incompatible way between Git versions or
+not to change in a backwards-incompatible way between shit versions or
 based on user configuration. This makes it ideal for parsing by scripts.
 The description of the short format above also describes the porcelain
 format, with a few exceptions:
@@ -421,7 +421,7 @@ byte.
 
 Without the `-z` option, pathnames with "unusual" characters are
 quoted as explained for the configuration variable `core.quotePath`
-(see linkgit:git-config[1]).
+(see linkshit:shit-config[1]).
 
 
 CONFIGURATION
@@ -439,18 +439,18 @@ directory.
 If `status.submoduleSummary` is set to a non zero number or true (identical
 to -1 or an unlimited number), the submodule summary will be enabled for
 the long format and a summary of commits for modified submodules will be
-shown (see --summary-limit option of linkgit:git-submodule[1]). Please note
+shown (see --summary-limit option of linkshit:shit-submodule[1]). Please note
 that the summary output from the status command will be suppressed for all
 submodules when `diff.ignoreSubmodules` is set to 'all' or only for those
 submodules where `submodule.<name>.ignore=all`. To also view the summary for
 ignored submodules you can either use the --ignore-submodules=dirty command
-line option or the 'git submodule summary' command, which shows a similar
+line option or the 'shit submodule summary' command, which shows a similar
 output but does not honor these settings.
 
 BACKGROUND REFRESH
 ------------------
 
-By default, `git status` will automatically refresh the index, updating
+By default, `shit status` will automatically refresh the index, updating
 the cached stat information from the working tree and writing out the
 result. Writing out the updated index is an optimization that isn't
 strictly necessary (`status` computes the values for itself, but writing
@@ -458,29 +458,29 @@ them out is just to save subsequent programs from repeating our
 computation). When `status` is run in the background, the lock held
 during the write may conflict with other simultaneous processes, causing
 them to fail. Scripts running `status` in the background should consider
-using `git --no-optional-locks status` (see linkgit:git[1] for details).
+using `shit --no-optional-locks status` (see linkshit:shit[1] for details).
 
 UNTRACKED FILES AND PERFORMANCE
 -------------------------------
 
-`git status` can be very slow in large worktrees if/when it
+`shit status` can be very slow in large worktrees if/when it
 needs to search for untracked files and directories. There are
 many configuration options available to speed this up by either
 avoiding the work or making use of cached results from previous
-Git commands. There is no single optimum set of settings right
+shit commands. There is no single optimum set of settings right
 for everyone. We'll list a summary of the relevant options to help
-you, but before going into the list, you may want to run `git status`
-again, because your configuration may already be caching `git status`
+you, but before going into the list, you may want to run `shit status`
+again, because your configuration may already be caching `shit status`
 results, so it could be faster on subsequent runs.
 
 * The `--untracked-files=no` flag or the
 	`status.showUntrackedFiles=no` config (see above for both):
-	indicate that `git status` should not report untracked
-	files. This is the fastest option. `git status` will not list
+	indicate that `shit status` should not report untracked
+	files. This is the fastest option. `shit status` will not list
 	the untracked files, so you need to be careful to remember if
-	you create any new files and manually `git add` them.
+	you create any new files and manually `shit add` them.
 
-* `advice.statusUoption=false` (see linkgit:git-config[1]):
+* `advice.statusUoption=false` (see linkshit:shit-config[1]):
 	setting this variable to `false` disables the warning message
 	given when enumerating untracked files takes more than 2
 	seconds.  In a large project, it may take longer and the user
@@ -489,41 +489,41 @@ results, so it could be faster on subsequent runs.
 	is no point issuing the warning message, and in such a case,
 	disabling the warning may be the best.
 
-* `core.untrackedCache=true` (see linkgit:git-update-index[1]):
+* `core.untrackedCache=true` (see linkshit:shit-update-index[1]):
 	enable the untracked cache feature and only search directories
-	that have been modified since the previous `git status` command.
-	Git remembers the set of untracked files within each directory
+	that have been modified since the previous `shit status` command.
+	shit remembers the set of untracked files within each directory
 	and assumes that if a directory has not been modified, then
 	the set of untracked files within has not changed.  This is much
 	faster than enumerating the contents of every directory, but still
-	not without cost, because Git still has to search for the set of
+	not without cost, because shit still has to search for the set of
 	modified directories. The untracked cache is stored in the
-	`.git/index` file. The reduced cost of searching for untracked
+	`.shit/index` file. The reduced cost of searching for untracked
 	files is offset slightly by the increased size of the index and
 	the cost of keeping it up-to-date. That reduced search time is
 	usually worth the additional size.
 
 * `core.untrackedCache=true` and `core.fsmonitor=true` or
 	`core.fsmonitor=<hook-command-pathname>` (see
-	linkgit:git-update-index[1]): enable both the untracked cache
+	linkshit:shit-update-index[1]): enable both the untracked cache
 	and FSMonitor features and only search directories that have
-	been modified since the previous `git status` command.  This
+	been modified since the previous `shit status` command.  This
 	is faster than using just the untracked cache alone because
-	Git can also avoid searching for modified directories.  Git
+	shit can also avoid searching for modified directories.  shit
 	only has to enumerate the exact set of directories that have
 	changed recently. While the FSMonitor feature can be enabled
 	without the untracked cache, the benefits are greatly reduced
 	in that case.
 
 Note that after you turn on the untracked cache and/or FSMonitor
-features it may take a few `git status` commands for the various
+features it may take a few `shit status` commands for the various
 caches to warm up before you see improved command times.  This is
 normal.
 
 SEE ALSO
 --------
-linkgit:gitignore[5]
+linkshit:shitignore[5]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

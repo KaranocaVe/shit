@@ -9,16 +9,16 @@ test_description='Test custom diff function name patterns'
 
 test_expect_success 'setup' '
 	# a non-trivial custom pattern
-	git config diff.custom1.funcname "!static
+	shit config diff.custom1.funcname "!static
 !String
 [^ 	].*s.*" &&
 
 	# a custom pattern which matches to end of line
-	git config diff.custom2.funcname "......Beer\$" &&
+	shit config diff.custom2.funcname "......Beer\$" &&
 
 	# alternation in pattern
-	git config diff.custom3.funcname "Beer$" &&
-	git config diff.custom3.xfuncname "^[ 	]*((public|static).*)$" &&
+	shit config diff.custom3.funcname "Beer$" &&
+	shit config diff.custom3.xfuncname "^[ 	]*((public|static).*)$" &&
 
 	# for regexp compilation tests
 	echo A >A.java &&
@@ -33,7 +33,7 @@ test_expect_success 'setup: test-tool userdiff' '
 	sort <builtin-drivers >builtin-drivers.sorted &&
 	test_cmp builtin-drivers.sorted builtin-drivers &&
 
-	# Ditto, but "custom" requires the .git directory and config
+	# Ditto, but "custom" requires the .shit directory and config
 	# to be setup and read.
 	test_when_finished "rm custom-drivers.sorted" &&
 	test-tool userdiff list-custom-drivers >custom-drivers &&
@@ -50,34 +50,34 @@ diffpatterns="
 for p in $diffpatterns
 do
 	test_expect_success "builtin $p pattern compiles" '
-		echo "*.java diff=$p" >.gitattributes &&
-		test_expect_code 1 git diff --no-index \
+		echo "*.java diff=$p" >.shitattributes &&
+		test_expect_code 1 shit diff --no-index \
 			A.java B.java 2>msg &&
 		test_grep ! fatal msg &&
 		test_grep ! error msg
 	'
 	test_expect_success "builtin $p wordRegex pattern compiles" '
-		echo "*.java diff=$p" >.gitattributes &&
-		test_expect_code 1 git diff --no-index --word-diff \
+		echo "*.java diff=$p" >.shitattributes &&
+		test_expect_code 1 shit diff --no-index --word-diff \
 			A.java B.java 2>msg &&
 		test_grep ! fatal msg &&
 		test_grep ! error msg
 	'
 
 	test_expect_success "builtin $p pattern compiles on bare repo with --attr-source" '
-		test_when_finished "rm -rf bare.git" &&
-		git checkout -B master &&
-		git add . &&
-		echo "*.java diff=notexist" >.gitattributes &&
-		git add .gitattributes &&
-		git commit -am "changing gitattributes" &&
-		git checkout -B branchA &&
-		echo "*.java diff=$p" >.gitattributes &&
-		git add .gitattributes &&
-		git commit -am "changing gitattributes" &&
-		git clone --bare --no-local . bare.git &&
-		git -C bare.git symbolic-ref HEAD refs/heads/master &&
-		test_expect_code 1 git -C bare.git --attr-source=branchA \
+		test_when_finished "rm -rf bare.shit" &&
+		shit checkout -B master &&
+		shit add . &&
+		echo "*.java diff=notexist" >.shitattributes &&
+		shit add .shitattributes &&
+		shit commit -am "changing shitattributes" &&
+		shit checkout -B branchA &&
+		echo "*.java diff=$p" >.shitattributes &&
+		shit add .shitattributes &&
+		shit commit -am "changing shitattributes" &&
+		shit clone --bare --no-local . bare.shit &&
+		shit -C bare.shit symbolic-ref HEAD refs/heads/master &&
+		test_expect_code 1 shit -C bare.shit --attr-source=branchA \
 			diff --exit-code HEAD:A.java HEAD:B.java 2>msg &&
 		test_grep ! fatal msg &&
 		test_grep ! error msg
@@ -85,9 +85,9 @@ do
 done
 
 test_expect_success 'last regexp must not be negated' '
-	echo "*.java diff=java" >.gitattributes &&
+	echo "*.java diff=java" >.shitattributes &&
 	test_config diff.java.funcname "!static" &&
-	test_expect_code 128 git diff --no-index A.java B.java 2>msg &&
+	test_expect_code 128 shit diff --no-index A.java B.java 2>msg &&
 	test_grep ": Last expression must not be negated:" msg
 '
 
@@ -95,26 +95,26 @@ test_expect_success 'setup hunk header tests' '
 	for i in $diffpatterns
 	do
 		echo "$i-* diff=$i" || return 1
-	done > .gitattributes &&
+	done > .shitattributes &&
 
 	# add all test files to the index
 	(
 		cd "$TEST_DIRECTORY"/t4018 &&
-		git --git-dir="$TRASH_DIRECTORY/.git" add .
+		shit --shit-dir="$TRASH_DIRECTORY/.shit" add .
 	) &&
 
 	# place modified files in the worktree
-	for i in $(git ls-files)
+	for i in $(shit ls-files)
 	do
 		sed -e "s/ChangeMe/IWasChanged/" <"$TEST_DIRECTORY/t4018/$i" >"$i" || return 1
 	done
 '
 
 # check each individual file
-for i in $(git ls-files)
+for i in $(shit ls-files)
 do
 	test_expect_success "hunk header: $i" "
-		git diff -U1 $i >actual &&
+		shit diff -U1 $i >actual &&
 		grep '@@ .* @@.*RIGHT' actual
 	"
 done

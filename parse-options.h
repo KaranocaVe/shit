@@ -124,8 +124,8 @@ typedef int parse_opt_subcommand_fn(int argc, const char **argv,
  *				(i.e. '<argh>') in the help message.
  *				Useful for options with multiple parameters.
  *   PARSE_OPT_NOCOMPLETE: by default all visible options are completable
- *			   by git-completion.bash. This option suppresses that.
- *   PARSE_OPT_COMP_ARG: this option forces to git-completion.bash to
+ *			   by shit-completion.bash. This option suppresses that.
+ *   PARSE_OPT_COMP_ARG: this option forces to shit-completion.bash to
  *			 complete an option as --name= not --name even if
  *			 the option takes optional argument.
  *
@@ -524,7 +524,7 @@ int parse_opt_tracking_mode(const struct option *, const char *, int);
 	.long_name = "abbrev", \
 	.value = (var), \
 	.argh = N_("n"), \
-	.help = N_("use <n> digits to display object names"), \
+	.help = N_("use <n> dishits to display object names"), \
 	.flags = PARSE_OPT_OPTARG, \
 	.callback = &parse_opt_abbrev_cb, \
 }

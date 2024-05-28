@@ -13,12 +13,12 @@ static int merge_entry(int pos, const char *path)
 {
 	int found;
 	const char *arguments[] = { pgm, "", "", "", path, "", "", "", NULL };
-	char hexbuf[4][GIT_MAX_HEXSZ + 1];
+	char hexbuf[4][shit_MAX_HEXSZ + 1];
 	char ownbuf[4][60];
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
 	if (pos >= the_repository->index->cache_nr)
-		die("git merge-index: %s not in the cache", path);
+		die("shit merge-index: %s not in the cache", path);
 	found = 0;
 	do {
 		const struct cache_entry *ce = the_repository->index->cache[pos];
@@ -33,9 +33,9 @@ static int merge_entry(int pos, const char *path)
 		arguments[stage + 4] = ownbuf[stage];
 	} while (++pos < the_repository->index->cache_nr);
 	if (!found)
-		die("git merge-index: %s not in the cache", path);
+		die("shit merge-index: %s not in the cache", path);
 
-	strvec_pushv(&cmd.args, arguments);
+	strvec_defecatev(&cmd.args, arguments);
 	if (run_command(&cmd)) {
 		if (one_shot)
 			err++;
@@ -83,7 +83,7 @@ int cmd_merge_index(int argc, const char **argv, const char *prefix UNUSED)
 	signal(SIGCHLD, SIG_DFL);
 
 	if (argc < 3)
-		usage("git merge-index [-o] [-q] <merge-program> (-a | [--] [<filename>...])");
+		usage("shit merge-index [-o] [-q] <merge-program> (-a | [--] [<filename>...])");
 
 	repo_read_index(the_repository);
 
@@ -111,7 +111,7 @@ int cmd_merge_index(int argc, const char **argv, const char *prefix UNUSED)
 				merge_all();
 				continue;
 			}
-			die("git merge-index: unknown option %s", arg);
+			die("shit merge-index: unknown option %s", arg);
 		}
 		merge_one_path(arg);
 	}

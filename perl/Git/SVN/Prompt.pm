@@ -1,6 +1,6 @@
-package Git::SVN::Prompt;
+package shit::SVN::Prompt;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 require SVN::Core;
 use vars qw/$_no_auth_cache $_username/;
 
@@ -66,7 +66,7 @@ prompt:
 	      "(R)eject, accept (t)emporarily or accept (p)ermanently? " :
 	      "(R)eject or accept (t)emporarily? ";
 	STDERR->flush;
-	$choice = lc(substr(Git::prompt("Certificate problem.\n" . $options) || 'R', 0, 1));
+	$choice = lc(substr(shit::prompt("Certificate problem.\n" . $options) || 'R', 0, 1));
 	if ($choice eq 't') {
 		$cred->may_save(undef);
 	} elsif ($choice eq 'r') {
@@ -109,7 +109,7 @@ sub username {
 	if (defined $_username) {
 		$username = $_username;
 	} else {
-		$username = Git::prompt("Username: ");
+		$username = shit::prompt("Username: ");
 	}
 	$cred->username($username);
 	$cred->may_save($may_save);
@@ -118,7 +118,7 @@ sub username {
 
 sub _read_password {
 	my ($prompt, $realm) = @_;
-	my $password = Git::prompt($prompt, 1);
+	my $password = shit::prompt($prompt, 1);
 	$password;
 }
 
@@ -127,45 +127,45 @@ __END__
 
 =head1 NAME
 
-Git::SVN::Prompt - authentication callbacks for git-svn
+shit::SVN::Prompt - authentication callbacks for shit-svn
 
 =head1 SYNOPSIS
 
-    use Git::SVN::Prompt qw(simple ssl_client_cert ssl_client_cert_pw
+    use shit::SVN::Prompt qw(simple ssl_client_cert ssl_client_cert_pw
                             ssl_server_trust username);
     use SVN::Client ();
 
     my $cached_simple = SVN::Client::get_simple_provider();
-    my $git_simple = SVN::Client::get_simple_prompt_provider(\&simple, 2);
+    my $shit_simple = SVN::Client::get_simple_prompt_provider(\&simple, 2);
     my $cached_ssl = SVN::Client::get_ssl_server_trust_file_provider();
-    my $git_ssl = SVN::Client::get_ssl_server_trust_prompt_provider(
+    my $shit_ssl = SVN::Client::get_ssl_server_trust_prompt_provider(
         \&ssl_server_trust);
     my $cached_cert = SVN::Client::get_ssl_client_cert_file_provider();
-    my $git_cert = SVN::Client::get_ssl_client_cert_prompt_provider(
+    my $shit_cert = SVN::Client::get_ssl_client_cert_prompt_provider(
         \&ssl_client_cert, 2);
     my $cached_cert_pw = SVN::Client::get_ssl_client_cert_pw_file_provider();
-    my $git_cert_pw = SVN::Client::get_ssl_client_cert_pw_prompt_provider(
+    my $shit_cert_pw = SVN::Client::get_ssl_client_cert_pw_prompt_provider(
         \&ssl_client_cert_pw, 2);
     my $cached_username = SVN::Client::get_username_provider();
-    my $git_username = SVN::Client::get_username_prompt_provider(
+    my $shit_username = SVN::Client::get_username_prompt_provider(
         \&username, 2);
 
     my $ctx = new SVN::Client(
         auth => [
-            $cached_simple, $git_simple,
-            $cached_ssl, $git_ssl,
-            $cached_cert, $git_cert,
-            $cached_cert_pw, $git_cert_pw,
-            $cached_username, $git_username
+            $cached_simple, $shit_simple,
+            $cached_ssl, $shit_ssl,
+            $cached_cert, $shit_cert,
+            $cached_cert_pw, $shit_cert_pw,
+            $cached_username, $shit_username
         ]);
 
 =head1 DESCRIPTION
 
-This module is an implementation detail of the "git svn" command.
-It implements git-svn's authentication policy.  Do not use it unless
-you are developing git-svn.
+This module is an implementation detail of the "shit svn" command.
+It implements shit-svn's authentication policy.  Do not use it unless
+you are developing shit-svn.
 
-The interface will change as git-svn evolves.
+The interface will change as shit-svn evolves.
 
 =head1 DEPENDENCIES
 

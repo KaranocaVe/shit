@@ -2,8 +2,8 @@
 
 test_description='test submodule ref store api'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,12 +11,12 @@ TEST_PASSES_SANITIZE_LEAK=true
 RUN="test-tool ref-store submodule:sub"
 
 test_expect_success 'setup' '
-	git init sub &&
+	shit init sub &&
 	(
 		cd sub &&
 		test_commit first &&
-		git checkout -b new-main &&
-		git tag -a -m new-tag new-tag HEAD
+		shit checkout -b new-main &&
+		shit tag -a -m new-tag new-tag HEAD
 	)
 '
 
@@ -52,7 +52,7 @@ test_expect_success 'for_each_ref() is sorted' '
 '
 
 test_expect_success 'resolve_ref(main)' '
-	SHA1=`git -C sub rev-parse main` &&
+	SHA1=`shit -C sub rev-parse main` &&
 	echo "$SHA1 refs/heads/main 0x0" >expected &&
 	$RUN resolve-ref refs/heads/main 0 >actual &&
 	test_cmp expected actual

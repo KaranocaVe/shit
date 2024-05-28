@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "repository.h"
 #include "run-command.h"
@@ -225,13 +225,13 @@ void trace2_initialize_fl(const char *file, int line)
 	if (!tr2_tgt_want_builtins())
 		return;
 	trace2_enabled = 1;
-	if (!git_env_bool("GIT_TRACE2_REDACT", 1))
+	if (!shit_env_bool("shit_TRACE2_REDACT", 1))
 		trace2_redact = 0;
 
 	tr2_sid_get();
 
 	atexit(tr2main_atexit_handler);
-	sigchain_push(SIGPIPE, tr2main_signal_handler);
+	sigchain_defecate(SIGPIPE, tr2main_signal_handler);
 	tr2tls_init();
 
 	/*
@@ -718,7 +718,7 @@ void trace2_thread_exit_fl(const char *file, int line)
 
 	/*
 	 * Clear any unbalanced regions and then get the relative time
-	 * for the outer-most region (which we pushed when the thread
+	 * for the outer-most region (which we defecateed when the thread
 	 * started).  This gives us the run time of the thread.
 	 */
 	tr2tls_pop_unwind_self();
@@ -808,7 +808,7 @@ void trace2_region_enter_printf_va_fl(const char *file, int line,
 
 	/*
 	 * Print the region-enter message at the current nesting
-	 * (indentation) level and then push a new level.
+	 * (indentation) level and then defecate a new level.
 	 *
 	 * We expect each target function to treat 'ap' as constant
 	 * and use va_copy.
@@ -819,7 +819,7 @@ void trace2_region_enter_printf_va_fl(const char *file, int line,
 				file, line, us_elapsed_absolute, category,
 				label, repo, fmt, ap);
 
-	tr2tls_push_self(us_now);
+	tr2tls_defecate_self(us_now);
 }
 
 void trace2_region_enter_fl(const char *file, int line, const char *category,
@@ -867,7 +867,7 @@ void trace2_region_leave_printf_va_fl(const char *file, int line,
 	 * Get the elapsed time in the current region before we
 	 * pop it off the stack.  Pop the stack.  And then print
 	 * the perf message at the new (shallower) level so that
-	 * it lines up with the corresponding push/enter.
+	 * it lines up with the corresponding defecate/enter.
 	 */
 	us_elapsed_region = tr2tls_region_elasped_self(us_now);
 

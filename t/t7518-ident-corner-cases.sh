@@ -12,23 +12,23 @@ TEST_PASSES_SANITIZE_LEAK=true
 # and "-u" is not portable.
 test_expect_success 'empty name and missing email' '
 	(
-		sane_unset GIT_AUTHOR_EMAIL &&
-		GIT_AUTHOR_NAME= &&
-		test_must_fail git commit --allow-empty -m foo 2>err &&
+		sane_unset shit_AUTHOR_EMAIL &&
+		shit_AUTHOR_NAME= &&
+		test_must_fail shit commit --allow-empty -m foo 2>err &&
 		test_grep ! "(null)" err
 	)
 '
 
 test_expect_success 'commit rejects all-crud name' '
-	test_must_fail env GIT_AUTHOR_NAME=" ,;<>" \
-		git commit --allow-empty -m foo
+	test_must_fail env shit_AUTHOR_NAME=" ,;<>" \
+		shit commit --allow-empty -m foo
 '
 
 test_expect_success 'commit does not strip trailing dot' '
 	author_name="Pat Doe Jr." &&
-	env GIT_AUTHOR_NAME="$author_name" \
-		git commit --allow-empty -m foo &&
-	git log -1 --format=%an >actual &&
+	env shit_AUTHOR_NAME="$author_name" \
+		shit commit --allow-empty -m foo &&
+	shit log -1 --format=%an >actual &&
 	echo "$author_name" >expected &&
 	test_cmp actual expected
 '
@@ -37,9 +37,9 @@ test_expect_success 'commit does not strip trailing dot' '
 # auto-detection could fail for other reasons.
 test_expect_success 'empty configured name does not auto-detect' '
 	(
-		sane_unset GIT_AUTHOR_NAME &&
+		sane_unset shit_AUTHOR_NAME &&
 		test_must_fail \
-			git -c user.name= commit --allow-empty -m foo 2>err &&
+			shit -c user.name= commit --allow-empty -m foo 2>err &&
 		test_grep "empty ident name" err &&
 		test_grep "Author identity unknown" err
 	)
@@ -47,9 +47,9 @@ test_expect_success 'empty configured name does not auto-detect' '
 
 test_expect_success 'empty configured name does not auto-detect for committer' '
 	(
-		sane_unset GIT_COMMITTER_NAME &&
+		sane_unset shit_COMMITTER_NAME &&
 		test_must_fail \
-			git -c user.name= commit --allow-empty -m foo 2>err &&
+			shit -c user.name= commit --allow-empty -m foo 2>err &&
 		test_grep "empty ident name" err &&
 		test_grep "Committer identity unknown" err
 	)

@@ -185,10 +185,10 @@ void pretty_print_ref(const char *name, const struct object_id *oid,
 		      struct ref_format *format);
 
 /*
- * Push a single ref onto the array; this can be used to construct your own
+ * defecate a single ref onto the array; this can be used to construct your own
  * ref_array without using filter_refs().
  */
-struct ref_array_item *ref_array_push(struct ref_array *array,
+struct ref_array_item *ref_array_defecate(struct ref_array *array,
 				      const char *refname,
 				      const struct object_id *oid);
 

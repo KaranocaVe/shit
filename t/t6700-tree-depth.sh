@@ -45,7 +45,7 @@ mkdeep () {
 		echo "the file contents" &&
 		echo "EOF" &&
 		echo
-	} | git fast-import
+	} | shit fast-import
 }
 
 test_expect_success 'create small tree' '
@@ -56,40 +56,40 @@ test_expect_success 'create big tree' '
 	mkdeep big $big_depth
 '
 
-test_expect_success 'limit recursion of git-archive' '
-	git $small_ok archive small >/dev/null &&
-	test_must_fail git $small_no archive small >/dev/null
+test_expect_success 'limit recursion of shit-archive' '
+	shit $small_ok archive small >/dev/null &&
+	test_must_fail shit $small_no archive small >/dev/null
 '
 
-test_expect_success 'default limit for git-archive fails gracefully' '
-	test_must_fail git archive big >/dev/null
+test_expect_success 'default limit for shit-archive fails gracefully' '
+	test_must_fail shit archive big >/dev/null
 '
 
 test_expect_success 'limit recursion of ls-tree -r' '
-	git $small_ok ls-tree -r small &&
-	test_must_fail git $small_no ls-tree -r small
+	shit $small_ok ls-tree -r small &&
+	test_must_fail shit $small_no ls-tree -r small
 '
 
 test_expect_success 'default limit for ls-tree fails gracefully' '
-	test_must_fail git ls-tree -r big >/dev/null
+	test_must_fail shit ls-tree -r big >/dev/null
 '
 
 test_expect_success 'limit recursion of rev-list --objects' '
-	git $small_ok rev-list --objects small >/dev/null &&
-	test_must_fail git $small_no rev-list --objects small >/dev/null
+	shit $small_ok rev-list --objects small >/dev/null &&
+	test_must_fail shit $small_no rev-list --objects small >/dev/null
 '
 
 test_expect_success 'default limit for rev-list fails gracefully' '
-	test_must_fail git rev-list --objects big >/dev/null
+	test_must_fail shit rev-list --objects big >/dev/null
 '
 
 test_expect_success 'limit recursion of diff-tree -r' '
-	git $small_ok diff-tree -r $EMPTY_TREE small &&
-	test_must_fail git $small_no diff-tree -r $EMPTY_TREE small
+	shit $small_ok diff-tree -r $EMPTY_TREE small &&
+	test_must_fail shit $small_no diff-tree -r $EMPTY_TREE small
 '
 
 test_expect_success 'default limit for diff-tree fails gracefully' '
-	test_must_fail git diff-tree -r $EMPTY_TREE big
+	test_must_fail shit diff-tree -r $EMPTY_TREE big
 '
 
 test_done

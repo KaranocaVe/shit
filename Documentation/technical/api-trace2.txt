@@ -5,14 +5,14 @@ information to stderr or a file.  The Trace2 feature is inactive unless
 explicitly enabled by enabling one or more Trace2 Targets.
 
 The Trace2 API is intended to replace the existing (Trace1)
-`printf()`-style tracing provided by the existing `GIT_TRACE` and
-`GIT_TRACE_PERFORMANCE` facilities.  During initial implementation,
+`printf()`-style tracing provided by the existing `shit_TRACE` and
+`shit_TRACE_PERFORMANCE` facilities.  During initial implementation,
 Trace2 and Trace1 may operate in parallel.
 
 The Trace2 API defines a set of high-level messages with known fields,
 such as (`start`: `argv`) and (`exit`: {`exit-code`, `elapsed-time`}).
 
-Trace2 instrumentation throughout the Git code base sends Trace2
+Trace2 instrumentation throughout the shit code base sends Trace2
 messages to the enabled Trace2 Targets.  Targets transform these
 messages content into purpose-specific formats and write events to
 their data streams.  In this manner, the Trace2 API can drive
@@ -23,7 +23,7 @@ formats in the future.  This might be used to define a binary format,
 for example.
 
 Trace2 is controlled using `trace2.*` config values in the system and
-global config files and `GIT_TRACE2*` environment variables.  Trace2 does
+global config files and `shit_TRACE2*` environment variables.  Trace2 does
 not read from repo local or worktree config files, nor does it respect
 `-c` command line config settings.
 
@@ -35,24 +35,24 @@ Format details are given in a later section.
 === The Normal Format Target
 
 The normal format target is a traditional `printf()` format and similar
-to the `GIT_TRACE` format.  This format is enabled with the `GIT_TRACE2`
+to the `shit_TRACE` format.  This format is enabled with the `shit_TRACE2`
 environment variable or the `trace2.normalTarget` system or global
 config setting.
 
 For example
 
 ------------
-$ export GIT_TRACE2=~/log.normal
-$ git version
-git version 2.20.1.155.g426c96fcdb
+$ export shit_TRACE2=~/log.normal
+$ shit version
+shit version 2.20.1.155.g426c96fcdb
 ------------
 
 or
 
 ------------
-$ git config --global trace2.normalTarget ~/log.normal
-$ git version
-git version 2.20.1.155.g426c96fcdb
+$ shit config --global trace2.normalTarget ~/log.normal
+$ shit version
+shit version 2.20.1.155.g426c96fcdb
 ------------
 
 yields
@@ -60,34 +60,34 @@ yields
 ------------
 $ cat ~/log.normal
 12:28:42.620009 common-main.c:38                  version 2.20.1.155.g426c96fcdb
-12:28:42.620989 common-main.c:39                  start git version
-12:28:42.621101 git.c:432                         cmd_name version (version)
-12:28:42.621215 git.c:662                         exit elapsed:0.001227 code:0
+12:28:42.620989 common-main.c:39                  start shit version
+12:28:42.621101 shit.c:432                         cmd_name version (version)
+12:28:42.621215 shit.c:662                         exit elapsed:0.001227 code:0
 12:28:42.621250 trace2/tr2_tgt_normal.c:124       atexit elapsed:0.001265 code:0
 ------------
 
 === The Performance Format Target
 
 The performance format target (PERF) is a column-based format to
-replace `GIT_TRACE_PERFORMANCE` and is suitable for development and
+replace `shit_TRACE_PERFORMANCE` and is suitable for development and
 testing, possibly to complement tools like `gprof`.  This format is
-enabled with the `GIT_TRACE2_PERF` environment variable or the
+enabled with the `shit_TRACE2_PERF` environment variable or the
 `trace2.perfTarget` system or global config setting.
 
 For example
 
 ------------
-$ export GIT_TRACE2_PERF=~/log.perf
-$ git version
-git version 2.20.1.155.g426c96fcdb
+$ export shit_TRACE2_PERF=~/log.perf
+$ shit version
+shit version 2.20.1.155.g426c96fcdb
 ------------
 
 or
 
 ------------
-$ git config --global trace2.perfTarget ~/log.perf
-$ git version
-git version 2.20.1.155.g426c96fcdb
+$ shit config --global trace2.perfTarget ~/log.perf
+$ shit version
+shit version 2.20.1.155.g426c96fcdb
 ------------
 
 yields
@@ -95,33 +95,33 @@ yields
 ------------
 $ cat ~/log.perf
 12:28:42.620675 common-main.c:38                  | d0 | main                     | version      |     |           |           |            | 2.20.1.155.g426c96fcdb
-12:28:42.621001 common-main.c:39                  | d0 | main                     | start        |     |  0.001173 |           |            | git version
-12:28:42.621111 git.c:432                         | d0 | main                     | cmd_name     |     |           |           |            | version (version)
-12:28:42.621225 git.c:662                         | d0 | main                     | exit         |     |  0.001227 |           |            | code:0
+12:28:42.621001 common-main.c:39                  | d0 | main                     | start        |     |  0.001173 |           |            | shit version
+12:28:42.621111 shit.c:432                         | d0 | main                     | cmd_name     |     |           |           |            | version (version)
+12:28:42.621225 shit.c:662                         | d0 | main                     | exit         |     |  0.001227 |           |            | code:0
 12:28:42.621259 trace2/tr2_tgt_perf.c:211         | d0 | main                     | atexit       |     |  0.001265 |           |            | code:0
 ------------
 
 === The Event Format Target
 
 The event format target is a JSON-based format of event data suitable
-for telemetry analysis.  This format is enabled with the `GIT_TRACE2_EVENT`
+for telemetry analysis.  This format is enabled with the `shit_TRACE2_EVENT`
 environment variable or the `trace2.eventTarget` system or global config
 setting.
 
 For example
 
 ------------
-$ export GIT_TRACE2_EVENT=~/log.event
-$ git version
-git version 2.20.1.155.g426c96fcdb
+$ export shit_TRACE2_EVENT=~/log.event
+$ shit version
+shit version 2.20.1.155.g426c96fcdb
 ------------
 
 or
 
 ------------
-$ git config --global trace2.eventTarget ~/log.event
-$ git version
-git version 2.20.1.155.g426c96fcdb
+$ shit config --global trace2.eventTarget ~/log.event
+$ shit version
+shit version 2.20.1.155.g426c96fcdb
 ------------
 
 yields
@@ -129,9 +129,9 @@ yields
 ------------
 $ cat ~/log.event
 {"event":"version","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.620713Z","file":"common-main.c","line":38,"evt":"3","exe":"2.20.1.155.g426c96fcdb"}
-{"event":"start","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.621027Z","file":"common-main.c","line":39,"t_abs":0.001173,"argv":["git","version"]}
-{"event":"cmd_name","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.621122Z","file":"git.c","line":432,"name":"version","hierarchy":"version"}
-{"event":"exit","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.621236Z","file":"git.c","line":662,"t_abs":0.001227,"code":0}
+{"event":"start","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.621027Z","file":"common-main.c","line":39,"t_abs":0.001173,"argv":["shit","version"]}
+{"event":"cmd_name","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.621122Z","file":"shit.c","line":432,"name":"version","hierarchy":"version"}
+{"event":"exit","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.621236Z","file":"shit.c","line":662,"t_abs":0.001227,"code":0}
 {"event":"atexit","sid":"20190408T191610.507018Z-H9b68c35f-P000059a8","thread":"main","time":"2019-01-16T17:28:42.621268Z","file":"trace2/tr2_tgt_event.c","line":163,"t_abs":0.001265,"code":0}
 ------------
 
@@ -192,10 +192,10 @@ Events are written as lines of the form:
 Note that this may contain embedded LF or CRLF characters that are
 not escaped, so the event may spill across multiple lines.
 
-If `GIT_TRACE2_BRIEF` or `trace2.normalBrief` is true, the `time`, `filename`,
+If `shit_TRACE2_BRIEF` or `trace2.normalBrief` is true, the `time`, `filename`,
 and `line` fields are omitted.
 
-This target is intended to be more of a summary (like GIT_TRACE) and
+This target is intended to be more of a summary (like shit_TRACE) and
 less detailed than the other targets.  It ignores thread, region, and
 data messages, for example.
 
@@ -217,8 +217,8 @@ Events are written as lines of the form:
 ------------
 
 `<depth>`::
-	is the git process depth.  This is the number of parent
-	git processes.  A top-level git command has depth value "d0".
+	is the shit process depth.  This is the number of parent
+	shit processes.  A top-level shit command has depth value "d0".
 	A child of it has depth value "d1".  A second level child
 	has depth value "d2" and so on.
 
@@ -260,7 +260,7 @@ This field is in anticipation of in-proc submodules in the future.
 15:33:33.532712 wt-status.c:2331                  | d0 | main                     | region_leave | r1  |  0.127568 |  0.001504 | status     | label:print
 ------------
 
-If `GIT_TRACE2_PERF_BRIEF` or `trace2.perfBrief` is true, the `time`, `file`,
+If `shit_TRACE2_PERF_BRIEF` or `trace2.perfBrief` is true, the `time`, `file`,
 and `line` fields are omitted.
 
 ------------
@@ -305,8 +305,8 @@ The following key/value pairs are common to all events:
 	is the session-id.  This is a unique string to identify the
 	process instance to allow all events emitted by a process to
 	be identified.  A session-id is used instead of a PID because
-	PIDs are recycled by the OS.  For child git processes, the
-	session-id is prepended with the session-id of the parent git
+	PIDs are recycled by the OS.  For child shit processes, the
+	session-id is prepended with the session-id of the parent shit
 	process to allow parent-child relationships to be identified
 	during post-processing.
 
@@ -325,7 +325,7 @@ The following key/value pairs are common to all events:
 `"repo":<repo-id>`::
 	when present, is the integer repo-id as described previously.
 
-If `GIT_TRACE2_EVENT_BRIEF` or `trace2.eventBrief` is true, the `file`
+If `shit_TRACE2_EVENT_BRIEF` or `trace2.eventBrief` is true, the `file`
 and `line` fields are omitted from all events and the `time` field is
 only present on the "start" and "atexit" events.
 
@@ -345,12 +345,12 @@ only present on the "start" and "atexit" events.
 	"event":"version",
 	...
 	"evt":"3",		       # EVENT format version
-	"exe":"2.20.1.155.g426c96fcdb" # git version
+	"exe":"2.20.1.155.g426c96fcdb" # shit version
 }
 ------------
 
 `"too_many_files"`::
-	This event is written to the git-trace2-discard sentinel file if there
+	This event is written to the shit-trace2-discard sentinel file if there
 	are too many files in the target trace directory (see the
 	trace2.maxFiles config option).
 +
@@ -369,12 +369,12 @@ only present on the "start" and "atexit" events.
 	"event":"start",
 	...
 	"t_abs":0.001227, # elapsed time in seconds
-	"argv":["git","version"]
+	"argv":["shit","version"]
 }
 ------------
 
 `"exit"`::
-	This event is emitted when git calls `exit()`.
+	This event is emitted when shit calls `exit()`.
 +
 ------------
 {
@@ -435,14 +435,14 @@ allows post-processors to group errors by type without worrying
 about specific error arguments.
 
 `"cmd_path"`::
-	This event contains the discovered full path of the git
+	This event contains the discovered full path of the shit
 	executable (on platforms that are configured to resolve it).
 +
 ------------
 {
 	"event":"cmd_path",
 	...
-	"path":"C:/work/gfw/git.exe"
+	"path":"C:/work/gfw/shit.exe"
 }
 ------------
 
@@ -461,15 +461,15 @@ about specific error arguments.
 ------------
 
 `"cmd_name"`::
-	This event contains the command name for this git process
-	and the hierarchy of commands from parent git processes.
+	This event contains the command name for this shit process
+	and the hierarchy of commands from parent shit processes.
 +
 ------------
 {
 	"event":"cmd_name",
 	...
 	"name":"pack-objects",
-	"hierarchy":"push/pack-objects"
+	"hierarchy":"defecate/pack-objects"
 }
 ------------
 +
@@ -478,10 +478,10 @@ command.  When a canonical name is not available, one of
 these special values are used:
 +
 ------------
-"_query_"            # "git --html-path"
-"_run_dashed_"       # when "git foo" tries to run "git-foo"
+"_query_"            # "shit --html-path"
+"_run_dashed_"       # when "shit foo" tries to run "shit-foo"
 "_run_shell_alias_"  # alias expansion to a shell command
-"_run_git_alias_"    # alias expansion to a git command
+"_run_shit_alias_"    # alias expansion to a shit command
 "_usage_"            # usage error
 ------------
 
@@ -525,7 +525,7 @@ characteristics that are not comparable.
 	"child_id":2,
 	"child_class":"?",
 	"use_shell":false,
-	"argv":["git","rev-list","--objects","--stdin","--not","--all","--quiet"]
+	"argv":["shit","rev-list","--objects","--stdin","--not","--all","--quiet"]
 
 	"hook_name":"<hook_name>"  # present when child_class is "hook"
 	"cd":"<path>"		   # present when cd is required
@@ -607,7 +607,7 @@ outlive the parent process.  So the parent's child event times should
 not be compared to the child's atexit times.
 
 `"exec"`::
-	This event is generated before git attempts to `exec()`
+	This event is generated before shit attempts to `exec()`
 	another command rather than starting a child process.
 +
 ------------
@@ -615,7 +615,7 @@ not be compared to the child's atexit times.
 	"event":"exec",
 	...
 	"exec_id":0,
-	"exe":"git",
+	"exe":"shit",
 	"argv":["foo", "bar"]
 }
 ------------
@@ -625,7 +625,7 @@ The "exec_id" field is a command-unique id and is only useful if the
 
 `"exec_result"`::
 	This event is generated if the `exec()` fails and control
-	returns to the current git command.
+	returns to the current shit command.
 +
 ------------
 {
@@ -705,14 +705,14 @@ visited.
 	"nesting":1,             # current region stack depth
 	"category":"index",      # optional
 	"label":"do_read_index", # optional
-	"msg":".git/index"       # optional
+	"msg":".shit/index"       # optional
 }
 ------------
 +
 The `category` field may be used in a future enhancement to
 do category-based filtering.
 +
-`GIT_TRACE2_EVENT_NESTING` or `trace2.eventNesting` can be used to
+`shit_TRACE2_EVENT_NESTING` or `trace2.eventNesting` can be used to
 filter deeply nested regions and data events.  It defaults to "2".
 
 `"region_leave"`::
@@ -727,7 +727,7 @@ filter deeply nested regions and data events.  It defaults to "2".
 	"nesting":1,             # region stack depth
 	"category":"index",      # optional
 	"label":"do_read_index", # optional
-	"msg":".git/index"       # optional
+	"msg":".shit/index"       # optional
 }
 ------------
 
@@ -839,7 +839,7 @@ The "value" field may be an integer or a string.
 == Example Trace2 API Usage
 
 Here is a hypothetical usage of the Trace2 API showing the intended
-usage (without worrying about the actual Git details).
+usage (without worrying about the actual shit details).
 
 Initialization::
 
@@ -907,35 +907,35 @@ rev-list, and gc.  This example also shows that fetch took
 5.199 seconds and of that 4.932 was in ssh.
 +
 ----------------
-$ export GIT_TRACE2_BRIEF=1
-$ export GIT_TRACE2=~/log.normal
-$ git fetch origin
+$ export shit_TRACE2_BRIEF=1
+$ export shit_TRACE2=~/log.normal
+$ shit fetch origin
 ...
 ----------------
 +
 ----------------
 $ cat ~/log.normal
 version 2.20.1.vfs.1.1.47.g534dbe1ad1
-start git fetch origin
+start shit fetch origin
 worktree /Users/jeffhost/work/gfw
 cmd_name fetch (fetch)
-child_start[0] ssh git@github.com ...
-child_start[1] git index-pack ...
+child_start[0] ssh shit@shithub.com ...
+child_start[1] shit index-pack ...
 ... (Trace2 events from child processes omitted)
 child_exit[1] pid:14707 code:0 elapsed:0.076353
 child_exit[0] pid:14706 code:0 elapsed:4.931869
-child_start[2] git rev-list ...
+child_start[2] shit rev-list ...
 ... (Trace2 events from child process omitted)
 child_exit[2] pid:14708 code:0 elapsed:0.110605
-child_start[3] git gc --auto
+child_start[3] shit gc --auto
 ... (Trace2 events from child process omitted)
 child_exit[3] pid:14709 code:0 elapsed:0.006240
 exit elapsed:5.198503 code:0
 atexit elapsed:5.198541 code:0
 ----------------
 +
-When a git process is a (direct or indirect) child of another
-git process, it inherits Trace2 context information.  This
+When a shit process is a (direct or indirect) child of another
+shit process, it inherits Trace2 context information.  This
 allows the child to print the command hierarchy.  This example
 shows gc as child[3] of fetch.  When the gc process reports
 its name as "gc", it also reports the hierarchy as "fetch/gc".
@@ -943,22 +943,22 @@ its name as "gc", it also reports the hierarchy as "fetch/gc".
 indented for clarity.)
 +
 ----------------
-$ export GIT_TRACE2_BRIEF=1
-$ export GIT_TRACE2=~/log.normal
-$ git fetch origin
+$ export shit_TRACE2_BRIEF=1
+$ export shit_TRACE2=~/log.normal
+$ shit fetch origin
 ...
 ----------------
 +
 ----------------
 $ cat ~/log.normal
 version 2.20.1.160.g5676107ecd.dirty
-start git fetch official
+start shit fetch official
 worktree /Users/jeffhost/work/gfw
 cmd_name fetch (fetch)
 ...
-child_start[3] git gc --auto
+child_start[3] shit gc --auto
     version 2.20.1.160.g5676107ecd.dirty
-    start /Users/jeffhost/work/gfw/git gc --auto
+    start /Users/jeffhost/work/gfw/shit gc --auto
     worktree /Users/jeffhost/work/gfw
     cmd_name gc (fetch/gc)
     exit elapsed:0.001959 code:0
@@ -1002,14 +1002,14 @@ In this example, scanning for untracked files ran from +0.012568 to
 +0.027149 (since the process started) and took 0.014581 seconds.
 +
 ----------------
-$ export GIT_TRACE2_PERF_BRIEF=1
-$ export GIT_TRACE2_PERF=~/log.perf
-$ git status
+$ export shit_TRACE2_PERF_BRIEF=1
+$ export shit_TRACE2_PERF=~/log.perf
+$ shit status
 ...
 
 $ cat ~/log.perf
 d0 | main                     | version      |     |           |           |            | 2.20.1.160.g5676107ecd.dirty
-d0 | main                     | start        |     |  0.001173 |           |            | git status
+d0 | main                     | start        |     |  0.001173 |           |            | shit status
 d0 | main                     | def_repo     | r1  |           |           |            | worktree:/Users/jeffhost/work/gfw
 d0 | main                     | cmd_name     |     |           |           |            | status (status)
 ...
@@ -1048,13 +1048,13 @@ static enum path_treatment read_directory_recursive(struct dir_struct *dir,
 We can further investigate the time spent scanning for untracked files.
 +
 ----------------
-$ export GIT_TRACE2_PERF_BRIEF=1
-$ export GIT_TRACE2_PERF=~/log.perf
-$ git status
+$ export shit_TRACE2_PERF_BRIEF=1
+$ export shit_TRACE2_PERF=~/log.perf
+$ shit status
 ...
 $ cat ~/log.perf
 d0 | main                     | version      |     |           |           |            | 2.20.1.162.gb4ccea44db.dirty
-d0 | main                     | start        |     |  0.001173 |           |            | git status
+d0 | main                     | start        |     |  0.001173 |           |            | shit status
 d0 | main                     | def_repo     | r1  |           |           |            | worktree:/Users/jeffhost/work/gfw
 d0 | main                     | cmd_name     |     |           |           |            | status (status)
 ...
@@ -1064,10 +1064,10 @@ d0 | main                     | region_enter |     |  0.016341 |           | dir
 d0 | main                     | region_leave |     |  0.016422 |  0.000081 | dir        | ....label:read_recursive vcs-svn/
 d0 | main                     | region_enter |     |  0.016446 |           | dir        | ....label:read_recursive xdiff/
 d0 | main                     | region_leave |     |  0.016522 |  0.000076 | dir        | ....label:read_recursive xdiff/
-d0 | main                     | region_enter |     |  0.016612 |           | dir        | ....label:read_recursive git-gui/
-d0 | main                     | region_enter |     |  0.016698 |           | dir        | ......label:read_recursive git-gui/po/
-d0 | main                     | region_enter |     |  0.016810 |           | dir        | ........label:read_recursive git-gui/po/glossary/
-d0 | main                     | region_leave |     |  0.016863 |  0.000053 | dir        | ........label:read_recursive git-gui/po/glossary/
+d0 | main                     | region_enter |     |  0.016612 |           | dir        | ....label:read_recursive shit-gui/
+d0 | main                     | region_enter |     |  0.016698 |           | dir        | ......label:read_recursive shit-gui/po/
+d0 | main                     | region_enter |     |  0.016810 |           | dir        | ........label:read_recursive shit-gui/po/glossary/
+d0 | main                     | region_leave |     |  0.016863 |  0.000053 | dir        | ........label:read_recursive shit-gui/po/glossary/
 ...
 d0 | main                     | region_enter |     |  0.031876 |           | dir        | ....label:read_recursive builtin/
 d0 | main                     | region_leave |     |  0.032270 |  0.000394 | dir        | ....label:read_recursive builtin/
@@ -1088,7 +1088,7 @@ Data Messages::
 +
 ----------------
 int read_index_from(struct index_state *istate, const char *path,
-	const char *gitdir)
+	const char *shitdir)
 {
 	trace2_region_enter_printf("index", "do_read_index", the_repository, "%s", path);
 
@@ -1104,19 +1104,19 @@ int read_index_from(struct index_state *istate, const char *path,
 This example shows that the index contained 3552 entries.
 +
 ----------------
-$ export GIT_TRACE2_PERF_BRIEF=1
-$ export GIT_TRACE2_PERF=~/log.perf
-$ git status
+$ export shit_TRACE2_PERF_BRIEF=1
+$ export shit_TRACE2_PERF=~/log.perf
+$ shit status
 ...
 $ cat ~/log.perf
 d0 | main                     | version      |     |           |           |            | 2.20.1.156.gf9916ae094.dirty
-d0 | main                     | start        |     |  0.001173 |           |            | git status
+d0 | main                     | start        |     |  0.001173 |           |            | shit status
 d0 | main                     | def_repo     | r1  |           |           |            | worktree:/Users/jeffhost/work/gfw
 d0 | main                     | cmd_name     |     |           |           |            | status (status)
-d0 | main                     | region_enter | r1  |  0.001791 |           | index      | label:do_read_index .git/index
+d0 | main                     | region_enter | r1  |  0.001791 |           | index      | label:do_read_index .shit/index
 d0 | main                     | data         | r1  |  0.002494 |  0.000703 | index      | ..read/version:2
 d0 | main                     | data         | r1  |  0.002520 |  0.000729 | index      | ..read/cache_nr:3552
-d0 | main                     | region_leave | r1  |  0.002539 |  0.000748 | index      | label:do_read_index .git/index
+d0 | main                     | region_leave | r1  |  0.002539 |  0.000748 | index      | label:do_read_index .shit/index
 ...
 ----------------
 
@@ -1178,9 +1178,9 @@ Data events are tagged with the active thread name.  They are used
 to report the per-thread parameters.
 +
 ----------------
-$ export GIT_TRACE2_PERF_BRIEF=1
-$ export GIT_TRACE2_PERF=~/log.perf
-$ git status
+$ export shit_TRACE2_PERF_BRIEF=1
+$ export shit_TRACE2_PERF=~/log.perf
+$ shit status
 ...
 $ cat ~/log.perf
 ...
@@ -1233,31 +1233,31 @@ Config (def param) Events::
 	  Dump "interesting" config values to trace2 log.
 +
 We can optionally emit configuration events, see
-`trace2.configparams` in linkgit:git-config[1] for how to enable
+`trace2.configparams` in linkshit:shit-config[1] for how to enable
 it.
 +
 ----------------
-$ git config --system color.ui never
-$ git config --global color.ui always
-$ git config --local color.ui auto
-$ git config --list --show-scope | grep 'color.ui'
+$ shit config --system color.ui never
+$ shit config --global color.ui always
+$ shit config --local color.ui auto
+$ shit config --list --show-scope | grep 'color.ui'
 system  color.ui=never
 global  color.ui=always
 local   color.ui=auto
 ----------------
 +
 Then, mark the config `color.ui` as "interesting" config with
-`GIT_TRACE2_CONFIG_PARAMS`:
+`shit_TRACE2_CONFIG_PARAMS`:
 +
 ----------------
-$ export GIT_TRACE2_PERF_BRIEF=1
-$ export GIT_TRACE2_PERF=~/log.perf
-$ export GIT_TRACE2_CONFIG_PARAMS=color.ui
-$ git version
+$ export shit_TRACE2_PERF_BRIEF=1
+$ export shit_TRACE2_PERF=~/log.perf
+$ export shit_TRACE2_CONFIG_PARAMS=color.ui
+$ shit version
 ...
 $ cat ~/log.perf
 d0 | main                     | version      |     |           |           |              | ...
-d0 | main                     | start        |     |  0.001642 |           |              | /usr/local/bin/git version
+d0 | main                     | start        |     |  0.001642 |           |              | /usr/local/bin/shit version
 d0 | main                     | cmd_name     |     |           |           |              | version (version)
 d0 | main                     | def_param    |     |           |           | scope:system | color.ui:never
 d0 | main                     | def_param    |     |           |           | scope:global | color.ui:always
@@ -1307,8 +1307,8 @@ In this example, we measure the total time spent in
 in the overall flow of the program.
 +
 ----------------
-$ export GIT_TRACE2_PERF_BRIEF=1
-$ export GIT_TRACE2_PERF=~/log.perf
+$ export shit_TRACE2_PERF_BRIEF=1
+$ export shit_TRACE2_PERF=~/log.perf
 $ t/helper/test-tool trace2 100timer 3 1000
 ...
 $ cat ~/log.perf
@@ -1328,11 +1328,11 @@ d0 | main                     | atexit       |     |  3.003796 |           |    
 There are a few issues to resolve before we can completely
 switch to Trace2.
 
-* Updating existing tests that assume `GIT_TRACE` format messages.
+* Updating existing tests that assume `shit_TRACE` format messages.
 
-* How to best handle custom `GIT_TRACE_<key>` messages?
+* How to best handle custom `shit_TRACE_<key>` messages?
 
-** The `GIT_TRACE_<key>` mechanism allows each <key> to write to a
+** The `shit_TRACE_<key>` mechanism allows each <key> to write to a
 different file (in addition to just stderr).
 
 ** Do we want to maintain that ability or simply write to the existing

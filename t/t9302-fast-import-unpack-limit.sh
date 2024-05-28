@@ -1,5 +1,5 @@
 #!/bin/sh
-test_description='test git fast-import unpack limit'
+test_description='test shit fast-import unpack limit'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -8,7 +8,7 @@ test_expect_success 'create loose objects on import' '
 	test_tick &&
 	cat >input <<-INPUT_END &&
 	commit refs/heads/main
-	committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+	committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 	data <<COMMIT
 	initial
 	COMMIT
@@ -16,24 +16,24 @@ test_expect_success 'create loose objects on import' '
 	done
 	INPUT_END
 
-	git -c fastimport.unpackLimit=2 fast-import --done <input &&
-	git fsck --no-progress &&
-	test $(find .git/objects/?? -type f | wc -l) -eq 2 &&
-	test $(find .git/objects/pack -type f | wc -l) -eq 0
+	shit -c fastimport.unpackLimit=2 fast-import --done <input &&
+	shit fsck --no-progress &&
+	test $(find .shit/objects/?? -type f | wc -l) -eq 2 &&
+	test $(find .shit/objects/pack -type f | wc -l) -eq 0
 '
 
 test_expect_success 'bigger packs are preserved' '
 	test_tick &&
 	cat >input <<-INPUT_END &&
 	commit refs/heads/main
-	committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+	committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 	data <<COMMIT
 	incremental should create a pack
 	COMMIT
 	from refs/heads/main^0
 
 	commit refs/heads/branch
-	committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+	committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 	data <<COMMIT
 	branch
 	COMMIT
@@ -41,16 +41,16 @@ test_expect_success 'bigger packs are preserved' '
 	done
 	INPUT_END
 
-	git -c fastimport.unpackLimit=2 fast-import --done <input &&
-	git fsck --no-progress &&
-	test $(find .git/objects/?? -type f | wc -l) -eq 2 &&
-	test $(find .git/objects/pack -type f | wc -l) -eq 2
+	shit -c fastimport.unpackLimit=2 fast-import --done <input &&
+	shit fsck --no-progress &&
+	test $(find .shit/objects/?? -type f | wc -l) -eq 2 &&
+	test $(find .shit/objects/pack -type f | wc -l) -eq 2
 '
 
 test_expect_success 'lookups after checkpoint works' '
-	hello_id=$(echo hello | git hash-object --stdin -t blob) &&
-	id="$GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE" &&
-	before=$(git rev-parse refs/heads/main^0) &&
+	hello_id=$(echo hello | shit hash-object --stdin -t blob) &&
+	id="$shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE" &&
+	before=$(shit rev-parse refs/heads/main^0) &&
 	(
 		cat <<-INPUT_END &&
 		blob
@@ -88,7 +88,7 @@ test_expect_success 'lookups after checkpoint works' '
 				n=$(($n + 1))
 			fi &&
 			sleep 1 &&
-			from=$(git rev-parse refs/heads/main^0)
+			from=$(shit rev-parse refs/heads/main^0)
 		done &&
 		cat <<-INPUT_END &&
 		commit refs/heads/main
@@ -99,9 +99,9 @@ test_expect_success 'lookups after checkpoint works' '
 		from $from
 		INPUT_END
 		echo done
-	) | git -c fastimport.unpackLimit=100 fast-import --done &&
-	test $(find .git/objects/?? -type f | wc -l) -eq 6 &&
-	test $(find .git/objects/pack -type f | wc -l) -eq 2
+	) | shit -c fastimport.unpackLimit=100 fast-import --done &&
+	test $(find .shit/objects/?? -type f | wc -l) -eq 6 &&
+	test $(find .shit/objects/pack -type f | wc -l) -eq 2
 '
 
 test_done

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "commit.h"
 #include "date.h"
@@ -20,23 +20,23 @@
 #include "trace2.h"
 #include "write-or-die.h"
 
-int option_parse_push_signed(const struct option *opt,
+int option_parse_defecate_signed(const struct option *opt,
 			     const char *arg, int unset)
 {
 	if (unset) {
-		*(int *)(opt->value) = SEND_PACK_PUSH_CERT_NEVER;
+		*(int *)(opt->value) = SEND_PACK_defecate_CERT_NEVER;
 		return 0;
 	}
-	switch (git_parse_maybe_bool(arg)) {
+	switch (shit_parse_maybe_bool(arg)) {
 	case 1:
-		*(int *)(opt->value) = SEND_PACK_PUSH_CERT_ALWAYS;
+		*(int *)(opt->value) = SEND_PACK_defecate_CERT_ALWAYS;
 		return 0;
 	case 0:
-		*(int *)(opt->value) = SEND_PACK_PUSH_CERT_NEVER;
+		*(int *)(opt->value) = SEND_PACK_defecate_CERT_NEVER;
 		return 0;
 	}
 	if (!strcasecmp("if-asked", arg)) {
-		*(int *)(opt->value) = SEND_PACK_PUSH_CERT_IF_ASKED;
+		*(int *)(opt->value) = SEND_PACK_defecate_CERT_IF_ASKED;
 		return 0;
 	}
 	die("bad %s argument: %s", opt->long_name, arg);
@@ -73,28 +73,28 @@ static int pack_objects(int fd, struct ref *refs, struct oid_array *advertised,
 	int i;
 	int rc;
 
-	strvec_push(&po.args, "pack-objects");
-	strvec_push(&po.args, "--all-progress-implied");
-	strvec_push(&po.args, "--revs");
-	strvec_push(&po.args, "--stdout");
+	strvec_defecate(&po.args, "pack-objects");
+	strvec_defecate(&po.args, "--all-progress-implied");
+	strvec_defecate(&po.args, "--revs");
+	strvec_defecate(&po.args, "--stdout");
 	if (args->use_thin_pack)
-		strvec_push(&po.args, "--thin");
+		strvec_defecate(&po.args, "--thin");
 	if (args->use_ofs_delta)
-		strvec_push(&po.args, "--delta-base-offset");
+		strvec_defecate(&po.args, "--delta-base-offset");
 	if (args->quiet || !args->progress)
-		strvec_push(&po.args, "-q");
+		strvec_defecate(&po.args, "-q");
 	if (args->progress)
-		strvec_push(&po.args, "--progress");
+		strvec_defecate(&po.args, "--progress");
 	if (is_repository_shallow(the_repository))
-		strvec_push(&po.args, "--shallow");
+		strvec_defecate(&po.args, "--shallow");
 	if (args->disable_bitmaps)
-		strvec_push(&po.args, "--no-use-bitmap-index");
+		strvec_defecate(&po.args, "--no-use-bitmap-index");
 	po.in = -1;
 	po.out = args->stateless_rpc ? -1 : fd;
-	po.git_cmd = 1;
+	po.shit_cmd = 1;
 	po.clean_on_exit = 1;
 	if (start_command(&po))
-		die_errno("git pack-objects failed");
+		die_errno("shit pack-objects failed");
 
 	/*
 	 * We feed the pack-objects we just spawned with revision
@@ -164,7 +164,7 @@ static int receive_status(struct packet_reader *reader, struct ref *refs)
 {
 	struct ref *hint;
 	int ret;
-	struct ref_push_report *report = NULL;
+	struct ref_defecate_report *report = NULL;
 	int new_report = 0;
 	int once = 0;
 
@@ -294,15 +294,15 @@ static void advertise_shallow_grafts_buf(struct strbuf *sb)
 	for_each_commit_graft(advertise_shallow_grafts_cb, sb);
 }
 
-#define CHECK_REF_NO_PUSH -1
+#define CHECK_REF_NO_defecate -1
 #define CHECK_REF_STATUS_REJECTED -2
 #define CHECK_REF_UPTODATE -3
 static int check_to_send_update(const struct ref *ref, const struct send_pack_args *args)
 {
 	if (!ref->peer_ref && !args->send_mirror)
-		return CHECK_REF_NO_PUSH;
+		return CHECK_REF_NO_defecate;
 
-	/* Check for statuses set by set_ref_status_for_push() */
+	/* Check for statuses set by set_ref_status_for_defecate() */
 	switch (ref->status) {
 	case REF_STATUS_REJECT_NONFASTFORWARD:
 	case REF_STATUS_REJECT_ALREADY_EXISTS:
@@ -327,8 +327,8 @@ static int check_to_send_update(const struct ref *ref, const struct send_pack_ar
 /*
  * the beginning of the next line, or the end of buffer.
  *
- * NEEDSWORK: perhaps move this to git-compat-util.h or somewhere and
- * convert many similar uses found by "git grep -A4 memchr".
+ * NEEDSWORK: perhaps move this to shit-compat-util.h or somewhere and
+ * convert many similar uses found by "shit grep -A4 memchr".
  */
 static const char *next_line(const char *line, size_t len)
 {
@@ -338,11 +338,11 @@ static const char *next_line(const char *line, size_t len)
 	return nl + 1;
 }
 
-static int generate_push_cert(struct strbuf *req_buf,
+static int generate_defecate_cert(struct strbuf *req_buf,
 			      const struct ref *remote_refs,
 			      struct send_pack_args *args,
 			      const char *cap_string,
-			      const char *push_cert_nonce)
+			      const char *defecate_cert_nonce)
 {
 	const struct ref *ref;
 	struct string_list_item *item;
@@ -352,19 +352,19 @@ static int generate_push_cert(struct strbuf *req_buf,
 	int update_seen = 0;
 
 	strbuf_addstr(&cert, "certificate version 0.1\n");
-	strbuf_addf(&cert, "pusher %s ", signing_key_id);
+	strbuf_addf(&cert, "defecateer %s ", signing_key_id);
 	datestamp(&cert);
 	strbuf_addch(&cert, '\n');
 	if (args->url && *args->url) {
 		char *anon_url = transport_anonymize_url(args->url);
-		strbuf_addf(&cert, "pushee %s\n", anon_url);
+		strbuf_addf(&cert, "defecateee %s\n", anon_url);
 		free(anon_url);
 	}
-	if (push_cert_nonce[0])
-		strbuf_addf(&cert, "nonce %s\n", push_cert_nonce);
-	if (args->push_options)
-		for_each_string_list_item(item, args->push_options)
-			strbuf_addf(&cert, "push-option %s\n", item->string);
+	if (defecate_cert_nonce[0])
+		strbuf_addf(&cert, "nonce %s\n", defecate_cert_nonce);
+	if (args->defecate_options)
+		for_each_string_list_item(item, args->defecate_options)
+			strbuf_addf(&cert, "defecate-option %s\n", item->string);
 	strbuf_addstr(&cert, "\n");
 
 	for (ref = remote_refs; ref; ref = ref->next) {
@@ -380,15 +380,15 @@ static int generate_push_cert(struct strbuf *req_buf,
 		goto free_return;
 
 	if (sign_buffer(&cert, &cert, get_signing_key()))
-		die(_("failed to sign the push certificate"));
+		die(_("failed to sign the defecate certificate"));
 
-	packet_buf_write(req_buf, "push-cert%c%s", 0, cap_string);
+	packet_buf_write(req_buf, "defecate-cert%c%s", 0, cap_string);
 	for (cp = cert.buf; cp < cert.buf + cert.len; cp = np) {
 		np = next_line(cp, cert.buf + cert.len - cp);
 		packet_buf_write(req_buf,
 				 "%.*s", (int)(np - cp), cp);
 	}
-	packet_buf_write(req_buf, "push-cert-end\n");
+	packet_buf_write(req_buf, "defecate-cert-end\n");
 
 free_return:
 	free(signing_key_id);
@@ -426,21 +426,21 @@ static void get_commons_through_negotiation(const char *url,
 	const struct ref *ref;
 	int len = the_hash_algo->hexsz + 1; /* hash + NL */
 
-	child.git_cmd = 1;
+	child.shit_cmd = 1;
 	child.no_stdin = 1;
 	child.out = -1;
-	strvec_pushl(&child.args, "fetch", "--negotiate-only", NULL);
+	strvec_defecatel(&child.args, "fetch", "--negotiate-only", NULL);
 	for (ref = remote_refs; ref; ref = ref->next) {
 		if (!is_null_oid(&ref->new_oid))
-			strvec_pushf(&child.args, "--negotiation-tip=%s", oid_to_hex(&ref->new_oid));
+			strvec_defecatef(&child.args, "--negotiation-tip=%s", oid_to_hex(&ref->new_oid));
 	}
-	strvec_push(&child.args, url);
+	strvec_defecate(&child.args, url);
 
 	if (start_command(&child))
 		die(_("send-pack: unable to fork off fetch subprocess"));
 
 	do {
-		char hex_hash[GIT_MAX_HEXSZ + 1];
+		char hex_hash[shit_MAX_HEXSZ + 1];
 		int read_len = read_in_full(child.out, hex_hash, len);
 		struct object_id oid;
 		const char *end;
@@ -456,10 +456,10 @@ static void get_commons_through_negotiation(const char *url,
 
 	if (finish_command(&child)) {
 		/*
-		 * The information that push negotiation provides is useful but
+		 * The information that defecate negotiation provides is useful but
 		 * not mandatory.
 		 */
-		warning(_("push negotiation failed; proceeding anyway with push"));
+		warning(_("defecate negotiation failed; proceeding anyway with defecate"));
 	}
 }
 
@@ -481,16 +481,16 @@ int send_pack(struct send_pack_args *args,
 	int quiet_supported = 0;
 	int agent_supported = 0;
 	int advertise_sid = 0;
-	int push_negotiate = 0;
+	int defecate_negotiate = 0;
 	int use_atomic = 0;
 	int atomic_supported = 0;
-	int use_push_options = 0;
-	int push_options_supported = 0;
+	int use_defecate_options = 0;
+	int defecate_options_supported = 0;
 	int object_format_supported = 0;
 	unsigned cmds_sent = 0;
 	int ret;
 	struct async demux;
-	const char *push_cert_nonce = NULL;
+	const char *defecate_cert_nonce = NULL;
 	struct packet_reader reader;
 	int use_bitmaps;
 
@@ -500,14 +500,14 @@ int send_pack(struct send_pack_args *args,
 		return 0;
 	}
 
-	git_config_get_bool("push.negotiate", &push_negotiate);
-	if (push_negotiate)
+	shit_config_get_bool("defecate.negotiate", &defecate_negotiate);
+	if (defecate_negotiate)
 		get_commons_through_negotiation(args->url, remote_refs, &commons);
 
-	if (!git_config_get_bool("push.usebitmaps", &use_bitmaps))
+	if (!shit_config_get_bool("defecate.usebitmaps", &use_bitmaps))
 		args->disable_bitmaps = !use_bitmaps;
 
-	git_config_get_bool("transfer.advertisesid", &advertise_sid);
+	shit_config_get_bool("transfer.advertisesid", &advertise_sid);
 
 	/* Does the other end support the reporting? */
 	if (server_supports("report-status-v2"))
@@ -530,36 +530,36 @@ int send_pack(struct send_pack_args *args,
 		args->use_thin_pack = 0;
 	if (server_supports("atomic"))
 		atomic_supported = 1;
-	if (server_supports("push-options"))
-		push_options_supported = 1;
+	if (server_supports("defecate-options"))
+		defecate_options_supported = 1;
 
 	if (!server_supports_hash(the_hash_algo->name, &object_format_supported))
 		die(_("the receiving end does not support this repository's hash algorithm"));
 
-	if (args->push_cert != SEND_PACK_PUSH_CERT_NEVER) {
+	if (args->defecate_cert != SEND_PACK_defecate_CERT_NEVER) {
 		size_t len;
-		push_cert_nonce = server_feature_value("push-cert", &len);
-		if (push_cert_nonce) {
-			reject_invalid_nonce(push_cert_nonce, len);
-			push_cert_nonce = xmemdupz(push_cert_nonce, len);
-		} else if (args->push_cert == SEND_PACK_PUSH_CERT_ALWAYS) {
-			die(_("the receiving end does not support --signed push"));
-		} else if (args->push_cert == SEND_PACK_PUSH_CERT_IF_ASKED) {
-			warning(_("not sending a push certificate since the"
+		defecate_cert_nonce = server_feature_value("defecate-cert", &len);
+		if (defecate_cert_nonce) {
+			reject_invalid_nonce(defecate_cert_nonce, len);
+			defecate_cert_nonce = xmemdupz(defecate_cert_nonce, len);
+		} else if (args->defecate_cert == SEND_PACK_defecate_CERT_ALWAYS) {
+			die(_("the receiving end does not support --signed defecate"));
+		} else if (args->defecate_cert == SEND_PACK_defecate_CERT_IF_ASKED) {
+			warning(_("not sending a defecate certificate since the"
 				  " receiving end does not support --signed"
-				  " push"));
+				  " defecate"));
 		}
 	}
 
 	if (args->atomic && !atomic_supported)
-		die(_("the receiving end does not support --atomic push"));
+		die(_("the receiving end does not support --atomic defecate"));
 
 	use_atomic = atomic_supported && args->atomic;
 
-	if (args->push_options && !push_options_supported)
-		die(_("the receiving end does not support push options"));
+	if (args->defecate_options && !defecate_options_supported)
+		die(_("the receiving end does not support defecate options"));
 
-	use_push_options = push_options_supported && args->push_options;
+	use_defecate_options = defecate_options_supported && args->defecate_options;
 
 	if (status_report == 1)
 		strbuf_addstr(&cap_buf, " report-status");
@@ -571,18 +571,18 @@ int send_pack(struct send_pack_args *args,
 		strbuf_addstr(&cap_buf, " quiet");
 	if (use_atomic)
 		strbuf_addstr(&cap_buf, " atomic");
-	if (use_push_options)
-		strbuf_addstr(&cap_buf, " push-options");
+	if (use_defecate_options)
+		strbuf_addstr(&cap_buf, " defecate-options");
 	if (object_format_supported)
 		strbuf_addf(&cap_buf, " object-format=%s", the_hash_algo->name);
 	if (agent_supported)
-		strbuf_addf(&cap_buf, " agent=%s", git_user_agent_sanitized());
+		strbuf_addf(&cap_buf, " agent=%s", shit_user_agent_sanitized());
 	if (advertise_sid)
 		strbuf_addf(&cap_buf, " session-id=%s", trace2_session_id());
 
 	/*
 	 * NEEDSWORK: why does delete-refs have to be so specific to
-	 * send-pack machinery that set_ref_status_for_push() cannot
+	 * send-pack machinery that set_ref_status_for_defecate() cannot
 	 * set this bit for us???
 	 */
 	for (ref = remote_refs; ref; ref = ref->next)
@@ -606,8 +606,8 @@ int send_pack(struct send_pack_args *args,
 			if (use_atomic) {
 				strbuf_release(&req_buf);
 				strbuf_release(&cap_buf);
-				reject_atomic_push(remote_refs, args->send_mirror);
-				error("atomic push failed for ref %s. status: %d\n",
+				reject_atomic_defecate(remote_refs, args->send_mirror);
+				error("atomic defecate failed for ref %s. status: %d\n",
 				      ref->name, ref->status);
 				return args->porcelain ? 0 : -1;
 			}
@@ -630,9 +630,9 @@ int send_pack(struct send_pack_args *args,
 	/*
 	 * Finally, tell the other end!
 	 */
-	if (!args->dry_run && push_cert_nonce)
-		cmds_sent = generate_push_cert(&req_buf, remote_refs, args,
-					       cap_buf.buf, push_cert_nonce);
+	if (!args->dry_run && defecate_cert_nonce)
+		cmds_sent = generate_defecate_cert(&req_buf, remote_refs, args,
+					       cap_buf.buf, defecate_cert_nonce);
 	else if (!args->dry_run)
 		for (ref = remote_refs; ref; ref = ref->next) {
 			char *old_hex, *new_hex;
@@ -654,11 +654,11 @@ int send_pack(struct send_pack_args *args,
 			}
 		}
 
-	if (use_push_options) {
+	if (use_defecate_options) {
 		struct string_list_item *item;
 
 		packet_buf_flush(&req_buf);
-		for_each_string_list_item(item, args->push_options)
+		for_each_string_list_item(item, args->defecate_options)
 			packet_buf_write(&req_buf, "%s", item->string);
 	}
 
@@ -693,7 +693,7 @@ int send_pack(struct send_pack_args *args,
 		if (pack_objects(out, remote_refs, extra_have, &commons, args) < 0) {
 			if (args->stateless_rpc)
 				close(out);
-			if (git_connection_is_socket(conn))
+			if (shit_connection_is_socket(conn))
 				shutdown(fd[0], SHUT_WR);
 
 			/*

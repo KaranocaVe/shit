@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git ls-files --format test'
+test_description='shit ls-files --format test'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -8,7 +8,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 for flag in -s -o -k -t --resolve-undo --deduplicate --eol
 do
 	test_expect_success "usage: --format is incompatible with $flag" '
-		test_expect_code 129 git ls-files --format="%(objectname)" $flag
+		test_expect_code 129 shit ls-files --format="%(objectname)" $flag
 	'
 done
 
@@ -16,36 +16,36 @@ test_expect_success 'setup' '
 	printf "LINEONE\nLINETWO\nLINETHREE\n" >o1.txt &&
 	printf "LINEONE\r\nLINETWO\r\nLINETHREE\r\n" >o2.txt &&
 	printf "LINEONE\r\nLINETWO\nLINETHREE\n" >o3.txt &&
-	git add o?.txt &&
-	oid=$(git hash-object o1.txt) &&
-	git update-index --add --cacheinfo 120000 $oid o4.txt &&
-	git update-index --add --cacheinfo 160000 $oid o5.txt &&
-	git update-index --add --cacheinfo 100755 $oid o6.txt &&
-	git commit -m base
+	shit add o?.txt &&
+	oid=$(shit hash-object o1.txt) &&
+	shit update-index --add --cacheinfo 120000 $oid o4.txt &&
+	shit update-index --add --cacheinfo 160000 $oid o5.txt &&
+	shit update-index --add --cacheinfo 100755 $oid o6.txt &&
+	shit commit -m base
 '
 
-test_expect_success 'git ls-files --format objectmode v.s. -s' '
-	git ls-files -s >files &&
+test_expect_success 'shit ls-files --format objectmode v.s. -s' '
+	shit ls-files -s >files &&
 	cut -d" " -f1 files >expect &&
-	git ls-files --format="%(objectmode)" >actual &&
+	shit ls-files --format="%(objectmode)" >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format objectname v.s. -s' '
-	git ls-files -s >files &&
+test_expect_success 'shit ls-files --format objectname v.s. -s' '
+	shit ls-files -s >files &&
 	cut -d" " -f2 files >expect &&
-	git ls-files --format="%(objectname)" >actual &&
+	shit ls-files --format="%(objectname)" >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format objecttype' '
-	git ls-files --format="%(objectname)" o1.txt o4.txt o6.txt >objectname &&
-	git cat-file --batch-check="%(objecttype)" >expect <objectname &&
-	git ls-files --format="%(objecttype)" o1.txt o4.txt o6.txt >actual &&
+test_expect_success 'shit ls-files --format objecttype' '
+	shit ls-files --format="%(objectname)" o1.txt o4.txt o6.txt >objectname &&
+	shit cat-file --batch-check="%(objecttype)" >expect <objectname &&
+	shit ls-files --format="%(objecttype)" o1.txt o4.txt o6.txt >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format objectsize' '
+test_expect_success 'shit ls-files --format objectsize' '
 	cat>expect <<-\EOF &&
 26
 29
@@ -54,12 +54,12 @@ test_expect_success 'git ls-files --format objectsize' '
 -
 26
 	EOF
-	git ls-files --format="%(objectsize)" >actual &&
+	shit ls-files --format="%(objectsize)" >actual &&
 
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format objectsize:padded' '
+test_expect_success 'shit ls-files --format objectsize:padded' '
 	cat>expect <<-\EOF &&
      26
      29
@@ -68,28 +68,28 @@ test_expect_success 'git ls-files --format objectsize:padded' '
       -
      26
 	EOF
-	git ls-files --format="%(objectsize:padded)" >actual &&
+	shit ls-files --format="%(objectsize:padded)" >actual &&
 
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format v.s. --eol' '
-	git ls-files --eol >tmp &&
+test_expect_success 'shit ls-files --format v.s. --eol' '
+	shit ls-files --eol >tmp &&
 	sed -e "s/	/ /g" -e "s/  */ /g" tmp >expect 2>err &&
 	test_must_be_empty err &&
-	git ls-files --format="i/%(eolinfo:index) w/%(eolinfo:worktree) attr/%(eolattr) %(path)" >actual 2>err &&
+	shit ls-files --format="i/%(eolinfo:index) w/%(eolinfo:worktree) attr/%(eolattr) %(path)" >actual 2>err &&
 	test_must_be_empty err &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format path v.s. -s' '
-	git ls-files -s >files &&
+test_expect_success 'shit ls-files --format path v.s. -s' '
+	shit ls-files -s >files &&
 	cut -f2 files >expect &&
-	git ls-files --format="%(path)" >actual &&
+	shit ls-files --format="%(path)" >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format with relative path' '
+test_expect_success 'shit ls-files --format with relative path' '
 	cat >expect <<-\EOF &&
 	../o1.txt
 	../o2.txt
@@ -100,12 +100,12 @@ test_expect_success 'git ls-files --format with relative path' '
 	EOF
 	mkdir sub &&
 	cd sub &&
-	git ls-files --format="%(path)" ":/" >../actual &&
+	shit ls-files --format="%(path)" ":/" >../actual &&
 	cd .. &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format with -m' '
+test_expect_success 'shit ls-files --format with -m' '
 	echo change >o1.txt &&
 	cat >expect <<-\EOF &&
 	o1.txt
@@ -113,13 +113,13 @@ test_expect_success 'git ls-files --format with -m' '
 	o5.txt
 	o6.txt
 	EOF
-	git ls-files --format="%(path)" -m >actual &&
+	shit ls-files --format="%(path)" -m >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format with -d' '
+test_expect_success 'shit ls-files --format with -d' '
 	echo o7 >o7.txt &&
-	git add o7.txt &&
+	shit add o7.txt &&
 	rm o7.txt &&
 	cat >expect <<-\EOF &&
 	o4.txt
@@ -127,19 +127,19 @@ test_expect_success 'git ls-files --format with -d' '
 	o6.txt
 	o7.txt
 	EOF
-	git ls-files --format="%(path)" -d >actual &&
+	shit ls-files --format="%(path)" -d >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format v.s -s' '
-	git ls-files --stage >expect &&
-	git ls-files --format="%(objectmode) %(objectname) %(stage)%x09%(path)" >actual &&
+test_expect_success 'shit ls-files --format v.s -s' '
+	shit ls-files --stage >expect &&
+	shit ls-files --format="%(objectmode) %(objectname) %(stage)%x09%(path)" >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git ls-files --format with --debug' '
-	git ls-files --debug >expect &&
-	git ls-files --format="%(path)" --debug >actual &&
+test_expect_success 'shit ls-files --format with --debug' '
+	shit ls-files --debug >expect &&
+	shit ls-files --format="%(path)" --debug >actual &&
 	test_cmp expect actual
 '
 

@@ -1,11 +1,11 @@
-package Git::SVN::Editor;
+package shit::SVN::Editor;
 use vars qw/@ISA $_rmdir $_cp_similarity $_find_copies_harder $_rename_limit/;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 use SVN::Core;
 use SVN::Delta;
 use Carp qw/croak/;
-use Git qw/command command_oneline command_noisy command_output_pipe
+use shit qw/command command_oneline command_noisy command_output_pipe
            command_input_pipe command_close_pipe
            command_bidi_pipe command_close_bidi_pipe
            get_record/;
@@ -43,7 +43,7 @@ sub new {
 	                       "$self->{svn_path}/" : '';
 	$self->{config} = $opts->{config};
 	$self->{mergeinfo} = $opts->{mergeinfo};
-	$self->{pathnameencoding} = Git::config('svn.pathnameencoding');
+	$self->{pathnameencoding} = shit::config('svn.pathnameencoding');
 	return $self;
 }
 
@@ -51,13 +51,13 @@ sub generate_diff {
 	my ($tree_a, $tree_b) = @_;
 	my @diff_tree = qw(diff-tree -z -r);
 	if ($_cp_similarity) {
-		push @diff_tree, "-C$_cp_similarity";
+		defecate @diff_tree, "-C$_cp_similarity";
 	} else {
-		push @diff_tree, '-C';
+		defecate @diff_tree, '-C';
 	}
-	push @diff_tree, '--find-copies-harder' if $_find_copies_harder;
-	push @diff_tree, "-l$_rename_limit" if defined $_rename_limit;
-	push @diff_tree, $tree_a, $tree_b;
+	defecate @diff_tree, '--find-copies-harder' if $_find_copies_harder;
+	defecate @diff_tree, "-l$_rename_limit" if defined $_rename_limit;
+	defecate @diff_tree, $tree_a, $tree_b;
 	my ($diff_fh, $ctx) = command_output_pipe(@diff_tree);
 	my $state = 'meta';
 	my @mods;
@@ -65,7 +65,7 @@ sub generate_diff {
 		if ($state eq 'meta' && /^:(\d{6})\s(\d{6})\s
 					($::oid)\s($::oid)\s
 					([MTCRAD])\d*$/xo) {
-			push @mods, {	mode_a => $1, mode_b => $2,
+			defecate @mods, {	mode_a => $1, mode_b => $2,
 					sha1_a => $3, sha1_b => $4,
 					chg => $5 };
 			if ($5 =~ /^(?:C|R)$/) {
@@ -304,7 +304,7 @@ sub apply_manualprops {
 	# - this fails for add so currently not done
 	# my $existing_props = ::get_svnprops($file);
 	my $existing_props = {};
-	# TODO: caching svn properties or storing them in .gitattributes
+	# TODO: caching svn properties or storing them in .shitattributes
 	# would make that faster
 	foreach my $prop (@props) {
 		# Parse 'name=value' syntax and set the property.
@@ -426,7 +426,7 @@ sub change_dir_prop {
 
 sub _chg_file_get_blob ($$$$) {
 	my ($self, $fbat, $m, $which) = @_;
-	my $fh = $::_repository->temp_acquire("git_blob_$which");
+	my $fh = $::_repository->temp_acquire("shit_blob_$which");
 	if ($m->{"mode_$which"} =~ /^120/) {
 		print $fh 'link ' or croak $!;
 		$self->change_file_prop($fbat,'svn:special','*');
@@ -468,8 +468,8 @@ sub chg_file {
 		die "Checksum mismatch\nexpected: $exp_b\ngot: $got\n"
 		    if ($got ne $exp_b);
 	}
-	Git::temp_release($fh_b, 1);
-	Git::temp_release($fh_a, 1);
+	shit::temp_release($fh_b, 1);
+	shit::temp_release($fh_a, 1);
 	$pool->clear;
 }
 
@@ -544,14 +544,14 @@ __END__
 
 =head1 NAME
 
-Git::SVN::Editor - commit driver for "git svn set-tree" and dcommit
+shit::SVN::Editor - commit driver for "shit svn set-tree" and dcommit
 
 =head1 SYNOPSIS
 
-	use Git::SVN::Editor;
-	use Git::SVN::Ra;
+	use shit::SVN::Editor;
+	use shit::SVN::Ra;
 
-	my $ra = Git::SVN::Ra->new($url);
+	my $ra = shit::SVN::Ra->new($url);
 	my %opts = (
 		r => 19,
 		log => "log message",
@@ -563,38 +563,38 @@ Git::SVN::Editor - commit driver for "git svn set-tree" and dcommit
 		mergeinfo => "/branches/foo:1-10",
 		svn_path => "trunk"
 	);
-	Git::SVN::Editor->new(\%opts)->apply_diff or print "No changes\n";
+	shit::SVN::Editor->new(\%opts)->apply_diff or print "No changes\n";
 
-	my $re = Git::SVN::Editor::glob2pat("trunk/*");
+	my $re = shit::SVN::Editor::glob2pat("trunk/*");
 	if ($branchname =~ /$re/) {
 		print "matched!\n";
 	}
 
 =head1 DESCRIPTION
 
-This module is an implementation detail of the "git svn" command.
-Do not use it unless you are developing git-svn.
+This module is an implementation detail of the "shit svn" command.
+Do not use it unless you are developing shit-svn.
 
 This module adapts the C<SVN::Delta::Editor> object returned by
 C<SVN::Delta::get_commit_editor> and drives it to convey the
-difference between two git tree objects to a remote Subversion
+difference between two shit tree objects to a remote Subversion
 repository.
 
-The interface will change as git-svn evolves.
+The interface will change as shit-svn evolves.
 
 =head1 DEPENDENCIES
 
 Subversion perl bindings,
 the core L<Carp> module,
-and git's L<Git> helper module.
+and shit's L<shit> helper module.
 
-C<Git::SVN::Editor> has not been tested using callers other than
-B<git-svn> itself.
+C<shit::SVN::Editor> has not been tested using callers other than
+B<shit-svn> itself.
 
 =head1 SEE ALSO
 
 L<SVN::Delta>,
-L<Git::SVN::Fetcher>.
+L<shit::SVN::Fetcher>.
 
 =head1 INCOMPATIBILITIES
 

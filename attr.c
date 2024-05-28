@@ -1,12 +1,12 @@
 /*
- * Handle git attributes.  See gitattributes(5) for a description of
+ * Handle shit attributes.  See shitattributes(5) for a description of
  * the file syntax, and attr.h for a description of the API.
  *
  * One basic design decision here is that we are not going to support
  * an insanely large number of attributes.
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "environment.h"
 #include "exec-cmd.h"
@@ -25,22 +25,22 @@
 #include "tree-walk.h"
 #include "object-name.h"
 
-const char *git_attr_tree;
+const char *shit_attr_tree;
 
-const char git_attr__true[] = "(builtin)true";
-const char git_attr__false[] = "\0(builtin)false";
-static const char git_attr__unknown[] = "(builtin)unknown";
-#define ATTR__TRUE git_attr__true
-#define ATTR__FALSE git_attr__false
+const char shit_attr__true[] = "(builtin)true";
+const char shit_attr__false[] = "\0(builtin)false";
+static const char shit_attr__unknown[] = "(builtin)unknown";
+#define ATTR__TRUE shit_attr__true
+#define ATTR__FALSE shit_attr__false
 #define ATTR__UNSET NULL
-#define ATTR__UNKNOWN git_attr__unknown
+#define ATTR__UNKNOWN shit_attr__unknown
 
-struct git_attr {
+struct shit_attr {
 	unsigned int attr_nr; /* unique attribute number */
 	char name[FLEX_ARRAY]; /* attribute name */
 };
 
-const char *git_attr_name(const struct git_attr *attr)
+const char *shit_attr_name(const struct shit_attr *attr)
 {
 	return attr->name;
 }
@@ -125,7 +125,7 @@ static void attr_hashmap_add(struct attr_hashmap *map,
 }
 
 struct all_attrs_item {
-	const struct git_attr *attr;
+	const struct shit_attr *attr;
 	const char *value;
 	/*
 	 * If 'macro' is non-NULL, indicates that 'attr' is a macro based on
@@ -155,7 +155,7 @@ static void all_attrs_init(struct attr_hashmap *map, struct attr_check *check)
 	 * If the number of attributes in the global dictionary has increased
 	 * (or this attr_check instance doesn't have an initialized all_attrs
 	 * field), reallocate the provided attr_check instance's all_attrs
-	 * field and fill each entry with its corresponding git_attr.
+	 * field and fill each entry with its corresponding shit_attr.
 	 */
 	if (size != check->all_attrs_nr) {
 		struct attr_hash_entry *e;
@@ -166,7 +166,7 @@ static void all_attrs_init(struct attr_hashmap *map, struct attr_check *check)
 
 		hashmap_for_each_entry(&map->map, &iter, e,
 					ent /* member name */) {
-			const struct git_attr *a = e->value;
+			const struct shit_attr *a = e->value;
 			check->all_attrs[a->attr_nr].attr = a;
 		}
 	}
@@ -227,9 +227,9 @@ static void report_invalid_attr(const char *name, size_t len,
  * dictionary.  If no entry is found, create a new attribute and store it in
  * the dictionary.
  */
-static const struct git_attr *git_attr_internal(const char *name, size_t namelen)
+static const struct shit_attr *shit_attr_internal(const char *name, size_t namelen)
 {
-	struct git_attr *a;
+	struct shit_attr *a;
 
 	if (!attr_name_valid(name, namelen))
 		return NULL;
@@ -252,14 +252,14 @@ static const struct git_attr *git_attr_internal(const char *name, size_t namelen
 	return a;
 }
 
-const struct git_attr *git_attr(const char *name)
+const struct shit_attr *shit_attr(const char *name)
 {
-	return git_attr_internal(name, strlen(name));
+	return shit_attr_internal(name, strlen(name));
 }
 
 /* What does a matched pattern decide? */
 struct attr_state {
-	const struct git_attr *attr;
+	const struct shit_attr *attr;
 	const char *setto;
 };
 
@@ -271,9 +271,9 @@ struct pattern {
 };
 
 /*
- * One rule, as from a .gitattributes file.
+ * One rule, as from a .shitattributes file.
  *
- * If is_macro is true, then u.attr is a pointer to the git_attr being
+ * If is_macro is true, then u.attr is a pointer to the shit_attr being
  * defined.
  *
  * If is_macro is false, then u.pat is the filename pattern to which the
@@ -286,7 +286,7 @@ struct pattern {
 struct match_attr {
 	union {
 		struct pattern pat;
-		const struct git_attr *attr;
+		const struct shit_attr *attr;
 	} u;
 	char is_macro;
 	size_t num_attr;
@@ -346,7 +346,7 @@ static const char *parse_attr(const char *src, int lineno, const char *cp,
 		else {
 			e->setto = xmemdupz(equals + 1, ep - equals - 1);
 		}
-		e->attr = git_attr_internal(cp, len);
+		e->attr = shit_attr_internal(cp, len);
 	}
 	return ep + strspn(ep, blank);
 }
@@ -410,7 +410,7 @@ static struct match_attr *parse_attr_line(const char *line, const char *src,
 				 st_mult(sizeof(struct attr_state), num_attr),
 				 is_macro ? 0 : namelen + 1));
 	if (is_macro) {
-		res->u.attr = git_attr_internal(name, namelen);
+		res->u.attr = shit_attr_internal(name, namelen);
 	} else {
 		char *p = (char *)&(res->state[num_attr]);
 		memcpy(p, name, namelen);
@@ -420,7 +420,7 @@ static struct match_attr *parse_attr_line(const char *line, const char *src,
 				      &res->u.pat.flags,
 				      &res->u.pat.nowildcardlen);
 		if (res->u.pat.flags & PATTERN_FLAG_NEGATIVE) {
-			warning(_("Negative patterns are ignored in git attributes\n"
+			warning(_("Negative patterns are ignored in shit attributes\n"
 				  "Use '\\!' for literal leading exclamation."));
 			goto fail_return;
 		}
@@ -443,21 +443,21 @@ fail_return:
 }
 
 /*
- * Like info/exclude and .gitignore, the attribute information can
+ * Like info/exclude and .shitignore, the attribute information can
  * come from many places.
  *
- * (1) .gitattributes file of the same directory;
- * (2) .gitattributes file of the parent directory if (1) does not have
- *      any match; this goes recursively upwards, just like .gitignore.
- * (3) $GIT_DIR/info/attributes, which overrides both of the above.
+ * (1) .shitattributes file of the same directory;
+ * (2) .shitattributes file of the parent directory if (1) does not have
+ *      any match; this goes recursively upwards, just like .shitignore.
+ * (3) $shit_DIR/info/attributes, which overrides both of the above.
  *
  * In the same file, later entries override the earlier match, so in the
  * global list, we would have entries from info/attributes the earliest
- * (reading the file from top to bottom), .gitattributes of the root
+ * (reading the file from top to bottom), .shitattributes of the root
  * directory (again, reading the file from top to bottom) down to the
  * current directory, and then scan the list backwards to find the first match.
  * This is exactly the same as what is_excluded() does in dir.c to deal with
- * .gitignore file and info/excludes file as a fallback.
+ * .shitignore file and info/excludes file as a fallback.
  */
 
 struct attr_stack {
@@ -596,15 +596,15 @@ struct attr_check *attr_check_initl(const char *one, ...)
 	check->alloc = cnt;
 	CALLOC_ARRAY(check->items, cnt);
 
-	check->items[0].attr = git_attr(one);
+	check->items[0].attr = shit_attr(one);
 	va_start(params, one);
 	for (cnt = 1; cnt < check->nr; cnt++) {
-		const struct git_attr *attr;
+		const struct shit_attr *attr;
 		param = va_arg(params, const char *);
 		if (!param)
 			BUG("counted %d != ended at %d",
 			    check->nr, cnt);
-		attr = git_attr(param);
+		attr = shit_attr(param);
 		if (!attr)
 			BUG("%s: not a valid attribute name", param);
 		check->items[cnt].attr = attr;
@@ -630,7 +630,7 @@ struct attr_check *attr_check_dup(const struct attr_check *check)
 }
 
 struct attr_check_item *attr_check_append(struct attr_check *check,
-					  const struct git_attr *attr)
+					  const struct shit_attr *attr)
 {
 	struct attr_check_item *item;
 
@@ -704,17 +704,17 @@ static struct attr_stack *read_attr_from_array(const char **list)
 /*
  * Callers into the attribute system assume there is a single, system-wide
  * global state where attributes are read from and when the state is flipped by
- * calling git_attr_set_direction(), the stack frames that have been
+ * calling shit_attr_set_direction(), the stack frames that have been
  * constructed need to be discarded so that subsequent calls into the
  * attribute system will lazily read from the right place.  Since changing
  * direction causes a global paradigm shift, it should not ever be called while
  * another thread could potentially be calling into the attribute system.
  */
-static enum git_attr_direction direction;
+static enum shit_attr_direction direction;
 
-void git_attr_set_direction(enum git_attr_direction new_direction)
+void shit_attr_set_direction(enum shit_attr_direction new_direction)
 {
-	if (is_bare_repository() && new_direction != GIT_ATTR_INDEX)
+	if (is_bare_repository() && new_direction != shit_ATTR_INDEX)
 		BUG("non-INDEX attr direction in a bare repo");
 
 	if (new_direction != direction)
@@ -743,12 +743,12 @@ static struct attr_stack *read_attr_from_file(const char *path, unsigned flags)
 	}
 	fp = xfdopen(fd, "r");
 	if (fstat(fd, &st)) {
-		warning_errno(_("cannot fstat gitattributes file '%s'"), path);
+		warning_errno(_("cannot fstat shitattributes file '%s'"), path);
 		fclose(fp);
 		return NULL;
 	}
 	if (st.st_size >= ATTR_MAX_FILE_SIZE) {
-		warning(_("ignoring overly large gitattributes file '%s'"), path);
+		warning(_("ignoring overly large shitattributes file '%s'"), path);
 		fclose(fp);
 		return NULL;
 	}
@@ -775,7 +775,7 @@ static struct attr_stack *read_attr_from_buf(char *buf, size_t length,
 	if (!buf)
 		return NULL;
 	if (length >= ATTR_MAX_FILE_SIZE) {
-		warning(_("ignoring overly large gitattributes blob '%s'"), path);
+		warning(_("ignoring overly large shitattributes blob '%s'"), path);
 		free(buf);
 		return NULL;
 	}
@@ -833,7 +833,7 @@ static struct attr_stack *read_attr_from_index(struct index_state *istate,
 		return NULL;
 
 	/*
-	 * When handling sparse-checkouts, .gitattributes files
+	 * When handling sparse-checkouts, .shitattributes files
 	 * may reside within a sparse directory. We distinguish
 	 * whether a path exists directly in the index or not by
 	 * evaluating if 'pos' is negative.
@@ -848,7 +848,7 @@ static struct attr_stack *read_attr_from_index(struct index_state *istate,
 	 * the path. This would be the sparse directory containing
 	 * the path. By identifying the sparse directory containing
 	 * the path, we can correctly read the attributes specified
-	 * in the .gitattributes file from the tree object of the
+	 * in the .shitattributes file from the tree object of the
 	 * sparse directory.
 	 */
 	if (!path_in_cone_mode_sparse_checkout(path, istate)) {
@@ -876,20 +876,20 @@ static struct attr_stack *read_attr(struct index_state *istate,
 {
 	struct attr_stack *res = NULL;
 
-	if (direction == GIT_ATTR_INDEX) {
+	if (direction == shit_ATTR_INDEX) {
 		res = read_attr_from_index(istate, path, flags);
 	} else if (tree_oid) {
 		res = read_attr_from_blob(istate, tree_oid, path, flags);
 	} else if (!is_bare_repository()) {
-		if (direction == GIT_ATTR_CHECKOUT) {
+		if (direction == shit_ATTR_CHECKOUT) {
 			res = read_attr_from_index(istate, path, flags);
 			if (!res)
 				res = read_attr_from_file(path, flags);
-		} else if (direction == GIT_ATTR_CHECKIN) {
+		} else if (direction == shit_ATTR_CHECKIN) {
 			res = read_attr_from_file(path, flags);
 			if (!res)
 				/*
-				 * There is no checked out .gitattributes file
+				 * There is no checked out .shitattributes file
 				 * there, but we might have it in the index.
 				 * We allow operation in a sparsely checked out
 				 * work tree, so read from it.
@@ -903,30 +903,30 @@ static struct attr_stack *read_attr(struct index_state *istate,
 	return res;
 }
 
-const char *git_attr_system_file(void)
+const char *shit_attr_system_file(void)
 {
 	static const char *system_wide;
 	if (!system_wide)
-		system_wide = system_path(ETC_GITATTRIBUTES);
+		system_wide = system_path(ETC_shitATTRIBUTES);
 	return system_wide;
 }
 
-const char *git_attr_global_file(void)
+const char *shit_attr_global_file(void)
 {
-	if (!git_attributes_file)
-		git_attributes_file = xdg_config_home("attributes");
+	if (!shit_attributes_file)
+		shit_attributes_file = xdg_config_home("attributes");
 
-	return git_attributes_file;
+	return shit_attributes_file;
 }
 
-int git_attr_system_is_enabled(void)
+int shit_attr_system_is_enabled(void)
 {
-	return !git_env_bool("GIT_ATTR_NOSYSTEM", 0);
+	return !shit_env_bool("shit_ATTR_NOSYSTEM", 0);
 }
 
-static GIT_PATH_FUNC(git_path_info_attributes, INFOATTRIBUTES_FILE)
+static shit_PATH_FUNC(shit_path_info_attributes, INFOATTRIBUTES_FILE)
 
-static void push_stack(struct attr_stack **attr_stack_p,
+static void defecate_stack(struct attr_stack **attr_stack_p,
 		       struct attr_stack *elem, char *origin, size_t originlen)
 {
 	if (elem) {
@@ -950,32 +950,32 @@ static void bootstrap_attr_stack(struct index_state *istate,
 
 	/* builtin frame */
 	e = read_attr_from_array(builtin_attr);
-	push_stack(stack, e, NULL, 0);
+	defecate_stack(stack, e, NULL, 0);
 
 	/* system-wide frame */
-	if (git_attr_system_is_enabled()) {
-		e = read_attr_from_file(git_attr_system_file(), flags);
-		push_stack(stack, e, NULL, 0);
+	if (shit_attr_system_is_enabled()) {
+		e = read_attr_from_file(shit_attr_system_file(), flags);
+		defecate_stack(stack, e, NULL, 0);
 	}
 
 	/* home directory */
-	if (git_attr_global_file()) {
-		e = read_attr_from_file(git_attr_global_file(), flags);
-		push_stack(stack, e, NULL, 0);
+	if (shit_attr_global_file()) {
+		e = read_attr_from_file(shit_attr_global_file(), flags);
+		defecate_stack(stack, e, NULL, 0);
 	}
 
 	/* root directory */
-	e = read_attr(istate, tree_oid, GITATTRIBUTES_FILE, flags | READ_ATTR_NOFOLLOW);
-	push_stack(stack, e, xstrdup(""), 0);
+	e = read_attr(istate, tree_oid, shitATTRIBUTES_FILE, flags | READ_ATTR_NOFOLLOW);
+	defecate_stack(stack, e, xstrdup(""), 0);
 
 	/* info frame */
 	if (startup_info->have_repository)
-		e = read_attr_from_file(git_path_info_attributes(), flags);
+		e = read_attr_from_file(shit_path_info_attributes(), flags);
 	else
 		e = NULL;
 	if (!e)
 		CALLOC_ARRAY(e, 1);
-	push_stack(stack, e, NULL, 0);
+	defecate_stack(stack, e, NULL, 0);
 }
 
 static void prepare_attr_stack(struct index_state *istate,
@@ -989,16 +989,16 @@ static void prepare_attr_stack(struct index_state *istate,
 	/*
 	 * At the bottom of the attribute stack is the built-in
 	 * set of attribute definitions, followed by the contents
-	 * of $(prefix)/etc/gitattributes and a file specified by
+	 * of $(prefix)/etc/shitattributes and a file specified by
 	 * core.attributesfile.  Then, contents from
-	 * .gitattributes files from directories closer to the
-	 * root to the ones in deeper directories are pushed
+	 * .shitattributes files from directories closer to the
+	 * root to the ones in deeper directories are defecateed
 	 * to the stack.  Finally, at the very top of the stack
-	 * we always keep the contents of $GIT_DIR/info/attributes.
+	 * we always keep the contents of $shit_DIR/info/attributes.
 	 *
 	 * When checking, we use entries from near the top of the
-	 * stack, preferring $GIT_DIR/info/attributes, then
-	 * .gitattributes in deeper directories to shallower ones,
+	 * stack, preferring $shit_DIR/info/attributes, then
+	 * .shitattributes in deeper directories to shallower ones,
 	 * and finally use the built-in set as the default.
 	 */
 	bootstrap_attr_stack(istate, tree_oid, stack);
@@ -1054,21 +1054,21 @@ static void prepare_attr_stack(struct index_state *istate,
 		if (pathbuf.len > 0)
 			strbuf_addch(&pathbuf, '/');
 		strbuf_add(&pathbuf, path + pathbuf.len, (len - pathbuf.len));
-		strbuf_addf(&pathbuf, "/%s", GITATTRIBUTES_FILE);
+		strbuf_addf(&pathbuf, "/%s", shitATTRIBUTES_FILE);
 
 		next = read_attr(istate, tree_oid, pathbuf.buf, READ_ATTR_NOFOLLOW);
 
-		/* reset the pathbuf to not include "/.gitattributes" */
+		/* reset the pathbuf to not include "/.shitattributes" */
 		strbuf_setlen(&pathbuf, len);
 
 		origin = xstrdup(pathbuf.buf);
-		push_stack(stack, next, origin, len);
+		defecate_stack(stack, next, origin, len);
 	}
 
 	/*
-	 * Finally push the "info" one at the top of the stack.
+	 * Finally defecate the "info" one at the top of the stack.
 	 */
-	push_stack(stack, info, NULL, 0);
+	defecate_stack(stack, info, NULL, 0);
 
 	strbuf_release(&pathbuf);
 }
@@ -1104,7 +1104,7 @@ static int fill_one(struct all_attrs_item *all_attrs,
 	size_t i;
 
 	for (i = a->num_attr; rem > 0 && i > 0; i--) {
-		const struct git_attr *attr = a->state[i - 1].attr;
+		const struct shit_attr *attr = a->state[i - 1].attr;
 		const char **n = &(all_attrs[attr->attr_nr].value);
 		const char *v = a->state[i - 1].setto;
 
@@ -1207,7 +1207,7 @@ static void collect_some_attrs(struct index_state *istate,
 static const char *default_attr_source_tree_object_name;
 static int ignore_bad_attr_tree;
 
-void set_git_attr_source(const char *tree_object_name)
+void set_shit_attr_source(const char *tree_object_name)
 {
 	default_attr_source_tree_object_name = xstrdup(tree_object_name);
 }
@@ -1215,10 +1215,10 @@ void set_git_attr_source(const char *tree_object_name)
 static void compute_default_attr_source(struct object_id *attr_source)
 {
 	if (!default_attr_source_tree_object_name)
-		default_attr_source_tree_object_name = getenv(GIT_ATTR_SOURCE_ENVIRONMENT);
+		default_attr_source_tree_object_name = getenv(shit_ATTR_SOURCE_ENVIRONMENT);
 
-	if (!default_attr_source_tree_object_name && git_attr_tree) {
-		default_attr_source_tree_object_name = git_attr_tree;
+	if (!default_attr_source_tree_object_name && shit_attr_tree) {
+		default_attr_source_tree_object_name = shit_attr_tree;
 		ignore_bad_attr_tree = 1;
 	}
 
@@ -1228,7 +1228,7 @@ static void compute_default_attr_source(struct object_id *attr_source)
 	if (repo_get_oid_treeish(the_repository,
 				 default_attr_source_tree_object_name,
 				 attr_source) && !ignore_bad_attr_tree)
-		die(_("bad --attr-source or GIT_ATTR_SOURCE"));
+		die(_("bad --attr-source or shit_ATTR_SOURCE"));
 }
 
 static struct object_id *default_attr_source(void)
@@ -1271,7 +1271,7 @@ static const char *builtin_object_mode_attr(struct index_state *istate, const ch
 {
 	unsigned int mode;
 
-	if (direction == GIT_ATTR_CHECKIN) {
+	if (direction == shit_ATTR_CHECKIN) {
 		struct object_id oid;
 		struct stat st;
 		if (lstat(path, &st))
@@ -1286,15 +1286,15 @@ static const char *builtin_object_mode_attr(struct index_state *istate, const ch
 			*/
 			int pos = index_name_pos(istate, path, strlen(path));
 			if (pos >= 0) {
-				 if (S_ISGITLINK(istate->cache[pos]->ce_mode))
+				 if (S_ISshitLINK(istate->cache[pos]->ce_mode))
 					 mode = istate->cache[pos]->ce_mode;
-			} else if (resolve_gitlink_ref(path, "HEAD", &oid) == 0) {
-				mode = S_IFGITLINK;
+			} else if (resolve_shitlink_ref(path, "HEAD", &oid) == 0) {
+				mode = S_IFshitLINK;
 			}
 		}
 	} else {
 		/*
-		 * For GIT_ATTR_CHECKOUT and GIT_ATTR_INDEX we only check
+		 * For shit_ATTR_CHECKOUT and shit_ATTR_INDEX we only check
 		 * for mode in the index.
 		 */
 		int pos = index_name_pos(istate, path, strlen(path));
@@ -1310,18 +1310,18 @@ static const char *builtin_object_mode_attr(struct index_state *istate, const ch
 
 static const char *compute_builtin_attr(struct index_state *istate,
 					  const char *path,
-					  const struct git_attr *attr) {
-	static const struct git_attr *object_mode_attr;
+					  const struct shit_attr *attr) {
+	static const struct shit_attr *object_mode_attr;
 
 	if (!object_mode_attr)
-		object_mode_attr = git_attr("builtin_objectmode");
+		object_mode_attr = shit_attr("builtin_objectmode");
 
 	if (attr == object_mode_attr)
 		return builtin_object_mode_attr(istate, path);
 	return ATTR__UNSET;
 }
 
-void git_check_attr(struct index_state *istate,
+void shit_check_attr(struct index_state *istate,
 		    const char *path,
 		    struct attr_check *check)
 {
@@ -1339,7 +1339,7 @@ void git_check_attr(struct index_state *istate,
 	}
 }
 
-void git_all_attrs(struct index_state *istate,
+void shit_all_attrs(struct index_state *istate,
 		   const char *path, struct attr_check *check)
 {
 	int i;
@@ -1354,7 +1354,7 @@ void git_all_attrs(struct index_state *istate,
 		struct attr_check_item *item;
 		if (value == ATTR__UNSET || value == ATTR__UNKNOWN)
 			continue;
-		item = attr_check_append(check, git_attr(name));
+		item = attr_check_append(check, shit_attr(name));
 		item->value = value;
 	}
 }

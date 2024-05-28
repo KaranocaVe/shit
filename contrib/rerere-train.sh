@@ -53,20 +53,20 @@ do
 	esac
 done
 
-. "$(git --exec-path)/git-sh-setup"
+. "$(shit --exec-path)/shit-sh-setup"
 require_work_tree
 cd_to_toplevel
 
 # Remember original branch
-branch=$(git symbolic-ref -q HEAD) ||
-original_HEAD=$(git rev-parse --verify HEAD) || {
+branch=$(shit symbolic-ref -q HEAD) ||
+original_HEAD=$(shit rev-parse --verify HEAD) || {
 	echo >&2 "Not on any branch and no commit yet?"
 	exit 1
 }
 
-mkdir -p "$GIT_DIR/rr-cache" || exit
+mkdir -p "$shit_DIR/rr-cache" || exit
 
-git rev-list --parents "$@" |
+shit rev-list --parents "$@" |
 while read commit parent1 other_parents
 do
 	if test -z "$other_parents"
@@ -74,29 +74,29 @@ do
 		# Skip non-merges
 		continue
 	fi
-	git checkout -q "$parent1^0"
-	if git merge --no-gpg-sign $other_parents >/dev/null 2>&1
+	shit checkout -q "$parent1^0"
+	if shit merge --no-gpg-sign $other_parents >/dev/null 2>&1
 	then
 		# Cleanly merges
 		continue
 	fi
 	if test $overwrite = 1
 	then
-		git rerere forget .
+		shit rerere forget .
 	fi
-	if test -s "$GIT_DIR/MERGE_RR"
+	if test -s "$shit_DIR/MERGE_RR"
 	then
-		git --no-pager show -s --format="Learning from %h %s" "$commit"
-		git rerere
-		git checkout -q $commit -- .
-		git rerere
+		shit --no-pager show -s --format="Learning from %h %s" "$commit"
+		shit rerere
+		shit checkout -q $commit -- .
+		shit rerere
 	fi
-	git reset -q --hard  # Might nuke untracked files...
+	shit reset -q --hard  # Might nuke untracked files...
 done
 
 if test -z "$branch"
 then
-	git checkout "$original_HEAD"
+	shit checkout "$original_HEAD"
 else
-	git checkout "${branch#refs/heads/}"
+	shit checkout "${branch#refs/heads/}"
 fi

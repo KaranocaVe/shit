@@ -1,4 +1,4 @@
-GIT v1.5.1.2 Release Notes
+shit v1.5.1.2 Release Notes
 ==========================
 
 Fixes since v1.5.1.1
@@ -6,37 +6,37 @@ Fixes since v1.5.1.1
 
 * Bugfixes
 
-  - "git clone" over http from a repository that has lost the
-    loose refs by running "git pack-refs" were broken (a code to
-    deal with this was added to "git fetch" in v1.5.0, but it
-    was missing from "git clone").
+  - "shit clone" over http from a repository that has lost the
+    loose refs by running "shit pack-refs" were broken (a code to
+    deal with this was added to "shit fetch" in v1.5.0, but it
+    was missing from "shit clone").
 
-  - "git diff a/ b/" incorrectly fell in "diff between two
+  - "shit diff a/ b/" incorrectly fell in "diff between two
     filesystem objects" codepath, when the user most likely
     wanted to limit the extent of output to two tracked
     directories.
 
-  - git-quiltimport had the same bug as we fixed for
-    git-applymbox in v1.5.1.1 -- it gave an alarming "did not
+  - shit-quiltimport had the same bug as we fixed for
+    shit-applymbox in v1.5.1.1 -- it gave an alarming "did not
     have any patch" message (but did not actually fail and was
     harmless).
 
-  - various git-svn fixes.
+  - various shit-svn fixes.
 
   - Sample update hook incorrectly always refused requests to
-    delete branches through push.
+    delete branches through defecate.
 
-  - git-blame on a very long working tree path had buffer
+  - shit-blame on a very long working tree path had buffer
     overrun problem.
 
-  - git-apply did not like to be fed two patches in a row that created
+  - shit-apply did not like to be fed two patches in a row that created
     and then modified the same file.
 
-  - git-svn was confused when a non-project was stored directly under
+  - shit-svn was confused when a non-project was stored directly under
     trunk/, branches/ and tags/.
 
-  - git-svn wants the Error.pm module that was at least as new
-    as what we ship as part of git; install ours in our private
+  - shit-svn wants the Error.pm module that was at least as new
+    as what we ship as part of shit; install ours in our private
     installation location if the one on the system is older.
 
   - An earlier update to command line integer parameter parser was

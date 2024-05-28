@@ -1,70 +1,70 @@
-package Git::SVN::Migration;
+package shit::SVN::Migration;
 # these version numbers do NOT correspond to actual version numbers
-# of git or git-svn.  They are just relative.
+# of shit or shit-svn.  They are just relative.
 #
-# v0 layout: .git/$id/info/url, refs/heads/$id-HEAD
+# v0 layout: .shit/$id/info/url, refs/heads/$id-HEAD
 #
-# v1 layout: .git/$id/info/url, refs/remotes/$id
+# v1 layout: .shit/$id/info/url, refs/remotes/$id
 #
-# v2 layout: .git/svn/$id/info/url, refs/remotes/$id
+# v2 layout: .shit/svn/$id/info/url, refs/remotes/$id
 #
-# v3 layout: .git/svn/$id, refs/remotes/$id
+# v3 layout: .shit/svn/$id, refs/remotes/$id
 #            - info/url may remain for backwards compatibility
 #            - this is what we migrate up to this layout automatically,
-#            - this will be used by git svn init on single branches
+#            - this will be used by shit svn init on single branches
 # v3.1 layout (auto migrated):
 #            - .rev_db => .rev_db.$UUID, .rev_db will remain as a symlink
 #              for backwards compatibility
 #
-# v4 layout: .git/svn/$repo_id/$id, refs/remotes/$repo_id/$id
+# v4 layout: .shit/svn/$repo_id/$id, refs/remotes/$repo_id/$id
 #            - this is only created for newly multi-init-ed
 #              repositories.  Similar in spirit to the
-#              --use-separate-remotes option in git-clone (now default)
+#              --use-separate-remotes option in shit-clone (now default)
 #            - we do not automatically migrate to this (following
-#              the example set by core git)
+#              the example set by core shit)
 #
 # v5 layout: .rev_db.$UUID => .rev_map.$UUID
 #            - newer, more-efficient format that uses 24-bytes per record
 #              with no filler space.
 #            - use xxd -c24 < .rev_map.$UUID to view and debug
 #            - This is a one-way migration, repositories updated to the
-#              new format will not be able to use old git-svn without
+#              new format will not be able to use old shit-svn without
 #              rebuilding the .rev_db.  Rebuilding the rev_db is not
 #              possible if noMetadata or useSvmProps are set; but should
 #              be no problem for users that use the (sensible) defaults.
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 use Carp qw/croak/;
 use File::Path qw/mkpath/;
 use File::Basename qw/dirname basename/;
 
 our $_minimize;
-use Git qw(
+use shit qw(
 	command
 	command_noisy
 	command_output_pipe
 	command_close_pipe
 	command_oneline
 );
-use Git::SVN;
+use shit::SVN;
 
 sub migrate_from_v0 {
-	my $git_dir = $ENV{GIT_DIR};
-	return undef unless -d $git_dir;
+	my $shit_dir = $ENV{shit_DIR};
+	return undef unless -d $shit_dir;
 	my ($fh, $ctx) = command_output_pipe(qw/rev-parse --symbolic --all/);
 	my $migrated = 0;
 	while (<$fh>) {
 		chomp;
 		my ($id, $orig_ref) = ($_, $_);
 		next unless $id =~ s#^refs/heads/(.+)-HEAD$#$1#;
-		my $info_url = command_oneline(qw(rev-parse --git-path),
+		my $info_url = command_oneline(qw(rev-parse --shit-path),
 						"$id/info/url");
 		next unless -f $info_url;
 		my $new_ref = "refs/remotes/$id";
 		if (::verify_ref("$new_ref^0")) {
 			print STDERR "W: $orig_ref is probably an old ",
 			             "branch used by an ancient version of ",
-				     "git-svn.\n",
+				     "shit-svn.\n",
 				     "However, $new_ref also exists.\n",
 				     "We will not be able ",
 				     "to use this branch until this ",
@@ -83,51 +83,51 @@ sub migrate_from_v0 {
 }
 
 sub migrate_from_v1 {
-	my $git_dir = $ENV{GIT_DIR};
+	my $shit_dir = $ENV{shit_DIR};
 	my $migrated = 0;
-	return $migrated unless -d $git_dir;
-	my $svn_dir = Git::SVN::svn_dir();
+	return $migrated unless -d $shit_dir;
+	my $svn_dir = shit::SVN::svn_dir();
 
 	# just in case somebody used 'svn' as their $id at some point...
 	return $migrated if -d $svn_dir && ! -f "$svn_dir/info/url";
 
-	print STDERR "Migrating from a git-svn v1 layout...\n";
+	print STDERR "Migrating from a shit-svn v1 layout...\n";
 	mkpath([$svn_dir]);
-	print STDERR "Data from a previous version of git-svn exists, but\n\t",
+	print STDERR "Data from a previous version of shit-svn exists, but\n\t",
 	             "$svn_dir\n\t(required for this version ",
-	             "($::VERSION) of git-svn) does not exist.\n";
+	             "($::VERSION) of shit-svn) does not exist.\n";
 	my ($fh, $ctx) = command_output_pipe(qw/rev-parse --symbolic --all/);
 	while (<$fh>) {
 		my $x = $_;
 		next unless $x =~ s#^refs/remotes/##;
 		chomp $x;
-		my $info_url = command_oneline(qw(rev-parse --git-path),
+		my $info_url = command_oneline(qw(rev-parse --shit-path),
 						"$x/info/url");
 		next unless -f $info_url;
 		my $u = eval { ::file_to_s($info_url) };
 		next unless $u;
 		my $dn = dirname("$svn_dir/$x");
 		mkpath([$dn]) unless -d $dn;
-		if ($x eq 'svn') { # they used 'svn' as GIT_SVN_ID:
+		if ($x eq 'svn') { # they used 'svn' as shit_SVN_ID:
 			mkpath(["$svn_dir/svn"]);
-			print STDERR " - $git_dir/$x/info => ",
+			print STDERR " - $shit_dir/$x/info => ",
 			                "$svn_dir/$x/info\n";
-			rename "$git_dir/$x/info", "$svn_dir/$x/info" or
+			rename "$shit_dir/$x/info", "$svn_dir/$x/info" or
 			       croak "$!: $x";
 			# don't worry too much about these, they probably
 			# don't exist with repos this old (save for index,
 			# and we can easily regenerate that)
 			foreach my $f (qw/unhandled.log index .rev_db/) {
-				rename "$git_dir/$x/$f", "$svn_dir/$x/$f";
+				rename "$shit_dir/$x/$f", "$svn_dir/$x/$f";
 			}
 		} else {
-			print STDERR " - $git_dir/$x => $svn_dir/$x\n";
-			rename "$git_dir/$x", "$svn_dir/$x" or croak "$!: $x";
+			print STDERR " - $shit_dir/$x => $svn_dir/$x\n";
+			rename "$shit_dir/$x", "$svn_dir/$x" or croak "$!: $x";
 		}
 		$migrated++;
 	}
 	command_close_pipe($fh, $ctx);
-	print STDERR "Done migrating from a git-svn v1 layout\n";
+	print STDERR "Done migrating from a shit-svn v1 layout\n";
 	$migrated;
 }
 
@@ -141,10 +141,10 @@ sub read_old_urls {
 			my $url = ::file_to_s("$_/info/url");
 			$l_map->{$ref_id} = $url;
 		} elsif (-d $_) {
-			push @dir, $_;
+			defecate @dir, $_;
 		}
 	}
-	my $svn_dir = Git::SVN::svn_dir();
+	my $svn_dir = shit::SVN::svn_dir();
 	foreach (@dir) {
 		my $x = $_;
 		$x =~ s!^\Q$svn_dir\E/!!o;
@@ -156,14 +156,14 @@ sub migrate_from_v2 {
 	my @cfg = command(qw/config -l/);
 	return if grep /^svn-remote\..+\.url=/, @cfg;
 	my %l_map;
-	read_old_urls(\%l_map, '', Git::SVN::svn_dir());
+	read_old_urls(\%l_map, '', shit::SVN::svn_dir());
 	my $migrated = 0;
 
-	require Git::SVN;
+	require shit::SVN;
 	foreach my $ref_id (sort keys %l_map) {
-		eval { Git::SVN->init($l_map{$ref_id}, '', undef, $ref_id) };
+		eval { shit::SVN->init($l_map{$ref_id}, '', undef, $ref_id) };
 		if ($@) {
-			Git::SVN->init($l_map{$ref_id}, '', $ref_id, $ref_id);
+			shit::SVN->init($l_map{$ref_id}, '', $ref_id, $ref_id);
 		}
 		$migrated++;
 	}
@@ -171,16 +171,16 @@ sub migrate_from_v2 {
 }
 
 sub minimize_connections {
-	require Git::SVN;
-	require Git::SVN::Ra;
+	require shit::SVN;
+	require shit::SVN::Ra;
 
-	my $r = Git::SVN::read_all_remotes();
+	my $r = shit::SVN::read_all_remotes();
 	my $new_urls = {};
 	my $root_repos = {};
 	foreach my $repo_id (keys %$r) {
 		my $url = $r->{$repo_id}->{url} or next;
 		my $fetch = $r->{$repo_id}->{fetch} or next;
-		my $ra = Git::SVN::Ra->new($url);
+		my $ra = shit::SVN::Ra->new($url);
 
 		# skip existing cases where we already connect to the root
 		if (($ra->url eq $ra->{repos_root}) ||
@@ -189,12 +189,12 @@ sub minimize_connections {
 			next;
 		}
 
-		my $root_ra = Git::SVN::Ra->new($ra->{repos_root});
+		my $root_ra = shit::SVN::Ra->new($ra->{repos_root});
 		my $root_path = $ra->url;
 		$root_path =~ s#^\Q$ra->{repos_root}\E(/|$)##;
 		foreach my $path (keys %$fetch) {
 			my $ref_id = $fetch->{$path};
-			my $gs = Git::SVN->new($ref_id, $repo_id, $path);
+			my $gs = shit::SVN->new($ref_id, $repo_id, $path);
 
 			# make sure we can read when connecting to
 			# a higher level of a repository
@@ -228,7 +228,7 @@ sub minimize_connections {
 		my $fetch = $new_urls->{$url};
 		foreach my $path (keys %$fetch) {
 			my $x = $fetch->{$path};
-			Git::SVN->init($url, $path, $repo_id, $x->{ref_id});
+			shit::SVN->init($url, $path, $repo_id, $x->{ref_id});
 			my $pfx = "svn-remote.$x->{old_repo_id}";
 
 			my $old_fetch = quotemeta("$x->{old_path}:".
@@ -240,13 +240,13 @@ sub minimize_connections {
 			if (!keys %{$r->{$x->{old_repo_id}}->{fetch}}) {
 				command_noisy(qw/config --unset/,
 				              "$pfx.url");
-				push @emptied, $x->{old_repo_id}
+				defecate @emptied, $x->{old_repo_id}
 			}
 		}
 	}
 	if (@emptied) {
-		my $file = $ENV{GIT_CONFIG} ||
-			command_oneline(qw(rev-parse --git-path config));
+		my $file = $ENV{shit_CONFIG} ||
+			command_oneline(qw(rev-parse --shit-path config));
 		print STDERR <<EOF;
 The following [svn-remote] sections in your config file ($file) are empty
 and can be safely removed:

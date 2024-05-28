@@ -2,21 +2,21 @@
 
 test_description='reference transaction hooks'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success setup '
 	test_commit PRE &&
-	PRE_OID=$(git rev-parse PRE) &&
+	PRE_OID=$(shit rev-parse PRE) &&
 	test_commit POST &&
-	POST_OID=$(git rev-parse POST)
+	POST_OID=$(shit rev-parse POST)
 '
 
 test_expect_success 'hook allows updating ref if successful' '
-	git reset --hard PRE &&
+	shit reset --hard PRE &&
 	test_hook reference-transaction <<-\EOF &&
 		echo "$*" >>actual
 	EOF
@@ -24,25 +24,25 @@ test_expect_success 'hook allows updating ref if successful' '
 		prepared
 		committed
 	EOF
-	git update-ref HEAD POST &&
+	shit update-ref HEAD POST &&
 	test_cmp expect actual
 '
 
 test_expect_success 'hook aborts updating ref in prepared state' '
-	git reset --hard PRE &&
+	shit reset --hard PRE &&
 	test_hook reference-transaction <<-\EOF &&
 		if test "$1" = prepared
 		then
 			exit 1
 		fi
 	EOF
-	test_must_fail git update-ref HEAD POST 2>err &&
+	test_must_fail shit update-ref HEAD POST 2>err &&
 	test_grep "ref updates aborted by hook" err
 '
 
 test_expect_success 'hook gets all queued updates in prepared state' '
 	test_when_finished "rm actual" &&
-	git reset --hard PRE &&
+	shit reset --hard PRE &&
 	test_hook reference-transaction <<-\EOF &&
 		if test "$1" = prepared
 		then
@@ -56,7 +56,7 @@ test_expect_success 'hook gets all queued updates in prepared state' '
 		$ZERO_OID $POST_OID HEAD
 		$ZERO_OID $POST_OID refs/heads/main
 	EOF
-	git update-ref HEAD POST <<-EOF &&
+	shit update-ref HEAD POST <<-EOF &&
 		update HEAD $ZERO_OID $POST_OID
 		update refs/heads/main $ZERO_OID $POST_OID
 	EOF
@@ -65,7 +65,7 @@ test_expect_success 'hook gets all queued updates in prepared state' '
 
 test_expect_success 'hook gets all queued updates in committed state' '
 	test_when_finished "rm actual" &&
-	git reset --hard PRE &&
+	shit reset --hard PRE &&
 	test_hook reference-transaction <<-\EOF &&
 		if test "$1" = committed
 		then
@@ -79,13 +79,13 @@ test_expect_success 'hook gets all queued updates in committed state' '
 		$ZERO_OID $POST_OID HEAD
 		$ZERO_OID $POST_OID refs/heads/main
 	EOF
-	git update-ref HEAD POST &&
+	shit update-ref HEAD POST &&
 	test_cmp expect actual
 '
 
 test_expect_success 'hook gets all queued updates in aborted state' '
 	test_when_finished "rm actual" &&
-	git reset --hard PRE &&
+	shit reset --hard PRE &&
 	test_hook reference-transaction <<-\EOF &&
 		if test "$1" = aborted
 		then
@@ -99,7 +99,7 @@ test_expect_success 'hook gets all queued updates in aborted state' '
 		$ZERO_OID $POST_OID HEAD
 		$ZERO_OID $POST_OID refs/heads/main
 	EOF
-	git update-ref --stdin <<-EOF &&
+	shit update-ref --stdin <<-EOF &&
 		start
 		update HEAD POST $ZERO_OID
 		update refs/heads/main POST $ZERO_OID
@@ -109,15 +109,15 @@ test_expect_success 'hook gets all queued updates in aborted state' '
 '
 
 test_expect_success 'interleaving hook calls succeed' '
-	test_when_finished "rm -r target-repo.git" &&
+	test_when_finished "rm -r target-repo.shit" &&
 
-	git init --bare target-repo.git &&
+	shit init --bare target-repo.shit &&
 
-	test_hook -C target-repo.git reference-transaction <<-\EOF &&
+	test_hook -C target-repo.shit reference-transaction <<-\EOF &&
 		echo $0 "$@" >>actual
 	EOF
 
-	test_hook -C target-repo.git update <<-\EOF &&
+	test_hook -C target-repo.shit update <<-\EOF &&
 		echo $0 "$@" >>actual
 	EOF
 
@@ -130,11 +130,11 @@ test_expect_success 'interleaving hook calls succeed' '
 		hooks/reference-transaction committed
 	EOF
 
-	git push ./target-repo.git PRE POST &&
-	test_cmp expect target-repo.git/actual
+	shit defecate ./target-repo.shit PRE POST &&
+	test_cmp expect target-repo.shit/actual
 '
 
-test_expect_success 'hook captures git-symbolic-ref updates' '
+test_expect_success 'hook captures shit-symbolic-ref updates' '
 	test_when_finished "rm actual" &&
 
 	test_hook reference-transaction <<-\EOF &&
@@ -145,7 +145,7 @@ test_expect_success 'hook captures git-symbolic-ref updates' '
 		done >>actual
 	EOF
 
-	git symbolic-ref refs/heads/symref refs/heads/main &&
+	shit symbolic-ref refs/heads/symref refs/heads/main &&
 
 	cat >expect <<-EOF &&
 	prepared

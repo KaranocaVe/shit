@@ -1,22 +1,22 @@
 #!/bin/sh
 
-test_description='test disabling of git-over-tcp in clone/fetch'
+test_description='test disabling of shit-over-tcp in clone/fetch'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 . "$TEST_DIRECTORY/lib-proto-disable.sh"
-. "$TEST_DIRECTORY/lib-git-daemon.sh"
-start_git_daemon
+. "$TEST_DIRECTORY/lib-shit-daemon.sh"
+start_shit_daemon
 
-test_expect_success 'create git-accessible repo' '
-	bare="$GIT_DAEMON_DOCUMENT_ROOT_PATH/repo.git" &&
+test_expect_success 'create shit-accessible repo' '
+	bare="$shit_DAEMON_DOCUMENT_ROOT_PATH/repo.shit" &&
 	test_commit one &&
-	git --bare init "$bare" &&
-	git push "$bare" HEAD &&
-	>"$bare/git-daemon-export-ok" &&
-	git -C "$bare" config daemon.receivepack true
+	shit --bare init "$bare" &&
+	shit defecate "$bare" HEAD &&
+	>"$bare/shit-daemon-export-ok" &&
+	shit -C "$bare" config daemon.receivepack true
 '
 
-test_proto "git://" git "$GIT_DAEMON_URL/repo.git"
+test_proto "shit://" shit "$shit_DAEMON_URL/repo.shit"
 
 test_done

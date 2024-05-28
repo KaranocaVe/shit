@@ -12,7 +12,7 @@ rails at 31k). The existing packed-refs format takes up a lot of space
 (e.g. 62M), and does not scale with additional references. Lookup of a
 single reference requires linearly scanning the file.
 
-Atomic pushes modifying multiple references require copying the entire
+Atomic defecatees modifying multiple references require copying the entire
 packed-refs file, which can be a considerable amount of data moved
 (e.g. 62M in, 62M out) for even small transactions (2 refs modified).
 
@@ -22,7 +22,7 @@ storing 41 bytes (and another file for the corresponding reflog). This
 negatively affects the number of inodes available when a large number of
 repositories are stored on the same filesystem. Readers can be penalized
 due to the larger number of syscalls required to traverse and read the
-`$GIT_DIR/refs` directory.
+`$shit_DIR/refs` directory.
 
 
 Objectives
@@ -33,7 +33,7 @@ repository is cold and not in process or kernel cache.
 * Near constant time verification if an object name is referred to by at least
 one reference (for allow-tip-sha1-in-want).
 * Efficient enumeration of an entire namespace, such as `refs/tags/`.
-* Support atomic push with `O(size_of_update)` operations.
+* Support atomic defecate with `O(size_of_update)` operations.
 * Combine reflog storage with ref storage for small transactions.
 * Separate reflog storage for base refs and historical logs.
 
@@ -58,8 +58,8 @@ Space used, packed-refs vs. reftable:
 |repository |packed-refs |reftable |% original |avg ref |avg obj
 |android |62.2 M |36.1 M |58.0% |33 bytes |5 bytes
 |rails |1.8 M |1.1 M |57.7% |29 bytes |4 bytes
-|git |78.7 K |48.1 K |61.0% |50 bytes |4 bytes
-|git (heads) |332 b |269 b |81.0% |33 bytes |0 bytes
+|shit |78.7 K |48.1 K |61.0% |50 bytes |4 bytes
+|shit (heads) |332 b |269 b |81.0% |33 bytes |0 bytes
 |===============================================================
 
 Scan (read 866k refs), by reference name lookup (single ref from 866k
@@ -79,7 +79,7 @@ Space used for 149,932 log entries for 43,061 refs, reflog vs. reftable:
 [cols=",>,>",options="header",]
 |================================
 |format |size |avg entry
-|$GIT_DIR/logs |173 M |1209 bytes
+|$shit_DIR/logs |173 M |1209 bytes
 |reftable |5 M |37 bytes
 |================================
 
@@ -97,7 +97,7 @@ Reference name encoding
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Reference names are an uninterpreted sequence of bytes that must pass
-linkgit:git-check-ref-format[1] as a valid reference name.
+linkshit:shit-check-ref-format[1] as a valid reference name.
 
 Key unicity
 ^^^^^^^^^^^
@@ -137,7 +137,7 @@ The reftable format accepts both `refs/heads/foo` and
 `refs/heads/foo/bar` as distinct references.
 
 This property is useful for retaining log records in reftable, but may
-confuse versions of Git using `$GIT_DIR/refs` directory tree to maintain
+confuse versions of shit using `$shit_DIR/refs` directory tree to maintain
 references. Users of reftable may choose to continue to reject `foo` and
 `foo/bar` type conflicts to prevent problems for peers.
 
@@ -492,7 +492,7 @@ Like in reference blocks, abbreviations are prefix compressed within an
 obj block. On large reftables with many unique objects, higher block
 sizes (64k), and higher restart interval (128), a `prefix_length` of 2
 or 3 and `suffix_length` of 3 may be common in obj records (unique
-abbreviation of 5-6 raw bytes, 10-12 hex digits).
+abbreviation of 5-6 raw bytes, 10-12 hex dishits).
 
 Each record contains `position_count` number of positions for matching
 ref blocks. For 1-7 positions the count is stored in `cnt_3`. When
@@ -631,15 +631,15 @@ key described above.
 Log record entries use `log_type` to indicate what follows:
 
 * `0x0`: deletion; no log data.
-* `0x1`: standard git reflog data using `log_data` above.
+* `0x1`: standard shit reflog data using `log_data` above.
 
-The `log_type = 0x0` is mostly useful for `git stash drop`, removing an
+The `log_type = 0x0` is mostly useful for `shit stash drop`, removing an
 entry from the reflog of `refs/stash` in a transaction file (below),
 without needing to rewrite larger files. Readers reading a stack of
 reflogs must treat this as a deletion.
 
 For `log_type = 0x1`, the `log_data` section follows
-linkgit:git-update-ref[1] logging and includes:
+linkshit:shit-update-ref[1] logging and includes:
 
 * two object names (old id, new id)
 * varint string of committer's name
@@ -653,7 +653,7 @@ at the time of the update. For example `GMT-0800` is encoded in reftable
 as `sint16(-480)` and `GMT+0230` is `sint16(150)`.
 
 The committer email does not contain `<` or `>`, it's the value normally
-found between the `<>` in a git commit object header.
+found between the `<>` in a shit commit object header.
 
 The `message_length` may be 0, in which case there was no message
 supplied for the update.
@@ -673,7 +673,7 @@ not block aligned.
 Importing logs
 ++++++++++++++
 
-When importing from `$GIT_DIR/logs` writers should globally order all
+When importing from `$shit_DIR/logs` writers should globally order all
 log records roughly by timestamp while preserving file order, and assign
 unique, increasing `update_index` values for each log line. Newer log
 records get higher `update_index` values.
@@ -799,7 +799,7 @@ Lightweight refs dominate
 
 The reftable format assumes the vast majority of references are single
 object names valued with common prefixes, such as Gerrit Code Review's
-`refs/changes/` namespace, GitHub's `refs/pulls/` namespace, or many
+`refs/changes/` namespace, shitHub's `refs/poops/` namespace, or many
 lightweight tags in the `refs/tags/` namespace.
 
 Annotated tags storing the peeled object cost an additional object name per
@@ -808,7 +808,7 @@ reference.
 Low overhead
 ^^^^^^^^^^^^
 
-A reftable with very few references (e.g. git.git with 5 heads) is 269
+A reftable with very few references (e.g. shit.shit with 5 heads) is 269
 bytes for reftable, vs. 332 bytes for packed-refs. This supports
 reftable scaling down for transaction logs (below).
 
@@ -860,7 +860,7 @@ Repository format
 Version 1
 ^^^^^^^^^
 
-A repository must set its `$GIT_DIR/config` to configure reftable:
+A repository must set its `$shit_DIR/config` to configure reftable:
 
 ....
 [core]
@@ -872,7 +872,7 @@ A repository must set its `$GIT_DIR/config` to configure reftable:
 Layout
 ^^^^^^
 
-A collection of reftable files are stored in the `$GIT_DIR/reftable/` directory.
+A collection of reftable files are stored in the `$shit_DIR/reftable/` directory.
 Their names should have a random element, such that each filename is globally
 unique; this helps avoid spurious failures on Windows, where open files cannot
 be removed or overwritten. It suggested to use
@@ -881,18 +881,18 @@ be removed or overwritten. It suggested to use
 Log-only files use the `.log` extension, while ref-only and mixed ref
 and log files use `.ref`. extension.
 
-The stack ordering file is `$GIT_DIR/reftable/tables.list` and lists the
+The stack ordering file is `$shit_DIR/reftable/tables.list` and lists the
 current files, one per line, in order, from oldest (base) to newest
 (most recent):
 
 ....
-$ cat .git/reftable/tables.list
+$ cat .shit/reftable/tables.list
 00000001-00000001-RANDOM1.log
 00000002-00000002-RANDOM2.ref
 00000003-00000003-RANDOM3.ref
 ....
 
-Readers must read `$GIT_DIR/reftable/tables.list` to determine which
+Readers must read `$shit_DIR/reftable/tables.list` to determine which
 files are relevant right now, and search through the stack in reverse
 order (last reftable is examined first).
 
@@ -903,14 +903,14 @@ pruned.
 Backward compatibility
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Older clients should continue to recognize the directory as a git
+Older clients should continue to recognize the directory as a shit
 repository so they don't look for an enclosing repository in parent
 directories. To this end, a reftable-enabled repository must contain the
 following dummy files
 
-* `.git/HEAD`, a regular file containing `ref: refs/heads/.invalid`.
-* `.git/refs/`, a directory
-* `.git/refs/heads`, a regular file
+* `.shit/HEAD`, a regular file containing `ref: refs/heads/.invalid`.
+* `.shit/refs/`, a directory
+* `.shit/refs/heads`, a regular file
 
 Readers
 ^^^^^^^
@@ -1043,8 +1043,8 @@ Michael Haggerty's alternate format
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Michael Haggerty proposed
-link:https://lore.kernel.org/git/CAMy9T_HCnyc1g8XWOOWhe7nN0aEFyyBskV2aOMb_fe%2BwGvEJ7A%40mail.gmail.com/[an
-alternate] format to reftable on the Git mailing list. This format uses
+link:https://lore.kernel.org/shit/CAMy9T_HCnyc1g8XWOOWhe7nN0aEFyyBskV2aOMb_fe%2BwGvEJ7A%40mail.gmail.com/[an
+alternate] format to reftable on the shit mailing list. This format uses
 smaller chunks, without the restart table, and avoids block alignment
 with padding. Reflog entries immediately follow each ref, and are thus
 interleaved between refs.
@@ -1060,13 +1060,13 @@ larger file (+ ~3.2%, 28.3M vs 29.2M):
 |reftable |29.2 M |19.9 usec |5.4 usec
 |=====================================
 
-JGit Ketch RefTree
+Jshit Ketch RefTree
 ^^^^^^^^^^^^^^^^^^
 
-https://dev.eclipse.org/mhonarc/lists/jgit-dev/msg03073.html[JGit Ketch]
+https://dev.eclipse.org/mhonarc/lists/jshit-dev/msg03073.html[Jshit Ketch]
 proposed
-link:https://lore.kernel.org/git/CAJo%3DhJvnAPNAdDcAAwAvU9C4RVeQdoS3Ev9WTguHx4fD0V_nOg%40mail.gmail.com/[RefTree],
-an encoding of references inside Git tree objects stored as part of the
+link:https://lore.kernel.org/shit/CAJo%3DhJvnAPNAdDcAAwAvU9C4RVeQdoS3Ev9WTguHx4fD0V_nOg%40mail.gmail.com/[RefTree],
+an encoding of references inside shit tree objects stored as part of the
 repository's object database.
 
 The RefTree format adds additional load on the object database storage
@@ -1079,20 +1079,20 @@ references to modify a handful.
 Flat namespaces are not efficiently searchable in RefTree, as tree
 objects in canonical formatting cannot be binary searched. This fails
 the need to handle a large number of references in a single namespace,
-such as GitHub's `refs/pulls`, or a project with many tags.
+such as shitHub's `refs/poops`, or a project with many tags.
 
 LMDB
 ^^^^
 
 David Turner proposed
-https://lore.kernel.org/git/1455772670-21142-26-git-send-email-dturner@twopensource.com/[using
+https://lore.kernel.org/shit/1455772670-21142-26-shit-send-email-dturner@twopensource.com/[using
 LMDB], as LMDB is lightweight (64k of runtime code) and GPL-compatible
 license.
 
 A downside of LMDB is its reliance on a single C implementation. This
-makes embedding inside JGit (a popular reimplementation of Git)
-difficult, and hoisting onto virtual storage (for JGit DFS) virtually
+makes embedding inside Jshit (a popular reimplementation of shit)
+difficult, and hoisting onto virtual storage (for Jshit DFS) virtually
 impossible.
 
-A common format that can be supported by all major Git implementations
-(git-core, JGit, libgit2) is strongly preferred.
+A common format that can be supported by all major shit implementations
+(shit-core, Jshit, libshit2) is strongly preferred.

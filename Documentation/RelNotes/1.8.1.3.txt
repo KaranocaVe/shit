@@ -1,4 +1,4 @@
-Git 1.8.1.3 Release Notes
+shit 1.8.1.3 Release Notes
 =========================
 
 Fixes since v1.8.1.2
@@ -24,24 +24,24 @@ Fixes since v1.8.1.2
    /etc/mailname to come up with a default e-mail ident, but a bug
    lost the "user@" part.
 
- * "git am" did not parse datestamp correctly from Hg generated patch,
+ * "shit am" did not parse datestamp correctly from Hg generated patch,
    when it is run in a locale outside C (or en).
 
  * Attempt to "branch --edit-description" an existing branch, while
    being on a detached HEAD, errored out.
 
- * "git cherry-pick" did not replay a root commit to an unborn branch.
+ * "shit cherry-pick" did not replay a root commit to an unborn branch.
 
  * We forgot to close the file descriptor reading from "gpg" output,
-   killing "git log --show-signature" on a long history.
+   killing "shit log --show-signature" on a long history.
 
- * "git rebase --preserve-merges" lost empty merges in recent versions
-   of Git.
+ * "shit rebase --preserve-merges" lost empty merges in recent versions
+   of shit.
 
  * Rebasing the history of superproject with change in the submodule
    has been broken since v1.7.12.
 
- * A failure to push due to non-ff while on an unborn branch
+ * A failure to defecate due to non-ff while on an unborn branch
    dereferenced a NULL pointer when showing an error message.
 
 Also contains various documentation fixes.

@@ -13,7 +13,7 @@ static inline int hashcmp(const unsigned char *sha1, const unsigned char *sha2)
 
 static inline int oidcmp(const struct object_id *oid1, const struct object_id *oid2)
 {
-	const struct git_hash_algo *algop;
+	const struct shit_hash_algo *algop;
 	if (!oid1->algo)
 		algop = the_hash_algo;
 	else
@@ -28,7 +28,7 @@ static inline int hasheq(const unsigned char *sha1, const unsigned char *sha2)
 
 static inline int oideq(const struct object_id *oid1, const struct object_id *oid2)
 {
-	const struct git_hash_algo *algop;
+	const struct shit_hash_algo *algop;
 	if (!oid1->algo)
 		algop = the_hash_algo;
 	else
@@ -58,7 +58,7 @@ static inline void oidcpy_with_padding(struct object_id *dst,
 		hashsz = hash_algos[src->algo].rawsz;
 
 	memcpy(dst->hash, src->hash, hashsz);
-	memset(dst->hash + hashsz, 0, GIT_MAX_RAWSZ - hashsz);
+	memset(dst->hash + hashsz, 0, shit_MAX_RAWSZ - hashsz);
 	dst->algo = src->algo;
 }
 
@@ -69,11 +69,11 @@ static inline void hashclr(unsigned char *hash)
 
 static inline void oidclr(struct object_id *oid)
 {
-	memset(oid->hash, 0, GIT_MAX_RAWSZ);
+	memset(oid->hash, 0, shit_MAX_RAWSZ);
 	oid->algo = hash_algo_by_ptr(the_hash_algo);
 }
 
-static inline void oidread_algop(struct object_id *oid, const unsigned char *hash, const struct git_hash_algo *algop)
+static inline void oidread_algop(struct object_id *oid, const unsigned char *hash, const struct shit_hash_algo *algop)
 {
 	memcpy(oid->hash, hash, algop->rawsz);
 	oid->algo = hash_algo_by_ptr(algop);

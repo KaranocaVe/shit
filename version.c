@@ -1,24 +1,24 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "version.h"
 #include "strbuf.h"
 
-const char git_version_string[] = GIT_VERSION;
-const char git_built_from_commit_string[] = GIT_BUILT_FROM_COMMIT;
+const char shit_version_string[] = shit_VERSION;
+const char shit_built_from_commit_string[] = shit_BUILT_FROM_COMMIT;
 
-const char *git_user_agent(void)
+const char *shit_user_agent(void)
 {
 	static const char *agent = NULL;
 
 	if (!agent) {
-		agent = getenv("GIT_USER_AGENT");
+		agent = getenv("shit_USER_AGENT");
 		if (!agent)
-			agent = GIT_USER_AGENT;
+			agent = shit_USER_AGENT;
 	}
 
 	return agent;
 }
 
-const char *git_user_agent_sanitized(void)
+const char *shit_user_agent_sanitized(void)
 {
 	static const char *agent = NULL;
 
@@ -26,7 +26,7 @@ const char *git_user_agent_sanitized(void)
 		struct strbuf buf = STRBUF_INIT;
 		int i;
 
-		strbuf_addstr(&buf, git_user_agent());
+		strbuf_addstr(&buf, shit_user_agent());
 		strbuf_trim(&buf);
 		for (i = 0; i < buf.len; i++) {
 			if (buf.buf[i] <= 32 || buf.buf[i] >= 127)

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "hex.h"
 #include "tree.h"
 #include "object-name.h"
@@ -53,7 +53,7 @@ int read_tree_at(struct repository *r,
 
 		if (S_ISDIR(entry.mode))
 			oidcpy(&oid, &entry.oid);
-		else if (S_ISGITLINK(entry.mode)) {
+		else if (S_ISshitLINK(entry.mode)) {
 			struct commit *commit;
 
 			commit = lookup_commit(r, &entry.oid);
@@ -122,7 +122,7 @@ int base_name_compare(const char *name1, size_t len1, int mode1,
  * then individually compare _differently_ to a filename that has
  * a dot after the basename (because '\0' < '.' < '/').
  *
- * This is used by routines that want to traverse the git namespace
+ * This is used by routines that want to traverse the shit namespace
  * but then handle conflicting entries together when possible.
  */
 int df_name_compare(const char *name1, size_t len1, int mode1,

@@ -1,5 +1,5 @@
-test_expect_success "setup proc-receive hook and disable push-options ($PROTOCOL)" '
-	git -C "$upstream" config receive.advertisePushOptions false &&
+test_expect_success "setup proc-receive hook and disable defecate-options ($PROTOCOL)" '
+	shit -C "$upstream" config receive.advertisedefecateOptions false &&
 	test_hook -C "$upstream" --clobber proc-receive <<-\EOF
 	printf >&2 "# proc-receive hook\n"
 	test-tool proc-receive -v \
@@ -9,16 +9,16 @@ test_expect_success "setup proc-receive hook and disable push-options ($PROTOCOL
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push -o ...  :                       refs/for/main/topic
-test_expect_success "proc-receive: not support push options ($PROTOCOL)" '
-	test_must_fail git -C workbench push \
+# shit defecate -o ...  :                       refs/for/main/topic
+test_expect_success "proc-receive: not support defecate options ($PROTOCOL)" '
+	test_must_fail shit -C workbench defecate \
 		-o issue=123 \
 		-o reviewer=user1 \
 		origin \
 		HEAD:refs/for/main/topic \
 		>out-$test_count 2>&1 &&
 	make_user_friendly_and_stable_output <out-$test_count >actual &&
-	test_grep "fatal: the receiving end does not support push options" \
+	test_grep "fatal: the receiving end does not support defecate options" \
 		actual &&
 
 	test_cmp_refs -C "$upstream" <<-EOF
@@ -26,8 +26,8 @@ test_expect_success "proc-receive: not support push options ($PROTOCOL)" '
 	EOF
 '
 
-test_expect_success "enable push options ($PROTOCOL)" '
-	git -C "$upstream" config receive.advertisePushOptions true
+test_expect_success "enable defecate options ($PROTOCOL)" '
+	shit -C "$upstream" config receive.advertisedefecateOptions true
 '
 
 test_expect_success "setup version=0 for proc-receive hook ($PROTOCOL)" '
@@ -41,9 +41,9 @@ test_expect_success "setup version=0 for proc-receive hook ($PROTOCOL)" '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push -o ...  :                       next(A)  refs/for/main/topic
-test_expect_success "proc-receive: ignore push-options for version 0 ($PROTOCOL)" '
-	git -C workbench push \
+# shit defecate -o ...  :                       next(A)  refs/for/main/topic
+test_expect_success "proc-receive: ignore defecate-options for version 0 ($PROTOCOL)" '
+	shit -C workbench defecate \
 		--atomic \
 		-o issue=123 \
 		-o reviewer=user1 \
@@ -62,7 +62,7 @@ test_expect_success "proc-receive: ignore push-options for version 0 ($PROTOCOL)
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  * [new branch]      HEAD -> next
 	>  * [new reference]   HEAD -> refs/for/main/topic
 	EOF
@@ -85,14 +85,14 @@ test_expect_success "restore proc-receive hook ($PROTOCOL)" '
 # Refs of upstream : main(A)             next(A)
 # Refs of workbench: main(A)  tags/v123
 test_expect_success "cleanup ($PROTOCOL)" '
-	git -C "$upstream" update-ref -d refs/heads/next
+	shit -C "$upstream" update-ref -d refs/heads/next
 '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git push -o ...  :                       next(A)  refs/for/main/topic
-test_expect_success "proc-receive: push with options ($PROTOCOL)" '
-	git -C workbench push \
+# shit defecate -o ...  :                       next(A)  refs/for/main/topic
+test_expect_success "proc-receive: defecate with options ($PROTOCOL)" '
+	shit -C workbench defecate \
 		--atomic \
 		-o issue=123 \
 		-o reviewer=user1 \
@@ -106,7 +106,7 @@ test_expect_success "proc-receive: push with options ($PROTOCOL)" '
 	> remote: pre-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
 	> remote: pre-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
 	> remote: # proc-receive hook        Z
-	> remote: proc-receive: atomic push_options        Z
+	> remote: proc-receive: atomic defecate_options        Z
 	> remote: proc-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
 	> remote: proc-receive< issue=123        Z
 	> remote: proc-receive< reviewer=user1        Z
@@ -114,7 +114,7 @@ test_expect_success "proc-receive: push with options ($PROTOCOL)" '
 	> remote: # post-receive hook        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/heads/next        Z
 	> remote: post-receive< <ZERO-OID> <COMMIT-A> refs/for/main/topic        Z
-	> To <URL/of/upstream.git>
+	> To <URL/of/upstream.shit>
 	>  * [new branch]      HEAD -> next
 	>  * [new reference]   HEAD -> refs/for/main/topic
 	EOF
@@ -129,5 +129,5 @@ test_expect_success "proc-receive: push with options ($PROTOCOL)" '
 # Refs of upstream : main(A)             next(A)
 # Refs of workbench: main(A)  tags/v123
 test_expect_success "cleanup ($PROTOCOL)" '
-	git -C "$upstream" update-ref -d refs/heads/next
+	shit -C "$upstream" update-ref -d refs/heads/next
 '

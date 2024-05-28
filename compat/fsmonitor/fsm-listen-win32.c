@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "fsmonitor-ll.h"
 #include "fsm-listen.h"
@@ -49,25 +49,25 @@ struct one_watch
 	 * We only set this for the worktree because we only need to
 	 * convert shortname paths to longname paths for items we send
 	 * to clients.  (We don't care about shortname expansion for
-	 * paths inside a GITDIR because we never send them to
+	 * paths inside a shitDIR because we never send them to
 	 * clients.)
 	 */
 	BOOL has_shortnames;
 	BOOL has_tilde;
-	wchar_t dotgit_shortname[16]; /* for 8.3 name */
+	wchar_t dotshit_shortname[16]; /* for 8.3 name */
 };
 
 struct fsm_listen_data
 {
 	struct one_watch *watch_worktree;
-	struct one_watch *watch_gitdir;
+	struct one_watch *watch_shitdir;
 
 	HANDLE hEventShutdown;
 
 	HANDLE hListener[3]; /* we don't own these handles */
 #define LISTENER_SHUTDOWN 0
 #define LISTENER_HAVE_DATA_WORKTREE 1
-#define LISTENER_HAVE_DATA_GITDIR 2
+#define LISTENER_HAVE_DATA_shitDIR 2
 	int nr_listener_handles;
 };
 
@@ -124,10 +124,10 @@ normalize:
  * to longname conversion on every notification event.
  *
  * We do not want to create a file to test this, so we assume that the
- * root directory contains a ".git" file or directory.  (Our caller
+ * root directory contains a ".shit" file or directory.  (Our caller
  * only calls us for the worktree root, so this should be fine.)
  *
- * Remember the spelling of the shortname for ".git" if it exists.
+ * Remember the spelling of the shortname for ".shit" if it exists.
  */
 static void check_for_shortnames(struct one_watch *watch)
 {
@@ -136,8 +136,8 @@ static void check_for_shortnames(struct one_watch *watch)
 	wchar_t *last;
 	wchar_t *p;
 
-	/* build L"<wt-root-path>/.git" */
-	swprintf(buf_in, ARRAY_SIZE(buf_in) - 1, L"%ls.git",
+	/* build L"<wt-root-path>/.shit" */
+	swprintf(buf_in, ARRAY_SIZE(buf_in) - 1, L"%ls.shit",
 		 watch->wpath_longname);
 
 	if (!GetShortPathNameW(buf_in, buf_out, ARRAY_SIZE(buf_out)))
@@ -151,15 +151,15 @@ static void check_for_shortnames(struct one_watch *watch)
 		if (*p == L'/' || *p == '\\')
 			last = p + 1;
 
-	if (!wcscmp(last, L".git"))
+	if (!wcscmp(last, L".shit"))
 		return;
 
 	watch->has_shortnames = 1;
-	wcsncpy(watch->dotgit_shortname, last,
-		ARRAY_SIZE(watch->dotgit_shortname));
+	wcsncpy(watch->dotshit_shortname, last,
+		ARRAY_SIZE(watch->dotshit_shortname));
 
 	/*
-	 * The shortname for ".git" is usually of the form "GIT~1", so
+	 * The shortname for ".shit" is usually of the form "shit~1", so
 	 * we should be able to avoid shortname to longname mapping on
 	 * every notification event if the source string does not
 	 * contain a "~".
@@ -170,7 +170,7 @@ static void check_for_shortnames(struct one_watch *watch)
 	 *
 	 * Lets test this.
 	 */
-	if (wcschr(watch->dotgit_shortname, L'~'))
+	if (wcschr(watch->dotshit_shortname, L'~'))
 		watch->has_tilde = 1;
 }
 
@@ -487,8 +487,8 @@ static int process_1_worktree_event(
 	const char *slash;
 
 	switch (t) {
-	case IS_INSIDE_DOT_GIT_WITH_COOKIE_PREFIX:
-		/* special case cookie files within .git */
+	case IS_INSIDE_DOT_shit_WITH_COOKIE_PREFIX:
+		/* special case cookie files within .shit */
 
 		/* Use just the filename of the cookie file. */
 		slash = find_last_dir_sep(path->buf);
@@ -496,16 +496,16 @@ static int process_1_worktree_event(
 				   slash ? slash + 1 : path->buf);
 		break;
 
-	case IS_INSIDE_DOT_GIT:
-		/* ignore everything inside of "<worktree>/.git/" */
+	case IS_INSIDE_DOT_shit:
+		/* ignore everything inside of "<worktree>/.shit/" */
 		break;
 
-	case IS_DOT_GIT:
-		/* "<worktree>/.git" was deleted (or renamed away) */
+	case IS_DOT_shit:
+		/* "<worktree>/.shit" was deleted (or renamed away) */
 		if ((info_action == FILE_ACTION_REMOVED) ||
 		    (info_action == FILE_ACTION_RENAMED_OLD_NAME)) {
 			trace2_data_string("fsmonitor", NULL,
-					   "fsm-listen/dotgit",
+					   "fsm-listen/dotshit",
 					   "removed");
 			return 1;
 		}
@@ -518,9 +518,9 @@ static int process_1_worktree_event(
 		fsmonitor_batch__add_path(*batch, path->buf);
 		break;
 
-	case IS_GITDIR:
-	case IS_INSIDE_GITDIR:
-	case IS_INSIDE_GITDIR_WITH_COOKIE_PREFIX:
+	case IS_shitDIR:
+	case IS_INSIDE_shitDIR:
+	case IS_INSIDE_shitDIR_WITH_COOKIE_PREFIX:
 	default:
 		BUG("unexpected path classification '%d' for '%s'",
 		    t, path->buf);
@@ -532,9 +532,9 @@ static int process_1_worktree_event(
 /*
  * Process filesystem events that happen anywhere (recursively) under the
  * <worktree> root directory.  For a normal working directory, this includes
- * both version controlled files and the contents of the .git/ directory.
+ * both version controlled files and the contents of the .shit/ directory.
  *
- * If <worktree>/.git is a file, then we only see events for the file
+ * If <worktree>/.shit is a file, then we only see events for the file
  * itself.
  */
 static int process_worktree_events(struct fsmonitor_daemon_state *state)
@@ -584,20 +584,20 @@ static int process_worktree_events(struct fsmonitor_daemon_state *state)
 		enum get_relative_result grr;
 
 		if (watch->has_shortnames) {
-			if (!wcscmp(wpath, watch->dotgit_shortname)) {
+			if (!wcscmp(wpath, watch->dotshit_shortname)) {
 				/*
 				 * This event exactly matches the
 				 * spelling of the shortname of
-				 * ".git", so we can skip some steps.
+				 * ".shit", so we can skip some steps.
 				 *
 				 * (This case is odd because the user
-				 * can "rm -rf GIT~1" and we cannot
+				 * can "rm -rf shit~1" and we cannot
 				 * use the filesystem to map it back
-				 * to ".git".)
+				 * to ".shit".)
 				 */
 				strbuf_reset(&path);
-				strbuf_addstr(&path, ".git");
-				t = IS_DOT_GIT;
+				strbuf_addstr(&path, ".shit");
+				t = IS_DOT_shit;
 				goto process_it;
 			}
 
@@ -658,20 +658,20 @@ force_shutdown:
 
 /*
  * Process filesystem events that happened anywhere (recursively) under the
- * external <gitdir> (such as non-primary worktrees or submodules).
+ * external <shitdir> (such as non-primary worktrees or submodules).
  * We only care about cookie files that our client threads created here.
  *
- * Note that we DO NOT get filesystem events on the external <gitdir>
+ * Note that we DO NOT get filesystem events on the external <shitdir>
  * itself (it is not inside something that we are watching).  In particular,
- * we do not get an event if the external <gitdir> is deleted.
+ * we do not get an event if the external <shitdir> is deleted.
  *
- * Also, we do not care about shortnames within the external <gitdir>, since
+ * Also, we do not care about shortnames within the external <shitdir>, since
  * we never send these paths to clients.
  */
-static int process_gitdir_events(struct fsmonitor_daemon_state *state)
+static int process_shitdir_events(struct fsmonitor_daemon_state *state)
 {
 	struct fsm_listen_data *data = state->listen_data;
-	struct one_watch *watch = data->watch_gitdir;
+	struct one_watch *watch = data->watch_shitdir;
 	struct strbuf path = STRBUF_INIT;
 	struct string_list cookie_list = STRING_LIST_INIT_DUP;
 	const char *p = watch->buffer;
@@ -680,7 +680,7 @@ static int process_gitdir_events(struct fsmonitor_daemon_state *state)
 		trace2_data_string("fsmonitor", NULL, "fsm-listen/kernel",
 				   "overflow");
 		fsmonitor_force_resync(state);
-		return LISTENER_HAVE_DATA_GITDIR;
+		return LISTENER_HAVE_DATA_shitDIR;
 	}
 
 	for (;;) {
@@ -694,11 +694,11 @@ static int process_gitdir_events(struct fsmonitor_daemon_state *state)
 			    &path) == -1)
 			goto skip_this_path;
 
-		t = fsmonitor_classify_path_gitdir_relative(path.buf);
+		t = fsmonitor_classify_path_shitdir_relative(path.buf);
 
 		switch (t) {
-		case IS_INSIDE_GITDIR_WITH_COOKIE_PREFIX:
-			/* special case cookie files within gitdir */
+		case IS_INSIDE_shitDIR_WITH_COOKIE_PREFIX:
+			/* special case cookie files within shitdir */
 
 			/* Use just the filename of the cookie file. */
 			slash = find_last_dir_sep(path.buf);
@@ -706,7 +706,7 @@ static int process_gitdir_events(struct fsmonitor_daemon_state *state)
 					   slash ? slash + 1 : path.buf);
 			break;
 
-		case IS_INSIDE_GITDIR:
+		case IS_INSIDE_shitDIR:
 			goto skip_this_path;
 
 		default:
@@ -723,7 +723,7 @@ skip_this_path:
 	fsmonitor_publish(state, NULL, &cookie_list);
 	string_list_clear(&cookie_list, 0);
 	strbuf_release(&path);
-	return LISTENER_HAVE_DATA_GITDIR;
+	return LISTENER_HAVE_DATA_shitDIR;
 }
 
 void fsm_listen__loop(struct fsmonitor_daemon_state *state)
@@ -737,8 +737,8 @@ void fsm_listen__loop(struct fsmonitor_daemon_state *state)
 	if (start_rdcw_watch(data->watch_worktree) == -1)
 		goto force_error_stop;
 
-	if (data->watch_gitdir &&
-	    start_rdcw_watch(data->watch_gitdir) == -1)
+	if (data->watch_shitdir &&
+	    start_rdcw_watch(data->watch_shitdir) == -1)
 		goto force_error_stop;
 
 	for (;;) {
@@ -767,23 +767,23 @@ void fsm_listen__loop(struct fsmonitor_daemon_state *state)
 			continue;
 		}
 
-		if (dwWait == WAIT_OBJECT_0 + LISTENER_HAVE_DATA_GITDIR) {
-			result = recv_rdcw_watch(data->watch_gitdir);
+		if (dwWait == WAIT_OBJECT_0 + LISTENER_HAVE_DATA_shitDIR) {
+			result = recv_rdcw_watch(data->watch_shitdir);
 			if (result == -1) {
 				/* hard error */
 				goto force_error_stop;
 			}
 			if (result == -2) {
 				/* retryable error */
-				if (start_rdcw_watch(data->watch_gitdir) == -1)
+				if (start_rdcw_watch(data->watch_shitdir) == -1)
 					goto force_error_stop;
 				continue;
 			}
 
 			/* have data */
-			if (process_gitdir_events(state) == LISTENER_SHUTDOWN)
+			if (process_shitdir_events(state) == LISTENER_SHUTDOWN)
 				goto force_shutdown;
-			if (start_rdcw_watch(data->watch_gitdir) == -1)
+			if (start_rdcw_watch(data->watch_shitdir) == -1)
 				goto force_error_stop;
 			continue;
 		}
@@ -809,7 +809,7 @@ force_shutdown:
 
 clean_shutdown:
 	cancel_rdcw_watch(data->watch_worktree);
-	cancel_rdcw_watch(data->watch_gitdir);
+	cancel_rdcw_watch(data->watch_shitdir);
 }
 
 int fsm_listen__ctor(struct fsmonitor_daemon_state *state)
@@ -827,8 +827,8 @@ int fsm_listen__ctor(struct fsmonitor_daemon_state *state)
 	check_for_shortnames(data->watch_worktree);
 
 	if (state->nr_paths_watching > 1) {
-		data->watch_gitdir = create_watch(state->path_gitdir_watch.buf);
-		if (!data->watch_gitdir)
+		data->watch_shitdir = create_watch(state->path_shitdir_watch.buf);
+		if (!data->watch_shitdir)
 			goto failed;
 	}
 
@@ -839,9 +839,9 @@ int fsm_listen__ctor(struct fsmonitor_daemon_state *state)
 		data->watch_worktree->hEvent;
 	data->nr_listener_handles++;
 
-	if (data->watch_gitdir) {
-		data->hListener[LISTENER_HAVE_DATA_GITDIR] =
-			data->watch_gitdir->hEvent;
+	if (data->watch_shitdir) {
+		data->hListener[LISTENER_HAVE_DATA_shitDIR] =
+			data->watch_shitdir->hEvent;
 		data->nr_listener_handles++;
 	}
 
@@ -851,7 +851,7 @@ int fsm_listen__ctor(struct fsmonitor_daemon_state *state)
 failed:
 	CloseHandle(data->hEventShutdown);
 	destroy_watch(data->watch_worktree);
-	destroy_watch(data->watch_gitdir);
+	destroy_watch(data->watch_shitdir);
 
 	return -1;
 }
@@ -867,7 +867,7 @@ void fsm_listen__dtor(struct fsmonitor_daemon_state *state)
 
 	CloseHandle(data->hEventShutdown);
 	destroy_watch(data->watch_worktree);
-	destroy_watch(data->watch_gitdir);
+	destroy_watch(data->watch_shitdir);
 
 	FREE_AND_NULL(state->listen_data);
 }

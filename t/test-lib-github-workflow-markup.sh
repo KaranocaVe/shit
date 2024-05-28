@@ -1,5 +1,5 @@
 # Library of functions to mark up test scripts' output suitable for
-# pretty-printing it in GitHub workflows.
+# pretty-printing it in shitHub workflows.
 #
 # Copyright (c) 2022 Johannes Schindelin
 #
@@ -16,18 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see https://www.gnu.org/licenses/ .
 #
-# The idea is for `test-lib.sh` to source this file when run in GitHub
+# The idea is for `test-lib.sh` to source this file when run in shitHub
 # workflows; these functions will then override (empty) functions
 # that are are called at the appropriate times during the test runs.
 
 test_skip_test_preamble=t
 
 start_test_output () {
-	test -n "$GIT_TEST_TEE_OUTPUT_FILE" ||
-	die "--github-workflow-markup requires --verbose-log"
-	github_markup_output="${GIT_TEST_TEE_OUTPUT_FILE%.out}.markup"
-	>$github_markup_output
-	GIT_TEST_TEE_OFFSET=0
+	test -n "$shit_TEST_TEE_OUTPUT_FILE" ||
+	die "--shithub-workflow-markup requires --verbose-log"
+	shithub_markup_output="${shit_TEST_TEE_OUTPUT_FILE%.out}.markup"
+	>$shithub_markup_output
+	shit_TEST_TEE_OFFSET=0
 }
 
 # No need to override start_test_case_output
@@ -37,20 +37,20 @@ finalize_test_case_output () {
 	shift
 	case "$test_case_result" in
 	failure)
-		echo >>$github_markup_output "::error::failed: $this_test.$test_count $1"
+		echo >>$shithub_markup_output "::error::failed: $this_test.$test_count $1"
 		;;
 	fixed)
-		echo >>$github_markup_output "::notice::fixed: $this_test.$test_count $1"
+		echo >>$shithub_markup_output "::notice::fixed: $this_test.$test_count $1"
 		;;
 	ok|broken)
 		# Exit without printing the "ok" or ""broken" tests
 		return
 		;;
 	esac
-	echo >>$github_markup_output "::group::$test_case_result: $this_test.$test_count $*"
-	test-tool >>$github_markup_output path-utils skip-n-bytes \
-		"$GIT_TEST_TEE_OUTPUT_FILE" $GIT_TEST_TEE_OFFSET
-	echo >>$github_markup_output "::endgroup::"
+	echo >>$shithub_markup_output "::group::$test_case_result: $this_test.$test_count $*"
+	test-tool >>$shithub_markup_output path-utils skip-n-bytes \
+		"$shit_TEST_TEE_OUTPUT_FILE" $shit_TEST_TEE_OFFSET
+	echo >>$shithub_markup_output "::endgroup::"
 }
 
 # No need to override finalize_test_output

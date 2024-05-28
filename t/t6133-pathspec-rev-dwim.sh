@@ -6,32 +6,32 @@ test_description='test dwim of revs versus pathspecs in revision parser'
 test_expect_success 'setup' '
 	test_commit base &&
 	echo content >"br[ack]ets" &&
-	git add . &&
+	shit add . &&
 	test_tick &&
-	git commit -m brackets
+	shit commit -m brackets
 '
 
 test_expect_success 'non-rev wildcard dwims to pathspec' '
-	git log -- "*.t" >expect &&
-	git log    "*.t" >actual &&
+	shit log -- "*.t" >expect &&
+	shit log    "*.t" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'tree:path with metacharacters dwims to rev' '
-	git show "HEAD:br[ack]ets" -- >expect &&
-	git show "HEAD:br[ack]ets"    >actual &&
+	shit show "HEAD:br[ack]ets" -- >expect &&
+	shit show "HEAD:br[ack]ets"    >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success '^{foo} with metacharacters dwims to rev' '
-	git log "HEAD^{/b.*}" -- >expect &&
-	git log "HEAD^{/b.*}"    >actual &&
+	shit log "HEAD^{/b.*}" -- >expect &&
+	shit log "HEAD^{/b.*}"    >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success '@{foo} with metacharacters dwims to rev' '
-	git log "HEAD@{now [or thereabouts]}" -- >expect &&
-	git log "HEAD@{now [or thereabouts]}"    >actual &&
+	shit log "HEAD@{now [or thereabouts]}" -- >expect &&
+	shit log "HEAD@{now [or thereabouts]}"    >actual &&
 	test_cmp expect actual
 '
 
@@ -39,8 +39,8 @@ test_expect_success ':/*.t from a subdir dwims to a pathspec' '
 	mkdir subdir &&
 	(
 		cd subdir &&
-		git log -- ":/*.t" >expect &&
-		git log    ":/*.t" >actual &&
+		shit log -- ":/*.t" >expect &&
+		shit log    ":/*.t" >actual &&
 		test_cmp expect actual
 	)
 '

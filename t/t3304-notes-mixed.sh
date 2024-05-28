@@ -2,8 +2,8 @@
 
 test_description='Test notes trees that also contain non-notes'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -14,7 +14,7 @@ start_note_commit () {
 	test_tick &&
 	cat <<INPUT_END
 commit refs/notes/commits
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 notes
 COMMIT
@@ -26,7 +26,7 @@ INPUT_END
 }
 
 verify_notes () {
-	git log | grep "^    " > output &&
+	shit log | grep "^    " > output &&
 	i=$number_of_commits &&
 	while [ $i -gt 0 ]; do
 		echo "    commit #$i" &&
@@ -41,7 +41,7 @@ test_expect_success "setup: create a couple of commits" '
 	test_tick &&
 	cat <<INPUT_END >input &&
 commit refs/heads/main
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 commit #1
 COMMIT
@@ -56,7 +56,7 @@ INPUT_END
 	test_tick &&
 	cat <<INPUT_END >>input &&
 commit refs/heads/main
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 commit #2
 COMMIT
@@ -67,17 +67,17 @@ file in commit #2
 EOF
 
 INPUT_END
-	git fast-import --quiet <input
+	shit fast-import --quiet <input
 '
 
 test_expect_success "create a notes tree with both notes and non-notes" '
 
-	commit1=$(git rev-parse refs/heads/main^) &&
-	commit2=$(git rev-parse refs/heads/main) &&
+	commit1=$(shit rev-parse refs/heads/main^) &&
+	commit2=$(shit rev-parse refs/heads/main) &&
 	test_tick &&
 	cat <<INPUT_END >input &&
 commit refs/notes/commits
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 notes commit #1
 COMMIT
@@ -96,7 +96,7 @@ INPUT_END
 	test_tick &&
 	cat <<INPUT_END >>input &&
 commit refs/notes/commits
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 notes commit #2
 COMMIT
@@ -115,7 +115,7 @@ INPUT_END
 	test_tick &&
 	cat <<INPUT_END >>input &&
 commit refs/notes/commits
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 notes commit #3
 COMMIT
@@ -147,8 +147,8 @@ yet another non-note with SHA1-like name
 EOF
 
 INPUT_END
-	git fast-import --quiet <input &&
-	git config core.notesRef refs/notes/commits
+	shit fast-import --quiet <input &&
+	shit config core.notesRef refs/notes/commits
 '
 
 cat >expect <<EXPECT_END
@@ -160,7 +160,7 @@ EXPECT_END
 
 test_expect_success "verify contents of notes" '
 
-	git log | grep "^    " > actual &&
+	shit log | grep "^    " > actual &&
 	test_cmp expect actual
 '
 
@@ -179,31 +179,31 @@ EXPECT_END
 
 test_expect_success "verify contents of non-notes" '
 
-	git cat-file -p refs/notes/commits:foobar/non-note.txt > actual_nn1 &&
+	shit cat-file -p refs/notes/commits:foobar/non-note.txt > actual_nn1 &&
 	test_cmp expect_nn1 actual_nn1 &&
-	git cat-file -p refs/notes/commits:deadbeef > actual_nn2 &&
+	shit cat-file -p refs/notes/commits:deadbeef > actual_nn2 &&
 	test_cmp expect_nn2 actual_nn2 &&
-	git cat-file -p refs/notes/commits:de/adbeef > actual_nn3 &&
+	shit cat-file -p refs/notes/commits:de/adbeef > actual_nn3 &&
 	test_cmp expect_nn3 actual_nn3 &&
-	git cat-file -p refs/notes/commits:dead/beef > actual_nn4 &&
+	shit cat-file -p refs/notes/commits:dead/beef > actual_nn4 &&
 	test_cmp expect_nn4 actual_nn4
 '
 
-test_expect_success "git-notes preserves non-notes" '
+test_expect_success "shit-notes preserves non-notes" '
 
 	test_tick &&
-	git notes add -f -m "foo bar"
+	shit notes add -f -m "foo bar"
 '
 
-test_expect_success "verify contents of non-notes after git-notes" '
+test_expect_success "verify contents of non-notes after shit-notes" '
 
-	git cat-file -p refs/notes/commits:foobar/non-note.txt > actual_nn1 &&
+	shit cat-file -p refs/notes/commits:foobar/non-note.txt > actual_nn1 &&
 	test_cmp expect_nn1 actual_nn1 &&
-	git cat-file -p refs/notes/commits:deadbeef > actual_nn2 &&
+	shit cat-file -p refs/notes/commits:deadbeef > actual_nn2 &&
 	test_cmp expect_nn2 actual_nn2 &&
-	git cat-file -p refs/notes/commits:de/adbeef > actual_nn3 &&
+	shit cat-file -p refs/notes/commits:de/adbeef > actual_nn3 &&
 	test_cmp expect_nn3 actual_nn3 &&
-	git cat-file -p refs/notes/commits:dead/beef > actual_nn4 &&
+	shit cat-file -p refs/notes/commits:dead/beef > actual_nn4 &&
 	test_cmp expect_nn4 actual_nn4
 '
 

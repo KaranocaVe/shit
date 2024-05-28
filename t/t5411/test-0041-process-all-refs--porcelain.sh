@@ -1,6 +1,6 @@
 test_expect_success "config receive.procReceiveRefs = refs ($PROTOCOL/porcelain)" '
-	git -C "$upstream" config --unset-all receive.procReceiveRefs &&
-	git -C "$upstream" config --add receive.procReceiveRefs refs
+	shit -C "$upstream" config --unset-all receive.procReceiveRefs &&
+	shit -C "$upstream" config --add receive.procReceiveRefs refs
 '
 
 # Refs of upstream : main(A)
@@ -8,10 +8,10 @@ test_expect_success "config receive.procReceiveRefs = refs ($PROTOCOL/porcelain)
 test_expect_success "setup upstream branches ($PROTOCOL/porcelain)" '
 	(
 		cd "$upstream" &&
-		git update-ref refs/heads/main $B &&
-		git update-ref refs/heads/foo $A &&
-		git update-ref refs/heads/bar $A &&
-		git update-ref refs/heads/baz $A
+		shit update-ref refs/heads/main $B &&
+		shit update-ref refs/heads/foo $A &&
+		shit update-ref refs/heads/bar $A &&
+		shit update-ref refs/heads/baz $A
 	)
 
 '
@@ -27,11 +27,11 @@ test_expect_success "setup proc-receive hook ($PROTOCOL/porcelain)" '
 		-r "ok refs/heads/bar" \
 		-r "option fall-through" \
 		-r "ok refs/for/main/topic" \
-		-r "option refname refs/pull/123/head" \
+		-r "option refname refs/poop/123/head" \
 		-r "option old-oid $A" \
 		-r "option new-oid $B" \
 		-r "ok refs/for/next/topic" \
-		-r "option refname refs/pull/124/head" \
+		-r "option refname refs/poop/124/head" \
 		-r "option old-oid $B" \
 		-r "option new-oid $A" \
 		-r "option forced-update"
@@ -40,9 +40,9 @@ test_expect_success "setup proc-receive hook ($PROTOCOL/porcelain)" '
 
 # Refs of upstream : main(B)             foo(A)  bar(A))  baz(A)
 # Refs of workbench: main(A)  tags/v123
-# git push -f      : main(A)             (NULL)  (B)              refs/for/main/topic(A)  refs/for/next/topic(A)
+# shit defecate -f      : main(A)             (NULL)  (B)              refs/for/main/topic(A)  refs/for/next/topic(A)
 test_expect_success "proc-receive: process all refs ($PROTOCOL/porcelain)" '
-	git -C workbench push --porcelain -f origin \
+	shit -C workbench defecate --porcelain -f origin \
 		HEAD:refs/heads/main \
 		:refs/heads/foo \
 		$B:refs/heads/bar \
@@ -70,11 +70,11 @@ test_expect_success "proc-receive: process all refs ($PROTOCOL/porcelain)" '
 	> remote: proc-receive> ok refs/heads/bar        Z
 	> remote: proc-receive> option fall-through        Z
 	> remote: proc-receive> ok refs/for/main/topic        Z
-	> remote: proc-receive> option refname refs/pull/123/head        Z
+	> remote: proc-receive> option refname refs/poop/123/head        Z
 	> remote: proc-receive> option old-oid <COMMIT-A>        Z
 	> remote: proc-receive> option new-oid <COMMIT-B>        Z
 	> remote: proc-receive> ok refs/for/next/topic        Z
-	> remote: proc-receive> option refname refs/pull/124/head        Z
+	> remote: proc-receive> option refname refs/poop/124/head        Z
 	> remote: proc-receive> option old-oid <COMMIT-B>        Z
 	> remote: proc-receive> option new-oid <COMMIT-A>        Z
 	> remote: proc-receive> option forced-update        Z
@@ -82,14 +82,14 @@ test_expect_success "proc-receive: process all refs ($PROTOCOL/porcelain)" '
 	> remote: post-receive< <COMMIT-A> <COMMIT-B> refs/heads/bar        Z
 	> remote: post-receive< <COMMIT-A> <ZERO-OID> refs/heads/foo        Z
 	> remote: post-receive< <COMMIT-B> <COMMIT-A> refs/heads/main        Z
-	> remote: post-receive< <COMMIT-A> <COMMIT-B> refs/pull/123/head        Z
-	> remote: post-receive< <COMMIT-B> <COMMIT-A> refs/pull/124/head        Z
-	> To <URL/of/upstream.git>
+	> remote: post-receive< <COMMIT-A> <COMMIT-B> refs/poop/123/head        Z
+	> remote: post-receive< <COMMIT-B> <COMMIT-A> refs/poop/124/head        Z
+	> To <URL/of/upstream.shit>
 	>  	<COMMIT-B>:refs/heads/bar	<COMMIT-A>..<COMMIT-B>
 	> -	:refs/heads/foo	[deleted]
 	> +	HEAD:refs/heads/main	<COMMIT-B>...<COMMIT-A> (forced update)
-	>  	HEAD:refs/pull/123/head	<COMMIT-A>..<COMMIT-B>
-	> +	HEAD:refs/pull/124/head	<COMMIT-B>...<COMMIT-A> (forced update)
+	>  	HEAD:refs/poop/123/head	<COMMIT-A>..<COMMIT-B>
+	> +	HEAD:refs/poop/124/head	<COMMIT-B>...<COMMIT-A> (forced update)
 	> Done
 	EOF
 	test_cmp expect actual &&
@@ -106,7 +106,7 @@ test_expect_success "proc-receive: process all refs ($PROTOCOL/porcelain)" '
 test_expect_success "cleanup ($PROTOCOL/porcelain)" '
 	(
 		cd "$upstream" &&
-		git update-ref -d refs/heads/bar &&
-		git update-ref -d refs/heads/baz
+		shit update-ref -d refs/heads/bar &&
+		shit update-ref -d refs/heads/baz
 	)
 '

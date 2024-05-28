@@ -8,8 +8,8 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 maketree () {
 	(
-		rm -f .git/index .git/index.lock &&
-		git clean -d -f -f -q -x &&
+		rm -f .shit/index .shit/index.lock &&
+		shit clean -d -f -f -q -x &&
 		name="$1" &&
 		shift &&
 		for it
@@ -17,22 +17,22 @@ maketree () {
 			path=$(expr "$it" : '\([^:]*\)') &&
 			mkdir -p $(dirname "$path") &&
 			echo "$it" >"$path" &&
-			git update-index --add "$path" || exit
+			shit update-index --add "$path" || exit
 		done &&
-		git tag "$name" $(git write-tree)
+		shit tag "$name" $(shit write-tree)
 	)
 }
 
 settree () {
-	rm -f .git/index .git/index.lock &&
-	git clean -d -f -f -q -x &&
-	git read-tree "$1" &&
-	git checkout-index -f -q -u -a &&
-	git update-index --refresh
+	rm -f .shit/index .shit/index.lock &&
+	shit clean -d -f -f -q -x &&
+	shit read-tree "$1" &&
+	shit checkout-index -f -q -u -a &&
+	shit update-index --refresh
 }
 
 checkindex () {
-	git ls-files -s |
+	shit ls-files -s |
 	sed "s|^[0-7][0-7]* $OID_REGEX \([0-3]\)	|\1 |" >current &&
 	cat >expect &&
 	test_cmp expect current

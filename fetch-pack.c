@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "repository.h"
 #include "config.h"
 #include "date.h"
@@ -46,7 +46,7 @@ static int server_supports_filtering;
 static int advertise_sid;
 static struct shallow_lock shallow_lock;
 static const char *alternate_shallow_file;
-static struct fsck_options fsck_options = FSCK_OPTIONS_MISSING_GITMODULES;
+static struct fsck_options fsck_options = FSCK_OPTIONS_MISSING_shitMODULES;
 static struct strbuf fsck_msg_types = STRBUF_INIT;
 static struct string_list uri_protocols = STRING_LIST_INIT_DUP;
 
@@ -209,10 +209,10 @@ static void consume_shallow_list(struct fetch_pack_args *args,
 				continue;
 			if (starts_with(reader->line, "unshallow "))
 				continue;
-			die(_("git fetch-pack: expected shallow list"));
+			die(_("shit fetch-pack: expected shallow list"));
 		}
 		if (reader->status != PACKET_READ_FLUSH)
-			die(_("git fetch-pack: expected a flush packet after shallow list"));
+			die(_("shit fetch-pack: expected a flush packet after shallow list"));
 	}
 }
 
@@ -223,7 +223,7 @@ static enum ack_type get_ack(struct packet_reader *reader,
 	const char *arg;
 
 	if (packet_reader_read(reader) != PACKET_READ_NORMAL)
-		die(_("git fetch-pack: expected ACK/NAK, got a flush packet"));
+		die(_("shit fetch-pack: expected ACK/NAK, got a flush packet"));
 	len = reader->pktlen;
 
 	if (!strcmp(reader->line, "NAK"))
@@ -243,7 +243,7 @@ static enum ack_type get_ack(struct packet_reader *reader,
 			return ACK;
 		}
 	}
-	die(_("git fetch-pack: expected ACK/NAK, got '%s'"), reader->line);
+	die(_("shit fetch-pack: expected ACK/NAK, got '%s'"), reader->line);
 }
 
 static void send_request(struct fetch_pack_args *args,
@@ -388,7 +388,7 @@ static int find_common(struct fetch_negotiator *negotiator,
 			if (deepen_since_ok)    strbuf_addstr(&c, " deepen-since");
 			if (deepen_not_ok)      strbuf_addstr(&c, " deepen-not");
 			if (agent_supported)    strbuf_addf(&c, " agent=%s",
-							    git_user_agent_sanitized());
+							    shit_user_agent_sanitized());
 			if (advertise_sid)
 				strbuf_addf(&c, " session-id=%s", trace2_session_id());
 			if (args->filter_options.choice)
@@ -872,12 +872,12 @@ static void create_promisor_file(const char *keep_name,
 	strbuf_release(&promisor_name);
 }
 
-static void parse_gitmodules_oids(int fd, struct oidset *gitmodules_oids)
+static void parse_shitmodules_oids(int fd, struct oidset *shitmodules_oids)
 {
 	int len = the_hash_algo->hexsz + 1; /* hash + NL */
 
 	do {
-		char hex_hash[GIT_MAX_HEXSZ + 1];
+		char hex_hash[shit_MAX_HEXSZ + 1];
 		int read_len = read_in_full(fd, hex_hash, len);
 		struct object_id oid;
 		const char *end;
@@ -888,7 +888,7 @@ static void parse_gitmodules_oids(int fd, struct oidset *gitmodules_oids)
 			die("invalid length read %d", read_len);
 		if (parse_oid_hex(hex_hash, &oid, &end) || *end != '\n')
 			die("invalid hash");
-		oidset_insert(gitmodules_oids, &oid);
+		oidset_insert(shitmodules_oids, &oid);
 	} while (1);
 }
 
@@ -898,7 +898,7 @@ static void add_index_pack_keep_option(struct strvec *args)
 
 	if (xgethostname(hostname, sizeof(hostname)))
 		xsnprintf(hostname, sizeof(hostname), "localhost");
-	strvec_pushf(args, "--keep=fetch-pack %"PRIuMAX " on %s",
+	strvec_defecatef(args, "--keep=fetch-pack %"PRIuMAX " on %s",
 		     (uintmax_t)getpid(), hostname);
 }
 
@@ -911,7 +911,7 @@ static int get_pack(struct fetch_pack_args *args,
 		    int xd[2], struct string_list *pack_lockfiles,
 		    struct strvec *index_pack_args,
 		    struct ref **sought, int nr_sought,
-		    struct oidset *gitmodules_oids)
+		    struct oidset *shitmodules_oids)
 {
 	struct async demux;
 	int do_keep = args->keep_pack;
@@ -950,8 +950,8 @@ static int get_pack(struct fetch_pack_args *args,
 	}
 
 	if (alternate_shallow_file) {
-		strvec_push(&cmd.args, "--shallow-file");
-		strvec_push(&cmd.args, alternate_shallow_file);
+		strvec_defecate(&cmd.args, "--shallow-file");
+		strvec_defecate(&cmd.args, alternate_shallow_file);
 	}
 
 	if (fetch_fsck_objects >= 0
@@ -965,16 +965,16 @@ static int get_pack(struct fetch_pack_args *args,
 		if (pack_lockfiles || fsck_objects)
 			cmd.out = -1;
 		cmd_name = "index-pack";
-		strvec_push(&cmd.args, cmd_name);
-		strvec_push(&cmd.args, "--stdin");
+		strvec_defecate(&cmd.args, cmd_name);
+		strvec_defecate(&cmd.args, "--stdin");
 		if (!args->quiet && !args->no_progress)
-			strvec_push(&cmd.args, "-v");
+			strvec_defecate(&cmd.args, "-v");
 		if (args->use_thin_pack)
-			strvec_push(&cmd.args, "--fix-thin");
+			strvec_defecate(&cmd.args, "--fix-thin");
 		if ((do_keep || index_pack_args) && (args->lock_pack || unpack_limit))
 			add_index_pack_keep_option(&cmd.args);
 		if (!index_pack_args && args->check_self_contained_and_connected)
-			strvec_push(&cmd.args, "--check-self-contained-and-connected");
+			strvec_defecate(&cmd.args, "--check-self-contained-and-connected");
 		else
 			/*
 			 * We cannot perform any connectivity checks because
@@ -988,22 +988,22 @@ static int get_pack(struct fetch_pack_args *args,
 			 * create_promisor_file() may be called afterwards but
 			 * we still need index-pack to know that this is a
 			 * promisor pack. For example, if transfer.fsckobjects
-			 * is true, index-pack needs to know that .gitmodules
+			 * is true, index-pack needs to know that .shitmodules
 			 * is a promisor object (so that it won't complain if
 			 * it is missing).
 			 */
-			strvec_push(&cmd.args, "--promisor");
+			strvec_defecate(&cmd.args, "--promisor");
 	}
 	else {
 		cmd_name = "unpack-objects";
-		strvec_push(&cmd.args, cmd_name);
+		strvec_defecate(&cmd.args, cmd_name);
 		if (args->quiet || args->no_progress)
-			strvec_push(&cmd.args, "-q");
+			strvec_defecate(&cmd.args, "-q");
 		args->check_self_contained_and_connected = 0;
 	}
 
 	if (pass_header)
-		strvec_pushf(&cmd.args, "--pack_header=%"PRIu32",%"PRIu32,
+		strvec_defecatef(&cmd.args, "--pack_header=%"PRIu32",%"PRIu32,
 			     ntohl(header.hdr_version),
 				 ntohl(header.hdr_entries));
 	if (fsck_objects) {
@@ -1013,9 +1013,9 @@ static int get_pack(struct fetch_pack_args *args,
 			 * checks both broken objects and links, but we only
 			 * want to check for broken objects.
 			 */
-			strvec_push(&cmd.args, "--fsck-objects");
+			strvec_defecate(&cmd.args, "--fsck-objects");
 		else
-			strvec_pushf(&cmd.args, "--strict%s",
+			strvec_defecatef(&cmd.args, "--strict%s",
 				     fsck_msg_types.buf);
 	}
 
@@ -1023,13 +1023,13 @@ static int get_pack(struct fetch_pack_args *args,
 		int i;
 
 		for (i = 0; i < cmd.args.nr; i++)
-			strvec_push(index_pack_args, cmd.args.v[i]);
+			strvec_defecate(index_pack_args, cmd.args.v[i]);
 	}
 
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 
 	cmd.in = demux.out;
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	if (start_command(&cmd))
 		die(_("fetch-pack: unable to fork off %s"), cmd_name);
 	if (do_keep && (pack_lockfiles || fsck_objects)) {
@@ -1040,7 +1040,7 @@ static int get_pack(struct fetch_pack_args *args,
 			die(_("fetch-pack: invalid index-pack output"));
 		if (pack_lockfile)
 			string_list_append_nodup(pack_lockfiles, pack_lockfile);
-		parse_gitmodules_oids(cmd.out, gitmodules_oids);
+		parse_shitmodules_oids(cmd.out, shitmodules_oids);
 		close(cmd.out);
 	}
 
@@ -1220,8 +1220,8 @@ static struct ref *do_fetch_pack(struct fetch_pack_args *args,
 	} else
 		alternate_shallow_file = NULL;
 	if (get_pack(args, fd, pack_lockfiles, NULL, sought, nr_sought,
-		     &fsck_options.gitmodules_found))
-		die(_("git fetch-pack: fetch failed."));
+		     &fsck_options.shitmodules_found))
+		die(_("shit fetch-pack: fetch failed."));
 	if (fsck_finish(&fsck_options))
 		die("fsck failed");
 
@@ -1321,7 +1321,7 @@ static void write_fetch_command_and_capabilities(struct strbuf *req_buf,
 	ensure_server_supports_v2("fetch");
 	packet_buf_write(req_buf, "command=fetch");
 	if (server_supports_v2("agent"))
-		packet_buf_write(req_buf, "agent=%s", git_user_agent_sanitized());
+		packet_buf_write(req_buf, "agent=%s", shit_user_agent_sanitized());
 	if (advertise_sid && server_supports_v2("session-id"))
 		packet_buf_write(req_buf, "session-id=%s", trace2_session_id());
 	if (server_options && server_options->nr) {
@@ -1338,7 +1338,7 @@ static void write_fetch_command_and_capabilities(struct strbuf *req_buf,
 			die(_("mismatched algorithms: client %s; server %s"),
 			    the_hash_algo->name, hash_name);
 		packet_buf_write(req_buf, "object-format=%s", the_hash_algo->name);
-	} else if (hash_algo_by_ptr(the_hash_algo) != GIT_HASH_SHA1) {
+	} else if (hash_algo_by_ptr(the_hash_algo) != shit_HASH_SHA1) {
 		die(_("the server does not support algorithm '%s'"),
 		    the_hash_algo->name);
 	}
@@ -1633,7 +1633,7 @@ static void do_check_stateless_delimiter(int stateless_rpc,
 					 struct packet_reader *reader)
 {
 	check_stateless_delimiter(stateless_rpc, reader,
-				  _("git fetch-pack: expected response end packet"));
+				  _("shit fetch-pack: expected response end packet"));
 }
 
 static struct ref *do_fetch_pack_v2(struct fetch_pack_args *args,
@@ -1670,7 +1670,7 @@ static struct ref *do_fetch_pack_v2(struct fetch_pack_args *args,
 	packet_reader_init(&reader, fd[0], NULL, 0,
 			   PACKET_READ_CHOMP_NEWLINE |
 			   PACKET_READ_DIE_ON_ERR_PACKET);
-	if (git_env_bool("GIT_TEST_SIDEBAND_ALL", 1) &&
+	if (shit_env_bool("shit_TEST_SIDEBAND_ALL", 1) &&
 	    server_supports_feature("fetch", "sideband-all", 0)) {
 		reader.use_sideband = 1;
 		reader.me = "fetch-pack";
@@ -1761,7 +1761,7 @@ static struct ref *do_fetch_pack_v2(struct fetch_pack_args *args,
 				receive_wanted_refs(&reader, sought, nr_sought);
 
 			/* get the pack(s) */
-			if (git_env_bool("GIT_TRACE_REDACT", 1))
+			if (shit_env_bool("shit_TRACE_REDACT", 1))
 				reader.options |= PACKET_READ_REDACT_URI_PATH;
 			if (process_section_header(&reader, "packfile-uris", 1))
 				receive_packfile_uris(&reader, &packfile_uris);
@@ -1780,8 +1780,8 @@ static struct ref *do_fetch_pack_v2(struct fetch_pack_args *args,
 
 			if (get_pack(args, fd, pack_lockfiles,
 				     packfile_uris.nr ? &index_pack_args : NULL,
-				     sought, nr_sought, &fsck_options.gitmodules_found))
-				die(_("git fetch-pack: fetch failed."));
+				     sought, nr_sought, &fsck_options.shitmodules_found))
+				die(_("shit fetch-pack: fetch failed."));
 			do_check_stateless_delimiter(args->stateless_rpc, &reader);
 
 			state = FETCH_DONE;
@@ -1794,19 +1794,19 @@ static struct ref *do_fetch_pack_v2(struct fetch_pack_args *args,
 	for (i = 0; i < packfile_uris.nr; i++) {
 		int j;
 		struct child_process cmd = CHILD_PROCESS_INIT;
-		char packname[GIT_MAX_HEXSZ + 1];
+		char packname[shit_MAX_HEXSZ + 1];
 		const char *uri = packfile_uris.items[i].string +
 			the_hash_algo->hexsz + 1;
 
-		strvec_push(&cmd.args, "http-fetch");
-		strvec_pushf(&cmd.args, "--packfile=%.*s",
+		strvec_defecate(&cmd.args, "http-fetch");
+		strvec_defecatef(&cmd.args, "--packfile=%.*s",
 			     (int) the_hash_algo->hexsz,
 			     packfile_uris.items[i].string);
 		for (j = 0; j < index_pack_args.nr; j++)
-			strvec_pushf(&cmd.args, "--index-pack-arg=%s",
+			strvec_defecatef(&cmd.args, "--index-pack-arg=%s",
 				     index_pack_args.v[j]);
-		strvec_push(&cmd.args, uri);
-		cmd.git_cmd = 1;
+		strvec_defecate(&cmd.args, uri);
+		cmd.shit_cmd = 1;
 		cmd.no_stdin = 1;
 		cmd.out = -1;
 		if (start_command(&cmd))
@@ -1823,7 +1823,7 @@ static struct ref *do_fetch_pack_v2(struct fetch_pack_args *args,
 
 		packname[the_hash_algo->hexsz] = '\0';
 
-		parse_gitmodules_oids(cmd.out, &fsck_options.gitmodules_found);
+		parse_shitmodules_oids(cmd.out, &fsck_options.shitmodules_found);
 
 		close(cmd.out);
 
@@ -1862,7 +1862,7 @@ static int fetch_pack_config_cb(const char *var, const char *value,
 	if (strcmp(var, "fetch.fsck.skiplist") == 0) {
 		const char *path;
 
-		if (git_config_pathname(&path, var, value))
+		if (shit_config_pathname(&path, var, value))
 			return 1;
 		strbuf_addf(&fsck_msg_types, "%cskiplist=%s",
 			fsck_msg_types.len ? ',' : '=', path);
@@ -1881,27 +1881,27 @@ static int fetch_pack_config_cb(const char *var, const char *value,
 		return 0;
 	}
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static void fetch_pack_config(void)
 {
-	git_config_get_int("fetch.unpacklimit", &fetch_unpack_limit);
-	git_config_get_int("transfer.unpacklimit", &transfer_unpack_limit);
-	git_config_get_bool("repack.usedeltabaseoffset", &prefer_ofs_delta);
-	git_config_get_bool("fetch.fsckobjects", &fetch_fsck_objects);
-	git_config_get_bool("transfer.fsckobjects", &transfer_fsck_objects);
-	git_config_get_bool("transfer.advertisesid", &advertise_sid);
+	shit_config_get_int("fetch.unpacklimit", &fetch_unpack_limit);
+	shit_config_get_int("transfer.unpacklimit", &transfer_unpack_limit);
+	shit_config_get_bool("repack.usedeltabaseoffset", &prefer_ofs_delta);
+	shit_config_get_bool("fetch.fsckobjects", &fetch_fsck_objects);
+	shit_config_get_bool("transfer.fsckobjects", &transfer_fsck_objects);
+	shit_config_get_bool("transfer.advertisesid", &advertise_sid);
 	if (!uri_protocols.nr) {
 		char *str;
 
-		if (!git_config_get_string("fetch.uriprotocols", &str) && str) {
+		if (!shit_config_get_string("fetch.uriprotocols", &str) && str) {
 			string_list_split(&uri_protocols, str, ',', -1);
 			free(str);
 		}
 	}
 
-	git_config(fetch_pack_config_cb, NULL);
+	shit_config(fetch_pack_config_cb, NULL);
 }
 
 static void fetch_pack_setup(void)
@@ -1948,7 +1948,7 @@ static void update_shallow(struct fetch_pack_args *args,
 
 	if (args->deepen && alternate_shallow_file) {
 		if (*alternate_shallow_file == '\0') { /* --unshallow */
-			unlink_or_warn(git_path_shallow(the_repository));
+			unlink_or_warn(shit_path_shallow(the_repository));
 			rollback_shallow_file(the_repository, &shallow_lock);
 		} else
 			commit_shallow_file(the_repository, &shallow_lock);
@@ -1964,7 +1964,7 @@ static void update_shallow(struct fetch_pack_args *args,
 		 * remote is shallow, but this is a clone, there are
 		 * no objects in repo to worry about. Accept any
 		 * shallow points that exist in the pack (iow in repo
-		 * after get_pack() and reprepare_packed_git())
+		 * after get_pack() and reprepare_packed_shit())
 		 */
 		struct oid_array extra = OID_ARRAY_INIT;
 		struct object_id *oid = si->shallow->oid;
@@ -1994,7 +1994,7 @@ static void update_shallow(struct fetch_pack_args *args,
 
 	if (args->update_shallow) {
 		/*
-		 * remote is also shallow, .git/shallow may be updated
+		 * remote is also shallow, .shit/shallow may be updated
 		 * so all refs can be accepted. Make sure we only add
 		 * shallow roots that are actually reachable from new
 		 * refs.
@@ -2022,7 +2022,7 @@ static void update_shallow(struct fetch_pack_args *args,
 
 	/*
 	 * remote is also shallow, check what ref is safe to update
-	 * without updating .git/shallow
+	 * without updating .shit/shallow
 	 */
 	CALLOC_ARRAY(status, nr_sought);
 	assign_shallow_commits_to_refs(si, NULL, status);
@@ -2078,7 +2078,7 @@ struct ref *fetch_pack(struct fetch_pack_args *args,
 		ref_cpy = do_fetch_pack(args, fd, ref, sought, nr_sought,
 					&si, pack_lockfiles);
 	}
-	reprepare_packed_git(the_repository);
+	reprepare_packed_shit(the_repository);
 
 	if (!args->cloning && args->deepen) {
 		struct check_connected_options opt = CHECK_CONNECTED_INIT;

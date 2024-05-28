@@ -1,29 +1,29 @@
-git-pack-redundant(1)
+shit-pack-redundant(1)
 =====================
 
 NAME
 ----
-git-pack-redundant - Find redundant pack files
+shit-pack-redundant - Find redundant pack files
 
 
 SYNOPSIS
 --------
 [verse]
-'git pack-redundant' [--verbose] [--alt-odb] (--all | <pack-filename>...)
+'shit pack-redundant' [--verbose] [--alt-odb] (--all | <pack-filename>...)
 
 WARNING
 -------
-`git pack-redundant` has been deprecated and is scheduled for removal in
-a future version of Git. Because it can only remove entire duplicate
+`shit pack-redundant` has been deprecated and is scheduled for removal in
+a future version of shit. Because it can only remove entire duplicate
 packs and not individual duplicate objects, it is generally not a useful
-tool for reducing repository size. You are better off using `git gc` to
+tool for reducing repository size. You are better off using `shit gc` to
 do so, which will put objects into a new pack, removing duplicates.
 
 Running `pack-redundant` without the `--i-still-use-this` flag will fail
 in this release. If you believe you have a use case for which
 `pack-redundant` is better suited and oppose this removal, please
-contact the Git mailing list at git@vger.kernel.org. More information
-about the list is available at https://git-scm.com/community.
+contact the shit mailing list at shit@vger.kernel.org. More information
+about the list is available at https://shit-scm.com/community.
 
 DESCRIPTION
 -----------
@@ -31,13 +31,13 @@ This program computes which packs in your repository
 are redundant. The output is suitable for piping to
 `xargs rm` if you are in the root of the repository.
 
-'git pack-redundant' accepts a list of objects on standard input. Any objects
+'shit pack-redundant' accepts a list of objects on standard input. Any objects
 given will be ignored when checking which packs are required. This makes the
 following command useful when wanting to remove packs which contain unreachable
 objects.
 
-git fsck --full --unreachable | cut -d ' ' -f3 | \
-git pack-redundant --all | xargs rm
+shit fsck --full --unreachable | cut -d ' ' -f3 | \
+shit pack-redundant --all | xargs rm
 
 OPTIONS
 -------
@@ -55,10 +55,10 @@ OPTIONS
 
 SEE ALSO
 --------
-linkgit:git-pack-objects[1]
-linkgit:git-repack[1]
-linkgit:git-prune-packed[1]
+linkshit:shit-pack-objects[1]
+linkshit:shit-repack[1]
+linkshit:shit-prune-packed[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

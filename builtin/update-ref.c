@@ -8,10 +8,10 @@
 #include "quote.h"
 #include "repository.h"
 
-static const char * const git_update_ref_usage[] = {
-	N_("git update-ref [<options>] -d <refname> [<old-oid>]"),
-	N_("git update-ref [<options>]    <refname> <new-oid> [<old-oid>]"),
-	N_("git update-ref [<options>] --stdin [-z]"),
+static const char * const shit_update_ref_usage[] = {
+	N_("shit update-ref [<options>] -d <refname> [<old-oid>]"),
+	N_("shit update-ref [<options>]    <refname> <new-oid> [<old-oid>]"),
+	N_("shit update-ref [<options>] --stdin [-z]"),
 	NULL
 };
 
@@ -517,8 +517,8 @@ int cmd_update_ref(int argc, const char **argv, const char *prefix)
 		OPT_END(),
 	};
 
-	git_config(git_default_config, NULL);
-	argc = parse_options(argc, argv, prefix, options, git_update_ref_usage,
+	shit_config(shit_default_config, NULL);
+	argc = parse_options(argc, argv, prefix, options, shit_update_ref_usage,
 			     0);
 	if (msg && !*msg)
 		die("Refusing to perform update with empty message.");
@@ -532,7 +532,7 @@ int cmd_update_ref(int argc, const char **argv, const char *prefix)
 
 	if (read_stdin) {
 		if (delete || argc > 0)
-			usage_with_options(git_update_ref_usage, options);
+			usage_with_options(shit_update_ref_usage, options);
 		if (end_null)
 			line_termination = '\0';
 		update_refs_stdin();
@@ -540,17 +540,17 @@ int cmd_update_ref(int argc, const char **argv, const char *prefix)
 	}
 
 	if (end_null)
-		usage_with_options(git_update_ref_usage, options);
+		usage_with_options(shit_update_ref_usage, options);
 
 	if (delete) {
 		if (argc < 1 || argc > 2)
-			usage_with_options(git_update_ref_usage, options);
+			usage_with_options(shit_update_ref_usage, options);
 		refname = argv[0];
 		oldval = argv[1];
 	} else {
 		const char *value;
 		if (argc < 2 || argc > 3)
-			usage_with_options(git_update_ref_usage, options);
+			usage_with_options(shit_update_ref_usage, options);
 		refname = argv[0];
 		value = argv[1];
 		oldval = argv[2];

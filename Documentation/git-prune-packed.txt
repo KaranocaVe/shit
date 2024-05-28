@@ -1,20 +1,20 @@
-git-prune-packed(1)
+shit-prune-packed(1)
 ===================
 
 NAME
 ----
-git-prune-packed - Remove extra objects that are already in pack files
+shit-prune-packed - Remove extra objects that are already in pack files
 
 
 SYNOPSIS
 --------
 [verse]
-'git prune-packed' [-n | --dry-run] [-q | --quiet]
+'shit prune-packed' [-n | --dry-run] [-q | --quiet]
 
 
 DESCRIPTION
 -----------
-This program searches the `$GIT_OBJECT_DIRECTORY` for all objects that currently
+This program searches the `$shit_OBJECT_DIRECTORY` for all objects that currently
 exist in a pack file as well as in the independent object directories.
 
 All such extra objects are removed.
@@ -39,9 +39,9 @@ OPTIONS
 
 SEE ALSO
 --------
-linkgit:git-pack-objects[1]
-linkgit:git-repack[1]
+linkshit:shit-pack-objects[1]
+linkshit:shit-repack[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

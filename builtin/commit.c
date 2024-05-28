@@ -1,8 +1,8 @@
 /*
- * Builtin "git commit"
+ * Builtin "shit commit"
  *
  * Copyright (c) 2007 Kristian Høgsberg <krh@redhat.com>
- * Based on git-commit.sh by Junio C Hamano and Linus Torvalds
+ * Based on shit-commit.sh by Junio C Hamano and Linus Torvalds
  */
 
 #include "builtin.h"
@@ -40,7 +40,7 @@
 #include "trailer.h"
 
 static const char * const builtin_commit_usage[] = {
-	N_("git commit [-a | --interactive | --patch] [-s] [-v] [-u<mode>] [--amend]\n"
+	N_("shit commit [-a | --interactive | --patch] [-s] [-v] [-u<mode>] [--amend]\n"
 	   "           [--dry-run] [(-c | -C | --squash) <commit> | --fixup [(amend|reword):]<commit>)]\n"
 	   "           [-F <file> | -m <msg>] [--reset-author] [--allow-empty]\n"
 	   "           [--allow-empty-message] [--no-verify] [-e] [--author=<author>]\n"
@@ -52,37 +52,37 @@ static const char * const builtin_commit_usage[] = {
 };
 
 static const char * const builtin_status_usage[] = {
-	N_("git status [<options>] [--] [<pathspec>...]"),
+	N_("shit status [<options>] [--] [<pathspec>...]"),
 	NULL
 };
 
 static const char empty_amend_advice[] =
 N_("You asked to amend the most recent commit, but doing so would make\n"
 "it empty. You can repeat your command with --allow-empty, or you can\n"
-"remove the commit entirely with \"git reset HEAD^\".\n");
+"remove the commit entirely with \"shit reset HEAD^\".\n");
 
 static const char empty_cherry_pick_advice[] =
 N_("The previous cherry-pick is now empty, possibly due to conflict resolution.\n"
 "If you wish to commit it anyway, use:\n"
 "\n"
-"    git commit --allow-empty\n"
+"    shit commit --allow-empty\n"
 "\n");
 
 static const char empty_rebase_pick_advice[] =
-N_("Otherwise, please use 'git rebase --skip'\n");
+N_("Otherwise, please use 'shit rebase --skip'\n");
 
 static const char empty_cherry_pick_advice_single[] =
-N_("Otherwise, please use 'git cherry-pick --skip'\n");
+N_("Otherwise, please use 'shit cherry-pick --skip'\n");
 
 static const char empty_cherry_pick_advice_multi[] =
 N_("and then use:\n"
 "\n"
-"    git cherry-pick --continue\n"
+"    shit cherry-pick --continue\n"
 "\n"
 "to resume cherry-picking the remaining commits.\n"
 "If you wish to skip this commit, use:\n"
 "\n"
-"    git cherry-pick --skip\n"
+"    shit cherry-pick --skip\n"
 "\n");
 
 static const char *color_status_slots[] = {
@@ -190,7 +190,7 @@ static int opt_parse_rename_score(const struct option *opt, const char *arg, int
 
 static void determine_whence(struct wt_status *s)
 {
-	if (file_exists(git_path_merge_head(the_repository)))
+	if (file_exists(shit_path_merge_head(the_repository)))
 		whence = FROM_MERGE;
 	else if (!sequencer_determine_whence(the_repository, &whence))
 		whence = FROM_COMMIT;
@@ -202,9 +202,9 @@ static void status_init_config(struct wt_status *s, config_fn_t fn)
 {
 	wt_status_prepare(the_repository, s);
 	init_diff_ui_defaults();
-	git_config(fn, s);
+	shit_config(fn, s);
 	determine_whence(s);
-	s->hints = advice_enabled(ADVICE_STATUS_HINTS); /* must come after git_config() */
+	s->hints = advice_enabled(ADVICE_STATUS_HINTS); /* must come after shit_config() */
 }
 
 static void rollback_index_files(void)
@@ -406,7 +406,7 @@ static const char *prepare_index(const char **argv, const char *prefix,
 
 		discard_index(the_repository->index);
 		read_index_from(the_repository->index, get_lock_file_path(&index_lock),
-				get_git_dir());
+				get_shit_dir());
 		if (cache_tree_update(the_repository->index, WRITE_TREE_SILENT) == 0) {
 			if (reopen_lock_file(&index_lock) < 0)
 				die(_("unable to write index file"));
@@ -520,7 +520,7 @@ static const char *prepare_index(const char **argv, const char *prefix,
 		die(_("unable to write new index file"));
 
 	hold_lock_file_for_update(&false_lock,
-				  git_path("next-index-%"PRIuMAX,
+				  shit_path("next-index-%"PRIuMAX,
 					   (uintmax_t) getpid()),
 				  LOCK_DIE_ON_ERROR);
 
@@ -533,7 +533,7 @@ static const char *prepare_index(const char **argv, const char *prefix,
 
 	discard_index(the_repository->index);
 	ret = get_lock_file_path(&false_lock);
-	read_index_from(the_repository->index, ret, get_git_dir());
+	read_index_from(the_repository->index, ret, get_shit_dir());
 out:
 	string_list_clear(&partial, 0);
 	clear_pathspec(&pathspec);
@@ -616,9 +616,9 @@ static void determine_author_info(struct strbuf *author_ident)
 	char *name, *email, *date;
 	struct ident_split author;
 
-	name = xstrdup_or_null(getenv("GIT_AUTHOR_NAME"));
-	email = xstrdup_or_null(getenv("GIT_AUTHOR_EMAIL"));
-	date = xstrdup_or_null(getenv("GIT_AUTHOR_DATE"));
+	name = xstrdup_or_null(getenv("shit_AUTHOR_NAME"));
+	email = xstrdup_or_null(getenv("shit_AUTHOR_EMAIL"));
+	date = xstrdup_or_null(getenv("shit_AUTHOR_DATE"));
 
 	if (author_message) {
 		struct ident_split ident;
@@ -663,9 +663,9 @@ static void determine_author_info(struct strbuf *author_ident)
 	strbuf_addstr(author_ident, fmt_ident(name, email, WANT_AUTHOR_IDENT, date,
 				IDENT_STRICT));
 	assert_split_ident(&author, author_ident);
-	export_one("GIT_AUTHOR_NAME", author.name_begin, author.name_end, 0);
-	export_one("GIT_AUTHOR_EMAIL", author.mail_begin, author.mail_end, 0);
-	export_one("GIT_AUTHOR_DATE", author.date_begin, author.tz_end, '@');
+	export_one("shit_AUTHOR_NAME", author.name_begin, author.name_end, 0);
+	export_one("shit_AUTHOR_EMAIL", author.mail_begin, author.mail_end, 0);
+	export_one("shit_AUTHOR_DATE", author.date_begin, author.tz_end, '@');
 	free(name);
 	free(email);
 	free(date);
@@ -806,7 +806,7 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 		 *
 		 * The other commit message options `-c`/`-C`/`-F` are
 		 * incompatible with all the forms of `--fixup` and
-		 * have already errored out while parsing the `git commit`
+		 * have already errored out while parsing the `shit commit`
 		 * options.
 		 */
 		if (have_option_m && !strcmp(fixup_prefix, "fixup"))
@@ -817,22 +817,22 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 				die(_("options '%s' and '%s:%s' cannot be used together"), "-m", "--fixup", fixup_message);
 			prepare_amend_commit(commit, &sb, &ctx);
 		}
-	} else if (!stat(git_path_merge_msg(the_repository), &statbuf)) {
+	} else if (!stat(shit_path_merge_msg(the_repository), &statbuf)) {
 		size_t merge_msg_start;
 
 		/*
 		 * prepend SQUASH_MSG here if it exists and a
 		 * "merge --squash" was originally performed
 		 */
-		if (!stat(git_path_squash_msg(the_repository), &statbuf)) {
-			if (strbuf_read_file(&sb, git_path_squash_msg(the_repository), 0) < 0)
+		if (!stat(shit_path_squash_msg(the_repository), &statbuf)) {
+			if (strbuf_read_file(&sb, shit_path_squash_msg(the_repository), 0) < 0)
 				die_errno(_("could not read SQUASH_MSG"));
 			hook_arg1 = "squash";
 		} else
 			hook_arg1 = "merge";
 
 		merge_msg_start = sb.len;
-		if (strbuf_read_file(&sb, git_path_merge_msg(the_repository), 0) < 0)
+		if (strbuf_read_file(&sb, shit_path_merge_msg(the_repository), 0) < 0)
 			die_errno(_("could not read MERGE_MSG"));
 
 		if (cleanup_mode == COMMIT_MSG_CLEANUP_SCISSORS &&
@@ -840,8 +840,8 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 					 sb.len - merge_msg_start) <
 				sb.len - merge_msg_start)
 			s->added_cut_line = 1;
-	} else if (!stat(git_path_squash_msg(the_repository), &statbuf)) {
-		if (strbuf_read_file(&sb, git_path_squash_msg(the_repository), 0) < 0)
+	} else if (!stat(shit_path_squash_msg(the_repository), &statbuf)) {
+		if (strbuf_read_file(&sb, shit_path_squash_msg(the_repository), 0) < 0)
 			die_errno(_("could not read SQUASH_MSG"));
 		hook_arg1 = "squash";
 	} else if (template_file) {
@@ -872,9 +872,9 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 		hook_arg2 = "";
 	}
 
-	s->fp = fopen_for_writing(git_path_commit_editmsg());
+	s->fp = fopen_for_writing(shit_path_commit_editmsg());
 	if (!s->fp)
-		die_errno(_("could not open '%s'"), git_path_commit_editmsg());
+		die_errno(_("could not open '%s'"), shit_path_commit_editmsg());
 
 	/* Ignore status.displayCommentPrefix: we do need comments in COMMIT_EDITMSG. */
 	old_display_comment_prefix = s->display_comment_prefix;
@@ -900,7 +900,7 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 	strbuf_release(&sb);
 
 	/* This checks if committer ident is explicitly given */
-	strbuf_addstr(&committer_ident, git_committer_info(IDENT_STRICT));
+	strbuf_addstr(&committer_ident, shit_committer_info(IDENT_STRICT));
 	if (use_editor && include_status) {
 		int ident_shown = 0;
 		int saved_color_setting;
@@ -925,28 +925,28 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 			if (cleanup_mode == COMMIT_MSG_CLEANUP_SCISSORS)
 				wt_status_add_cut_line(s);
 			status_printf_ln(
-				s, GIT_COLOR_NORMAL,
+				s, shit_COLOR_NORMAL,
 				whence == FROM_MERGE ?
 					      _("\n"
 					  "It looks like you may be committing a merge.\n"
 					  "If this is not correct, please run\n"
-					  "	git update-ref -d MERGE_HEAD\n"
+					  "	shit update-ref -d MERGE_HEAD\n"
 					  "and try again.\n") :
 					      _("\n"
 					  "It looks like you may be committing a cherry-pick.\n"
 					  "If this is not correct, please run\n"
-					  "	git update-ref -d CHERRY_PICK_HEAD\n"
+					  "	shit update-ref -d CHERRY_PICK_HEAD\n"
 					  "and try again.\n"));
 		}
 
 		fprintf(s->fp, "\n");
 		if (cleanup_mode == COMMIT_MSG_CLEANUP_ALL)
-			status_printf(s, GIT_COLOR_NORMAL, hint_cleanup_all, comment_line_str);
+			status_printf(s, shit_COLOR_NORMAL, hint_cleanup_all, comment_line_str);
 		else if (cleanup_mode == COMMIT_MSG_CLEANUP_SCISSORS) {
 			if (whence == FROM_COMMIT)
 				wt_status_add_cut_line(s);
 		} else /* COMMIT_MSG_CLEANUP_SPACE, that is. */
-			status_printf(s, GIT_COLOR_NORMAL, hint_cleanup_space, comment_line_str);
+			status_printf(s, shit_COLOR_NORMAL, hint_cleanup_space, comment_line_str);
 
 		/*
 		 * These should never fail because they come from our own
@@ -958,7 +958,7 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 		assert_split_ident(&ci, &committer_ident);
 
 		if (ident_cmp(&ai, &ci))
-			status_printf_ln(s, GIT_COLOR_NORMAL,
+			status_printf_ln(s, shit_COLOR_NORMAL,
 				_("%s"
 				"Author:    %.*s <%.*s>"),
 				ident_shown++ ? "" : "\n",
@@ -966,21 +966,21 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 				(int)(ai.mail_end - ai.mail_begin), ai.mail_begin);
 
 		if (author_date_is_interesting())
-			status_printf_ln(s, GIT_COLOR_NORMAL,
+			status_printf_ln(s, shit_COLOR_NORMAL,
 				_("%s"
 				"Date:      %s"),
 				ident_shown++ ? "" : "\n",
 				show_ident_date(&ai, DATE_MODE(NORMAL)));
 
 		if (!committer_ident_sufficiently_given())
-			status_printf_ln(s, GIT_COLOR_NORMAL,
+			status_printf_ln(s, shit_COLOR_NORMAL,
 				_("%s"
 				"Committer: %.*s <%.*s>"),
 				ident_shown++ ? "" : "\n",
 				(int)(ci.name_end - ci.name_begin), ci.name_begin,
 				(int)(ci.mail_end - ci.mail_begin), ci.mail_begin);
 
-		status_printf_ln(s, GIT_COLOR_NORMAL, "%s", ""); /* Add new line for clarity */
+		status_printf_ln(s, shit_COLOR_NORMAL, "%s", ""); /* Add new line for clarity */
 
 		saved_color_setting = s->use_color;
 		s->use_color = 0;
@@ -1030,7 +1030,7 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 	fclose(s->fp);
 
 	if (trailer_args.nr) {
-		if (amend_file_with_trailers(git_path_commit_editmsg(), &trailer_args))
+		if (amend_file_with_trailers(shit_path_commit_editmsg(), &trailer_args))
 			die(_("unable to pass trailers to --trailers"));
 		strvec_clear(&trailer_args);
 	}
@@ -1068,7 +1068,7 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 		 */
 		discard_index(the_repository->index);
 	}
-	read_index_from(the_repository->index, index_file, get_git_dir());
+	read_index_from(the_repository->index, index_file, get_shit_dir());
 
 	if (cache_tree_update(the_repository->index, 0)) {
 		error(_("Error building trees"));
@@ -1076,14 +1076,14 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 	}
 
 	if (run_commit_hook(use_editor, index_file, NULL, "prepare-commit-msg",
-			    git_path_commit_editmsg(), hook_arg1, hook_arg2, NULL))
+			    shit_path_commit_editmsg(), hook_arg1, hook_arg2, NULL))
 		return 0;
 
 	if (use_editor) {
 		struct strvec env = STRVEC_INIT;
 
-		strvec_pushf(&env, "GIT_INDEX_FILE=%s", index_file);
-		if (launch_editor(git_path_commit_editmsg(), NULL, env.v)) {
+		strvec_defecatef(&env, "shit_INDEX_FILE=%s", index_file);
+		if (launch_editor(shit_path_commit_editmsg(), NULL, env.v)) {
 			fprintf(stderr,
 			_("Please supply the message using either -m or -F option.\n"));
 			exit(1);
@@ -1093,7 +1093,7 @@ static int prepare_to_commit(const char *index_file, const char *prefix,
 
 	if (!no_verify &&
 	    run_commit_hook(use_editor, index_file, NULL, "commit-msg",
-			    git_path_commit_editmsg(), NULL)) {
+			    shit_path_commit_editmsg(), NULL)) {
 		return 0;
 	}
 
@@ -1151,10 +1151,10 @@ static void handle_ignored_arg(struct wt_status *s)
 static enum untracked_status_type parse_untracked_setting_name(const char *u)
 {
 	/*
-	 * Please update $__git_untracked_file_modes in
-	 * git-completion.bash when you add new options
+	 * Please update $__shit_untracked_file_modes in
+	 * shit-completion.bash when you add new options
 	 */
-	switch (git_parse_maybe_bool(u)) {
+	switch (shit_parse_maybe_bool(u)) {
 	case 0:
 		u = "no";
 		break;
@@ -1412,47 +1412,47 @@ static int parse_status_slot(const char *slot)
 	return LOOKUP_CONFIG(color_status_slots, slot);
 }
 
-static int git_status_config(const char *k, const char *v,
+static int shit_status_config(const char *k, const char *v,
 			     const struct config_context *ctx, void *cb)
 {
 	struct wt_status *s = cb;
 	const char *slot_name;
 
 	if (starts_with(k, "column."))
-		return git_column_config(k, v, "status", &s->colopts);
+		return shit_column_config(k, v, "status", &s->colopts);
 	if (!strcmp(k, "status.submodulesummary")) {
 		int is_bool;
-		s->submodule_summary = git_config_bool_or_int(k, v, ctx->kvi,
+		s->submodule_summary = shit_config_bool_or_int(k, v, ctx->kvi,
 							      &is_bool);
 		if (is_bool && s->submodule_summary)
 			s->submodule_summary = -1;
 		return 0;
 	}
 	if (!strcmp(k, "status.short")) {
-		if (git_config_bool(k, v))
+		if (shit_config_bool(k, v))
 			status_deferred_config.status_format = STATUS_FORMAT_SHORT;
 		else
 			status_deferred_config.status_format = STATUS_FORMAT_NONE;
 		return 0;
 	}
 	if (!strcmp(k, "status.branch")) {
-		status_deferred_config.show_branch = git_config_bool(k, v);
+		status_deferred_config.show_branch = shit_config_bool(k, v);
 		return 0;
 	}
 	if (!strcmp(k, "status.aheadbehind")) {
-		status_deferred_config.ahead_behind = git_config_bool(k, v);
+		status_deferred_config.ahead_behind = shit_config_bool(k, v);
 		return 0;
 	}
 	if (!strcmp(k, "status.showstash")) {
-		s->show_stash = git_config_bool(k, v);
+		s->show_stash = shit_config_bool(k, v);
 		return 0;
 	}
 	if (!strcmp(k, "status.color") || !strcmp(k, "color.status")) {
-		s->use_color = git_config_colorbool(k, v);
+		s->use_color = shit_config_colorbool(k, v);
 		return 0;
 	}
 	if (!strcmp(k, "status.displaycommentprefix")) {
-		s->display_comment_prefix = git_config_bool(k, v);
+		s->display_comment_prefix = shit_config_bool(k, v);
 		return 0;
 	}
 	if (skip_prefix(k, "status.color.", &slot_name) ||
@@ -1465,7 +1465,7 @@ static int git_status_config(const char *k, const char *v,
 		return color_parse(v, s->color_palette[slot]);
 	}
 	if (!strcmp(k, "status.relativepaths")) {
-		s->relative_paths = git_config_bool(k, v);
+		s->relative_paths = shit_config_bool(k, v);
 		return 0;
 	}
 	if (!strcmp(k, "status.showuntrackedfiles")) {
@@ -1479,23 +1479,23 @@ static int git_status_config(const char *k, const char *v,
 	}
 	if (!strcmp(k, "diff.renamelimit")) {
 		if (s->rename_limit == -1)
-			s->rename_limit = git_config_int(k, v, ctx->kvi);
+			s->rename_limit = shit_config_int(k, v, ctx->kvi);
 		return 0;
 	}
 	if (!strcmp(k, "status.renamelimit")) {
-		s->rename_limit = git_config_int(k, v, ctx->kvi);
+		s->rename_limit = shit_config_int(k, v, ctx->kvi);
 		return 0;
 	}
 	if (!strcmp(k, "diff.renames")) {
 		if (s->detect_rename == -1)
-			s->detect_rename = git_config_rename(k, v);
+			s->detect_rename = shit_config_rename(k, v);
 		return 0;
 	}
 	if (!strcmp(k, "status.renames")) {
-		s->detect_rename = git_config_rename(k, v);
+		s->detect_rename = shit_config_rename(k, v);
 		return 0;
 	}
-	return git_diff_ui_config(k, v, ctx, NULL);
+	return shit_diff_ui_config(k, v, ctx, NULL);
 }
 
 int cmd_status(int argc, const char **argv, const char *prefix)
@@ -1549,7 +1549,7 @@ int cmd_status(int argc, const char **argv, const char *prefix)
 	prepare_repo_settings(the_repository);
 	the_repository->settings.command_requires_full_index = 0;
 
-	status_init_config(&s, git_status_config);
+	status_init_config(&s, shit_status_config);
 	argc = parse_options(argc, argv, prefix,
 			     builtin_status_options,
 			     builtin_status_usage, 0);
@@ -1610,31 +1610,31 @@ int cmd_status(int argc, const char **argv, const char *prefix)
 	return 0;
 }
 
-static int git_commit_config(const char *k, const char *v,
+static int shit_commit_config(const char *k, const char *v,
 			     const struct config_context *ctx, void *cb)
 {
 	struct wt_status *s = cb;
 
 	if (!strcmp(k, "commit.template"))
-		return git_config_pathname(&template_file, k, v);
+		return shit_config_pathname(&template_file, k, v);
 	if (!strcmp(k, "commit.status")) {
-		include_status = git_config_bool(k, v);
+		include_status = shit_config_bool(k, v);
 		return 0;
 	}
 	if (!strcmp(k, "commit.cleanup"))
-		return git_config_string(&cleanup_arg, k, v);
+		return shit_config_string(&cleanup_arg, k, v);
 	if (!strcmp(k, "commit.gpgsign")) {
-		sign_commit = git_config_bool(k, v) ? "" : NULL;
+		sign_commit = shit_config_bool(k, v) ? "" : NULL;
 		return 0;
 	}
 	if (!strcmp(k, "commit.verbose")) {
 		int is_bool;
-		config_commit_verbose = git_config_bool_or_int(k, v, ctx->kvi,
+		config_commit_verbose = shit_config_bool_or_int(k, v, ctx->kvi,
 							       &is_bool);
 		return 0;
 	}
 
-	return git_status_config(k, v, ctx, s);
+	return shit_status_config(k, v, ctx, s);
 }
 
 int cmd_commit(int argc, const char **argv, const char *prefix)
@@ -1720,7 +1720,7 @@ int cmd_commit(int argc, const char **argv, const char *prefix)
 	prepare_repo_settings(the_repository);
 	the_repository->settings.command_requires_full_index = 0;
 
-	status_init_config(&s, git_commit_config);
+	status_init_config(&s, shit_commit_config);
 	s.commit_template = 1;
 	status_format = STATUS_FORMAT_NONE; /* Ignore status.short */
 	s.colopts = 0;
@@ -1753,7 +1753,7 @@ int cmd_commit(int argc, const char **argv, const char *prefix)
 	}
 
 	/* Determine parents */
-	reflog_msg = getenv("GIT_REFLOG_ACTION");
+	reflog_msg = getenv("shit_REFLOG_ACTION");
 	if (!current_head) {
 		if (!reflog_msg)
 			reflog_msg = "commit (initial)";
@@ -1770,7 +1770,7 @@ int cmd_commit(int argc, const char **argv, const char *prefix)
 		if (!reflog_msg)
 			reflog_msg = "commit (merge)";
 		pptr = commit_list_append(current_head, pptr);
-		fp = xfopen(git_path_merge_head(the_repository), "r");
+		fp = xfopen(shit_path_merge_head(the_repository), "r");
 		while (strbuf_getline_lf(&m, fp) != EOF) {
 			struct commit *parent;
 
@@ -1781,8 +1781,8 @@ int cmd_commit(int argc, const char **argv, const char *prefix)
 		}
 		fclose(fp);
 		strbuf_release(&m);
-		if (!stat(git_path_merge_mode(the_repository), &statbuf)) {
-			if (strbuf_read_file(&sb, git_path_merge_mode(the_repository), 0) < 0)
+		if (!stat(shit_path_merge_mode(the_repository), &statbuf)) {
+			if (strbuf_read_file(&sb, shit_path_merge_mode(the_repository), 0) < 0)
 				die_errno(_("could not read MERGE_MODE"));
 			if (!strcmp(sb.buf, "no-ff"))
 				allow_fast_forward = 0;
@@ -1801,7 +1801,7 @@ int cmd_commit(int argc, const char **argv, const char *prefix)
 
 	/* Finally, get the commit message */
 	strbuf_reset(&sb);
-	if (strbuf_read_file(&sb, git_path_commit_editmsg(), 0) < 0) {
+	if (strbuf_read_file(&sb, shit_path_commit_editmsg(), 0) < 0) {
 		int saved_errno = errno;
 		rollback_index_files();
 		die(_("could not read commit message: %s"), strerror(saved_errno));
@@ -1856,17 +1856,17 @@ int cmd_commit(int argc, const char **argv, const char *prefix)
 	}
 
 	sequencer_post_commit_cleanup(the_repository, 0);
-	unlink(git_path_merge_head(the_repository));
-	unlink(git_path_merge_msg(the_repository));
-	unlink(git_path_merge_mode(the_repository));
-	unlink(git_path_squash_msg(the_repository));
+	unlink(shit_path_merge_head(the_repository));
+	unlink(shit_path_merge_msg(the_repository));
+	unlink(shit_path_merge_mode(the_repository));
+	unlink(shit_path_squash_msg(the_repository));
 
 	if (commit_index_files())
 		die(_("repository has been updated, but unable to write\n"
 		      "new index file. Check that disk is not full and quota is\n"
-		      "not exceeded, and then \"git restore --staged :/\" to recover."));
+		      "not exceeded, and then \"shit restore --staged :/\" to recover."));
 
-	git_test_write_commit_graph_or_die();
+	shit_test_write_commit_graph_or_die();
 
 	repo_rerere(the_repository, 0);
 	run_auto_maintenance(quiet);

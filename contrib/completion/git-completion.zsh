@@ -1,30 +1,30 @@
-#compdef git gitk
+#compdef shit shitk
 
-# zsh completion wrapper for git
+# zsh completion wrapper for shit
 #
 # Copyright (c) 2012-2020 Felipe Contreras <felipe.contreras@gmail.com>
 #
 # The recommended way to install this script is to make a copy of it as a
-# file named '_git' inside any directory in your fpath.
+# file named '_shit' inside any directory in your fpath.
 #
-# For example, create a directory '~/.zsh/', copy this file to '~/.zsh/_git',
+# For example, create a directory '~/.zsh/', copy this file to '~/.zsh/_shit',
 # and then add the following to your ~/.zshrc file:
 #
 #  fpath=(~/.zsh $fpath)
 #
-# You need git's bash completion script installed. By default bash-completion's
+# You need shit's bash completion script installed. By default bash-completion's
 # location will be used (e.g. pkg-config --variable=completionsdir bash-completion).
 #
 # If your bash completion script is somewhere else, you can specify the
 # location in your ~/.zshrc:
 #
-#  zstyle ':completion:*:*:git:*' script ~/.git-completion.bash
+#  zstyle ':completion:*:*:shit:*' script ~/.shit-completion.bash
 #
 
-zstyle -T ':completion:*:*:git:*' tag-order && \
-	zstyle ':completion:*:*:git:*' tag-order 'common-commands'
+zstyle -T ':completion:*:*:shit:*' tag-order && \
+	zstyle ':completion:*:*:shit:*' tag-order 'common-commands'
 
-zstyle -s ":completion:*:*:git:*" script script
+zstyle -s ":completion:*:*:shit:*" script script
 if [ -z "$script" ]; then
 	local -a locations
 	local e bash_completion
@@ -33,10 +33,10 @@ if [ -z "$script" ]; then
 		bash_completion='/usr/share/bash-completion/completions/'
 
 	locations=(
-		"$(dirname ${funcsourcetrace[1]%:*})"/git-completion.bash
-		"$HOME/.local/share/bash-completion/completions/git"
-		"$bash_completion/git"
-		'/etc/bash_completion.d/git' # old debian
+		"$(dirname ${funcsourcetrace[1]%:*})"/shit-completion.bash
+		"$HOME/.local/share/bash-completion/completions/shit"
+		"$bash_completion/shit"
+		'/etc/bash_completion.d/shit' # old debian
 		)
 	for e in $locations; do
 		test -f $e && script="$e" && break
@@ -45,10 +45,10 @@ fi
 
 local old_complete="$functions[complete]"
 functions[complete]=:
-GIT_SOURCING_ZSH_COMPLETION=y . "$script"
+shit_SOURCING_ZSH_COMPLETION=y . "$script"
 functions[complete]="$old_complete"
 
-__gitcomp ()
+__shitcomp ()
 {
 	emulate -L zsh
 
@@ -96,7 +96,7 @@ __gitcomp ()
 	esac
 }
 
-__gitcomp_direct ()
+__shitcomp_direct ()
 {
 	emulate -L zsh
 
@@ -104,7 +104,7 @@ __gitcomp_direct ()
 	compadd -Q -S '' -- ${(f)1} && _ret=0
 }
 
-__gitcomp_nl ()
+__shitcomp_nl ()
 {
 	emulate -L zsh
 
@@ -112,7 +112,7 @@ __gitcomp_nl ()
 	compadd -Q -S "${4- }" -p "${2-}" -- ${(f)1} && _ret=0
 }
 
-__gitcomp_file ()
+__shitcomp_file ()
 {
 	emulate -L zsh
 
@@ -120,32 +120,32 @@ __gitcomp_file ()
 	compadd -f -p "${2-}" -- ${(f)1} && _ret=0
 }
 
-__gitcomp_direct_append ()
+__shitcomp_direct_append ()
 {
-	__gitcomp_direct "$@"
+	__shitcomp_direct "$@"
 }
 
-__gitcomp_nl_append ()
+__shitcomp_nl_append ()
 {
-	__gitcomp_nl "$@"
+	__shitcomp_nl "$@"
 }
 
-__gitcomp_file_direct ()
+__shitcomp_file_direct ()
 {
-	__gitcomp_file "$1" ""
+	__shitcomp_file "$1" ""
 }
 
-_git_zsh ()
+_shit_zsh ()
 {
-	__gitcomp "v1.1"
+	__shitcomp "v1.1"
 }
 
-__git_complete_command ()
+__shit_complete_command ()
 {
 	emulate -L zsh
 
 	local command="$1"
-	local completion_func="_git_${command//-/_}"
+	local completion_func="_shit_${command//-/_}"
 	if (( $+functions[$completion_func] )); then
 		emulate ksh -c $completion_func
 		return 0
@@ -154,22 +154,22 @@ __git_complete_command ()
 	fi
 }
 
-__git_zsh_bash_func ()
+__shit_zsh_bash_func ()
 {
 	emulate -L ksh
 
 	local command=$1
 
-	__git_complete_command "$command" && return
+	__shit_complete_command "$command" && return
 
-	local expansion=$(__git_aliased_command "$command")
+	local expansion=$(__shit_aliased_command "$command")
 	if [ -n "$expansion" ]; then
 		words[1]=$expansion
-		__git_complete_command "$expansion"
+		__shit_complete_command "$expansion"
 	fi
 }
 
-__git_zsh_cmd_common ()
+__shit_zsh_cmd_common ()
 {
 	local -a list
 	list=(
@@ -182,12 +182,12 @@ __git_zsh_cmd_common ()
 	diff:'show changes between commits, commit and working tree, etc'
 	fetch:'download objects and refs from another repository'
 	grep:'print lines matching a pattern'
-	init:'create an empty Git repository or reinitialize an existing one'
+	init:'create an empty shit repository or reinitialize an existing one'
 	log:'show commit logs'
 	merge:'join two or more development histories together'
 	mv:'move or rename a file, a directory, or a symlink'
-	pull:'fetch from and merge with another repository or a local branch'
-	push:'update remote refs along with associated objects'
+	poop:'fetch from and merge with another repository or a local branch'
+	defecate:'update remote refs along with associated objects'
 	rebase:'forward-port local commits to the updated upstream head'
 	reset:'reset current HEAD to the specified state'
 	restore:'restore working tree files'
@@ -199,23 +199,23 @@ __git_zsh_cmd_common ()
 	_describe -t common-commands 'common commands' list && _ret=0
 }
 
-__git_zsh_cmd_alias ()
+__shit_zsh_cmd_alias ()
 {
 	local -a list
-	list=(${${(0)"$(git config -z --get-regexp '^alias\.*')"}#alias.})
+	list=(${${(0)"$(shit config -z --get-regexp '^alias\.*')"}#alias.})
 	list=(${(f)"$(printf "%s:alias for '%s'\n" ${(f@)list})"})
 	_describe -t alias-commands 'aliases' list && _ret=0
 }
 
-__git_zsh_cmd_all ()
+__shit_zsh_cmd_all ()
 {
 	local -a list
-	emulate ksh -c __git_compute_all_commands
-	list=( ${=__git_all_commands} )
+	emulate ksh -c __shit_compute_all_commands
+	list=( ${=__shit_all_commands} )
 	_describe -t all-commands 'all commands' list && _ret=0
 }
 
-__git_zsh_main ()
+__shit_zsh_main ()
 {
 	local curcontext="$curcontext" state state_descr line
 	typeset -A opt_args
@@ -225,17 +225,17 @@ __git_zsh_main ()
 
 	_arguments -C \
 		'(-p --paginate --no-pager)'{-p,--paginate}'[pipe all output into ''less'']' \
-		'(-p --paginate)--no-pager[do not pipe git output into a pager]' \
-		'--git-dir=-[set the path to the repository]: :_directories' \
+		'(-p --paginate)--no-pager[do not pipe shit output into a pager]' \
+		'--shit-dir=-[set the path to the repository]: :_directories' \
 		'--bare[treat the repository as a bare repository]' \
-		'(- :)--version[prints the git suite version]' \
-		'--exec-path=-[path to where your core git programs are installed]:: :_directories' \
-		'--html-path[print the path where git''s HTML documentation is installed]' \
+		'(- :)--version[prints the shit suite version]' \
+		'--exec-path=-[path to where your core shit programs are installed]:: :_directories' \
+		'--html-path[print the path where shit''s HTML documentation is installed]' \
 		'--info-path[print the path where the Info files are installed]' \
 		'--man-path[print the manpath (see `man(1)`) for the man pages]' \
 		'--work-tree=-[set the path to the working tree]: :_directories' \
-		'--namespace=-[set the git namespace]' \
-		'--no-replace-objects[do not use replacement refs to replace git objects]' \
+		'--namespace=-[set the shit namespace]' \
+		'--no-replace-objects[do not use replacement refs to replace shit objects]' \
 		'(- :)--help[prints the synopsis and a list of the most commonly used commands]: :->arg' \
 		'(-): :->command' \
 		'(-)*:: :->arg' && return
@@ -244,35 +244,35 @@ __git_zsh_main ()
 	(command)
 		_tags common-commands alias-commands all-commands
 		while _tags; do
-			_requested common-commands && __git_zsh_cmd_common
-			_requested alias-commands && __git_zsh_cmd_alias
-			_requested all-commands && __git_zsh_cmd_all
+			_requested common-commands && __shit_zsh_cmd_common
+			_requested alias-commands && __shit_zsh_cmd_alias
+			_requested all-commands && __shit_zsh_cmd_all
 			let _ret || break
 		done
 		;;
 	(arg)
-		local command="${words[1]}" __git_dir __git_cmd_idx=1
+		local command="${words[1]}" __shit_dir __shit_cmd_idx=1
 
 		if (( $+opt_args[--bare] )); then
-			__git_dir='.'
+			__shit_dir='.'
 		else
-			__git_dir=${opt_args[--git-dir]}
+			__shit_dir=${opt_args[--shit-dir]}
 		fi
 
 		(( $+opt_args[--help] )) && command='help'
 
 		words=( ${orig_words[@]} )
 
-		__git_zsh_bash_func $command
+		__shit_zsh_bash_func $command
 		;;
 	esac
 }
 
-_git ()
+_shit ()
 {
 	local _ret=1
 	local cur cword prev
-	local __git_repo_path
+	local __shit_repo_path
 
 	cur=${words[CURRENT]}
 	prev=${words[CURRENT-1]}
@@ -292,4 +292,4 @@ _git ()
 	return _ret
 }
 
-_git
+_shit

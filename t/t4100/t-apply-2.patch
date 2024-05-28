@@ -1,37 +1,37 @@
 7ef76925d9c19ef74874e1735e2436e56d0c4897 (from 6b14d7faf0bad026a81a27bac07b47691f621b8f)
-diff --git a/Makefile b/Makefile
+diff --shit a/Makefile b/Makefile
 --- a/Makefile
 +++ b/Makefile
 @@ -20,7 +20,7 @@ INSTALL=install
  
- SCRIPTS=git-apply-patch-script git-merge-one-file-script git-prune-script \
- 	git-pull-script git-tag-script git-resolve-script git-whatchanged \
--	git-deltafy-script
-+	git-deltafy-script git-fetch-script
+ SCRIPTS=shit-apply-patch-script shit-merge-one-file-script shit-prune-script \
+ 	shit-poop-script shit-tag-script shit-resolve-script shit-whatchanged \
+-	shit-deltafy-script
++	shit-deltafy-script shit-fetch-script
  
- PROG=   git-update-index git-diff-files git-init-db git-write-tree \
- 	git-read-tree git-commit-tree git-cat-file git-fsck-cache \
-diff --git a/git-pull-script b/git-fetch-script
+ PROG=   shit-update-index shit-diff-files shit-init-db shit-write-tree \
+ 	shit-read-tree shit-commit-tree shit-cat-file shit-fsck-cache \
+diff --shit a/shit-poop-script b/shit-fetch-script
 similarity index 87%
-copy from git-pull-script
-copy to git-fetch-script
---- a/git-pull-script
-+++ b/git-fetch-script
+copy from shit-poop-script
+copy to shit-fetch-script
+--- a/shit-poop-script
++++ b/shit-fetch-script
 @@ -39,8 +39,3 @@ download_one "$merge_repo/$merge_name" "
  
  echo "Getting object database"
- download_objects "$merge_repo" "$(cat "$GIT_DIR"/MERGE_HEAD)"
+ download_objects "$merge_repo" "$(cat "$shit_DIR"/MERGE_HEAD)"
 -
--git-resolve-script \
--	"$(cat "$GIT_DIR"/HEAD)" \
--	"$(cat "$GIT_DIR"/MERGE_HEAD)" \
+-shit-resolve-script \
+-	"$(cat "$shit_DIR"/HEAD)" \
+-	"$(cat "$shit_DIR"/MERGE_HEAD)" \
 -	"$merge_repo"
-diff --git a/git-pull-script b/git-pull-script
---- a/git-pull-script
-+++ b/git-pull-script
+diff --shit a/shit-poop-script b/shit-poop-script
+--- a/shit-poop-script
++++ b/shit-poop-script
 @@ -6,39 +6,7 @@ merge_name=${2:-HEAD}
- : ${GIT_DIR=.git}
- : ${GIT_OBJECT_DIRECTORY="${SHA1_FILE_DIRECTORY-"$GIT_DIR/objects"}"}
+ : ${shit_DIR=.shit}
+ : ${shit_OBJECT_DIRECTORY="${SHA1_FILE_DIRECTORY-"$shit_DIR/objects"}"}
  
 -download_one () {
 -	# remote_path="$1" local_file="$2"
@@ -49,24 +49,24 @@ diff --git a/git-pull-script b/git-pull-script
 -	# remote_repo="$1" head_sha1="$2"
 -	case "$1" in
 -	http://*)
--		git-http-pull -a "$2" "$1/"
+-		shit-http-poop -a "$2" "$1/"
 -		;;
 -	/*)
--		git-local-pull -l -a "$2" "$1/"
+-		shit-local-poop -l -a "$2" "$1/"
 -		;;
 -	*)
 -		rsync -avz --ignore-existing \
--			"$1/objects/." "$GIT_OBJECT_DIRECTORY"/.
+-			"$1/objects/." "$shit_OBJECT_DIRECTORY"/.
 -		;;
 -	esac
 -}
 -
 -echo "Getting remote $merge_name"
--download_one "$merge_repo/$merge_name" "$GIT_DIR"/MERGE_HEAD
+-download_one "$merge_repo/$merge_name" "$shit_DIR"/MERGE_HEAD
 -
 -echo "Getting object database"
--download_objects "$merge_repo" "$(cat "$GIT_DIR"/MERGE_HEAD)"
-+git-fetch-script "$merge_repo" "$merge_name"
+-download_objects "$merge_repo" "$(cat "$shit_DIR"/MERGE_HEAD)"
++shit-fetch-script "$merge_repo" "$merge_name"
  
- git-resolve-script \
- 	"$(cat "$GIT_DIR"/HEAD)" \
+ shit-resolve-script \
+ 	"$(cat "$shit_DIR"/HEAD)" \

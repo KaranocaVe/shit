@@ -2,34 +2,34 @@
 
 test_description='fetch --all works correctly'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 setup_repository () {
 	mkdir "$1" && (
 	cd "$1" &&
-	git init &&
+	shit init &&
 	>file &&
-	git add file &&
+	shit add file &&
 	test_tick &&
-	git commit -m "Initial" &&
-	git checkout -b side &&
+	shit commit -m "Initial" &&
+	shit checkout -b side &&
 	>elif &&
-	git add elif &&
+	shit add elif &&
 	test_tick &&
-	git commit -m "Second" &&
-	git checkout main
+	shit commit -m "Second" &&
+	shit checkout main
 	)
 }
 
 setup_test_clone () {
 	test_dir="$1" &&
-	git clone one "$test_dir" &&
+	shit clone one "$test_dir" &&
 	for r in one two three
 	do
-		git -C "$test_dir" remote add "$r" "../$r" || return 1
+		shit -C "$test_dir" remote add "$r" "../$r" || return 1
 	done
 }
 
@@ -37,10 +37,10 @@ test_expect_success setup '
 	setup_repository one &&
 	setup_repository two &&
 	(
-		cd two && git branch another
+		cd two && shit branch another
 	) &&
-	git clone --mirror two three &&
-	git clone one test
+	shit clone --mirror two three &&
+	shit clone one test
 '
 
 cat > test/expect << EOF
@@ -57,39 +57,39 @@ cat > test/expect << EOF
   two/side
 EOF
 
-test_expect_success 'git fetch --all' '
+test_expect_success 'shit fetch --all' '
 	(cd test &&
-	 git remote add one ../one &&
-	 git remote add two ../two &&
-	 git remote add three ../three &&
-	 git fetch --all &&
-	 git branch -r > output &&
+	 shit remote add one ../one &&
+	 shit remote add two ../two &&
+	 shit remote add three ../three &&
+	 shit fetch --all &&
+	 shit branch -r > output &&
 	 test_cmp expect output)
 '
 
-test_expect_success 'git fetch --all --no-write-fetch-head' '
+test_expect_success 'shit fetch --all --no-write-fetch-head' '
 	(cd test &&
-	rm -f .git/FETCH_HEAD &&
-	git fetch --all --no-write-fetch-head &&
-	test_path_is_missing .git/FETCH_HEAD)
+	rm -f .shit/FETCH_HEAD &&
+	shit fetch --all --no-write-fetch-head &&
+	test_path_is_missing .shit/FETCH_HEAD)
 '
 
-test_expect_success 'git fetch --all should continue if a remote has errors' '
-	(git clone one test2 &&
+test_expect_success 'shit fetch --all should continue if a remote has errors' '
+	(shit clone one test2 &&
 	 cd test2 &&
-	 git remote add bad ../non-existing &&
-	 git remote add one ../one &&
-	 git remote add two ../two &&
-	 git remote add three ../three &&
-	 test_must_fail git fetch --all &&
-	 git branch -r > output &&
+	 shit remote add bad ../non-existing &&
+	 shit remote add one ../one &&
+	 shit remote add two ../two &&
+	 shit remote add three ../three &&
+	 test_must_fail shit fetch --all &&
+	 shit branch -r > output &&
 	 test_cmp ../test/expect output)
 '
 
-test_expect_success 'git fetch --all does not allow non-option arguments' '
+test_expect_success 'shit fetch --all does not allow non-option arguments' '
 	(cd test &&
-	 test_must_fail git fetch --all origin &&
-	 test_must_fail git fetch --all origin main)
+	 test_must_fail shit fetch --all origin &&
+	 test_must_fail shit fetch --all origin main)
 '
 
 cat > expect << EOF
@@ -101,12 +101,12 @@ cat > expect << EOF
   three/side
 EOF
 
-test_expect_success 'git fetch --multiple (but only one remote)' '
-	(git clone one test3 &&
+test_expect_success 'shit fetch --multiple (but only one remote)' '
+	(shit clone one test3 &&
 	 cd test3 &&
-	 git remote add three ../three &&
-	 git fetch --multiple three &&
-	 git branch -r > output &&
+	 shit remote add three ../three &&
+	 shit fetch --multiple three &&
+	 shit branch -r > output &&
 	 test_cmp ../expect output)
 '
 
@@ -118,36 +118,36 @@ cat > expect << EOF
   two/side
 EOF
 
-test_expect_success 'git fetch --multiple (two remotes)' '
-	(git clone one test4 &&
+test_expect_success 'shit fetch --multiple (two remotes)' '
+	(shit clone one test4 &&
 	 cd test4 &&
-	 git remote rm origin &&
-	 git remote add one ../one &&
-	 git remote add two ../two &&
-	 GIT_TRACE=1 git fetch --multiple one two 2>trace &&
-	 git branch -r > output &&
+	 shit remote rm origin &&
+	 shit remote add one ../one &&
+	 shit remote add two ../two &&
+	 shit_TRACE=1 shit fetch --multiple one two 2>trace &&
+	 shit branch -r > output &&
 	 test_cmp ../expect output &&
-	 grep "built-in: git maintenance" trace >gc &&
+	 grep "built-in: shit maintenance" trace >gc &&
 	 test_line_count = 1 gc
 	)
 '
 
-test_expect_success 'git fetch --multiple (bad remote names)' '
+test_expect_success 'shit fetch --multiple (bad remote names)' '
 	(cd test4 &&
-	 test_must_fail git fetch --multiple four)
+	 test_must_fail shit fetch --multiple four)
 '
 
 
-test_expect_success 'git fetch --all (skipFetchAll)' '
+test_expect_success 'shit fetch --all (skipFetchAll)' '
 	(cd test4 &&
-	 for b in $(git branch -r)
+	 for b in $(shit branch -r)
 	 do
-		git branch -r -d $b || exit 1
+		shit branch -r -d $b || exit 1
 	 done &&
-	 git remote add three ../three &&
-	 git config remote.three.skipFetchAll true &&
-	 git fetch --all &&
-	 git branch -r > output &&
+	 shit remote add three ../three &&
+	 shit config remote.three.skipFetchAll true &&
+	 shit fetch --all &&
+	 shit branch -r > output &&
 	 test_cmp ../expect output)
 '
 
@@ -162,60 +162,60 @@ cat > expect << EOF
   two/side
 EOF
 
-test_expect_success 'git fetch --multiple (ignoring skipFetchAll)' '
+test_expect_success 'shit fetch --multiple (ignoring skipFetchAll)' '
 	(cd test4 &&
-	 for b in $(git branch -r)
+	 for b in $(shit branch -r)
 	 do
-		git branch -r -d $b || exit 1
+		shit branch -r -d $b || exit 1
 	 done &&
-	 git fetch --multiple one two three &&
-	 git branch -r > output &&
+	 shit fetch --multiple one two three &&
+	 shit branch -r > output &&
 	 test_cmp ../expect output)
 '
 
-test_expect_success 'git fetch --all --no-tags' '
-	git clone one test5 &&
-	git clone test5 test6 &&
-	(cd test5 && git tag test-tag) &&
+test_expect_success 'shit fetch --all --no-tags' '
+	shit clone one test5 &&
+	shit clone test5 test6 &&
+	(cd test5 && shit tag test-tag) &&
 	(
 		cd test6 &&
-		git fetch --all --no-tags &&
-		git tag >output
+		shit fetch --all --no-tags &&
+		shit tag >output
 	) &&
 	test_must_be_empty test6/output
 '
 
-test_expect_success 'git fetch --all --tags' '
+test_expect_success 'shit fetch --all --tags' '
 	echo test-tag >expect &&
-	git clone one test7 &&
-	git clone test7 test8 &&
+	shit clone one test7 &&
+	shit clone test7 test8 &&
 	(
 		cd test7 &&
 		test_commit test-tag &&
-		git reset --hard HEAD^
+		shit reset --hard HEAD^
 	) &&
 	(
 		cd test8 &&
-		git fetch --all --tags &&
-		git tag >output
+		shit fetch --all --tags &&
+		shit tag >output
 	) &&
 	test_cmp expect test8/output
 '
 
 test_expect_success 'parallel' '
-	git remote add one ./bogus1 &&
-	git remote add two ./bogus2 &&
+	shit remote add one ./bogus1 &&
+	shit remote add two ./bogus2 &&
 
-	test_must_fail env GIT_TRACE="$PWD/trace" \
-		git fetch --jobs=2 --multiple one two 2>err &&
+	test_must_fail env shit_TRACE="$PWD/trace" \
+		shit fetch --jobs=2 --multiple one two 2>err &&
 	grep "preparing to run up to 2 tasks" trace &&
 	test_grep "could not fetch .one.*128" err &&
 	test_grep "could not fetch .two.*128" err
 '
 
-test_expect_success 'git fetch --multiple --jobs=0 picks a default' '
+test_expect_success 'shit fetch --multiple --jobs=0 picks a default' '
 	(cd test &&
-	 git fetch --multiple --jobs=0)
+	 shit fetch --multiple --jobs=0)
 '
 
 create_fetch_all_expect () {
@@ -236,27 +236,27 @@ create_fetch_all_expect () {
 
 for fetch_all in true false
 do
-	test_expect_success "git fetch --all (works with fetch.all = $fetch_all)" '
+	test_expect_success "shit fetch --all (works with fetch.all = $fetch_all)" '
 		test_dir="test_fetch_all_$fetch_all" &&
 		setup_test_clone "$test_dir" &&
 		(
 			cd "$test_dir" &&
-			git config fetch.all $fetch_all &&
-			git fetch --all &&
+			shit config fetch.all $fetch_all &&
+			shit fetch --all &&
 			create_fetch_all_expect &&
-			git branch -r >actual &&
+			shit branch -r >actual &&
 			test_cmp expect actual
 		)
 	'
 done
 
-test_expect_success 'git fetch (fetch all remotes with fetch.all = true)' '
+test_expect_success 'shit fetch (fetch all remotes with fetch.all = true)' '
 	setup_test_clone test9 &&
 	(
 		cd test9 &&
-		git config fetch.all true &&
-		git fetch &&
-		git branch -r >actual &&
+		shit config fetch.all true &&
+		shit fetch &&
+		shit branch -r >actual &&
 		create_fetch_all_expect &&
 		test_cmp expect actual
 	)
@@ -272,14 +272,14 @@ create_fetch_one_expect () {
 	EOF
 }
 
-test_expect_success 'git fetch one (explicit remote overrides fetch.all)' '
+test_expect_success 'shit fetch one (explicit remote overrides fetch.all)' '
 	setup_test_clone test10 &&
 	(
 		cd test10 &&
-		git config fetch.all true &&
-		git fetch one &&
+		shit config fetch.all true &&
+		shit fetch one &&
 		create_fetch_one_expect &&
-		git branch -r >actual &&
+		shit branch -r >actual &&
 		test_cmp expect actual
 	)
 '
@@ -293,79 +293,79 @@ create_fetch_two_as_origin_expect () {
 	EOF
 }
 
-test_expect_success 'git config fetch.all false (fetch only default remote)' '
+test_expect_success 'shit config fetch.all false (fetch only default remote)' '
 	setup_test_clone test11 &&
 	(
 		cd test11 &&
-		git config fetch.all false &&
-		git remote set-url origin ../two &&
-		git fetch &&
+		shit config fetch.all false &&
+		shit remote set-url origin ../two &&
+		shit fetch &&
 		create_fetch_two_as_origin_expect &&
-		git branch -r >actual &&
+		shit branch -r >actual &&
 		test_cmp expect actual
 	)
 '
 
 for fetch_all in true false
 do
-	test_expect_success "git fetch --no-all (fetch only default remote with fetch.all = $fetch_all)" '
+	test_expect_success "shit fetch --no-all (fetch only default remote with fetch.all = $fetch_all)" '
 		test_dir="test_no_all_fetch_all_$fetch_all" &&
 		setup_test_clone "$test_dir" &&
 		(
 			cd "$test_dir" &&
-			git config fetch.all $fetch_all &&
-			git remote set-url origin ../two &&
-			git fetch --no-all &&
+			shit config fetch.all $fetch_all &&
+			shit remote set-url origin ../two &&
+			shit fetch --no-all &&
 			create_fetch_two_as_origin_expect &&
-			git branch -r >actual &&
+			shit branch -r >actual &&
 			test_cmp expect actual
 		)
 	'
 done
 
-test_expect_success 'git fetch --no-all (fetch only default remote without fetch.all)' '
+test_expect_success 'shit fetch --no-all (fetch only default remote without fetch.all)' '
 	setup_test_clone test12 &&
 	(
 		cd test12 &&
-		git config --unset-all fetch.all || true &&
-		git remote set-url origin ../two &&
-		git fetch --no-all &&
+		shit config --unset-all fetch.all || true &&
+		shit remote set-url origin ../two &&
+		shit fetch --no-all &&
 		create_fetch_two_as_origin_expect &&
-		git branch -r >actual &&
+		shit branch -r >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'git fetch --all --no-all (fetch only default remote)' '
+test_expect_success 'shit fetch --all --no-all (fetch only default remote)' '
 	setup_test_clone test13 &&
 	(
 		cd test13 &&
-		git remote set-url origin ../two &&
-		git fetch --all --no-all &&
+		shit remote set-url origin ../two &&
+		shit fetch --all --no-all &&
 		create_fetch_two_as_origin_expect &&
-		git branch -r >actual &&
+		shit branch -r >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'git fetch --no-all one (fetch only explicit remote)' '
+test_expect_success 'shit fetch --no-all one (fetch only explicit remote)' '
 	setup_test_clone test14 &&
 	(
 		cd test14 &&
-		git fetch --no-all one &&
+		shit fetch --no-all one &&
 		create_fetch_one_expect &&
-		git branch -r >actual &&
+		shit branch -r >actual &&
 		test_cmp expect actual
 	)
 '
 
-test_expect_success 'git fetch --no-all --all (fetch all remotes)' '
+test_expect_success 'shit fetch --no-all --all (fetch all remotes)' '
 	setup_test_clone test15 &&
 	(
 		cd test15 &&
-		git fetch --no-all --all &&
+		shit fetch --no-all --all &&
 		create_fetch_all_expect &&
-		git branch -r >actual &&
+		shit branch -r >actual &&
 		test_cmp expect actual
 	)
 '

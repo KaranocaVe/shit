@@ -1,5 +1,5 @@
-#include "git-compat-util.h"
-#include "git-curl-compat.h"
+#include "shit-compat-util.h"
+#include "shit-curl-compat.h"
 #include "hex.h"
 #include "http.h"
 #include "config.h"
@@ -21,7 +21,7 @@
 static struct trace_key trace_curl = TRACE_KEY_INIT(CURL);
 static int trace_curl_data = 1;
 static int trace_curl_redact = 1;
-long int git_curl_ipresolve = CURL_IPRESOLVE_WHATEVER;
+long int shit_curl_ipresolve = CURL_IPRESOLVE_WHATEVER;
 int active_requests;
 int http_is_verbose;
 ssize_t http_post_buffer = 16 * LARGE_PACKET_MAX;
@@ -50,12 +50,12 @@ static struct {
 	{ "sslv2", CURL_SSLVERSION_SSLv2 },
 	{ "sslv3", CURL_SSLVERSION_SSLv3 },
 	{ "tlsv1", CURL_SSLVERSION_TLSv1 },
-#ifdef GIT_CURL_HAVE_CURL_SSLVERSION_TLSv1_0
+#ifdef shit_CURL_HAVE_CURL_SSLVERSION_TLSv1_0
 	{ "tlsv1.0", CURL_SSLVERSION_TLSv1_0 },
 	{ "tlsv1.1", CURL_SSLVERSION_TLSv1_1 },
 	{ "tlsv1.2", CURL_SSLVERSION_TLSv1_2 },
 #endif
-#ifdef GIT_CURL_HAVE_CURL_SSLVERSION_TLSv1_3
+#ifdef shit_CURL_HAVE_CURL_SSLVERSION_TLSv1_3
 	{ "tlsv1.3", CURL_SSLVERSION_TLSv1_3 },
 #endif
 };
@@ -63,7 +63,7 @@ static const char *ssl_key;
 static const char *ssl_key_type;
 static const char *ssl_capath;
 static const char *curl_no_proxy;
-#ifdef GIT_CURL_HAVE_CURLOPT_PINNEDPUBLICKEY
+#ifdef shit_CURL_HAVE_CURLOPT_PINNEDPUBLICKEY
 static const char *ssl_pinnedkey;
 #endif
 static const char *ssl_cainfo;
@@ -236,7 +236,7 @@ static size_t fwrite_wwwauth(char *ptr, size_t eltsize, size_t nmemb, void *p UN
 		 */
 		strbuf_trim(&buf);
 
-		strvec_push(values, buf.buf);
+		strvec_defecate(values, buf.buf);
 		http_auth.header_is_last_match = 1;
 		goto exit;
 	}
@@ -267,7 +267,7 @@ static size_t fwrite_wwwauth(char *ptr, size_t eltsize, size_t nmemb, void *p UN
 			const char *const sp = *prev ? " " : "";
 
 			strvec_pop(values);
-			strvec_pushf(values, "%s%s%s", prev, sp, buf.buf);
+			strvec_defecatef(values, "%s%s%s", prev, sp, buf.buf);
 			free(prev);
 		}
 
@@ -370,34 +370,34 @@ static int http_options(const char *var, const char *value,
 			const struct config_context *ctx, void *data)
 {
 	if (!strcmp("http.version", var)) {
-		return git_config_string(&curl_http_version, var, value);
+		return shit_config_string(&curl_http_version, var, value);
 	}
 	if (!strcmp("http.sslverify", var)) {
-		curl_ssl_verify = git_config_bool(var, value);
+		curl_ssl_verify = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp("http.sslcipherlist", var))
-		return git_config_string(&ssl_cipherlist, var, value);
+		return shit_config_string(&ssl_cipherlist, var, value);
 	if (!strcmp("http.sslversion", var))
-		return git_config_string(&ssl_version, var, value);
+		return shit_config_string(&ssl_version, var, value);
 	if (!strcmp("http.sslcert", var))
-		return git_config_pathname(&ssl_cert, var, value);
+		return shit_config_pathname(&ssl_cert, var, value);
 	if (!strcmp("http.sslcerttype", var))
-		return git_config_string(&ssl_cert_type, var, value);
+		return shit_config_string(&ssl_cert_type, var, value);
 	if (!strcmp("http.sslkey", var))
-		return git_config_pathname(&ssl_key, var, value);
+		return shit_config_pathname(&ssl_key, var, value);
 	if (!strcmp("http.sslkeytype", var))
-		return git_config_string(&ssl_key_type, var, value);
+		return shit_config_string(&ssl_key_type, var, value);
 	if (!strcmp("http.sslcapath", var))
-		return git_config_pathname(&ssl_capath, var, value);
+		return shit_config_pathname(&ssl_capath, var, value);
 	if (!strcmp("http.sslcainfo", var))
-		return git_config_pathname(&ssl_cainfo, var, value);
+		return shit_config_pathname(&ssl_cainfo, var, value);
 	if (!strcmp("http.sslcertpasswordprotected", var)) {
-		ssl_cert_password_required = git_config_bool(var, value);
+		ssl_cert_password_required = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp("http.ssltry", var)) {
-		curl_ssl_try = git_config_bool(var, value);
+		curl_ssl_try = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp("http.sslbackend", var)) {
@@ -407,67 +407,67 @@ static int http_options(const char *var, const char *value,
 	}
 
 	if (!strcmp("http.schannelcheckrevoke", var)) {
-		http_schannel_check_revoke = git_config_bool(var, value);
+		http_schannel_check_revoke = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp("http.schannelusesslcainfo", var)) {
-		http_schannel_use_ssl_cainfo = git_config_bool(var, value);
+		http_schannel_use_ssl_cainfo = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp("http.minsessions", var)) {
-		min_curl_sessions = git_config_int(var, value, ctx->kvi);
+		min_curl_sessions = shit_config_int(var, value, ctx->kvi);
 		if (min_curl_sessions > 1)
 			min_curl_sessions = 1;
 		return 0;
 	}
 	if (!strcmp("http.maxrequests", var)) {
-		max_requests = git_config_int(var, value, ctx->kvi);
+		max_requests = shit_config_int(var, value, ctx->kvi);
 		return 0;
 	}
 	if (!strcmp("http.lowspeedlimit", var)) {
-		curl_low_speed_limit = (long)git_config_int(var, value, ctx->kvi);
+		curl_low_speed_limit = (long)shit_config_int(var, value, ctx->kvi);
 		return 0;
 	}
 	if (!strcmp("http.lowspeedtime", var)) {
-		curl_low_speed_time = (long)git_config_int(var, value, ctx->kvi);
+		curl_low_speed_time = (long)shit_config_int(var, value, ctx->kvi);
 		return 0;
 	}
 
 	if (!strcmp("http.noepsv", var)) {
-		curl_ftp_no_epsv = git_config_bool(var, value);
+		curl_ftp_no_epsv = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp("http.proxy", var))
-		return git_config_string(&curl_http_proxy, var, value);
+		return shit_config_string(&curl_http_proxy, var, value);
 
 	if (!strcmp("http.proxyauthmethod", var))
-		return git_config_string(&http_proxy_authmethod, var, value);
+		return shit_config_string(&http_proxy_authmethod, var, value);
 
 	if (!strcmp("http.proxysslcert", var))
-		return git_config_string(&http_proxy_ssl_cert, var, value);
+		return shit_config_string(&http_proxy_ssl_cert, var, value);
 
 	if (!strcmp("http.proxysslkey", var))
-		return git_config_string(&http_proxy_ssl_key, var, value);
+		return shit_config_string(&http_proxy_ssl_key, var, value);
 
 	if (!strcmp("http.proxysslcainfo", var))
-		return git_config_string(&http_proxy_ssl_ca_info, var, value);
+		return shit_config_string(&http_proxy_ssl_ca_info, var, value);
 
 	if (!strcmp("http.proxysslcertpasswordprotected", var)) {
-		proxy_ssl_cert_password_required = git_config_bool(var, value);
+		proxy_ssl_cert_password_required = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp("http.cookiefile", var))
-		return git_config_pathname(&curl_cookie_file, var, value);
+		return shit_config_pathname(&curl_cookie_file, var, value);
 	if (!strcmp("http.savecookies", var)) {
-		curl_save_cookies = git_config_bool(var, value);
+		curl_save_cookies = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp("http.postbuffer", var)) {
-		http_post_buffer = git_config_ssize_t(var, value, ctx->kvi);
+		http_post_buffer = shit_config_ssize_t(var, value, ctx->kvi);
 		if (http_post_buffer < 0)
 			warning(_("negative value for http.postBuffer; defaulting to %d"), LARGE_PACKET_MAX);
 		if (http_post_buffer < LARGE_PACKET_MAX)
@@ -476,19 +476,19 @@ static int http_options(const char *var, const char *value,
 	}
 
 	if (!strcmp("http.useragent", var))
-		return git_config_string(&user_agent, var, value);
+		return shit_config_string(&user_agent, var, value);
 
 	if (!strcmp("http.emptyauth", var)) {
 		if (value && !strcmp("auto", value))
 			curl_empty_auth = -1;
 		else
-			curl_empty_auth = git_config_bool(var, value);
+			curl_empty_auth = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp("http.delegation", var)) {
 #ifdef CURLGSSAPI_DELEGATION_FLAG
-		return git_config_string(&curl_deleg, var, value);
+		return shit_config_string(&curl_deleg, var, value);
 #else
 		warning(_("Delegation control is not supported with cURL < 7.22.0"));
 		return 0;
@@ -496,8 +496,8 @@ static int http_options(const char *var, const char *value,
 	}
 
 	if (!strcmp("http.pinnedpubkey", var)) {
-#ifdef GIT_CURL_HAVE_CURLOPT_PINNEDPUBLICKEY
-		return git_config_pathname(&ssl_pinnedkey, var, value);
+#ifdef shit_CURL_HAVE_CURLOPT_PINNEDPUBLICKEY
+		return shit_config_pathname(&ssl_pinnedkey, var, value);
 #else
 		warning(_("Public key pinning not supported with cURL < 7.39.0"));
 		return 0;
@@ -530,7 +530,7 @@ static int http_options(const char *var, const char *value,
 	if (!strcmp("http.followredirects", var)) {
 		if (value && !strcmp(value, "initial"))
 			http_follow_config = HTTP_FOLLOW_INITIAL;
-		else if (git_config_bool(var, value))
+		else if (shit_config_bool(var, value))
 			http_follow_config = HTTP_FOLLOW_ALWAYS;
 		else
 			http_follow_config = HTTP_FOLLOW_NONE;
@@ -538,7 +538,7 @@ static int http_options(const char *var, const char *value,
 	}
 
 	/* Fall back on the default ones */
-	return git_default_config(var, value, ctx, data);
+	return shit_default_config(var, value, ctx, data);
 }
 
 static int curl_empty_auth_enabled(void)
@@ -621,7 +621,7 @@ static void init_curl_proxy_auth(CURL *result)
 		set_proxyauth_name_password(result);
 	}
 
-	var_override(&http_proxy_authmethod, getenv("GIT_HTTP_PROXY_AUTHMETHOD"));
+	var_override(&http_proxy_authmethod, getenv("shit_HTTP_PROXY_AUTHMETHOD"));
 
 	if (http_proxy_authmethod) {
 		int i;
@@ -656,7 +656,7 @@ static int has_cert_password(void)
 	return 1;
 }
 
-#ifdef GIT_CURL_HAVE_CURLOPT_PROXY_KEYPASSWD
+#ifdef shit_CURL_HAVE_CURLOPT_PROXY_KEYPASSWD
 static int has_proxy_cert_password(void)
 {
 	if (http_proxy_ssl_cert == NULL || proxy_ssl_cert_password_required != 1)
@@ -672,7 +672,7 @@ static int has_proxy_cert_password(void)
 }
 #endif
 
-#ifdef GITCURL_HAVE_CURLOPT_TCP_KEEPALIVE
+#ifdef shitCURL_HAVE_CURLOPT_TCP_KEEPALIVE
 static void set_curl_keepalive(CURL *c)
 {
 	curl_easy_setopt(c, CURLOPT_TCP_KEEPALIVE, 1);
@@ -782,7 +782,7 @@ static int match_curl_h2_trace(const char *line, const char **out)
 	 * where <stream-id> is numeric.
 	 */
 	if (skip_iprefix(line, "[HTTP/2] [", &p)) {
-		while (isdigit(*p))
+		while (isdishit(*p))
 			p++;
 		if (skip_prefix(p, "] [", out))
 			return 1;
@@ -968,7 +968,7 @@ static long get_curl_allowed_protocols(int from_user, struct strbuf *list)
 	return bits;
 }
 
-#ifdef GIT_CURL_HAVE_CURL_HTTP_VERSION_2
+#ifdef shit_CURL_HAVE_CURL_HTTP_VERSION_2
 static int get_curl_http_version_opt(const char *version_string, long *opt)
 {
 	int i;
@@ -1010,7 +1010,7 @@ static CURL *get_curl_handle(void)
 		curl_easy_setopt(result, CURLOPT_SSL_VERIFYHOST, 2);
 	}
 
-#ifdef GIT_CURL_HAVE_CURL_HTTP_VERSION_2
+#ifdef shit_CURL_HAVE_CURL_HTTP_VERSION_2
     if (curl_http_version) {
 		long opt;
 		if (!get_curl_http_version_opt(curl_http_version, &opt)) {
@@ -1041,7 +1041,7 @@ static CURL *get_curl_handle(void)
 
 	if (http_ssl_backend && !strcmp("schannel", http_ssl_backend) &&
 	    !http_schannel_check_revoke) {
-#ifdef GIT_CURL_HAVE_CURLSSLOPT_NO_REVOKE
+#ifdef shit_CURL_HAVE_CURLSSLOPT_NO_REVOKE
 		curl_easy_setopt(result, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NO_REVOKE);
 #else
 		warning(_("CURLSSLOPT_NO_REVOKE not supported with cURL < 7.44.0"));
@@ -1051,8 +1051,8 @@ static CURL *get_curl_handle(void)
 	if (http_proactive_auth)
 		init_curl_http_auth(result);
 
-	if (getenv("GIT_SSL_VERSION"))
-		ssl_version = getenv("GIT_SSL_VERSION");
+	if (getenv("shit_SSL_VERSION"))
+		ssl_version = getenv("shit_SSL_VERSION");
 	if (ssl_version && *ssl_version) {
 		int i;
 		for (i = 0; i < ARRAY_SIZE(sslversions); i++) {
@@ -1067,8 +1067,8 @@ static CURL *get_curl_handle(void)
 				ssl_version);
 	}
 
-	if (getenv("GIT_SSL_CIPHER_LIST"))
-		ssl_cipherlist = getenv("GIT_SSL_CIPHER_LIST");
+	if (getenv("shit_SSL_CIPHER_LIST"))
+		ssl_cipherlist = getenv("shit_SSL_CIPHER_LIST");
 	if (ssl_cipherlist != NULL && *ssl_cipherlist)
 		curl_easy_setopt(result, CURLOPT_SSL_CIPHER_LIST,
 				ssl_cipherlist);
@@ -1085,20 +1085,20 @@ static CURL *get_curl_handle(void)
 		curl_easy_setopt(result, CURLOPT_SSLKEYTYPE, ssl_key_type);
 	if (ssl_capath)
 		curl_easy_setopt(result, CURLOPT_CAPATH, ssl_capath);
-#ifdef GIT_CURL_HAVE_CURLOPT_PINNEDPUBLICKEY
+#ifdef shit_CURL_HAVE_CURLOPT_PINNEDPUBLICKEY
 	if (ssl_pinnedkey)
 		curl_easy_setopt(result, CURLOPT_PINNEDPUBLICKEY, ssl_pinnedkey);
 #endif
 	if (http_ssl_backend && !strcmp("schannel", http_ssl_backend) &&
 	    !http_schannel_use_ssl_cainfo) {
 		curl_easy_setopt(result, CURLOPT_CAINFO, NULL);
-#ifdef GIT_CURL_HAVE_CURLOPT_PROXY_CAINFO
+#ifdef shit_CURL_HAVE_CURLOPT_PROXY_CAINFO
 		curl_easy_setopt(result, CURLOPT_PROXY_CAINFO, NULL);
 #endif
 	} else if (ssl_cainfo != NULL || http_proxy_ssl_ca_info != NULL) {
 		if (ssl_cainfo)
 			curl_easy_setopt(result, CURLOPT_CAINFO, ssl_cainfo);
-#ifdef GIT_CURL_HAVE_CURLOPT_PROXY_CAINFO
+#ifdef shit_CURL_HAVE_CURLOPT_PROXY_CAINFO
 		if (http_proxy_ssl_ca_info)
 			curl_easy_setopt(result, CURLOPT_PROXY_CAINFO, http_proxy_ssl_ca_info);
 #endif
@@ -1114,7 +1114,7 @@ static CURL *get_curl_handle(void)
 	curl_easy_setopt(result, CURLOPT_MAXREDIRS, 20);
 	curl_easy_setopt(result, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
 
-#ifdef GIT_CURL_HAVE_CURLOPT_PROTOCOLS_STR
+#ifdef shit_CURL_HAVE_CURLOPT_PROTOCOLS_STR
 	{
 		struct strbuf buf = STRBUF_INIT;
 
@@ -1133,16 +1133,16 @@ static CURL *get_curl_handle(void)
 			 get_curl_allowed_protocols(-1, NULL));
 #endif
 
-	if (getenv("GIT_CURL_VERBOSE"))
+	if (getenv("shit_CURL_VERBOSE"))
 		http_trace_curl_no_data();
 	setup_curl_trace(result);
-	if (getenv("GIT_TRACE_CURL_NO_DATA"))
+	if (getenv("shit_TRACE_CURL_NO_DATA"))
 		trace_curl_data = 0;
-	if (!git_env_bool("GIT_TRACE_REDACT", 1))
+	if (!shit_env_bool("shit_TRACE_REDACT", 1))
 		trace_curl_redact = 0;
 
 	curl_easy_setopt(result, CURLOPT_USERAGENT,
-		user_agent ? user_agent : git_user_agent());
+		user_agent ? user_agent : shit_user_agent());
 
 	if (curl_ftp_no_epsv)
 		curl_easy_setopt(result, CURLOPT_FTP_USE_EPSV, 0);
@@ -1195,7 +1195,7 @@ static CURL *get_curl_handle(void)
 		else if (starts_with(curl_http_proxy, "socks"))
 			curl_easy_setopt(result,
 				CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4);
-#ifdef GIT_CURL_HAVE_CURLOPT_PROXY_KEYPASSWD
+#ifdef shit_CURL_HAVE_CURLOPT_PROXY_KEYPASSWD
 		else if (starts_with(curl_http_proxy, "https")) {
 			curl_easy_setopt(result, CURLOPT_PROXYTYPE, CURLPROXY_HTTPS);
 
@@ -1250,17 +1250,17 @@ void http_init(struct remote *remote, const char *url, int proactive_auth)
 	config.section = "http";
 	config.key = NULL;
 	config.collect_fn = http_options;
-	config.cascade_fn = git_default_config;
+	config.cascade_fn = shit_default_config;
 	config.cb = NULL;
 
 	http_is_verbose = 0;
 	normalized_url = url_normalize(url, &config.url);
 
-	git_config(urlmatch_config_entry, &config);
+	shit_config(urlmatch_config_entry, &config);
 	free(normalized_url);
 	string_list_clear(&config.vars, 1);
 
-#ifdef GIT_CURL_HAVE_CURLSSLSET_NO_BACKENDS
+#ifdef shit_CURL_HAVE_CURLSSLSET_NO_BACKENDS
 	if (http_ssl_backend) {
 		const curl_ssl_backend **backends;
 		struct strbuf buf = STRBUF_INIT;
@@ -1302,7 +1302,7 @@ void http_init(struct remote *remote, const char *url, int proactive_auth)
 		"Pragma: no-cache");
 
 	{
-		char *http_max_requests = getenv("GIT_HTTP_MAX_REQUESTS");
+		char *http_max_requests = getenv("shit_HTTP_MAX_REQUESTS");
 		if (http_max_requests)
 			max_requests = atoi(http_max_requests);
 	}
@@ -1311,22 +1311,22 @@ void http_init(struct remote *remote, const char *url, int proactive_auth)
 	if (!curlm)
 		die("curl_multi_init failed");
 
-	if (getenv("GIT_SSL_NO_VERIFY"))
+	if (getenv("shit_SSL_NO_VERIFY"))
 		curl_ssl_verify = 0;
 
-	set_from_env(&ssl_cert, "GIT_SSL_CERT");
-	set_from_env(&ssl_cert_type, "GIT_SSL_CERT_TYPE");
-	set_from_env(&ssl_key, "GIT_SSL_KEY");
-	set_from_env(&ssl_key_type, "GIT_SSL_KEY_TYPE");
-	set_from_env(&ssl_capath, "GIT_SSL_CAPATH");
-	set_from_env(&ssl_cainfo, "GIT_SSL_CAINFO");
+	set_from_env(&ssl_cert, "shit_SSL_CERT");
+	set_from_env(&ssl_cert_type, "shit_SSL_CERT_TYPE");
+	set_from_env(&ssl_key, "shit_SSL_KEY");
+	set_from_env(&ssl_key_type, "shit_SSL_KEY_TYPE");
+	set_from_env(&ssl_capath, "shit_SSL_CAPATH");
+	set_from_env(&ssl_cainfo, "shit_SSL_CAINFO");
 
-	set_from_env(&user_agent, "GIT_HTTP_USER_AGENT");
+	set_from_env(&user_agent, "shit_HTTP_USER_AGENT");
 
-	low_speed_limit = getenv("GIT_HTTP_LOW_SPEED_LIMIT");
+	low_speed_limit = getenv("shit_HTTP_LOW_SPEED_LIMIT");
 	if (low_speed_limit)
 		curl_low_speed_limit = strtol(low_speed_limit, NULL, 10);
-	low_speed_time = getenv("GIT_HTTP_LOW_SPEED_TIME");
+	low_speed_time = getenv("shit_HTTP_LOW_SPEED_TIME");
 	if (low_speed_time)
 		curl_low_speed_time = strtol(low_speed_time, NULL, 10);
 
@@ -1337,20 +1337,20 @@ void http_init(struct remote *remote, const char *url, int proactive_auth)
 	if (max_requests < 1)
 		max_requests = DEFAULT_MAX_REQUESTS;
 
-	set_from_env(&http_proxy_ssl_cert, "GIT_PROXY_SSL_CERT");
-	set_from_env(&http_proxy_ssl_key, "GIT_PROXY_SSL_KEY");
-	set_from_env(&http_proxy_ssl_ca_info, "GIT_PROXY_SSL_CAINFO");
+	set_from_env(&http_proxy_ssl_cert, "shit_PROXY_SSL_CERT");
+	set_from_env(&http_proxy_ssl_key, "shit_PROXY_SSL_KEY");
+	set_from_env(&http_proxy_ssl_ca_info, "shit_PROXY_SSL_CAINFO");
 
-	if (getenv("GIT_PROXY_SSL_CERT_PASSWORD_PROTECTED"))
+	if (getenv("shit_PROXY_SSL_CERT_PASSWORD_PROTECTED"))
 		proxy_ssl_cert_password_required = 1;
 
-	if (getenv("GIT_CURL_FTP_NO_EPSV"))
+	if (getenv("shit_CURL_FTP_NO_EPSV"))
 		curl_ftp_no_epsv = 1;
 
 	if (url) {
 		credential_from_url(&http_auth, url);
 		if (!ssl_cert_password_required &&
-		    getenv("GIT_SSL_CERT_PASSWORD_PROTECTED") &&
+		    getenv("shit_SSL_CERT_PASSWORD_PROTECTED") &&
 		    starts_with(url, "https://"))
 			ssl_cert_password_required = 1;
 	}
@@ -1488,7 +1488,7 @@ struct active_request_slot *get_active_slot(void)
 	else
 		curl_easy_setopt(slot->curl, CURLOPT_FOLLOWLOCATION, 0);
 
-	curl_easy_setopt(slot->curl, CURLOPT_IPRESOLVE, git_curl_ipresolve);
+	curl_easy_setopt(slot->curl, CURLOPT_IPRESOLVE, shit_curl_ipresolve);
 	curl_easy_setopt(slot->curl, CURLOPT_HTTPAUTH, http_auth_methods);
 	if (http_auth.password || http_auth.credential || curl_empty_auth_enabled())
 		init_curl_http_auth(slot->curl);
@@ -1711,20 +1711,20 @@ static char *quote_ref_url(const char *base, const char *ref)
 
 void append_remote_object_url(struct strbuf *buf, const char *url,
 			      const char *hex,
-			      int only_two_digit_prefix)
+			      int only_two_dishit_prefix)
 {
 	end_url_with_slash(buf, url);
 
 	strbuf_addf(buf, "objects/%.*s/", 2, hex);
-	if (!only_two_digit_prefix)
+	if (!only_two_dishit_prefix)
 		strbuf_addstr(buf, hex + 2);
 }
 
 char *get_remote_object_url(const char *url, const char *hex,
-			    int only_two_digit_prefix)
+			    int only_two_dishit_prefix)
 {
 	struct strbuf buf = STRBUF_INIT;
-	append_remote_object_url(&buf, url, hex, only_two_digit_prefix);
+	append_remote_object_url(&buf, url, hex, only_two_dishit_prefix);
 	return strbuf_detach(&buf, NULL);
 }
 
@@ -1772,7 +1772,7 @@ static int handle_curl_result(struct slot_results *results)
 		 */
 		credential_reject(&cert_auth);
 		return HTTP_NOAUTH;
-#ifdef GIT_CURL_HAVE_CURLE_SSL_PINNEDPUBKEYNOTMATCH
+#ifdef shit_CURL_HAVE_CURLE_SSL_PINNEDPUBKEYNOTMATCH
 	} else if (results->curl_result == CURLE_SSL_PINNEDPUBKEYNOTMATCH) {
 		return HTTP_NOMATCHPUBLICKEY;
 #endif
@@ -2140,15 +2140,15 @@ static int http_request(const char *url,
  *
  * Our basic strategy is to compare "base" and "asked" to find the bits
  * specific to our request. We then strip those bits off of "got" to yield the
- * new base. So for example, if our base is "http://example.com/foo.git",
- * and we ask for "http://example.com/foo.git/info/refs", we might end up
- * with "https://other.example.com/foo.git/info/refs". We would want the
- * new URL to become "https://other.example.com/foo.git".
+ * new base. So for example, if our base is "http://example.com/foo.shit",
+ * and we ask for "http://example.com/foo.shit/info/refs", we might end up
+ * with "https://other.example.com/foo.shit/info/refs". We would want the
+ * new URL to become "https://other.example.com/foo.shit".
  *
  * Note that this assumes a sane redirect scheme. It's entirely possible
  * in the example above to end up at a URL that does not even end in
  * "info/refs".  In such a case we die. There's not much we can do, such a
- * scheme is unlikely to represent a real git repository, and failing to
+ * scheme is unlikely to represent a real shit repository, and failing to
  * rewrite the base opens options for malicious redirects to do funny things.
  */
 static int update_url_from_redirect(struct strbuf *base,
@@ -2315,10 +2315,10 @@ static char *fetch_pack_index(unsigned char *hash, const char *base_url)
 	return tmp;
 }
 
-static int fetch_and_setup_pack_index(struct packed_git **packs_head,
+static int fetch_and_setup_pack_index(struct packed_shit **packs_head,
 	unsigned char *sha1, const char *base_url)
 {
-	struct packed_git *new_pack;
+	struct packed_shit *new_pack;
 	char *tmp_idx = NULL;
 	int ret;
 
@@ -2356,7 +2356,7 @@ add_pack:
 	return 0;
 }
 
-int http_get_info_packs(const char *base_url, struct packed_git **packs_head)
+int http_get_info_packs(const char *base_url, struct packed_shit **packs_head)
 {
 	struct http_get_options options = {0};
 	int ret = 0;
@@ -2420,9 +2420,9 @@ int finish_http_pack_request(struct http_pack_request *preq)
 
 	tmpfile_fd = xopen(preq->tmpfile.buf, O_RDONLY);
 
-	ip.git_cmd = 1;
+	ip.shit_cmd = 1;
 	ip.in = tmpfile_fd;
-	strvec_pushv(&ip.args, preq->index_pack_args ?
+	strvec_defecatev(&ip.args, preq->index_pack_args ?
 		     preq->index_pack_args :
 		     default_index_pack_args);
 
@@ -2442,32 +2442,32 @@ cleanup:
 	return ret;
 }
 
-void http_install_packfile(struct packed_git *p,
-			   struct packed_git **list_to_remove_from)
+void http_install_packfile(struct packed_shit *p,
+			   struct packed_shit **list_to_remove_from)
 {
-	struct packed_git **lst = list_to_remove_from;
+	struct packed_shit **lst = list_to_remove_from;
 
 	while (*lst != p)
 		lst = &((*lst)->next);
 	*lst = (*lst)->next;
 
-	install_packed_git(the_repository, p);
+	install_packed_shit(the_repository, p);
 }
 
 struct http_pack_request *new_http_pack_request(
-	const unsigned char *packed_git_hash, const char *base_url) {
+	const unsigned char *packed_shit_hash, const char *base_url) {
 
 	struct strbuf buf = STRBUF_INIT;
 
 	end_url_with_slash(&buf, base_url);
 	strbuf_addf(&buf, "objects/pack/pack-%s.pack",
-		hash_to_hex(packed_git_hash));
-	return new_direct_http_pack_request(packed_git_hash,
+		hash_to_hex(packed_shit_hash));
+	return new_direct_http_pack_request(packed_shit_hash,
 					    strbuf_detach(&buf, NULL));
 }
 
 struct http_pack_request *new_direct_http_pack_request(
-	const unsigned char *packed_git_hash, char *url)
+	const unsigned char *packed_shit_hash, char *url)
 {
 	off_t prev_posn = 0;
 	struct http_pack_request *preq;
@@ -2477,7 +2477,7 @@ struct http_pack_request *new_direct_http_pack_request(
 
 	preq->url = url;
 
-	strbuf_addf(&preq->tmpfile, "%s.temp", sha1_pack_name(packed_git_hash));
+	strbuf_addf(&preq->tmpfile, "%s.temp", sha1_pack_name(packed_shit_hash));
 	preq->packfile = fopen(preq->tmpfile.buf, "a");
 	if (!preq->packfile) {
 		error("Unable to open local file %s for pack",
@@ -2501,7 +2501,7 @@ struct http_pack_request *new_direct_http_pack_request(
 		if (http_is_verbose)
 			fprintf(stderr,
 				"Resuming fetch of pack %s at byte %"PRIuMAX"\n",
-				hash_to_hex(packed_git_hash),
+				hash_to_hex(packed_shit_hash),
 				(uintmax_t)prev_posn);
 		http_opt_request_remainder(preq->slot->curl, prev_posn);
 	}
@@ -2548,7 +2548,7 @@ static size_t fwrite_sha1_file(char *ptr, size_t eltsize, size_t nmemb,
 	do {
 		freq->stream.next_out = expn;
 		freq->stream.avail_out = sizeof(expn);
-		freq->zret = git_inflate(&freq->stream, Z_SYNC_FLUSH);
+		freq->zret = shit_inflate(&freq->stream, Z_SYNC_FLUSH);
 		the_hash_algo->update_fn(&freq->c, expn,
 					 sizeof(expn) - freq->stream.avail_out);
 	} while (freq->stream.avail_in && freq->zret == Z_OK);
@@ -2606,7 +2606,7 @@ struct http_object_request *new_http_object_request(const char *base_url,
 		goto abort;
 	}
 
-	git_inflate_init(&freq->stream);
+	shit_inflate_init(&freq->stream);
 
 	the_hash_algo->init_fn(&freq->c);
 
@@ -2642,7 +2642,7 @@ struct http_object_request *new_http_object_request(const char *base_url,
 	 */
 	if (prev_read == -1) {
 		memset(&freq->stream, 0, sizeof(freq->stream));
-		git_inflate_init(&freq->stream);
+		shit_inflate_init(&freq->stream);
 		the_hash_algo->init_fn(&freq->c);
 		if (prev_posn>0) {
 			prev_posn = 0;
@@ -2714,7 +2714,7 @@ int finish_http_object_request(struct http_object_request *freq)
 		return -1;
 	}
 
-	git_inflate_end(&freq->stream);
+	shit_inflate_end(&freq->stream);
 	the_hash_algo->final_oid_fn(&freq->real_oid, &freq->c);
 	if (freq->zret != Z_STREAM_END) {
 		unlink_or_warn(freq->tmpfile.buf);

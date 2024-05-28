@@ -104,11 +104,11 @@ test_expect_success POSIXPERM 'run_command reports EACCES' '
 test_expect_success POSIXPERM,SANITY 'unreadable directory in PATH' '
 	mkdir local-command &&
 	test_when_finished "chmod u+rwx local-command && rm -fr local-command" &&
-	git config alias.nitfol "!echo frotz" &&
+	shit config alias.nitfol "!echo frotz" &&
 	chmod a-rx local-command &&
 	(
 		PATH=./local-command:$PATH &&
-		git nitfol >actual
+		shit nitfol >actual
 	) &&
 	echo frotz >expect &&
 	test_cmp expect actual
@@ -205,14 +205,14 @@ test_expect_success 'run_command outputs (ungroup) ' '
 test_trace () {
 	expect="$1"
 	shift
-	GIT_TRACE=1 test-tool run-command "$@" run-command true 2>&1 >/dev/null | \
+	shit_TRACE=1 test-tool run-command "$@" run-command true 2>&1 >/dev/null | \
 		sed -e 's/.* run_command: //' -e '/trace: .*/d' \
 			-e '/RUNTIME_PREFIX requested/d' >actual &&
 	echo "$expect true" >expect &&
 	test_cmp expect actual
 }
 
-test_expect_success 'GIT_TRACE with environment variables' '
+test_expect_success 'shit_TRACE with environment variables' '
 	test_trace "abc=1 def=2" env abc=1 env def=2 &&
 	test_trace "abc=2" env abc env abc=1 env abc=2 &&
 	test_trace "abc=2" env abc env abc=2 &&
@@ -242,7 +242,7 @@ test_expect_success 'GIT_TRACE with environment variables' '
 
 test_expect_success MINGW 'verify curlies are quoted properly' '
 	: force the rev-parse through the MSYS2 Bash &&
-	git -c alias.r="!git rev-parse" r -- a{b}c >actual &&
+	shit -c alias.r="!shit rev-parse" r -- a{b}c >actual &&
 	cat >expect <<-\EOF &&
 	--
 	a{b}c
@@ -257,16 +257,16 @@ test_expect_success MINGW 'can spawn .bat with argv[0] containing spaces' '
 	rm -f out &&
 	echo "echo %* >>out" >"$bat" &&
 
-	# Ask git to invoke .bat; clone will fail due to fake SSH helper
-	test_must_fail env GIT_SSH="$bat" git clone myhost:src ssh-clone &&
+	# Ask shit to invoke .bat; clone will fail due to fake SSH helper
+	test_must_fail env shit_SSH="$bat" shit clone myhost:src ssh-clone &&
 
 	# Spawning .bat can fail if there are two quoted cmd.exe arguments.
 	# .bat itself is first (due to spaces in name), so just one more is
-	# needed to verify. GIT_SSH will invoke .bat multiple times:
+	# needed to verify. shit_SSH will invoke .bat multiple times:
 	# 1) -G myhost
-	# 2) myhost "git-upload-pack src"
+	# 2) myhost "shit-upload-pack src"
 	# First invocation will always succeed. Test the second one.
-	grep "git-upload-pack" out
+	grep "shit-upload-pack" out
 '
 
 test_done

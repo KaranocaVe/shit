@@ -1,5 +1,5 @@
 /*
- * Builtin "git interpret-trailers"
+ * Builtin "shit interpret-trailers"
  *
  * Copyright (c) 2013, 2014 Christian Couder <chriscool@tuxfamily.org>
  *
@@ -13,8 +13,8 @@
 #include "trailer.h"
 #include "config.h"
 
-static const char * const git_interpret_trailers_usage[] = {
-	N_("git interpret-trailers [--in-place] [--trim-empty]\n"
+static const char * const shit_interpret_trailers_usage[] = {
+	N_("shit interpret-trailers [--in-place] [--trim-empty]\n"
 	   "                       [(--trailer (<key>|<key-alias>)[(=|:)<value>])...]\n"
 	   "                       [--parse] [<file>...]"),
 	NULL
@@ -112,7 +112,7 @@ static FILE *create_in_place_tempfile(const char *file)
 	tail = strrchr(file, '/');
 	if (tail)
 		strbuf_add(&filename_template, file, tail - file + 1);
-	strbuf_addstr(&filename_template, "git-interpret-trailers-XXXXXX");
+	strbuf_addstr(&filename_template, "shit-interpret-trailers-XXXXXX");
 
 	trailers_tempfile = xmks_tempfile_m(filename_template.buf, st.st_mode);
 	strbuf_release(&filename_template);
@@ -215,15 +215,15 @@ int cmd_interpret_trailers(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, options,
-			     git_interpret_trailers_usage, 0);
+			     shit_interpret_trailers_usage, 0);
 
 	if (opts.only_input && !list_empty(&trailers))
 		usage_msg_opt(
 			_("--trailer with --only-input does not make sense"),
-			git_interpret_trailers_usage,
+			shit_interpret_trailers_usage,
 			options);
 
 	if (argc) {

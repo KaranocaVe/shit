@@ -8,7 +8,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 cat <<\EOF >expected ||
-diff --git a/f b/f
+diff --shit a/f b/f
 index 5f6a263..8cb8bae 100644
 --- a/f
 +++ b/f
@@ -21,23 +21,23 @@ exit 1
 
 test_expect_success "$test_description" '
 	printf "\nx\n" > f &&
-	before=$(git hash-object f) &&
-	before=$(git rev-parse --short $before) &&
-	git add f &&
-	git commit -q -m. f &&
+	before=$(shit hash-object f) &&
+	before=$(shit rev-parse --short $before) &&
+	shit add f &&
+	shit commit -q -m. f &&
 	printf "\ny\n" > f &&
-	after=$(git hash-object f) &&
-	after=$(git rev-parse --short $after) &&
+	after=$(shit hash-object f) &&
+	after=$(shit rev-parse --short $after) &&
 	sed -e "s/^index .*/index $before..$after 100644/" expected >exp &&
-	git config --bool diff.suppressBlankEmpty true &&
-	git diff f > actual &&
+	shit config --bool diff.suppressBlankEmpty true &&
+	shit diff f > actual &&
 	test_cmp exp actual &&
 	perl -i.bak -p -e "s/^\$/ /" exp &&
-	git config --bool diff.suppressBlankEmpty false &&
-	git diff f > actual &&
+	shit config --bool diff.suppressBlankEmpty false &&
+	shit diff f > actual &&
 	test_cmp exp actual &&
-	git config --bool --unset diff.suppressBlankEmpty &&
-	git diff f > actual &&
+	shit config --bool --unset diff.suppressBlankEmpty &&
+	shit diff f > actual &&
 	test_cmp exp actual
 '
 

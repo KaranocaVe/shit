@@ -38,8 +38,8 @@ int xsnprintf(char *dst, size_t max, const char *fmt, ...);
 int xgethostname(char *buf, size_t len);
 
 /* set default permissions by passing mode arguments to open(2) */
-int git_mkstemps_mode(char *pattern, int suffix_len, int mode);
-int git_mkstemp_mode(char *pattern, int mode);
+int shit_mkstemps_mode(char *pattern, int suffix_len, int mode);
+int shit_mkstemp_mode(char *pattern, int mode);
 
 ssize_t read_in_full(int fd, void *buf, size_t count);
 ssize_t write_in_full(int fd, const void *buf, size_t count);
@@ -85,7 +85,7 @@ enum fsync_action {
  * FSYNC_HARDWARE_FLUSH does an OS writeout and hardware flush to ensure that
  * changes are durable. It is not expected to fail.
  */
-int git_fsync(int fd, enum fsync_action action);
+int shit_fsync(int fd, enum fsync_action action);
 
 /*
  * Preserves errno, prints a message, but gives no warning for ENOENT.
@@ -138,6 +138,6 @@ int csprng_bytes(void *buf, size_t len);
  * Returns a random uint32_t, uniformly distributed across all possible
  * values.
  */
-uint32_t git_rand(void);
+uint32_t shit_rand(void);
 
 #endif /* WRAPPER_H */

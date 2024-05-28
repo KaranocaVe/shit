@@ -9,7 +9,7 @@ struct bundle_header {
 	unsigned version;
 	struct string_list prerequisites;
 	struct string_list references;
-	const struct git_hash_algo *hash_algo;
+	const struct shit_hash_algo *hash_algo;
 	struct list_objects_filter_options filter;
 };
 
@@ -41,7 +41,7 @@ int verify_bundle(struct repository *r, struct bundle_header *header,
 /**
  * Unbundle after reading the header with read_bundle_header().
  *
- * We'll invoke "git index-pack --stdin --fix-thin" for you on the
+ * We'll invoke "shit index-pack --stdin --fix-thin" for you on the
  * provided `bundle_fd` from read_bundle_header().
  *
  * Provide "extra_index_pack_args" to pass any extra arguments

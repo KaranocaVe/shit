@@ -7,15 +7,15 @@ test_expect_success "setup pre-receive hook ($PROTOCOL)" '
 
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
-# git-push         : main(B)             next(A)
-test_expect_success "git-push is declined ($PROTOCOL)" '
-	test_must_fail git -C workbench push origin \
+# shit-defecate         : main(B)             next(A)
+test_expect_success "shit-defecate is declined ($PROTOCOL)" '
+	test_must_fail shit -C workbench defecate origin \
 		$B:refs/heads/main \
 		HEAD:refs/heads/next \
 		>out-$test_count 2>&1 &&
 	make_user_friendly_and_stable_output <out-$test_count >actual &&
 	cat >expect <<-EOF &&
-	To <URL/of/upstream.git>
+	To <URL/of/upstream.shit>
 	 ! [remote rejected] <COMMIT-B> -> main (pre-receive hook declined)
 	 ! [remote rejected] HEAD -> next (pre-receive hook declined)
 	EOF

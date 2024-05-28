@@ -5,15 +5,15 @@ all::
 -include ../../config.mak
 
 prefix ?= /usr/local
-gitexecdir ?= $(prefix)/libexec/git-core
+shitexecdir ?= $(prefix)/libexec/shit-core
 mandir ?= $(prefix)/share/man
 man1dir ?= $(mandir)/man1
-htmldir ?= $(prefix)/share/doc/git-doc
+htmldir ?= $(prefix)/share/doc/shit-doc
 
-../../GIT-VERSION-FILE: FORCE
-	$(MAKE) -C ../../ GIT-VERSION-FILE
+../../shit-VERSION-FILE: FORCE
+	$(MAKE) -C ../../ shit-VERSION-FILE
 
--include ../../GIT-VERSION-FILE
+-include ../../shit-VERSION-FILE
 
 # this should be set to a 'standard' bsd-type install program
 INSTALL  ?= install
@@ -30,42 +30,42 @@ SHELL_PATH_SQ = $(subst ','\'',$(SHELL_PATH))
 ASCIIDOC_CONF = ../../Documentation/asciidoc.conf
 MANPAGE_XSL   = ../../Documentation/manpage-normal.xsl
 
-GIT_CONTACTS := git-contacts
+shit_CONTACTS := shit-contacts
 
-GIT_CONTACTS_DOC := git-contacts.1
-GIT_CONTACTS_XML := git-contacts.xml
-GIT_CONTACTS_TXT := git-contacts.txt
-GIT_CONTACTS_HTML := git-contacts.html
+shit_CONTACTS_DOC := shit-contacts.1
+shit_CONTACTS_XML := shit-contacts.xml
+shit_CONTACTS_TXT := shit-contacts.txt
+shit_CONTACTS_HTML := shit-contacts.html
 
-doc: $(GIT_CONTACTS_DOC) $(GIT_CONTACTS_HTML)
+doc: $(shit_CONTACTS_DOC) $(shit_CONTACTS_HTML)
 
-install: $(GIT_CONTACTS)
-	$(INSTALL) -d -m 755 $(DESTDIR)$(gitexecdir)
-	$(INSTALL) -m 755 $(GIT_CONTACTS) $(DESTDIR)$(gitexecdir)
+install: $(shit_CONTACTS)
+	$(INSTALL) -d -m 755 $(DESTDIR)$(shitexecdir)
+	$(INSTALL) -m 755 $(shit_CONTACTS) $(DESTDIR)$(shitexecdir)
 
 install-doc: install-man install-html
 
-install-man: $(GIT_CONTACTS_DOC)
+install-man: $(shit_CONTACTS_DOC)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(man1dir)
 	$(INSTALL) -m 644 $^ $(DESTDIR)$(man1dir)
 
-install-html: $(GIT_CONTACTS_HTML)
+install-html: $(shit_CONTACTS_HTML)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(htmldir)
 	$(INSTALL) -m 644 $^ $(DESTDIR)$(htmldir)
 
-$(GIT_CONTACTS_DOC): $(GIT_CONTACTS_XML)
+$(shit_CONTACTS_DOC): $(shit_CONTACTS_XML)
 	$(XMLTO) -m $(MANPAGE_XSL) man $^
 
-$(GIT_CONTACTS_XML): $(GIT_CONTACTS_TXT)
+$(shit_CONTACTS_XML): $(shit_CONTACTS_TXT)
 	$(ASCIIDOC) -b docbook -d manpage -f $(ASCIIDOC_CONF) \
-		-agit_version=$(GIT_VERSION) $^
+		-ashit_version=$(shit_VERSION) $^
 
-$(GIT_CONTACTS_HTML): $(GIT_CONTACTS_TXT)
+$(shit_CONTACTS_HTML): $(shit_CONTACTS_TXT)
 	$(ASCIIDOC) -b xhtml11 -d manpage -f $(ASCIIDOC_CONF) \
-		-agit_version=$(GIT_VERSION) $^
+		-ashit_version=$(shit_VERSION) $^
 
 clean:
-	$(RM) $(GIT_CONTACTS)
+	$(RM) $(shit_CONTACTS)
 	$(RM) *.xml *.html *.1
 
 .PHONY: FORCE

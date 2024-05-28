@@ -1,8 +1,8 @@
 #!/bin/sh
 
 test_description='Merge-recursive merging renames'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -44,39 +44,39 @@ test_expect_success 'setup' '
 	O OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 	EOF
 
-	git add A M &&
-	git commit -m "initial has A and M" &&
-	git branch white &&
-	git branch red &&
-	git branch blue &&
+	shit add A M &&
+	shit commit -m "initial has A and M" &&
+	shit branch white &&
+	shit branch red &&
+	shit branch blue &&
 
-	git checkout white &&
+	shit checkout white &&
 	sed -e "/^g /s/.*/g : white changes a line/" <A >B &&
 	sed -e "/^G /s/.*/G : colored branch changes a line/" <M >N &&
 	rm -f A M &&
-	git update-index --add --remove A B M N &&
-	git commit -m "white renames A->B, M->N" &&
+	shit update-index --add --remove A B M N &&
+	shit commit -m "white renames A->B, M->N" &&
 
-	git checkout red &&
+	shit checkout red &&
 	echo created by red >R &&
-	git update-index --add R &&
-	git commit -m "red creates R" &&
+	shit update-index --add R &&
+	shit commit -m "red creates R" &&
 
-	git checkout blue &&
+	shit checkout blue &&
 	sed -e "/^o /s/.*/g : blue changes a line/" <A >B &&
 	rm -f A &&
 	mv B A &&
-	git update-index A &&
-	git commit -m "blue modify A" &&
+	shit update-index A &&
+	shit commit -m "blue modify A" &&
 
-	git checkout main
+	shit checkout main
 '
 
 # This test broke in 65ac6e9c3f47807cb603af07a6a9e1a43bc119ae
 test_expect_success 'merge white into red (A->B,M->N)' '
-	git checkout -b red-white red &&
-	git merge white &&
-	git write-tree &&
+	shit checkout -b red-white red &&
+	shit merge white &&
+	shit write-tree &&
 	test_path_is_file B &&
 	test_path_is_file N &&
 	test_path_is_file R &&
@@ -86,10 +86,10 @@ test_expect_success 'merge white into red (A->B,M->N)' '
 
 # This test broke in 8371234ecaaf6e14fe3f2082a855eff1bbd79ae9
 test_expect_success 'merge blue into white (A->B, mod A, A untracked)' '
-	git checkout -b white-blue white &&
+	shit checkout -b white-blue white &&
 	echo dirty >A &&
-	git merge blue &&
-	git write-tree &&
+	shit merge blue &&
+	shit write-tree &&
 	test_path_is_file A &&
 	echo dirty >expect &&
 	test_cmp expect A &&

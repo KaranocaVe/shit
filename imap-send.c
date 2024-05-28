@@ -1,5 +1,5 @@
 /*
- * git-imap-send - drops patches into an imap Drafts folder
+ * shit-imap-send - drops patches into an imap Drafts folder
  *                 derived from isync/mbsync - mailbox synchronizer
  *
  * Copyright (C) 2000-2002 Michael R. Elkins <me@mutt.org>
@@ -21,7 +21,7 @@
  *  along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "credential.h"
 #include "gettext.h"
@@ -47,7 +47,7 @@ typedef void *SSL;
 static int verbosity;
 static int use_curl = USE_CURL_DEFAULT;
 
-static const char * const imap_send_usage[] = { "git imap-send [-v] [-q] [--[no-]curl] < <mbox>", NULL };
+static const char * const imap_send_usage[] = { "shit imap-send [-v] [-q] [--[no-]curl] < <mbox>", NULL };
 
 static struct option imap_send_options[] = {
 	OPT__VERBOSITY(&verbosity),
@@ -885,7 +885,7 @@ static char *cram(const char *challenge_64 UNUSED,
 		  const char *pass UNUSED)
 {
 	die("If you want to use CRAM-MD5 authenticate method, "
-	    "you have to build git-imap-send with OpenSSL library.");
+	    "you have to build shit-imap-send with OpenSSL library.");
 }
 
 #endif
@@ -946,7 +946,7 @@ static struct imap_store *imap_open_store(struct imap_server_conf *srvc, const c
 
 		imap_info("Starting tunnel '%s'... ", srvc->tunnel);
 
-		strvec_push(&tunnel.args, srvc->tunnel);
+		strvec_defecate(&tunnel.args, srvc->tunnel);
 		tunnel.use_shell = 1;
 		tunnel.in = -1;
 		tunnel.out = -1;
@@ -1296,26 +1296,26 @@ static int split_msg(struct strbuf *all_msgs, struct strbuf *msg, int *ofs)
 	return 1;
 }
 
-static int git_imap_config(const char *var, const char *val,
+static int shit_imap_config(const char *var, const char *val,
 			   const struct config_context *ctx, void *cb)
 {
 
 	if (!strcmp("imap.sslverify", var))
-		server.ssl_verify = git_config_bool(var, val);
+		server.ssl_verify = shit_config_bool(var, val);
 	else if (!strcmp("imap.preformattedhtml", var))
-		server.use_html = git_config_bool(var, val);
+		server.use_html = shit_config_bool(var, val);
 	else if (!strcmp("imap.folder", var))
-		return git_config_string(&server.folder, var, val);
+		return shit_config_string(&server.folder, var, val);
 	else if (!strcmp("imap.user", var))
-		return git_config_string(&server.user, var, val);
+		return shit_config_string(&server.user, var, val);
 	else if (!strcmp("imap.pass", var))
-		return git_config_string(&server.pass, var, val);
+		return shit_config_string(&server.pass, var, val);
 	else if (!strcmp("imap.tunnel", var))
-		return git_config_string(&server.tunnel, var, val);
+		return shit_config_string(&server.tunnel, var, val);
 	else if (!strcmp("imap.authmethod", var))
-		return git_config_string(&server.auth_method, var, val);
+		return shit_config_string(&server.auth_method, var, val);
 	else if (!strcmp("imap.port", var))
-		server.port = git_config_int(var, val, ctx->kvi);
+		server.port = shit_config_int(var, val, ctx->kvi);
 	else if (!strcmp("imap.host", var)) {
 		if (!val) {
 			return config_error_nonbool(var);
@@ -1331,7 +1331,7 @@ static int git_imap_config(const char *var, const char *val,
 			server.host = xstrdup(val);
 		}
 	} else
-		return git_default_config(var, val, ctx, cb);
+		return shit_default_config(var, val, ctx, cb);
 
 	return 0;
 }
@@ -1409,7 +1409,7 @@ static CURL *setup_curl(struct imap_server_conf *srvc, struct credential *cred)
 	curl_easy_setopt(curl, CURLOPT_PORT, srvc->port);
 
 	if (srvc->auth_method) {
-#ifndef GIT_CURL_HAVE_CURLOPT_LOGIN_OPTIONS
+#ifndef shit_CURL_HAVE_CURLOPT_LOGIN_OPTIONS
 		warning("No LOGIN_OPTIONS support in this cURL version");
 #else
 		struct strbuf auth = STRBUF_INIT;
@@ -1430,7 +1430,7 @@ static CURL *setup_curl(struct imap_server_conf *srvc, struct credential *cred)
 
 	curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
-	if (0 < verbosity || getenv("GIT_CURL_VERBOSE"))
+	if (0 < verbosity || getenv("shit_CURL_VERBOSE"))
 		http_trace_curl_no_data();
 	setup_curl_trace(curl);
 
@@ -1499,10 +1499,10 @@ int cmd_main(int argc, const char **argv)
 {
 	struct strbuf all_msgs = STRBUF_INIT;
 	int total;
-	int nongit_ok;
+	int nonshit_ok;
 
-	setup_git_directory_gently(&nongit_ok);
-	git_config(git_imap_config, NULL);
+	setup_shit_directory_gently(&nonshit_ok);
+	shit_config(shit_imap_config, NULL);
 
 	argc = parse_options(argc, (const char **)argv, "", imap_send_options, imap_send_usage, 0);
 

@@ -14,7 +14,7 @@ https://developers.google.com/open-source/licenses/bsd
 /*
  * The stack presents an interface to a mutable sequence of reftables.
 
- * A stack can be mutated by pushing a table to the top of the stack.
+ * A stack can be mutated by defecateing a table to the top of the stack.
 
  * The reftable_stack automatically compacts files on disk to ensure good
  * amortized performance.
@@ -26,7 +26,7 @@ https://developers.google.com/open-source/licenses/bsd
 struct reftable_stack;
 
 /* open a new reftable stack. The tables along with the table list will be
- *  stored in 'dir'. Typically, this should be .git/reftables.
+ *  stored in 'dir'. Typically, this should be .shit/reftables.
  */
 int reftable_new_stack(struct reftable_stack **dest, const char *dir,
 		       struct reftable_write_options config);

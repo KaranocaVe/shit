@@ -8,7 +8,7 @@ Instructions how to use this in Visual Studio:
 
 Open the worktree as a folder. Visual Studio 2019 and later will detect
 the CMake configuration automatically and set everything up for you,
-ready to build. You can then run the tests in `t/` via a regular Git Bash.
+ready to build. You can then run the tests in `t/` via a regular shit Bash.
 
 Note: Visual Studio also has the option of opening `CMakeLists.txt`
 directly; Using this option, Visual Studio will not find the source code,
@@ -20,8 +20,8 @@ Instructions to run CMake manually:
     cd contrib/buildsystems/out
     cmake ../ -DCMAKE_BUILD_TYPE=Release
 
-This will build the git binaries in contrib/buildsystems/out
-directory (our top-level .gitignore file knows to ignore contents of
+This will build the shit binaries in contrib/buildsystems/out
+directory (our top-level .shitignore file knows to ignore contents of
 this directory).
 
 Possible build configurations(-DCMAKE_BUILD_TYPE) with corresponding
@@ -36,8 +36,8 @@ NOTE: -DCMAKE_BUILD_TYPE is optional. For multi-config generators like Visual St
 this option is ignored
 
 This process generates a Makefile(Linux/*BSD/MacOS) , Visual Studio solution(Windows) by default.
-Run `make` to build Git on Linux/*BSD/MacOS.
-Open git.sln on Windows and build Git.
+Run `make` to build shit on Linux/*BSD/MacOS.
+Open shit.sln on Windows and build shit.
 
 NOTE: By default CMake uses Makefile as the build tool on Linux and Visual Studio in Windows,
 to use another tool say `ninja` add this to the command line when configuring.
@@ -49,7 +49,7 @@ to avoid this, add `-DNO_VCPKG=TRUE` to the command line when configuring.
 ]]
 cmake_minimum_required(VERSION 3.14)
 
-#set the source directory to root of git
+#set the source directory to root of shit
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../..)
 
 option(USE_VCPKG "Whether or not to use vcpkg for obtaining dependencies.  Only applicable to Windows platforms" ON)
@@ -64,7 +64,7 @@ endif()
 if(USE_VCPKG)
 	set(VCPKG_DIR "${CMAKE_SOURCE_DIR}/compat/vcbuild/vcpkg")
 	if(NOT EXISTS ${VCPKG_DIR})
-		message("Initializing vcpkg and building the Git's dependencies (this will take a while...)")
+		message("Initializing vcpkg and building the shit's dependencies (this will take a while...)")
 		execute_process(COMMAND ${CMAKE_SOURCE_DIR}/compat/vcbuild/vcpkg_install.bat)
 	endif()
 	list(APPEND CMAKE_PREFIX_PATH "${VCPKG_DIR}/installed/x64-windows")
@@ -77,43 +77,43 @@ if(USE_VCPKG)
 	set(CMAKE_TOOLCHAIN_FILE ${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")
 endif()
 
-find_program(SH_EXE sh PATHS "C:/Program Files/Git/bin" "$ENV{LOCALAPPDATA}/Programs/Git/bin")
+find_program(SH_EXE sh PATHS "C:/Program Files/shit/bin" "$ENV{LOCALAPPDATA}/Programs/shit/bin")
 if(NOT SH_EXE)
 	message(FATAL_ERROR "sh: shell interpreter was not found in your path, please install one."
-			"On Windows, you can get it as part of 'Git for Windows' install at https://gitforwindows.org/")
+			"On Windows, you can get it as part of 'shit for Windows' install at https://shitforwindows.org/")
 endif()
 
-#Create GIT-VERSION-FILE using GIT-VERSION-GEN
-if(NOT EXISTS ${CMAKE_SOURCE_DIR}/GIT-VERSION-FILE)
-	message("Generating GIT-VERSION-FILE")
-	execute_process(COMMAND ${SH_EXE} ${CMAKE_SOURCE_DIR}/GIT-VERSION-GEN
+#Create shit-VERSION-FILE using shit-VERSION-GEN
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/shit-VERSION-FILE)
+	message("Generating shit-VERSION-FILE")
+	execute_process(COMMAND ${SH_EXE} ${CMAKE_SOURCE_DIR}/shit-VERSION-GEN
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
 
-#Parse GIT-VERSION-FILE to get the version
-file(STRINGS ${CMAKE_SOURCE_DIR}/GIT-VERSION-FILE git_version REGEX "GIT_VERSION = (.*)")
-string(REPLACE "GIT_VERSION = " "" git_version ${git_version})
-string(FIND ${git_version} "GIT" location)
+#Parse shit-VERSION-FILE to get the version
+file(STRINGS ${CMAKE_SOURCE_DIR}/shit-VERSION-FILE shit_version REGEX "shit_VERSION = (.*)")
+string(REPLACE "shit_VERSION = " "" shit_version ${shit_version})
+string(FIND ${shit_version} "shit" location)
 if(location EQUAL -1)
-	string(REGEX MATCH "[0-9]*\\.[0-9]*\\.[0-9]*" git_version ${git_version})
+	string(REGEX MATCH "[0-9]*\\.[0-9]*\\.[0-9]*" shit_version ${shit_version})
 else()
-	string(REGEX MATCH "[0-9]*\\.[0-9]*" git_version ${git_version})
-	string(APPEND git_version ".0") #for building from a snapshot
+	string(REGEX MATCH "[0-9]*\\.[0-9]*" shit_version ${shit_version})
+	string(APPEND shit_version ".0") #for building from a snapshot
 endif()
 
-project(git
-	VERSION ${git_version}
+project(shit
+	VERSION ${shit_version}
 	LANGUAGES C)
 
 
-#TODO gitk git-gui gitweb
+#TODO shitk shit-gui shitweb
 #TODO Enable NLS on windows natively
 
 #macros for parsing the Makefile for sources and scripts
 macro(parse_makefile_for_sources list_var regex)
 	file(STRINGS ${CMAKE_SOURCE_DIR}/Makefile ${list_var} REGEX "^${regex} \\+=(.*)")
 	string(REPLACE "${regex} +=" "" ${list_var} ${${list_var}})
-	string(REPLACE "$(COMPAT_OBJS)" "" ${list_var} ${${list_var}}) #remove "$(COMPAT_OBJS)" This is only for libgit.
+	string(REPLACE "$(COMPAT_OBJS)" "" ${list_var} ${${list_var}}) #remove "$(COMPAT_OBJS)" This is only for libshit.
 	string(STRIP ${${list_var}} ${list_var}) #remove trailing/leading whitespaces
 	string(REPLACE ".o" ".c;" ${list_var} ${${list_var}}) #change .o to .c, ; is for converting the string into a list
 	list(TRANSFORM ${list_var} STRIP) #remove trailing/leading whitespaces for each element in list
@@ -131,10 +131,10 @@ macro(parse_makefile_for_scripts list_var regex lang)
 endmacro()
 
 macro(parse_makefile_for_executables list_var regex)
-	file(STRINGS ${CMAKE_SOURCE_DIR}/Makefile ${list_var} REGEX "^${regex} \\+= git-(.*)")
+	file(STRINGS ${CMAKE_SOURCE_DIR}/Makefile ${list_var} REGEX "^${regex} \\+= shit-(.*)")
 	string(REPLACE "${regex} +=" "" ${list_var} ${${list_var}})
 	string(STRIP ${${list_var}} ${list_var}) #remove trailing/leading whitespaces
-	string(REPLACE "git-" "" ${list_var} ${${list_var}}) #strip `git-` prefix
+	string(REPLACE "shit-" "" ${list_var} ${${list_var}}) #strip `shit-` prefix
 	string(REPLACE "\$X" ";" ${list_var} ${${list_var}}) #strip $X, ; is for converting the string into a list
 	list(TRANSFORM ${list_var} STRIP) #remove trailing/leading whitespaces for each element in list
 	list(REMOVE_ITEM ${list_var} "") #remove empty list elements
@@ -223,39 +223,39 @@ endif()
 
 #default behaviour
 include_directories(${CMAKE_SOURCE_DIR})
-add_compile_definitions(GIT_HOST_CPU="${CMAKE_SYSTEM_PROCESSOR}")
+add_compile_definitions(shit_HOST_CPU="${CMAKE_SYSTEM_PROCESSOR}")
 add_compile_definitions(SHA256_BLK INTERNAL_QSORT RUNTIME_PREFIX)
 add_compile_definitions(NO_OPENSSL SHA1_DC SHA1DC_NO_STANDARD_INCLUDES
 			SHA1DC_INIT_SAFE_HASH_DEFAULT=0
-			SHA1DC_CUSTOM_INCLUDE_SHA1_C="git-compat-util.h"
-			SHA1DC_CUSTOM_INCLUDE_UBC_CHECK_C="git-compat-util.h" )
-list(APPEND compat_SOURCES sha1dc_git.c sha1dc/sha1.c sha1dc/ubc_check.c block-sha1/sha1.c sha256/block/sha256.c compat/qsort_s.c)
+			SHA1DC_CUSTOM_INCLUDE_SHA1_C="shit-compat-util.h"
+			SHA1DC_CUSTOM_INCLUDE_UBC_CHECK_C="shit-compat-util.h" )
+list(APPEND compat_SOURCES sha1dc_shit.c sha1dc/sha1.c sha1dc/ubc_check.c block-sha1/sha1.c sha256/block/sha256.c compat/qsort_s.c)
 
 
 add_compile_definitions(PAGER_ENV="LESS=FRX LV=-c"
-			GIT_EXEC_PATH="libexec/git-core"
-			GIT_LOCALE_PATH="share/locale"
-			GIT_MAN_PATH="share/man"
-			GIT_INFO_PATH="share/info"
-			GIT_HTML_PATH="share/doc/git-doc"
+			shit_EXEC_PATH="libexec/shit-core"
+			shit_LOCALE_PATH="share/locale"
+			shit_MAN_PATH="share/man"
+			shit_INFO_PATH="share/info"
+			shit_HTML_PATH="share/doc/shit-doc"
 			DEFAULT_HELP_FORMAT="html"
-			DEFAULT_GIT_TEMPLATE_DIR="share/git-core/templates"
-			GIT_VERSION="${PROJECT_VERSION}.GIT"
-			GIT_USER_AGENT="git/${PROJECT_VERSION}.GIT"
+			DEFAULT_shit_TEMPLATE_DIR="share/shit-core/templates"
+			shit_VERSION="${PROJECT_VERSION}.shit"
+			shit_USER_AGENT="shit/${PROJECT_VERSION}.shit"
 			BINDIR="bin"
-			GIT_BUILT_FROM_COMMIT="")
+			shit_BUILT_FROM_COMMIT="")
 
 if(WIN32)
 	set(FALLBACK_RUNTIME_PREFIX /mingw64)
 	# Move system config into top-level /etc/
 	add_compile_definitions(FALLBACK_RUNTIME_PREFIX="${FALLBACK_RUNTIME_PREFIX}"
-		ETC_GITATTRIBUTES="../etc/gitattributes"
-		ETC_GITCONFIG="../etc/gitconfig")
+		ETC_shitATTRIBUTES="../etc/shitattributes"
+		ETC_shitCONFIG="../etc/shitconfig")
 else()
 	set(FALLBACK_RUNTIME_PREFIX /home/$ENV{USER})
 	add_compile_definitions(FALLBACK_RUNTIME_PREFIX="${FALLBACK_RUNTIME_PREFIX}"
-		ETC_GITATTRIBUTES="etc/gitattributes"
-		ETC_GITCONFIG="etc/gitconfig")
+		ETC_shitATTRIBUTES="etc/shitattributes"
+		ETC_shitCONFIG="etc/shitconfig")
 endif()
 
 
@@ -613,25 +613,25 @@ unset(CMAKE_REQUIRED_INCLUDES)
 
 #programs
 set(PROGRAMS_BUILT
-	git git-daemon git-http-backend git-sh-i18n--envsubst
-	git-shell scalar)
+	shit shit-daemon shit-http-backend shit-sh-i18n--envsubst
+	shit-shell scalar)
 
 if(NOT CURL_FOUND)
-	list(APPEND excluded_progs git-http-fetch git-http-push)
+	list(APPEND excluded_progs shit-http-fetch shit-http-defecate)
 	add_compile_definitions(NO_CURL)
-	message(WARNING "git-http-push and git-http-fetch will not be built")
+	message(WARNING "shit-http-defecate and shit-http-fetch will not be built")
 else()
-	list(APPEND PROGRAMS_BUILT git-http-fetch git-http-push git-imap-send git-remote-http)
+	list(APPEND PROGRAMS_BUILT shit-http-fetch shit-http-defecate shit-imap-send shit-remote-http)
 	if(CURL_VERSION_STRING VERSION_GREATER_EQUAL 7.34.0)
 		add_compile_definitions(USE_CURL_FOR_IMAP_SEND)
 	endif()
 endif()
 
 if(NOT EXPAT_FOUND)
-	list(APPEND excluded_progs git-http-push)
+	list(APPEND excluded_progs shit-http-defecate)
 	add_compile_definitions(NO_EXPAT)
 else()
-	list(APPEND PROGRAMS_BUILT git-http-push)
+	list(APPEND PROGRAMS_BUILT shit-http-defecate)
 	if(EXPAT_VERSION_STRING VERSION_LESS_EQUAL 1.2)
 		add_compile_definitions(EXPAT_NEEDS_XMLPARSE_H)
 	endif()
@@ -674,12 +674,12 @@ endif()
 include_directories(${CMAKE_BINARY_DIR})
 
 #build
-#libgit
-parse_makefile_for_sources(libgit_SOURCES "LIB_OBJS")
+#libshit
+parse_makefile_for_sources(libshit_SOURCES "LIB_OBJS")
 
-list(TRANSFORM libgit_SOURCES PREPEND "${CMAKE_SOURCE_DIR}/")
+list(TRANSFORM libshit_SOURCES PREPEND "${CMAKE_SOURCE_DIR}/")
 list(TRANSFORM compat_SOURCES PREPEND "${CMAKE_SOURCE_DIR}/")
-add_library(libgit ${libgit_SOURCES} ${compat_SOURCES})
+add_library(libshit ${libshit_SOURCES} ${compat_SOURCES})
 
 #libxdiff
 parse_makefile_for_sources(libxdiff_SOURCES "XDIFF_OBJS")
@@ -695,27 +695,27 @@ add_library(reftable STATIC ${reftable_SOURCES})
 
 if(WIN32)
 	if(NOT MSVC)#use windres when compiling with gcc and clang
-		add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/git.res
+		add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/shit.res
 				COMMAND ${WINDRES_EXE} -O coff -DMAJOR=${PROJECT_VERSION_MAJOR} -DMINOR=${PROJECT_VERSION_MINOR}
-					-DMICRO=${PROJECT_VERSION_PATCH} -DPATCHLEVEL=0 -DGIT_VERSION="\\\"${PROJECT_VERSION}.GIT\\\""
-					-i ${CMAKE_SOURCE_DIR}/git.rc -o ${CMAKE_BINARY_DIR}/git.res
+					-DMICRO=${PROJECT_VERSION_PATCH} -DPATCHLEVEL=0 -Dshit_VERSION="\\\"${PROJECT_VERSION}.shit\\\""
+					-i ${CMAKE_SOURCE_DIR}/shit.rc -o ${CMAKE_BINARY_DIR}/shit.res
 				WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 				VERBATIM)
 	else()#MSVC use rc
-		add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/git.res
+		add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/shit.res
 				COMMAND ${CMAKE_RC_COMPILER} /d MAJOR=${PROJECT_VERSION_MAJOR} /d MINOR=${PROJECT_VERSION_MINOR}
-					/d MICRO=${PROJECT_VERSION_PATCH} /d PATCHLEVEL=0 /d GIT_VERSION="${PROJECT_VERSION}.GIT"
-					/fo ${CMAKE_BINARY_DIR}/git.res ${CMAKE_SOURCE_DIR}/git.rc
+					/d MICRO=${PROJECT_VERSION_PATCH} /d PATCHLEVEL=0 /d shit_VERSION="${PROJECT_VERSION}.shit"
+					/fo ${CMAKE_BINARY_DIR}/shit.res ${CMAKE_SOURCE_DIR}/shit.rc
 				WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 				VERBATIM)
 	endif()
-	add_custom_target(git-rc DEPENDS ${CMAKE_BINARY_DIR}/git.res)
+	add_custom_target(shit-rc DEPENDS ${CMAKE_BINARY_DIR}/shit.res)
 endif()
 
 #link all required libraries to common-main
 add_library(common-main OBJECT ${CMAKE_SOURCE_DIR}/common-main.c)
 
-target_link_libraries(common-main libgit xdiff reftable ${ZLIB_LIBRARIES})
+target_link_libraries(common-main libshit xdiff reftable ${ZLIB_LIBRARIES})
 if(Intl_FOUND)
 	target_link_libraries(common-main ${Intl_LIBRARIES})
 endif()
@@ -727,8 +727,8 @@ if(PCRE2_FOUND)
 	target_link_directories(common-main PUBLIC ${PCRE2_LIBRARY_DIRS})
 endif()
 if(WIN32)
-	target_link_libraries(common-main ws2_32 ntdll ${CMAKE_BINARY_DIR}/git.res)
-	add_dependencies(common-main git-rc)
+	target_link_libraries(common-main ws2_32 ntdll ${CMAKE_BINARY_DIR}/shit.res)
+	add_dependencies(common-main shit-rc)
 	if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
 		target_link_options(common-main PUBLIC -municode -Wl,--nxcompat -Wl,--dynamicbase -Wl,--pic-executable,-e,mainCRTStartup)
 	elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang")
@@ -739,11 +739,11 @@ if(WIN32)
 		message(FATAL_ERROR "Unhandled compiler: ${CMAKE_C_COMPILER_ID}")
 	endif()
 
-	add_executable(headless-git ${CMAKE_SOURCE_DIR}/compat/win32/headless.c)
+	add_executable(headless-shit ${CMAKE_SOURCE_DIR}/compat/win32/headless.c)
 	if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
-		target_link_options(headless-git PUBLIC -municode -Wl,-subsystem,windows)
+		target_link_options(headless-shit PUBLIC -municode -Wl,-subsystem,windows)
 	elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-		target_link_options(headless-git PUBLIC /NOLOGO /ENTRY:wWinMainCRTStartup /SUBSYSTEM:WINDOWS)
+		target_link_options(headless-shit PUBLIC /NOLOGO /ENTRY:wWinMainCRTStartup /SUBSYSTEM:WINDOWS)
 	else()
 		message(FATAL_ERROR "Unhandled compiler: ${CMAKE_C_COMPILER_ID}")
 	endif()
@@ -751,24 +751,24 @@ elseif(UNIX)
 	target_link_libraries(common-main pthread rt)
 endif()
 
-#git
-parse_makefile_for_sources(git_SOURCES "BUILTIN_OBJS")
+#shit
+parse_makefile_for_sources(shit_SOURCES "BUILTIN_OBJS")
 
-list(TRANSFORM git_SOURCES PREPEND "${CMAKE_SOURCE_DIR}/")
-add_executable(git ${CMAKE_SOURCE_DIR}/git.c ${git_SOURCES})
-target_link_libraries(git common-main)
+list(TRANSFORM shit_SOURCES PREPEND "${CMAKE_SOURCE_DIR}/")
+add_executable(shit ${CMAKE_SOURCE_DIR}/shit.c ${shit_SOURCES})
+target_link_libraries(shit common-main)
 
-add_executable(git-daemon ${CMAKE_SOURCE_DIR}/daemon.c)
-target_link_libraries(git-daemon common-main)
+add_executable(shit-daemon ${CMAKE_SOURCE_DIR}/daemon.c)
+target_link_libraries(shit-daemon common-main)
 
-add_executable(git-http-backend ${CMAKE_SOURCE_DIR}/http-backend.c)
-target_link_libraries(git-http-backend common-main)
+add_executable(shit-http-backend ${CMAKE_SOURCE_DIR}/http-backend.c)
+target_link_libraries(shit-http-backend common-main)
 
-add_executable(git-sh-i18n--envsubst ${CMAKE_SOURCE_DIR}/sh-i18n--envsubst.c)
-target_link_libraries(git-sh-i18n--envsubst common-main)
+add_executable(shit-sh-i18n--envsubst ${CMAKE_SOURCE_DIR}/sh-i18n--envsubst.c)
+target_link_libraries(shit-sh-i18n--envsubst common-main)
 
-add_executable(git-shell ${CMAKE_SOURCE_DIR}/shell.c)
-target_link_libraries(git-shell common-main)
+add_executable(shit-shell ${CMAKE_SOURCE_DIR}/shell.c)
+target_link_libraries(shit-shell common-main)
 
 add_executable(scalar ${CMAKE_SOURCE_DIR}/scalar.c)
 target_link_libraries(scalar common-main)
@@ -776,69 +776,69 @@ target_link_libraries(scalar common-main)
 if(CURL_FOUND)
 	add_library(http_obj OBJECT ${CMAKE_SOURCE_DIR}/http.c)
 
-	add_executable(git-imap-send ${CMAKE_SOURCE_DIR}/imap-send.c)
-	target_link_libraries(git-imap-send http_obj common-main ${CURL_LIBRARIES})
+	add_executable(shit-imap-send ${CMAKE_SOURCE_DIR}/imap-send.c)
+	target_link_libraries(shit-imap-send http_obj common-main ${CURL_LIBRARIES})
 
-	add_executable(git-http-fetch ${CMAKE_SOURCE_DIR}/http-walker.c ${CMAKE_SOURCE_DIR}/http-fetch.c)
-	target_link_libraries(git-http-fetch http_obj common-main ${CURL_LIBRARIES})
+	add_executable(shit-http-fetch ${CMAKE_SOURCE_DIR}/http-walker.c ${CMAKE_SOURCE_DIR}/http-fetch.c)
+	target_link_libraries(shit-http-fetch http_obj common-main ${CURL_LIBRARIES})
 
-	add_executable(git-remote-http ${CMAKE_SOURCE_DIR}/http-walker.c ${CMAKE_SOURCE_DIR}/remote-curl.c)
-	target_link_libraries(git-remote-http http_obj common-main ${CURL_LIBRARIES} )
+	add_executable(shit-remote-http ${CMAKE_SOURCE_DIR}/http-walker.c ${CMAKE_SOURCE_DIR}/remote-curl.c)
+	target_link_libraries(shit-remote-http http_obj common-main ${CURL_LIBRARIES} )
 
 	if(EXPAT_FOUND)
-		add_executable(git-http-push ${CMAKE_SOURCE_DIR}/http-push.c)
-		target_link_libraries(git-http-push http_obj common-main ${CURL_LIBRARIES} ${EXPAT_LIBRARIES})
+		add_executable(shit-http-defecate ${CMAKE_SOURCE_DIR}/http-defecate.c)
+		target_link_libraries(shit-http-defecate http_obj common-main ${CURL_LIBRARIES} ${EXPAT_LIBRARIES})
 	endif()
 endif()
 
-parse_makefile_for_executables(git_builtin_extra "BUILT_INS")
+parse_makefile_for_executables(shit_builtin_extra "BUILT_INS")
 
 option(SKIP_DASHED_BUILT_INS "Skip hardlinking the dashed versions of the built-ins")
 
 #Creating hardlinks
 if(NOT SKIP_DASHED_BUILT_INS)
-foreach(s ${git_SOURCES} ${git_builtin_extra})
+foreach(s ${shit_SOURCES} ${shit_builtin_extra})
 	string(REPLACE "${CMAKE_SOURCE_DIR}/builtin/" "" s ${s})
 	string(REPLACE ".c" "" s ${s})
-	file(APPEND ${CMAKE_BINARY_DIR}/CreateLinks.cmake "file(CREATE_LINK git${EXE_EXTENSION} git-${s}${EXE_EXTENSION})\n")
-	list(APPEND git_links ${CMAKE_BINARY_DIR}/git-${s}${EXE_EXTENSION})
+	file(APPEND ${CMAKE_BINARY_DIR}/CreateLinks.cmake "file(CREATE_LINK shit${EXE_EXTENSION} shit-${s}${EXE_EXTENSION})\n")
+	list(APPEND shit_links ${CMAKE_BINARY_DIR}/shit-${s}${EXE_EXTENSION})
 endforeach()
 endif()
 
 if(CURL_FOUND)
 	set(remote_exes
-		git-remote-https git-remote-ftp git-remote-ftps)
+		shit-remote-https shit-remote-ftp shit-remote-ftps)
 	foreach(s ${remote_exes})
-		file(APPEND ${CMAKE_BINARY_DIR}/CreateLinks.cmake "file(CREATE_LINK git-remote-http${EXE_EXTENSION} ${s}${EXE_EXTENSION})\n")
-		list(APPEND git_http_links ${CMAKE_BINARY_DIR}/${s}${EXE_EXTENSION})
+		file(APPEND ${CMAKE_BINARY_DIR}/CreateLinks.cmake "file(CREATE_LINK shit-remote-http${EXE_EXTENSION} ${s}${EXE_EXTENSION})\n")
+		list(APPEND shit_http_links ${CMAKE_BINARY_DIR}/${s}${EXE_EXTENSION})
 	endforeach()
 endif()
 
-add_custom_command(OUTPUT ${git_links} ${git_http_links}
+add_custom_command(OUTPUT ${shit_links} ${shit_http_links}
 		COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/CreateLinks.cmake
-		DEPENDS git git-remote-http)
-add_custom_target(git-links ALL DEPENDS ${git_links} ${git_http_links})
+		DEPENDS shit shit-remote-http)
+add_custom_target(shit-links ALL DEPENDS ${shit_links} ${shit_http_links})
 
 
 #creating required scripts
 set(SHELL_PATH /bin/sh)
 set(PERL_PATH /usr/bin/perl)
 set(LOCALEDIR ${FALLBACK_RUNTIME_PREFIX}/share/locale)
-set(GITWEBDIR ${FALLBACK_RUNTIME_PREFIX}/share/locale)
+set(shitWEBDIR ${FALLBACK_RUNTIME_PREFIX}/share/locale)
 set(INSTLIBDIR ${FALLBACK_RUNTIME_PREFIX}/share/perl5)
 
 #shell scripts
-parse_makefile_for_scripts(git_sh_scripts "SCRIPT_SH" ".sh")
-parse_makefile_for_scripts(git_shlib_scripts "SCRIPT_LIB" "")
-set(git_shell_scripts
-	${git_sh_scripts} ${git_shlib_scripts} git-instaweb)
+parse_makefile_for_scripts(shit_sh_scripts "SCRIPT_SH" ".sh")
+parse_makefile_for_scripts(shit_shlib_scripts "SCRIPT_LIB" "")
+set(shit_shell_scripts
+	${shit_sh_scripts} ${shit_shlib_scripts} shit-instaweb)
 
-foreach(script ${git_shell_scripts})
+foreach(script ${shit_shell_scripts})
 	file(STRINGS ${CMAKE_SOURCE_DIR}/${script}.sh content NEWLINE_CONSUME)
 	string(REPLACE "@SHELL_PATH@" "${SHELL_PATH}" content "${content}")
 	string(REPLACE "@@DIFF@@" "diff" content "${content}")
 	string(REPLACE "@LOCALEDIR@" "${LOCALEDIR}" content "${content}")
-	string(REPLACE "@GITWEBDIR@" "${GITWEBDIR}" content "${content}")
+	string(REPLACE "@shitWEBDIR@" "${shitWEBDIR}" content "${content}")
 	string(REPLACE "@@NO_CURL@@" "" content "${content}")
 	string(REPLACE "@@USE_GETTEXT_SCHEME@@" "" content "${content}")
 	string(REPLACE "# @@BROKEN_PATH_FIX@@" "" content "${content}")
@@ -848,24 +848,24 @@ foreach(script ${git_shell_scripts})
 endforeach()
 
 #perl scripts
-parse_makefile_for_scripts(git_perl_scripts "SCRIPT_PERL" ".perl")
+parse_makefile_for_scripts(shit_perl_scripts "SCRIPT_PERL" ".perl")
 
 #create perl header
 file(STRINGS ${CMAKE_SOURCE_DIR}/perl/header_templates/fixed_prefix.template.pl perl_header )
 string(REPLACE "@@PATHSEP@@" ":" perl_header "${perl_header}")
 string(REPLACE "@@INSTLIBDIR@@" "${INSTLIBDIR}" perl_header "${perl_header}")
 
-foreach(script ${git_perl_scripts})
+foreach(script ${shit_perl_scripts})
 	file(STRINGS ${CMAKE_SOURCE_DIR}/${script}.perl content NEWLINE_CONSUME)
 	string(REPLACE "#!/usr/bin/perl" "#!/usr/bin/perl\n${perl_header}\n" content "${content}")
-	string(REPLACE "@@GIT_VERSION@@" "${PROJECT_VERSION}" content "${content}")
+	string(REPLACE "@@shit_VERSION@@" "${PROJECT_VERSION}" content "${content}")
 	file(WRITE ${CMAKE_BINARY_DIR}/${script} ${content})
 endforeach()
 
 #python script
-file(STRINGS ${CMAKE_SOURCE_DIR}/git-p4.py content NEWLINE_CONSUME)
+file(STRINGS ${CMAKE_SOURCE_DIR}/shit-p4.py content NEWLINE_CONSUME)
 string(REPLACE "#!/usr/bin/env python" "#!/usr/bin/python" content "${content}")
-file(WRITE ${CMAKE_BINARY_DIR}/git-p4 ${content})
+file(WRITE ${CMAKE_BINARY_DIR}/shit-p4 ${content})
 
 #perl modules
 file(GLOB_RECURSE perl_modules "${CMAKE_SOURCE_DIR}/perl/*.pm")
@@ -883,7 +883,7 @@ endforeach()
 #templates
 file(GLOB templates "${CMAKE_SOURCE_DIR}/templates/*")
 list(TRANSFORM templates REPLACE "${CMAKE_SOURCE_DIR}/templates/" "")
-list(REMOVE_ITEM templates ".gitignore")
+list(REMOVE_ITEM templates ".shitignore")
 list(REMOVE_ITEM templates "Makefile")
 list(REMOVE_ITEM templates "blt")# Prevents an error when reconfiguring for in source builds
 
@@ -905,59 +905,59 @@ if(MSGFMT_EXE)
 	list(TRANSFORM po_files REPLACE ".po" "")
 	foreach(po ${po_files})
 		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/po/build/locale/${po}/LC_MESSAGES)
-		add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/po/build/locale/${po}/LC_MESSAGES/git.mo
-				COMMAND ${MSGFMT_EXE} --check --statistics -o ${CMAKE_BINARY_DIR}/po/build/locale/${po}/LC_MESSAGES/git.mo ${CMAKE_SOURCE_DIR}/po/${po}.po)
-		list(APPEND po_gen ${CMAKE_BINARY_DIR}/po/build/locale/${po}/LC_MESSAGES/git.mo)
+		add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/po/build/locale/${po}/LC_MESSAGES/shit.mo
+				COMMAND ${MSGFMT_EXE} --check --statistics -o ${CMAKE_BINARY_DIR}/po/build/locale/${po}/LC_MESSAGES/shit.mo ${CMAKE_SOURCE_DIR}/po/${po}.po)
+		list(APPEND po_gen ${CMAKE_BINARY_DIR}/po/build/locale/${po}/LC_MESSAGES/shit.mo)
 	endforeach()
 	add_custom_target(po-gen ALL DEPENDS ${po_gen})
 endif()
 
 
 #to help with the install
-list(TRANSFORM git_shell_scripts PREPEND "${CMAKE_BINARY_DIR}/")
-list(TRANSFORM git_perl_scripts PREPEND "${CMAKE_BINARY_DIR}/")
+list(TRANSFORM shit_shell_scripts PREPEND "${CMAKE_BINARY_DIR}/")
+list(TRANSFORM shit_perl_scripts PREPEND "${CMAKE_BINARY_DIR}/")
 
 #install
 foreach(program ${PROGRAMS_BUILT})
-if(program MATCHES "^(git|git-shell|scalar)$")
+if(program MATCHES "^(shit|shit-shell|scalar)$")
 install(TARGETS ${program}
 	RUNTIME DESTINATION bin)
 else()
 install(TARGETS ${program}
-	RUNTIME DESTINATION libexec/git-core)
+	RUNTIME DESTINATION libexec/shit-core)
 endif()
 endforeach()
 
-install(PROGRAMS ${CMAKE_BINARY_DIR}/git-cvsserver
+install(PROGRAMS ${CMAKE_BINARY_DIR}/shit-cvsserver
 	DESTINATION bin)
 
 set(bin_links
-	git-receive-pack git-upload-archive git-upload-pack)
+	shit-receive-pack shit-upload-archive shit-upload-pack)
 
 foreach(b ${bin_links})
-install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/git${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/bin/${b}${EXE_EXTENSION})")
+install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/shit${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/bin/${b}${EXE_EXTENSION})")
 endforeach()
 
-install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/git${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/git-core/git${EXE_EXTENSION})")
-install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/git-shell${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/git-core/git-shell${EXE_EXTENSION})")
+install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/shit${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/shit-core/shit${EXE_EXTENSION})")
+install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/shit-shell${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/shit-core/shit-shell${EXE_EXTENSION})")
 
-foreach(b ${git_links})
+foreach(b ${shit_links})
 	string(REPLACE "${CMAKE_BINARY_DIR}" "" b ${b})
-	install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/git${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/git-core/${b})")
+	install(CODE "file(CREATE_LINK ${CMAKE_INSTALL_PREFIX}/bin/shit${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/shit-core/${b})")
 endforeach()
 
-foreach(b ${git_http_links})
+foreach(b ${shit_http_links})
 	string(REPLACE "${CMAKE_BINARY_DIR}" "" b ${b})
-	install(CODE "file(CREATE_LINK  ${CMAKE_INSTALL_PREFIX}/libexec/git-core/git-remote-http${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/git-core/${b})")
+	install(CODE "file(CREATE_LINK  ${CMAKE_INSTALL_PREFIX}/libexec/shit-core/shit-remote-http${EXE_EXTENSION} ${CMAKE_INSTALL_PREFIX}/libexec/shit-core/${b})")
 endforeach()
 
-install(PROGRAMS ${git_shell_scripts} ${git_perl_scripts} ${CMAKE_BINARY_DIR}/git-p4
-	DESTINATION libexec/git-core)
+install(PROGRAMS ${shit_shell_scripts} ${shit_perl_scripts} ${CMAKE_BINARY_DIR}/shit-p4
+	DESTINATION libexec/shit-core)
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/mergetools DESTINATION libexec/git-core)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/mergetools DESTINATION libexec/shit-core)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/perl/build/lib/ DESTINATION share/perl5
 	FILES_MATCHING PATTERN "*.pm")
-install(DIRECTORY ${CMAKE_BINARY_DIR}/templates/blt/ DESTINATION share/git-core/templates)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/templates/blt/ DESTINATION share/shit-core/templates)
 
 if(MSGFMT_EXE)
 	install(DIRECTORY ${CMAKE_BINARY_DIR}/po/build/locale DESTINATION share)
@@ -1023,7 +1023,7 @@ endif()
 
 #wrapper scripts
 set(wrapper_scripts
-	git git-upload-pack git-receive-pack git-upload-archive git-shell git-remote-ext scalar)
+	shit shit-upload-pack shit-receive-pack shit-upload-archive shit-shell shit-remote-ext scalar)
 
 set(wrapper_test_scripts
 	test-fake-ssh test-tool)
@@ -1045,14 +1045,14 @@ endforeach()
 
 file(STRINGS ${CMAKE_SOURCE_DIR}/wrap-for-bin.sh content NEWLINE_CONSUME)
 string(REPLACE "@@BUILD_DIR@@" "${CMAKE_BINARY_DIR}" content "${content}")
-string(REPLACE "@@PROG@@" "git-cvsserver" content "${content}")
-file(WRITE ${CMAKE_BINARY_DIR}/bin-wrappers/git-cvsserver ${content})
+string(REPLACE "@@PROG@@" "shit-cvsserver" content "${content}")
+file(WRITE ${CMAKE_BINARY_DIR}/bin-wrappers/shit-cvsserver ${content})
 
 #options for configuring test options
 option(PERL_TESTS "Perform tests that use perl" ON)
 option(PYTHON_TESTS "Perform tests that use python" ON)
 
-#GIT-BUILD-OPTIONS
+#shit-BUILD-OPTIONS
 set(TEST_SHELL_PATH ${SHELL_PATH})
 set(DIFF diff)
 set(PYTHON_PATH /usr/bin/python)
@@ -1087,25 +1087,25 @@ if(NOT PYTHON_TESTS)
 	set(NO_PYTHON 1)
 endif()
 
-file(WRITE ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "SHELL_PATH='${SHELL_PATH}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "TEST_SHELL_PATH='${TEST_SHELL_PATH}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "PERL_PATH='${PERL_PATH}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "DIFF='${DIFF}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "PYTHON_PATH='${PYTHON_PATH}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "TAR='${TAR}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "NO_CURL='${NO_CURL}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "NO_EXPAT='${NO_EXPAT}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "NO_PERL='${NO_PERL}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "NO_PTHREADS='${NO_PTHREADS}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "NO_UNIX_SOCKETS='${NO_UNIX_SOCKETS}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "PAGER_ENV='${PAGER_ENV}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "X='${EXE_EXTENSION}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "NO_GETTEXT='${NO_GETTEXT}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "RUNTIME_PREFIX='${RUNTIME_PREFIX}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "NO_PYTHON='${NO_PYTHON}'\n")
-file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "SUPPORTS_SIMPLE_IPC='${SUPPORTS_SIMPLE_IPC}'\n")
+file(WRITE ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "SHELL_PATH='${SHELL_PATH}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "TEST_SHELL_PATH='${TEST_SHELL_PATH}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "PERL_PATH='${PERL_PATH}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "DIFF='${DIFF}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "PYTHON_PATH='${PYTHON_PATH}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "TAR='${TAR}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "NO_CURL='${NO_CURL}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "NO_EXPAT='${NO_EXPAT}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "NO_PERL='${NO_PERL}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "NO_PTHREADS='${NO_PTHREADS}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "NO_UNIX_SOCKETS='${NO_UNIX_SOCKETS}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "PAGER_ENV='${PAGER_ENV}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "X='${EXE_EXTENSION}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "NO_GETTEXT='${NO_GETTEXT}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "RUNTIME_PREFIX='${RUNTIME_PREFIX}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "NO_PYTHON='${NO_PYTHON}'\n")
+file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "SUPPORTS_SIMPLE_IPC='${SUPPORTS_SIMPLE_IPC}'\n")
 if(USE_VCPKG)
-	file(APPEND ${CMAKE_BINARY_DIR}/GIT-BUILD-OPTIONS "PATH=\"$PATH:$TEST_DIRECTORY/../compat/vcbuild/vcpkg/installed/x64-windows/bin\"\n")
+	file(APPEND ${CMAKE_BINARY_DIR}/shit-BUILD-OPTIONS "PATH=\"$PATH:$TEST_DIRECTORY/../compat/vcbuild/vcpkg/installed/x64-windows/bin\"\n")
 endif()
 
 #Make the tests work when building out of the source tree
@@ -1113,14 +1113,14 @@ get_filename_component(CACHE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMakeCache.txt
 if(NOT ${CMAKE_BINARY_DIR}/CMakeCache.txt STREQUAL ${CACHE_PATH})
 	#Setting the build directory in test-lib.sh before running tests
 	file(WRITE ${CMAKE_BINARY_DIR}/CTestCustom.cmake
-		"file(WRITE ${CMAKE_SOURCE_DIR}/GIT-BUILD-DIR \"${CMAKE_BINARY_DIR}\")")
+		"file(WRITE ${CMAKE_SOURCE_DIR}/shit-BUILD-DIR \"${CMAKE_BINARY_DIR}\")")
 	#misc copies
 	file(COPY ${CMAKE_SOURCE_DIR}/t/chainlint.pl DESTINATION ${CMAKE_BINARY_DIR}/t/)
 	file(COPY ${CMAKE_SOURCE_DIR}/po/is.po DESTINATION ${CMAKE_BINARY_DIR}/po/)
 	file(GLOB mergetools "${CMAKE_SOURCE_DIR}/mergetools/*")
 	file(COPY ${mergetools} DESTINATION ${CMAKE_BINARY_DIR}/mergetools/)
-	file(COPY ${CMAKE_SOURCE_DIR}/contrib/completion/git-prompt.sh DESTINATION ${CMAKE_BINARY_DIR}/contrib/completion/)
-	file(COPY ${CMAKE_SOURCE_DIR}/contrib/completion/git-completion.bash DESTINATION ${CMAKE_BINARY_DIR}/contrib/completion/)
+	file(COPY ${CMAKE_SOURCE_DIR}/contrib/completion/shit-prompt.sh DESTINATION ${CMAKE_BINARY_DIR}/contrib/completion/)
+	file(COPY ${CMAKE_SOURCE_DIR}/contrib/completion/shit-completion.bash DESTINATION ${CMAKE_BINARY_DIR}/contrib/completion/)
 endif()
 
 file(GLOB test_scripts "${CMAKE_SOURCE_DIR}/t/t[0-9]*.sh")

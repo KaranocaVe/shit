@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "pack-mtimes.h"
 #include "object-file.h"
@@ -6,7 +6,7 @@
 #include "packfile.h"
 #include "strbuf.h"
 
-static char *pack_mtimes_filename(struct packed_git *p)
+static char *pack_mtimes_filename(struct packed_shit *p)
 {
 	size_t len;
 	if (!strip_suffix(p->pack_name, ".pack", &len))
@@ -32,7 +32,7 @@ static int load_pack_mtimes_file(char *mtimes_file,
 	size_t mtimes_size, expected_size;
 	struct mtimes_header header;
 
-	fd = git_open(mtimes_file);
+	fd = shit_open(mtimes_file);
 
 	if (fd < 0) {
 		ret = -1;
@@ -76,7 +76,7 @@ static int load_pack_mtimes_file(char *mtimes_file,
 
 	expected_size = MTIMES_HEADER_SIZE;
 	expected_size = st_add(expected_size, st_mult(sizeof(uint32_t), num_objects));
-	expected_size = st_add(expected_size, 2 * (header.hash_id == 1 ? GIT_SHA1_RAWSZ : GIT_SHA256_RAWSZ));
+	expected_size = st_add(expected_size, 2 * (header.hash_id == 1 ? shit_SHA1_RAWSZ : shit_SHA256_RAWSZ));
 
 	if (mtimes_size != expected_size) {
 		ret = error(_("mtimes file %s is corrupt"), mtimes_file);
@@ -97,7 +97,7 @@ cleanup:
 	return ret;
 }
 
-int load_pack_mtimes(struct packed_git *p)
+int load_pack_mtimes(struct packed_shit *p)
 {
 	char *mtimes_name = NULL;
 	int ret = 0;
@@ -121,7 +121,7 @@ cleanup:
 	return ret;
 }
 
-uint32_t nth_packed_mtime(struct packed_git *p, uint32_t pos)
+uint32_t nth_packed_mtime(struct packed_shit *p, uint32_t pos)
 {
 	if (!p->mtimes_map)
 		BUG("pack .mtimes file not loaded for %s", p->pack_name);

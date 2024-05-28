@@ -25,7 +25,7 @@ When received, the response is returned back to the caller.
 For example, the `fsmonitor--daemon` feature will be built as a server
 application on top of the IPC-server library routines.  It will have
 threads watching for file system events and a thread pool waiting for
-client connections.  Clients, such as `git status`, will request a list
+client connections.  Clients, such as `shit status`, will request a list
 of file system events since a point in time and the server will
 respond with a list of changed files and directories.  The formats of
 the request and response are application-specific; the IPC-client and
@@ -37,7 +37,7 @@ Comparison with sub-process model
 
 The Simple-IPC mechanism differs from the existing `sub-process.c`
 model (Documentation/technical/long-running-process-protocol.txt) and
-used by applications like Git-LFS.  In the LFS-style sub-process model,
+used by applications like shit-LFS.  In the LFS-style sub-process model,
 the helper is started by the foreground process, communication happens
 via a pair of file descriptors bound to the stdin/stdout of the
 sub-process, the sub-process only serves the current foreground
@@ -63,7 +63,7 @@ outside the scope of the Simple-IPC design and is a property of the
 application using it.  For example, the server might be started or
 restarted during routine maintenance operations, or it might be
 started as a system service during the system boot-up sequence, or it
-might be started on-demand by a foreground Git command when needed.
+might be started on-demand by a foreground shit command when needed.
 
 Similarly, server shutdown is a property of the application using
 the simple-ipc routines.  For example, the server might decide to
@@ -78,7 +78,7 @@ client and an optional response message from the server.  Both the
 client and server messages are unlimited in length and are terminated
 with a flush packet.
 
-The pkt-line routines (linkgit:gitprotocol-common[5])
+The pkt-line routines (linkshit:shitprotocol-common[5])
 are used to simplify buffer management during message generation,
 transmission, and reception.  A flush packet is used to mark the end
 of the message.  This allows the sender to incrementally generate and

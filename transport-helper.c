@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "transport.h"
 #include "quote.h"
 #include "run-command.h"
@@ -30,7 +30,7 @@ struct helper_data {
 		bidi_import : 1,
 		export : 1,
 		option : 1,
-		push : 1,
+		defecate : 1,
 		connect : 1,
 		stateless_connect : 1,
 		signed_tags : 1,
@@ -55,7 +55,7 @@ struct helper_data {
 	/* Transport options for fetch-pack/send-pack (should one of
 	 * those be invoked).
 	 */
-	struct git_transport_options transport_options;
+	struct shit_transport_options transport_options;
 };
 
 static void sendline(struct helper_data *helper, struct strbuf *buffer)
@@ -132,15 +132,15 @@ static struct child_process *get_helper(struct transport *transport)
 	helper->in = -1;
 	helper->out = -1;
 	helper->err = 0;
-	strvec_pushf(&helper->args, "remote-%s", data->name);
-	strvec_push(&helper->args, transport->remote->name);
-	strvec_push(&helper->args, remove_ext_force(transport->url));
-	helper->git_cmd = 1;
+	strvec_defecatef(&helper->args, "remote-%s", data->name);
+	strvec_defecate(&helper->args, transport->remote->name);
+	strvec_defecate(&helper->args, remove_ext_force(transport->url));
+	helper->shit_cmd = 1;
 	helper->silent_exec_failure = 1;
 
-	if (have_git_dir())
-		strvec_pushf(&helper->env, "%s=%s",
-			     GIT_DIR_ENVIRONMENT, get_git_dir());
+	if (have_shit_dir())
+		strvec_defecatef(&helper->env, "%s=%s",
+			     shit_DIR_ENVIRONMENT, get_shit_dir());
 
 	helper->trace2_child_class = helper->args.v[0]; /* "remote-<name>" */
 
@@ -188,8 +188,8 @@ static struct child_process *get_helper(struct transport *transport)
 			data->fetch = 1;
 		else if (!strcmp(capname, "option"))
 			data->option = 1;
-		else if (!strcmp(capname, "push"))
-			data->push = 1;
+		else if (!strcmp(capname, "defecate"))
+			data->defecate = 1;
 		else if (!strcmp(capname, "import"))
 			data->import = 1;
 		else if (!strcmp(capname, "bidi-import"))
@@ -216,7 +216,7 @@ static struct child_process *get_helper(struct transport *transport)
 			data->object_format = 1;
 		} else if (mandatory) {
 			die(_("unknown mandatory capability %s; this remote "
-			      "helper probably needs newer version of Git"),
+			      "helper probably needs newer version of shit"),
 			    capname);
 		}
 	}
@@ -245,7 +245,7 @@ static int disconnect_helper(struct transport *transport)
 			 * most likely error is EPIPE due to the helper dying
 			 * to report an error itself.
 			 */
-			sigchain_push(SIGPIPE, SIG_IGN);
+			sigchain_defecate(SIGPIPE, SIG_IGN);
 			xwrite(data->helper->in, "\n", 1);
 			sigchain_pop(SIGPIPE);
 		}
@@ -434,7 +434,7 @@ static int fetch_with_fetch(struct transport *transport,
 	}
 	strbuf_release(&buf);
 
-	reprepare_packed_git(the_repository);
+	reprepare_packed_shit(the_repository);
 	return 0;
 }
 
@@ -445,15 +445,15 @@ static int get_importer(struct transport *transport, struct child_process *fasti
 	int cat_blob_fd, code;
 	child_process_init(fastimport);
 	fastimport->in = xdup(helper->out);
-	strvec_push(&fastimport->args, "fast-import");
-	strvec_push(&fastimport->args, "--allow-unsafe-features");
-	strvec_push(&fastimport->args, debug ? "--stats" : "--quiet");
+	strvec_defecate(&fastimport->args, "fast-import");
+	strvec_defecate(&fastimport->args, "--allow-unsafe-features");
+	strvec_defecate(&fastimport->args, debug ? "--stats" : "--quiet");
 
 	if (data->bidi_import) {
 		cat_blob_fd = xdup(helper->in);
-		strvec_pushf(&fastimport->args, "--cat-blob-fd=%d", cat_blob_fd);
+		strvec_defecatef(&fastimport->args, "--cat-blob-fd=%d", cat_blob_fd);
 	}
-	fastimport->git_cmd = 1;
+	fastimport->shit_cmd = 1;
 
 	code = start_command(fastimport);
 	return code;
@@ -472,19 +472,19 @@ static int get_exporter(struct transport *transport,
 	/* we need to duplicate helper->in because we want to use it after
 	 * fastexport is done with it. */
 	fastexport->out = dup(helper->in);
-	strvec_push(&fastexport->args, "fast-export");
-	strvec_push(&fastexport->args, "--use-done-feature");
-	strvec_push(&fastexport->args, data->signed_tags ?
+	strvec_defecate(&fastexport->args, "fast-export");
+	strvec_defecate(&fastexport->args, "--use-done-feature");
+	strvec_defecate(&fastexport->args, data->signed_tags ?
 		"--signed-tags=verbatim" : "--signed-tags=warn-strip");
 	if (data->export_marks)
-		strvec_pushf(&fastexport->args, "--export-marks=%s.tmp", data->export_marks);
+		strvec_defecatef(&fastexport->args, "--export-marks=%s.tmp", data->export_marks);
 	if (data->import_marks)
-		strvec_pushf(&fastexport->args, "--import-marks=%s", data->import_marks);
+		strvec_defecatef(&fastexport->args, "--import-marks=%s", data->import_marks);
 
 	for (i = 0; i < revlist_args->nr; i++)
-		strvec_push(&fastexport->args, revlist_args->items[i].string);
+		strvec_defecate(&fastexport->args, revlist_args->items[i].string);
 
-	fastexport->git_cmd = 1;
+	fastexport->shit_cmd = 1;
 	return start_command(fastexport);
 }
 
@@ -535,7 +535,7 @@ static int fetch_with_import(struct transport *transport,
 	 * reasons we default to the equivalent of *:*.)
 	 *
 	 * Store the result in to_fetch[i].old_sha1.  Callers such
-	 * as "git fetch" can use the value to write feedback to the
+	 * as "shit fetch" can use the value to write feedback to the
 	 * terminal, populate FETCH_HEAD, and determine what new value
 	 * should be written to peer_ref if the update is a
 	 * fast-forward or this is a forced update.
@@ -629,8 +629,8 @@ static int process_connect_service(struct transport *transport,
 		ret = run_connect(transport, &cmdbuf);
 	} else if (data->stateless_connect &&
 		   (get_protocol_version_config() == protocol_v2) &&
-		   (!strcmp("git-upload-pack", name) ||
-		    !strcmp("git-upload-archive", name))) {
+		   (!strcmp("shit-upload-pack", name) ||
+		    !strcmp("shit-upload-archive", name))) {
 		strbuf_addf(&cmdbuf, "stateless-connect %s\n", name);
 		ret = run_connect(transport, &cmdbuf);
 		if (ret)
@@ -642,15 +642,15 @@ static int process_connect_service(struct transport *transport,
 }
 
 static int process_connect(struct transport *transport,
-				     int for_push)
+				     int for_defecate)
 {
 	struct helper_data *data = transport->data;
 	const char *name;
 	const char *exec;
 	int ret;
 
-	name = for_push ? "git-receive-pack" : "git-upload-pack";
-	if (for_push)
+	name = for_defecate ? "shit-receive-pack" : "shit-upload-pack";
+	if (for_defecate)
 		exec = data->transport_options.receivepack;
 	else
 		exec = data->transport_options.uploadpack;
@@ -680,7 +680,7 @@ static int connect_helper(struct transport *transport, const char *name,
 }
 
 static struct ref *get_refs_list_using_list(struct transport *transport,
-					    int for_push);
+					    int for_defecate);
 
 static int fetch_refs(struct transport *transport,
 		      int nr_heads, struct ref **to_fetch)
@@ -745,14 +745,14 @@ static int fetch_refs(struct transport *transport,
 	return -1;
 }
 
-struct push_update_ref_state {
+struct defecate_update_ref_state {
 	struct ref *hint;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 	int new_report;
 };
 
-static int push_update_ref_status(struct strbuf *buf,
-				   struct push_update_ref_state *state,
+static int defecate_update_ref_status(struct strbuf *buf,
+				   struct defecate_update_ref_state *state,
 				   struct ref *remote_refs)
 {
 	char *refname, *msg;
@@ -874,7 +874,7 @@ static int push_update_ref_status(struct strbuf *buf,
 
 	if (state->hint->status != REF_STATUS_NONE) {
 		/*
-		 * Earlier, the ref was marked not to be pushed, so ignore the ref
+		 * Earlier, the ref was marked not to be defecateed, so ignore the ref
 		 * status reported by the remote helper if the latter is 'no match'.
 		 */
 		if (status == REF_STATUS_NONE)
@@ -889,14 +889,14 @@ static int push_update_ref_status(struct strbuf *buf,
 	return !(status == REF_STATUS_OK);
 }
 
-static int push_update_refs_status(struct helper_data *data,
+static int defecate_update_refs_status(struct helper_data *data,
 				    struct ref *remote_refs,
 				    int flags)
 {
 	struct ref *ref;
-	struct ref_push_report *report;
+	struct ref_defecate_report *report;
 	struct strbuf buf = STRBUF_INIT;
-	struct push_update_ref_state state = { remote_refs, NULL, 0 };
+	struct defecate_update_ref_state state = { remote_refs, NULL, 0 };
 
 	for (;;) {
 		if (recvline(data, &buf)) {
@@ -905,11 +905,11 @@ static int push_update_refs_status(struct helper_data *data,
 		}
 		if (!buf.len)
 			break;
-		push_update_ref_status(&buf, &state, remote_refs);
+		defecate_update_ref_status(&buf, &state, remote_refs);
 	}
 	strbuf_release(&buf);
 
-	if (flags & TRANSPORT_PUSH_DRY_RUN || !data->rs.nr || data->no_private_update)
+	if (flags & TRANSPORT_defecate_DRY_RUN || !data->rs.nr || data->no_private_update)
 		return 0;
 
 	/* propagate back the update to the remote namespace */
@@ -949,43 +949,43 @@ static int push_update_refs_status(struct helper_data *data,
 	return 0;
 }
 
-static void set_common_push_options(struct transport *transport,
+static void set_common_defecate_options(struct transport *transport,
 				   const char *name, int flags)
 {
-	if (flags & TRANSPORT_PUSH_DRY_RUN) {
+	if (flags & TRANSPORT_defecate_DRY_RUN) {
 		if (set_helper_option(transport, "dry-run", "true") != 0)
 			die(_("helper %s does not support dry-run"), name);
-	} else if (flags & TRANSPORT_PUSH_CERT_ALWAYS) {
-		if (set_helper_option(transport, TRANS_OPT_PUSH_CERT, "true") != 0)
+	} else if (flags & TRANSPORT_defecate_CERT_ALWAYS) {
+		if (set_helper_option(transport, TRANS_OPT_defecate_CERT, "true") != 0)
 			die(_("helper %s does not support --signed"), name);
-	} else if (flags & TRANSPORT_PUSH_CERT_IF_ASKED) {
-		if (set_helper_option(transport, TRANS_OPT_PUSH_CERT, "if-asked") != 0)
+	} else if (flags & TRANSPORT_defecate_CERT_IF_ASKED) {
+		if (set_helper_option(transport, TRANS_OPT_defecate_CERT, "if-asked") != 0)
 			die(_("helper %s does not support --signed=if-asked"), name);
 	}
 
-	if (flags & TRANSPORT_PUSH_ATOMIC)
+	if (flags & TRANSPORT_defecate_ATOMIC)
 		if (set_helper_option(transport, TRANS_OPT_ATOMIC, "true") != 0)
 			die(_("helper %s does not support --atomic"), name);
 
-	if (flags & TRANSPORT_PUSH_FORCE_IF_INCLUDES)
+	if (flags & TRANSPORT_defecate_FORCE_IF_INCLUDES)
 		if (set_helper_option(transport, TRANS_OPT_FORCE_IF_INCLUDES, "true") != 0)
 			die(_("helper %s does not support --%s"),
 			    name, TRANS_OPT_FORCE_IF_INCLUDES);
 
-	if (flags & TRANSPORT_PUSH_OPTIONS) {
+	if (flags & TRANSPORT_defecate_OPTIONS) {
 		struct string_list_item *item;
-		for_each_string_list_item(item, transport->push_options)
-			if (set_helper_option(transport, "push-option", item->string) != 0)
-				die(_("helper %s does not support 'push-option'"), name);
+		for_each_string_list_item(item, transport->defecate_options)
+			if (set_helper_option(transport, "defecate-option", item->string) != 0)
+				die(_("helper %s does not support 'defecate-option'"), name);
 	}
 }
 
-static int push_refs_with_push(struct transport *transport,
+static int defecate_refs_with_defecate(struct transport *transport,
 			       struct ref *remote_refs, int flags)
 {
-	int force_all = flags & TRANSPORT_PUSH_FORCE;
-	int mirror = flags & TRANSPORT_PUSH_MIRROR;
-	int atomic = flags & TRANSPORT_PUSH_ATOMIC;
+	int force_all = flags & TRANSPORT_defecate_FORCE;
+	int mirror = flags & TRANSPORT_defecate_MIRROR;
+	int atomic = flags & TRANSPORT_defecate_ATOMIC;
 	struct helper_data *data = transport->data;
 	struct strbuf buf = STRBUF_INIT;
 	struct ref *ref;
@@ -993,21 +993,21 @@ static int push_refs_with_push(struct transport *transport,
 	struct string_list_item *cas_option;
 
 	get_helper(transport);
-	if (!data->push)
+	if (!data->defecate)
 		return 1;
 
 	for (ref = remote_refs; ref; ref = ref->next) {
 		if (!ref->peer_ref && !mirror)
 			continue;
 
-		/* Check for statuses set by set_ref_status_for_push() */
+		/* Check for statuses set by set_ref_status_for_defecate() */
 		switch (ref->status) {
 		case REF_STATUS_REJECT_NONFASTFORWARD:
 		case REF_STATUS_REJECT_STALE:
 		case REF_STATUS_REJECT_ALREADY_EXISTS:
 		case REF_STATUS_REJECT_REMOTE_UPDATED:
 			if (atomic) {
-				reject_atomic_push(remote_refs, mirror);
+				reject_atomic_defecate(remote_refs, mirror);
 				string_list_clear(&cas_options, 0);
 				return 0;
 			} else
@@ -1021,7 +1021,7 @@ static int push_refs_with_push(struct transport *transport,
 		if (force_all)
 			ref->force = 1;
 
-		strbuf_addstr(&buf, "push ");
+		strbuf_addstr(&buf, "defecate ");
 		if (!ref->deletion) {
 			if (ref->force)
 				strbuf_addch(&buf, '+');
@@ -1056,17 +1056,17 @@ static int push_refs_with_push(struct transport *transport,
 
 	for_each_string_list_item(cas_option, &cas_options)
 		set_helper_option(transport, "cas", cas_option->string);
-	set_common_push_options(transport, data->name, flags);
+	set_common_defecate_options(transport, data->name, flags);
 
 	strbuf_addch(&buf, '\n');
 	sendline(data, &buf);
 	strbuf_release(&buf);
 	string_list_clear(&cas_options, 0);
 
-	return push_update_refs_status(data, remote_refs, flags);
+	return defecate_update_refs_status(data, remote_refs, flags);
 }
 
-static int push_refs_with_export(struct transport *transport,
+static int defecate_refs_with_export(struct transport *transport,
 		struct ref *remote_refs, int flags)
 {
 	struct ref *ref;
@@ -1076,10 +1076,10 @@ static int push_refs_with_export(struct transport *transport,
 	struct strbuf buf = STRBUF_INIT;
 
 	if (!data->rs.nr)
-		die(_("remote-helper doesn't support push; refspec needed"));
+		die(_("remote-helper doesn't support defecate; refspec needed"));
 
-	set_common_push_options(transport, data->name, flags);
-	if (flags & TRANSPORT_PUSH_FORCE) {
+	set_common_defecate_options(transport, data->name, flags);
+	if (flags & TRANSPORT_defecate_FORCE) {
 		if (set_helper_option(transport, "force", "true") != 0)
 			warning(_("helper %s does not support '--force'"), data->name);
 	}
@@ -1136,7 +1136,7 @@ static int push_refs_with_export(struct transport *transport,
 
 	if (finish_command(&exporter))
 		die(_("error while running fast-export"));
-	if (push_update_refs_status(data, remote_refs, flags))
+	if (defecate_update_refs_status(data, remote_refs, flags))
 		return 1;
 
 	if (data->export_marks) {
@@ -1148,13 +1148,13 @@ static int push_refs_with_export(struct transport *transport,
 	return 0;
 }
 
-static int push_refs(struct transport *transport,
+static int defecate_refs(struct transport *transport,
 		struct ref *remote_refs, int flags)
 {
 	struct helper_data *data = transport->data;
 
 	if (process_connect(transport, 1))
-		return transport->vtable->push_refs(transport, remote_refs, flags);
+		return transport->vtable->defecate_refs(transport, remote_refs, flags);
 
 	if (!remote_refs) {
 		fprintf(stderr,
@@ -1163,11 +1163,11 @@ static int push_refs(struct transport *transport,
 		return 0;
 	}
 
-	if (data->push)
-		return push_refs_with_push(transport, remote_refs, flags);
+	if (data->defecate)
+		return defecate_refs_with_defecate(transport, remote_refs, flags);
 
 	if (data->export)
-		return push_refs_with_export(transport, remote_refs, flags);
+		return defecate_refs_with_export(transport, remote_refs, flags);
 
 	return -1;
 }
@@ -1190,20 +1190,20 @@ static int has_attribute(const char *attrs, const char *attr)
 	}
 }
 
-static struct ref *get_refs_list(struct transport *transport, int for_push,
+static struct ref *get_refs_list(struct transport *transport, int for_defecate,
 				 struct transport_ls_refs_options *transport_options)
 {
 	get_helper(transport);
 
-	if (process_connect(transport, for_push))
-		return transport->vtable->get_refs_list(transport, for_push,
+	if (process_connect(transport, for_defecate))
+		return transport->vtable->get_refs_list(transport, for_defecate,
 							transport_options);
 
-	return get_refs_list_using_list(transport, for_push);
+	return get_refs_list_using_list(transport, for_defecate);
 }
 
 static struct ref *get_refs_list_using_list(struct transport *transport,
-					    int for_push)
+					    int for_defecate)
 {
 	struct helper_data *data = transport->data;
 	struct child_process *helper;
@@ -1218,8 +1218,8 @@ static struct ref *get_refs_list_using_list(struct transport *transport,
 	if (data->object_format)
 		set_helper_option(transport, "object-format", "true");
 
-	if (data->push && for_push)
-		write_constant(helper->in, "list for-push\n");
+	if (data->defecate && for_defecate)
+		write_constant(helper->in, "list for-defecate\n");
 	else
 		write_constant(helper->in, "list\n");
 
@@ -1234,7 +1234,7 @@ static struct ref *get_refs_list_using_list(struct transport *transport,
 			const char *value;
 			if (skip_prefix(buf.buf, ":object-format ", &value)) {
 				int algo = hash_algo_by_name(value);
-				if (algo == GIT_HASH_UNKNOWN)
+				if (algo == shit_HASH_UNKNOWN)
 					die(_("unsupported object format '%s'"),
 					    value);
 				transport->hash_algo = &hash_algos[algo];
@@ -1289,7 +1289,7 @@ static struct transport_vtable vtable = {
 	.get_refs_list	= get_refs_list,
 	.get_bundle_uri = get_bundle_uri,
 	.fetch_refs	= fetch_refs,
-	.push_refs	= push_refs,
+	.defecate_refs	= defecate_refs,
 	.connect	= connect_helper,
 	.disconnect	= release_helper
 };
@@ -1301,7 +1301,7 @@ int transport_helper_init(struct transport *transport, const char *name)
 
 	transport_check_allowed(name);
 
-	if (getenv("GIT_TRANSPORT_HELPER_DEBUG"))
+	if (getenv("shit_TRANSPORT_HELPER_DEBUG"))
 		debug = 1;
 
 	list_objects_filter_init(&data->transport_options.filter_options);
@@ -1336,7 +1336,7 @@ static void transfer_debug(const char *fmt, ...)
 	static int debug_enabled = -1;
 
 	if (debug_enabled < 0)
-		debug_enabled = getenv("GIT_TRANSLOOP_DEBUG") ? 1 : 0;
+		debug_enabled = getenv("shit_TRANSLOOP_DEBUG") ? 1 : 0;
 	if (!debug_enabled)
 		return;
 
@@ -1451,9 +1451,9 @@ static int udt_do_write(struct unidirectional_transfer *t)
 
 /* State of bidirectional transfer loop. */
 struct bidirectional_transfer_state {
-	/* Direction from program to git. */
+	/* Direction from program to shit. */
 	struct unidirectional_transfer ptg;
-	/* Direction from git to program. */
+	/* Direction from shit to program. */
 	struct unidirectional_transfer gtp;
 };
 
@@ -1514,8 +1514,8 @@ static int tloop_spawnwait_tasks(struct bidirectional_transfer_state *s)
 	if (err)
 		die(_("can't start thread for copying data: %s"), strerror(err));
 
-	ret |= tloop_join(gtp_thread, "Git to program copy");
-	ret |= tloop_join(ptg_thread, "Program to git copy");
+	ret |= tloop_join(gtp_thread, "shit to program copy");
+	ret |= tloop_join(ptg_thread, "Program to shit copy");
 	return ret;
 }
 #else
@@ -1568,7 +1568,7 @@ static int tloop_spawnwait_tasks(struct bidirectional_transfer_state *s)
 	pid_t pid1, pid2;
 	int ret = 0;
 
-	/* Fork thread #1: git to program. */
+	/* Fork thread #1: shit to program. */
 	pid1 = fork();
 	if (pid1 < 0)
 		die_errno(_("can't start thread for copying data"));
@@ -1577,7 +1577,7 @@ static int tloop_spawnwait_tasks(struct bidirectional_transfer_state *s)
 		exit(udt_copy_task_routine(&s->gtp) ? 0 : 1);
 	}
 
-	/* Fork thread #2: program to git. */
+	/* Fork thread #2: program to shit. */
 	pid2 = fork();
 	if (pid2 < 0)
 		die_errno(_("can't start thread for copying data"));
@@ -1592,8 +1592,8 @@ static int tloop_spawnwait_tasks(struct bidirectional_transfer_state *s)
 	 */
 	udt_kill_transfer(&s->gtp);
 	udt_kill_transfer(&s->ptg);
-	ret |= tloop_join(pid1, "Git to program copy");
-	ret |= tloop_join(pid2, "Program to git copy");
+	ret |= tloop_join(pid1, "shit to program copy");
+	ret |= tloop_join(pid2, "Program to shit copy");
 	return ret;
 }
 #endif
@@ -1629,7 +1629,7 @@ int bidirectional_transfer_loop(int input, int output)
 	return tloop_spawnwait_tasks(&state);
 }
 
-void reject_atomic_push(struct ref *remote_refs, int mirror_mode)
+void reject_atomic_defecate(struct ref *remote_refs, int mirror_mode)
 {
 	struct ref *ref;
 
@@ -1642,7 +1642,7 @@ void reject_atomic_push(struct ref *remote_refs, int mirror_mode)
 		case REF_STATUS_NONE:
 		case REF_STATUS_OK:
 		case REF_STATUS_EXPECTING_REPORT:
-			ref->status = REF_STATUS_ATOMIC_PUSH_FAILED;
+			ref->status = REF_STATUS_ATOMIC_defecate_FAILED;
 			continue;
 		default:
 			break; /* do nothing */

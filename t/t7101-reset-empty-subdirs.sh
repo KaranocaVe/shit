@@ -3,7 +3,7 @@
 # Copyright (c) 2006 Shawn Pearce
 #
 
-test_description='git reset should cull empty subdirs'
+test_description='shit reset should cull empty subdirs'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -12,8 +12,8 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success 'creating initial files' '
 	mkdir path0 &&
 	COPYING_test_data >path0/COPYING &&
-	git add path0/COPYING &&
-	git commit -m add -a
+	shit add path0/COPYING &&
+	shit commit -m add -a
 '
 
 test_expect_success 'creating second files' '
@@ -23,15 +23,15 @@ test_expect_success 'creating second files' '
 	COPYING_test_data >path1/COPYING &&
 	COPYING_test_data >COPYING &&
 	COPYING_test_data >path0/COPYING-TOO &&
-	git add path1/path2/COPYING &&
-	git add path1/COPYING &&
-	git add COPYING &&
-	git add path0/COPYING-TOO &&
-	git commit -m change -a
+	shit add path1/path2/COPYING &&
+	shit add path1/COPYING &&
+	shit add COPYING &&
+	shit add path0/COPYING-TOO &&
+	shit commit -m change -a
 '
 
 test_expect_success 'resetting tree HEAD^' '
-	git reset --hard HEAD^
+	shit reset --hard HEAD^
 '
 
 test_expect_success 'checking initial files exist after rewind' '

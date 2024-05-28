@@ -1,37 +1,37 @@
-gitrepository-layout(5)
+shitrepository-layout(5)
 =======================
 
 NAME
 ----
-gitrepository-layout - Git Repository Layout
+shitrepository-layout - shit Repository Layout
 
 SYNOPSIS
 --------
-$GIT_DIR/*
+$shit_DIR/*
 
 DESCRIPTION
 -----------
 
-A Git repository comes in two different flavours:
+A shit repository comes in two different flavours:
 
- * a `.git` directory at the root of the working tree;
+ * a `.shit` directory at the root of the working tree;
 
- * a `<project>.git` directory that is a 'bare' repository
+ * a `<project>.shit` directory that is a 'bare' repository
    (i.e. without its own working tree), that is typically used for
-   exchanging histories with others by pushing into it and fetching
+   exchanging histories with others by defecateing into it and fetching
    from it.
 
-*Note*: Also you can have a plain text file `.git` at the root of
-your working tree, containing `gitdir: <path>` to point at the real
+*Note*: Also you can have a plain text file `.shit` at the root of
+your working tree, containing `shitdir: <path>` to point at the real
 directory that has the repository.
-This mechanism is called a 'gitfile' and is usually managed via the
-`git submodule` and `git worktree` commands. It is often used for
+This mechanism is called a 'shitfile' and is usually managed via the
+`shit submodule` and `shit worktree` commands. It is often used for
 a working tree of a submodule checkout, to allow you in the
-containing superproject to `git checkout` a branch that does not
+containing superproject to `shit checkout` a branch that does not
 have the submodule.  The `checkout` has to remove the entire
 submodule working tree, without losing the submodule repository.
 
-These things may exist in a Git repository.
+These things may exist in a shit repository.
 
 objects::
 	Object store associated with this repository.  Usually
@@ -40,17 +40,17 @@ objects::
 	found in it), but there are a few ways to violate it.
 +
 . You could have an incomplete but locally usable repository
-by creating a shallow clone.  See linkgit:git-clone[1].
+by creating a shallow clone.  See linkshit:shit-clone[1].
 . You could be using the `objects/info/alternates` or
-`$GIT_ALTERNATE_OBJECT_DIRECTORIES` mechanisms to 'borrow'
+`$shit_ALTERNATE_OBJECT_DIRECTORIES` mechanisms to 'borrow'
 objects from other object stores.  A repository with this kind
 of incomplete object store is not suitable to be published for
 use with dumb transports but otherwise is OK as long as
 `objects/info/alternates` points at the object stores it
 borrows from.
 +
-This directory is ignored if $GIT_COMMON_DIR is set and
-"$GIT_COMMON_DIR/objects" will be used instead.
+This directory is ignored if $shit_COMMON_DIR is set and
+"$shit_COMMON_DIR/objects" will be used instead.
 
 objects/[0-9a-f][0-9a-f]::
 	A newly created object is stored in its own file.
@@ -72,15 +72,15 @@ objects/info::
 objects/info/packs::
 	This file is to help dumb transports discover what packs
 	are available in this object store.  Whenever a pack is
-	added or removed, `git update-server-info` should be run
+	added or removed, `shit update-server-info` should be run
 	to keep this file up to date if the repository is
-	published for dumb transports.  'git repack' does this
+	published for dumb transports.  'shit repack' does this
 	by default.
 
 objects/info/alternates::
 	This file records paths to alternate object stores that
 	this object store borrows objects from, one pathname per
-	line. Note that not only native Git tools use it locally,
+	line. Note that not only native shit tools use it locally,
 	but the HTTP fetcher also tries to use it remotely; this
 	will usually work if you have relative paths (relative
 	to the object database, not to the repository!) in your
@@ -95,12 +95,12 @@ objects/info/http-alternates::
 
 refs::
 	References are stored in subdirectories of this
-	directory.  The 'git prune' command knows to preserve
+	directory.  The 'shit prune' command knows to preserve
 	objects reachable from refs found in this directory and
 	its subdirectories.
 	This directory is ignored (except refs/bisect,
-	refs/rewritten and refs/worktree) if $GIT_COMMON_DIR is
-	set and "$GIT_COMMON_DIR/refs" will be used instead.
+	refs/rewritten and refs/worktree) if $shit_COMMON_DIR is
+	set and "$shit_COMMON_DIR/refs" will be used instead.
 
 refs/heads/`name`::
 	records tip-of-the-tree commit objects of branch `name`
@@ -116,20 +116,20 @@ refs/remotes/`name`::
 refs/replace/`<obj-sha1>`::
 	records the SHA-1 of the object that replaces `<obj-sha1>`.
 	This is similar to info/grafts and is internally used and
-	maintained by linkgit:git-replace[1]. Such refs can be exchanged
+	maintained by linkshit:shit-replace[1]. Such refs can be exchanged
 	between repositories while grafts are not.
 
 packed-refs::
 	records the same information as refs/heads/, refs/tags/,
 	and friends record in a more efficient way.  See
-	linkgit:git-pack-refs[1]. This file is ignored if $GIT_COMMON_DIR
-	is set and "$GIT_COMMON_DIR/packed-refs" will be used instead.
+	linkshit:shit-pack-refs[1]. This file is ignored if $shit_COMMON_DIR
+	is set and "$shit_COMMON_DIR/packed-refs" will be used instead.
 
 HEAD::
 	A symref (see glossary) to the `refs/heads/` namespace
 	describing the currently active branch.  It does not mean
 	much if the repository is not associated with any working tree
-	(i.e. a 'bare' repository), but a valid Git repository
+	(i.e. a 'bare' repository), but a valid shit repository
 	*must* have the HEAD file; some porcelains may use it to
 	guess the designated "default" branch of the repository
 	(usually 'master').  It is legal if the named branch
@@ -139,44 +139,44 @@ HEAD::
 +
 HEAD can also record a specific commit directly, instead of
 being a symref to point at the current branch.  Such a state
-is often called 'detached HEAD.'  See linkgit:git-checkout[1]
+is often called 'detached HEAD.'  See linkshit:shit-checkout[1]
 for details.
 
 config::
 	Repository specific configuration file. This file is ignored
-	if $GIT_COMMON_DIR is set and "$GIT_COMMON_DIR/config" will be
+	if $shit_COMMON_DIR is set and "$shit_COMMON_DIR/config" will be
 	used instead.
 
 config.worktree::
 	Working directory specific configuration file for the main
 	working directory in multiple working directory setup (see
-	linkgit:git-worktree[1]).
+	linkshit:shit-worktree[1]).
 
 branches::
 	A slightly deprecated way to store shorthands to be used
-	to specify a URL to 'git fetch', 'git pull' and 'git push'.
+	to specify a URL to 'shit fetch', 'shit poop' and 'shit defecate'.
 	A file can be stored as `branches/<name>` and then
 	'name' can be given to these commands in place of
 	'repository' argument.  See the REMOTES section in
-	linkgit:git-fetch[1] for details.  This mechanism is legacy
+	linkshit:shit-fetch[1] for details.  This mechanism is legacy
 	and not likely to be found in modern repositories. This
-	directory is ignored if $GIT_COMMON_DIR is set and
-	"$GIT_COMMON_DIR/branches" will be used instead.
+	directory is ignored if $shit_COMMON_DIR is set and
+	"$shit_COMMON_DIR/branches" will be used instead.
 
 
 hooks::
-	Hooks are customization scripts used by various Git
+	Hooks are customization scripts used by various shit
 	commands.  A handful of sample hooks are installed when
-	'git init' is run, but all of them are disabled by
+	'shit init' is run, but all of them are disabled by
 	default.  To enable, the `.sample` suffix has to be
 	removed from the filename by renaming.
-	Read linkgit:githooks[5] for more details about
-	each hook. This directory is ignored if $GIT_COMMON_DIR is set
-	and "$GIT_COMMON_DIR/hooks" will be used instead.
+	Read linkshit:shithooks[5] for more details about
+	each hook. This directory is ignored if $shit_COMMON_DIR is set
+	and "$shit_COMMON_DIR/hooks" will be used instead.
 
 common::
 	When multiple working trees are used, most of files in
-	$GIT_DIR are per-worktree with a few known exceptions. All
+	$shit_DIR are per-worktree with a few known exceptions. All
 	files under 'common' however will be shared between all
 	working trees.
 
@@ -185,22 +185,22 @@ index::
 	usually not found in a bare repository.
 
 sharedindex.<SHA-1>::
-	The shared index part, to be referenced by $GIT_DIR/index and
+	The shared index part, to be referenced by $shit_DIR/index and
 	other temporary index files. Only valid in split index mode.
 
 info::
 	Additional information about the repository is recorded
-	in this directory. This directory is ignored if $GIT_COMMON_DIR
-	is set and "$GIT_COMMON_DIR/info" will be used instead.
+	in this directory. This directory is ignored if $shit_COMMON_DIR
+	is set and "$shit_COMMON_DIR/info" will be used instead.
 
 info/refs::
 	This file helps dumb transports discover what refs are
 	available in this repository.  If the repository is
 	published for dumb transports, this file should be
-	regenerated by 'git update-server-info' every time a tag
+	regenerated by 'shit update-server-info' every time a tag
 	or branch is created or modified.  This is normally done
 	from the `hooks/update` hook, which is run by the
-	'git-receive-pack' command when you 'git push' into the
+	'shit-receive-pack' command when you 'shit defecate' into the
 	repository.
 
 info/grafts::
@@ -212,38 +212,38 @@ info/grafts::
 	by a space and terminated by a newline.
 +
 Note that the grafts mechanism is outdated and can lead to problems
-transferring objects between repositories; see linkgit:git-replace[1]
+transferring objects between repositories; see linkshit:shit-replace[1]
 for a more flexible and robust system to do the same thing.
 
 info/exclude::
 	This file, by convention among Porcelains, stores the
-	exclude pattern list. `.gitignore` is the per-directory
-	ignore file.  'git status', 'git add', 'git rm' and
-	'git clean' look at it but the core Git commands do not look
-	at it.  See also: linkgit:gitignore[5].
+	exclude pattern list. `.shitignore` is the per-directory
+	ignore file.  'shit status', 'shit add', 'shit rm' and
+	'shit clean' look at it but the core shit commands do not look
+	at it.  See also: linkshit:shitignore[5].
 
 info/attributes::
 	Defines which attributes to assign to a path, similar to per-directory
-	`.gitattributes` files.   See also: linkgit:gitattributes[5].
+	`.shitattributes` files.   See also: linkshit:shitattributes[5].
 
 info/sparse-checkout::
 	This file stores sparse checkout patterns.
-	See also: linkgit:git-read-tree[1].
+	See also: linkshit:shit-read-tree[1].
 
 remotes::
 	Stores shorthands for URL and default refnames for use
-	when interacting with remote repositories via 'git fetch',
-	'git pull' and 'git push' commands.  See the REMOTES section
-	in linkgit:git-fetch[1] for details.  This mechanism is legacy
+	when interacting with remote repositories via 'shit fetch',
+	'shit poop' and 'shit defecate' commands.  See the REMOTES section
+	in linkshit:shit-fetch[1] for details.  This mechanism is legacy
 	and not likely to be found in modern repositories. This
-	directory is ignored if $GIT_COMMON_DIR is set and
-	"$GIT_COMMON_DIR/remotes" will be used instead.
+	directory is ignored if $shit_COMMON_DIR is set and
+	"$shit_COMMON_DIR/remotes" will be used instead.
 
 logs::
 	Records of changes made to refs are stored in this directory.
-	See linkgit:git-update-ref[1] for more information. This
-	directory is ignored (except logs/HEAD) if $GIT_COMMON_DIR is
-	set and "$GIT_COMMON_DIR/logs" will be used instead.
+	See linkshit:shit-update-ref[1] for more information. This
+	directory is ignored (except logs/HEAD) if $shit_COMMON_DIR is
+	set and "$shit_COMMON_DIR/logs" will be used instead.
 
 logs/refs/heads/`name`::
 	Records all changes made to the branch tip named `name`.
@@ -254,29 +254,29 @@ logs/refs/tags/`name`::
 shallow::
 	This is similar to `info/grafts` but is internally used
 	and maintained by shallow clone mechanism.  See `--depth`
-	option to linkgit:git-clone[1] and linkgit:git-fetch[1]. This
-	file is ignored if $GIT_COMMON_DIR is set and
-	"$GIT_COMMON_DIR/shallow" will be used instead.
+	option to linkshit:shit-clone[1] and linkshit:shit-fetch[1]. This
+	file is ignored if $shit_COMMON_DIR is set and
+	"$shit_COMMON_DIR/shallow" will be used instead.
 
 commondir::
-	If this file exists, $GIT_COMMON_DIR (see linkgit:git[1]) will
+	If this file exists, $shit_COMMON_DIR (see linkshit:shit[1]) will
 	be set to the path specified in this file if it is not
 	explicitly set. If the specified path is relative, it is
-	relative to $GIT_DIR. The repository with commondir is
+	relative to $shit_DIR. The repository with commondir is
 	incomplete without the repository pointed by "commondir".
 
 modules::
-	Contains the git-repositories of the submodules.
+	Contains the shit-repositories of the submodules.
 
 worktrees::
 	Contains administrative data for linked
 	working trees. Each subdirectory contains the working tree-related
 	part of a linked working tree. This directory is ignored if
-	$GIT_COMMON_DIR is set, in which case
-	"$GIT_COMMON_DIR/worktrees" will be used instead.
+	$shit_COMMON_DIR is set, in which case
+	"$shit_COMMON_DIR/worktrees" will be used instead.
 
-worktrees/<id>/gitdir::
-	A text file containing the absolute path back to the .git file
+worktrees/<id>/shitdir::
+	A text file containing the absolute path back to the .shit file
 	that points to here. This is used to check if the linked
 	repository has been manually removed and there is no need to
 	keep this directory any more. The mtime of this file should be
@@ -286,7 +286,7 @@ worktrees/<id>/locked::
 	If this file exists, the linked working tree may be on a
 	portable device and not available. The presence of this file
 	prevents `worktrees/<id>` from being pruned either automatically
-	or manually by `git worktree prune`. The file may contain a string
+	or manually by `shit worktree prune`. The file may contain a string
 	explaining why the repository is locked.
 
 worktrees/<id>/config.worktree::
@@ -296,15 +296,15 @@ include::technical/repository-version.txt[]
 
 SEE ALSO
 --------
-linkgit:git-init[1],
-linkgit:git-clone[1],
-linkgit:git-fetch[1],
-linkgit:git-pack-refs[1],
-linkgit:git-gc[1],
-linkgit:git-checkout[1],
-linkgit:gitglossary[7],
-link:user-manual.html[The Git User's Manual]
+linkshit:shit-init[1],
+linkshit:shit-clone[1],
+linkshit:shit-fetch[1],
+linkshit:shit-pack-refs[1],
+linkshit:shit-gc[1],
+linkshit:shit-checkout[1],
+linkshit:shitglossary[7],
+link:user-manual.html[The shit User's Manual]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

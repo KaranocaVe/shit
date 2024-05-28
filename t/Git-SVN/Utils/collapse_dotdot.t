@@ -5,8 +5,8 @@ use warnings;
 
 use Test::More 'no_plan';
 
-use Git::SVN::Utils;
-my $collapse_dotdot = \&Git::SVN::Utils::_collapse_dotdot;
+use shit::SVN::Utils;
+my $collapse_dotdot = \&shit::SVN::Utils::_collapse_dotdot;
 
 my %tests = (
 	"foo/bar/baz"			=> "foo/bar/baz",

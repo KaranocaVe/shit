@@ -68,6 +68,6 @@ int read_chunk(struct chunkfile *cf,
 	       chunk_read_fn fn,
 	       void *data);
 
-uint8_t oid_version(const struct git_hash_algo *algop);
+uint8_t oid_version(const struct shit_hash_algo *algop);
 
 #endif

@@ -10,7 +10,7 @@
 #    include "sha1/openssl.h"
 #  endif
 #elif defined(SHA1_DC)
-#include "sha1dc_git.h"
+#include "sha1dc_shit.h"
 #else /* SHA1_BLK */
 #include "block-sha1/sha1.h"
 #endif
@@ -44,13 +44,13 @@
 #define platform_SHA1_Final    	SHA1_Final
 #endif
 
-#define git_SHA_CTX		platform_SHA_CTX
-#define git_SHA1_Init		platform_SHA1_Init
-#define git_SHA1_Update		platform_SHA1_Update
-#define git_SHA1_Final		platform_SHA1_Final
+#define shit_SHA_CTX		platform_SHA_CTX
+#define shit_SHA1_Init		platform_SHA1_Init
+#define shit_SHA1_Update		platform_SHA1_Update
+#define shit_SHA1_Final		platform_SHA1_Final
 
 #ifdef platform_SHA1_Clone
-#define git_SHA1_Clone	platform_SHA1_Clone
+#define shit_SHA1_Clone	platform_SHA1_Clone
 #endif
 
 #ifndef platform_SHA256_CTX
@@ -60,30 +60,30 @@
 #define platform_SHA256_Final	SHA256_Final
 #endif
 
-#define git_SHA256_CTX		platform_SHA256_CTX
-#define git_SHA256_Init		platform_SHA256_Init
-#define git_SHA256_Update	platform_SHA256_Update
-#define git_SHA256_Final	platform_SHA256_Final
+#define shit_SHA256_CTX		platform_SHA256_CTX
+#define shit_SHA256_Init		platform_SHA256_Init
+#define shit_SHA256_Update	platform_SHA256_Update
+#define shit_SHA256_Final	platform_SHA256_Final
 
 #ifdef platform_SHA256_Clone
-#define git_SHA256_Clone	platform_SHA256_Clone
+#define shit_SHA256_Clone	platform_SHA256_Clone
 #endif
 
 #ifdef SHA1_MAX_BLOCK_SIZE
 #include "compat/sha1-chunked.h"
-#undef git_SHA1_Update
-#define git_SHA1_Update		git_SHA1_Update_Chunked
+#undef shit_SHA1_Update
+#define shit_SHA1_Update		shit_SHA1_Update_Chunked
 #endif
 
 #ifndef SHA1_NEEDS_CLONE_HELPER
-static inline void git_SHA1_Clone(git_SHA_CTX *dst, const git_SHA_CTX *src)
+static inline void shit_SHA1_Clone(shit_SHA_CTX *dst, const shit_SHA_CTX *src)
 {
 	memcpy(dst, src, sizeof(*dst));
 }
 #endif
 
 #ifndef SHA256_NEEDS_CLONE_HELPER
-static inline void git_SHA256_Clone(git_SHA256_CTX *dst, const git_SHA256_CTX *src)
+static inline void shit_SHA256_Clone(shit_SHA256_CTX *dst, const shit_SHA256_CTX *src)
 {
 	memcpy(dst, src, sizeof(*dst));
 }
@@ -93,45 +93,45 @@ static inline void git_SHA256_Clone(git_SHA256_CTX *dst, const git_SHA256_CTX *s
  * Note that these constants are suitable for indexing the hash_algos array and
  * comparing against each other, but are otherwise arbitrary, so they should not
  * be exposed to the user or serialized to disk.  To know whether a
- * git_hash_algo struct points to some usable hash function, test the format_id
+ * shit_hash_algo struct points to some usable hash function, test the format_id
  * field for being non-zero.  Use the name field for user-visible situations and
  * the format_id field for fixed-length fields on disk.
  */
 /* An unknown hash function. */
-#define GIT_HASH_UNKNOWN 0
+#define shit_HASH_UNKNOWN 0
 /* SHA-1 */
-#define GIT_HASH_SHA1 1
+#define shit_HASH_SHA1 1
 /* SHA-256  */
-#define GIT_HASH_SHA256 2
+#define shit_HASH_SHA256 2
 /* Number of algorithms supported (including unknown). */
-#define GIT_HASH_NALGOS (GIT_HASH_SHA256 + 1)
+#define shit_HASH_NALGOS (shit_HASH_SHA256 + 1)
 
 /* "sha1", big-endian */
-#define GIT_SHA1_FORMAT_ID 0x73686131
+#define shit_SHA1_FORMAT_ID 0x73686131
 
-/* The length in bytes and in hex digits of an object name (SHA-1 value). */
-#define GIT_SHA1_RAWSZ 20
-#define GIT_SHA1_HEXSZ (2 * GIT_SHA1_RAWSZ)
+/* The length in bytes and in hex dishits of an object name (SHA-1 value). */
+#define shit_SHA1_RAWSZ 20
+#define shit_SHA1_HEXSZ (2 * shit_SHA1_RAWSZ)
 /* The block size of SHA-1. */
-#define GIT_SHA1_BLKSZ 64
+#define shit_SHA1_BLKSZ 64
 
 /* "s256", big-endian */
-#define GIT_SHA256_FORMAT_ID 0x73323536
+#define shit_SHA256_FORMAT_ID 0x73323536
 
-/* The length in bytes and in hex digits of an object name (SHA-256 value). */
-#define GIT_SHA256_RAWSZ 32
-#define GIT_SHA256_HEXSZ (2 * GIT_SHA256_RAWSZ)
+/* The length in bytes and in hex dishits of an object name (SHA-256 value). */
+#define shit_SHA256_RAWSZ 32
+#define shit_SHA256_HEXSZ (2 * shit_SHA256_RAWSZ)
 /* The block size of SHA-256. */
-#define GIT_SHA256_BLKSZ 64
+#define shit_SHA256_BLKSZ 64
 
-/* The length in byte and in hex digits of the largest possible hash value. */
-#define GIT_MAX_RAWSZ GIT_SHA256_RAWSZ
-#define GIT_MAX_HEXSZ GIT_SHA256_HEXSZ
+/* The length in byte and in hex dishits of the largest possible hash value. */
+#define shit_MAX_RAWSZ shit_SHA256_RAWSZ
+#define shit_MAX_HEXSZ shit_SHA256_HEXSZ
 /* The largest possible block size for any supported hash. */
-#define GIT_MAX_BLKSZ GIT_SHA256_BLKSZ
+#define shit_MAX_BLKSZ shit_SHA256_BLKSZ
 
 struct object_id {
-	unsigned char hash[GIT_MAX_RAWSZ];
+	unsigned char hash[shit_MAX_RAWSZ];
 	int algo;	/* XXX requires 4-byte alignment */
 };
 
@@ -171,19 +171,19 @@ enum get_oid_result {
 };
 
 /* A suitably aligned type for stack allocations of hash contexts. */
-union git_hash_ctx {
-	git_SHA_CTX sha1;
-	git_SHA256_CTX sha256;
+union shit_hash_ctx {
+	shit_SHA_CTX sha1;
+	shit_SHA256_CTX sha256;
 };
-typedef union git_hash_ctx git_hash_ctx;
+typedef union shit_hash_ctx shit_hash_ctx;
 
-typedef void (*git_hash_init_fn)(git_hash_ctx *ctx);
-typedef void (*git_hash_clone_fn)(git_hash_ctx *dst, const git_hash_ctx *src);
-typedef void (*git_hash_update_fn)(git_hash_ctx *ctx, const void *in, size_t len);
-typedef void (*git_hash_final_fn)(unsigned char *hash, git_hash_ctx *ctx);
-typedef void (*git_hash_final_oid_fn)(struct object_id *oid, git_hash_ctx *ctx);
+typedef void (*shit_hash_init_fn)(shit_hash_ctx *ctx);
+typedef void (*shit_hash_clone_fn)(shit_hash_ctx *dst, const shit_hash_ctx *src);
+typedef void (*shit_hash_update_fn)(shit_hash_ctx *ctx, const void *in, size_t len);
+typedef void (*shit_hash_final_fn)(unsigned char *hash, shit_hash_ctx *ctx);
+typedef void (*shit_hash_final_oid_fn)(struct object_id *oid, shit_hash_ctx *ctx);
 
-struct git_hash_algo {
+struct shit_hash_algo {
 	/*
 	 * The name of the algorithm, as appears in the config file and in
 	 * messages.
@@ -203,19 +203,19 @@ struct git_hash_algo {
 	size_t blksz;
 
 	/* The hash initialization function. */
-	git_hash_init_fn init_fn;
+	shit_hash_init_fn init_fn;
 
 	/* The hash context cloning function. */
-	git_hash_clone_fn clone_fn;
+	shit_hash_clone_fn clone_fn;
 
 	/* The hash update function. */
-	git_hash_update_fn update_fn;
+	shit_hash_update_fn update_fn;
 
 	/* The hash finalization function. */
-	git_hash_final_fn final_fn;
+	shit_hash_final_fn final_fn;
 
 	/* The hash finalization function for object IDs. */
-	git_hash_final_oid_fn final_oid_fn;
+	shit_hash_final_oid_fn final_oid_fn;
 
 	/* The OID of the empty tree. */
 	const struct object_id *empty_tree;
@@ -226,10 +226,10 @@ struct git_hash_algo {
 	/* The all-zeros OID. */
 	const struct object_id *null_oid;
 };
-extern const struct git_hash_algo hash_algos[GIT_HASH_NALGOS];
+extern const struct shit_hash_algo hash_algos[shit_HASH_NALGOS];
 
 /*
- * Return a GIT_HASH_* constant based on the name.  Returns GIT_HASH_UNKNOWN if
+ * Return a shit_HASH_* constant based on the name.  Returns shit_HASH_UNKNOWN if
  * the name doesn't match a known algorithm.
  */
 int hash_algo_by_name(const char *name);
@@ -237,39 +237,39 @@ int hash_algo_by_name(const char *name);
 int hash_algo_by_id(uint32_t format_id);
 /* Identical, except based on the length. */
 int hash_algo_by_length(int len);
-/* Identical, except for a pointer to struct git_hash_algo. */
-static inline int hash_algo_by_ptr(const struct git_hash_algo *p)
+/* Identical, except for a pointer to struct shit_hash_algo. */
+static inline int hash_algo_by_ptr(const struct shit_hash_algo *p)
 {
 	return p - hash_algos;
 }
 
 const struct object_id *null_oid(void);
 
-static inline int hashcmp_algop(const unsigned char *sha1, const unsigned char *sha2, const struct git_hash_algo *algop)
+static inline int hashcmp_algop(const unsigned char *sha1, const unsigned char *sha2, const struct shit_hash_algo *algop)
 {
 	/*
 	 * Teach the compiler that there are only two possibilities of hash size
 	 * here, so that it can optimize for this case as much as possible.
 	 */
-	if (algop->rawsz == GIT_MAX_RAWSZ)
-		return memcmp(sha1, sha2, GIT_MAX_RAWSZ);
-	return memcmp(sha1, sha2, GIT_SHA1_RAWSZ);
+	if (algop->rawsz == shit_MAX_RAWSZ)
+		return memcmp(sha1, sha2, shit_MAX_RAWSZ);
+	return memcmp(sha1, sha2, shit_SHA1_RAWSZ);
 }
 
-static inline int hasheq_algop(const unsigned char *sha1, const unsigned char *sha2, const struct git_hash_algo *algop)
+static inline int hasheq_algop(const unsigned char *sha1, const unsigned char *sha2, const struct shit_hash_algo *algop)
 {
 	/*
 	 * We write this here instead of deferring to hashcmp so that the
 	 * compiler can properly inline it and avoid calling memcmp.
 	 */
-	if (algop->rawsz == GIT_MAX_RAWSZ)
-		return !memcmp(sha1, sha2, GIT_MAX_RAWSZ);
-	return !memcmp(sha1, sha2, GIT_SHA1_RAWSZ);
+	if (algop->rawsz == shit_MAX_RAWSZ)
+		return !memcmp(sha1, sha2, shit_MAX_RAWSZ);
+	return !memcmp(sha1, sha2, shit_SHA1_RAWSZ);
 }
 
 static inline void oidcpy(struct object_id *dst, const struct object_id *src)
 {
-	memcpy(dst->hash, src->hash, GIT_MAX_RAWSZ);
+	memcpy(dst->hash, src->hash, shit_MAX_RAWSZ);
 	dst->algo = src->algo;
 }
 
@@ -280,7 +280,7 @@ static inline struct object_id *oiddup(const struct object_id *src)
 	return dst;
 }
 
-static inline void oid_set_algo(struct object_id *oid, const struct git_hash_algo *algop)
+static inline void oid_set_algo(struct object_id *oid, const struct shit_hash_algo *algop)
 {
 	oid->algo = hash_algo_by_ptr(algop);
 }

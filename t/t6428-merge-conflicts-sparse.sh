@@ -29,31 +29,31 @@ test_description="merge cases"
 # Testcase basic, conflicting changes in 'numerals'
 
 test_setup_numerals () {
-	git init numerals_$1 &&
+	shit init numerals_$1 &&
 	(
 		cd numerals_$1 &&
 
 		>README &&
 		test_write_lines I II III >numerals &&
-		git add README numerals &&
+		shit add README numerals &&
 		test_tick &&
-		git commit -m "O" &&
+		shit commit -m "O" &&
 
-		git branch O &&
-		git branch A &&
-		git branch B &&
+		shit branch O &&
+		shit branch A &&
+		shit branch B &&
 
-		git checkout A &&
+		shit checkout A &&
 		test_write_lines I II III IIII >numerals &&
-		git add numerals &&
+		shit add numerals &&
 		test_tick &&
-		git commit -m "A" &&
+		shit commit -m "A" &&
 
-		git checkout B &&
+		shit checkout B &&
 		test_write_lines I II III IV >numerals &&
-		git add numerals &&
+		shit add numerals &&
 		test_tick &&
-		git commit -m "B" &&
+		shit commit -m "B" &&
 
 		cat <<-EOF >expected-index &&
 		H README
@@ -81,20 +81,20 @@ test_expect_success 'conflicting entries written to worktree even if sparse' '
 	(
 		cd numerals_plain &&
 
-		git checkout A^0 &&
+		shit checkout A^0 &&
 
 		test_path_is_file README &&
 		test_path_is_file numerals &&
 
-		git sparse-checkout init &&
-		git sparse-checkout set --no-cone README &&
+		shit sparse-checkout init &&
+		shit sparse-checkout set --no-cone README &&
 
 		test_path_is_file README &&
 		test_path_is_missing numerals &&
 
-		test_must_fail git merge -s recursive B^0 &&
+		test_must_fail shit merge -s recursive B^0 &&
 
-		git ls-files -t >index_files &&
+		shit ls-files -t >index_files &&
 		test_cmp expected-index index_files &&
 
 		test_path_is_file README &&
@@ -107,7 +107,7 @@ test_expect_success 'conflicting entries written to worktree even if sparse' '
 		#   * expected-index
 		#   * index_files
 		#   * others
-		git ls-files -o >others &&
+		shit ls-files -o >others &&
 		test_line_count = 4 others
 	)
 '
@@ -117,22 +117,22 @@ test_expect_success 'present-despite-SKIP_WORKTREE handled reasonably' '
 	(
 		cd numerals_in_the_way &&
 
-		git checkout A^0 &&
+		shit checkout A^0 &&
 
 		test_path_is_file README &&
 		test_path_is_file numerals &&
 
-		git sparse-checkout init &&
-		git sparse-checkout set --no-cone README &&
+		shit sparse-checkout init &&
+		shit sparse-checkout set --no-cone README &&
 
 		test_path_is_file README &&
 		test_path_is_missing numerals &&
 
 		echo foobar >numerals &&
 
-		test_must_fail git merge -s recursive B^0 &&
+		test_must_fail shit merge -s recursive B^0 &&
 
-		test_path_is_missing .git/MERGE_HEAD &&
+		test_path_is_missing .shit/MERGE_HEAD &&
 
 		test_path_is_file numerals &&
 

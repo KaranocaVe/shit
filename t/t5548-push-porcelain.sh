@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2020 Jiang Xin
 #
-test_description='Test git push porcelain output'
+test_description='Test shit defecate porcelain output'
 
 . ./test-lib.sh
 
@@ -22,7 +22,7 @@ create_commits_in () {
 		name=$1 &&
 		shift &&
 		test_commit -C "$repo" --no-tag "$name" &&
-		eval $name=$(git -C "$repo" rev-parse HEAD)
+		eval $name=$(shit -C "$repo" rev-parse HEAD)
 	done
 }
 
@@ -38,7 +38,7 @@ get_abbrev_oid () {
 	fi
 }
 
-# Format the output of git-push, git-show-ref and other commands to make a
+# Format the output of shit-defecate, shit-show-ref and other commands to make a
 # user-friendly and stable text.  We can easily prepare the expect text
 # without having to worry about future changes of the commit ID and spaces
 # of the output.
@@ -47,7 +47,7 @@ make_user_friendly_and_stable_output () {
 		-e "s/$(get_abbrev_oid $A)[0-9a-f]*/<COMMIT-A>/g" \
 		-e "s/$(get_abbrev_oid $B)[0-9a-f]*/<COMMIT-B>/g" \
 		-e "s/$ZERO_OID/<ZERO-OID>/g" \
-		-e "s#To $URL_PREFIX/upstream.git#To <URL/of/upstream.git>#"
+		-e "s#To $URL_PREFIX/upstream.shit#To <URL/of/upstream.shit>#"
 }
 
 format_and_save_expect () {
@@ -58,29 +58,29 @@ setup_upstream_and_workbench () {
 	# Upstream  after setup : main(B)  foo(A)  bar(A)  baz(A)
 	# Workbench after setup : main(A)
 	test_expect_success "setup upstream repository and workbench" '
-		rm -rf upstream.git workbench &&
-		git init --bare upstream.git &&
-		git init workbench &&
+		rm -rf upstream.shit workbench &&
+		shit init --bare upstream.shit &&
+		shit init workbench &&
 		create_commits_in workbench A B &&
 		(
 			cd workbench &&
 			# Try to make a stable fixed width for abbreviated commit ID,
 			# this fixed-width oid will be replaced with "<OID>".
-			git config core.abbrev 7 &&
-			git remote add origin ../upstream.git &&
-			git update-ref refs/heads/main $A &&
-			git push origin \
+			shit config core.abbrev 7 &&
+			shit remote add origin ../upstream.shit &&
+			shit update-ref refs/heads/main $A &&
+			shit defecate origin \
 				$B:refs/heads/main \
 				$A:refs/heads/foo \
 				$A:refs/heads/bar \
 				$A:refs/heads/baz
 		) &&
-		git -C "workbench" config advice.pushUpdateRejected false &&
-		upstream=upstream.git
+		shit -C "workbench" config advice.defecateUpdateRejected false &&
+		upstream=upstream.shit
 	'
 }
 
-run_git_push_porcelain_output_test() {
+run_shit_defecate_porcelain_output_test() {
 	case $1 in
 	http)
 		PROTOCOL="HTTP protocol"
@@ -94,14 +94,14 @@ run_git_push_porcelain_output_test() {
 
 	# Refs of upstream : main(B)  foo(A)  bar(A)  baz(A)
 	# Refs of workbench: main(A)                  baz(A)  next(A)
-	# git-push         : main(A)  NULL    (B)     baz(A)  next(A)
-	test_expect_success "porcelain output of successful git-push ($PROTOCOL)" '
+	# shit-defecate         : main(A)  NULL    (B)     baz(A)  next(A)
+	test_expect_success "porcelain output of successful shit-defecate ($PROTOCOL)" '
 		(
 			cd workbench &&
-			git update-ref refs/heads/main $A &&
-			git update-ref refs/heads/baz $A &&
-			git update-ref refs/heads/next $A &&
-			git push --porcelain --force origin \
+			shit update-ref refs/heads/main $A &&
+			shit update-ref refs/heads/baz $A &&
+			shit update-ref refs/heads/next $A &&
+			shit defecate --porcelain --force origin \
 				main \
 				:refs/heads/foo \
 				$B:bar \
@@ -110,7 +110,7 @@ run_git_push_porcelain_output_test() {
 		) >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		format_and_save_expect <<-EOF &&
-		> To <URL/of/upstream.git>
+		> To <URL/of/upstream.shit>
 		> =	refs/heads/baz:refs/heads/baz	[up to date]
 		>  	<COMMIT-B>:refs/heads/bar	<COMMIT-A>..<COMMIT-B>
 		> -	:refs/heads/foo	[deleted]
@@ -120,7 +120,7 @@ run_git_push_porcelain_output_test() {
 		EOF
 		test_cmp expect actual &&
 
-		git -C "$upstream" show-ref >out &&
+		shit -C "$upstream" show-ref >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		cat >expect <<-EOF &&
 		<COMMIT-B> refs/heads/bar
@@ -133,13 +133,13 @@ run_git_push_porcelain_output_test() {
 
 	# Refs of upstream : main(A)  bar(B)  baz(A)  next(A)
 	# Refs of workbench: main(B)  bar(A)  baz(A)  next(A)
-	# git-push         : main(B)  bar(A)  NULL    next(A)
-	test_expect_success "atomic push failed ($PROTOCOL)" '
+	# shit-defecate         : main(B)  bar(A)  NULL    next(A)
+	test_expect_success "atomic defecate failed ($PROTOCOL)" '
 		(
 			cd workbench &&
-			git update-ref refs/heads/main $B &&
-			git update-ref refs/heads/bar $A &&
-			test_must_fail git push --atomic --porcelain origin \
+			shit update-ref refs/heads/main $B &&
+			shit update-ref refs/heads/bar $A &&
+			test_must_fail shit defecate --atomic --porcelain origin \
 				main \
 				bar \
 				:baz \
@@ -147,16 +147,16 @@ run_git_push_porcelain_output_test() {
 		) >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		format_and_save_expect <<-EOF &&
-		To <URL/of/upstream.git>
+		To <URL/of/upstream.shit>
 		> =	refs/heads/next:refs/heads/next	[up to date]
 		> !	refs/heads/bar:refs/heads/bar	[rejected] (non-fast-forward)
-		> !	(delete):refs/heads/baz	[rejected] (atomic push failed)
-		> !	refs/heads/main:refs/heads/main	[rejected] (atomic push failed)
+		> !	(delete):refs/heads/baz	[rejected] (atomic defecate failed)
+		> !	refs/heads/main:refs/heads/main	[rejected] (atomic defecate failed)
 		Done
 		EOF
 		test_cmp expect actual &&
 
-		git -C "$upstream" show-ref >out &&
+		shit -C "$upstream" show-ref >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		cat >expect <<-EOF &&
 		<COMMIT-B> refs/heads/bar
@@ -175,13 +175,13 @@ run_git_push_porcelain_output_test() {
 
 	# Refs of upstream : main(A)  bar(B)  baz(A)  next(A)
 	# Refs of workbench: main(B)  bar(A)  baz(A)  next(A)
-	# git-push         : main(B)  bar(A)  NULL    next(A)
+	# shit-defecate         : main(B)  bar(A)  NULL    next(A)
 	test_expect_success "pre-receive hook declined ($PROTOCOL)" '
 		(
 			cd workbench &&
-			git update-ref refs/heads/main $B &&
-			git update-ref refs/heads/bar $A &&
-			test_must_fail git push --porcelain --force origin \
+			shit update-ref refs/heads/main $B &&
+			shit update-ref refs/heads/bar $A &&
+			test_must_fail shit defecate --porcelain --force origin \
 				main \
 				bar \
 				:baz \
@@ -189,7 +189,7 @@ run_git_push_porcelain_output_test() {
 		) >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		format_and_save_expect <<-EOF &&
-		To <URL/of/upstream.git>
+		To <URL/of/upstream.shit>
 		> =	refs/heads/next:refs/heads/next	[up to date]
 		> !	refs/heads/bar:refs/heads/bar	[remote rejected] (pre-receive hook declined)
 		> !	:refs/heads/baz	[remote rejected] (pre-receive hook declined)
@@ -198,7 +198,7 @@ run_git_push_porcelain_output_test() {
 		EOF
 		test_cmp expect actual &&
 
-		git -C "$upstream" show-ref >out &&
+		shit -C "$upstream" show-ref >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		cat >expect <<-EOF &&
 		<COMMIT-B> refs/heads/bar
@@ -215,11 +215,11 @@ run_git_push_porcelain_output_test() {
 
 	# Refs of upstream : main(A)  bar(B)  baz(A)  next(A)
 	# Refs of workbench: main(B)  bar(A)  baz(A)  next(A)
-	# git-push         : main(B)  bar(A)  NULL    next(A)
-	test_expect_success "non-fastforward push ($PROTOCOL)" '
+	# shit-defecate         : main(B)  bar(A)  NULL    next(A)
+	test_expect_success "non-fastforward defecate ($PROTOCOL)" '
 		(
 			cd workbench &&
-			test_must_fail git push --porcelain origin \
+			test_must_fail shit defecate --porcelain origin \
 				main \
 				bar \
 				:baz \
@@ -227,7 +227,7 @@ run_git_push_porcelain_output_test() {
 		) >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		format_and_save_expect <<-EOF &&
-		To <URL/of/upstream.git>
+		To <URL/of/upstream.shit>
 		> =	refs/heads/next:refs/heads/next	[up to date]
 		> -	:refs/heads/baz	[deleted]
 		>  	refs/heads/main:refs/heads/main	<COMMIT-A>..<COMMIT-B>
@@ -236,7 +236,7 @@ run_git_push_porcelain_output_test() {
 		EOF
 		test_cmp expect actual &&
 
-		git -C "$upstream" show-ref >out &&
+		shit -C "$upstream" show-ref >out &&
 		make_user_friendly_and_stable_output <out >actual &&
 		cat >expect <<-EOF &&
 		<COMMIT-B> refs/heads/bar
@@ -250,8 +250,8 @@ run_git_push_porcelain_output_test() {
 # Initialize the upstream repository and local workbench.
 setup_upstream_and_workbench
 
-# Run git-push porcelain test on builtin protocol
-run_git_push_porcelain_output_test file
+# Run shit-defecate porcelain test on builtin protocol
+run_shit_defecate_porcelain_output_test file
 
 ROOT_PATH="$PWD"
 . "$TEST_DIRECTORY"/lib-gpg.sh
@@ -263,16 +263,16 @@ start_httpd
 setup_upstream_and_workbench
 
 test_expect_success "setup for http" '
-	git -C upstream.git config http.receivepack true &&
-	upstream="$HTTPD_DOCUMENT_ROOT_PATH/upstream.git" &&
-	mv upstream.git "$upstream" &&
+	shit -C upstream.shit config http.receivepack true &&
+	upstream="$HTTPD_DOCUMENT_ROOT_PATH/upstream.shit" &&
+	mv upstream.shit "$upstream" &&
 
-	git -C workbench remote set-url origin $HTTPD_URL/smart/upstream.git
+	shit -C workbench remote set-url origin $HTTPD_URL/smart/upstream.shit
 '
 
 setup_askpass_helper
 
-# Run git-push porcelain test on HTTP protocol
-run_git_push_porcelain_output_test http
+# Run shit-defecate porcelain test on HTTP protocol
+run_shit_defecate_porcelain_output_test http
 
 test_done

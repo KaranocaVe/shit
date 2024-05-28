@@ -1,7 +1,7 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "hash-ll.h"
 
-int git_SHA1_Update_Chunked(platform_SHA_CTX *c, const void *data, size_t len)
+int shit_SHA1_Update_Chunked(platform_SHA_CTX *c, const void *data, size_t len)
 {
 	size_t nr;
 	size_t total = 0;

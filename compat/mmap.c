@@ -1,6 +1,6 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
-void *git_mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
+void *shit_mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
 {
 	size_t n = 0;
 
@@ -38,7 +38,7 @@ void *git_mmap(void *start, size_t length, int prot, int flags, int fd, off_t of
 	return start;
 }
 
-int git_munmap(void *start, size_t length)
+int shit_munmap(void *start, size_t length)
 {
 	free(start);
 	return 0;

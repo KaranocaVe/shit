@@ -1,4 +1,4 @@
-GIT v1.5.0.2 Release Notes
+shit v1.5.0.2 Release Notes
 ==========================
 
 Fixes since v1.5.0.1
@@ -14,18 +14,18 @@ Fixes since v1.5.0.1
     that was pointed at by the symbolic link.  Both of these
     problems have been fixed.
 
-  - 'git diff maint master next' did not correctly give combined
+  - 'shit diff maint master next' did not correctly give combined
     diff across three trees.
 
-  - 'git fast-import' portability fix for Solaris.
+  - 'shit fast-import' portability fix for Solaris.
 
-  - 'git show-ref --verify' without arguments did not error out
+  - 'shit show-ref --verify' without arguments did not error out
     but segfaulted.
 
-  - 'git diff :tracked-file `pwd`/an-untracked-file' gave an extra
+  - 'shit diff :tracked-file `pwd`/an-untracked-file' gave an extra
     slashes after a/ and b/.
 
-  - 'git format-patch' produced too long filenames if the commit
+  - 'shit format-patch' produced too long filenames if the commit
     message had too long line at the beginning.
 
   - Running 'make all' and then without changing anything
@@ -34,32 +34,32 @@ Fixes since v1.5.0.1
     installing as root (especially problematic when the source
     directory is on NFS and root is mapped to nobody).
 
-  - 'git-rerere' failed to deal with two unconflicted paths that
+  - 'shit-rerere' failed to deal with two unconflicted paths that
     sorted next to each other.
 
-  - 'git-rerere' attempted to open(2) a symlink and failed if
+  - 'shit-rerere' attempted to open(2) a symlink and failed if
     there was a conflict.  Since a conflicting change to a
     symlink would not benefit from rerere anyway, the command
     now ignores conflicting changes to symlinks.
 
-  - 'git-repack' did not like to pass more than 64 arguments
+  - 'shit-repack' did not like to pass more than 64 arguments
     internally to underlying 'rev-list' logic, which made it
     impossible to repack after accumulating many (small) packs
     in the repository.
 
-  - 'git-diff' to review the combined diff during a conflicted
+  - 'shit-diff' to review the combined diff during a conflicted
     merge were not reading the working tree version correctly
     when changes to a symbolic link conflicted.  It should have
     read the data using readlink(2) but read from the regular
     file the symbolic link pointed at.
 
-  - 'git-remote' did not like period in a remote's name.
+  - 'shit-remote' did not like period in a remote's name.
 
 * Documentation updates
 
   - added and clarified core.bare, core.legacyheaders configurations.
 
-  - updated "git-clone --depth" documentation.
+  - updated "shit-clone --depth" documentation.
 
 
-* Assorted git-gui fixes.
+* Assorted shit-gui fixes.

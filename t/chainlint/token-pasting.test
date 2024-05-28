@@ -1,11 +1,11 @@
 # LINT: single token; composite of multiple strings
-git config filter.rot13.smudge ./rot13.sh &&
-git config filter.rot13.clean ./rot13.sh &&
+shit config filter.rot13.smudge ./rot13.sh &&
+shit config filter.rot13.clean ./rot13.sh &&
 
 {
     echo "*.t filter=rot13"
     echo "*.i ident"
-} >.gitattributes &&
+} >.shitattributes &&
 
 {
     echo a b c d e f g h i j k l m
@@ -16,9 +16,9 @@ git config filter.rot13.clean ./rot13.sh &&
 cat test >test.t &&
 cat test >test.o &&
 cat test >test.i &&
-git add test test.t test.i &&
+shit add test test.t test.i &&
 rm -f test test.t test.i &&
-git checkout -- test test.t test.i &&
+shit checkout -- test test.t test.i &&
 
 echo "content-test2" >test2.o &&
 # LINT: exit/enter string context and escaped-quote outside of string

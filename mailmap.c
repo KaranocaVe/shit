@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "string-list.h"
 #include "mailmap.h"
@@ -6,8 +6,8 @@
 #include "object-store-ll.h"
 #include "setup.h"
 
-const char *git_mailmap_file;
-const char *git_mailmap_blob;
+const char *shit_mailmap_file;
+const char *shit_mailmap_blob;
 
 struct mailmap_info {
 	char *name;
@@ -215,16 +215,16 @@ int read_mailmap(struct string_list *map)
 	map->strdup_strings = 1;
 	map->cmp = namemap_cmp;
 
-	if (!git_mailmap_blob && is_bare_repository())
-		git_mailmap_blob = "HEAD:.mailmap";
+	if (!shit_mailmap_blob && is_bare_repository())
+		shit_mailmap_blob = "HEAD:.mailmap";
 
 	if (!startup_info->have_repository || !is_bare_repository())
 		err |= read_mailmap_file(map, ".mailmap",
 					 startup_info->have_repository ?
 					 MAILMAP_NOFOLLOW : 0);
 	if (startup_info->have_repository)
-		err |= read_mailmap_blob(map, git_mailmap_blob);
-	err |= read_mailmap_file(map, git_mailmap_file, 0);
+		err |= read_mailmap_blob(map, shit_mailmap_blob);
+	err |= read_mailmap_file(map, shit_mailmap_file, 0);
 	return err;
 }
 

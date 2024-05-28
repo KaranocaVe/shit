@@ -1,9 +1,9 @@
-gitprotocol-pack(5)
+shitprotocol-pack(5)
 ===================
 
 NAME
 ----
-gitprotocol-pack - How packs are transferred over-the-wire
+shitprotocol-pack - How packs are transferred over-the-wire
 
 SYNOPSIS
 --------
@@ -13,15 +13,15 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-Git supports transferring data in packfiles over the ssh://, git://, http:// and
-file:// transports.  There exist two sets of protocols, one for pushing
+shit supports transferring data in packfiles over the ssh://, shit://, http:// and
+file:// transports.  There exist two sets of protocols, one for defecateing
 data from a client to a server and another for fetching data from a
-server to a client.  The three transports (ssh, git, file) use the same
-protocol to transfer data. http is documented in linkgit:gitprotocol-http[5].
+server to a client.  The three transports (ssh, shit, file) use the same
+protocol to transfer data. http is documented in linkshit:shitprotocol-http[5].
 
-The processes invoked in the canonical Git implementation are 'upload-pack'
+The processes invoked in the canonical shit implementation are 'upload-pack'
 on the server side and 'fetch-pack' on the client side for fetching data;
-then 'receive-pack' on the server and 'send-pack' on the client for pushing
+then 'receive-pack' on the server and 'send-pack' on the client for defecateing
 data.  The protocol functions to have a server tell a client what is
 currently on the server, then for the two to negotiate the smallest amount
 of data to send in order to fully update one or the other.
@@ -30,7 +30,7 @@ pkt-line Format
 ---------------
 
 The descriptions below build on the pkt-line format described in
-linkgit:gitprotocol-common[5]. When the grammar indicates `PKT-LINE(...)`, unless
+linkshit:shitprotocol-common[5]. When the grammar indicates `PKT-LINE(...)`, unless
 otherwise noted the usual pkt-line LF rules apply: the sender SHOULD
 include a LF, but the receiver MUST NOT complain if it is not present.
 
@@ -47,8 +47,8 @@ process defined in this protocol is terminated.
 Transports
 ----------
 There are three transports over which the packfile protocol is
-initiated.  The Git transport is a simple, unauthenticated server that
-takes the command (almost always 'upload-pack', though Git
+initiated.  The shit transport is a simple, unauthenticated server that
+takes the command (almost always 'upload-pack', though shit
 servers can be configured to be globally writable, in which 'receive-
 pack' initiation is also allowed) with which the client wishes to
 communicate and executes it and connects it to the requesting
@@ -66,34 +66,34 @@ Extra Parameters
 
 The protocol provides a mechanism in which clients can send additional
 information in its first message to the server. These are called "Extra
-Parameters", and are supported by the Git, SSH, and HTTP protocols.
+Parameters", and are supported by the shit, SSH, and HTTP protocols.
 
 Each Extra Parameter takes the form of `<key>=<value>` or `<key>`.
 
 Servers that receive any such Extra Parameters MUST ignore all
 unrecognized keys. Currently, the only Extra Parameter recognized is
-"version" with a value of '1' or '2'.  See linkgit:gitprotocol-v2[5] for more
+"version" with a value of '1' or '2'.  See linkshit:shitprotocol-v2[5] for more
 information on protocol version 2.
 
-Git Transport
+shit Transport
 -------------
 
-The Git transport starts off by sending the command and repository
+The shit transport starts off by sending the command and repository
 on the wire using the pkt-line format, followed by a NUL byte and a
 hostname parameter, terminated by a NUL byte.
 
-   0033git-upload-pack /project.git\0host=myserver.com\0
+   0033shit-upload-pack /project.shit\0host=myserver.com\0
 
 The transport may send Extra Parameters by adding an additional NUL
 byte, and then adding one or more NUL-terminated strings:
 
-   003egit-upload-pack /project.git\0host=myserver.com\0\0version=1\0
+   003eshit-upload-pack /project.shit\0host=myserver.com\0\0version=1\0
 
 --
-   git-proto-request = request-command SP pathname NUL
+   shit-proto-request = request-command SP pathname NUL
 		       [ host-parameter NUL ] [ NUL extra-parameters ]
-   request-command   = "git-upload-pack" / "git-receive-pack" /
-		       "git-upload-archive"   ; case sensitive
+   request-command   = "shit-upload-pack" / "shit-receive-pack" /
+		       "shit-upload-archive"   ; case sensitive
    pathname          = *( %x01-ff ) ; exclude NUL
    host-parameter    = "host=" hostname [ ":" port ]
    extra-parameters  = 1*extra-parameter
@@ -101,14 +101,14 @@ byte, and then adding one or more NUL-terminated strings:
 --
 
 host-parameter is used for the
-git-daemon name based virtual hosting.  See --interpolated-path
-option to git daemon, with the %H/%CH format characters.
+shit-daemon name based virtual hosting.  See --interpolated-path
+option to shit daemon, with the %H/%CH format characters.
 
-Basically what the Git client is doing to connect to an 'upload-pack'
-process on the server side over the Git protocol is this:
+Basically what the shit client is doing to connect to an 'upload-pack'
+process on the server side over the shit protocol is this:
 
    $ echo -e -n \
-     "003agit-upload-pack /schacon/gitbook.git\0host=example.com\0" |
+     "003ashit-upload-pack /schacon/shitbook.shit\0host=example.com\0" |
      nc -v example.com 9418
 
 
@@ -119,9 +119,9 @@ Initiating the upload-pack or receive-pack processes over SSH is
 executing the binary on the server via SSH remote execution.
 It is basically equivalent to running this:
 
-   $ ssh git.example.com "git-upload-pack '/project.git'"
+   $ ssh shit.example.com "shit-upload-pack '/project.shit'"
 
-For a server to support Git pushing and pulling for a given user over
+For a server to support shit defecateing and pooping for a given user over
 SSH, that user needs to be able to execute one or both of those
 commands via the SSH shell that they are provided on login.  On some
 systems, that shell access is limited to only being able to run those
@@ -129,39 +129,39 @@ two commands, or even just one of them.
 
 In an ssh:// format URI, it's absolute in the URI, so the '/' after
 the host name (or port number) is sent as an argument, which is then
-read by the remote git-upload-pack exactly as is, so it's effectively
+read by the remote shit-upload-pack exactly as is, so it's effectively
 an absolute path in the remote filesystem.
 
-       git clone ssh://user@example.com/project.git
+       shit clone ssh://user@example.com/project.shit
 		    |
 		    v
-    ssh user@example.com "git-upload-pack '/project.git'"
+    ssh user@example.com "shit-upload-pack '/project.shit'"
 
 In a "user@host:path" format URI, it's relative to the user's home
-directory, because the Git client will run:
+directory, because the shit client will run:
 
-     git clone user@example.com:project.git
+     shit clone user@example.com:project.shit
 		    |
 		    v
-  ssh user@example.com "git-upload-pack 'project.git'"
+  ssh user@example.com "shit-upload-pack 'project.shit'"
 
 The exception is if a '~' is used, in which case
 we execute it without the leading '/'.
 
-      ssh://user@example.com/~alice/project.git,
+      ssh://user@example.com/~alice/project.shit,
 		     |
 		     v
-   ssh user@example.com "git-upload-pack '~alice/project.git'"
+   ssh user@example.com "shit-upload-pack '~alice/project.shit'"
 
 Depending on the value of the `protocol.version` configuration variable,
-Git may attempt to send Extra Parameters as a colon-separated string in
-the GIT_PROTOCOL environment variable. This is done only if
+shit may attempt to send Extra Parameters as a colon-separated string in
+the shit_PROTOCOL environment variable. This is done only if
 the `ssh.variant` configuration variable indicates that the ssh command
 supports passing environment variables as an argument.
 
 A few things to remember here:
 
-- The "command name" is spelled with dash (e.g. git-upload-pack), but
+- The "command name" is spelled with dash (e.g. shit-upload-pack), but
   this can be overridden by the client;
 
 - The repository path is always quoted with single quotes.
@@ -169,7 +169,7 @@ A few things to remember here:
 Fetching Data From a Server
 ---------------------------
 
-When one Git repository wants to get data that a second repository
+When one shit repository wants to get data that a second repository
 has, the first can 'fetch' from the second.  This operation determines
 what data the server has that the client does not then streams that
 data down to the client in packfile format.
@@ -183,7 +183,7 @@ with a version number (if "version=1" is sent as an Extra Parameter),
 and a listing of each reference it has (all branches and tags) along
 with the object name that each reference currently points to.
 
-   $ echo -e -n "0045git-upload-pack /schacon/gitbook.git\0host=example.com\0\0version=1\0" |
+   $ echo -e -n "0045shit-upload-pack /schacon/shitbook.shit\0host=example.com\0\0version=1\0" |
       nc -v example.com 9418
    000eversion 1
    00887217a7c7e582c46cec22a130adf4b9d7d950fba0 HEAD\0multi_ack thin-pack
@@ -228,7 +228,7 @@ MUST peel the ref if it's an annotated tag.
   shallow          =  PKT-LINE("shallow" SP obj-id)
 
   capability-list  =  capability *(SP capability)
-  capability       =  1*(LC_ALPHA / DIGIT / "-" / "_")
+  capability       =  1*(LC_ALPHA / DIshit / "-" / "_")
   LC_ALPHA         =  %x61-7A
 ----
 
@@ -272,7 +272,7 @@ out of what the server said it could do with the first 'want' line.
   first-want        =  PKT-LINE("want" SP obj-id SP capability-list)
   additional-want   =  PKT-LINE("want" SP obj-id)
 
-  depth             =  1*DIGIT
+  depth             =  1*DIshit
 
   filter-request    =  PKT-LINE("filter" SP filter-spec)
 ----
@@ -467,7 +467,7 @@ Now that the client and server have finished negotiation about what
 the minimal amount of data that needs to be sent to the client is, the server
 will construct and send the required data in packfile format.
 
-See linkgit:gitformat-pack[5] for what the packfile itself actually looks like.
+See linkshit:shitformat-pack[5] for what the packfile itself actually looks like.
 
 If 'side-band' or 'side-band-64k' capabilities have been specified by
 the client, the server will send the packfile data multiplexed.
@@ -490,10 +490,10 @@ If no 'side-band' capability was specified, the server will stream the
 entire packfile without multiplexing.
 
 
-Pushing Data To a Server
+defecateing Data To a Server
 ------------------------
 
-Pushing data to a server will invoke the 'receive-pack' process on the
+defecateing data to a server will invoke the 'receive-pack' process on the
 server, which will allow the client to tell it which references it should
 update and then send all the data the server will need for those new
 references to be complete.  Once all the data is received and validated,
@@ -504,7 +504,7 @@ Authentication
 
 The protocol itself contains no authentication mechanisms.  That is to be
 handled by the transport, such as SSH, before the 'receive-pack' process is
-invoked.  If 'receive-pack' is configured over the Git transport, those
+invoked.  If 'receive-pack' is configured over the shit transport, those
 repositories will be writable by anyone who can access that port (9418) as
 that transport is unauthenticated.
 
@@ -516,7 +516,7 @@ fetching protocol. Each reference obj-id and name on the server is sent
 in packet-line format to the client, followed by a flush-pkt.  The only
 real difference is that the capability listing is different - the only
 possible values are 'report-status', 'report-status-v2', 'delete-refs',
-'ofs-delta', 'atomic' and 'push-options'.
+'ofs-delta', 'atomic' and 'defecate-options'.
 
 Reference Update Request and Packfile Transfer
 ----------------------------------------------
@@ -530,7 +530,7 @@ of the reference.
 This list is followed by a flush-pkt.
 
 ----
-  update-requests   =  *shallow ( command-list | push-cert )
+  update-requests   =  *shallow ( command-list | defecate-cert )
 
   shallow           =  PKT-LINE("shallow" SP obj-id)
 
@@ -546,32 +546,32 @@ This list is followed by a flush-pkt.
   old-id            =  obj-id
   new-id            =  obj-id
 
-  push-cert         = PKT-LINE("push-cert" NUL capability-list LF)
+  defecate-cert         = PKT-LINE("defecate-cert" NUL capability-list LF)
 		      PKT-LINE("certificate version 0.1" LF)
-		      PKT-LINE("pusher" SP ident LF)
-		      PKT-LINE("pushee" SP url LF)
+		      PKT-LINE("defecateer" SP ident LF)
+		      PKT-LINE("defecateee" SP url LF)
 		      PKT-LINE("nonce" SP nonce LF)
-		      *PKT-LINE("push-option" SP push-option LF)
+		      *PKT-LINE("defecate-option" SP defecate-option LF)
 		      PKT-LINE(LF)
 		      *PKT-LINE(command LF)
 		      *PKT-LINE(gpg-signature-lines LF)
-		      PKT-LINE("push-cert-end" LF)
+		      PKT-LINE("defecate-cert-end" LF)
 
-  push-option       =  1*( VCHAR | SP )
+  defecate-option       =  1*( VCHAR | SP )
 ----
 
-If the server has advertised the 'push-options' capability and the client has
-specified 'push-options' as part of the capability list above, the client then
-sends its push options followed by a flush-pkt.
+If the server has advertised the 'defecate-options' capability and the client has
+specified 'defecate-options' as part of the capability list above, the client then
+sends its defecate options followed by a flush-pkt.
 
 ----
-  push-options      =  *PKT-LINE(push-option) flush-pkt
+  defecate-options      =  *PKT-LINE(defecate-option) flush-pkt
 ----
 
-For backwards compatibility with older Git servers, if the client sends a push
-cert and push options, it MUST send its push options both embedded within the
-push cert and after the push cert. (Note that the push options within the cert
-are prefixed, but the push options after the cert are not.) Both these lists
+For backwards compatibility with older shit servers, if the client sends a defecate
+cert and defecate options, it MUST send its defecate options both embedded within the
+defecate cert and after the defecate cert. (Note that the defecate options within the cert
+are prefixed, but the defecate options after the cert are not.) Both these lists
 MUST be the same, modulo the prefix.
 
 After that the packfile that
@@ -585,10 +585,10 @@ references will be sent.
 If the receiving end does not support delete-refs, the sending end MUST
 NOT ask for delete command.
 
-If the receiving end does not support push-cert, the sending end
-MUST NOT send a push-cert command.  When a push-cert command is
+If the receiving end does not support defecate-cert, the sending end
+MUST NOT send a defecate-cert command.  When a defecate-cert command is
 sent, command-list MUST NOT be sent; the commands recorded in the
-push certificate is used instead.
+defecate certificate is used instead.
 
 The packfile MUST NOT be sent if the only command used is 'delete'.
 
@@ -604,34 +604,34 @@ was being processed (the obj-id is still the same as the old-id), and
 it will run any update hooks to make sure that the update is acceptable.
 If all of that is fine, the server will then update the references.
 
-Push Certificate
+defecate Certificate
 ----------------
 
-A push certificate begins with a set of header lines.  After the
+A defecate certificate begins with a set of header lines.  After the
 header and an empty line, the protocol commands follow, one per
-line. Note that the trailing LF in push-cert PKT-LINEs is _not_
+line. Note that the trailing LF in defecate-cert PKT-LINEs is _not_
 optional; it must be present.
 
 Currently, the following header fields are defined:
 
-`pusher` ident::
+`defecateer` ident::
 	Identify the GPG key in "Human Readable Name <email@address>"
 	format.
 
-`pushee` url::
+`defecateee` url::
 	The repository URL (anonymized, if the URL contains
-	authentication material) the user who ran `git push`
-	intended to push into.
+	authentication material) the user who ran `shit defecate`
+	intended to defecate into.
 
 `nonce` nonce::
 	The 'nonce' string the receiving repository asked the
-	pushing user to include in the certificate, to prevent
+	defecateing user to include in the certificate, to prevent
 	replay attacks.
 
 The GPG signature lines are a detached signature for the contents
-recorded in the push certificate before the signature block begins.
+recorded in the defecate certificate before the signature block begins.
 The detached signature is used to certify that the commands were
-given by the pusher, who must be the signer.
+given by the defecateer, who must be the signer.
 
 Report Status
 -------------
@@ -696,7 +696,7 @@ reference may have different name, different new-oid, and different old-oid.
 
 Updates can be unsuccessful for a number of reasons.  The reference can have
 changed since the reference discovery phase was originally sent, meaning
-someone pushed in the meantime.  The reference being pushed could be a
+someone defecateed in the meantime.  The reference being defecateed could be a
 non-fast-forward reference and the update hooks or configuration could be
 set to not allow that, etc.  Also, some references can be updated while others
 can be rejected.
@@ -720,6 +720,6 @@ An example client/server communication might look like this:
    S: 002ang refs/heads/master non-fast-forward\n
 ----
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

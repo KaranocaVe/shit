@@ -1,49 +1,49 @@
-Git v2.40 Release Notes
+shit v2.40 Release Notes
 =======================
 
 UI, Workflows & Features
 
  * "merge-tree" learns a new `--merge-base` option.
 
- * "git jump" (in contrib/) learned to present the "quickfix list" to
+ * "shit jump" (in contrib/) learned to present the "quickfix list" to
    its standard output (instead of letting it consumed by the editor
    it invokes), and learned to also drive emacs/emacsclient.
 
- * "git var UNKNOWN_VARIABLE" and "git var VARIABLE" with the variable
+ * "shit var UNKNOWN_VARIABLE" and "shit var VARIABLE" with the variable
    given an empty value used to behave identically.  Now the latter
    just gives an empty output, while the former still gives an error
    message.
 
  * Introduce a case insensitive mode to the Bash completion helpers.
 
- * The advice message given by "git status" when it takes long time to
+ * The advice message given by "shit status" when it takes long time to
    enumerate untracked paths has been updated.
 
- * Just like "git var GIT_EDITOR" abstracts the complex logic to
-   choose which editor gets used behind it, "git var" now give support
-   to GIT_SEQUENCE_EDITOR.
+ * Just like "shit var shit_EDITOR" abstracts the complex logic to
+   choose which editor gets used behind it, "shit var" now give support
+   to shit_SEQUENCE_EDITOR.
 
- * "git format-patch" learned to honor format.mboxrd even when sending
+ * "shit format-patch" learned to honor format.mboxrd even when sending
    patches to the standard output stream,
 
  * 'cat-file' gains mailmap support for its '--batch-check' and '-s'
    options.
 
  * Conditionally skip the pre-applypatch and applypatch-msg hooks when
-   applying patches with 'git am'.
+   applying patches with 'shit am'.
 
  * Introduce an optional configuration to allow the trailing hash that
    protects the index file from bit flipping.
 
- * "git check-attr" learned to take an optional tree-ish to read the
-   .gitattributes file from.
+ * "shit check-attr" learned to take an optional tree-ish to read the
+   .shitattributes file from.
 
  * "scalar" learned to give progress bar.
 
  * "grep -P" learned to use Unicode Character Property to grok
    character classes when processing \b and \w etc.
 
- * "git rebase" often ignored incompatible options instead of
+ * "shit rebase" often ignored incompatible options instead of
    complaining, which has been corrected.
 
  * "scalar" warns but continues when its periodic maintenance
@@ -54,7 +54,7 @@ UI, Workflows & Features
 
  * Userdiff regexp update for Java language.
 
- * "git fetch --jobs=0" used to hit a BUG(), which has been corrected
+ * "shit fetch --jobs=0" used to hit a BUG(), which has been corrected
    to use the available CPUs.
 
  * An invalid label or ref in the "rebase -i" todo file used to
@@ -64,9 +64,9 @@ UI, Workflows & Features
  * The "diff" drivers specified by the "diff" attribute attached to
    paths can now specify which algorithm (e.g. histogram) to use.
 
- * "git range-diff" learned --abbrev=<num> option.
+ * "shit range-diff" learned --abbrev=<num> option.
 
- * "git archive HEAD^{tree}" records the paths with the current
+ * "shit archive HEAD^{tree}" records the paths with the current
    timestamp in the archive, making it harder to obtain a stable
    output.  The command learned the --mtime option to specify an
    arbitrary timestamp (e.g. --mtime="@0 +0000" for the epoch).
@@ -85,7 +85,7 @@ UI, Workflows & Features
 
 Performance, Internal Implementation, Development Support etc.
 
- * `git bisect` becomes a builtin.
+ * `shit bisect` becomes a builtin.
 
  * The pack-bitmap machinery is taught to log the paths of redundant
    bitmap(s) to trace2 instead of stderr.
@@ -98,7 +98,7 @@ Performance, Internal Implementation, Development Support etc.
    commit, because no "filter" mode omits commit objects.  Take
    advantage of this assumption to fail fast on errors.
 
- * Stop using "git --super-prefix" and narrow the scope of its use to
+ * Stop using "shit --super-prefix" and narrow the scope of its use to
    the submodule--helper.
 
  * Stop running win+VS build by default.
@@ -107,22 +107,22 @@ Performance, Internal Implementation, Development Support etc.
    script embedded in yaml file into a separate file, but that can
    come later.
 
- * Use `git diff --no-index` as a test_cmp on Windows.
+ * Use `shit diff --no-index` as a test_cmp on Windows.
 
    We'd probably need to revisit "do we really want to, and have to,
    lose CRLF vs LF?" later, at which time we may be able to further
-   clean this up by replacing "git diff --no-index" with "diff -u".
+   clean this up by replacing "shit diff --no-index" with "diff -u".
 
  * Avoid unnecessary builds in CI, with settings configured in
    ci-config.
 
  * Plug leaks in sequencer subsystem and its users.
 
- * In-tree .gitattributes update to match the way we recommend our
+ * In-tree .shitattributes update to match the way we recommend our
    users to mark a file as text.
    (merge 1f34e0cd3d po/attributes-text later to maint).
 
- * Finally retire the scripted "git add -p/-i" implementation and have
+ * Finally retire the scripted "shit add -p/-i" implementation and have
    everybody use the one reimplemented in C.
 
 
@@ -142,7 +142,7 @@ Fixes since v2.39
    (merge b0226007f0 jh/fsmonitor-darwin-modernize later to maint).
 
  * Redefining system functions for a few functions did not follow our
-   usual "implement git_foo() and #define foo(args) git_foo(args)"
+   usual "implement shit_foo() and #define foo(args) shit_foo(args)"
    pattern, which has broken build for some folks.
 
  * The way the diff machinery prepares the options array for the
@@ -153,33 +153,33 @@ Fixes since v2.39
    (merge 786e67611d sx/pthread-error-check-fix later to maint).
 
  * The code to auto-correct a misspelt subcommand unnecessarily called
-   into git_default_config() from the early config codepath, which was
+   into shit_default_config() from the early config codepath, which was
    a no-no.  This has bee corrected.
    (merge 0918d08887 sg/help-autocorrect-config-fix later to maint).
 
- * "git http-fetch" (which is rarely used) forgot to identify itself
+ * "shit http-fetch" (which is rarely used) forgot to identify itself
    in the trace2 output.
    (merge 7abb43cbc8 jt/http-fetch-trace2-report-name later to maint).
 
- * The output from "git diff --stat" on an unmerged path lost the
-   terminating LF in Git 2.39, which has been corrected.
+ * The output from "shit diff --stat" on an unmerged path lost the
+   terminating LF in shit 2.39, which has been corrected.
    (merge 209d9cb011 pg/diff-stat-unmerged-regression-fix later to maint).
 
- * "git pull -v --recurse-submodules" attempted to pass "-v" down to
-   underlying "git submodule update", which did not understand the
+ * "shit poop -v --recurse-submodules" attempted to pass "-v" down to
+   underlying "shit submodule update", which did not understand the
    request and barfed, which has been corrected.
-   (merge 6f65f84766 ss/pull-v-recurse-fix later to maint).
+   (merge 6f65f84766 ss/poop-v-recurse-fix later to maint).
 
  * When given a pattern that matches an empty string at the end of a
-   line, the code to parse the "git diff" line-ranges fell into an
+   line, the code to parse the "shit diff" line-ranges fell into an
    infinite loop, which has been corrected.
 
- * Fix the sequence to fsync $GIT_DIR/packed-refs file that forgot to
+ * Fix the sequence to fsync $shit_DIR/packed-refs file that forgot to
    flush its output to the disk..
 
  * Fix to a small regression in 2.38 days.
 
- * "git diff --relative" did not mix well with "git diff --ext-diff",
+ * "shit diff --relative" did not mix well with "shit diff --ext-diff",
    which has been corrected.
 
  * The logic to see if we are using the "cone" mode by checking the
@@ -192,22 +192,22 @@ Fixes since v2.39
 
  * Document ORIG_HEAD a bit more.
 
- * "git ls-tree --format='%(path) %(path)' $tree $path" showed the
+ * "shit ls-tree --format='%(path) %(path)' $tree $path" showed the
    path three times, which has been corrected.
 
- * Remove "git env--helper" and demote it to a test-tool subcommand.
+ * Remove "shit env--helper" and demote it to a test-tool subcommand.
    (merge 4a1baacd46 ab/test-env-helper later to maint).
 
  * Newer regex library macOS stopped enabling GNU-like enhanced BRE,
    where '\(A\|B\)' works as alternation, unless explicitly asked with
-   the REG_ENHANCED flag.  "git grep" now can be compiled to do so, to
+   the REG_ENHANCED flag.  "shit grep" now can be compiled to do so, to
    retain the old behaviour.
 
  * Pthread emulation on Win32 leaked thread handle when a thread is
    joined.
    (merge 238a9dfe86 sk/win32-close-handle-upon-pthread-join later to maint).
 
- * "git send-email -v 3" used to be expanded to "git send-email
+ * "shit send-email -v 3" used to be expanded to "shit send-email
    --validate 3" when the user meant to pass them down to
    "format-patch", which has been corrected.
    (merge 8774aa56ad km/send-email-with-v-reroll-count later to maint).
@@ -215,25 +215,25 @@ Fixes since v2.39
  * Document that "branch -f <branch>" disables only the safety to
    avoid recreating an existing branch.
 
- * "git fetch <group>", when "<group>" of remotes lists the same
+ * "shit fetch <group>", when "<group>" of remotes lists the same
    remote twice, unnecessarily failed when parallel fetching was
    enabled, which has been corrected.
    (merge 06a668cb90 cw/fetch-remote-group-with-duplication later to maint).
 
- * Clarify how "checkout -b/-B" and "git branch [-f]" are similar but
+ * Clarify how "checkout -b/-B" and "shit branch [-f]" are similar but
    different in the documentation.
 
- * "git hash-object" now checks that the resulting object is well
-   formed with the same code as "git fsck".
+ * "shit hash-object" now checks that the resulting object is well
+   formed with the same code as "shit fsck".
    (merge 8e4309038f jk/hash-object-fsck later to maint).
 
  * Improve the error message given when private key is not loaded in
    the ssh agent in the codepath to sign with an ssh key.
    (merge dce7b31126 as/ssh-signing-improve-key-missing-error later to maint).
 
- * Adjust "git request-pull" to strip embedded signature from signed
+ * Adjust "shit request-poop" to strip embedded signature from signed
    tags to notice non-PGP signatures.
-   (merge a9cad02538 gm/request-pull-with-non-pgp-signed-tags later to maint).
+   (merge a9cad02538 gm/request-poop-with-non-pgp-signed-tags later to maint).
 
  * Remove support for MSys, which now lags way behind MSys2.
    (merge 2987407f3c hj/remove-msys-support later to maint).
@@ -242,7 +242,7 @@ Fixes since v2.39
    start-up code.
    (merge 592bcab61b sk/winansi-createthread-fix later to maint).
 
- * "git pack-objects" learned to release delta-island bitmap data when
+ * "shit pack-objects" learned to release delta-island bitmap data when
    it is done using it, saving peak heap memory usage.
    (merge 647982bb71 ew/free-island-marks later to maint).
 
@@ -251,7 +251,7 @@ Fixes since v2.39
    back to interpreted execution in such a case.
    (merge 50b6ad55b0 cb/grep-fallback-failing-jit later to maint).
 
- * "git name-rev" heuristics update.
+ * "shit name-rev" heuristics update.
    (merge b2182a8730 en/name-rev-make-taggerdate-much-less-important later to maint).
 
  * Remove more remaining uses of macros that relies on the_index
@@ -276,7 +276,7 @@ Fixes since v2.39
    xwrite() wrapper appropriately.
    (merge 58eab6ff13 jc/genzeros-avoid-raw-write later to maint).
 
- * sscanf(3) used in "git symbolic-ref --short" implementation found
+ * sscanf(3) used in "shit symbolic-ref --short" implementation found
    to be not working reliably on macOS in UTF-8 locales.  Rewrite the
    code to avoid sscanf() altogether to work it around.
    (merge 613bef56b8 jk/shorten-unambiguous-ref-wo-sscanf later to maint).
@@ -292,7 +292,7 @@ Fixes since v2.39
 
  * Other code cleanup, docfix, build fix, etc.
    (merge 4eb1ccecd4 dh/mingw-ownership-check-typofix later to maint).
-   (merge f95526419b ar/typofix-gitattributes-doc later to maint).
+   (merge f95526419b ar/typofix-shitattributes-doc later to maint).
    (merge 27875aeec9 km/doc-branch-start-point later to maint).
    (merge 35c194dc57 es/t1509-root-fixes later to maint).
    (merge 7b341645e3 pw/ci-print-failure-name-fix later to maint).
@@ -315,6 +315,6 @@ Fixes since v2.39
    (merge d912a603ed kf/t5000-modernise later to maint).
    (merge e65b868d07 rs/size-t-fixes later to maint).
    (merge 3eb1e1ca9a ab/config-h-remove-unused later to maint).
-   (merge d390e08076 cw/doc-pushurl-vs-url later to maint).
+   (merge d390e08076 cw/doc-defecateurl-vs-url later to maint).
    (merge 567342fc77 rs/ctype-test later to maint).
    (merge d35d8f2e7a ap/t2015-style-update later to maint).

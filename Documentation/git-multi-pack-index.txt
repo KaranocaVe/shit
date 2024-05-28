@@ -1,15 +1,15 @@
-git-multi-pack-index(1)
+shit-multi-pack-index(1)
 =======================
 
 NAME
 ----
-git-multi-pack-index - Write and verify multi-pack-indexes
+shit-multi-pack-index - Write and verify multi-pack-indexes
 
 
 SYNOPSIS
 --------
 [verse]
-'git multi-pack-index' [--object-dir=<dir>] [--[no-]bitmap] <sub-command>
+'shit multi-pack-index' [--object-dir=<dir>] [--[no-]bitmap] <sub-command>
 
 DESCRIPTION
 -----------
@@ -19,7 +19,7 @@ OPTIONS
 -------
 
 --object-dir=<dir>::
-	Use given directory for the location of Git objects. We check
+	Use given directory for the location of shit objects. We check
 	`<dir>/packs/multi-pack-index` for the current MIDX file, and
 	`<dir>/packs` for the pack-files to index.
 +
@@ -55,10 +55,10 @@ write::
 		contains a "refs snapshot" taken prior to repacking.
 +
 A reference snapshot is composed of line-delimited OIDs corresponding to
-the reference tips, usually taken by `git repack` prior to generating a
+the reference tips, usually taken by `shit repack` prior to generating a
 new pack. A line may optionally start with a `+` character to indicate
 that the reference which corresponds to that OID is "preferred" (see
-linkgit:git-config[1]'s `pack.preferBitmapTips`.)
+linkshit:shit-config[1]'s `pack.preferBitmapTips`.)
 +
 The file given at `<path>` is expected to be readable, and can contain
 duplicates. (If a given OID is given more than once, it is marked as
@@ -90,7 +90,7 @@ repack::
 	are considered. If only one pack-file is selected, then do
 	nothing. If a new pack-file is created, rewrite the
 	multi-pack-index to reference the new pack-file. A later run of
-	'git multi-pack-index expire' will delete the pack-files that
+	'shit multi-pack-index expire' will delete the pack-files that
 	were part of this batch.
 +
 If `repack.packKeptObjects` is `false`, then any pack-files with an
@@ -100,39 +100,39 @@ associated `.keep` file will not be selected for the batch to repack.
 EXAMPLES
 --------
 
-* Write a MIDX file for the packfiles in the current `.git` directory.
+* Write a MIDX file for the packfiles in the current `.shit` directory.
 +
 -----------------------------------------------
-$ git multi-pack-index write
+$ shit multi-pack-index write
 -----------------------------------------------
 
-* Write a MIDX file for the packfiles in the current `.git` directory with a
+* Write a MIDX file for the packfiles in the current `.shit` directory with a
 corresponding bitmap.
 +
 -------------------------------------------------------------
-$ git multi-pack-index write --preferred-pack=<pack> --bitmap
+$ shit multi-pack-index write --preferred-pack=<pack> --bitmap
 -------------------------------------------------------------
 
 * Write a MIDX file for the packfiles in an alternate object store.
 +
 -----------------------------------------------
-$ git multi-pack-index --object-dir <alt> write
+$ shit multi-pack-index --object-dir <alt> write
 -----------------------------------------------
 
-* Verify the MIDX file for the packfiles in the current `.git` directory.
+* Verify the MIDX file for the packfiles in the current `.shit` directory.
 +
 -----------------------------------------------
-$ git multi-pack-index verify
+$ shit multi-pack-index verify
 -----------------------------------------------
 
 
 SEE ALSO
 --------
 See link:technical/multi-pack-index.html[The Multi-Pack-Index Design
-Document] and linkgit:gitformat-pack[5] for more information on the
+Document] and linkshit:shitformat-pack[5] for more information on the
 multi-pack-index feature and its file format.
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

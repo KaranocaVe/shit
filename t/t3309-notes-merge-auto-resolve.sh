@@ -86,45 +86,45 @@ test_expect_success 'setup commits' '
 	EOF
 '
 
-commit_sha1=$(git rev-parse 1st^{commit})
-commit_sha2=$(git rev-parse 2nd^{commit})
-commit_sha3=$(git rev-parse 3rd^{commit})
-commit_sha4=$(git rev-parse 4th^{commit})
-commit_sha5=$(git rev-parse 5th^{commit})
-commit_sha6=$(git rev-parse 6th^{commit})
-commit_sha7=$(git rev-parse 7th^{commit})
-commit_sha8=$(git rev-parse 8th^{commit})
-commit_sha9=$(git rev-parse 9th^{commit})
-commit_sha10=$(git rev-parse 10th^{commit})
-commit_sha11=$(git rev-parse 11th^{commit})
-commit_sha12=$(git rev-parse 12th^{commit})
-commit_sha13=$(git rev-parse 13th^{commit})
-commit_sha14=$(git rev-parse 14th^{commit})
-commit_sha15=$(git rev-parse 15th^{commit})
+commit_sha1=$(shit rev-parse 1st^{commit})
+commit_sha2=$(shit rev-parse 2nd^{commit})
+commit_sha3=$(shit rev-parse 3rd^{commit})
+commit_sha4=$(shit rev-parse 4th^{commit})
+commit_sha5=$(shit rev-parse 5th^{commit})
+commit_sha6=$(shit rev-parse 6th^{commit})
+commit_sha7=$(shit rev-parse 7th^{commit})
+commit_sha8=$(shit rev-parse 8th^{commit})
+commit_sha9=$(shit rev-parse 9th^{commit})
+commit_sha10=$(shit rev-parse 10th^{commit})
+commit_sha11=$(shit rev-parse 11th^{commit})
+commit_sha12=$(shit rev-parse 12th^{commit})
+commit_sha13=$(shit rev-parse 13th^{commit})
+commit_sha14=$(shit rev-parse 14th^{commit})
+commit_sha15=$(shit rev-parse 15th^{commit})
 
 verify_notes () {
 	notes_ref="$1"
 	suffix="$2"
-	git -c core.notesRef="refs/notes/$notes_ref" notes |
+	shit -c core.notesRef="refs/notes/$notes_ref" notes |
 		sort >"output_notes_$suffix" &&
 	test_cmp "expect_notes_$suffix" "output_notes_$suffix" &&
-	git -c core.notesRef="refs/notes/$notes_ref" log --format="%H %s%n%N" \
+	shit -c core.notesRef="refs/notes/$notes_ref" log --format="%H %s%n%N" \
 		>"output_log_$suffix" &&
 	test_cmp "expect_log_$suffix" "output_log_$suffix"
 }
 
 test_expect_success 'setup merge base (x)' '
-	git config core.notesRef refs/notes/x &&
-	git notes add -m "x notes on 6th commit" 6th &&
-	git notes add -m "x notes on 7th commit" 7th &&
-	git notes add -m "x notes on 8th commit" 8th &&
-	git notes add -m "x notes on 9th commit" 9th &&
-	git notes add -m "x notes on 10th commit" 10th &&
-	git notes add -m "x notes on 11th commit" 11th &&
-	git notes add -m "x notes on 12th commit" 12th &&
-	git notes add -m "x notes on 13th commit" 13th &&
-	git notes add -m "x notes on 14th commit" 14th &&
-	git notes add -m "x notes on 15th commit" 15th
+	shit config core.notesRef refs/notes/x &&
+	shit notes add -m "x notes on 6th commit" 6th &&
+	shit notes add -m "x notes on 7th commit" 7th &&
+	shit notes add -m "x notes on 8th commit" 8th &&
+	shit notes add -m "x notes on 9th commit" 9th &&
+	shit notes add -m "x notes on 10th commit" 10th &&
+	shit notes add -m "x notes on 11th commit" 11th &&
+	shit notes add -m "x notes on 12th commit" 12th &&
+	shit notes add -m "x notes on 13th commit" 13th &&
+	shit notes add -m "x notes on 14th commit" 14th &&
+	shit notes add -m "x notes on 15th commit" 15th
 '
 
 cat <<EOF | sort >expect_notes_x
@@ -186,18 +186,18 @@ EOF
 test_expect_success 'verify state of merge base (x)' 'verify_notes x x'
 
 test_expect_success 'setup local branch (y)' '
-	git update-ref refs/notes/y refs/notes/x &&
-	git config core.notesRef refs/notes/y &&
-	git notes add -f -m "y notes on 3rd commit" 3rd &&
-	git notes add -f -m "y notes on 4th commit" 4th &&
-	git notes add -f -m "y notes on 5th commit" 5th &&
-	git notes remove 6th &&
-	git notes remove 7th &&
-	git notes remove 8th &&
-	git notes add -f -m "y notes on 12th commit" 12th &&
-	git notes add -f -m "y notes on 13th commit" 13th &&
-	git notes add -f -m "y notes on 14th commit" 14th &&
-	git notes add -f -m "y notes on 15th commit" 15th
+	shit update-ref refs/notes/y refs/notes/x &&
+	shit config core.notesRef refs/notes/y &&
+	shit notes add -f -m "y notes on 3rd commit" 3rd &&
+	shit notes add -f -m "y notes on 4th commit" 4th &&
+	shit notes add -f -m "y notes on 5th commit" 5th &&
+	shit notes remove 6th &&
+	shit notes remove 7th &&
+	shit notes remove 8th &&
+	shit notes add -f -m "y notes on 12th commit" 12th &&
+	shit notes add -f -m "y notes on 13th commit" 13th &&
+	shit notes add -f -m "y notes on 14th commit" 14th &&
+	shit notes add -f -m "y notes on 15th commit" 15th
 '
 
 cat <<EOF | sort >expect_notes_y
@@ -259,18 +259,18 @@ EOF
 test_expect_success 'verify state of local branch (y)' 'verify_notes y y'
 
 test_expect_success 'setup remote branch (z)' '
-	git update-ref refs/notes/z refs/notes/x &&
-	git config core.notesRef refs/notes/z &&
-	git notes add -f -m "z notes on 2nd commit" 2nd &&
-	git notes add -f -m "y notes on 4th commit" 4th &&
-	git notes add -f -m "z notes on 5th commit" 5th &&
-	git notes remove 6th &&
-	git notes add -f -m "z notes on 8th commit" 8th &&
-	git notes remove 9th &&
-	git notes add -f -m "z notes on 11th commit" 11th &&
-	git notes remove 12th &&
-	git notes add -f -m "y notes on 14th commit" 14th &&
-	git notes add -f -m "z notes on 15th commit" 15th
+	shit update-ref refs/notes/z refs/notes/x &&
+	shit config core.notesRef refs/notes/z &&
+	shit notes add -f -m "z notes on 2nd commit" 2nd &&
+	shit notes add -f -m "y notes on 4th commit" 4th &&
+	shit notes add -f -m "z notes on 5th commit" 5th &&
+	shit notes remove 6th &&
+	shit notes add -f -m "z notes on 8th commit" 8th &&
+	shit notes remove 9th &&
+	shit notes add -f -m "z notes on 11th commit" 11th &&
+	shit notes remove 12th &&
+	shit notes add -f -m "y notes on 14th commit" 14th &&
+	shit notes add -f -m "z notes on 15th commit" 15th
 '
 
 cat <<EOF | sort >expect_notes_z
@@ -352,19 +352,19 @@ test_expect_success 'verify state of remote branch (z)' 'verify_notes z z'
 # 15th   | 457a85d | 68b8630 | 9b4b2c6  | changed   / changed (diff) | ???
 
 test_expect_success 'merge z into y with invalid strategy => Fail/No changes' '
-	git config core.notesRef refs/notes/y &&
-	test_must_fail git notes merge --strategy=foo z &&
+	shit config core.notesRef refs/notes/y &&
+	test_must_fail shit notes merge --strategy=foo z &&
 	# Verify no changes (y)
 	verify_notes y y
 '
 
 test_expect_success 'merge z into y with invalid configuration option => Fail/No changes' '
-	git config core.notesRef refs/notes/y &&
+	shit config core.notesRef refs/notes/y &&
 	cat >expect <<-\EOF &&
 	error: unknown notes merge strategy foo
 	fatal: unable to parse '\''notes.mergeStrategy'\'' from command-line config
 	EOF
-	test_must_fail git -c notes.mergeStrategy="foo" notes merge z 2>actual &&
+	test_must_fail shit -c notes.mergeStrategy="foo" notes merge z 2>actual &&
 	test_cmp expect actual &&
 	# Verify no changes (y)
 	verify_notes y y
@@ -427,34 +427,34 @@ $commit_sha1 1st
 EOF
 
 test_expect_success 'merge z into y with "ours" strategy => Non-conflicting 3-way merge' '
-	git notes merge --strategy=ours z &&
+	shit notes merge --strategy=ours z &&
 	verify_notes y ours
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
 
 test_expect_success 'merge z into y with "ours" configuration option => Non-conflicting 3-way merge' '
-	git -c notes.mergeStrategy="ours" notes merge z &&
+	shit -c notes.mergeStrategy="ours" notes merge z &&
 	verify_notes y ours
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
 
 test_expect_success 'merge z into y with "ours" per-ref configuration option => Non-conflicting 3-way merge' '
-	git -c notes.y.mergeStrategy="ours" notes merge z &&
+	shit -c notes.y.mergeStrategy="ours" notes merge z &&
 	verify_notes y ours
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
@@ -516,23 +516,23 @@ $commit_sha1 1st
 EOF
 
 test_expect_success 'merge z into y with "theirs" strategy => Non-conflicting 3-way merge' '
-	git notes merge --strategy=theirs z &&
+	shit notes merge --strategy=theirs z &&
 	verify_notes y theirs
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
 
 test_expect_success 'merge z into y with "theirs" strategy overriding configuration option "ours" => Non-conflicting 3-way merge' '
-	git -c notes.mergeStrategy="ours" notes merge --strategy=theirs z &&
+	shit -c notes.mergeStrategy="ours" notes merge --strategy=theirs z &&
 	verify_notes y theirs
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
@@ -600,41 +600,41 @@ $commit_sha1 1st
 EOF
 
 test_expect_success 'merge z into y with "union" strategy => Non-conflicting 3-way merge' '
-	git notes merge --strategy=union z &&
+	shit notes merge --strategy=union z &&
 	verify_notes y union
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
 
 test_expect_success 'merge z into y with "union" strategy overriding per-ref configuration => Non-conflicting 3-way merge' '
-	git -c notes.y.mergeStrategy="theirs" notes merge --strategy=union z &&
+	shit -c notes.y.mergeStrategy="theirs" notes merge --strategy=union z &&
 	verify_notes y union
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
 
 test_expect_success 'merge z into y with "union" per-ref overriding general configuration => Non-conflicting 3-way merge' '
-	git -c notes.y.mergeStrategy="union" -c notes.mergeStrategy="theirs" notes merge z &&
+	shit -c notes.y.mergeStrategy="union" -c notes.mergeStrategy="theirs" notes merge z &&
 	verify_notes y union
 '
 
 test_expect_success 'reset to pre-merge state (y)' '
-	git update-ref refs/notes/y refs/notes/y^1 &&
+	shit update-ref refs/notes/y refs/notes/y^1 &&
 	# Verify pre-merge state
 	verify_notes y y
 '
 
 test_expect_success 'merge z into y with "manual" per-ref only checks specific ref configuration => Conflicting 3-way merge' '
-	test_must_fail git -c notes.z.mergeStrategy="union" notes merge z &&
-	git notes merge --abort &&
+	test_must_fail shit -c notes.z.mergeStrategy="union" notes merge z &&
+	shit notes merge --abort &&
 	verify_notes y y
 '
 
@@ -701,13 +701,13 @@ $commit_sha1 1st
 EOF
 
 test_expect_success 'merge y into z with "union" strategy => Non-conflicting 3-way merge' '
-	git config core.notesRef refs/notes/z &&
-	git notes merge --strategy=union y &&
+	shit config core.notesRef refs/notes/z &&
+	shit notes merge --strategy=union y &&
 	verify_notes z union2
 '
 
 test_expect_success 'reset to pre-merge state (z)' '
-	git update-ref refs/notes/z refs/notes/z^1 &&
+	shit update-ref refs/notes/z refs/notes/z^1 &&
 	# Verify pre-merge state
 	verify_notes z z
 '
@@ -773,18 +773,18 @@ $commit_sha1 1st
 EOF
 
 test_expect_success 'merge y into z with "cat_sort_uniq" strategy => Non-conflicting 3-way merge' '
-	git notes merge --strategy=cat_sort_uniq y &&
+	shit notes merge --strategy=cat_sort_uniq y &&
 	verify_notes z cat_sort_uniq
 '
 
 test_expect_success 'reset to pre-merge state (z)' '
-	git update-ref refs/notes/z refs/notes/z^1 &&
+	shit update-ref refs/notes/z refs/notes/z^1 &&
 	# Verify pre-merge state
 	verify_notes z z
 '
 
 test_expect_success 'merge y into z with "cat_sort_uniq" strategy configuration option => Non-conflicting 3-way merge' '
-	git -c notes.mergeStrategy="cat_sort_uniq" notes merge y &&
+	shit -c notes.mergeStrategy="cat_sort_uniq" notes merge y &&
 	verify_notes z cat_sort_uniq
 '
 

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "copy.h"
 #include "environment.h"
@@ -18,7 +18,7 @@
 #include "worktree.h"
 #include "exec-cmd.h"
 
-static int inside_git_dir = -1;
+static int inside_shit_dir = -1;
 static int inside_work_tree = -1;
 static int work_tree_config_is_bogus;
 enum allowed_bare_repo {
@@ -48,7 +48,7 @@ static int abspath_part_inside_repo(char *path)
 	size_t wtlen;
 	char *path0;
 	int off;
-	const char *work_tree = get_git_work_tree();
+	const char *work_tree = get_shit_work_tree();
 	struct strbuf realpath = STRBUF_INIT;
 
 	if (!work_tree)
@@ -144,9 +144,9 @@ char *prefix_path(const char *prefix, int len, const char *path)
 {
 	char *r = prefix_path_gently(prefix, len, NULL, path);
 	if (!r) {
-		const char *hint_path = get_git_work_tree();
+		const char *hint_path = get_shit_work_tree();
 		if (!hint_path)
-			hint_path = get_git_dir();
+			hint_path = get_shit_dir();
 		die(_("'%s' is outside repository at '%s'"), path,
 		    absolute_path(hint_path));
 	}
@@ -200,7 +200,7 @@ static void NORETURN die_verify_filename(struct repository *r,
 {
 	if (!diagnose_misspelt_rev)
 		die(_("%s: no such path in the working tree.\n"
-		      "Use 'git <command> -- <path>...' to specify paths that do not exist locally."),
+		      "Use 'shit <command> -- <path>...' to specify paths that do not exist locally."),
 		    arg);
 	/*
 	 * Saying "'(icase)foo' does not exist in the index" when the
@@ -214,7 +214,7 @@ static void NORETURN die_verify_filename(struct repository *r,
 	/* ... or fall back the most general message. */
 	die(_("ambiguous argument '%s': unknown revision or path not in the working tree.\n"
 	      "Use '--' to separate paths from revisions, like this:\n"
-	      "'git <command> [<revision>...] -- [<file>...]'"), arg);
+	      "'shit <command> [<revision>...] -- [<file>...]'"), arg);
 
 }
 
@@ -291,7 +291,7 @@ void verify_filename(const char *prefix,
  */
 void verify_non_filename(const char *prefix, const char *arg)
 {
-	if (!is_inside_work_tree() || is_inside_git_dir())
+	if (!is_inside_work_tree() || is_inside_shit_dir())
 		return;
 	if (*arg == '-')
 		return; /* flag */
@@ -299,27 +299,27 @@ void verify_non_filename(const char *prefix, const char *arg)
 		return;
 	die(_("ambiguous argument '%s': both revision and filename\n"
 	      "Use '--' to separate paths from revisions, like this:\n"
-	      "'git <command> [<revision>...] -- [<file>...]'"), arg);
+	      "'shit <command> [<revision>...] -- [<file>...]'"), arg);
 }
 
-int get_common_dir(struct strbuf *sb, const char *gitdir)
+int get_common_dir(struct strbuf *sb, const char *shitdir)
 {
-	const char *git_env_common_dir = getenv(GIT_COMMON_DIR_ENVIRONMENT);
-	if (git_env_common_dir) {
-		strbuf_addstr(sb, git_env_common_dir);
+	const char *shit_env_common_dir = getenv(shit_COMMON_DIR_ENVIRONMENT);
+	if (shit_env_common_dir) {
+		strbuf_addstr(sb, shit_env_common_dir);
 		return 1;
 	} else {
-		return get_common_dir_noenv(sb, gitdir);
+		return get_common_dir_noenv(sb, shitdir);
 	}
 }
 
-int get_common_dir_noenv(struct strbuf *sb, const char *gitdir)
+int get_common_dir_noenv(struct strbuf *sb, const char *shitdir)
 {
 	struct strbuf data = STRBUF_INIT;
 	struct strbuf path = STRBUF_INIT;
 	int ret = 0;
 
-	strbuf_addf(&path, "%s/commondir", gitdir);
+	strbuf_addf(&path, "%s/commondir", shitdir);
 	if (file_exists(path.buf)) {
 		if (strbuf_read_file(&data, path.buf, 0) <= 0)
 			die_errno(_("failed to read %s"), path.buf);
@@ -329,12 +329,12 @@ int get_common_dir_noenv(struct strbuf *sb, const char *gitdir)
 		data.buf[data.len] = '\0';
 		strbuf_reset(&path);
 		if (!is_absolute_path(data.buf))
-			strbuf_addf(&path, "%s/", gitdir);
+			strbuf_addf(&path, "%s/", shitdir);
 		strbuf_addbuf(&path, &data);
 		strbuf_add_real_path(sb, path.buf);
 		ret = 1;
 	} else {
-		strbuf_addstr(sb, gitdir);
+		strbuf_addstr(sb, shitdir);
 	}
 
 	strbuf_release(&data);
@@ -343,17 +343,17 @@ int get_common_dir_noenv(struct strbuf *sb, const char *gitdir)
 }
 
 /*
- * Test if it looks like we're at a git directory.
+ * Test if it looks like we're at a shit directory.
  * We want to see:
  *
  *  - either an objects/ directory _or_ the proper
- *    GIT_OBJECT_DIRECTORY environment variable
+ *    shit_OBJECT_DIRECTORY environment variable
  *  - a refs/ directory
  *  - either a HEAD symlink or a HEAD file that is formatted as
  *    a proper "ref:", or a regular file HEAD that has a properly
  *    formatted sha1 object name.
  */
-int is_git_directory(const char *suspect)
+int is_shit_directory(const char *suspect)
 {
 	struct strbuf path = STRBUF_INIT;
 	int ret = 0;
@@ -396,31 +396,31 @@ done:
 int is_nonbare_repository_dir(struct strbuf *path)
 {
 	int ret = 0;
-	int gitfile_error;
+	int shitfile_error;
 	size_t orig_path_len = path->len;
 	assert(orig_path_len != 0);
 	strbuf_complete(path, '/');
-	strbuf_addstr(path, ".git");
-	if (read_gitfile_gently(path->buf, &gitfile_error) || is_git_directory(path->buf))
+	strbuf_addstr(path, ".shit");
+	if (read_shitfile_gently(path->buf, &shitfile_error) || is_shit_directory(path->buf))
 		ret = 1;
-	if (gitfile_error == READ_GITFILE_ERR_OPEN_FAILED ||
-	    gitfile_error == READ_GITFILE_ERR_READ_FAILED)
+	if (shitfile_error == READ_shitFILE_ERR_OPEN_FAILED ||
+	    shitfile_error == READ_shitFILE_ERR_READ_FAILED)
 		ret = 1;
 	strbuf_setlen(path, orig_path_len);
 	return ret;
 }
 
-int is_inside_git_dir(void)
+int is_inside_shit_dir(void)
 {
-	if (inside_git_dir < 0)
-		inside_git_dir = is_inside_dir(get_git_dir());
-	return inside_git_dir;
+	if (inside_shit_dir < 0)
+		inside_shit_dir = is_inside_dir(get_shit_dir());
+	return inside_shit_dir;
 }
 
 int is_inside_work_tree(void)
 {
 	if (inside_work_tree < 0)
-		inside_work_tree = is_inside_dir(get_git_work_tree());
+		inside_work_tree = is_inside_dir(get_shit_work_tree());
 	return inside_work_tree;
 }
 
@@ -435,16 +435,16 @@ void setup_work_tree(void)
 	if (work_tree_config_is_bogus)
 		die(_("unable to set up work tree using invalid config"));
 
-	work_tree = get_git_work_tree();
+	work_tree = get_shit_work_tree();
 	if (!work_tree || chdir_notify(work_tree))
 		die(_("this operation must be run in a work tree"));
 
 	/*
-	 * Make sure subsequent git processes find correct worktree
-	 * if $GIT_WORK_TREE is set relative
+	 * Make sure subsequent shit processes find correct worktree
+	 * if $shit_WORK_TREE is set relative
 	 */
-	if (getenv(GIT_WORK_TREE_ENVIRONMENT))
-		setenv(GIT_WORK_TREE_ENVIRONMENT, ".", 1);
+	if (getenv(shit_WORK_TREE_ENVIRONMENT))
+		setenv(shit_WORK_TREE_ENVIRONMENT, ".", 1);
 
 	initialized = 1;
 }
@@ -469,7 +469,7 @@ static void setup_original_cwd(void)
 	 * Yes, startup_info->original_cwd is usually the same as 'prefix',
 	 * but differs in two ways:
 	 *   - prefix has a trailing '/'
-	 *   - if the user passes '-C' to git, that modifies the prefix but
+	 *   - if the user passes '-C' to shit, that modifies the prefix but
 	 *     not startup_info->original_cwd.
 	 */
 
@@ -492,7 +492,7 @@ static void setup_original_cwd(void)
 	 * Get our worktree; we only protect the current working directory
 	 * if it's in the worktree.
 	 */
-	worktree = get_git_work_tree();
+	worktree = get_shit_work_tree();
 	if (!worktree)
 		goto no_prevention_needed;
 
@@ -528,7 +528,7 @@ static int read_worktree_config(const char *var, const char *value,
 	struct repository_format *data = vdata;
 
 	if (strcmp(var, "core.bare") == 0) {
-		data->is_bare = git_config_bool(var, value);
+		data->is_bare = shit_config_bool(var, value);
 	} else if (strcmp(var, "core.worktree") == 0) {
 		if (!value)
 			return config_error_nonbool(var);
@@ -556,7 +556,7 @@ static enum extension_result handle_extension_v0(const char *var,
 		if (!strcmp(ext, "noop")) {
 			return EXTENSION_OK;
 		} else if (!strcmp(ext, "preciousobjects")) {
-			data->precious_objects = git_config_bool(var, value);
+			data->precious_objects = shit_config_bool(var, value);
 			return EXTENSION_OK;
 		} else if (!strcmp(ext, "partialclone")) {
 			if (!value)
@@ -564,7 +564,7 @@ static enum extension_result handle_extension_v0(const char *var,
 			data->partial_clone = xstrdup(value);
 			return EXTENSION_OK;
 		} else if (!strcmp(ext, "worktreeconfig")) {
-			data->worktree_config = git_config_bool(var, value);
+			data->worktree_config = shit_config_bool(var, value);
 			return EXTENSION_OK;
 		}
 
@@ -587,7 +587,7 @@ static enum extension_result handle_extension(const char *var,
 		if (!value)
 			return config_error_nonbool(var);
 		format = hash_algo_by_name(value);
-		if (format == GIT_HASH_UNKNOWN)
+		if (format == shit_HASH_UNKNOWN)
 			return error(_("invalid value for '%s': '%s'"),
 				     "extensions.objectformat", value);
 		data->hash_algo = format;
@@ -599,7 +599,7 @@ static enum extension_result handle_extension(const char *var,
 		if (!value)
 			return config_error_nonbool(var);
 		format = hash_algo_by_name(value);
-		if (format == GIT_HASH_UNKNOWN)
+		if (format == shit_HASH_UNKNOWN)
 			return error(_("invalid value for '%s': '%s'"),
 				     "extensions.compatobjectformat", value);
 		/* For now only support compatObjectFormat being specified once. */
@@ -633,7 +633,7 @@ static int check_repo_format(const char *var, const char *value,
 	const char *ext;
 
 	if (strcmp(var, "core.repositoryformatversion") == 0)
-		data->version = git_config_int(var, value, ctx->kvi);
+		data->version = shit_config_int(var, value, ctx->kvi);
 	else if (skip_prefix(var, "extensions.", &ext)) {
 		switch (handle_extension_v0(var, value, ext, data)) {
 		case EXTENSION_ERROR:
@@ -659,30 +659,30 @@ static int check_repo_format(const char *var, const char *value,
 	return read_worktree_config(var, value, ctx, vdata);
 }
 
-static int check_repository_format_gently(const char *gitdir, struct repository_format *candidate, int *nongit_ok)
+static int check_repository_format_gently(const char *shitdir, struct repository_format *candidate, int *nonshit_ok)
 {
 	struct strbuf sb = STRBUF_INIT;
 	struct strbuf err = STRBUF_INIT;
 	int has_common;
 
-	has_common = get_common_dir(&sb, gitdir);
+	has_common = get_common_dir(&sb, shitdir);
 	strbuf_addstr(&sb, "/config");
 	read_repository_format(candidate, sb.buf);
 	strbuf_release(&sb);
 
 	/*
-	 * For historical use of check_repository_format() in git-init,
-	 * we treat a missing config as a silent "ok", even when nongit_ok
+	 * For historical use of check_repository_format() in shit-init,
+	 * we treat a missing config as a silent "ok", even when nonshit_ok
 	 * is unset.
 	 */
 	if (candidate->version < 0)
 		return 0;
 
 	if (verify_repository_format(candidate, &err) < 0) {
-		if (nongit_ok) {
+		if (nonshit_ok) {
 			warning("%s", err.buf);
 			strbuf_release(&err);
-			*nongit_ok = -1;
+			*nonshit_ok = -1;
 			return -1;
 		}
 		die("%s", err.buf);
@@ -697,8 +697,8 @@ static int check_repository_format_gently(const char *gitdir, struct repository_
 		 * pick up core.bare and core.worktree from per-worktree
 		 * config if present
 		 */
-		strbuf_addf(&sb, "%s/config.worktree", gitdir);
-		git_config_from_file(read_worktree_config, sb.buf, candidate);
+		strbuf_addf(&sb, "%s/config.worktree", shitdir);
+		shit_config_from_file(read_worktree_config, sb.buf, candidate);
 		strbuf_release(&sb);
 		has_common = 0;
 	}
@@ -710,8 +710,8 @@ static int check_repository_format_gently(const char *gitdir, struct repository_
 				inside_work_tree = -1;
 		}
 		if (candidate->work_tree) {
-			free(git_work_tree_cfg);
-			git_work_tree_cfg = xstrdup(candidate->work_tree);
+			free(shit_work_tree_cfg);
+			shit_work_tree_cfg = xstrdup(candidate->work_tree);
 			inside_work_tree = -1;
 		}
 	}
@@ -727,7 +727,7 @@ int upgrade_repository_format(int target_version)
 	struct repository_format repo_fmt = REPOSITORY_FORMAT_INIT;
 	int ret;
 
-	strbuf_git_common_path(&sb, the_repository, "config");
+	strbuf_shit_common_path(&sb, the_repository, "config");
 	read_repository_format(&repo_fmt, sb.buf);
 	strbuf_release(&sb);
 
@@ -749,7 +749,7 @@ int upgrade_repository_format(int target_version)
 	}
 
 	strbuf_addf(&repo_version, "%d", target_version);
-	git_config_set("core.repositoryformatversion", repo_version.buf);
+	shit_config_set("core.repositoryformatversion", repo_version.buf);
 
 	ret = 1;
 
@@ -770,7 +770,7 @@ static void init_repository_format(struct repository_format *format)
 int read_repository_format(struct repository_format *format, const char *path)
 {
 	clear_repository_format(format);
-	git_config_from_file(check_repo_format, path, format);
+	shit_config_from_file(check_repo_format, path, format);
 	if (format->version == -1)
 		clear_repository_format(format);
 	return format->version;
@@ -788,9 +788,9 @@ void clear_repository_format(struct repository_format *format)
 int verify_repository_format(const struct repository_format *format,
 			     struct strbuf *err)
 {
-	if (GIT_REPO_VERSION_READ < format->version) {
-		strbuf_addf(err, _("Expected git repo version <= %d, found %d"),
-			    GIT_REPO_VERSION_READ, format->version);
+	if (shit_REPO_VERSION_READ < format->version) {
+		strbuf_addf(err, _("Expected shit repo version <= %d, found %d"),
+			    shit_REPO_VERSION_READ, format->version);
 		return -1;
 	}
 
@@ -824,33 +824,33 @@ int verify_repository_format(const struct repository_format *format,
 	return 0;
 }
 
-void read_gitfile_error_die(int error_code, const char *path, const char *dir)
+void read_shitfile_error_die(int error_code, const char *path, const char *dir)
 {
 	switch (error_code) {
-	case READ_GITFILE_ERR_STAT_FAILED:
-	case READ_GITFILE_ERR_NOT_A_FILE:
+	case READ_shitFILE_ERR_STAT_FAILED:
+	case READ_shitFILE_ERR_NOT_A_FILE:
 		/* non-fatal; follow return path */
 		break;
-	case READ_GITFILE_ERR_OPEN_FAILED:
+	case READ_shitFILE_ERR_OPEN_FAILED:
 		die_errno(_("error opening '%s'"), path);
-	case READ_GITFILE_ERR_TOO_LARGE:
-		die(_("too large to be a .git file: '%s'"), path);
-	case READ_GITFILE_ERR_READ_FAILED:
+	case READ_shitFILE_ERR_TOO_LARGE:
+		die(_("too large to be a .shit file: '%s'"), path);
+	case READ_shitFILE_ERR_READ_FAILED:
 		die(_("error reading %s"), path);
-	case READ_GITFILE_ERR_INVALID_FORMAT:
-		die(_("invalid gitfile format: %s"), path);
-	case READ_GITFILE_ERR_NO_PATH:
-		die(_("no path in gitfile: %s"), path);
-	case READ_GITFILE_ERR_NOT_A_REPO:
-		die(_("not a git repository: %s"), dir);
+	case READ_shitFILE_ERR_INVALID_FORMAT:
+		die(_("invalid shitfile format: %s"), path);
+	case READ_shitFILE_ERR_NO_PATH:
+		die(_("no path in shitfile: %s"), path);
+	case READ_shitFILE_ERR_NOT_A_REPO:
+		die(_("not a shit repository: %s"), dir);
 	default:
 		BUG("unknown error code");
 	}
 }
 
 /*
- * Try to read the location of the git directory from the .git file,
- * return path to git directory if found. The return value comes from
+ * Try to read the location of the shit directory from the .shit file,
+ * return path to shit directory if found. The return value comes from
  * a shared buffer.
  *
  * On failure, if return_error_code is not NULL, return_error_code
@@ -858,7 +858,7 @@ void read_gitfile_error_die(int error_code, const char *path, const char *dir)
  * return_error_code is NULL the function will die instead (for most
  * cases).
  */
-const char *read_gitfile_gently(const char *path, int *return_error_code)
+const char *read_shitfile_gently(const char *path, int *return_error_code)
 {
 	const int max_file_size = 1 << 20;  /* 1MB */
 	int error_code = 0;
@@ -872,37 +872,37 @@ const char *read_gitfile_gently(const char *path, int *return_error_code)
 
 	if (stat(path, &st)) {
 		/* NEEDSWORK: discern between ENOENT vs other errors */
-		error_code = READ_GITFILE_ERR_STAT_FAILED;
+		error_code = READ_shitFILE_ERR_STAT_FAILED;
 		goto cleanup_return;
 	}
 	if (!S_ISREG(st.st_mode)) {
-		error_code = READ_GITFILE_ERR_NOT_A_FILE;
+		error_code = READ_shitFILE_ERR_NOT_A_FILE;
 		goto cleanup_return;
 	}
 	if (st.st_size > max_file_size) {
-		error_code = READ_GITFILE_ERR_TOO_LARGE;
+		error_code = READ_shitFILE_ERR_TOO_LARGE;
 		goto cleanup_return;
 	}
 	fd = open(path, O_RDONLY);
 	if (fd < 0) {
-		error_code = READ_GITFILE_ERR_OPEN_FAILED;
+		error_code = READ_shitFILE_ERR_OPEN_FAILED;
 		goto cleanup_return;
 	}
 	buf = xmallocz(st.st_size);
 	len = read_in_full(fd, buf, st.st_size);
 	close(fd);
 	if (len != st.st_size) {
-		error_code = READ_GITFILE_ERR_READ_FAILED;
+		error_code = READ_shitFILE_ERR_READ_FAILED;
 		goto cleanup_return;
 	}
-	if (!starts_with(buf, "gitdir: ")) {
-		error_code = READ_GITFILE_ERR_INVALID_FORMAT;
+	if (!starts_with(buf, "shitdir: ")) {
+		error_code = READ_shitFILE_ERR_INVALID_FORMAT;
 		goto cleanup_return;
 	}
 	while (buf[len - 1] == '\n' || buf[len - 1] == '\r')
 		len--;
 	if (len < 9) {
-		error_code = READ_GITFILE_ERR_NO_PATH;
+		error_code = READ_shitFILE_ERR_NO_PATH;
 		goto cleanup_return;
 	}
 	buf[len] = '\0';
@@ -915,8 +915,8 @@ const char *read_gitfile_gently(const char *path, int *return_error_code)
 		free(buf);
 		buf = dir;
 	}
-	if (!is_git_directory(dir)) {
-		error_code = READ_GITFILE_ERR_NOT_A_REPO;
+	if (!is_shit_directory(dir)) {
+		error_code = READ_shitFILE_ERR_NOT_A_REPO;
 		goto cleanup_return;
 	}
 
@@ -927,146 +927,146 @@ cleanup_return:
 	if (return_error_code)
 		*return_error_code = error_code;
 	else if (error_code)
-		read_gitfile_error_die(error_code, path, dir);
+		read_shitfile_error_die(error_code, path, dir);
 
 	free(buf);
 	return error_code ? NULL : path;
 }
 
-static const char *setup_explicit_git_dir(const char *gitdirenv,
+static const char *setup_explicit_shit_dir(const char *shitdirenv,
 					  struct strbuf *cwd,
 					  struct repository_format *repo_fmt,
-					  int *nongit_ok)
+					  int *nonshit_ok)
 {
-	const char *work_tree_env = getenv(GIT_WORK_TREE_ENVIRONMENT);
+	const char *work_tree_env = getenv(shit_WORK_TREE_ENVIRONMENT);
 	const char *worktree;
-	char *gitfile;
+	char *shitfile;
 	int offset;
 
-	if (PATH_MAX - 40 < strlen(gitdirenv))
-		die(_("'$%s' too big"), GIT_DIR_ENVIRONMENT);
+	if (PATH_MAX - 40 < strlen(shitdirenv))
+		die(_("'$%s' too big"), shit_DIR_ENVIRONMENT);
 
-	gitfile = (char*)read_gitfile(gitdirenv);
-	if (gitfile) {
-		gitfile = xstrdup(gitfile);
-		gitdirenv = gitfile;
+	shitfile = (char*)read_shitfile(shitdirenv);
+	if (shitfile) {
+		shitfile = xstrdup(shitfile);
+		shitdirenv = shitfile;
 	}
 
-	if (!is_git_directory(gitdirenv)) {
-		if (nongit_ok) {
-			*nongit_ok = 1;
-			free(gitfile);
+	if (!is_shit_directory(shitdirenv)) {
+		if (nonshit_ok) {
+			*nonshit_ok = 1;
+			free(shitfile);
 			return NULL;
 		}
-		die(_("not a git repository: '%s'"), gitdirenv);
+		die(_("not a shit repository: '%s'"), shitdirenv);
 	}
 
-	if (check_repository_format_gently(gitdirenv, repo_fmt, nongit_ok)) {
-		free(gitfile);
+	if (check_repository_format_gently(shitdirenv, repo_fmt, nonshit_ok)) {
+		free(shitfile);
 		return NULL;
 	}
 
 	/* #3, #7, #11, #15, #19, #23, #27, #31 (see t1510) */
 	if (work_tree_env)
-		set_git_work_tree(work_tree_env);
+		set_shit_work_tree(work_tree_env);
 	else if (is_bare_repository_cfg > 0) {
-		if (git_work_tree_cfg) {
+		if (shit_work_tree_cfg) {
 			/* #22.2, #30 */
 			warning("core.bare and core.worktree do not make sense");
 			work_tree_config_is_bogus = 1;
 		}
 
 		/* #18, #26 */
-		set_git_dir(gitdirenv, 0);
-		free(gitfile);
+		set_shit_dir(shitdirenv, 0);
+		free(shitfile);
 		return NULL;
 	}
-	else if (git_work_tree_cfg) { /* #6, #14 */
-		if (is_absolute_path(git_work_tree_cfg))
-			set_git_work_tree(git_work_tree_cfg);
+	else if (shit_work_tree_cfg) { /* #6, #14 */
+		if (is_absolute_path(shit_work_tree_cfg))
+			set_shit_work_tree(shit_work_tree_cfg);
 		else {
 			char *core_worktree;
-			if (chdir(gitdirenv))
-				die_errno(_("cannot chdir to '%s'"), gitdirenv);
-			if (chdir(git_work_tree_cfg))
-				die_errno(_("cannot chdir to '%s'"), git_work_tree_cfg);
+			if (chdir(shitdirenv))
+				die_errno(_("cannot chdir to '%s'"), shitdirenv);
+			if (chdir(shit_work_tree_cfg))
+				die_errno(_("cannot chdir to '%s'"), shit_work_tree_cfg);
 			core_worktree = xgetcwd();
 			if (chdir(cwd->buf))
 				die_errno(_("cannot come back to cwd"));
-			set_git_work_tree(core_worktree);
+			set_shit_work_tree(core_worktree);
 			free(core_worktree);
 		}
 	}
-	else if (!git_env_bool(GIT_IMPLICIT_WORK_TREE_ENVIRONMENT, 1)) {
+	else if (!shit_env_bool(shit_IMPLICIT_WORK_TREE_ENVIRONMENT, 1)) {
 		/* #16d */
-		set_git_dir(gitdirenv, 0);
-		free(gitfile);
+		set_shit_dir(shitdirenv, 0);
+		free(shitfile);
 		return NULL;
 	}
 	else /* #2, #10 */
-		set_git_work_tree(".");
+		set_shit_work_tree(".");
 
-	/* set_git_work_tree() must have been called by now */
-	worktree = get_git_work_tree();
+	/* set_shit_work_tree() must have been called by now */
+	worktree = get_shit_work_tree();
 
-	/* both get_git_work_tree() and cwd are already normalized */
+	/* both get_shit_work_tree() and cwd are already normalized */
 	if (!strcmp(cwd->buf, worktree)) { /* cwd == worktree */
-		set_git_dir(gitdirenv, 0);
-		free(gitfile);
+		set_shit_dir(shitdirenv, 0);
+		free(shitfile);
 		return NULL;
 	}
 
 	offset = dir_inside_of(cwd->buf, worktree);
 	if (offset >= 0) {	/* cwd inside worktree? */
-		set_git_dir(gitdirenv, 1);
+		set_shit_dir(shitdirenv, 1);
 		if (chdir(worktree))
 			die_errno(_("cannot chdir to '%s'"), worktree);
 		strbuf_addch(cwd, '/');
-		free(gitfile);
+		free(shitfile);
 		return cwd->buf + offset;
 	}
 
 	/* cwd outside worktree */
-	set_git_dir(gitdirenv, 0);
-	free(gitfile);
+	set_shit_dir(shitdirenv, 0);
+	free(shitfile);
 	return NULL;
 }
 
-static const char *setup_discovered_git_dir(const char *gitdir,
+static const char *setup_discovered_shit_dir(const char *shitdir,
 					    struct strbuf *cwd, int offset,
 					    struct repository_format *repo_fmt,
-					    int *nongit_ok)
+					    int *nonshit_ok)
 {
-	if (check_repository_format_gently(gitdir, repo_fmt, nongit_ok))
+	if (check_repository_format_gently(shitdir, repo_fmt, nonshit_ok))
 		return NULL;
 
-	/* --work-tree is set without --git-dir; use discovered one */
-	if (getenv(GIT_WORK_TREE_ENVIRONMENT) || git_work_tree_cfg) {
+	/* --work-tree is set without --shit-dir; use discovered one */
+	if (getenv(shit_WORK_TREE_ENVIRONMENT) || shit_work_tree_cfg) {
 		char *to_free = NULL;
 		const char *ret;
 
-		if (offset != cwd->len && !is_absolute_path(gitdir))
-			gitdir = to_free = real_pathdup(gitdir, 1);
+		if (offset != cwd->len && !is_absolute_path(shitdir))
+			shitdir = to_free = real_pathdup(shitdir, 1);
 		if (chdir(cwd->buf))
 			die_errno(_("cannot come back to cwd"));
-		ret = setup_explicit_git_dir(gitdir, cwd, repo_fmt, nongit_ok);
+		ret = setup_explicit_shit_dir(shitdir, cwd, repo_fmt, nonshit_ok);
 		free(to_free);
 		return ret;
 	}
 
 	/* #16.2, #17.2, #20.2, #21.2, #24, #25, #28, #29 (see t1510) */
 	if (is_bare_repository_cfg > 0) {
-		set_git_dir(gitdir, (offset != cwd->len));
+		set_shit_dir(shitdir, (offset != cwd->len));
 		if (chdir(cwd->buf))
 			die_errno(_("cannot come back to cwd"));
 		return NULL;
 	}
 
 	/* #0, #1, #5, #8, #9, #12, #13 */
-	set_git_work_tree(".");
-	if (strcmp(gitdir, DEFAULT_GIT_DIR_ENVIRONMENT))
-		set_git_dir(gitdir, 0);
-	inside_git_dir = 0;
+	set_shit_work_tree(".");
+	if (strcmp(shitdir, DEFAULT_shit_DIR_ENVIRONMENT))
+		set_shit_dir(shitdir, 0);
+	inside_shit_dir = 0;
 	inside_work_tree = 1;
 	if (offset >= cwd->len)
 		return NULL;
@@ -1080,38 +1080,38 @@ static const char *setup_discovered_git_dir(const char *gitdir,
 }
 
 /* #16.1, #17.1, #20.1, #21.1, #22.1 (see t1510) */
-static const char *setup_bare_git_dir(struct strbuf *cwd, int offset,
+static const char *setup_bare_shit_dir(struct strbuf *cwd, int offset,
 				      struct repository_format *repo_fmt,
-				      int *nongit_ok)
+				      int *nonshit_ok)
 {
 	int root_len;
 
-	if (check_repository_format_gently(".", repo_fmt, nongit_ok))
+	if (check_repository_format_gently(".", repo_fmt, nonshit_ok))
 		return NULL;
 
-	setenv(GIT_IMPLICIT_WORK_TREE_ENVIRONMENT, "0", 1);
+	setenv(shit_IMPLICIT_WORK_TREE_ENVIRONMENT, "0", 1);
 
-	/* --work-tree is set without --git-dir; use discovered one */
-	if (getenv(GIT_WORK_TREE_ENVIRONMENT) || git_work_tree_cfg) {
-		static const char *gitdir;
+	/* --work-tree is set without --shit-dir; use discovered one */
+	if (getenv(shit_WORK_TREE_ENVIRONMENT) || shit_work_tree_cfg) {
+		static const char *shitdir;
 
-		gitdir = offset == cwd->len ? "." : xmemdupz(cwd->buf, offset);
+		shitdir = offset == cwd->len ? "." : xmemdupz(cwd->buf, offset);
 		if (chdir(cwd->buf))
 			die_errno(_("cannot come back to cwd"));
-		return setup_explicit_git_dir(gitdir, cwd, repo_fmt, nongit_ok);
+		return setup_explicit_shit_dir(shitdir, cwd, repo_fmt, nonshit_ok);
 	}
 
-	inside_git_dir = 1;
+	inside_shit_dir = 1;
 	inside_work_tree = 0;
 	if (offset != cwd->len) {
 		if (chdir(cwd->buf))
 			die_errno(_("cannot come back to cwd"));
 		root_len = offset_1st_component(cwd->buf);
 		strbuf_setlen(cwd, offset > root_len ? offset : root_len);
-		set_git_dir(cwd->buf, 0);
+		set_shit_dir(cwd->buf, 0);
 	}
 	else
-		set_git_dir(".", 0);
+		set_shit_dir(".", 0);
 	return NULL;
 }
 
@@ -1129,9 +1129,9 @@ static dev_t get_device_or_die(const char *path, const char *prefix, int prefix_
 
 /*
  * A "string_list_each_func_t" function that canonicalizes an entry
- * from GIT_CEILING_DIRECTORIES using real_pathdup(), or
+ * from shit_CEILING_DIRECTORIES using real_pathdup(), or
  * discards it if unusable.  The presence of an empty entry in
- * GIT_CEILING_DIRECTORIES turns off canonicalization for all
+ * shit_CEILING_DIRECTORIES turns off canonicalization for all
  * subsequent entries.
  */
 static int canonicalize_ceiling_entry(struct string_list_item *item,
@@ -1179,7 +1179,7 @@ static int safe_directory_cb(const char *key, const char *value,
 	} else {
 		const char *interpolated = NULL;
 
-		if (!git_config_pathname(&interpolated, key, value) &&
+		if (!shit_config_pathname(&interpolated, key, value) &&
 		    !fspathcmp(data->path, interpolated ? interpolated : value))
 			data->is_safe = 1;
 
@@ -1191,24 +1191,24 @@ static int safe_directory_cb(const char *key, const char *value,
 
 /*
  * Check if a repository is safe, by verifying the ownership of the
- * worktree (if any), the git directory, and the gitfile (if any).
+ * worktree (if any), the shit directory, and the shitfile (if any).
  *
  * Exemptions for known-safe repositories can be added via `safe.directory`
  * config settings; for non-bare repositories, their worktree needs to be
- * added, for bare ones their git directory.
+ * added, for bare ones their shit directory.
  */
-static int ensure_valid_ownership(const char *gitfile,
-				  const char *worktree, const char *gitdir,
+static int ensure_valid_ownership(const char *shitfile,
+				  const char *worktree, const char *shitdir,
 				  struct strbuf *report)
 {
 	struct safe_directory_data data = {
-		.path = worktree ? worktree : gitdir
+		.path = worktree ? worktree : shitdir
 	};
 
-	if (!git_env_bool("GIT_TEST_ASSUME_DIFFERENT_OWNER", 0) &&
-	    (!gitfile || is_path_owned_by_current_user(gitfile, report)) &&
+	if (!shit_env_bool("shit_TEST_ASSUME_DIFFERENT_OWNER", 0) &&
+	    (!shitfile || is_path_owned_by_current_user(shitfile, report)) &&
 	    (!worktree || is_path_owned_by_current_user(worktree, report)) &&
-	    (!gitdir || is_path_owned_by_current_user(gitdir, report)))
+	    (!shitdir || is_path_owned_by_current_user(shitdir, report)))
 		return 1;
 
 	/*
@@ -1216,29 +1216,29 @@ static int ensure_valid_ownership(const char *gitfile,
 	 * constant regardless of what failed above. data.is_safe should be
 	 * initialized to false, and might be changed by the callback.
 	 */
-	git_protected_config(safe_directory_cb, &data);
+	shit_protected_config(safe_directory_cb, &data);
 
 	return data.is_safe;
 }
 
-void die_upon_dubious_ownership(const char *gitfile, const char *worktree,
-				const char *gitdir)
+void die_upon_dubious_ownership(const char *shitfile, const char *worktree,
+				const char *shitdir)
 {
 	struct strbuf report = STRBUF_INIT, quoted = STRBUF_INIT;
 	const char *path;
 
-	if (ensure_valid_ownership(gitfile, worktree, gitdir, &report))
+	if (ensure_valid_ownership(shitfile, worktree, shitdir, &report))
 		return;
 
 	strbuf_complete(&report, '\n');
-	path = gitfile ? gitfile : gitdir;
+	path = shitfile ? shitfile : shitdir;
 	sq_quote_buf_pretty(&quoted, path);
 
 	die(_("detected dubious ownership in repository at '%s'\n"
 	      "%s"
 	      "To add an exception for this directory, call:\n"
 	      "\n"
-	      "\tgit config --global --add safe.directory %s"),
+	      "\tshit config --global --add safe.directory %s"),
 	    path, report.buf, quoted.buf);
 }
 
@@ -1265,7 +1265,7 @@ static int allowed_bare_repo_cb(const char *key, const char *value,
 static enum allowed_bare_repo get_allowed_bare_repo(void)
 {
 	enum allowed_bare_repo result = ALLOWED_BARE_REPO_ALL;
-	git_protected_config(allowed_bare_repo_cb, &result);
+	shit_protected_config(allowed_bare_repo_cb, &result);
 	return result;
 }
 
@@ -1287,24 +1287,24 @@ static const char *allowed_bare_repo_to_string(
 static int is_implicit_bare_repo(const char *path)
 {
 	/*
-	 * what we found is a ".git" directory at the root of
+	 * what we found is a ".shit" directory at the root of
 	 * the working tree.
 	 */
-	if (ends_with_path_components(path, ".git"))
+	if (ends_with_path_components(path, ".shit"))
 		return 1;
 
 	/*
-	 * we are inside $GIT_DIR of a secondary worktree of a
+	 * we are inside $shit_DIR of a secondary worktree of a
 	 * non-bare repository.
 	 */
-	if (strstr(path, "/.git/worktrees/"))
+	if (strstr(path, "/.shit/worktrees/"))
 		return 1;
 
 	/*
-	 * we are inside $GIT_DIR of a worktree of a non-embedded
+	 * we are inside $shit_DIR of a worktree of a non-embedded
 	 * submodule, whose superproject is not a bare repository.
 	 */
-	if (strstr(path, "/.git/modules/"))
+	if (strstr(path, "/.shit/modules/"))
 		return 1;
 
 	return 0;
@@ -1319,31 +1319,31 @@ static int is_implicit_bare_repo(const char *path)
  *
  * The directory where the search should start needs to be passed in via the
  * `dir` parameter; upon return, the `dir` buffer will contain the path of
- * the directory where the search ended, and `gitdir` will contain the path of
- * the discovered .git/ directory, if any. If `gitdir` is not absolute, it
+ * the directory where the search ended, and `shitdir` will contain the path of
+ * the discovered .shit/ directory, if any. If `shitdir` is not absolute, it
  * is relative to `dir` (i.e. *not* necessarily the cwd).
  */
-static enum discovery_result setup_git_directory_gently_1(struct strbuf *dir,
-							  struct strbuf *gitdir,
+static enum discovery_result setup_shit_directory_gently_1(struct strbuf *dir,
+							  struct strbuf *shitdir,
 							  struct strbuf *report,
 							  int die_on_error)
 {
 	const char *env_ceiling_dirs = getenv(CEILING_DIRECTORIES_ENVIRONMENT);
 	struct string_list ceiling_dirs = STRING_LIST_INIT_DUP;
-	const char *gitdirenv;
+	const char *shitdirenv;
 	int ceil_offset = -1, min_offset = offset_1st_component(dir->buf);
 	dev_t current_device = 0;
 	int one_filesystem = 1;
 
 	/*
-	 * If GIT_DIR is set explicitly, we're not going
+	 * If shit_DIR is set explicitly, we're not going
 	 * to do any discovery, but we still do repository
 	 * validation.
 	 */
-	gitdirenv = getenv(GIT_DIR_ENVIRONMENT);
-	if (gitdirenv) {
-		strbuf_addstr(gitdir, gitdirenv);
-		return GIT_DIR_EXPLICIT;
+	shitdirenv = getenv(shit_DIR_ENVIRONMENT);
+	if (shitdirenv) {
+		strbuf_addstr(shitdir, shitdirenv);
+		return shit_DIR_EXPLICIT;
 	}
 
 	if (env_ceiling_dirs) {
@@ -1367,134 +1367,134 @@ static enum discovery_result setup_git_directory_gently_1(struct strbuf *dir,
 
 	/*
 	 * Test in the following order (relative to the dir):
-	 * - .git (file containing "gitdir: <path>")
-	 * - .git/
+	 * - .shit (file containing "shitdir: <path>")
+	 * - .shit/
 	 * - ./ (bare)
-	 * - ../.git
-	 * - ../.git/
+	 * - ../.shit
+	 * - ../.shit/
 	 * - ../ (bare)
-	 * - ../../.git
+	 * - ../../.shit
 	 *   etc.
 	 */
-	one_filesystem = !git_env_bool("GIT_DISCOVERY_ACROSS_FILESYSTEM", 0);
+	one_filesystem = !shit_env_bool("shit_DISCOVERY_ACROSS_FILESYSTEM", 0);
 	if (one_filesystem)
 		current_device = get_device_or_die(dir->buf, NULL, 0);
 	for (;;) {
 		int offset = dir->len, error_code = 0;
-		char *gitdir_path = NULL;
-		char *gitfile = NULL;
+		char *shitdir_path = NULL;
+		char *shitfile = NULL;
 
 		if (offset > min_offset)
 			strbuf_addch(dir, '/');
-		strbuf_addstr(dir, DEFAULT_GIT_DIR_ENVIRONMENT);
-		gitdirenv = read_gitfile_gently(dir->buf, die_on_error ?
+		strbuf_addstr(dir, DEFAULT_shit_DIR_ENVIRONMENT);
+		shitdirenv = read_shitfile_gently(dir->buf, die_on_error ?
 						NULL : &error_code);
-		if (!gitdirenv) {
+		if (!shitdirenv) {
 			if (die_on_error ||
-			    error_code == READ_GITFILE_ERR_NOT_A_FILE) {
-				/* NEEDSWORK: fail if .git is not file nor dir */
-				if (is_git_directory(dir->buf)) {
-					gitdirenv = DEFAULT_GIT_DIR_ENVIRONMENT;
-					gitdir_path = xstrdup(dir->buf);
+			    error_code == READ_shitFILE_ERR_NOT_A_FILE) {
+				/* NEEDSWORK: fail if .shit is not file nor dir */
+				if (is_shit_directory(dir->buf)) {
+					shitdirenv = DEFAULT_shit_DIR_ENVIRONMENT;
+					shitdir_path = xstrdup(dir->buf);
 				}
-			} else if (error_code != READ_GITFILE_ERR_STAT_FAILED)
-				return GIT_DIR_INVALID_GITFILE;
+			} else if (error_code != READ_shitFILE_ERR_STAT_FAILED)
+				return shit_DIR_INVALID_shitFILE;
 		} else
-			gitfile = xstrdup(dir->buf);
+			shitfile = xstrdup(dir->buf);
 		/*
-		 * Earlier, we tentatively added DEFAULT_GIT_DIR_ENVIRONMENT
+		 * Earlier, we tentatively added DEFAULT_shit_DIR_ENVIRONMENT
 		 * to check that directory for a repository.
 		 * Now trim that tentative addition away, because we want to
 		 * focus on the real directory we are in.
 		 */
 		strbuf_setlen(dir, offset);
-		if (gitdirenv) {
+		if (shitdirenv) {
 			enum discovery_result ret;
-			const char *gitdir_candidate =
-				gitdir_path ? gitdir_path : gitdirenv;
+			const char *shitdir_candidate =
+				shitdir_path ? shitdir_path : shitdirenv;
 
-			if (ensure_valid_ownership(gitfile, dir->buf,
-						   gitdir_candidate, report)) {
-				strbuf_addstr(gitdir, gitdirenv);
-				ret = GIT_DIR_DISCOVERED;
+			if (ensure_valid_ownership(shitfile, dir->buf,
+						   shitdir_candidate, report)) {
+				strbuf_addstr(shitdir, shitdirenv);
+				ret = shit_DIR_DISCOVERED;
 			} else
-				ret = GIT_DIR_INVALID_OWNERSHIP;
+				ret = shit_DIR_INVALID_OWNERSHIP;
 
 			/*
 			 * Earlier, during discovery, we might have allocated
-			 * string copies for gitdir_path or gitfile so make
+			 * string copies for shitdir_path or shitfile so make
 			 * sure we don't leak by freeing them now, before
 			 * leaving the loop and function.
 			 *
-			 * Note: gitdirenv will be non-NULL whenever these are
+			 * Note: shitdirenv will be non-NULL whenever these are
 			 * allocated, therefore we need not take care of releasing
 			 * them outside of this conditional block.
 			 */
-			free(gitdir_path);
-			free(gitfile);
+			free(shitdir_path);
+			free(shitfile);
 
 			return ret;
 		}
 
-		if (is_git_directory(dir->buf)) {
+		if (is_shit_directory(dir->buf)) {
 			trace2_data_string("setup", NULL, "implicit-bare-repository", dir->buf);
 			if (get_allowed_bare_repo() == ALLOWED_BARE_REPO_EXPLICIT &&
 			    !is_implicit_bare_repo(dir->buf))
-				return GIT_DIR_DISALLOWED_BARE;
+				return shit_DIR_DISALLOWED_BARE;
 			if (!ensure_valid_ownership(NULL, NULL, dir->buf, report))
-				return GIT_DIR_INVALID_OWNERSHIP;
-			strbuf_addstr(gitdir, ".");
-			return GIT_DIR_BARE;
+				return shit_DIR_INVALID_OWNERSHIP;
+			strbuf_addstr(shitdir, ".");
+			return shit_DIR_BARE;
 		}
 
 		if (offset <= min_offset)
-			return GIT_DIR_HIT_CEILING;
+			return shit_DIR_HIT_CEILING;
 
 		while (--offset > ceil_offset && !is_dir_sep(dir->buf[offset]))
 			; /* continue */
 		if (offset <= ceil_offset)
-			return GIT_DIR_HIT_CEILING;
+			return shit_DIR_HIT_CEILING;
 
 		strbuf_setlen(dir, offset > min_offset ?  offset : min_offset);
 		if (one_filesystem &&
 		    current_device != get_device_or_die(dir->buf, NULL, offset))
-			return GIT_DIR_HIT_MOUNT_POINT;
+			return shit_DIR_HIT_MOUNT_POINT;
 	}
 }
 
-enum discovery_result discover_git_directory_reason(struct strbuf *commondir,
-						    struct strbuf *gitdir)
+enum discovery_result discover_shit_directory_reason(struct strbuf *commondir,
+						    struct strbuf *shitdir)
 {
 	struct strbuf dir = STRBUF_INIT, err = STRBUF_INIT;
-	size_t gitdir_offset = gitdir->len, cwd_len;
+	size_t shitdir_offset = shitdir->len, cwd_len;
 	size_t commondir_offset = commondir->len;
 	struct repository_format candidate = REPOSITORY_FORMAT_INIT;
 	enum discovery_result result;
 
 	if (strbuf_getcwd(&dir))
-		return GIT_DIR_CWD_FAILURE;
+		return shit_DIR_CWD_FAILURE;
 
 	cwd_len = dir.len;
-	result = setup_git_directory_gently_1(&dir, gitdir, NULL, 0);
+	result = setup_shit_directory_gently_1(&dir, shitdir, NULL, 0);
 	if (result <= 0) {
 		strbuf_release(&dir);
 		return result;
 	}
 
 	/*
-	 * The returned gitdir is relative to dir, and if dir does not reflect
-	 * the current working directory, we simply make the gitdir absolute.
+	 * The returned shitdir is relative to dir, and if dir does not reflect
+	 * the current working directory, we simply make the shitdir absolute.
 	 */
-	if (dir.len < cwd_len && !is_absolute_path(gitdir->buf + gitdir_offset)) {
+	if (dir.len < cwd_len && !is_absolute_path(shitdir->buf + shitdir_offset)) {
 		/* Avoid a trailing "/." */
-		if (!strcmp(".", gitdir->buf + gitdir_offset))
-			strbuf_setlen(gitdir, gitdir_offset);
+		if (!strcmp(".", shitdir->buf + shitdir_offset))
+			strbuf_setlen(shitdir, shitdir_offset);
 		else
 			strbuf_addch(&dir, '/');
-		strbuf_insert(gitdir, gitdir_offset, dir.buf, dir.len);
+		strbuf_insert(shitdir, shitdir_offset, dir.buf, dir.len);
 	}
 
-	get_common_dir(commondir, gitdir->buf + gitdir_offset);
+	get_common_dir(commondir, shitdir->buf + shitdir_offset);
 
 	strbuf_reset(&dir);
 	strbuf_addf(&dir, "%s/config", commondir->buf + commondir_offset);
@@ -1502,77 +1502,77 @@ enum discovery_result discover_git_directory_reason(struct strbuf *commondir,
 	strbuf_release(&dir);
 
 	if (verify_repository_format(&candidate, &err) < 0) {
-		warning("ignoring git dir '%s': %s",
-			gitdir->buf + gitdir_offset, err.buf);
+		warning("ignoring shit dir '%s': %s",
+			shitdir->buf + shitdir_offset, err.buf);
 		strbuf_release(&err);
 		strbuf_setlen(commondir, commondir_offset);
-		strbuf_setlen(gitdir, gitdir_offset);
+		strbuf_setlen(shitdir, shitdir_offset);
 		clear_repository_format(&candidate);
-		return GIT_DIR_INVALID_FORMAT;
+		return shit_DIR_INVALID_FORMAT;
 	}
 
 	clear_repository_format(&candidate);
 	return result;
 }
 
-const char *setup_git_directory_gently(int *nongit_ok)
+const char *setup_shit_directory_gently(int *nonshit_ok)
 {
 	static struct strbuf cwd = STRBUF_INIT;
-	struct strbuf dir = STRBUF_INIT, gitdir = STRBUF_INIT, report = STRBUF_INIT;
+	struct strbuf dir = STRBUF_INIT, shitdir = STRBUF_INIT, report = STRBUF_INIT;
 	const char *prefix = NULL;
 	struct repository_format repo_fmt = REPOSITORY_FORMAT_INIT;
 
 	/*
 	 * We may have read an incomplete configuration before
-	 * setting-up the git directory. If so, clear the cache so
+	 * setting-up the shit directory. If so, clear the cache so
 	 * that the next queries to the configuration reload complete
 	 * configuration (including the per-repo config file that we
 	 * ignored previously).
 	 */
-	git_config_clear();
+	shit_config_clear();
 
 	/*
-	 * Let's assume that we are in a git repository.
+	 * Let's assume that we are in a shit repository.
 	 * If it turns out later that we are somewhere else, the value will be
 	 * updated accordingly.
 	 */
-	if (nongit_ok)
-		*nongit_ok = 0;
+	if (nonshit_ok)
+		*nonshit_ok = 0;
 
 	if (strbuf_getcwd(&cwd))
 		die_errno(_("Unable to read current working directory"));
 	strbuf_addbuf(&dir, &cwd);
 
-	switch (setup_git_directory_gently_1(&dir, &gitdir, &report, 1)) {
-	case GIT_DIR_EXPLICIT:
-		prefix = setup_explicit_git_dir(gitdir.buf, &cwd, &repo_fmt, nongit_ok);
+	switch (setup_shit_directory_gently_1(&dir, &shitdir, &report, 1)) {
+	case shit_DIR_EXPLICIT:
+		prefix = setup_explicit_shit_dir(shitdir.buf, &cwd, &repo_fmt, nonshit_ok);
 		break;
-	case GIT_DIR_DISCOVERED:
+	case shit_DIR_DISCOVERED:
 		if (dir.len < cwd.len && chdir(dir.buf))
 			die(_("cannot change to '%s'"), dir.buf);
-		prefix = setup_discovered_git_dir(gitdir.buf, &cwd, dir.len,
-						  &repo_fmt, nongit_ok);
+		prefix = setup_discovered_shit_dir(shitdir.buf, &cwd, dir.len,
+						  &repo_fmt, nonshit_ok);
 		break;
-	case GIT_DIR_BARE:
+	case shit_DIR_BARE:
 		if (dir.len < cwd.len && chdir(dir.buf))
 			die(_("cannot change to '%s'"), dir.buf);
-		prefix = setup_bare_git_dir(&cwd, dir.len, &repo_fmt, nongit_ok);
+		prefix = setup_bare_shit_dir(&cwd, dir.len, &repo_fmt, nonshit_ok);
 		break;
-	case GIT_DIR_HIT_CEILING:
-		if (!nongit_ok)
-			die(_("not a git repository (or any of the parent directories): %s"),
-			    DEFAULT_GIT_DIR_ENVIRONMENT);
-		*nongit_ok = 1;
+	case shit_DIR_HIT_CEILING:
+		if (!nonshit_ok)
+			die(_("not a shit repository (or any of the parent directories): %s"),
+			    DEFAULT_shit_DIR_ENVIRONMENT);
+		*nonshit_ok = 1;
 		break;
-	case GIT_DIR_HIT_MOUNT_POINT:
-		if (!nongit_ok)
-			die(_("not a git repository (or any parent up to mount point %s)\n"
-			      "Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set)."),
+	case shit_DIR_HIT_MOUNT_POINT:
+		if (!nonshit_ok)
+			die(_("not a shit repository (or any parent up to mount point %s)\n"
+			      "Stopping at filesystem boundary (shit_DISCOVERY_ACROSS_FILESYSTEM not set)."),
 			    dir.buf);
-		*nongit_ok = 1;
+		*nonshit_ok = 1;
 		break;
-	case GIT_DIR_INVALID_OWNERSHIP:
-		if (!nongit_ok) {
+	case shit_DIR_INVALID_OWNERSHIP:
+		if (!nonshit_ok) {
 			struct strbuf quoted = STRBUF_INIT;
 
 			strbuf_complete(&report, '\n');
@@ -1581,66 +1581,66 @@ const char *setup_git_directory_gently(int *nongit_ok)
 			      "%s"
 			      "To add an exception for this directory, call:\n"
 			      "\n"
-			      "\tgit config --global --add safe.directory %s"),
+			      "\tshit config --global --add safe.directory %s"),
 			    dir.buf, report.buf, quoted.buf);
 		}
-		*nongit_ok = 1;
+		*nonshit_ok = 1;
 		break;
-	case GIT_DIR_DISALLOWED_BARE:
-		if (!nongit_ok) {
+	case shit_DIR_DISALLOWED_BARE:
+		if (!nonshit_ok) {
 			die(_("cannot use bare repository '%s' (safe.bareRepository is '%s')"),
 			    dir.buf,
 			    allowed_bare_repo_to_string(get_allowed_bare_repo()));
 		}
-		*nongit_ok = 1;
+		*nonshit_ok = 1;
 		break;
-	case GIT_DIR_CWD_FAILURE:
-	case GIT_DIR_INVALID_FORMAT:
+	case shit_DIR_CWD_FAILURE:
+	case shit_DIR_INVALID_FORMAT:
 		/*
-		 * As a safeguard against setup_git_directory_gently_1 returning
+		 * As a safeguard against setup_shit_directory_gently_1 returning
 		 * these values, fallthrough to BUG. Otherwise it is possible to
 		 * set startup_info->have_repository to 1 when we did nothing to
 		 * find a repository.
 		 */
 	default:
-		BUG("unhandled setup_git_directory_gently_1() result");
+		BUG("unhandled setup_shit_directory_gently_1() result");
 	}
 
 	/*
-	 * At this point, nongit_ok is stable. If it is non-NULL and points
+	 * At this point, nonshit_ok is stable. If it is non-NULL and points
 	 * to a non-zero value, then this means that we haven't found a
 	 * repository and that the caller expects startup_info to reflect
 	 * this.
 	 *
-	 * Regardless of the state of nongit_ok, startup_info->prefix and
-	 * the GIT_PREFIX environment variable must always match. For details
+	 * Regardless of the state of nonshit_ok, startup_info->prefix and
+	 * the shit_PREFIX environment variable must always match. For details
 	 * see Documentation/config/alias.txt.
 	 */
-	if (nongit_ok && *nongit_ok)
+	if (nonshit_ok && *nonshit_ok)
 		startup_info->have_repository = 0;
 	else
 		startup_info->have_repository = 1;
 
 	/*
-	 * Not all paths through the setup code will call 'set_git_dir()' (which
+	 * Not all paths through the setup code will call 'set_shit_dir()' (which
 	 * directly sets up the environment) so in order to guarantee that the
 	 * environment is in a consistent state after setup, explicitly setup
 	 * the environment if we have a repository.
 	 *
-	 * NEEDSWORK: currently we allow bogus GIT_DIR values to be set in some
+	 * NEEDSWORK: currently we allow bogus shit_DIR values to be set in some
 	 * code paths so we also need to explicitly setup the environment if
-	 * the user has set GIT_DIR.  It may be beneficial to disallow bogus
-	 * GIT_DIR values at some point in the future.
+	 * the user has set shit_DIR.  It may be beneficial to disallow bogus
+	 * shit_DIR values at some point in the future.
 	 */
-	if (/* GIT_DIR_EXPLICIT, GIT_DIR_DISCOVERED, GIT_DIR_BARE */
+	if (/* shit_DIR_EXPLICIT, shit_DIR_DISCOVERED, shit_DIR_BARE */
 	    startup_info->have_repository ||
-	    /* GIT_DIR_EXPLICIT */
-	    getenv(GIT_DIR_ENVIRONMENT)) {
-		if (!the_repository->gitdir) {
-			const char *gitdir = getenv(GIT_DIR_ENVIRONMENT);
-			if (!gitdir)
-				gitdir = DEFAULT_GIT_DIR_ENVIRONMENT;
-			setup_git_env(gitdir);
+	    /* shit_DIR_EXPLICIT */
+	    getenv(shit_DIR_ENVIRONMENT)) {
+		if (!the_repository->shitdir) {
+			const char *shitdir = getenv(shit_DIR_ENVIRONMENT);
+			if (!shitdir)
+				shitdir = DEFAULT_shit_DIR_ENVIRONMENT;
+			setup_shit_env(shitdir);
 		}
 		if (startup_info->have_repository) {
 			repo_set_hash_algo(the_repository, repo_fmt.hash_algo);
@@ -1661,28 +1661,28 @@ const char *setup_git_directory_gently(int *nongit_ok)
 	 * the core.precomposeunicode configuration, this
 	 * has to happen after the above block that finds
 	 * out where the repository is, i.e. a preparation
-	 * for calling git_config_get_bool().
+	 * for calling shit_config_get_bool().
 	 */
 	if (prefix) {
 		prefix = precompose_string_if_needed(prefix);
 		startup_info->prefix = prefix;
-		setenv(GIT_PREFIX_ENVIRONMENT, prefix, 1);
+		setenv(shit_PREFIX_ENVIRONMENT, prefix, 1);
 	} else {
 		startup_info->prefix = NULL;
-		setenv(GIT_PREFIX_ENVIRONMENT, "", 1);
+		setenv(shit_PREFIX_ENVIRONMENT, "", 1);
 	}
 
 	setup_original_cwd();
 
 	strbuf_release(&dir);
-	strbuf_release(&gitdir);
+	strbuf_release(&shitdir);
 	strbuf_release(&report);
 	clear_repository_format(&repo_fmt);
 
 	return prefix;
 }
 
-int git_config_perm(const char *var, const char *value)
+int shit_config_perm(const char *var, const char *value)
 {
 	int i;
 	char *endptr;
@@ -1704,7 +1704,7 @@ int git_config_perm(const char *var, const char *value)
 
 	/* If not an octal number, maybe true/false? */
 	if (*endptr != 0)
-		return git_config_bool(var, value) ? PERM_GROUP : PERM_UMASK;
+		return shit_config_bool(var, value) ? PERM_GROUP : PERM_UMASK;
 
 	/*
 	 * Treat values 0, 1 and 2 as compatibility cases, otherwise it is
@@ -1738,7 +1738,7 @@ void check_repository_format(struct repository_format *fmt)
 	struct repository_format repo_fmt = REPOSITORY_FORMAT_INIT;
 	if (!fmt)
 		fmt = &repo_fmt;
-	check_repository_format_gently(get_git_dir(), fmt, NULL);
+	check_repository_format_gently(get_shit_dir(), fmt, NULL);
 	startup_info->have_repository = 1;
 	repo_set_hash_algo(the_repository, fmt->hash_algo);
 	repo_set_compat_hash_algo(the_repository, fmt->compat_hash_algo);
@@ -1757,16 +1757,16 @@ void check_repository_format(struct repository_format *fmt)
  * directory is not a strict subdirectory of the work tree root. The
  * prefix always ends with a '/' character.
  */
-const char *setup_git_directory(void)
+const char *setup_shit_directory(void)
 {
-	return setup_git_directory_gently(NULL);
+	return setup_shit_directory_gently(NULL);
 }
 
-const char *resolve_gitdir_gently(const char *suspect, int *return_error_code)
+const char *resolve_shitdir_gently(const char *suspect, int *return_error_code)
 {
-	if (is_git_directory(suspect))
+	if (is_shit_directory(suspect))
 		return suspect;
-	return read_gitfile_gently(suspect, return_error_code);
+	return read_shitfile_gently(suspect, return_error_code);
 }
 
 /* if any standard file descriptor is missing open it to /dev/null */
@@ -1822,7 +1822,7 @@ static int template_dir_cb(const char *key, const char *value,
 		char *path = NULL;
 
 		FREE_AND_NULL(data->path);
-		if (!git_config_pathname((const char **)&path, key, value))
+		if (!shit_config_pathname((const char **)&path, key, value))
 			data->path = path ? path : xstrdup(value);
 	}
 
@@ -1839,7 +1839,7 @@ const char *get_template_dir(const char *option_template)
 		static struct template_dir_cb_data data;
 
 		if (!data.initialized) {
-			git_protected_config(template_dir_cb, &data);
+			shit_protected_config(template_dir_cb, &data);
 			data.initialized = 1;
 		}
 		template_dir = data.path;
@@ -1848,7 +1848,7 @@ const char *get_template_dir(const char *option_template)
 		static char *dir;
 
 		if (!dir)
-			dir = system_path(DEFAULT_GIT_TEMPLATE_DIR);
+			dir = system_path(DEFAULT_shit_TEMPLATE_DIR);
 		template_dir = dir;
 	}
 	return template_dir;
@@ -1860,7 +1860,7 @@ const char *get_template_dir(const char *option_template)
 #define TEST_FILEMODE 1
 #endif
 
-#define GIT_DEFAULT_HASH_ENVIRONMENT "GIT_DEFAULT_HASH"
+#define shit_DEFAULT_HASH_ENVIRONMENT "shit_DEFAULT_HASH"
 
 static void copy_templates_1(struct strbuf *path, struct strbuf *template_path,
 			     DIR *dir)
@@ -1869,16 +1869,16 @@ static void copy_templates_1(struct strbuf *path, struct strbuf *template_path,
 	size_t template_baselen = template_path->len;
 	struct dirent *de;
 
-	/* Note: if ".git/hooks" file exists in the repository being
-	 * re-initialized, /etc/core-git/templates/hooks/update would
-	 * cause "git init" to fail here.  I think this is sane but
+	/* Note: if ".shit/hooks" file exists in the repository being
+	 * re-initialized, /etc/core-shit/templates/hooks/update would
+	 * cause "shit init" to fail here.  I think this is sane but
 	 * it means that the set of templates we ship by default, along
-	 * with the way the namespace under .git/ is organized, should
+	 * with the way the namespace under .shit/ is organized, should
 	 * be really carefully chosen.
 	 */
 	safe_create_dir(path->buf, 1);
 	while ((de = readdir(dir)) != NULL) {
-		struct stat st_git, st_template;
+		struct stat st_shit, st_template;
 		int exists = 0;
 
 		strbuf_setlen(path, path_baselen);
@@ -1888,7 +1888,7 @@ static void copy_templates_1(struct strbuf *path, struct strbuf *template_path,
 			continue;
 		strbuf_addstr(path, de->d_name);
 		strbuf_addstr(template_path, de->d_name);
-		if (lstat(path->buf, &st_git)) {
+		if (lstat(path->buf, &st_shit)) {
 			if (errno != ENOENT)
 				die_errno(_("cannot stat '%s'"), path->buf);
 		}
@@ -1970,7 +1970,7 @@ static void copy_templates(const char *option_template)
 		goto close_free_return;
 	}
 
-	strbuf_addstr(&path, get_git_common_dir());
+	strbuf_addstr(&path, get_shit_common_dir());
 	strbuf_complete(&path, '/');
 	copy_templates_1(&path, &template_path, dir);
 close_free_return:
@@ -1983,15 +1983,15 @@ free_return:
 }
 
 /*
- * If the git_dir is not directly inside the working tree, then git will not
+ * If the shit_dir is not directly inside the working tree, then shit will not
  * find it by default, and we need to set the worktree explicitly.
  */
-static int needs_work_tree_config(const char *git_dir, const char *work_tree)
+static int needs_work_tree_config(const char *shit_dir, const char *work_tree)
 {
-	if (!strcmp(work_tree, "/") && !strcmp(git_dir, "/.git"))
+	if (!strcmp(work_tree, "/") && !strcmp(shit_dir, "/.shit"))
 		return 0;
-	if (skip_prefix(git_dir, work_tree, &git_dir) &&
-	    !strcmp(git_dir, "/.git"))
+	if (skip_prefix(shit_dir, work_tree, &shit_dir) &&
+	    !strcmp(shit_dir, "/.shit"))
 		return 0;
 	return 1;
 }
@@ -2001,32 +2001,32 @@ void initialize_repository_version(int hash_algo,
 				   int reinit)
 {
 	char repo_version_string[10];
-	int repo_version = GIT_REPO_VERSION;
+	int repo_version = shit_REPO_VERSION;
 
 	/*
 	 * Note that we initialize the repository version to 1 when the ref
 	 * storage format is unknown. This is on purpose so that we can add the
-	 * correct object format to the config during git-clone(1). The format
-	 * version will get adjusted by git-clone(1) once it has learned about
+	 * correct object format to the config during shit-clone(1). The format
+	 * version will get adjusted by shit-clone(1) once it has learned about
 	 * the remote repository's format.
 	 */
-	if (hash_algo != GIT_HASH_SHA1 ||
+	if (hash_algo != shit_HASH_SHA1 ||
 	    ref_storage_format != REF_STORAGE_FORMAT_FILES)
-		repo_version = GIT_REPO_VERSION_READ;
+		repo_version = shit_REPO_VERSION_READ;
 
 	/* This forces creation of new config file */
 	xsnprintf(repo_version_string, sizeof(repo_version_string),
 		  "%d", repo_version);
-	git_config_set("core.repositoryformatversion", repo_version_string);
+	shit_config_set("core.repositoryformatversion", repo_version_string);
 
-	if (hash_algo != GIT_HASH_SHA1 && hash_algo != GIT_HASH_UNKNOWN)
-		git_config_set("extensions.objectformat",
+	if (hash_algo != shit_HASH_SHA1 && hash_algo != shit_HASH_UNKNOWN)
+		shit_config_set("extensions.objectformat",
 			       hash_algos[hash_algo].name);
 	else if (reinit)
-		git_config_set_gently("extensions.objectformat", NULL);
+		shit_config_set_gently("extensions.objectformat", NULL);
 
 	if (ref_storage_format != REF_STORAGE_FORMAT_FILES)
-		git_config_set("extensions.refstorage",
+		shit_config_set("extensions.refstorage",
 			       ref_storage_format_to_name(ref_storage_format));
 }
 
@@ -2036,7 +2036,7 @@ static int is_reinit(void)
 	char junk[2];
 	int ret;
 
-	git_path_buf(&buf, "HEAD");
+	shit_path_buf(&buf, "HEAD");
 	ret = !access(buf.buf, R_OK) || readlink(buf.buf, junk, sizeof(junk) - 1) != -1;
 	strbuf_release(&buf);
 	return ret;
@@ -2060,7 +2060,7 @@ void create_reference_database(unsigned int ref_storage_format,
 		char *ref;
 
 		if (!initial_branch)
-			initial_branch = git_default_branch_name(quiet);
+			initial_branch = shit_default_branch_name(quiet);
 
 		ref = xstrfmt("refs/heads/%s", initial_branch);
 		if (check_refname_format(ref, 0) < 0)
@@ -2080,7 +2080,7 @@ void create_reference_database(unsigned int ref_storage_format,
 }
 
 static int create_default_files(const char *template_path,
-				const char *original_git_dir,
+				const char *original_shit_dir,
 				const struct repository_format *fmt,
 				int init_shared_repository)
 {
@@ -2089,7 +2089,7 @@ static int create_default_files(const char *template_path,
 	char *path;
 	int reinit;
 	int filemode;
-	const char *work_tree = get_git_work_tree();
+	const char *work_tree = get_shit_work_tree();
 
 	/*
 	 * First copy the templates -- we might have the default
@@ -2101,9 +2101,9 @@ static int create_default_files(const char *template_path,
 	 * disk).
 	 */
 	copy_templates(template_path);
-	git_config_clear();
+	shit_config_clear();
 	reset_shared_repository();
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	reinit = is_reinit();
 
@@ -2121,13 +2121,13 @@ static int create_default_files(const char *template_path,
 	 * shared-repository settings, we would need to fix them up.
 	 */
 	if (get_shared_repository()) {
-		adjust_shared_perm(get_git_dir());
+		adjust_shared_perm(get_shit_dir());
 	}
 
 	initialize_repository_version(fmt->hash_algo, fmt->ref_storage_format, 0);
 
 	/* Check filemode trustability */
-	path = git_path_buf(&buf, "config");
+	path = shit_path_buf(&buf, "config");
 	filemode = TEST_FILEMODE;
 	if (TEST_FILEMODE && !lstat(path, &st1)) {
 		struct stat st2;
@@ -2138,22 +2138,22 @@ static int create_default_files(const char *template_path,
 		if (filemode && !reinit && (st1.st_mode & S_IXUSR))
 			filemode = 0;
 	}
-	git_config_set("core.filemode", filemode ? "true" : "false");
+	shit_config_set("core.filemode", filemode ? "true" : "false");
 
 	if (is_bare_repository())
-		git_config_set("core.bare", "true");
+		shit_config_set("core.bare", "true");
 	else {
-		git_config_set("core.bare", "false");
+		shit_config_set("core.bare", "false");
 		/* allow template config file to override the default */
 		if (log_all_ref_updates == LOG_REFS_UNSET)
-			git_config_set("core.logallrefupdates", "true");
-		if (needs_work_tree_config(original_git_dir, work_tree))
-			git_config_set("core.worktree", work_tree);
+			shit_config_set("core.logallrefupdates", "true");
+		if (needs_work_tree_config(original_shit_dir, work_tree))
+			shit_config_set("core.worktree", work_tree);
 	}
 
 	if (!reinit) {
 		/* Check if symlink is supported in the work tree */
-		path = git_path_buf(&buf, "tXXXXXX");
+		path = shit_path_buf(&buf, "tXXXXXX");
 		if (!close(xmkstemp(path)) &&
 		    !unlink(path) &&
 		    !symlink("testing", path) &&
@@ -2161,12 +2161,12 @@ static int create_default_files(const char *template_path,
 		    S_ISLNK(st1.st_mode))
 			unlink(path); /* good */
 		else
-			git_config_set("core.symlinks", "false");
+			shit_config_set("core.symlinks", "false");
 
 		/* Check if the filesystem is case-insensitive */
-		path = git_path_buf(&buf, "CoNfIg");
+		path = shit_path_buf(&buf, "CoNfIg");
 		if (!access(path, F_OK))
-			git_config_set("core.ignorecase", "true");
+			shit_config_set("core.ignorecase", "true");
 		probe_utf8_pathname_composition();
 	}
 
@@ -2195,43 +2195,43 @@ static void create_object_directory(void)
 	strbuf_release(&path);
 }
 
-static void separate_git_dir(const char *git_dir, const char *git_link)
+static void separate_shit_dir(const char *shit_dir, const char *shit_link)
 {
 	struct stat st;
 
-	if (!stat(git_link, &st)) {
+	if (!stat(shit_link, &st)) {
 		const char *src;
 
 		if (S_ISREG(st.st_mode))
-			src = read_gitfile(git_link);
+			src = read_shitfile(shit_link);
 		else if (S_ISDIR(st.st_mode))
-			src = git_link;
+			src = shit_link;
 		else
 			die(_("unable to handle file type %d"), (int)st.st_mode);
 
-		if (rename(src, git_dir))
-			die_errno(_("unable to move %s to %s"), src, git_dir);
+		if (rename(src, shit_dir))
+			die_errno(_("unable to move %s to %s"), src, shit_dir);
 		repair_worktrees(NULL, NULL);
 	}
 
-	write_file(git_link, "gitdir: %s", git_dir);
+	write_file(shit_link, "shitdir: %s", shit_dir);
 }
 
 static void validate_hash_algorithm(struct repository_format *repo_fmt, int hash)
 {
-	const char *env = getenv(GIT_DEFAULT_HASH_ENVIRONMENT);
+	const char *env = getenv(shit_DEFAULT_HASH_ENVIRONMENT);
 	/*
 	 * If we already have an initialized repo, don't allow the user to
 	 * specify a different algorithm, as that could cause corruption.
 	 * Otherwise, if the user has specified one on the command line, use it.
 	 */
-	if (repo_fmt->version >= 0 && hash != GIT_HASH_UNKNOWN && hash != repo_fmt->hash_algo)
+	if (repo_fmt->version >= 0 && hash != shit_HASH_UNKNOWN && hash != repo_fmt->hash_algo)
 		die(_("attempt to reinitialize repository with different hash"));
-	else if (hash != GIT_HASH_UNKNOWN)
+	else if (hash != shit_HASH_UNKNOWN)
 		repo_fmt->hash_algo = hash;
 	else if (env) {
 		int env_algo = hash_algo_by_name(env);
-		if (env_algo == GIT_HASH_UNKNOWN)
+		if (env_algo == shit_HASH_UNKNOWN)
 			die(_("unknown hash algorithm '%s'"), env);
 		repo_fmt->hash_algo = env_algo;
 	}
@@ -2240,7 +2240,7 @@ static void validate_hash_algorithm(struct repository_format *repo_fmt, int hash
 static void validate_ref_storage_format(struct repository_format *repo_fmt,
 					unsigned int format)
 {
-	const char *name = getenv("GIT_DEFAULT_REF_FORMAT");
+	const char *name = getenv("shit_DEFAULT_REF_FORMAT");
 
 	if (repo_fmt->version >= 0 &&
 	    format != REF_STORAGE_FORMAT_UNKNOWN &&
@@ -2256,7 +2256,7 @@ static void validate_ref_storage_format(struct repository_format *repo_fmt,
 	}
 }
 
-int init_db(const char *git_dir, const char *real_git_dir,
+int init_db(const char *shit_dir, const char *real_shit_dir,
 	    const char *template_dir, int hash,
 	    unsigned int ref_storage_format,
 	    const char *initial_branch,
@@ -2264,32 +2264,32 @@ int init_db(const char *git_dir, const char *real_git_dir,
 {
 	int reinit;
 	int exist_ok = flags & INIT_DB_EXIST_OK;
-	char *original_git_dir = real_pathdup(git_dir, 1);
+	char *original_shit_dir = real_pathdup(shit_dir, 1);
 	struct repository_format repo_fmt = REPOSITORY_FORMAT_INIT;
 
-	if (real_git_dir) {
+	if (real_shit_dir) {
 		struct stat st;
 
-		if (!exist_ok && !stat(git_dir, &st))
-			die(_("%s already exists"), git_dir);
+		if (!exist_ok && !stat(shit_dir, &st))
+			die(_("%s already exists"), shit_dir);
 
-		if (!exist_ok && !stat(real_git_dir, &st))
-			die(_("%s already exists"), real_git_dir);
+		if (!exist_ok && !stat(real_shit_dir, &st))
+			die(_("%s already exists"), real_shit_dir);
 
-		set_git_dir(real_git_dir, 1);
-		git_dir = get_git_dir();
-		separate_git_dir(git_dir, original_git_dir);
+		set_shit_dir(real_shit_dir, 1);
+		shit_dir = get_shit_dir();
+		separate_shit_dir(shit_dir, original_shit_dir);
 	}
 	else {
-		set_git_dir(git_dir, 1);
-		git_dir = get_git_dir();
+		set_shit_dir(shit_dir, 1);
+		shit_dir = get_shit_dir();
 	}
 	startup_info->have_repository = 1;
 
 	/* Ensure `core.hidedotfiles` is processed */
-	git_config(platform_core_config, NULL);
+	shit_config(platform_core_config, NULL);
 
-	safe_create_dir(git_dir, 0);
+	safe_create_dir(shit_dir, 0);
 
 
 	/* Check to see if the repository version is right.
@@ -2302,7 +2302,7 @@ int init_db(const char *git_dir, const char *real_git_dir,
 	validate_hash_algorithm(&repo_fmt, hash);
 	validate_ref_storage_format(&repo_fmt, ref_storage_format);
 
-	reinit = create_default_files(template_dir, original_git_dir,
+	reinit = create_default_files(template_dir, original_shit_dir,
 				      &repo_fmt, init_shared_repository);
 
 	/*
@@ -2321,7 +2321,7 @@ int init_db(const char *git_dir, const char *real_git_dir,
 		char buf[10];
 		/* We do not spell "group" and such, so that
 		 * the configuration can be read by older version
-		 * of git. Note, we use octal numbers for new share modes,
+		 * of shit. Note, we use octal numbers for new share modes,
 		 * and compatibility values for PERM_GROUP and
 		 * PERM_EVERYBODY.
 		 */
@@ -2334,26 +2334,26 @@ int init_db(const char *git_dir, const char *real_git_dir,
 			xsnprintf(buf, sizeof(buf), "%d", OLD_PERM_EVERYBODY);
 		else
 			BUG("invalid value for shared_repository");
-		git_config_set("core.sharedrepository", buf);
-		git_config_set("receive.denyNonFastforwards", "true");
+		shit_config_set("core.sharedrepository", buf);
+		shit_config_set("receive.denyNonFastforwards", "true");
 	}
 
 	if (!(flags & INIT_DB_QUIET)) {
-		int len = strlen(git_dir);
+		int len = strlen(shit_dir);
 
 		if (reinit)
 			printf(get_shared_repository()
-			       ? _("Reinitialized existing shared Git repository in %s%s\n")
-			       : _("Reinitialized existing Git repository in %s%s\n"),
-			       git_dir, len && git_dir[len-1] != '/' ? "/" : "");
+			       ? _("Reinitialized existing shared shit repository in %s%s\n")
+			       : _("Reinitialized existing shit repository in %s%s\n"),
+			       shit_dir, len && shit_dir[len-1] != '/' ? "/" : "");
 		else
 			printf(get_shared_repository()
-			       ? _("Initialized empty shared Git repository in %s%s\n")
-			       : _("Initialized empty Git repository in %s%s\n"),
-			       git_dir, len && git_dir[len-1] != '/' ? "/" : "");
+			       ? _("Initialized empty shared shit repository in %s%s\n")
+			       : _("Initialized empty shit repository in %s%s\n"),
+			       shit_dir, len && shit_dir[len-1] != '/' ? "/" : "");
 	}
 
 	clear_repository_format(&repo_fmt);
-	free(original_git_dir);
+	free(original_shit_dir);
 	return 0;
 }

@@ -1,18 +1,18 @@
 #!/bin/sh
 
 test_description='checkout into detached HEAD state'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 check_detached () {
-	test_must_fail git symbolic-ref -q HEAD >/dev/null
+	test_must_fail shit symbolic-ref -q HEAD >/dev/null
 }
 
 check_not_detached () {
-	git symbolic-ref -q HEAD >/dev/null
+	shit symbolic-ref -q HEAD >/dev/null
 }
 
 PREV_HEAD_DESC='Previous HEAD position was'
@@ -26,22 +26,22 @@ check_no_orphan_warning() {
 }
 
 reset () {
-	git checkout main &&
+	shit checkout main &&
 	check_not_detached
 }
 
 test_expect_success 'setup' '
 	test_commit one &&
 	test_commit two &&
-	test_commit three && git tag -d three &&
-	test_commit four && git tag -d four &&
-	git branch branch &&
-	git tag tag
+	test_commit three && shit tag -d three &&
+	test_commit four && shit tag -d four &&
+	shit branch branch &&
+	shit tag tag
 '
 
 test_expect_success 'checkout branch does not detach' '
 	reset &&
-	git checkout branch &&
+	shit checkout branch &&
 	check_not_detached
 '
 
@@ -49,9 +49,9 @@ for opt in "HEAD" "@"
 do
 	test_expect_success "checkout $opt no-op/don't detach" '
 		reset &&
-		cat .git/HEAD >expect &&
-		git checkout $opt &&
-		cat .git/HEAD >actual &&
+		cat .shit/HEAD >expect &&
+		shit checkout $opt &&
+		cat .shit/HEAD >actual &&
 		check_not_detached &&
 		test_cmp expect actual
 	'
@@ -59,77 +59,77 @@ done
 
 test_expect_success 'checkout tag detaches' '
 	reset &&
-	git checkout tag &&
+	shit checkout tag &&
 	check_detached
 '
 
 test_expect_success 'checkout branch by full name detaches' '
 	reset &&
-	git checkout refs/heads/branch &&
+	shit checkout refs/heads/branch &&
 	check_detached
 '
 
 test_expect_success 'checkout non-ref detaches' '
 	reset &&
-	git checkout branch^ &&
+	shit checkout branch^ &&
 	check_detached
 '
 
 test_expect_success 'checkout ref^0 detaches' '
 	reset &&
-	git checkout branch^0 &&
+	shit checkout branch^0 &&
 	check_detached
 '
 
 test_expect_success 'checkout --detach detaches' '
 	reset &&
-	git checkout --detach branch &&
+	shit checkout --detach branch &&
 	check_detached
 '
 
 test_expect_success 'checkout --detach without branch name' '
 	reset &&
-	git checkout --detach &&
+	shit checkout --detach &&
 	check_detached
 '
 
 test_expect_success 'checkout --detach errors out for non-commit' '
 	reset &&
-	test_must_fail git checkout --detach one^{tree} &&
+	test_must_fail shit checkout --detach one^{tree} &&
 	check_not_detached
 '
 
 test_expect_success 'checkout --detach errors out for extra argument' '
 	reset &&
-	git checkout main &&
-	test_must_fail git checkout --detach tag one.t &&
+	shit checkout main &&
+	test_must_fail shit checkout --detach tag one.t &&
 	check_not_detached
 '
 
 test_expect_success 'checkout --detached and -b are incompatible' '
 	reset &&
-	test_must_fail git checkout --detach -b newbranch tag &&
+	test_must_fail shit checkout --detach -b newbranch tag &&
 	check_not_detached
 '
 
 test_expect_success 'checkout --detach moves HEAD' '
 	reset &&
-	git checkout one &&
-	git checkout --detach two &&
-	git diff --exit-code HEAD &&
-	git diff --exit-code two
+	shit checkout one &&
+	shit checkout --detach two &&
+	shit diff --exit-code HEAD &&
+	shit diff --exit-code two
 '
 
 test_expect_success 'checkout warns on orphan commits' '
 	reset &&
-	git checkout --detach two &&
+	shit checkout --detach two &&
 	echo content >orphan &&
-	git add orphan &&
-	git commit -a -m orphan1 &&
+	shit add orphan &&
+	shit commit -a -m orphan1 &&
 	echo new content >orphan &&
-	git commit -a -m orphan2 &&
-	orphan2=$(git rev-parse HEAD) &&
-	git checkout main 2>stderr
+	shit commit -a -m orphan2 &&
+	orphan2=$(shit rev-parse HEAD) &&
+	shit checkout main 2>stderr
 '
 
 test_expect_success 'checkout warns on orphan commits: output' '
@@ -137,8 +137,8 @@ test_expect_success 'checkout warns on orphan commits: output' '
 '
 
 test_expect_success 'checkout warns orphaning 1 of 2 commits' '
-	git checkout "$orphan2" &&
-	git checkout HEAD^ 2>stderr
+	shit checkout "$orphan2" &&
+	shit checkout HEAD^ 2>stderr
 '
 
 test_expect_success 'checkout warns orphaning 1 of 2 commits: output' '
@@ -147,8 +147,8 @@ test_expect_success 'checkout warns orphaning 1 of 2 commits: output' '
 
 test_expect_success 'checkout does not warn leaving ref tip' '
 	reset &&
-	git checkout --detach two &&
-	git checkout main 2>stderr
+	shit checkout --detach two &&
+	shit checkout main 2>stderr
 '
 
 test_expect_success 'checkout does not warn leaving ref tip' '
@@ -157,8 +157,8 @@ test_expect_success 'checkout does not warn leaving ref tip' '
 
 test_expect_success 'checkout does not warn leaving reachable commit' '
 	reset &&
-	git checkout --detach HEAD^ &&
-	git checkout main 2>stderr
+	shit checkout --detach HEAD^ &&
+	shit checkout main 2>stderr
 '
 
 test_expect_success 'checkout does not warn leaving reachable commit' '
@@ -167,50 +167,50 @@ test_expect_success 'checkout does not warn leaving reachable commit' '
 
 cat >expect <<'EOF'
 Your branch is behind 'main' by 1 commit, and can be fast-forwarded.
-  (use "git pull" to update your local branch)
+  (use "shit poop" to update your local branch)
 EOF
 test_expect_success 'tracking count is accurate after orphan check' '
 	reset &&
-	git branch child main^ &&
-	git config branch.child.remote . &&
-	git config branch.child.merge refs/heads/main &&
-	git checkout child^ &&
-	git checkout child >stdout &&
+	shit branch child main^ &&
+	shit config branch.child.remote . &&
+	shit config branch.child.merge refs/heads/main &&
+	shit checkout child^ &&
+	shit checkout child >stdout &&
 	test_cmp expect stdout &&
 
-	git checkout --detach child >stdout &&
+	shit checkout --detach child >stdout &&
 	test_grep ! "can be fast-forwarded\." stdout
 '
 
 test_expect_success 'no advice given for explicit detached head state' '
 	# baseline
 	test_config advice.detachedHead true &&
-	git checkout child && git checkout HEAD^0 >expect.advice 2>&1 &&
+	shit checkout child && shit checkout HEAD^0 >expect.advice 2>&1 &&
 	test_config advice.detachedHead false &&
-	git checkout child && git checkout HEAD^0 >expect.no-advice 2>&1 &&
+	shit checkout child && shit checkout HEAD^0 >expect.no-advice 2>&1 &&
 	test_unconfig advice.detachedHead &&
 	# without configuration, the advice.* variables default to true
-	git checkout child && git checkout HEAD^0 >actual 2>&1 &&
+	shit checkout child && shit checkout HEAD^0 >actual 2>&1 &&
 	test_cmp expect.advice actual &&
 
 	# with explicit --detach
 	# no configuration
 	test_unconfig advice.detachedHead &&
-	git checkout child && git checkout --detach HEAD^0 >actual 2>&1 &&
+	shit checkout child && shit checkout --detach HEAD^0 >actual 2>&1 &&
 	test_cmp expect.no-advice actual &&
 
 	# explicitly decline advice
 	test_config advice.detachedHead false &&
-	git checkout child && git checkout --detach HEAD^0 >actual 2>&1 &&
+	shit checkout child && shit checkout --detach HEAD^0 >actual 2>&1 &&
 	test_cmp expect.no-advice actual
 '
 
-# Detached HEAD tests for GIT_PRINT_SHA1_ELLIPSIS (new format)
+# Detached HEAD tests for shit_PRINT_SHA1_ELLIPSIS (new format)
 test_expect_success 'describe_detached_head prints no SHA-1 ellipsis when not asked to' "
 
-	commit=$(git rev-parse --short=12 main^) &&
-	commit2=$(git rev-parse --short=12 main~2) &&
-	commit3=$(git rev-parse --short=12 main~3) &&
+	commit=$(shit rev-parse --short=12 main^) &&
+	commit2=$(shit rev-parse --short=12 main~2) &&
+	commit3=$(shit rev-parse --short=12 main~3) &&
 
 	# The first detach operation is more chatty than the following ones.
 	cat >1st_detach <<-EOF &&
@@ -223,11 +223,11 @@ test_expect_success 'describe_detached_head prints no SHA-1 ellipsis when not as
 	If you want to create a new branch to retain commits you create, you may
 	do so (now or later) by using -c with the switch command. Example:
 
-	  git switch -c <new-branch-name>
+	  shit switch -c <new-branch-name>
 
 	Or undo this operation with:
 
-	  git switch -
+	  shit switch -
 
 	Turn off this advice by setting config variable advice.detachedHead to false
 
@@ -250,49 +250,49 @@ test_expect_success 'describe_detached_head prints no SHA-1 ellipsis when not as
 
 	# Various ways of *not* asking for ellipses
 
-	sane_unset GIT_PRINT_SHA1_ELLIPSIS &&
-	git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	sane_unset shit_PRINT_SHA1_ELLIPSIS &&
+	shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 1st_detach actual &&
 
-	GIT_PRINT_SHA1_ELLIPSIS="no" git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit_PRINT_SHA1_ELLIPSIS="no" shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 2nd_detach actual &&
 
-	GIT_PRINT_SHA1_ELLIPSIS= git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit_PRINT_SHA1_ELLIPSIS= shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 3rd_detach actual &&
 
-	sane_unset GIT_PRINT_SHA1_ELLIPSIS &&
+	sane_unset shit_PRINT_SHA1_ELLIPSIS &&
 
 	# We only have four commits, but we can re-use them
 	reset &&
 	check_not_detached &&
 
 	# Make no mention of the env var at all
-	git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 1st_detach actual &&
 
-	GIT_PRINT_SHA1_ELLIPSIS='nope' &&
-	git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit_PRINT_SHA1_ELLIPSIS='nope' &&
+	shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 2nd_detach actual &&
 
-	GIT_PRINT_SHA1_ELLIPSIS=nein &&
-	git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit_PRINT_SHA1_ELLIPSIS=nein &&
+	shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 3rd_detach actual &&
 
 	true
 "
 
-# Detached HEAD tests for GIT_PRINT_SHA1_ELLIPSIS (old format)
+# Detached HEAD tests for shit_PRINT_SHA1_ELLIPSIS (old format)
 test_expect_success 'describe_detached_head does print SHA-1 ellipsis when asked to' "
 
-	commit=$(git rev-parse --short=12 main^) &&
-	commit2=$(git rev-parse --short=12 main~2) &&
-	commit3=$(git rev-parse --short=12 main~3) &&
+	commit=$(shit rev-parse --short=12 main^) &&
+	commit2=$(shit rev-parse --short=12 main~2) &&
+	commit3=$(shit rev-parse --short=12 main~3) &&
 
 	# The first detach operation is more chatty than the following ones.
 	cat >1st_detach <<-EOF &&
@@ -305,11 +305,11 @@ test_expect_success 'describe_detached_head does print SHA-1 ellipsis when asked
 	If you want to create a new branch to retain commits you create, you may
 	do so (now or later) by using -c with the switch command. Example:
 
-	  git switch -c <new-branch-name>
+	  shit switch -c <new-branch-name>
 
 	Or undo this operation with:
 
-	  git switch -
+	  shit switch -
 
 	Turn off this advice by setting config variable advice.detachedHead to false
 
@@ -333,15 +333,15 @@ test_expect_success 'describe_detached_head does print SHA-1 ellipsis when asked
 	# Various ways of asking for ellipses...
 	# The user can just use any kind of quoting (including none).
 
-	GIT_PRINT_SHA1_ELLIPSIS=yes git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit_PRINT_SHA1_ELLIPSIS=yes shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 1st_detach actual &&
 
-	GIT_PRINT_SHA1_ELLIPSIS=Yes git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit_PRINT_SHA1_ELLIPSIS=Yes shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 2nd_detach actual &&
 
-	GIT_PRINT_SHA1_ELLIPSIS=YES git -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
+	shit_PRINT_SHA1_ELLIPSIS=YES shit -c 'core.abbrev=12' checkout HEAD^ >actual 2>&1 &&
 	check_detached &&
 	test_cmp 3rd_detach actual &&
 

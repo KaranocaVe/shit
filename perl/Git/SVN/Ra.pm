@@ -1,9 +1,9 @@
-package Git::SVN::Ra;
+package shit::SVN::Ra;
 use vars qw/@ISA $config_dir $_ignore_refs_regex $_log_window_size/;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 use Memoize;
-use Git::SVN::Utils qw(
+use shit::SVN::Utils qw(
 	canonicalize_url
 	canonicalize_path
 	add_path_to_url
@@ -46,18 +46,18 @@ sub _auth_providers () {
 	  SVN::Client::get_simple_provider(),
 	  SVN::Client::get_ssl_server_trust_file_provider(),
 	  SVN::Client::get_simple_prompt_provider(
-	    \&Git::SVN::Prompt::simple, 2),
+	    \&shit::SVN::Prompt::simple, 2),
 	  SVN::Client::get_ssl_client_cert_file_provider(),
 	  SVN::Client::get_ssl_client_cert_prompt_provider(
-	    \&Git::SVN::Prompt::ssl_client_cert, 2),
+	    \&shit::SVN::Prompt::ssl_client_cert, 2),
 	  SVN::Client::get_ssl_client_cert_pw_file_provider(),
 	  SVN::Client::get_ssl_client_cert_pw_prompt_provider(
-	    \&Git::SVN::Prompt::ssl_client_cert_pw, 2),
+	    \&shit::SVN::Prompt::ssl_client_cert_pw, 2),
 	  SVN::Client::get_username_provider(),
 	  SVN::Client::get_ssl_server_trust_prompt_provider(
-	    \&Git::SVN::Prompt::ssl_server_trust),
+	    \&shit::SVN::Prompt::ssl_server_trust),
 	  SVN::Client::get_username_prompt_provider(
-	    \&Git::SVN::Prompt::username, 2)
+	    \&shit::SVN::Prompt::username, 2)
 	);
 
 	# earlier 1.6.x versions would segfault, and <= 1.5.x didn't have
@@ -105,7 +105,7 @@ sub prepare_config_once {
 	    $SVN::_Core::SVN_CONFIG_SECTION_AUTH,
 	    $SVN::_Core::SVN_CONFIG_OPTION_STORE_AUTH_CREDS,
 	    1) == 0) {
-		$Git::SVN::Prompt::_no_auth_cache = 1;
+		$shit::SVN::Prompt::_no_auth_cache = 1;
 	}
 
 	return ($config, $baton, $callbacks);
@@ -210,12 +210,12 @@ sub get_log {
 	# overwritten even if only the refs are copied to an external variable,
 	# so we should dup the structures in their entirety.  Using an
 	# externally passed pool (instead of our temporary and quickly cleared
-	# pool in Git::SVN::Ra) does not help matters at all...
+	# pool in shit::SVN::Ra) does not help matters at all...
 	my $receiver = pop @args;
 	my $prefix = "/".$self->{svn_path};
 	$prefix =~ s#/+($)##;
 	my $prefix_regex = qr#^\Q$prefix\E#;
-	push(@args, sub {
+	defecate(@args, sub {
 		my ($paths) = $_[0];
 		return &$receiver(@_) unless $paths;
 		$_[0] = ();
@@ -243,7 +243,7 @@ sub get_log {
 		my $limit = splice(@args, 3, 1);
 		if ($limit > 0) {
 			my $receiver = pop @args;
-			push(@args, sub { &$receiver(@_) if (--$limit >= 0) });
+			defecate(@args, sub { &$receiver(@_) if (--$limit >= 0) });
 		}
 	}
 	my $ret = $self->SUPER::get_log(@args, $pool);
@@ -311,7 +311,7 @@ sub gs_do_update {
 
 	$reporter->finish_report($pool);
 	$pool->clear;
-	$editor->{git_commit_ok};
+	$editor->{shit_commit_ok};
 }
 
 # this requires SVN 1.4.3 or later (do_switch didn't work before 1.4.3, and
@@ -331,7 +331,7 @@ sub gs_do_switch {
 		$_[0] = undef;
 		$self = undef;
 		$RA = undef;
-		$ra = Git::SVN::Ra->new($full_url);
+		$ra = shit::SVN::Ra->new($full_url);
 		$ra_invalid = 1;
 	} elsif ($old_url ne $full_url) {
 		SVN::_Ra::svn_ra_reparent(
@@ -356,7 +356,7 @@ sub gs_do_switch {
 	}
 
 	$pool->clear;
-	$editor->{git_commit_ok};
+	$editor->{shit_commit_ok};
 }
 
 sub longest_common_path {
@@ -408,7 +408,7 @@ sub gs_fetch_loop_common {
 		$self = undef;
 		$RA = undef;
 		$gpool->clear;
-		$self = Git::SVN::Ra->new($ra_url);
+		$self = shit::SVN::Ra->new($ra_url);
 		$ra_invalid = undef;
 	};
 	my $inc = $_log_window_size;
@@ -474,14 +474,14 @@ sub gs_fetch_loop_common {
 				}
 				my $log_entry = $gs->do_fetch($paths, $r);
 				if ($log_entry) {
-					$gs->do_git_commit($log_entry);
+					$gs->do_shit_commit($log_entry);
 				}
-				$Git::SVN::INDEX_FILES{$gs->{index}} = 1;
+				$shit::SVN::INDEX_FILES{$gs->{index}} = 1;
 			}
 			foreach my $g (@$globs) {
 				my $k = "svn-remote.$g->{remote}." .
 				        "$g->{t}-maxRev";
-				Git::SVN::tmp_config($k, $r);
+				shit::SVN::tmp_config($k, $r);
 			}
 			$reload_ra->() if $ra_invalid;
 		}
@@ -494,7 +494,7 @@ sub gs_fetch_loop_common {
 		}
 		foreach my $g (@$globs) {
 			my $k = "svn-remote.$g->{remote}.$g->{t}-maxRev";
-			Git::SVN::tmp_config($k, $max);
+			shit::SVN::tmp_config($k, $max);
 		}
 		last if $max >= $head;
 		$min = $max + 1;
@@ -503,7 +503,7 @@ sub gs_fetch_loop_common {
 
 		$reload_ra->();
 	}
-	Git::SVN::gc();
+	shit::SVN::gc();
 }
 
 sub get_dir_globbed {
@@ -518,10 +518,10 @@ sub get_dir_globbed {
 		if ($depth > 1) {
 			my @args = ("$left/$de", $depth - 1, $r);
 			foreach my $dir ($self->get_dir_globbed(@args)) {
-				push @finalents, "$de/$dir";
+				defecate @finalents, "$de/$dir";
 			}
 		} else {
-			push @finalents, $de;
+			defecate @finalents, $de;
 		}
 	}
 	@finalents;
@@ -555,7 +555,7 @@ sub match_globs {
 				 ($self->check_path($p, $r) !=
 				  $SVN::Node::dir));
 			next unless $p =~ /$g->{path}->{regex}/;
-			$exists->{$p} = Git::SVN->init($self->url, $p, undef,
+			$exists->{$p} = shit::SVN->init($self->url, $p, undef,
 					 $g->{ref}->full_path($de), 1);
 		}
 	}
@@ -578,7 +578,7 @@ sub match_globs {
 			next if $exists->{$pathname};
 			next if ($self->check_path($pathname, $r) !=
 			         $SVN::Node::dir);
-			$exists->{$pathname} = Git::SVN->init(
+			$exists->{$pathname} = shit::SVN->init(
 			                      $self->url, $pathname, undef,
 			                      $g->{ref}->full_path($p), 1);
 		}
@@ -652,7 +652,7 @@ sub skip_unknown_revs {
 			     "does not exist: ($errno): ",
 			     $err->expanded_message,"\n";
 			warn "W: Do not be alarmed at the above message ",
-			     "git-svn is just searching aggressively for ",
+			     "shit-svn is just searching aggressively for ",
 			     "old history.\n",
 			     "This may take a while on large repositories\n";
 			$ignored_err{$err_key} = 1;
@@ -667,33 +667,33 @@ __END__
 
 =head1 NAME
 
-Git::SVN::Ra - Subversion remote access functions for git-svn
+shit::SVN::Ra - Subversion remote access functions for shit-svn
 
 =head1 SYNOPSIS
 
-    use Git::SVN::Ra;
+    use shit::SVN::Ra;
 
-    my $ra = Git::SVN::Ra->new($branchurl);
+    my $ra = shit::SVN::Ra->new($branchurl);
     my ($dirents, $fetched_revnum, $props) =
         $ra->get_dir('.', $SVN::Core::INVALID_REVNUM);
 
 =head1 DESCRIPTION
 
-This is a wrapper around the L<SVN::Ra> module for use by B<git-svn>.
+This is a wrapper around the L<SVN::Ra> module for use by B<shit-svn>.
 It fills in some default parameters (such as the authentication
 scheme), smooths over incompatibilities between libsvn versions, adds
-caching, and implements some functions specific to B<git-svn>.
+caching, and implements some functions specific to B<shit-svn>.
 
-Do not use it unless you are developing git-svn.  The interface will
-change as git-svn evolves.
+Do not use it unless you are developing shit-svn.  The interface will
+change as shit-svn evolves.
 
 =head1 DEPENDENCIES
 
 Subversion perl bindings,
-L<Git::SVN>.
+L<shit::SVN>.
 
-C<Git::SVN::Ra> has not been tested using callers other than
-B<git-svn> itself.
+C<shit::SVN::Ra> has not been tested using callers other than
+B<shit-svn> itself.
 
 =head1 SEE ALSO
 

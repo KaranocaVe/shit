@@ -20,34 +20,34 @@ test_expect_success setup '
 '
 
 test_expect_success 'update-index and ls-files' '
-	git update-index --add one &&
-	case "$(git ls-files)" in
+	shit update-index --add one &&
+	case "$(shit ls-files)" in
 	one) echo pass one ;;
 	*) echo bad one; return 1 ;;
 	esac &&
 	(
 		cd dir &&
-		git update-index --add two &&
-		case "$(git ls-files)" in
+		shit update-index --add two &&
+		case "$(shit ls-files)" in
 		two) echo pass two ;;
 		*) echo bad two; exit 1 ;;
 		esac
 	) &&
-	case "$(git ls-files)" in
+	case "$(shit ls-files)" in
 	dir/two"$LF"one) echo pass both ;;
 	*) echo bad; return 1 ;;
 	esac
 '
 
 test_expect_success 'cat-file' '
-	two=$(git ls-files -s dir/two) &&
+	two=$(shit ls-files -s dir/two) &&
 	two=$(expr "$two" : "[0-7]* \\([0-9a-f]*\\)") &&
 	echo "$two" &&
-	git cat-file -p "$two" >actual &&
+	shit cat-file -p "$two" >actual &&
 	cmp dir/two actual &&
 	(
 		cd dir &&
-		git cat-file -p "$two" >actual &&
+		shit cat-file -p "$two" >actual &&
 		cmp two actual
 	)
 '
@@ -56,18 +56,18 @@ rm -f actual dir/actual
 test_expect_success 'diff-files' '
 	echo a >>one &&
 	echo d >>dir/two &&
-	case "$(git diff-files --name-only)" in
+	case "$(shit diff-files --name-only)" in
 	dir/two"$LF"one) echo pass top ;;
 	*) echo bad top; return 1 ;;
 	esac &&
 	# diff should not omit leading paths
 	(
 		cd dir &&
-		case "$(git diff-files --name-only)" in
+		case "$(shit diff-files --name-only)" in
 		dir/two"$LF"one) echo pass subdir ;;
 		*) echo bad subdir; exit 1 ;;
 		esac &&
-		case "$(git diff-files --name-only .)" in
+		case "$(shit diff-files --name-only .)" in
 		dir/two) echo pass subdir limited ;;
 		*) echo bad subdir limited; exit 1 ;;
 		esac
@@ -75,29 +75,29 @@ test_expect_success 'diff-files' '
 '
 
 test_expect_success 'write-tree' '
-	top=$(git write-tree) &&
+	top=$(shit write-tree) &&
 	echo $top &&
 	(
 		cd dir &&
-		sub=$(git write-tree) &&
+		sub=$(shit write-tree) &&
 		echo $sub &&
 		test "z$top" = "z$sub"
 	)
 '
 
 test_expect_success 'checkout-index' '
-	git checkout-index -f -u one &&
+	shit checkout-index -f -u one &&
 	cmp one original.one &&
 	(
 		cd dir &&
-		git checkout-index -f -u two &&
+		shit checkout-index -f -u two &&
 		cmp two ../original.two
 	)
 '
 
 test_expect_success 'read-tree' '
 	rm -f one dir/two &&
-	tree=$(git write-tree) &&
+	tree=$(shit write-tree) &&
 	read_tree_u_must_succeed --reset -u "$tree" &&
 	cmp one original.one &&
 	cmp dir/two original.two &&
@@ -112,84 +112,84 @@ test_expect_success 'read-tree' '
 
 test_expect_success 'alias expansion' '
 	(
-		git config alias.test-status-alias status &&
+		shit config alias.test-status-alias status &&
 		cd dir &&
-		git status &&
-		git test-status-alias
+		shit status &&
+		shit test-status-alias
 	)
 '
 
 test_expect_success !MINGW '!alias expansion' '
 	pwd >expect &&
 	(
-		git config alias.test-alias-directory !pwd &&
+		shit config alias.test-alias-directory !pwd &&
 		cd dir &&
-		git test-alias-directory >../actual
+		shit test-alias-directory >../actual
 	) &&
 	test_cmp expect actual
 '
 
-test_expect_success 'GIT_PREFIX for !alias' '
+test_expect_success 'shit_PREFIX for !alias' '
 	printf "dir/" >expect &&
 	(
-		git config alias.test-alias-directory "!sh -c \"printf \$GIT_PREFIX\"" &&
+		shit config alias.test-alias-directory "!sh -c \"printf \$shit_PREFIX\"" &&
 		cd dir &&
-		git test-alias-directory >../actual
+		shit test-alias-directory >../actual
 	) &&
 	test_cmp expect actual
 '
 
-test_expect_success 'GIT_PREFIX for built-ins' '
-	# Use GIT_EXTERNAL_DIFF to test that the "diff" built-in
-	# receives the GIT_PREFIX variable.
+test_expect_success 'shit_PREFIX for built-ins' '
+	# Use shit_EXTERNAL_DIFF to test that the "diff" built-in
+	# receives the shit_PREFIX variable.
 	echo "dir/" >expect &&
 	write_script diff <<-\EOF &&
-	printf "%s\n" "$GIT_PREFIX"
+	printf "%s\n" "$shit_PREFIX"
 	EOF
 	(
 		cd dir &&
 		echo "change" >two &&
-		GIT_EXTERNAL_DIFF=./diff git diff >../actual &&
-		git checkout -- two
+		shit_EXTERNAL_DIFF=./diff shit diff >../actual &&
+		shit checkout -- two
 	) &&
 	test_cmp expect actual
 '
 
-test_expect_success 'no file/rev ambiguity check inside .git' '
-	git commit -a -m 1 &&
+test_expect_success 'no file/rev ambiguity check inside .shit' '
+	shit commit -a -m 1 &&
 	(
-		cd .git &&
-		git show -s HEAD
+		cd .shit &&
+		shit show -s HEAD
 	)
 '
 
-test_expect_success 'no file/rev ambiguity check inside a bare repo (explicit GIT_DIR)' '
-	test_when_finished "rm -fr foo.git" &&
-	git clone -s --bare .git foo.git &&
+test_expect_success 'no file/rev ambiguity check inside a bare repo (explicit shit_DIR)' '
+	test_when_finished "rm -fr foo.shit" &&
+	shit clone -s --bare .shit foo.shit &&
 	(
-		cd foo.git &&
-		# older Git needed help by exporting GIT_DIR=.
+		cd foo.shit &&
+		# older shit needed help by exporting shit_DIR=.
 		# to realize that it is inside a bare repository.
 		# We keep this test around for regression testing.
-		GIT_DIR=. git show -s HEAD
+		shit_DIR=. shit show -s HEAD
 	)
 '
 
 test_expect_success 'no file/rev ambiguity check inside a bare repo' '
-	test_when_finished "rm -fr foo.git" &&
-	git clone -s --bare .git foo.git &&
+	test_when_finished "rm -fr foo.shit" &&
+	shit clone -s --bare .shit foo.shit &&
 	(
-		cd foo.git &&
-		git show -s HEAD
+		cd foo.shit &&
+		shit show -s HEAD
 	)
 '
 
 test_expect_success SYMLINKS 'detection should not be fooled by a symlink' '
-	git clone -s .git another &&
+	shit clone -s .shit another &&
 	ln -s another yetanother &&
 	(
-		cd yetanother/.git &&
-		git show -s HEAD
+		cd yetanother/.shit &&
+		shit show -s HEAD
 	)
 '
 

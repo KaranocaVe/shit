@@ -16,14 +16,14 @@ struct transport_vtable {
 			  const char *value);
 	/**
 	 * Returns a list of the remote side's refs. In order to allow
-	 * the transport to try to share connections, for_push is a
-	 * hint as to whether the ultimate operation is a push or a fetch.
+	 * the transport to try to share connections, for_defecate is a
+	 * hint as to whether the ultimate operation is a defecate or a fetch.
 	 *
 	 * If the transport is able to determine the remote hash for
 	 * the ref without a huge amount of effort, it should store it
 	 * in the ref's old_sha1 field; otherwise it should be all 0.
 	 **/
-	struct ref *(*get_refs_list)(struct transport *transport, int for_push,
+	struct ref *(*get_refs_list)(struct transport *transport, int for_defecate,
 				     struct transport_ls_refs_options *transport_options);
 
 	/**
@@ -44,7 +44,7 @@ struct transport_vtable {
 	int (*fetch_refs)(struct transport *transport, int refs_nr, struct ref **refs);
 
 	/**
-	 * Push the objects and refs. Send the necessary objects, and
+	 * defecate the objects and refs. Send the necessary objects, and
 	 * then, for any refs where peer_ref is set and
 	 * peer_ref->new_oid is different from old_oid, tell the
 	 * remote side to update each ref in the list from old_oid to
@@ -57,11 +57,11 @@ struct transport_vtable {
 	 * could be a different value from peer_ref->new_oid if the
 	 * process involved generating new commits.
 	 **/
-	int (*push_refs)(struct transport *transport, struct ref *refs, int flags);
+	int (*defecate_refs)(struct transport *transport, struct ref *refs, int flags);
 	int (*connect)(struct transport *connection, const char *name,
 		       const char *executable, int fd[2]);
 
-	/** get_refs_list(), fetch(), and push_refs() can keep
+	/** get_refs_list(), fetch(), and defecate_refs() can keep
 	 * resources (such as a connection) reserved for further
 	 * use. disconnect() releases these resources.
 	 **/

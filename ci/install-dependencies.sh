@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Install dependencies required to build and test Git on Linux and macOS
+# Install dependencies required to build and test shit on Linux and macOS
 #
 
 . ${0%/*}/lib.sh
@@ -8,8 +8,8 @@
 begin_group "Install dependencies"
 
 P4WHENCE=https://cdist2.perforce.com/perforce/r21.2
-LFSWHENCE=https://github.com/github/git-lfs/releases/download/v$LINUX_GIT_LFS_VERSION
-JGITWHENCE=https://repo.eclipse.org/content/groups/releases//org/eclipse/jgit/org.eclipse.jgit.pgm/6.8.0.202311291450-r/org.eclipse.jgit.pgm-6.8.0.202311291450-r.sh
+LFSWHENCE=https://shithub.com/shithub/shit-lfs/releases/download/v$LINUX_shit_LFS_VERSION
+JshitWHENCE=https://repo.eclipse.org/content/groups/releases//org/eclipse/jshit/org.eclipse.jshit.pgm/6.8.0.202311291450-r/org.eclipse.jshit.pgm-6.8.0.202311291450-r.sh
 
 # Make sudo a no-op and execute the command directly when running as root.
 # While using sudo would be fine on most platforms when we are root already,
@@ -39,7 +39,7 @@ ubuntu-*)
 
 	sudo apt-get -q update
 	sudo apt-get -q -y install \
-		language-pack-is libsvn-perl apache2 cvs cvsps git gnupg subversion \
+		language-pack-is libsvn-perl apache2 cvs cvsps shit gnupg subversion \
 		make libssl-dev libcurl4-openssl-dev libexpat-dev wget sudo default-jre \
 		tcl tk gettext zlib1g-dev perl-modules liberror-perl libauthen-sasl-perl \
 		libemail-valid-perl libio-socket-ssl-perl libnet-smtp-ssl-perl libdbd-sqlite3-perl libcgi-pm-perl \
@@ -50,13 +50,13 @@ ubuntu-*)
 		"$P4WHENCE/bin.linux26x86_64/p4d" "$P4WHENCE/bin.linux26x86_64/p4"
 	chmod a+x "$CUSTOM_PATH/p4d" "$CUSTOM_PATH/p4"
 
-	wget --quiet "$LFSWHENCE/git-lfs-linux-amd64-$LINUX_GIT_LFS_VERSION.tar.gz"
-	tar -xzf "git-lfs-linux-amd64-$LINUX_GIT_LFS_VERSION.tar.gz" \
-		-C "$CUSTOM_PATH" --strip-components=1 "git-lfs-$LINUX_GIT_LFS_VERSION/git-lfs"
-	rm "git-lfs-linux-amd64-$LINUX_GIT_LFS_VERSION.tar.gz"
+	wget --quiet "$LFSWHENCE/shit-lfs-linux-amd64-$LINUX_shit_LFS_VERSION.tar.gz"
+	tar -xzf "shit-lfs-linux-amd64-$LINUX_shit_LFS_VERSION.tar.gz" \
+		-C "$CUSTOM_PATH" --strip-components=1 "shit-lfs-$LINUX_shit_LFS_VERSION/shit-lfs"
+	rm "shit-lfs-linux-amd64-$LINUX_shit_LFS_VERSION.tar.gz"
 
-	wget --quiet "$JGITWHENCE" --output-document="$CUSTOM_PATH/jgit"
-	chmod a+x "$CUSTOM_PATH/jgit"
+	wget --quiet "$JshitWHENCE" --output-document="$CUSTOM_PATH/jshit"
+	chmod a+x "$CUSTOM_PATH/jshit"
 	;;
 ubuntu32-*)
 	sudo linux32 --32bit i386 sh -c '
@@ -116,20 +116,20 @@ else
 	echo >&2 "WARNING: perforce wasn't installed, see above for clues why"
 fi
 
-if type git-lfs >/dev/null 2>&1
+if type shit-lfs >/dev/null 2>&1
 then
-	echo "$(tput setaf 6)Git-LFS Version$(tput sgr0)"
-	git-lfs version
+	echo "$(tput setaf 6)shit-LFS Version$(tput sgr0)"
+	shit-lfs version
 else
-	echo >&2 "WARNING: git-lfs wasn't installed, see above for clues why"
+	echo >&2 "WARNING: shit-lfs wasn't installed, see above for clues why"
 fi
 
-if type jgit >/dev/null 2>&1
+if type jshit >/dev/null 2>&1
 then
-	echo "$(tput setaf 6)JGit Version$(tput sgr0)"
-	jgit version
+	echo "$(tput setaf 6)Jshit Version$(tput sgr0)"
+	jshit version
 else
-	echo >&2 "WARNING: JGit wasn't installed, see above for clues why"
+	echo >&2 "WARNING: Jshit wasn't installed, see above for clues why"
 fi
 
 end_group "Install dependencies"

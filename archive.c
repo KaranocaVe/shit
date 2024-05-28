@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "config.h"
 #include "convert.h"
@@ -21,10 +21,10 @@
 #include "quote.h"
 
 static char const * const archive_usage[] = {
-	N_("git archive [<options>] <tree-ish> [<path>...]"),
-	"git archive --list",
-	N_("git archive --remote <repo> [--exec <cmd>] [<options>] <tree-ish> [<path>...]"),
-	N_("git archive --remote <repo> [--exec <cmd>] --list"),
+	N_("shit archive [<options>] <tree-ish> [<path>...]"),
+	"shit archive --list",
+	N_("shit archive --remote <repo> [--exec <cmd>] [<options>] <tree-ish> [<path>...]"),
+	N_("shit archive --remote <repo> [--exec <cmd>] --list"),
 	NULL
 };
 
@@ -130,7 +130,7 @@ static const struct attr_check *get_archive_attrs(struct index_state *istate,
 	static struct attr_check *check;
 	if (!check)
 		check = attr_check_initl("export-ignore", "export-subst", NULL);
-	git_check_attr(istate, path, check);
+	shit_check_attr(istate, path, check);
 	return check;
 }
 
@@ -164,7 +164,7 @@ static int write_archive_entry(const struct object_id *oid, const char *base,
 	strbuf_add(&path, args->base, args->baselen);
 	strbuf_add(&path, base, baselen);
 	strbuf_addstr(&path, filename);
-	if (S_ISDIR(mode) || S_ISGITLINK(mode))
+	if (S_ISDIR(mode) || S_ISshitLINK(mode))
 		strbuf_addch(&path, '/');
 	path_without_prefix = path.buf + args->baselen;
 
@@ -202,7 +202,7 @@ static int write_archive_entry(const struct object_id *oid, const char *base,
 	if (args->verbose)
 		fprintf(stderr, "%.*s\n", (int)path.len, path.buf);
 
-	if (S_ISDIR(mode) || S_ISGITLINK(mode)) {
+	if (S_ISDIR(mode) || S_ISshitLINK(mode)) {
 		err = write_entry(args, oid, path.buf, path.len, mode, NULL, 0);
 		if (err)
 			return err;
@@ -343,7 +343,7 @@ int write_archive_entries(struct archiver_args *args,
 			       args->tree->buffer, args->tree->size);
 		if (unpack_trees(1, &t, &opts))
 			return -1;
-		git_attr_set_direction(GIT_ATTR_INDEX);
+		shit_attr_set_direction(shit_ATTR_INDEX);
 	}
 
 	err = read_tree(args->repo, args->tree,
@@ -653,7 +653,7 @@ static int parse_archive_args(int argc, const char **argv,
 		OPT_STRING('o', "output", &output, N_("file"),
 			N_("write the archive to this file")),
 		OPT_BOOL(0, "worktree-attributes", &worktree_attributes,
-			N_("read .gitattributes in working directory")),
+			N_("read .shitattributes in working directory")),
 		OPT__VERBOSE(&verbose, N_("report archived files on stderr")),
 		{ OPTION_STRING, 0, "mtime", &mtime_option, N_("time"),
 		  N_("set modification time of archive entries"),
@@ -667,7 +667,7 @@ static int parse_archive_args(int argc, const char **argv,
 		OPT_STRING(0, "remote", &remote, N_("repo"),
 			N_("retrieve the archive from remote repository <repo>")),
 		OPT_STRING(0, "exec", &exec, N_("command"),
-			N_("path to the remote git-upload-archive command")),
+			N_("path to the remote shit-upload-archive command")),
 		OPT_END()
 	};
 
@@ -736,8 +736,8 @@ int write_archive(int argc, const char **argv, const char *prefix,
 	struct archiver_args args;
 	int rc;
 
-	git_config_get_bool("uploadarchive.allowunreachable", &remote_allow_unreachable);
-	git_config(git_default_config, NULL);
+	shit_config_get_bool("uploadarchive.allowunreachable", &remote_allow_unreachable);
+	shit_config(shit_default_config, NULL);
 
 	describe_status.max_invocations = 1;
 	ctx.date_mode.type = DATE_NORMAL;
@@ -754,7 +754,7 @@ int write_archive(int argc, const char **argv, const char *prefix,
 		 * die ourselves; but its error message will be more specific
 		 * than what we could write here.
 		 */
-		setup_git_directory();
+		setup_shit_directory();
 	}
 
 	parse_treeish_arg(argv, &args, remote);

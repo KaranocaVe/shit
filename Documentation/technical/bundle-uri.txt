@@ -1,17 +1,17 @@
 Bundle URIs
 ===========
 
-Git bundles are files that store a pack-file along with some extra metadata,
+shit bundles are files that store a pack-file along with some extra metadata,
 including a set of refs and a (possibly empty) set of necessary commits. See
-linkgit:git-bundle[1] and linkgit:gitformat-bundle[5] for more information.
+linkshit:shit-bundle[1] and linkshit:shitformat-bundle[5] for more information.
 
-Bundle URIs are locations where Git can download one or more bundles in
+Bundle URIs are locations where shit can download one or more bundles in
 order to bootstrap the object database in advance of fetching the remaining
 objects from a remote.
 
 One goal is to speed up clones and fetches for users with poor network
 connectivity to the origin server. Another benefit is to allow heavy users,
-such as CI build farms, to use local resources for the majority of Git data
+such as CI build farms, to use local resources for the majority of shit data
 and thereby reducing the load on the origin server.
 
 To enable the bundle URI feature, users can specify a bundle URI using
@@ -22,7 +22,7 @@ Design Goals
 ------------
 
 The bundle URI standard aims to be flexible enough to satisfy multiple
-workloads. The bundle provider and the Git client have several choices in
+workloads. The bundle provider and the shit client have several choices in
 how they create and consume bundle URIs.
 
 * Bundles can have whatever name the server desires. This name could refer
@@ -36,7 +36,7 @@ how they create and consume bundle URIs.
   clones, but could also be organized with the intention of bootstrapping
   incremental fetches. The bundle provider must decide on one of several
   organization schemes to minimize client downloads during incremental
-  fetches, but the Git client can also choose whether to use bundles for
+  fetches, but the shit client can also choose whether to use bundles for
   either of these operations.
 
 * The bundle provider can choose to support full clones, partial clones,
@@ -55,20 +55,20 @@ how they create and consume bundle URIs.
   the client can use optimizations to minimize how much of the data is
   downloaded.
 
-* The bundle provider does not need to be associated with the Git server.
+* The bundle provider does not need to be associated with the shit server.
   The client can choose to use the bundle provider without it being
-  advertised by the Git server.
+  advertised by the shit server.
 
 * The client can choose to discover bundle providers that are advertised
-  by the Git server. This could happen during `git clone`, during
-  `git fetch`, both, or neither. The user can choose which combination
+  by the shit server. This could happen during `shit clone`, during
+  `shit fetch`, both, or neither. The user can choose which combination
   works best for them.
 
 * The client can choose to configure a bundle provider manually at any
   time. The client can also choose to specify a bundle provider manually
-  as a command-line option to `git clone`.
+  as a command-line option to `shit clone`.
 
-Each repository is different and every Git server has different needs.
+Each repository is different and every shit server has different needs.
 Hopefully the bundle URI feature is flexible enough to satisfy all needs.
 If not, then the feature can be extended through its versioning mechanism.
 
@@ -76,7 +76,7 @@ Server requirements
 -------------------
 
 To provide a server-side implementation of bundle servers, no other parts
-of the Git protocol are required. This allows server maintainers to use
+of the shit protocol are required. This allows server maintainers to use
 static content solutions such as CDNs in order to serve the bundle files.
 
 At the current scope of the bundle URI feature, all URIs are expected to
@@ -87,11 +87,11 @@ helper for secure access. (Future extensions could use "file://" URIs or
 SSH URIs.)
 
 Assuming a `200 OK` response from the server, the content at the URL is
-inspected. First, Git attempts to parse the file as a bundle file of
+inspected. First, shit attempts to parse the file as a bundle file of
 version 2 or higher. If the file is not a bundle, then the file is parsed
-as a plain-text file using Git's config parser. The key-value pairs in
+as a plain-text file using shit's config parser. The key-value pairs in
 that config file are expected to describe a list of bundle URIs. If
-neither of these parse attempts succeed, then Git will report an error to
+neither of these parse attempts succeed, then shit will report an error to
 the user that the bundle URI provided erroneous data.
 
 Any other data provided by the server is considered erroneous.
@@ -99,8 +99,8 @@ Any other data provided by the server is considered erroneous.
 Bundle Lists
 ------------
 
-The Git server can advertise bundle URIs using a set of `key=value` pairs.
-A bundle URI can also serve a plain-text file in the Git config format
+The shit server can advertise bundle URIs using a set of `key=value` pairs.
+A bundle URI can also serve a plain-text file in the shit config format
 containing these same `key=value` pairs. In both cases, we consider this
 to be a _bundle list_. The pairs specify information about the bundles
 that the client can use to make decisions for which bundles to download
@@ -110,10 +110,10 @@ A few keys focus on properties of the list itself.
 
 bundle.version::
 	(Required) This value provides a version number for the bundle
-	list. If a future Git change enables a feature that needs the Git
+	list. If a future shit change enables a feature that needs the shit
 	client to react to a new key in the bundle list file, then this version
 	will increment. The only current version number is 1, and if any other
-	value is specified then Git will fail to use this file.
+	value is specified then shit will fail to use this file.
 
 bundle.mode::
 	(Required) This value has one of two values: `all` and `any`. When `all`
@@ -126,7 +126,7 @@ bundle.mode::
 
 bundle.heuristic::
 	If this string-valued key exists, then the bundle list is designed to
-	work well with incremental `git fetch` commands. The heuristic signals
+	work well with incremental `shit fetch` commands. The heuristic signals
 	that there are additional keys available for each bundle that help
 	determine which subset of bundles the client should download. The only
 	heuristic currently planned is `creationToken`.
@@ -160,10 +160,10 @@ bundle.<id>.location::
 	This string value advertises a real-world location from where the bundle
 	URI is served. This can be used to present the user with an option for
 	which bundle URI to use or simply as an informative indicator of which
-	bundle URI was selected by Git. This is only valuable when
+	bundle URI was selected by shit. This is only valuable when
 	`bundle.mode` is `any`.
 
-Here is an example bundle list using the Git config format:
+Here is an example bundle list using the shit config format:
 
 	[bundle]
 		version = 1
@@ -171,11 +171,11 @@ Here is an example bundle list using the Git config format:
 		heuristic = creationToken
 
 	[bundle "2022-02-09-1644442601-daily"]
-		uri = https://bundles.example.com/git/git/2022-02-09-1644442601-daily.bundle
+		uri = https://bundles.example.com/shit/shit/2022-02-09-1644442601-daily.bundle
 		creationToken = 1644442601
 
 	[bundle "2022-02-02-1643842562"]
-		uri = https://bundles.example.com/git/git/2022-02-02-1643842562.bundle
+		uri = https://bundles.example.com/shit/shit/2022-02-02-1643842562.bundle
 		creationToken = 1643842562
 
 	[bundle "2022-02-09-1644442631-daily-blobless"]
@@ -184,7 +184,7 @@ Here is an example bundle list using the Git config format:
 		filter = blob:none
 
 	[bundle "2022-02-02-1643842568-blobless"]
-		uri = /git/git/2022-02-02-1643842568-blobless.bundle
+		uri = /shit/shit/2022-02-02-1643842568-blobless.bundle
 		creationToken = 1643842568
 		filter = blob:none
 
@@ -194,18 +194,18 @@ options to present two parallel sets of bundles: one for full clones and
 another for blobless partial clones.
 
 Suppose that this bundle list was found at the URI
-`https://bundles.example.com/git/git/` and so the two blobless bundles have
+`https://bundles.example.com/shit/shit/` and so the two blobless bundles have
 the following fully-expanded URIs:
 
-* `https://bundles.example.com/git/git/2022-02-09-1644442631-daily-blobless.bundle`
-* `https://bundles.example.com/git/git/2022-02-02-1643842568-blobless.bundle`
+* `https://bundles.example.com/shit/shit/2022-02-09-1644442631-daily-blobless.bundle`
+* `https://bundles.example.com/shit/shit/2022-02-02-1643842568-blobless.bundle`
 
 Advertising Bundle URIs
 -----------------------
 
 If a user knows a bundle URI for the repository they are cloning, then
 they can specify that URI manually through a command-line option. However,
-a Git host may want to advertise bundle URIs during the clone operation,
+a shit host may want to advertise bundle URIs during the clone operation,
 helping users unaware of the feature.
 
 The only thing required for this feature is that the server can advertise
@@ -220,12 +220,12 @@ single URI that is geodistributed through server-side infrastructure.
 Cloning with Bundle URIs
 ------------------------
 
-The primary need for bundle URIs is to speed up clones. The Git client
+The primary need for bundle URIs is to speed up clones. The shit client
 will interact with bundle URIs according to the following flow:
 
 1. The user specifies a bundle URI with the `--bundle-uri` command-line
    option _or_ the client discovers a bundle list advertised by the
-   Git server.
+   shit server.
 
 2. If the downloaded data from a bundle URI is a bundle, then the client
    inspects the bundle headers to check that the prerequisite commit OIDs
@@ -234,9 +234,9 @@ will interact with bundle URIs according to the following flow:
    making those OIDs present. When all required OIDs are present, the
    client unbundles that data using a refspec. The default refspec is
    `+refs/heads/*:refs/bundles/*`, but this can be configured. These refs
-   are stored so that later `git fetch` negotiations can communicate each
-   bundled ref as a `have`, reducing the size of the fetch over the Git
-   protocol. To allow pruning refs from this ref namespace, Git may
+   are stored so that later `shit fetch` negotiations can communicate each
+   bundled ref as a `have`, reducing the size of the fetch over the shit
+   protocol. To allow pruning refs from this ref namespace, shit may
    introduce a numbered namespace (such as `refs/bundles/<i>/*`) such that
    stale bundle refs can be deleted.
 
@@ -265,7 +265,7 @@ bundles in chronological order or in parallel.
 
 If a given bundle URI is a bundle list with a `bundle.heuristic`
 value, then the client can choose to store that URI as its chosen bundle
-URI. The client can then navigate directly to that URI during later `git
+URI. The client can then navigate directly to that URI during later `shit
 fetch` calls.
 
 When downloading bundle URIs, the client can choose to inspect the initial
@@ -290,7 +290,7 @@ thin bundle are already in the object database.
 
 When using the `creationToken` heuristic, the client can avoid downloading
 any bundles if their creation tokens are not larger than the stored
-creation token. After fetching new bundles, Git updates this local
+creation token. After fetching new bundles, shit updates this local
 creation token.
 
 If the bundle provider does not provide a heuristic, then the client
@@ -301,10 +301,10 @@ repository.
 Error Conditions
 ----------------
 
-If the Git client discovers something unexpected while downloading
+If the shit client discovers something unexpected while downloading
 information according to a bundle URI or the bundle list found at that
-location, then Git can ignore that data and continue as if it was not
-given a bundle URI. The remote Git server is the ultimate source of truth,
+location, then shit can ignore that data and continue as if it was not
+given a bundle URI. The remote shit server is the ultimate source of truth,
 not the bundle URI.
 
 Here are a few example error conditions:
@@ -315,7 +315,7 @@ Here are a few example error conditions:
 * The client receives a 400-level response (such as `404 Not Found` or
   `401 Not Authorized`). The client should use the credential helper to
   find and provide a credential for the URI, but match the semantics of
-  Git's other HTTP protocols in terms of handling specific 400-level
+  shit's other HTTP protocols in terms of handling specific 400-level
   errors.
 
 * The server reports any other failure response.
@@ -337,7 +337,7 @@ error conditions:
   initially wasteful, but perhaps these objects will become reachable by
   a later ref update that the client cares about.
 
-* A bundle download during a `git fetch` contains objects already in the
+* A bundle download during a `shit fetch` contains objects already in the
   object database. This is probably unavoidable if we are using bundles
   for fetches, since the client will almost always be slightly ahead of
   the bundle servers after performing its "catch-up" fetch to the remote
@@ -359,14 +359,14 @@ here so providers can start from that base.
 This example organization is a simplified model of what is used by the
 GVFS Cache Servers (see section near the end of this document) which have
 been beneficial in speeding up clones and fetches for very large
-repositories, although using extra software outside of Git.
+repositories, although using extra software outside of shit.
 
 The bundle provider deploys servers across multiple geographies. Each
-server manages its own bundle set. The server can track a number of Git
+server manages its own bundle set. The server can track a number of shit
 repositories, but provides a bundle list for each based on a pattern. For
 example, when mirroring a repository at `https://<domain>/<org>/<repo>`
 the bundle server could have its bundle list available at
-`https://<server-url>/<domain>/<org>/<repo>`. The origin Git server can
+`https://<server-url>/<domain>/<org>/<repo>`. The origin shit server can
 list all of these servers under the "any" mode:
 
 	[bundle]
@@ -431,11 +431,11 @@ can be created by looking at the newer bundles and ensuring that their
 necessary commits are all available in this merged bundle (or in another
 one of the newer bundles). This allows "expiring" object data that is not
 being used by new commits in this window of time. That data could be
-reintroduced by a later push.
+reintroduced by a later defecate.
 
 The intention of this data organization has two main goals. First, initial
 clones of the repository become faster by downloading precomputed object
-data from a closer source. Second, `git fetch` commands can be faster,
+data from a closer source. Second, `shit fetch` commands can be faster,
 especially if the client has not fetched for a few days. However, if a
 client does not fetch for 30 days, then the bundle list organization would
 cause redownloading a large amount of object data.
@@ -461,31 +461,31 @@ document, with the goal of implementing all of the mentioned client
 features over the course of several patch series. Here is a potential
 outline for submitting these features:
 
-1. Integrate bundle URIs into `git clone` with a `--bundle-uri` option.
-   This will include a new `git fetch --bundle-uri` mode for use as the
-   implementation underneath `git clone`. The initial version here will
+1. Integrate bundle URIs into `shit clone` with a `--bundle-uri` option.
+   This will include a new `shit fetch --bundle-uri` mode for use as the
+   implementation underneath `shit clone`. The initial version here will
    expect a single bundle at the given URI.
 
 2. Implement the ability to parse a bundle list from a bundle URI and
-   update the `git fetch --bundle-uri` logic to properly distinguish
+   update the `shit fetch --bundle-uri` logic to properly distinguish
    between `bundle.mode` options. Specifically design the feature so
    that the config format parsing feeds a list of key-value pairs into the
    bundle list logic.
 
-3. Create the `bundle-uri` protocol v2 command so Git servers can advertise
+3. Create the `bundle-uri` protocol v2 command so shit servers can advertise
    bundle URIs using the key-value pairs. Plug into the existing key-value
-   input to the bundle list logic. Allow `git clone` to discover these
+   input to the bundle list logic. Allow `shit clone` to discover these
    bundle URIs and bootstrap the client repository from the bundle data.
    (This choice is an opt-in via a config option and a command-line
    option.)
 
 4. Allow the client to understand the `bundle.heuristic` configuration key
-   and the `bundle.<id>.creationToken` heuristic. When `git clone`
+   and the `bundle.<id>.creationToken` heuristic. When `shit clone`
    discovers a bundle URI with `bundle.heuristic`, it configures the client
-   repository to check that bundle URI during later `git fetch <remote>`
+   repository to check that bundle URI during later `shit fetch <remote>`
    commands.
 
-5. Allow clients to discover bundle URIs during `git fetch` and configure
+5. Allow clients to discover bundle URIs during `shit fetch` and configure
    a bundle URI for later fetches if `bundle.heuristic` is set.
 
 6. Implement the "inspect headers" heuristic to reduce data downloads when
@@ -498,12 +498,12 @@ matures and becomes used in real-world scenarios.
 Related Work: Packfile URIs
 ---------------------------
 
-The Git protocol already has a capability where the Git server can list
+The shit protocol already has a capability where the shit server can list
 a set of URLs along with the packfile response when serving a client
 request. The client is then expected to download the packfiles at those
 locations in order to have a complete understanding of the response.
 
-This mechanism is used by the Gerrit server (implemented with JGit) and
+This mechanism is used by the Gerrit server (implemented with Jshit) and
 has been effective at reducing CPU load and improving user performance for
 clones.
 
@@ -518,12 +518,12 @@ Related Work: GVFS Cache Servers
 --------------------------------
 
 The GVFS Protocol [2] is a set of HTTP endpoints designed independently of
-the Git project before Git's partial clone was created. One feature of this
+the shit project before shit's partial clone was created. One feature of this
 protocol is the idea of a "cache server" which can be colocated with build
-machines or developer offices to transfer Git data without overloading the
+machines or developer offices to transfer shit data without overloading the
 central server.
 
-The endpoint that VFS for Git is famous for is the `GET /gvfs/objects/{oid}`
+The endpoint that VFS for shit is famous for is the `GET /gvfs/objects/{oid}`
 endpoint, which allows downloading an object on-demand. This is a critical
 piece of the filesystem virtualization of that product.
 
@@ -548,7 +548,7 @@ attempts to checkout that tip reference. (There is an extra endpoint that
 helps get all reachable trees from a given commit, in case that commit
 was not already in a prefetch packfile.)
 
-During a `git fetch`, a hook requests the prefetch endpoint using the
+During a `shit fetch`, a hook requests the prefetch endpoint using the
 most-recent timestamp from a previously-downloaded prefetch packfile.
 Only the list of packfiles with later timestamps are downloaded. Most
 users fetch hourly, so they get at most one hourly prefetch pack. Users
@@ -559,14 +559,14 @@ It is important to note that the clients always contact the origin server
 for the refs advertisement, so the refs are frequently "ahead" of the
 prefetched pack data. The missing objects are downloaded on-demand using
 the `GET gvfs/objects/{oid}` requests, when needed by a command such as
-`git checkout` or `git log`. Some Git optimizations disable checks that
+`shit checkout` or `shit log`. Some shit optimizations disable checks that
 would cause these on-demand downloads to be too aggressive.
 
 See Also
 --------
 
-[1] https://lore.kernel.org/git/RFC-cover-00.13-0000000000-20210805T150534Z-avarab@gmail.com/
+[1] https://lore.kernel.org/shit/RFC-cover-00.13-0000000000-20210805T150534Z-avarab@gmail.com/
     An earlier RFC for a bundle URI feature.
 
-[2] https://github.com/microsoft/VFSForGit/blob/master/Protocol.md
+[2] https://shithub.com/microsoft/VFSForshit/blob/master/Protocol.md
     The GVFS Protocol

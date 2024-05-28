@@ -14,18 +14,18 @@ int cmd__oidtree(int argc UNUSED, const char **argv UNUSED)
 {
 	struct oidtree ot;
 	struct strbuf line = STRBUF_INIT;
-	int nongit_ok;
-	int algo = GIT_HASH_UNKNOWN;
+	int nonshit_ok;
+	int algo = shit_HASH_UNKNOWN;
 
 	oidtree_init(&ot);
-	setup_git_directory_gently(&nongit_ok);
+	setup_shit_directory_gently(&nonshit_ok);
 
 	while (strbuf_getline(&line, stdin) != EOF) {
 		const char *arg;
 		struct object_id oid;
 
 		if (skip_prefix(line.buf, "insert ", &arg)) {
-			if (get_oid_hex_any(arg, &oid) == GIT_HASH_UNKNOWN)
+			if (get_oid_hex_any(arg, &oid) == shit_HASH_UNKNOWN)
 				die("insert not a hexadecimal oid: %s", arg);
 			algo = oid.algo;
 			oidtree_insert(&ot, &oid);
@@ -34,7 +34,7 @@ int cmd__oidtree(int argc UNUSED, const char **argv UNUSED)
 				die("contains not a hexadecimal oid: %s", arg);
 			printf("%d\n", oidtree_contains(&ot, &oid));
 		} else if (skip_prefix(line.buf, "each ", &arg)) {
-			char buf[GIT_MAX_HEXSZ + 1] = { '0' };
+			char buf[shit_MAX_HEXSZ + 1] = { '0' };
 			memset(&oid, 0, sizeof(oid));
 			memcpy(buf, arg, strlen(arg));
 			buf[hash_algos[algo].hexsz] = '\0';

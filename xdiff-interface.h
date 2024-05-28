@@ -52,9 +52,9 @@ void xdiff_set_find_func(xdemitconf_t *xecfg, const char *line, int cflags);
 void xdiff_clear_find_func(xdemitconf_t *xecfg);
 struct config_context;
 int parse_conflict_style_name(const char *value);
-int git_xmerge_config(const char *var, const char *value,
+int shit_xmerge_config(const char *var, const char *value,
 		      const struct config_context *ctx, void *cb);
-extern int git_xmerge_style;
+extern int shit_xmerge_style;
 
 /*
  * Compare the strings l1 with l2 which are of size s1 and s2 respectively.

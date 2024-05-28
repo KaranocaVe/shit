@@ -1,4 +1,4 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
 /*
  * The size parameter specifies the available space, i.e. includes
@@ -17,7 +17,7 @@
 #endif
 
 #undef vsnprintf
-int git_vsnprintf(char *str, size_t maxsize, const char *format, va_list ap)
+int shit_vsnprintf(char *str, size_t maxsize, const char *format, va_list ap)
 {
 	va_list cp;
 	char *s;
@@ -55,13 +55,13 @@ int git_vsnprintf(char *str, size_t maxsize, const char *format, va_list ap)
 	return ret;
 }
 
-int git_snprintf(char *str, size_t maxsize, const char *format, ...)
+int shit_snprintf(char *str, size_t maxsize, const char *format, ...)
 {
 	va_list ap;
 	int ret;
 
 	va_start(ap, format);
-	ret = git_vsnprintf(str, maxsize, format, ap);
+	ret = shit_vsnprintf(str, maxsize, format, ap);
 	va_end(ap);
 
 	return ret;

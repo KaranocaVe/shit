@@ -1,4 +1,4 @@
-all:: git-credential-osxkeychain
+all:: shit-credential-osxkeychain
 
 CC = gcc
 RM = rm -f
@@ -7,12 +7,12 @@ CFLAGS = -g -O2 -Wall
 -include ../../../config.mak.autogen
 -include ../../../config.mak
 
-git-credential-osxkeychain: git-credential-osxkeychain.o
+shit-credential-osxkeychain: shit-credential-osxkeychain.o
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS) \
 		-framework Security -framework CoreFoundation
 
-git-credential-osxkeychain.o: git-credential-osxkeychain.c
+shit-credential-osxkeychain.o: shit-credential-osxkeychain.c
 	$(CC) -c $(CFLAGS) $<
 
 clean:
-	$(RM) git-credential-osxkeychain git-credential-osxkeychain.o
+	$(RM) shit-credential-osxkeychain shit-credential-osxkeychain.o

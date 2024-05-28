@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='check broken or malicious patterns in .git* files
+test_description='check broken or malicious patterns in .shit* files
 
 Such as:
 
@@ -10,7 +10,7 @@ Such as:
 
   - nested submodule names
 
-  - symlinked .gitmodules, etc
+  - symlinked .shitmodules, etc
 '
 
 TEST_PASSES_SANITIZE_LEAK=true
@@ -18,7 +18,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 . "$TEST_DIRECTORY"/lib-pack.sh
 
 test_expect_success 'setup' '
-	git config --global protocol.file.allow always
+	shit config --global protocol.file.allow always
 '
 
 test_expect_success 'check names' '
@@ -47,128 +47,128 @@ test_expect_success 'check names' '
 
 test_expect_success 'check urls' '
 	cat >expect <<-\EOF &&
-	./bar/baz/foo.git
-	https://example.com/foo.git
-	http://example.com:80/deeper/foo.git
+	./bar/baz/foo.shit
+	https://example.com/foo.shit
+	http://example.com:80/deeper/foo.shit
 	EOF
 
 	test-tool submodule check-url >actual <<-\EOF &&
-	./bar/baz/foo.git
-	https://example.com/foo.git
-	http://example.com:80/deeper/foo.git
+	./bar/baz/foo.shit
+	https://example.com/foo.shit
+	http://example.com:80/deeper/foo.shit
 	-a./foo
-	../../..//test/foo.git
-	../../../../../:localhost:8080/foo.git
-	..\../.\../:example.com/foo.git
-	./%0ahost=example.com/foo.git
+	../../..//test/foo.shit
+	../../../../../:localhost:8080/foo.shit
+	..\../.\../:example.com/foo.shit
+	./%0ahost=example.com/foo.shit
 	https://one.example.com/evil?%0ahost=two.example.com
-	https:///example.com/foo.git
-	http://example.com:test/foo.git
-	https::example.com/foo.git
-	http:::example.com/foo.git
+	https:///example.com/foo.shit
+	http://example.com:test/foo.shit
+	https::example.com/foo.shit
+	http:::example.com/foo.shit
 	EOF
 
 	test_cmp expect actual
 '
 
 test_expect_success 'create innocent subrepo' '
-	git init innocent &&
-	git -C innocent commit --allow-empty -m foo
+	shit init innocent &&
+	shit -C innocent commit --allow-empty -m foo
 '
 
 test_expect_success 'submodule add refuses invalid names' '
 	test_must_fail \
-		git submodule add --name ../../modules/evil "$PWD/innocent" evil
+		shit submodule add --name ../../modules/evil "$PWD/innocent" evil
 '
 
 test_expect_success 'add evil submodule' '
-	git submodule add "$PWD/innocent" evil &&
+	shit submodule add "$PWD/innocent" evil &&
 
 	mkdir modules &&
-	cp -r .git/modules/evil modules &&
+	cp -r .shit/modules/evil modules &&
 	write_script modules/evil/hooks/post-checkout <<-\EOF &&
 	echo >&2 "RUNNING POST CHECKOUT"
 	EOF
 
-	git config -f .gitmodules submodule.evil.update checkout &&
-	git config -f .gitmodules --rename-section \
+	shit config -f .shitmodules submodule.evil.update checkout &&
+	shit config -f .shitmodules --rename-section \
 		submodule.evil submodule.../../modules/evil &&
-	git add modules &&
-	git commit -am evil
+	shit add modules &&
+	shit commit -am evil
 '
 
 # This step seems like it shouldn't be necessary, since the payload is
 # contained entirely in the evil submodule. But due to the vagaries of the
-# submodule code, checking out the evil module will fail unless ".git/modules"
+# submodule code, checking out the evil module will fail unless ".shit/modules"
 # exists. Adding another submodule (with a name that sorts before "evil") is an
 # easy way to make sure this is the case in the victim clone.
 test_expect_success 'add other submodule' '
-	git submodule add "$PWD/innocent" another-module &&
-	git add another-module &&
-	git commit -am another
+	shit submodule add "$PWD/innocent" another-module &&
+	shit add another-module &&
+	shit commit -am another
 '
 
 test_expect_success 'clone evil superproject' '
-	git clone --recurse-submodules . victim >output 2>&1 &&
+	shit clone --recurse-submodules . victim >output 2>&1 &&
 	! grep "RUNNING POST CHECKOUT" output
 '
 
 test_expect_success 'fsck detects evil superproject' '
-	test_must_fail git fsck
+	test_must_fail shit fsck
 '
 
 test_expect_success 'transfer.fsckObjects detects evil superproject (unpack)' '
-	rm -rf dst.git &&
-	git init --bare dst.git &&
-	git -C dst.git config transfer.fsckObjects true &&
-	test_must_fail git push dst.git HEAD
+	rm -rf dst.shit &&
+	shit init --bare dst.shit &&
+	shit -C dst.shit config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst.shit HEAD
 '
 
 test_expect_success 'transfer.fsckObjects detects evil superproject (index)' '
-	rm -rf dst.git &&
-	git init --bare dst.git &&
-	git -C dst.git config transfer.fsckObjects true &&
-	git -C dst.git config transfer.unpackLimit 1 &&
-	test_must_fail git push dst.git HEAD
+	rm -rf dst.shit &&
+	shit init --bare dst.shit &&
+	shit -C dst.shit config transfer.fsckObjects true &&
+	shit -C dst.shit config transfer.unpackLimit 1 &&
+	test_must_fail shit defecate dst.shit HEAD
 '
 
 # Normally our packs contain commits followed by trees followed by blobs. This
 # reverses the order, which requires backtracking to find the context of a
-# blob. We'll start with a fresh gitmodules-only tree to make it simpler.
+# blob. We'll start with a fresh shitmodules-only tree to make it simpler.
 test_expect_success 'create oddly ordered pack' '
-	git checkout --orphan odd &&
-	git rm -rf --cached . &&
-	git add .gitmodules &&
-	git commit -m odd &&
+	shit checkout --orphan odd &&
+	shit rm -rf --cached . &&
+	shit add .shitmodules &&
+	shit commit -m odd &&
 	{
 		pack_header 3 &&
-		pack_obj $(git rev-parse HEAD:.gitmodules) &&
-		pack_obj $(git rev-parse HEAD^{tree}) &&
-		pack_obj $(git rev-parse HEAD)
+		pack_obj $(shit rev-parse HEAD:.shitmodules) &&
+		pack_obj $(shit rev-parse HEAD^{tree}) &&
+		pack_obj $(shit rev-parse HEAD)
 	} >odd.pack &&
 	pack_trailer odd.pack
 '
 
 test_expect_success 'transfer.fsckObjects handles odd pack (unpack)' '
-	rm -rf dst.git &&
-	git init --bare dst.git &&
-	test_must_fail git -C dst.git unpack-objects --strict <odd.pack
+	rm -rf dst.shit &&
+	shit init --bare dst.shit &&
+	test_must_fail shit -C dst.shit unpack-objects --strict <odd.pack
 '
 
 test_expect_success 'transfer.fsckObjects handles odd pack (index)' '
-	rm -rf dst.git &&
-	git init --bare dst.git &&
-	test_must_fail git -C dst.git index-pack --strict --stdin <odd.pack
+	rm -rf dst.shit &&
+	shit init --bare dst.shit &&
+	test_must_fail shit -C dst.shit index-pack --strict --stdin <odd.pack
 '
 
 test_expect_success 'index-pack --strict works for non-repo pack' '
-	rm -rf dst.git &&
-	git init --bare dst.git &&
-	cp odd.pack dst.git &&
-	test_must_fail git -C dst.git index-pack --strict odd.pack 2>output &&
-	# Make sure we fail due to bad gitmodules content, not because we
+	rm -rf dst.shit &&
+	shit init --bare dst.shit &&
+	cp odd.pack dst.shit &&
+	test_must_fail shit -C dst.shit index-pack --strict odd.pack 2>output &&
+	# Make sure we fail due to bad shitmodules content, not because we
 	# could not read the blob in the first place.
-	grep gitmodulesName output
+	grep shitmodulesName output
 '
 
 check_dotx_symlink () {
@@ -190,24 +190,24 @@ check_dotx_symlink () {
 	dir=symlink-$name-$type
 
 	test_expect_success "set up repo with symlinked $name ($type)" '
-		git init $dir &&
+		shit init $dir &&
 		(
 			cd $dir &&
 
 			# Make the tree directly to avoid index restrictions.
 			#
 			# Because symlinks store the target as a blob, choose
-			# a pathname that could be parsed as a .gitmodules file
+			# a pathname that could be parsed as a .shitmodules file
 			# to trick naive non-symlink-aware checking.
 			tricky="[foo]bar=true" &&
-			content=$(git hash-object -w ../.gitmodules) &&
-			target=$(printf "$tricky" | git hash-object -w --stdin) &&
+			content=$(shit hash-object -w ../.shitmodules) &&
+			target=$(printf "$tricky" | shit hash-object -w --stdin) &&
 			{
 				printf "100644 blob $content\t$tricky\n" &&
 				printf "120000 blob $target\t$path\n"
 			} >bad-tree
 		) &&
-		tree=$(git -C $dir mktree <$dir/bad-tree)
+		tree=$(shit -C $dir mktree <$dir/bad-tree)
 	'
 
 	test_expect_success "fsck detects symlinked $name ($type)" '
@@ -216,7 +216,7 @@ check_dotx_symlink () {
 
 			# Check not only that we fail, but that it is due to the
 			# symlink detector
-			$fsck_must_fail git fsck 2>output &&
+			$fsck_must_fail shit fsck 2>output &&
 			grep "$fsck_prefix.*tree $tree: ${name}Symlink" output
 		)
 	'
@@ -224,108 +224,108 @@ check_dotx_symlink () {
 	test -n "$refuse_index" &&
 	test_expect_success "refuse to load symlinked $name into index ($type)" '
 		test_must_fail \
-			git -C $dir \
+			shit -C $dir \
 			    -c core.protectntfs \
 			    -c core.protecthfs \
 			    read-tree $tree 2>err &&
 		grep "invalid path.*$name" err &&
-		git -C $dir ls-files -s >out &&
+		shit -C $dir ls-files -s >out &&
 		test_must_be_empty out
 	'
 }
 
-check_dotx_symlink gitmodules vanilla .gitmodules
-check_dotx_symlink gitmodules ntfs ".gitmodules ."
-check_dotx_symlink gitmodules hfs ".${u200c}gitmodules"
+check_dotx_symlink shitmodules vanilla .shitmodules
+check_dotx_symlink shitmodules ntfs ".shitmodules ."
+check_dotx_symlink shitmodules hfs ".${u200c}shitmodules"
 
-check_dotx_symlink --warning gitattributes vanilla .gitattributes
-check_dotx_symlink --warning gitattributes ntfs ".gitattributes ."
-check_dotx_symlink --warning gitattributes hfs ".${u200c}gitattributes"
+check_dotx_symlink --warning shitattributes vanilla .shitattributes
+check_dotx_symlink --warning shitattributes ntfs ".shitattributes ."
+check_dotx_symlink --warning shitattributes hfs ".${u200c}shitattributes"
 
-check_dotx_symlink --warning gitignore vanilla .gitignore
-check_dotx_symlink --warning gitignore ntfs ".gitignore ."
-check_dotx_symlink --warning gitignore hfs ".${u200c}gitignore"
+check_dotx_symlink --warning shitignore vanilla .shitignore
+check_dotx_symlink --warning shitignore ntfs ".shitignore ."
+check_dotx_symlink --warning shitignore hfs ".${u200c}shitignore"
 
 check_dotx_symlink --warning mailmap vanilla .mailmap
 check_dotx_symlink --warning mailmap ntfs ".mailmap ."
 check_dotx_symlink --warning mailmap hfs ".${u200c}mailmap"
 
-test_expect_success 'fsck detects non-blob .gitmodules' '
-	git init non-blob &&
+test_expect_success 'fsck detects non-blob .shitmodules' '
+	shit init non-blob &&
 	(
 		cd non-blob &&
 
 		# As above, make the funny tree directly to avoid index
 		# restrictions.
 		mkdir subdir &&
-		cp ../.gitmodules subdir/file &&
-		git add subdir/file &&
-		git commit -m ok &&
-		git ls-tree HEAD | sed s/subdir/.gitmodules/ | git mktree &&
+		cp ../.shitmodules subdir/file &&
+		shit add subdir/file &&
+		shit commit -m ok &&
+		shit ls-tree HEAD | sed s/subdir/.shitmodules/ | shit mktree &&
 
-		test_must_fail git fsck 2>output &&
-		test_grep gitmodulesBlob output
+		test_must_fail shit fsck 2>output &&
+		test_grep shitmodulesBlob output
 	)
 '
 
-test_expect_success 'fsck detects corrupt .gitmodules' '
-	git init corrupt &&
+test_expect_success 'fsck detects corrupt .shitmodules' '
+	shit init corrupt &&
 	(
 		cd corrupt &&
 
-		echo "[broken" >.gitmodules &&
-		git add .gitmodules &&
-		git commit -m "broken gitmodules" &&
+		echo "[broken" >.shitmodules &&
+		shit add .shitmodules &&
+		shit commit -m "broken shitmodules" &&
 
-		git fsck 2>output &&
-		test_grep gitmodulesParse output &&
+		shit fsck 2>output &&
+		test_grep shitmodulesParse output &&
 		test_grep ! "bad config" output
 	)
 '
 
-test_expect_success WINDOWS 'prevent git~1 squatting on Windows' '
-	git init squatting &&
+test_expect_success WINDOWS 'prevent shit~1 squatting on Windows' '
+	shit init squatting &&
 	(
 		cd squatting &&
 		mkdir a &&
-		touch a/..git &&
-		git add a/..git &&
+		touch a/..shit &&
+		shit add a/..shit &&
 		test_tick &&
-		git commit -m initial &&
+		shit commit -m initial &&
 
 		modules="$(test_write_lines \
 			"[submodule \"b.\"]" "url = ." "path = c" \
 			"[submodule \"b\"]" "url = ." "path = d\\\\a" |
-			git hash-object -w --stdin)" &&
-		rev="$(git rev-parse --verify HEAD)" &&
-		hash="$(echo x | git hash-object -w --stdin)" &&
-		test_must_fail git update-index --add \
+			shit hash-object -w --stdin)" &&
+		rev="$(shit rev-parse --verify HEAD)" &&
+		hash="$(echo x | shit hash-object -w --stdin)" &&
+		test_must_fail shit update-index --add \
 			--cacheinfo 160000,$rev,d\\a 2>err &&
 		test_grep "Invalid path" err &&
-		git -c core.protectNTFS=false update-index --add \
-			--cacheinfo 100644,$modules,.gitmodules \
+		shit -c core.protectNTFS=false update-index --add \
+			--cacheinfo 100644,$modules,.shitmodules \
 			--cacheinfo 160000,$rev,c \
 			--cacheinfo 160000,$rev,d\\a \
 			--cacheinfo 100644,$hash,d./a/x \
-			--cacheinfo 100644,$hash,d./a/..git &&
+			--cacheinfo 100644,$hash,d./a/..shit &&
 		test_tick &&
-		git -c core.protectNTFS=false commit -m "module"
+		shit -c core.protectNTFS=false commit -m "module"
 	) &&
 	if test_have_prereq MINGW
 	then
-		test_must_fail git -c core.protectNTFS=false \
+		test_must_fail shit -c core.protectNTFS=false \
 			clone --recurse-submodules squatting squatting-clone 2>err &&
 		test_grep -e "directory not empty" -e "not an empty directory" err &&
-		! grep gitdir squatting-clone/d/a/git~2
+		! grep shitdir squatting-clone/d/a/shit~2
 	fi
 '
 
-test_expect_success 'setup submodules with nested git dirs' '
-	git init nested &&
+test_expect_success 'setup submodules with nested shit dirs' '
+	shit init nested &&
 	test_commit -C nested nested &&
 	(
 		cd nested &&
-		cat >.gitmodules <<-EOF &&
+		cat >.shitmodules <<-EOF &&
 		[submodule "hippo"]
 			url = .
 			path = thing1
@@ -333,44 +333,44 @@ test_expect_success 'setup submodules with nested git dirs' '
 			url = .
 			path = thing2
 		EOF
-		git clone . thing1 &&
-		git clone . thing2 &&
-		git add .gitmodules thing1 thing2 &&
+		shit clone . thing1 &&
+		shit clone . thing2 &&
+		shit add .shitmodules thing1 thing2 &&
 		test_tick &&
-		git commit -m nested
+		shit commit -m nested
 	)
 '
 
-test_expect_success 'git dirs of sibling submodules must not be nested' '
-	test_must_fail git clone --recurse-submodules nested clone 2>err &&
-	test_grep "is inside git dir" err
+test_expect_success 'shit dirs of sibling submodules must not be nested' '
+	test_must_fail shit clone --recurse-submodules nested clone 2>err &&
+	test_grep "is inside shit dir" err
 '
 
-test_expect_success 'submodule git dir nesting detection must work with parallel cloning' '
-	test_must_fail git clone --recurse-submodules --jobs=2 nested clone_parallel 2>err &&
+test_expect_success 'submodule shit dir nesting detection must work with parallel cloning' '
+	test_must_fail shit clone --recurse-submodules --jobs=2 nested clone_parallel 2>err &&
 	cat err &&
-	grep -E "(already exists|is inside git dir|not a git repository)" err &&
+	grep -E "(already exists|is inside shit dir|not a shit repository)" err &&
 	{
-		test_path_is_missing .git/modules/hippo/HEAD ||
-		test_path_is_missing .git/modules/hippo/hooks/HEAD
+		test_path_is_missing .shit/modules/hippo/HEAD ||
+		test_path_is_missing .shit/modules/hippo/hooks/HEAD
 	}
 '
 
-test_expect_success 'checkout -f --recurse-submodules must not use a nested gitdir' '
-	git clone nested nested_checkout &&
+test_expect_success 'checkout -f --recurse-submodules must not use a nested shitdir' '
+	shit clone nested nested_checkout &&
 	(
 		cd nested_checkout &&
-		git submodule init &&
-		git submodule update thing1 &&
-		mkdir -p .git/modules/hippo/hooks/refs &&
-		mkdir -p .git/modules/hippo/hooks/objects/info &&
-		echo "../../../../objects" >.git/modules/hippo/hooks/objects/info/alternates &&
-		echo "ref: refs/heads/master" >.git/modules/hippo/hooks/HEAD
+		shit submodule init &&
+		shit submodule update thing1 &&
+		mkdir -p .shit/modules/hippo/hooks/refs &&
+		mkdir -p .shit/modules/hippo/hooks/objects/info &&
+		echo "../../../../objects" >.shit/modules/hippo/hooks/objects/info/alternates &&
+		echo "ref: refs/heads/master" >.shit/modules/hippo/hooks/HEAD
 	) &&
-	test_must_fail git -C nested_checkout checkout -f --recurse-submodules HEAD 2>err &&
+	test_must_fail shit -C nested_checkout checkout -f --recurse-submodules HEAD 2>err &&
 	cat err &&
-	grep "is inside git dir" err &&
-	test_path_is_missing nested_checkout/thing2/.git
+	grep "is inside shit dir" err &&
+	test_path_is_missing nested_checkout/thing2/.shit
 '
 
 test_done

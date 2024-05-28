@@ -37,8 +37,8 @@ static inline uint64_t default_bswap64(uint64_t val)
 
 #if defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
 
-#define bswap32 git_bswap32
-static inline uint32_t git_bswap32(uint32_t x)
+#define bswap32 shit_bswap32
+static inline uint32_t shit_bswap32(uint32_t x)
 {
 	uint32_t result;
 	if (__builtin_constant_p(x))
@@ -48,9 +48,9 @@ static inline uint32_t git_bswap32(uint32_t x)
 	return result;
 }
 
-#define bswap64 git_bswap64
+#define bswap64 shit_bswap64
 #if defined(__x86_64__)
-static inline uint64_t git_bswap64(uint64_t x)
+static inline uint64_t shit_bswap64(uint64_t x)
 {
 	uint64_t result;
 	if (__builtin_constant_p(x))
@@ -60,15 +60,15 @@ static inline uint64_t git_bswap64(uint64_t x)
 	return result;
 }
 #else
-static inline uint64_t git_bswap64(uint64_t x)
+static inline uint64_t shit_bswap64(uint64_t x)
 {
 	union { uint64_t i64; uint32_t i32[2]; } tmp, result;
 	if (__builtin_constant_p(x))
 		result.i64 = default_bswap64(x);
 	else {
 		tmp.i64 = x;
-		result.i32[0] = git_bswap32(tmp.i32[1]);
-		result.i32[1] = git_bswap32(tmp.i32[0]);
+		result.i32[0] = shit_bswap32(tmp.i32[1]);
+		result.i32[1] = shit_bswap32(tmp.i32[0]);
 	}
 	return result.i64;
 }
@@ -106,36 +106,36 @@ static inline uint64_t git_bswap64(uint64_t x)
 
 #if defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && defined(__BIG_ENDIAN)
 
-# define GIT_BYTE_ORDER __BYTE_ORDER
-# define GIT_LITTLE_ENDIAN __LITTLE_ENDIAN
-# define GIT_BIG_ENDIAN __BIG_ENDIAN
+# define shit_BYTE_ORDER __BYTE_ORDER
+# define shit_LITTLE_ENDIAN __LITTLE_ENDIAN
+# define shit_BIG_ENDIAN __BIG_ENDIAN
 
 #elif defined(BYTE_ORDER) && defined(LITTLE_ENDIAN) && defined(BIG_ENDIAN)
 
-# define GIT_BYTE_ORDER BYTE_ORDER
-# define GIT_LITTLE_ENDIAN LITTLE_ENDIAN
-# define GIT_BIG_ENDIAN BIG_ENDIAN
+# define shit_BYTE_ORDER BYTE_ORDER
+# define shit_LITTLE_ENDIAN LITTLE_ENDIAN
+# define shit_BIG_ENDIAN BIG_ENDIAN
 
 #else
 
-# define GIT_BIG_ENDIAN 4321
-# define GIT_LITTLE_ENDIAN 1234
+# define shit_BIG_ENDIAN 4321
+# define shit_LITTLE_ENDIAN 1234
 
 # if defined(_BIG_ENDIAN) && !defined(_LITTLE_ENDIAN)
-#  define GIT_BYTE_ORDER GIT_BIG_ENDIAN
+#  define shit_BYTE_ORDER shit_BIG_ENDIAN
 # elif defined(_LITTLE_ENDIAN) && !defined(_BIG_ENDIAN)
-#  define GIT_BYTE_ORDER GIT_LITTLE_ENDIAN
+#  define shit_BYTE_ORDER shit_LITTLE_ENDIAN
 # elif defined(__THW_BIG_ENDIAN__) && !defined(__THW_LITTLE_ENDIAN__)
-#  define GIT_BYTE_ORDER GIT_BIG_ENDIAN
+#  define shit_BYTE_ORDER shit_BIG_ENDIAN
 # elif defined(__THW_LITTLE_ENDIAN__) && !defined(__THW_BIG_ENDIAN__)
-#  define GIT_BYTE_ORDER GIT_LITTLE_ENDIAN
+#  define shit_BYTE_ORDER shit_LITTLE_ENDIAN
 # else
 #  error "Cannot determine endianness"
 # endif
 
 #endif
 
-#if GIT_BYTE_ORDER == GIT_BIG_ENDIAN
+#if shit_BYTE_ORDER == shit_BIG_ENDIAN
 # define ntohll(n) (n)
 # define htonll(n) (n)
 #else

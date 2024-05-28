@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "dir.h"
 #include "tr2_sysenv.h"
@@ -9,7 +9,7 @@
  */
 struct tr2_sysenv_entry {
 	const char *env_var_name;
-	const char *git_config_name;
+	const char *shit_config_name;
 
 	char *value;
 	unsigned int getenv_called : 1;
@@ -21,38 +21,38 @@ struct tr2_sysenv_entry {
  * The strings in this table are constant and must match the published
  * config and environment variable names as described in the documentation.
  *
- * We do not define entries for the GIT_TRACE2_PARENT_* environment
+ * We do not define entries for the shit_TRACE2_PARENT_* environment
  * variables because they are transient and used to pass information
- * from parent to child git processes, rather than settings.
+ * from parent to child shit processes, rather than settings.
  */
 /* clang-format off */
 static struct tr2_sysenv_entry tr2_sysenv_settings[] = {
-	[TR2_SYSENV_CFG_PARAM]     = { "GIT_TRACE2_CONFIG_PARAMS",
+	[TR2_SYSENV_CFG_PARAM]     = { "shit_TRACE2_CONFIG_PARAMS",
 				       "trace2.configparams" },
-	[TR2_SYSENV_ENV_VARS]      = { "GIT_TRACE2_ENV_VARS",
+	[TR2_SYSENV_ENV_VARS]      = { "shit_TRACE2_ENV_VARS",
 				       "trace2.envvars" },
 
-	[TR2_SYSENV_DST_DEBUG]     = { "GIT_TRACE2_DST_DEBUG",
+	[TR2_SYSENV_DST_DEBUG]     = { "shit_TRACE2_DST_DEBUG",
 				       "trace2.destinationdebug" },
 
-	[TR2_SYSENV_NORMAL]        = { "GIT_TRACE2",
+	[TR2_SYSENV_NORMAL]        = { "shit_TRACE2",
 				       "trace2.normaltarget" },
-	[TR2_SYSENV_NORMAL_BRIEF]  = { "GIT_TRACE2_BRIEF",
+	[TR2_SYSENV_NORMAL_BRIEF]  = { "shit_TRACE2_BRIEF",
 				       "trace2.normalbrief" },
 
-	[TR2_SYSENV_EVENT]         = { "GIT_TRACE2_EVENT",
+	[TR2_SYSENV_EVENT]         = { "shit_TRACE2_EVENT",
 				       "trace2.eventtarget" },
-	[TR2_SYSENV_EVENT_BRIEF]   = { "GIT_TRACE2_EVENT_BRIEF",
+	[TR2_SYSENV_EVENT_BRIEF]   = { "shit_TRACE2_EVENT_BRIEF",
 				       "trace2.eventbrief" },
-	[TR2_SYSENV_EVENT_NESTING] = { "GIT_TRACE2_EVENT_NESTING",
+	[TR2_SYSENV_EVENT_NESTING] = { "shit_TRACE2_EVENT_NESTING",
 				       "trace2.eventnesting" },
 
-	[TR2_SYSENV_PERF]          = { "GIT_TRACE2_PERF",
+	[TR2_SYSENV_PERF]          = { "shit_TRACE2_PERF",
 				       "trace2.perftarget" },
-	[TR2_SYSENV_PERF_BRIEF]    = { "GIT_TRACE2_PERF_BRIEF",
+	[TR2_SYSENV_PERF_BRIEF]    = { "shit_TRACE2_PERF_BRIEF",
 				       "trace2.perfbrief" },
 
-	[TR2_SYSENV_MAX_FILES]     = { "GIT_TRACE2_MAX_FILES",
+	[TR2_SYSENV_MAX_FILES]     = { "shit_TRACE2_MAX_FILES",
 				       "trace2.maxfiles" },
 };
 /* clang-format on */
@@ -67,7 +67,7 @@ static int tr2_sysenv_cb(const char *key, const char *value,
 		return 0;
 
 	for (k = 0; k < ARRAY_SIZE(tr2_sysenv_settings); k++) {
-		if (!strcmp(key, tr2_sysenv_settings[k].git_config_name)) {
+		if (!strcmp(key, tr2_sysenv_settings[k].shit_config_name)) {
 			if (!value)
 				return config_error_nonbool(key);
 			free(tr2_sysenv_settings[k].value);
@@ -80,7 +80,7 @@ static int tr2_sysenv_cb(const char *key, const char *value,
 }
 
 /*
- * Load Trace2 settings from the system config (usually "/etc/gitconfig"
+ * Load Trace2 settings from the system config (usually "/etc/shitconfig"
  * unless we were built with a runtime-prefix).  These are intended to
  * define the default values for Trace2 as requested by the administrator.
  *

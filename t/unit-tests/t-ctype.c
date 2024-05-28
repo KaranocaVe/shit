@@ -15,7 +15,7 @@
 	test__run_end(!skip, TEST_LOCATION(), #class " works"); \
 } while (0)
 
-#define DIGIT "0123456789"
+#define DIshit "0123456789"
 #define LOWER "abcdefghijklmnopqrstuvwxyz"
 #define UPPER "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define PUNCT "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
@@ -35,9 +35,9 @@
 
 int cmd_main(int argc, const char **argv) {
 	TEST_CHAR_CLASS(isspace, " \n\r\t");
-	TEST_CHAR_CLASS(isdigit, DIGIT);
+	TEST_CHAR_CLASS(isdishit, DIshit);
 	TEST_CHAR_CLASS(isalpha, LOWER UPPER);
-	TEST_CHAR_CLASS(isalnum, LOWER UPPER DIGIT);
+	TEST_CHAR_CLASS(isalnum, LOWER UPPER DIshit);
 	TEST_CHAR_CLASS(is_glob_special, "*?[\\");
 	TEST_CHAR_CLASS(is_regex_special, "$()*+.?[\\^{|");
 	TEST_CHAR_CLASS(is_pathspec_magic, "!\"#%&',-/:;<=>@_`~");
@@ -46,8 +46,8 @@ int cmd_main(int argc, const char **argv) {
 	TEST_CHAR_CLASS(isupper, UPPER);
 	TEST_CHAR_CLASS(iscntrl, CNTRL);
 	TEST_CHAR_CLASS(ispunct, PUNCT);
-	TEST_CHAR_CLASS(isxdigit, DIGIT "abcdefABCDEF");
-	TEST_CHAR_CLASS(isprint, LOWER UPPER DIGIT PUNCT " ");
+	TEST_CHAR_CLASS(isxdishit, DIshit "abcdefABCDEF");
+	TEST_CHAR_CLASS(isprint, LOWER UPPER DIshit PUNCT " ");
 
 	return test_done();
 }

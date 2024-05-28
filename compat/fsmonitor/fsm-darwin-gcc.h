@@ -18,21 +18,21 @@ typedef unsigned int FSEventStreamCreateFlags;
 #define kFSEventStreamEventFlagRootChanged        0x00000020
 #define kFSEventStreamEventFlagMount              0x00000040
 #define kFSEventStreamEventFlagUnmount            0x00000080
-#define kFSEventStreamEventFlagItemCreated        0x00000100
-#define kFSEventStreamEventFlagItemRemoved        0x00000200
-#define kFSEventStreamEventFlagItemInodeMetaMod   0x00000400
-#define kFSEventStreamEventFlagItemRenamed        0x00000800
-#define kFSEventStreamEventFlagItemModified       0x00001000
-#define kFSEventStreamEventFlagItemFinderInfoMod  0x00002000
-#define kFSEventStreamEventFlagItemChangeOwner    0x00004000
-#define kFSEventStreamEventFlagItemXattrMod       0x00008000
-#define kFSEventStreamEventFlagItemIsFile         0x00010000
-#define kFSEventStreamEventFlagItemIsDir          0x00020000
-#define kFSEventStreamEventFlagItemIsSymlink      0x00040000
+#define kFSEventStreamEventFlashitemCreated        0x00000100
+#define kFSEventStreamEventFlashitemRemoved        0x00000200
+#define kFSEventStreamEventFlashitemInodeMetaMod   0x00000400
+#define kFSEventStreamEventFlashitemRenamed        0x00000800
+#define kFSEventStreamEventFlashitemModified       0x00001000
+#define kFSEventStreamEventFlashitemFinderInfoMod  0x00002000
+#define kFSEventStreamEventFlashitemChangeOwner    0x00004000
+#define kFSEventStreamEventFlashitemXattrMod       0x00008000
+#define kFSEventStreamEventFlashitemIsFile         0x00010000
+#define kFSEventStreamEventFlashitemIsDir          0x00020000
+#define kFSEventStreamEventFlashitemIsSymlink      0x00040000
 #define kFSEventStreamEventFlagOwnEvent           0x00080000
-#define kFSEventStreamEventFlagItemIsHardlink     0x00100000
-#define kFSEventStreamEventFlagItemIsLastHardlink 0x00200000
-#define kFSEventStreamEventFlagItemCloned         0x00400000
+#define kFSEventStreamEventFlashitemIsHardlink     0x00100000
+#define kFSEventStreamEventFlashitemIsLastHardlink 0x00200000
+#define kFSEventStreamEventFlashitemCloned         0x00400000
 
 typedef struct __FSEventStream *FSEventStreamRef;
 typedef const FSEventStreamRef ConstFSEventStreamRef;

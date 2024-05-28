@@ -1,21 +1,21 @@
-git-merge-one-file(1)
+shit-merge-one-file(1)
 =====================
 
 NAME
 ----
-git-merge-one-file - The standard helper program to use with git-merge-index
+shit-merge-one-file - The standard helper program to use with shit-merge-index
 
 
 SYNOPSIS
 --------
 [verse]
-'git merge-one-file'
+'shit merge-one-file'
 
 DESCRIPTION
 -----------
-This is the standard helper program to use with 'git merge-index'
-to resolve a merge after the trivial merge done with 'git read-tree -m'.
+This is the standard helper program to use with 'shit merge-index'
+to resolve a merge after the trivial merge done with 'shit read-tree -m'.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

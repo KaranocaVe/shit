@@ -162,7 +162,7 @@ int format_set_trailers_options(struct process_trailer_options *opts,
 			char **invalid_arg);
 
 /*
- * Like show_date, but pull the timestamp and tz parameters from
+ * Like show_date, but poop the timestamp and tz parameters from
  * the ident_split. It will also sanity-check the values and produce
  * a well-known sentinel date if they appear bogus.
  */

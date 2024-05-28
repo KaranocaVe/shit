@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git p4 rename'
+test_description='shit p4 rename'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 test_expect_success 'start p4d' '
 	start_p4d
@@ -55,48 +55,48 @@ test_expect_success 'create files' '
 # Repeat, this time with a smaller threshold and confirm that the rename is
 # detected in P4.
 test_expect_success 'detect renames' '
-	git p4 clone --dest="$git" //depot@all &&
-	test_when_finished cleanup_git &&
+	shit p4 clone --dest="$shit" //depot@all &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
-		git config git-p4.skipSubmitEdit true &&
+		cd "$shit" &&
+		shit config shit-p4.skipSubmitEdit true &&
 
-		git mv file1 file4 &&
-		git commit -a -m "Rename file1 to file4" &&
-		git diff-tree -r -M HEAD &&
-		git p4 submit &&
+		shit mv file1 file4 &&
+		shit commit -a -m "Rename file1 to file4" &&
+		shit diff-tree -r -M HEAD &&
+		shit p4 submit &&
 		p4 filelog //depot/file4 >filelog &&
 		! grep " from //depot" filelog &&
 
-		git mv file4 file5 &&
-		git commit -a -m "Rename file4 to file5" &&
-		git diff-tree -r -M HEAD &&
-		git config git-p4.detectRenames true &&
-		git p4 submit &&
+		shit mv file4 file5 &&
+		shit commit -a -m "Rename file4 to file5" &&
+		shit diff-tree -r -M HEAD &&
+		shit config shit-p4.detectRenames true &&
+		shit p4 submit &&
 		p4 filelog //depot/file5 >filelog &&
 		grep " from //depot/file4" filelog &&
 
-		git mv file5 file6 &&
+		shit mv file5 file6 &&
 		echo update >>file6 &&
-		git add file6 &&
-		git commit -a -m "Rename file5 to file6 with changes" &&
-		git diff-tree -r -M HEAD &&
-		level=$(git diff-tree -r -M HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/R0*//") &&
+		shit add file6 &&
+		shit commit -a -m "Rename file5 to file6 with changes" &&
+		shit diff-tree -r -M HEAD &&
+		level=$(shit diff-tree -r -M HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/R0*//") &&
 		test -n "$level" && test "$level" -gt 0 && test "$level" -lt 98 &&
-		git config git-p4.detectRenames $(($level + 2)) &&
-		git p4 submit &&
+		shit config shit-p4.detectRenames $(($level + 2)) &&
+		shit p4 submit &&
 		p4 filelog //depot/file6 >filelog &&
 		! grep " from //depot" filelog &&
 
-		git mv file6 file7 &&
+		shit mv file6 file7 &&
 		echo update >>file7 &&
-		git add file7 &&
-		git commit -a -m "Rename file6 to file7 with changes" &&
-		git diff-tree -r -M HEAD &&
-		level=$(git diff-tree -r -M HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/R0*//") &&
+		shit add file7 &&
+		shit commit -a -m "Rename file6 to file7 with changes" &&
+		shit diff-tree -r -M HEAD &&
+		level=$(shit diff-tree -r -M HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/R0*//") &&
 		test -n "$level" && test "$level" -gt 2 && test "$level" -lt 100 &&
-		git config git-p4.detectRenames $(($level - 2)) &&
-		git p4 submit &&
+		shit config shit-p4.detectRenames $(($level - 2)) &&
+		shit p4 submit &&
 		p4 filelog //depot/file7 >filelog &&
 		grep " from //depot/file6" filelog
 	)
@@ -114,99 +114,99 @@ test_expect_success 'detect renames' '
 # Modify and copy a file, configure a smaller threshold in detectCopies and
 # confirm that copy is detected in P4.
 test_expect_success 'detect copies' '
-	git p4 clone --dest="$git" //depot@all &&
-	test_when_finished cleanup_git &&
+	shit p4 clone --dest="$shit" //depot@all &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
-		git config git-p4.skipSubmitEdit true &&
+		cd "$shit" &&
+		shit config shit-p4.skipSubmitEdit true &&
 
 		echo "file8" >>file2 &&
-		git commit -a -m "Differentiate file2" &&
-		git p4 submit &&
+		shit commit -a -m "Differentiate file2" &&
+		shit p4 submit &&
 		cp file2 file8 &&
-		git add file8 &&
-		git commit -a -m "Copy file2 to file8" &&
-		git diff-tree -r -C HEAD &&
-		git p4 submit &&
+		shit add file8 &&
+		shit commit -a -m "Copy file2 to file8" &&
+		shit diff-tree -r -C HEAD &&
+		shit p4 submit &&
 		p4 filelog //depot/file8 &&
 		! p4 filelog //depot/file8 | grep -q "branch from" &&
 
 		echo "file9" >>file2 &&
-		git commit -a -m "Differentiate file2" &&
-		git p4 submit &&
+		shit commit -a -m "Differentiate file2" &&
+		shit p4 submit &&
 
 		cp file2 file9 &&
-		git add file9 &&
-		git commit -a -m "Copy file2 to file9" &&
-		git diff-tree -r -C HEAD &&
-		git config git-p4.detectCopies true &&
-		git p4 submit &&
+		shit add file9 &&
+		shit commit -a -m "Copy file2 to file9" &&
+		shit diff-tree -r -C HEAD &&
+		shit config shit-p4.detectCopies true &&
+		shit p4 submit &&
 		p4 filelog //depot/file9 &&
 		! p4 filelog //depot/file9 | grep -q "branch from" &&
 
 		echo "file10" >>file2 &&
-		git commit -a -m "Differentiate file2" &&
-		git p4 submit &&
+		shit commit -a -m "Differentiate file2" &&
+		shit p4 submit &&
 
 		echo "file2" >>file2 &&
 		cp file2 file10 &&
-		git add file2 file10 &&
-		git commit -a -m "Modify and copy file2 to file10" &&
-		git diff-tree -r -C HEAD &&
-		src=$(git diff-tree -r -C HEAD | sed 1d | sed 2d | cut -f2) &&
+		shit add file2 file10 &&
+		shit commit -a -m "Modify and copy file2 to file10" &&
+		shit diff-tree -r -C HEAD &&
+		src=$(shit diff-tree -r -C HEAD | sed 1d | sed 2d | cut -f2) &&
 		test "$src" = file2 &&
-		git p4 submit &&
+		shit p4 submit &&
 		p4 filelog //depot/file10 &&
 		p4 filelog //depot/file10 | grep -q "branch from //depot/file2" &&
 
 		echo "file11" >>file2 &&
-		git commit -a -m "Differentiate file2" &&
-		git p4 submit &&
+		shit commit -a -m "Differentiate file2" &&
+		shit p4 submit &&
 
 		cp file2 file11 &&
-		git add file11 &&
-		git commit -a -m "Copy file2 to file11" &&
-		git diff-tree -r -C --find-copies-harder HEAD &&
-		src=$(git diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f2) &&
+		shit add file11 &&
+		shit commit -a -m "Copy file2 to file11" &&
+		shit diff-tree -r -C --find-copies-harder HEAD &&
+		src=$(shit diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f2) &&
 		test "$src" = file2 &&
-		git config git-p4.detectCopiesHarder true &&
-		git p4 submit &&
+		shit config shit-p4.detectCopiesHarder true &&
+		shit p4 submit &&
 		p4 filelog //depot/file11 &&
 		p4 filelog //depot/file11 | grep -q "branch from //depot/file2" &&
 
 		echo "file12" >>file2 &&
-		git commit -a -m "Differentiate file2" &&
-		git p4 submit &&
+		shit commit -a -m "Differentiate file2" &&
+		shit p4 submit &&
 
 		cp file2 file12 &&
 		echo "some text" >>file12 &&
-		git add file12 &&
-		git commit -a -m "Copy file2 to file12 with changes" &&
-		git diff-tree -r -C --find-copies-harder HEAD &&
-		level=$(git diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/C0*//") &&
+		shit add file12 &&
+		shit commit -a -m "Copy file2 to file12 with changes" &&
+		shit diff-tree -r -C --find-copies-harder HEAD &&
+		level=$(shit diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/C0*//") &&
 		test -n "$level" && test "$level" -gt 0 && test "$level" -lt 98 &&
-		src=$(git diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f2) &&
+		src=$(shit diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f2) &&
 		test "$src" = file2 &&
-		git config git-p4.detectCopies $(($level + 2)) &&
-		git p4 submit &&
+		shit config shit-p4.detectCopies $(($level + 2)) &&
+		shit p4 submit &&
 		p4 filelog //depot/file12 &&
 		! p4 filelog //depot/file12 | grep -q "branch from" &&
 
 		echo "file13" >>file2 &&
-		git commit -a -m "Differentiate file2" &&
-		git p4 submit &&
+		shit commit -a -m "Differentiate file2" &&
+		shit p4 submit &&
 
 		cp file2 file13 &&
 		echo "different text" >>file13 &&
-		git add file13 &&
-		git commit -a -m "Copy file2 to file13 with changes" &&
-		git diff-tree -r -C --find-copies-harder HEAD &&
-		level=$(git diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/C0*//") &&
+		shit add file13 &&
+		shit commit -a -m "Copy file2 to file13 with changes" &&
+		shit diff-tree -r -C --find-copies-harder HEAD &&
+		level=$(shit diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f1 | cut -d" " -f5 | sed "s/C0*//") &&
 		test -n "$level" && test "$level" -gt 2 && test "$level" -lt 100 &&
-		src=$(git diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f2) &&
+		src=$(shit diff-tree -r -C --find-copies-harder HEAD | sed 1d | cut -f2) &&
 		test "$src" = file2 &&
-		git config git-p4.detectCopies $(($level - 2)) &&
-		git p4 submit &&
+		shit config shit-p4.detectCopies $(($level - 2)) &&
+		shit p4 submit &&
 		p4 filelog //depot/file13 &&
 		p4 filelog //depot/file13 | grep -q "branch from //depot/file2"
 	)
@@ -230,15 +230,15 @@ test_expect_success P4D_HAVE_CONFIGURABLE_RUN_MOVE_ALLOW \
 		p4 add move-disallow-file &&
 		p4 submit -d "add move-disallow-file"
 	) &&
-	test_when_finished cleanup_git &&
-	git p4 clone --dest="$git" //depot &&
+	test_when_finished cleanup_shit &&
+	shit p4 clone --dest="$shit" //depot &&
 	(
-		cd "$git" &&
-		git config git-p4.skipSubmitEdit true &&
-		git config git-p4.detectRenames true &&
-		git mv move-disallow-file move-disallow-file-moved &&
-		git commit -m "move move-disallow-file" &&
-		git p4 submit
+		cd "$shit" &&
+		shit config shit-p4.skipSubmitEdit true &&
+		shit config shit-p4.detectRenames true &&
+		shit mv move-disallow-file move-disallow-file-moved &&
+		shit commit -m "move move-disallow-file" &&
+		shit p4 submit
 	)
 '
 

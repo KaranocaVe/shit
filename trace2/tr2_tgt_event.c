@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "json-writer.h"
 #include "repository.h"
@@ -62,7 +62,7 @@ static int fn_init(void)
 
 	brief = tr2_sysenv_get(TR2_SYSENV_EVENT_BRIEF);
 	if (brief && *brief &&
-	    ((want_brief = git_parse_maybe_bool(brief)) != -1))
+	    ((want_brief = shit_parse_maybe_bool(brief)) != -1))
 		tr2env_event_be_brief = want_brief;
 
 	return want;
@@ -133,7 +133,7 @@ static void fn_version_fl(const char *file, int line)
 	jw_object_begin(&jw, 0);
 	event_fmt_prepare(event_name, file, line, NULL, &jw);
 	jw_object_string(&jw, "evt", TR2_EVENT_VERSION);
-	jw_object_string(&jw, "exe", git_version_string);
+	jw_object_string(&jw, "exe", shit_version_string);
 	jw_end(&jw);
 
 	tr2_dst_write_line(&tr2dst_event, &jw.json);
@@ -356,8 +356,8 @@ static void fn_child_start_fl(const char *file, int line,
 		jw_object_string(&jw, "cd", cmd->dir);
 	jw_object_bool(&jw, "use_shell", cmd->use_shell);
 	jw_object_inline_begin_array(&jw, "argv");
-	if (cmd->git_cmd)
-		jw_array_string(&jw, "git");
+	if (cmd->shit_cmd)
+		jw_array_string(&jw, "shit");
 	jw_array_argv(&jw, cmd->args.v);
 	jw_end(&jw);
 	jw_end(&jw);

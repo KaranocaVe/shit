@@ -42,7 +42,7 @@
  * file created by its parent.
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "path.h"
 #include "tempfile.h"
@@ -114,7 +114,7 @@ static void activate_tempfile(struct tempfile *tempfile)
 	static int initialized;
 
 	if (!initialized) {
-		sigchain_push_common(remove_tempfiles_on_signal);
+		sigchain_defecate_common(remove_tempfiles_on_signal);
 		atexit(remove_tempfiles_on_exit);
 		initialized = 1;
 	}
@@ -172,7 +172,7 @@ struct tempfile *mks_tempfile_sm(const char *filename_template, int suffixlen, i
 	struct tempfile *tempfile = new_tempfile();
 
 	strbuf_add_absolute_path(&tempfile->filename, filename_template);
-	tempfile->fd = git_mkstemps_mode(tempfile->filename.buf, suffixlen, mode);
+	tempfile->fd = shit_mkstemps_mode(tempfile->filename.buf, suffixlen, mode);
 	if (tempfile->fd < 0) {
 		deactivate_tempfile(tempfile);
 		return NULL;
@@ -191,7 +191,7 @@ struct tempfile *mks_tempfile_tsm(const char *filename_template, int suffixlen, 
 		tmpdir = "/tmp";
 
 	strbuf_addf(&tempfile->filename, "%s/%s", tmpdir, filename_template);
-	tempfile->fd = git_mkstemps_mode(tempfile->filename.buf, suffixlen, mode);
+	tempfile->fd = shit_mkstemps_mode(tempfile->filename.buf, suffixlen, mode);
 	if (tempfile->fd < 0) {
 		deactivate_tempfile(tempfile);
 		return NULL;

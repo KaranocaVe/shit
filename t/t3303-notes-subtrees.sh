@@ -2,8 +2,8 @@
 
 test_description='Test commit notes organized in subtrees'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -14,7 +14,7 @@ start_note_commit () {
 	test_tick &&
 	cat <<INPUT_END
 commit refs/notes/commits
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 notes
 COMMIT
@@ -26,7 +26,7 @@ INPUT_END
 }
 
 verify_notes () {
-	git log | grep "^    " > output &&
+	shit log | grep "^    " > output &&
 	i=$number_of_commits &&
 	while [ $i -gt 0 ]; do
 		echo "    commit #$i" &&
@@ -45,7 +45,7 @@ test_expect_success "setup: create $number_of_commits commits" '
 			test_tick &&
 			cat <<INPUT_END || return 1
 commit refs/heads/main
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 commit #$nr
 COMMIT
@@ -61,7 +61,7 @@ INPUT_END
 		test_tick &&
 		cat <<INPUT_END
 commit refs/notes/commits
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 no notes
 COMMIT
@@ -71,15 +71,15 @@ deleteall
 INPUT_END
 
 	) |
-	git fast-import --quiet &&
-	git config core.notesRef refs/notes/commits
+	shit fast-import --quiet &&
+	shit config core.notesRef refs/notes/commits
 '
 
 test_sha1_based () {
 	(
 		start_note_commit &&
 		nr=$number_of_commits &&
-		git rev-list refs/heads/main >out &&
+		shit rev-list refs/heads/main >out &&
 		while read sha1; do
 			note_path=$(echo "$sha1" | sed "$1")
 			cat <<INPUT_END &&
@@ -93,7 +93,7 @@ INPUT_END
 			nr=$(($nr-1))
 		done <out
 	) >gfi &&
-	git fast-import --quiet <gfi
+	shit fast-import --quiet <gfi
 }
 
 test_expect_success 'test notes in 2/38-fanout' 'test_sha1_based "s|^..|&/|"'
@@ -109,7 +109,7 @@ test_same_notes () {
 	(
 		start_note_commit &&
 		nr=$number_of_commits &&
-		git rev-list refs/heads/main |
+		shit rev-list refs/heads/main |
 		while read sha1; do
 			first_note_path=$(echo "$sha1" | sed "$1")
 			second_note_path=$(echo "$sha1" | sed "$2")
@@ -129,7 +129,7 @@ INPUT_END
 			nr=$(($nr-1))
 		done
 	) |
-	git fast-import --quiet
+	shit fast-import --quiet
 }
 
 test_expect_success 'test same notes in no fanout and 2/38-fanout' 'test_same_notes "s|^..|&/|" ""'
@@ -148,7 +148,7 @@ test_concatenated_notes () {
 	(
 		start_note_commit &&
 		nr=$number_of_commits &&
-		git rev-list refs/heads/main |
+		shit rev-list refs/heads/main |
 		while read sha1; do
 			first_note_path=$(echo "$sha1" | sed "$1")
 			second_note_path=$(echo "$sha1" | sed "$2")
@@ -168,11 +168,11 @@ INPUT_END
 			nr=$(($nr-1))
 		done
 	) |
-	git fast-import --quiet
+	shit fast-import --quiet
 }
 
 verify_concatenated_notes () {
-	git log | grep "^    " > output &&
+	shit log | grep "^    " > output &&
 	i=$number_of_commits &&
 	while [ $i -gt 0 ]; do
 		echo "    commit #$i" &&

@@ -17,7 +17,7 @@ cat >.vscode/settings.json.new <<\EOF ||
 {
     "C_Cpp.intelliSenseEngine": "Default",
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
-    "[git-commit]": {
+    "[shit-commit]": {
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 72
     },
@@ -49,10 +49,10 @@ cat >.vscode/settings.json.new <<\EOF ||
         "HEXSZ",
         "HKEY",
         "HKLM",
-        "IFGITLINK",
+        "IFshitLINK",
         "IFINVALID",
         "ISBROKEN",
-        "ISGITLINK",
+        "ISshitLINK",
         "ISSYMREF",
         "Junio",
         "LPDWORD",
@@ -107,8 +107,8 @@ cat >.vscode/settings.json.new <<\EOF ||
         "pnew",
         "pold",
         "ppinfo",
-        "pushf",
-        "pushv",
+        "defecatef",
+        "defecatev",
         "rawsz",
         "rebasing",
         "reencode",
@@ -220,7 +220,7 @@ case "$(uname -s)" in
 MINGW*)
 	GCCPATH="$(cygpath -am "$GCCPATH")"
 	GDBPATH="$(cygpath -am "$GDBPATH")"
-	MAKE_BASH="$(cygpath -am /git-cmd.exe) --command=usr\\\\bin\\\\bash.exe"
+	MAKE_BASH="$(cygpath -am /shit-cmd.exe) --command=usr\\\\bin\\\\bash.exe"
 	MAKECOMMAND="$MAKE_BASH -lc \\\"$MAKECOMMAND\\\""
 	OSNAME=Win32
 	X=.exe
@@ -269,7 +269,7 @@ cat >.vscode/launch.json.new <<EOF ||
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "\${workspaceFolder}/git$X",
+            "program": "\${workspaceFolder}/shit$X",
             "args": [],
             "stopAtEntry": false,
             "cwd": "\${workspaceFolder}",
@@ -299,18 +299,18 @@ vscode-init:
 	@mkdir -p .vscode && \
 	incs= && defs= && \
 	for e in $(ALL_CFLAGS) \
-			'-DGIT_EXEC_PATH="$(gitexecdir_SQ)"' \
-			'-DGIT_LOCALE_PATH="$(localedir_relative_SQ)"' \
+			'-Dshit_EXEC_PATH="$(shitexecdir_SQ)"' \
+			'-Dshit_LOCALE_PATH="$(localedir_relative_SQ)"' \
 			'-DBINDIR="$(bindir_relative_SQ)"' \
 			'-DFALLBACK_RUNTIME_PREFIX="$(prefix_SQ)"' \
-			'-DDEFAULT_GIT_TEMPLATE_DIR="$(template_dir_SQ)"' \
-			'-DETC_GITCONFIG="$(ETC_GITCONFIG_SQ)"' \
-			'-DETC_GITATTRIBUTES="$(ETC_GITATTRIBUTES_SQ)"' \
-			'-DGIT_LOCALE_PATH="$(localedir_relative_SQ)"' \
+			'-DDEFAULT_shit_TEMPLATE_DIR="$(template_dir_SQ)"' \
+			'-DETC_shitCONFIG="$(ETC_shitCONFIG_SQ)"' \
+			'-DETC_shitATTRIBUTES="$(ETC_shitATTRIBUTES_SQ)"' \
+			'-Dshit_LOCALE_PATH="$(localedir_relative_SQ)"' \
 			'-DCURL_DISABLE_TYPECHECK', \
-			'-DGIT_HTML_PATH="$(htmldir_relative_SQ)"' \
-			'-DGIT_MAN_PATH="$(mandir_relative_SQ)"' \
-			'-DGIT_INFO_PATH="$(infodir_relative_SQ)"'; do \
+			'-Dshit_HTML_PATH="$(htmldir_relative_SQ)"' \
+			'-Dshit_MAN_PATH="$(mandir_relative_SQ)"' \
+			'-Dshit_INFO_PATH="$(infodir_relative_SQ)"'; do \
 		case "$$e" in \
 		-I.) \
 			incs="$$(printf '% 16s"$${workspaceRoot}",\n%s' \
@@ -363,12 +363,12 @@ for file in .vscode/settings.json .vscode/tasks.json .vscode/launch.json
 do
 	if test -f $file
 	then
-		if git diff --no-index --quiet --exit-code $file $file.new
+		if shit diff --no-index --quiet --exit-code $file $file.new
 		then
 			rm $file.new
 		else
 			printf "The file $file.new has these changes:\n\n"
-			git --no-pager diff --no-index $file $file.new
+			shit --no-pager diff --no-index $file $file.new
 			printf "\n\nMaybe \`mv $file.new $file\`?\n\n"
 		fi
 	else

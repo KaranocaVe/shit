@@ -5,24 +5,24 @@ test_description='test show-branch'
 . ./test-lib.sh
 
 test_expect_success 'error descriptions on empty repository' '
-	current=$(git branch --show-current) &&
+	current=$(shit branch --show-current) &&
 	cat >expect <<-EOF &&
 	error: no commit on branch '\''$current'\'' yet
 	EOF
-	test_must_fail git branch --edit-description 2>actual &&
+	test_must_fail shit branch --edit-description 2>actual &&
 	test_cmp expect actual &&
-	test_must_fail git branch --edit-description $current 2>actual &&
+	test_must_fail shit branch --edit-description $current 2>actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'fatal descriptions on empty repository' '
-	current=$(git branch --show-current) &&
+	current=$(shit branch --show-current) &&
 	cat >expect <<-EOF &&
 	fatal: no commit on branch '\''$current'\'' yet
 	EOF
-	test_must_fail git branch --set-upstream-to=non-existent 2>actual &&
+	test_must_fail shit branch --set-upstream-to=non-existent 2>actual &&
 	test_cmp expect actual &&
-	test_must_fail git branch -c new-branch 2>actual &&
+	test_must_fail shit branch -c new-branch 2>actual &&
 	test_cmp expect actual
 '
 
@@ -30,10 +30,10 @@ test_expect_success 'setup' '
 	test_commit initial &&
 	for i in $(test_seq 1 10)
 	do
-		git checkout -b branch$i initial &&
+		shit checkout -b branch$i initial &&
 		test_commit --no-tag branch$i || return 1
 	done &&
-	git for-each-ref \
+	shit for-each-ref \
 		--sort=version:refname \
 		--format="%(refname:strip=2)" \
 		"refs/heads/branch*" >branches.sorted &&
@@ -64,7 +64,7 @@ test_expect_success 'setup' '
 '
 
 test_expect_success 'show-branch with more than 8 branches' '
-	git show-branch $(cat branches.sorted) >actual &&
+	shit show-branch $(cat branches.sorted) >actual &&
 	test_cmp expect actual
 '
 
@@ -73,7 +73,7 @@ test_expect_success 'show-branch with showbranch.default' '
 	do
 		test_config showbranch.default $branch --add || return 1
 	done &&
-	git show-branch >actual &&
+	shit show-branch >actual &&
 	test_cmp expect actual
 '
 
@@ -102,7 +102,7 @@ test_expect_success 'show-branch --color output' '
 	> <RED>+<RESET>          [branch1] branch1
 	> <RED>+<RESET><GREEN>+<RESET><YELLOW>+<RESET><BLUE>+<RESET><MAGENTA>+<RESET><CYAN>+<RESET><BOLD;RED>+<RESET><BOLD;GREEN>+<RESET><BOLD;YELLOW>+<RESET><BOLD;BLUE>*<RESET> [branch10^] initial
 	EOF
-	git show-branch --color=always $(cat branches.sorted) >actual.raw &&
+	shit show-branch --color=always $(cat branches.sorted) >actual.raw &&
 	test_decode_color <actual.raw >actual &&
 	test_cmp expect actual
 '
@@ -111,24 +111,24 @@ test_expect_success 'show branch --remotes' '
 	cat >expect.err <<-\EOF &&
 	No revs to be shown.
 	EOF
-	git show-branch -r 2>actual.err >actual.out &&
+	shit show-branch -r 2>actual.err >actual.out &&
 	test_cmp expect.err actual.err &&
 	test_must_be_empty actual.out
 '
 
 test_expect_success 'show-branch --sparse' '
-	test_when_finished "git checkout branch10 && git branch -D branchA" &&
-	git checkout -b branchA branch10 &&
-	git merge -s ours -m "merge 1 and 10 to make A" branch1 &&
-	git commit --allow-empty -m "another" &&
+	test_when_finished "shit checkout branch10 && shit branch -D branchA" &&
+	shit checkout -b branchA branch10 &&
+	shit merge -s ours -m "merge 1 and 10 to make A" branch1 &&
+	shit commit --allow-empty -m "another" &&
 
-	git show-branch --sparse >out &&
+	shit show-branch --sparse >out &&
 	grep "merge 1 and 10 to make A" out &&
 
-	git show-branch >out &&
+	shit show-branch >out &&
 	! grep "merge 1 and 10 to make A" out &&
 
-	git show-branch --no-sparse >out &&
+	shit show-branch --no-sparse >out &&
 	! grep "merge 1 and 10 to make A" out
 '
 
@@ -148,20 +148,20 @@ test_expect_success 'setup show branch --list' '
 '
 
 test_expect_success 'show branch --list' '
-	git show-branch --list $(cat branches.sorted) >actual &&
+	shit show-branch --list $(cat branches.sorted) >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'show branch --list has no --color output' '
-	git show-branch --color=always --list $(cat branches.sorted) >actual &&
+	shit show-branch --color=always --list $(cat branches.sorted) >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'show branch --merge-base with one argument' '
 	for branch in $(cat branches.sorted)
 	do
-		git rev-parse $branch >expect &&
-		git show-branch --merge-base $branch >actual &&
+		shit rev-parse $branch >expect &&
+		shit show-branch --merge-base $branch >actual &&
 		test_cmp expect actual || return 1
 	done
 '
@@ -169,18 +169,18 @@ test_expect_success 'show branch --merge-base with one argument' '
 test_expect_success 'show branch --merge-base with two arguments' '
 	for branch in $(cat branches.sorted)
 	do
-		git rev-parse initial >expect &&
-		git show-branch --merge-base initial $branch >actual &&
+		shit rev-parse initial >expect &&
+		shit show-branch --merge-base initial $branch >actual &&
 		test_cmp expect actual || return 1
 	done
 '
 
 test_expect_success 'show branch --merge-base with N arguments' '
-	git rev-parse initial >expect &&
-	git show-branch --merge-base $(cat branches.sorted) >actual &&
+	shit rev-parse initial >expect &&
+	shit show-branch --merge-base $(cat branches.sorted) >actual &&
 	test_cmp expect actual &&
 
-	git merge-base $(cat branches.sorted) >actual &&
+	shit merge-base $(cat branches.sorted) >actual &&
 	test_cmp expect actual
 '
 
@@ -188,7 +188,7 @@ test_expect_success 'show branch --merge-base with N arguments' '
 while read combo
 do
 	test_expect_success "show-branch $combo (should fail)" '
-		test_must_fail git show-branch $combo 2>error &&
+		test_must_fail shit show-branch $combo 2>error &&
 		grep -e "cannot be used together" -e "usage:" error
 	'
 done <<\EOF
@@ -202,7 +202,7 @@ EOF
 for opt in topo-order date-order reflog
 do
 	test_expect_success "show-branch --no-$opt (should fail)" '
-		test_must_fail git show-branch --no-$opt 2>err &&
+		test_must_fail shit show-branch --no-$opt 2>err &&
 		grep "unknown option .no-$opt." err
 	'
 done
@@ -211,7 +211,7 @@ test_expect_success 'error descriptions on non-existent branch' '
 	cat >expect <<-EOF &&
 	error: no branch named '\''non-existent'\''
 	EOF
-	test_must_fail git branch --edit-description non-existent 2>actual &&
+	test_must_fail shit branch --edit-description non-existent 2>actual &&
 	test_cmp expect actual
 '
 
@@ -219,25 +219,25 @@ test_expect_success 'fatal descriptions on non-existent branch' '
 	cat >expect <<-EOF &&
 	fatal: branch '\''non-existent'\'' does not exist
 	EOF
-	test_must_fail git branch --set-upstream-to=non-existent non-existent 2>actual &&
+	test_must_fail shit branch --set-upstream-to=non-existent non-existent 2>actual &&
 	test_cmp expect actual &&
 
 	cat >expect <<-EOF &&
 	fatal: no branch named '\''non-existent'\''
 	EOF
-	test_must_fail git branch -c non-existent new-branch 2>actual &&
+	test_must_fail shit branch -c non-existent new-branch 2>actual &&
 	test_cmp expect actual &&
-	test_must_fail git branch -m non-existent new-branch 2>actual &&
+	test_must_fail shit branch -m non-existent new-branch 2>actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'error descriptions on orphan branch' '
-	test_when_finished git worktree remove -f wt &&
-	git worktree add wt --detach &&
-	git -C wt checkout --orphan orphan-branch &&
+	test_when_finished shit worktree remove -f wt &&
+	shit worktree add wt --detach &&
+	shit -C wt checkout --orphan orphan-branch &&
 	test_branch_op_in_wt() {
 		test_orphan_error() {
-			test_must_fail git $* 2>actual &&
+			test_must_fail shit $* 2>actual &&
 			test_grep "no commit on branch .orphan-branch. yet$" actual
 		} &&
 		test_orphan_error -C wt branch $1 $2 &&                # implicit branch
@@ -251,9 +251,9 @@ test_expect_success 'error descriptions on orphan branch' '
 
 test_expect_success 'setup reflogs' '
 	test_commit base &&
-	git checkout -b branch &&
+	shit checkout -b branch &&
 	test_commit one &&
-	git reset --hard HEAD^ &&
+	shit reset --hard HEAD^ &&
 	test_commit two &&
 	test_commit three
 '
@@ -272,14 +272,14 @@ test_expect_success '--reflog shows reflog entries' '
 	EOF
 	# the output always contains relative timestamps; use
 	# a known time to get deterministic results
-	GIT_TEST_DATE_NOW=$test_tick \
-	git show-branch --reflog branch >actual &&
+	shit_TEST_DATE_NOW=$test_tick \
+	shit show-branch --reflog branch >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success '--reflog handles missing reflog' '
-	git reflog expire --expire=now branch &&
-	git show-branch --reflog branch >actual &&
+	shit reflog expire --expire=now branch &&
+	shit show-branch --reflog branch >actual &&
 	test_must_be_empty actual
 '
 

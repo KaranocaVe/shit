@@ -6,7 +6,7 @@
 #include "tar.h"
 
 static const char builtin_get_tar_commit_id_usage[] =
-"git get-tar-commit-id";
+"shit get-tar-commit-id";
 
 /* ustar header + extended global header content */
 #define RECORDSIZE	(512)
@@ -29,9 +29,9 @@ int cmd_get_tar_commit_id(int argc, const char **argv UNUSED, const char *prefix
 
 	n = read_in_full(0, buffer, HEADERSIZE);
 	if (n < 0)
-		die_errno("git get-tar-commit-id: read error");
+		die_errno("shit get-tar-commit-id: read error");
 	if (n != HEADERSIZE)
-		die_errno("git get-tar-commit-id: EOF before reading tar header");
+		die_errno("shit get-tar-commit-id: EOF before reading tar header");
 	if (header->typeflag[0] != TYPEFLAG_GLOBAL_HEADER)
 		return 1;
 
@@ -42,11 +42,11 @@ int cmd_get_tar_commit_id(int argc, const char **argv UNUSED, const char *prefix
 		return 1;
 	len -= comment - content;
 	if (len < 1 || !(len % 2) ||
-	    hash_algo_by_length((len - 1) / 2) == GIT_HASH_UNKNOWN)
+	    hash_algo_by_length((len - 1) / 2) == shit_HASH_UNKNOWN)
 		return 1;
 
 	if (write_in_full(1, comment, len) < 0)
-		die_errno("git get-tar-commit-id: write error");
+		die_errno("shit get-tar-commit-id: write error");
 
 	return 0;
 }

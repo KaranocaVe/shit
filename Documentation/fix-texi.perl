@@ -2,11 +2,11 @@
 
 while (<>) {
 	if (/^\@setfilename/) {
-		$_ = "\@setfilename git.info\n";
+		$_ = "\@setfilename shit.info\n";
 	} elsif (/^\@direntry/) {
 		print '@dircategory Development
 @direntry
-* Git: (git).           A fast distributed revision control system
+* shit: (shit).           A fast distributed revision control system
 @end direntry
 ';	}
 	unless (/^\@direntry/../^\@end direntry/) {

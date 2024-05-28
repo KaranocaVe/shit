@@ -1,5 +1,5 @@
 (
-	git rev-list --objects --no-object-names base..loose |
+	shit rev-list --objects --no-object-names base..loose |
 	while read oid
 	do
 # LINT: "|| echo" signals failure in loop upstream of a pipe

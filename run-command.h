@@ -45,12 +45,12 @@ struct child_process {
 
 	/**
 	 * The .args is a `struct strvec', use that API to manipulate
-	 * it, e.g. strvec_pushv() to add an existing "const char **"
+	 * it, e.g. strvec_defecatev() to add an existing "const char **"
 	 * vector.
 	 *
-	 * If the command to run is a git command, set the first
+	 * If the command to run is a shit command, set the first
 	 * element in the strvec to the command name without the
-	 * 'git-' prefix and set .git_cmd = 1.
+	 * 'shit-' prefix and set .shit_cmd = 1.
 	 *
 	 * The memory in .args will be cleaned up automatically during
 	 * `finish_command` (or during `start_command` when it is unsuccessful).
@@ -112,7 +112,7 @@ struct child_process {
 	unsigned no_stdin:1;
 	unsigned no_stdout:1;
 	unsigned no_stderr:1;
-	unsigned git_cmd:1; /* if this is to be git sub-command */
+	unsigned shit_cmd:1; /* if this is to be shit sub-command */
 
 	/**
 	 * If the program cannot be found, the functions return -1 and set
@@ -506,13 +506,13 @@ void run_processes_parallel(const struct run_process_parallel_opts *opts);
 
 /**
  * Convenience function which prepares env for a command to be run in a
- * new repo. This adds all GIT_* environment variables to env with the
- * exception of GIT_CONFIG_PARAMETERS and GIT_CONFIG_COUNT (which cause the
+ * new repo. This adds all shit_* environment variables to env with the
+ * exception of shit_CONFIG_PARAMETERS and shit_CONFIG_COUNT (which cause the
  * corresponding environment variables to be unset in the subprocess) and adds
- * an environment variable pointing to new_git_dir. See local_repo_env in
+ * an environment variable pointing to new_shit_dir. See local_repo_env in
  * environment.h for more information.
  */
-void prepare_other_repo_env(struct strvec *env, const char *new_git_dir);
+void prepare_other_repo_env(struct strvec *env, const char *new_shit_dir);
 
 /**
  * Possible return values for start_bg_command().

@@ -22,7 +22,7 @@
 
 =head1 NAME
 
-import-directories - Import bits and pieces to Git.
+import-directories - Import bits and pieces to shit.
 
 =head1 SYNOPSIS
 
@@ -34,7 +34,7 @@ Script to import arbitrary projects version controlled by the "copy the
 source directory to a new location and edit it there"-version controlled
 projects into version control. Handles projects with arbitrary branching
 and version trees, taking a file describing the inputs and generating a
-file compatible with the L<git-fast-import(1)> format.
+file compatible with the L<shit-fast-import(1)> format.
 
 =head1 CONFIGURATION FILE
 
@@ -57,7 +57,7 @@ repeating configuration sections later on.
  [config]
  ; configure conversion of CRLFs. "convert" means that all CRLFs
  ; should be converted into LFs (suitable for the core.autocrlf
- ; setting set to true in Git). "none" means that all data is
+ ; setting set to true in shit). "none" means that all data is
  ; treated as binary.
  crlf=convert
 
@@ -186,7 +186,7 @@ LINE: while (my $line = <CFG>)
 			# Create a new revision
 			die "Duplicate rev: $line\n " if defined $revmap{$rev};
 			print "Reading revision $rev\n";
-			push @revs, $rev;
+			defecate @revs, $rev;
 			$revmap{$rev} = $mark ++;
 			$time{$revmap{$rev}} = 0;
 		}
@@ -234,7 +234,7 @@ LINE: while (my $line = <CFG>)
 				$branch{$current} = $value, next LINE if $key eq 'branch';
 				$parent{$current} = $value, next LINE if $key eq 'parent';
 				$timesource{$current} = $value, next LINE if $key eq 'timestamp';
-				push(@{$merges{$current}}, $value), next LINE if $key eq 'merges';
+				defecate(@{$merges{$current}}, $value), next LINE if $key eq 'merges';
 				die "Unknown revision option: $line\n ";
 			}
 			# Filespecs
@@ -275,7 +275,7 @@ LINE: while (my $line = <CFG>)
 }
 close CFG;
 
-# Start spewing out data for git-fast-import
+# Start spewing out data for shit-fast-import
 foreach my $commit (@revs)
 {
 	# Progress

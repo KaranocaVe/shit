@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "object-store-ll.h"
 #include "reflog.h"
@@ -297,7 +297,7 @@ int should_expire_reflog_ent_verbose(struct object_id *ooid,
 	return expire;
 }
 
-static int push_tip_to_list(const char *refname UNUSED,
+static int defecate_tip_to_list(const char *refname UNUSED,
 			    const struct object_id *oid,
 			    int flags, void *cb_data)
 {
@@ -344,7 +344,7 @@ void reflog_expiry_prepare(const char *refname,
 		return;
 	case UE_HEAD:
 		refs_for_each_ref(get_main_ref_store(the_repository),
-				  push_tip_to_list, &cb->tips);
+				  defecate_tip_to_list, &cb->tips);
 		for (elem = cb->tips; elem; elem = elem->next)
 			commit_list_insert(elem->item, &cb->mark_list);
 		break;

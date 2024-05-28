@@ -3,37 +3,37 @@
 # Copyright (c) 2010 Brad King
 #
 
-test_description='git update-index for gitlink to .git file.
+test_description='shit update-index for shitlink to .shit file.
 '
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
-test_expect_success 'submodule with absolute .git file' '
+test_expect_success 'submodule with absolute .shit file' '
 	mkdir sub1 &&
 	(cd sub1 &&
-	 git init &&
+	 shit init &&
 	 REAL="$(pwd)/.real" &&
-	 mv .git "$REAL" &&
-	 echo "gitdir: $REAL" >.git &&
+	 mv .shit "$REAL" &&
+	 echo "shitdir: $REAL" >.shit &&
 	 test_commit first)
 '
 
-test_expect_success 'add gitlink to absolute .git file' '
-	git update-index --add -- sub1
+test_expect_success 'add shitlink to absolute .shit file' '
+	shit update-index --add -- sub1
 '
 
-test_expect_success 'submodule with relative .git file' '
+test_expect_success 'submodule with relative .shit file' '
 	mkdir sub2 &&
 	(cd sub2 &&
-	 git init &&
-	 mv .git .real &&
-	 echo "gitdir: .real" >.git &&
+	 shit init &&
+	 mv .shit .real &&
+	 echo "shitdir: .real" >.shit &&
 	 test_commit first)
 '
 
-test_expect_success 'add gitlink to relative .git file' '
-	git update-index --add -- sub2
+test_expect_success 'add shitlink to relative .shit file' '
+	shit update-index --add -- sub2
 '
 
 test_done

@@ -1,6 +1,6 @@
 /*
- * Example implementation for the Git filter protocol version 2
- * See Documentation/gitattributes.txt, section "Filter Protocol"
+ * Example implementation for the shit filter protocol version 2
+ * See Documentation/shitattributes.txt, section "Filter Protocol"
  *
  * Usage: test-tool rot13-filter [--always-delay] --log=<path> <capabilities>
  *
@@ -162,11 +162,11 @@ static void reply_list_available_blobs_cmd(void)
 			continue;
 		delay_entry->count--;
 		if (!strcmp(ent->key, "invalid-delay.a")) {
-			/* Send Git a pathname that was not delayed earlier */
+			/* Send shit a pathname that was not delayed earlier */
 			packet_write_fmt(1, "pathname=unfiltered");
 		}
 		if (!strcmp(ent->key, "missing-delay.a")) {
-			/* Do not signal Git that this file is available */
+			/* Do not signal shit that this file is available */
 		} else if (!delay_entry->count) {
 			string_list_append(&paths, ent->key);
 			packet_write_fmt(1, "pathname=%s", ent->key);
@@ -307,7 +307,7 @@ static void packet_initialize(void)
 {
 	char *pkt_buf = packet_read_line(0, NULL);
 
-	if (!pkt_buf || strcmp(pkt_buf, "git-filter-client"))
+	if (!pkt_buf || strcmp(pkt_buf, "shit-filter-client"))
 		die("bad initialize: '%s'", str_or_null(pkt_buf));
 
 	pkt_buf = packet_read_line(0, NULL);
@@ -318,7 +318,7 @@ static void packet_initialize(void)
 	if (pkt_buf)
 		die("bad version end: '%s'", pkt_buf);
 
-	packet_write_fmt(1, "git-filter-server");
+	packet_write_fmt(1, "shit-filter-server");
 	packet_write_fmt(1, "version=2");
 	packet_flush(1);
 }

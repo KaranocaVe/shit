@@ -2,7 +2,7 @@
  * Memory Pool implementation logic.
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "mem-pool.h"
 #include "gettext.h"
 
@@ -19,14 +19,14 @@
  *
  * Add more types to the union if the current set is insufficient.
  */
-struct git_max_alignment {
+struct shit_max_alignment {
 	char unalign;
 	union {
 		uintmax_t max_align_uintmax;
 		void *max_align_pointer;
 	} aligned;
 };
-#define GIT_MAX_ALIGNMENT offsetof(struct git_max_alignment, aligned)
+#define shit_MAX_ALIGNMENT offsetof(struct shit_max_alignment, aligned)
 
 /*
  * Allocate a new mp_block and insert it after the block specified in
@@ -90,7 +90,7 @@ void *mem_pool_alloc(struct mem_pool *pool, size_t len)
 	struct mp_block *p = NULL;
 	void *r;
 
-	len = DIV_ROUND_UP(len, GIT_MAX_ALIGNMENT) * GIT_MAX_ALIGNMENT;
+	len = DIV_ROUND_UP(len, shit_MAX_ALIGNMENT) * shit_MAX_ALIGNMENT;
 
 	if (pool->mp_block &&
 	    pool->mp_block->end - pool->mp_block->next_free >= len)

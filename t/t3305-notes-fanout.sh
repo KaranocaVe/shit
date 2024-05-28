@@ -16,7 +16,7 @@ touched_one_note_with_fanout() {
 	notes_commit=$1 &&
 	modification=$2 &&  # 'A' for addition, 'D' for deletion
 	fanout=$3 &&
-	diff=$(git diff-tree --no-commit-id --name-status --root -r $notes_commit) &&
+	diff=$(shit diff-tree --no-commit-id --name-status --root -r $notes_commit) &&
 	path=$(echo $diff | sed -e "s/^$modification[\t ]//") &&
 	path_has_fanout "$path" $fanout;
 }
@@ -24,7 +24,7 @@ touched_one_note_with_fanout() {
 all_notes_have_fanout() {
 	notes_commit=$1 &&
 	fanout=$2 &&
-	git ls-tree -r --name-only $notes_commit |
+	shit ls-tree -r --name-only $notes_commit |
 	while read path
 	do
 		path_has_fanout $path $fanout || return 1
@@ -32,12 +32,12 @@ all_notes_have_fanout() {
 }
 
 test_expect_success 'tweak test environment' '
-	git checkout -b nondeterminism &&
+	shit checkout -b nondeterminism &&
 	test_commit A &&
-	git checkout --orphan with_notes;
+	shit checkout --orphan with_notes;
 '
 
-test_expect_success 'creating many notes with git-notes' '
+test_expect_success 'creating many notes with shit-notes' '
 	num_notes=300 &&
 	i=0 &&
 	while test $i -lt $num_notes
@@ -45,14 +45,14 @@ test_expect_success 'creating many notes with git-notes' '
 		i=$(($i + 1)) &&
 		test_tick &&
 		echo "file for commit #$i" > file &&
-		git add file &&
-		git commit -q -m "commit #$i" &&
-		git notes add -m "note #$i" || return 1
+		shit add file &&
+		shit commit -q -m "commit #$i" &&
+		shit notes add -m "note #$i" || return 1
 	done
 '
 
-test_expect_success 'many notes created correctly with git-notes' '
-	git log >output.raw &&
+test_expect_success 'many notes created correctly with shit-notes' '
+	shit log >output.raw &&
 	grep "^    " output.raw >output &&
 	i=$num_notes &&
 	while test $i -gt 0
@@ -83,26 +83,26 @@ test_expect_success 'stable fanout 0 is followed by stable fanout 1' '
 			fi
 		fi &&
 		echo "Failed fanout=$fanout check at refs/notes/commits~$i" &&
-		git ls-tree -r --name-only refs/notes/commits~$i &&
+		shit ls-tree -r --name-only refs/notes/commits~$i &&
 		return 1
 	done &&
 	all_notes_have_fanout refs/notes/commits 1
 '
 
-test_expect_success 'deleting most notes with git-notes' '
+test_expect_success 'deleting most notes with shit-notes' '
 	remove_notes=285 &&
 	i=0 &&
-	git rev-list HEAD >revs &&
+	shit rev-list HEAD >revs &&
 	while test $i -lt $remove_notes && read sha1
 	do
 		i=$(($i + 1)) &&
 		test_tick &&
-		git notes remove "$sha1" || return 1
+		shit notes remove "$sha1" || return 1
 	done <revs
 '
 
-test_expect_success 'most notes deleted correctly with git-notes' '
-	git log HEAD~$remove_notes | grep "^    " > output &&
+test_expect_success 'most notes deleted correctly with shit-notes' '
+	shit log HEAD~$remove_notes | grep "^    " > output &&
 	i=$(($num_notes - $remove_notes)) &&
 	while test $i -gt 0
 	do
@@ -132,7 +132,7 @@ test_expect_success 'stable fanout 1 is followed by stable fanout 0' '
 			fi
 		fi &&
 		echo "Failed fanout=$fanout check at refs/notes/commits~$i" &&
-		git ls-tree -r --name-only refs/notes/commits~$i &&
+		shit ls-tree -r --name-only refs/notes/commits~$i &&
 		return 1
 	done &&
 	all_notes_have_fanout refs/notes/commits 0

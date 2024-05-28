@@ -7,18 +7,18 @@ test_perf_default_repo
 test_checkout_worktree
 
 test_expect_success 'mark bases for tests' '
-	git tag -f tip &&
-	git tag -f base HEAD~100
+	shit tag -f tip &&
+	shit tag -f base HEAD~100
 '
 
 test_perf 'noop filter' '
-	git checkout --detach tip &&
-	git filter-branch -f base..HEAD
+	shit checkout --detach tip &&
+	shit filter-branch -f base..HEAD
 '
 
 test_perf 'noop prune-empty' '
-	git checkout --detach tip &&
-	git filter-branch -f --prune-empty base..HEAD
+	shit checkout --detach tip &&
+	shit filter-branch -f --prune-empty base..HEAD
 '
 
 test_done

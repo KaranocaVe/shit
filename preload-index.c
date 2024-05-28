@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2008 Linus Torvalds
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "pathspec.h"
 #include "dir.h"
 #include "environment.h"
@@ -59,7 +59,7 @@ static void *preload_thread(void *_data)
 
 		if (ce_stage(ce))
 			continue;
-		if (S_ISGITLINK(ce->ce_mode))
+		if (S_ISshitLINK(ce->ce_mode))
 			continue;
 		if (ce_uptodate(ce))
 			continue;
@@ -112,7 +112,7 @@ void preload_index(struct index_state *index,
 		return;
 
 	threads = index->cache_nr / THREAD_COST;
-	if ((index->cache_nr > 1) && (threads < 2) && git_env_bool("GIT_TEST_PRELOAD_INDEX", 0))
+	if ((index->cache_nr > 1) && (threads < 2) && shit_env_bool("shit_TEST_PRELOAD_INDEX", 0))
 		threads = 2;
 	if (threads < 2)
 		return;

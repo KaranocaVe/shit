@@ -14,8 +14,8 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success 'prepare reference tree' '
 	COPYING_test_data >COPYING &&
 	echo frotz >rezrov &&
-	git update-index --add COPYING rezrov &&
-	tree=$(git write-tree) &&
+	shit update-index --add COPYING rezrov &&
+	tree=$(shit write-tree) &&
 	echo $tree
 '
 
@@ -23,7 +23,7 @@ test_expect_success 'prepare work tree' '
 	sed -e 's/HOWEVER/However/' <COPYING >COPYING.1 &&
 	sed -e 's/GPL/G.P.L/g' <COPYING >COPYING.2 &&
 	rm -f COPYING &&
-	git update-index --add --remove COPYING COPYING.?
+	shit update-index --add --remove COPYING COPYING.?
 '
 
 # tree has COPYING and rezrov.  work tree has COPYING.1 and COPYING.2,
@@ -31,9 +31,9 @@ test_expect_success 'prepare work tree' '
 # copy-and-edit one, and rename-and-edit the other.  We do not say
 # anything about rezrov.
 
-GIT_DIFF_OPTS=--unified=0 git diff-index -C -p $tree >current
+shit_DIFF_OPTS=--unified=0 shit diff-index -C -p $tree >current
 cat >expected <<\EOF
-diff --git a/COPYING b/COPYING.1
+diff --shit a/COPYING b/COPYING.1
 copy from COPYING
 copy to COPYING.1
 --- a/COPYING
@@ -41,7 +41,7 @@ copy to COPYING.1
 @@ -6 +6 @@
 - HOWEVER, in order to allow a migration to GPLv3 if that seems like
 + However, in order to allow a migration to GPLv3 if that seems like
-diff --git a/COPYING b/COPYING.2
+diff --shit a/COPYING b/COPYING.2
 rename from COPYING
 rename to COPYING.2
 --- a/COPYING
@@ -63,7 +63,7 @@ test_expect_success 'validate output from rename/copy detection (#1)' '
 
 test_expect_success 'prepare work tree again' '
 	mv COPYING.2 COPYING &&
-	git update-index --add --remove COPYING COPYING.1 COPYING.2
+	shit update-index --add --remove COPYING COPYING.1 COPYING.2
 '
 
 # tree has COPYING and rezrov.  work tree has COPYING and COPYING.1,
@@ -71,9 +71,9 @@ test_expect_success 'prepare work tree again' '
 # edited one, and copy-and-edit the other.  We do not say
 # anything about rezrov.
 
-GIT_DIFF_OPTS=--unified=0 git diff-index -C -p $tree >current
+shit_DIFF_OPTS=--unified=0 shit diff-index -C -p $tree >current
 cat >expected <<\EOF
-diff --git a/COPYING b/COPYING
+diff --shit a/COPYING b/COPYING
 --- a/COPYING
 +++ b/COPYING
 @@ -2 +2 @@
@@ -85,7 +85,7 @@ diff --git a/COPYING b/COPYING
 @@ -12 +12 @@
 -	This file is licensed under the GPL v2, or a later version
 +	This file is licensed under the G.P.L v2, or a later version
-diff --git a/COPYING b/COPYING.1
+diff --shit a/COPYING b/COPYING.1
 copy from COPYING
 copy to COPYING.1
 --- a/COPYING
@@ -101,19 +101,19 @@ test_expect_success 'validate output from rename/copy detection (#2)' '
 
 test_expect_success 'prepare work tree once again' '
 	COPYING_test_data >COPYING &&
-	git update-index --add --remove COPYING COPYING.1
+	shit update-index --add --remove COPYING COPYING.1
 '
 
 # tree has COPYING and rezrov.  work tree has COPYING and COPYING.1,
 # but COPYING is not edited.  We say you copy-and-edit COPYING.1; this
 # is only possible because -C mode now reports the unmodified file to
 # the diff-core.  Unchanged rezrov, although being fed to
-# git diff-index as well, should not be mentioned.
+# shit diff-index as well, should not be mentioned.
 
-GIT_DIFF_OPTS=--unified=0 \
-    git diff-index -C --find-copies-harder -p $tree >current
+shit_DIFF_OPTS=--unified=0 \
+    shit diff-index -C --find-copies-harder -p $tree >current
 cat >expected <<\EOF
-diff --git a/COPYING b/COPYING.1
+diff --shit a/COPYING b/COPYING.1
 copy from COPYING
 copy to COPYING.1
 --- a/COPYING

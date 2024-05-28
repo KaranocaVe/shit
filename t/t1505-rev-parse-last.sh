@@ -2,8 +2,8 @@
 
 test_description='test @{-N} syntax'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -11,21 +11,21 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 make_commit () {
 	echo "$1" > "$1" &&
-	git add "$1" &&
-	git commit -m "$1"
+	shit add "$1" &&
+	shit commit -m "$1"
 }
 
 
 test_expect_success 'setup' '
 
 	make_commit 1 &&
-	git branch side &&
+	shit branch side &&
 	make_commit 2 &&
 	make_commit 3 &&
-	git checkout side &&
+	shit checkout side &&
 	make_commit 4 &&
-	git merge main &&
-	git checkout main
+	shit merge main &&
+	shit checkout main
 
 '
 
@@ -57,7 +57,7 @@ test_expect_success '@{-2} works' '
 '
 
 test_expect_success '@{-3} fails' '
-	test_must_fail git rev-parse @{-3}
+	test_must_fail shit rev-parse @{-3}
 '
 
 test_done

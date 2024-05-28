@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "abspath.h"
 #include "config.h"
 #include "credential.h"
@@ -10,7 +10,7 @@
 #include "sigchain.h"
 #include "strbuf.h"
 #include "urlmatch.h"
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 void credential_init(struct credential *c)
 {
@@ -125,7 +125,7 @@ static int credential_config_callback(const char *var, const char *value,
 		}
 	}
 	else if (!strcmp(key, "usehttppath"))
-		c->use_http_path = git_config_bool(var, value);
+		c->use_http_path = shit_config_bool(var, value);
 
 	return 0;
 }
@@ -187,7 +187,7 @@ static void credential_apply_config(struct credential *c)
 	credential_format(c, &url);
 	normalized_url = url_normalize(url.buf, &config.url);
 
-	git_config(urlmatch_config_entry, &config);
+	shit_config(urlmatch_config_entry, &config);
 	string_list_clear(&config.vars, 1);
 	free(normalized_url);
 	urlmatch_config_release(&config);
@@ -243,7 +243,7 @@ static char *credential_ask_one(const char *what, struct credential *c,
 	else
 		strbuf_addf(&prompt, "%s: ", what);
 
-	r = git_prompt(prompt.buf, flags);
+	r = shit_prompt(prompt.buf, flags);
 
 	strbuf_release(&desc);
 	strbuf_release(&prompt);
@@ -317,18 +317,18 @@ int credential_read(struct credential *c, FILE *fp,
 			free(c->path);
 			c->path = xstrdup(value);
 		} else if (!strcmp(key, "ephemeral")) {
-			c->ephemeral = !!git_config_bool("ephemeral", value);
+			c->ephemeral = !!shit_config_bool("ephemeral", value);
 		} else if (!strcmp(key, "wwwauth[]")) {
-			strvec_push(&c->wwwauth_headers, value);
+			strvec_defecate(&c->wwwauth_headers, value);
 		} else if (!strcmp(key, "state[]")) {
-			strvec_push(&c->state_headers, value);
+			strvec_defecate(&c->state_headers, value);
 		} else if (!strcmp(key, "capability[]")) {
 			if (!strcmp(value, "authtype"))
 				credential_set_capability(&c->capa_authtype, op_type);
 			else if (!strcmp(value, "state"))
 				credential_set_capability(&c->capa_state, op_type);
 		} else if (!strcmp(key, "continue")) {
-			c->multistage = !!git_config_bool("continue", value);
+			c->multistage = !!shit_config_bool("continue", value);
 		} else if (!strcmp(key, "password_expiry_utc")) {
 			errno = 0;
 			c->password_expiry_utc = parse_timestamp(value, NULL, 10);
@@ -343,11 +343,11 @@ int credential_read(struct credential *c, FILE *fp,
 		} else if (!strcmp(key, "url")) {
 			credential_from_url(c, value);
 		} else if (!strcmp(key, "quit")) {
-			c->quit = !!git_config_bool("quit", value);
+			c->quit = !!shit_config_bool("quit", value);
 		}
 		/*
 		 * Ignore other lines; we don't know what they mean, but
-		 * this future-proofs us when later versions of git do
+		 * this future-proofs us when later versions of shit do
 		 * learn new lines, and the helpers are updated to match.
 		 */
 	}
@@ -410,7 +410,7 @@ static int run_credential_helper(struct credential *c,
 	struct child_process helper = CHILD_PROCESS_INIT;
 	FILE *fp;
 
-	strvec_push(&helper.args, cmd);
+	strvec_defecate(&helper.args, cmd);
 	helper.use_shell = 1;
 	helper.in = -1;
 	if (want_output)
@@ -422,7 +422,7 @@ static int run_credential_helper(struct credential *c,
 		return -1;
 
 	fp = xfdopen(helper.in, "w");
-	sigchain_push(SIGPIPE, SIG_IGN);
+	sigchain_defecate(SIGPIPE, SIG_IGN);
 	credential_write(c, fp, want_output ? CREDENTIAL_OP_HELPER : CREDENTIAL_OP_RESPONSE);
 	fclose(fp);
 	sigchain_pop(SIGPIPE);
@@ -454,7 +454,7 @@ static int credential_do(struct credential *c, const char *helper,
 	else if (is_absolute_path(helper))
 		strbuf_addstr(&cmd, helper);
 	else
-		strbuf_addf(&cmd, "git credential-%s", helper);
+		strbuf_addf(&cmd, "shit credential-%s", helper);
 
 	strbuf_addf(&cmd, " %s", operation);
 	r = run_credential_helper(c, cmd.buf, !strcmp(operation, "get"));
@@ -565,7 +565,7 @@ static int check_url_component(const char *url, int quiet,
  *
  * Missing parts will be left unset in `struct credential`. Thus, `https://`
  * will have only the `protocol` set, `example.com` only the host name, and
- * `/git` only the path.
+ * `/shit` only the path.
  *
  * Note that an empty host name in an otherwise fully-qualified URL (e.g.
  * `cert:///path/to/cert.pem`) will be treated as unset if we expect the URL to

@@ -10,67 +10,67 @@ test_expect_success setup '
 	echo >c &&
 	echo >a/d &&
 	echo >b/e &&
-	git add . &&
+	shit add . &&
 	test_tick &&
-	git commit -m initial &&
+	shit commit -m initial &&
 	echo " " >a/d &&
 	test_tick &&
-	git commit -a -m second &&
+	shit commit -a -m second &&
 	echo "  " >a/d &&
 	echo " " >b/e &&
-	git add a/d
+	shit add a/d
 '
 
 test_expect_success 'diff-tree --exit-code' '
-	test_must_fail git diff --exit-code HEAD^ HEAD &&
-	test_must_fail git diff-tree --exit-code HEAD^ HEAD
+	test_must_fail shit diff --exit-code HEAD^ HEAD &&
+	test_must_fail shit diff-tree --exit-code HEAD^ HEAD
 '
 
 test_expect_success 'diff-tree -b --exit-code' '
-	git diff -b --exit-code HEAD^ HEAD &&
-	git diff-tree -b -p --exit-code HEAD^ HEAD
+	shit diff -b --exit-code HEAD^ HEAD &&
+	shit diff-tree -b -p --exit-code HEAD^ HEAD
 '
 
 test_expect_success 'diff-index --cached --exit-code' '
-	test_must_fail git diff --cached --exit-code HEAD &&
-	test_must_fail git diff-index --cached --exit-code HEAD
+	test_must_fail shit diff --cached --exit-code HEAD &&
+	test_must_fail shit diff-index --cached --exit-code HEAD
 '
 
 test_expect_success 'diff-index -b -p --cached --exit-code' '
-	git diff -b --cached --exit-code HEAD &&
-	git diff-index -b -p --cached --exit-code HEAD
+	shit diff -b --cached --exit-code HEAD &&
+	shit diff-index -b -p --cached --exit-code HEAD
 '
 
 test_expect_success 'diff-index --exit-code' '
-	test_must_fail git diff --exit-code HEAD &&
-	test_must_fail git diff-index --exit-code HEAD
+	test_must_fail shit diff --exit-code HEAD &&
+	test_must_fail shit diff-index --exit-code HEAD
 '
 
 test_expect_success 'diff-index -b -p --exit-code' '
-	git diff -b --exit-code HEAD &&
-	git diff-index -b -p --exit-code HEAD
+	shit diff -b --exit-code HEAD &&
+	shit diff-index -b -p --exit-code HEAD
 '
 
 test_expect_success 'diff-files --exit-code' '
-	test_must_fail git diff --exit-code &&
-	test_must_fail git diff-files --exit-code
+	test_must_fail shit diff --exit-code &&
+	test_must_fail shit diff-files --exit-code
 '
 
 test_expect_success 'diff-files -b -p --exit-code' '
-	git diff -b --exit-code &&
-	git diff-files -b -p --exit-code
+	shit diff -b --exit-code &&
+	shit diff-files -b -p --exit-code
 '
 
 test_expect_success 'diff-files --diff-filter --quiet' '
-	git reset --hard &&
+	shit reset --hard &&
 	rm a/d &&
 	echo x >>b/e &&
-	test_must_fail git diff-files --diff-filter=M --quiet
+	test_must_fail shit diff-files --diff-filter=M --quiet
 '
 
 test_expect_success 'diff-tree --diff-filter --quiet' '
-	git commit -a -m "worktree state" &&
-	test_must_fail git diff-tree --diff-filter=M --quiet HEAD^ HEAD
+	shit commit -a -m "worktree state" &&
+	test_must_fail shit diff-tree --diff-filter=M --quiet HEAD^ HEAD
 '
 
 test_done

@@ -1,0 +1,1419 @@
+# Translation of shitk to Hungarian.
+# Copyright (C) 2007 Paul Mackerras.
+# This file is distributed under the same license as the shitk package.
+#
+# Laszlo Papp <laszlo.papp@arhungary.hu>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: shit-gui\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-17 14:32+1000\n"
+"PO-Revision-Date: 2009-12-14 14:04+0100\n"
+"Last-Translator: Laszlo Papp <djszapi@archlinux.us>\n"
+"Language-Team: Hungarian\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: shitk:140
+msgid "Couldn't get list of unmerged files:"
+msgstr "Nem sikerült letölteni az unmerged fájl listát:"
+
+#: shitk:212 shitk:2381
+msgid "Color words"
+msgstr ""
+
+#: shitk:217 shitk:2381 shitk:8220 shitk:8253
+msgid "Markup words"
+msgstr ""
+
+#: shitk:324
+msgid "Error parsing revisions:"
+msgstr "Hiba történt értelmezés közben:"
+
+#: shitk:380
+msgid "Error executing --argscmd command:"
+msgstr "Hiba történt a végrehajtáskor --argscmd parancs:"
+
+#: shitk:393
+msgid "No files selected: --merge specified but no files are unmerged."
+msgstr ""
+"Nincsen fájl kiválasztva: --merge megadve, de egyetlen fájl sem unmerged."
+
+#: shitk:396
+msgid ""
+"No files selected: --merge specified but no unmerged files are within file "
+"limit."
+msgstr ""
+"Nincsen fájl kiválasztva: --merge megadva, de nincsenek unmerged fájlok a "
+"fájlon belül limit."
+
+#: shitk:418 shitk:566
+msgid "Error executing shit log:"
+msgstr "Hiba történt a shit log végrehajtása közben:"
+
+#: shitk:436 shitk:582
+msgid "Reading"
+msgstr "Olvasás"
+
+#: shitk:496 shitk:4525
+msgid "Reading commits..."
+msgstr "Commitok olvasása ..."
+
+#: shitk:499 shitk:1637 shitk:4528
+msgid "No commits selected"
+msgstr "Nincsen commit kiválasztva"
+
+#: shitk:1445 shitk:4045 shitk:12432
+msgid "Command line"
+msgstr "Parancs sor"
+
+#: shitk:1511
+msgid "Can't parse shit log output:"
+msgstr "Nem lehet értelmezni a shit log kimenetét:"
+
+#: shitk:1740
+msgid "No commit information available"
+msgstr "Nincsen elérhető commit információ"
+
+#: shitk:1903 shitk:1932 shitk:4315 shitk:9669 shitk:11241 shitk:11521
+msgid "OK"
+msgstr "OK"
+
+#: shitk:1934 shitk:4317 shitk:9196 shitk:9275 shitk:9391 shitk:9440 shitk:9671
+#: shitk:11242 shitk:11522
+msgid "Cancel"
+msgstr "Visszavonás"
+
+#: shitk:2069
+msgid "&Update"
+msgstr "Frissités"
+
+#: shitk:2070
+msgid "&Reload"
+msgstr "Újratöltés"
+
+#: shitk:2071
+msgid "Reread re&ferences"
+msgstr "Referenciák újraolvasása"
+
+#: shitk:2072
+msgid "&List references"
+msgstr "Referenciák listázása"
+
+#: shitk:2074
+msgid "Start shit &gui"
+msgstr "shit gui indítása"
+
+#: shitk:2076
+msgid "&Quit"
+msgstr "Kilépés"
+
+#: shitk:2068
+msgid "&File"
+msgstr "Fájl"
+
+#: shitk:2080
+msgid "&Preferences"
+msgstr "Beállítások"
+
+#: shitk:2079
+msgid "&Edit"
+msgstr "Szerkesztés"
+
+#: shitk:2084
+msgid "&New view..."
+msgstr "Új nézet ..."
+
+#: shitk:2085
+msgid "&Edit view..."
+msgstr "Nézet szerkesztése ..."
+
+#: shitk:2086
+msgid "&Delete view"
+msgstr "Nézet törlése"
+
+#: shitk:2088 shitk:4043
+msgid "&All files"
+msgstr "Minden fájl"
+
+#: shitk:2083 shitk:4067
+msgid "&View"
+msgstr "Nézet"
+
+#: shitk:2093 shitk:2103 shitk:3012
+msgid "&About shitk"
+msgstr "shitk névjegy"
+
+#: shitk:2094 shitk:2108
+msgid "&Key bindings"
+msgstr "Billentyűkombináció"
+
+#: shitk:2092 shitk:2107
+msgid "&Help"
+msgstr "Segítség"
+
+#: shitk:2185 shitk:8652
+msgid "SHA1 ID:"
+msgstr "SHA1 ID:"
+
+#: shitk:2229
+msgid "Row"
+msgstr "Sor"
+
+#: shitk:2267
+msgid "Find"
+msgstr "Keresés"
+
+#: shitk:2295
+msgid "commit"
+msgstr "commit"
+
+#: shitk:2299 shitk:2301 shitk:4687 shitk:4710 shitk:4734 shitk:6755 shitk:6827
+#: shitk:6912
+msgid "containing:"
+msgstr "tartalmazás:"
+
+#: shitk:2302 shitk:3526 shitk:3531 shitk:4763
+msgid "touching paths:"
+msgstr "érintendő útvonalak:"
+
+#: shitk:2303 shitk:4777
+msgid "adding/removing string:"
+msgstr "string hozzáadása/törlése:"
+
+#: shitk:2304 shitk:4779
+msgid "changing lines matching:"
+msgstr ""
+
+#: shitk:2313 shitk:2315 shitk:4766
+msgid "Exact"
+msgstr "Pontos"
+
+#: shitk:2315 shitk:4854 shitk:6723
+msgid "IgnCase"
+msgstr "Kis/nagy betű nem számít"
+
+#: shitk:2315 shitk:4736 shitk:4852 shitk:6719
+msgid "Regexp"
+msgstr "Regexp"
+
+#: shitk:2317 shitk:2318 shitk:4874 shitk:4904 shitk:4911 shitk:6848 shitk:6916
+msgid "All fields"
+msgstr "Minden mező"
+
+#: shitk:2318 shitk:4871 shitk:4904 shitk:6786
+msgid "Headline"
+msgstr "Főcím"
+
+#: shitk:2319 shitk:4871 shitk:6786 shitk:6916 shitk:7389
+msgid "Comments"
+msgstr "Megjegyzések"
+
+#: shitk:2319 shitk:4871 shitk:4876 shitk:4911 shitk:6786 shitk:7324 shitk:8830
+#: shitk:8845
+msgid "Author"
+msgstr "Szerző"
+
+#: shitk:2319 shitk:4871 shitk:6786 shitk:7326
+msgid "Committer"
+msgstr "Commitoló"
+
+#: shitk:2350
+msgid "Search"
+msgstr "Keresés"
+
+#: shitk:2358
+msgid "Diff"
+msgstr "Diff"
+
+#: shitk:2360
+msgid "Old version"
+msgstr "Régi verzió"
+
+#: shitk:2362
+msgid "New version"
+msgstr "Új verzió"
+
+#: shitk:2364
+msgid "Lines of context"
+msgstr "Tartalmi sorok"
+
+#: shitk:2374
+msgid "Ignore space change"
+msgstr "Space váltás mellőzése"
+
+#: shitk:2378 shitk:2380 shitk:7959 shitk:8206
+msgid "Line diff"
+msgstr ""
+
+#: shitk:2445
+msgid "Patch"
+msgstr "Patch"
+
+#: shitk:2447
+msgid "Tree"
+msgstr "Tree"
+
+#: shitk:2617 shitk:2637
+msgid "Diff this -> selected"
+msgstr "Diff ezeket -> kiválasztott"
+
+#: shitk:2618 shitk:2638
+msgid "Diff selected -> this"
+msgstr "Diff kiválasztottakat -> ezt"
+
+#: shitk:2619 shitk:2639
+msgid "Make patch"
+msgstr "Patch készítése"
+
+#: shitk:2620 shitk:9254
+msgid "Create tag"
+msgstr "Tag készítése"
+
+#: shitk:2621 shitk:9371
+msgid "Write commit to file"
+msgstr "Commit fáljba írása"
+
+#: shitk:2622 shitk:9428
+msgid "Create new branch"
+msgstr "Új branch készítése"
+
+#: shitk:2623
+msgid "Cherry-pick this commit"
+msgstr "Cherry-pick erre a commitra"
+
+#: shitk:2624
+msgid "Reset HEAD branch to here"
+msgstr "HEAD branch újraindítása ide"
+
+#: shitk:2625
+msgid "Mark this commit"
+msgstr "Ezen commit megjelölése"
+
+#: shitk:2626
+msgid "Return to mark"
+msgstr "Visszatérés a megjelöléshez"
+
+#: shitk:2627
+msgid "Find descendant of this and mark"
+msgstr "Találd meg ezen utódokat és jelöld meg"
+
+#: shitk:2628
+msgid "Compare with marked commit"
+msgstr "Összehasonlítás a megjelölt commit-tal"
+
+#: shitk:2629 shitk:2640
+#, fuzzy
+msgid "Diff this -> marked commit"
+msgstr "Diff ezeket -> kiválasztott"
+
+#: shitk:2630 shitk:2641
+#, fuzzy
+msgid "Diff marked commit -> this"
+msgstr "Diff kiválasztottakat -> ezt"
+
+#: shitk:2631
+#, fuzzy
+msgid "Revert this commit"
+msgstr "Ezen commit megjelölése"
+
+#: shitk:2647
+msgid "Check out this branch"
+msgstr "Check out ezt a branchot"
+
+#: shitk:2648
+msgid "Remove this branch"
+msgstr "Töröld ezt a branch-ot"
+
+#: shitk:2649
+msgid "Copy branch name"
+msgstr ""
+
+#: shitk:2656
+msgid "Highlight this too"
+msgstr "Emeld ki ezt is"
+
+#: shitk:2657
+msgid "Highlight this only"
+msgstr "Csak ezt emeld ki"
+
+#: shitk:2658
+msgid "External diff"
+msgstr "Külső diff"
+
+#: shitk:2659
+msgid "Blame parent commit"
+msgstr "Blame szülő kommitra"
+
+#: shitk:2660
+msgid "Copy path"
+msgstr ""
+
+#: shitk:2667
+msgid "Show origin of this line"
+msgstr "Mutasd meg ennek a sornak az eredetét"
+
+#: shitk:2668
+msgid "Run shit gui blame on this line"
+msgstr "Futtasd a shit gui blame-t ezen a soron"
+
+#: shitk:3014
+#, fuzzy
+msgid ""
+"\n"
+"shitk - a commit viewer for shit\n"
+"\n"
+"Copyright © 2005-2016 Paul Mackerras\n"
+"\n"
+"Use and redistribute under the terms of the GNU General Public License"
+msgstr ""
+"\n"
+"shitk - commit nézegető a shithez\n"
+"\n"
+"Szerzői jog \\u00a9 2005-2016 Paul Mackerras\n"
+"\n"
+"Használd és terjeszd a GNU General Public License feltételei mellett"
+
+#: shitk:3022 shitk:3089 shitk:9857
+msgid "Close"
+msgstr "Bezárás"
+
+#: shitk:3043
+msgid "shitk key bindings"
+msgstr "shitk-billentyű hozzárendelés"
+
+#: shitk:3046
+msgid "shitk key bindings:"
+msgstr "shitk-billentyű hozzaárendelés:"
+
+#: shitk:3048
+#, tcl-format
+msgid "<%s-Q>\t\tQuit"
+msgstr "<%s-Q>\t\tKilépés"
+
+#: shitk:3049
+#, fuzzy, tcl-format
+msgid "<%s-W>\t\tClose window"
+msgstr "<%s-F>\t\tKeresés"
+
+#: shitk:3050
+msgid "<Home>\t\tMove to first commit"
+msgstr "<Pos1>\t\tElső commithoz"
+
+#: shitk:3051
+msgid "<End>\t\tMove to last commit"
+msgstr "<Ende>\t\tUtolsó commithoz"
+
+#: shitk:3052
+#, fuzzy
+msgid "<Up>, p, k\tMove up one commit"
+msgstr "<Hoch>, p, i\tEgy committal feljebb"
+
+#: shitk:3053
+#, fuzzy
+msgid "<Down>, n, j\tMove down one commit"
+msgstr "<Runter>, n, k\tEgy committal lejjebb"
+
+#: shitk:3054
+#, fuzzy
+msgid "<Left>, z, h\tGo back in history list"
+msgstr "<Links>, z, j\tVissza a history listába"
+
+#: shitk:3055
+msgid "<Right>, x, l\tGo forward in history list"
+msgstr "<Rechts>, x, l\tElőre a history listába"
+
+#: shitk:3056
+#, tcl-format
+msgid "<%s-n>\tGo to n-th parent of current commit in history list"
+msgstr ""
+
+#: shitk:3057
+msgid "<PageUp>\tMove up one page in commit list"
+msgstr "<BildHoch>\tEgy lappal feljebb a commit listába"
+
+#: shitk:3058
+msgid "<PageDown>\tMove down one page in commit list"
+msgstr "<BildRunter>\tEgy lappal lejjebb a commit listába"
+
+#: shitk:3059
+#, tcl-format
+msgid "<%s-Home>\tScroll to top of commit list"
+msgstr "<%s-Pos1>\tGörgetés a commit lista tetejéhez"
+
+#: shitk:3060
+#, tcl-format
+msgid "<%s-End>\tScroll to bottom of commit list"
+msgstr "<%s-Ende>\tGörgetés a commit lista aljához"
+
+#: shitk:3061
+#, tcl-format
+msgid "<%s-Up>\tScroll commit list up one line"
+msgstr "<%s-Hoch>\tEgy sorral feljebb görgetés a commit listában"
+
+#: shitk:3062
+#, tcl-format
+msgid "<%s-Down>\tScroll commit list down one line"
+msgstr "<%s-Runter>\tEgy sorral lejjebb görgetés a commit listában"
+
+#: shitk:3063
+#, tcl-format
+msgid "<%s-PageUp>\tScroll commit list up one page"
+msgstr "<%s-BildHoch>\tEgy lappal feljebb görgetés a commit listában"
+
+#: shitk:3064
+#, tcl-format
+msgid "<%s-PageDown>\tScroll commit list down one page"
+msgstr "<%s-BildRunter>\tEgy sorral lejjebb görgetés a commit listában"
+
+#: shitk:3065
+msgid "<Shift-Up>\tFind backwards (upwards, later commits)"
+msgstr "<Umschalt-Hoch>\tKeresés visszafele (felfele, utolsó commitok)"
+
+#: shitk:3066
+msgid "<Shift-Down>\tFind forwards (downwards, earlier commits)"
+msgstr "<Umschalt-Runter>\tKeresés előre (lefelé; korábbi commitok)"
+
+#: shitk:3067
+msgid "<Delete>, b\tScroll diff view up one page"
+msgstr "<Entf>, b\t\tEgy lappal feljebb görgetés a diff nézetben"
+
+#: shitk:3068
+msgid "<Backspace>\tScroll diff view up one page"
+msgstr "<Löschtaste>\tEgy lappal feljebb görgetés a diff nézetben"
+
+#: shitk:3069
+msgid "<Space>\t\tScroll diff view down one page"
+msgstr "<Leertaste>\tEgy lappal lejjebb görgetés a diff nézetben"
+
+#: shitk:3070
+msgid "u\t\tScroll diff view up 18 lines"
+msgstr "u\t\t18 sorral felfelé görgetés diff nézetben"
+
+#: shitk:3071
+msgid "d\t\tScroll diff view down 18 lines"
+msgstr "d\t\t18 sorral lejjebb görgetés a diff nézetben"
+
+#: shitk:3072
+#, tcl-format
+msgid "<%s-F>\t\tFind"
+msgstr "<%s-F>\t\tKeresés"
+
+#: shitk:3073
+#, tcl-format
+msgid "<%s-G>\t\tMove to next find hit"
+msgstr "<%s-G>\t\tKövetkező találathoz"
+
+#: shitk:3074
+msgid "<Return>\tMove to next find hit"
+msgstr "<Eingabetaste>\tKövetkező találathoz"
+
+#: shitk:3075
+#, fuzzy
+msgid "g\t\tGo to commit"
+msgstr "<Ende>\t\tUtolsó commithoz"
+
+#: shitk:3076
+msgid "/\t\tFocus the search box"
+msgstr "/\t\tLépj a keresési mezőre"
+
+#: shitk:3077
+msgid "?\t\tMove to previous find hit"
+msgstr "?\t\tElőző találathoz"
+
+#: shitk:3078
+msgid "f\t\tScroll diff view to next file"
+msgstr "f\t\tKövetkező fájlra görgetés diff nézetben"
+
+#: shitk:3079
+#, tcl-format
+msgid "<%s-S>\t\tSearch for next hit in diff view"
+msgstr "<%s-S>\t\tKövetkező találatra keresés diff nézetben"
+
+#: shitk:3080
+#, tcl-format
+msgid "<%s-R>\t\tSearch for previous hit in diff view"
+msgstr "<%s-R>\t\tElőző találatra keresés diff nézetben"
+
+#: shitk:3081
+#, tcl-format
+msgid "<%s-KP+>\tIncrease font size"
+msgstr "<%s-Nummerblock-Plus>\tBetűméret növelése"
+
+#: shitk:3082
+#, tcl-format
+msgid "<%s-plus>\tIncrease font size"
+msgstr "<%s-Plus>\tBetűméret növelése"
+
+#: shitk:3083
+#, tcl-format
+msgid "<%s-KP->\tDecrease font size"
+msgstr "<%s-Nummernblock-Minus> Betűméret csökkentése"
+
+#: shitk:3084
+#, tcl-format
+msgid "<%s-minus>\tDecrease font size"
+msgstr "<%s-Minus>\tBetűméret csökkentése"
+
+#: shitk:3085
+msgid "<F5>\t\tUpdate"
+msgstr "<F5>\t\tFrissítés"
+
+#: shitk:3550 shitk:3559
+#, tcl-format
+msgid "Error creating temporary directory %s:"
+msgstr "Hiba történt az ideiglenes könyvtár létrehozása közben %s:"
+
+#: shitk:3572
+#, tcl-format
+msgid "Error getting \"%s\" from %s:"
+msgstr "Hiba történt \"%s\" letöltése közben %s-ről:"
+
+#: shitk:3635
+msgid "command failed:"
+msgstr "parancs hiba:"
+
+#: shitk:3784
+msgid "No such commit"
+msgstr "Nincs ilyen commit"
+
+#: shitk:3798
+msgid "shit gui blame: command failed:"
+msgstr "shit gui blame: parancs hiba:"
+
+#: shitk:3829
+#, tcl-format
+msgid "Couldn't read merge head: %s"
+msgstr "Nem sikerült a Merge head olvasása: %s"
+
+#: shitk:3837
+#, tcl-format
+msgid "Error reading index: %s"
+msgstr "Hiba történt az index olvasása közben: %s"
+
+#: shitk:3862
+#, tcl-format
+msgid "Couldn't start shit blame: %s"
+msgstr "Nem sikerült a shit blame indítása: %s"
+
+#: shitk:3865 shitk:6754
+msgid "Searching"
+msgstr "Keresés"
+
+#: shitk:3897
+#, tcl-format
+msgid "Error running shit blame: %s"
+msgstr "Hiba történt a shit blame futtatása közben: %s"
+
+#: shitk:3925
+#, tcl-format
+msgid "That line comes from commit %s,  which is not in this view"
+msgstr ""
+"A %s commitból származik az a sor, amelyik nem található ebben a nézetben"
+
+#: shitk:3939
+msgid "External diff viewer failed:"
+msgstr "Külső diff nézegető hiba:"
+
+#: shitk:4070
+msgid "shitk view definition"
+msgstr "shitk nézet meghatározása"
+
+#: shitk:4074
+msgid "Remember this view"
+msgstr "Maradj ennél a nézetnél"
+
+#: shitk:4075
+msgid "References (space separated list):"
+msgstr "Referenciák (szóközzel tagolt lista"
+
+#: shitk:4076
+msgid "Branches & tags:"
+msgstr "Branch-ek & tagek:"
+
+#: shitk:4077
+msgid "All refs"
+msgstr "Minden ref"
+
+#: shitk:4078
+msgid "All (local) branches"
+msgstr "Minden (helyi) branch"
+
+#: shitk:4079
+msgid "All tags"
+msgstr "Minden tag"
+
+#: shitk:4080
+msgid "All remote-tracking branches"
+msgstr "Minden távoli követő branch"
+
+#: shitk:4081
+msgid "Commit Info (regular expressions):"
+msgstr "Commit Infó (reguláris kifejezés):"
+
+#: shitk:4082
+msgid "Author:"
+msgstr "Szerző:"
+
+#: shitk:4083
+msgid "Committer:"
+msgstr "Commitoló:"
+
+#: shitk:4084
+msgid "Commit Message:"
+msgstr "Commit üzenet:"
+
+#: shitk:4085
+msgid "Matches all Commit Info criteria"
+msgstr "Egyezik minen Commit Infó feltétellel"
+
+#: shitk:4086
+#, fuzzy
+msgid "Matches no Commit Info criteria"
+msgstr "Egyezik minen Commit Infó feltétellel"
+
+#: shitk:4087
+msgid "Changes to Files:"
+msgstr "Fájl változások:"
+
+#: shitk:4088
+msgid "Fixed String"
+msgstr "Fix String"
+
+#: shitk:4089
+msgid "Regular Expression"
+msgstr "Reguláris kifejezés"
+
+#: shitk:4090
+msgid "Search string:"
+msgstr "Keresés szöveg:"
+
+#: shitk:4091
+msgid ""
+"Commit Dates (\"2 weeks ago\", \"2009-03-17 15:27:38\", \"March 17, 2009 "
+"15:27:38\"):"
+msgstr ""
+"Commit Dátumok (\"2 weeks ago\", \"2009-03-17 15:27:38\", \"March 17, 2009 "
+"15:27:38\"):"
+
+#: shitk:4092
+msgid "Since:"
+msgstr "Ettől:"
+
+#: shitk:4093
+msgid "Until:"
+msgstr "Eddig:"
+
+#: shitk:4094
+msgid "Limit and/or skip a number of revisions (positive integer):"
+msgstr "Limitálva és/vagy kihagyva egy adott számú revíziót (pozitív egész):"
+
+#: shitk:4095
+msgid "Number to show:"
+msgstr "Mutatandó szám:"
+
+#: shitk:4096
+msgid "Number to skip:"
+msgstr "Kihagyandó szám:"
+
+#: shitk:4097
+msgid "Miscellaneous options:"
+msgstr "Különféle opciók:"
+
+#: shitk:4098
+msgid "Strictly sort by date"
+msgstr "Szigorú rendezás dátum alapján"
+
+#: shitk:4099
+msgid "Mark branch sides"
+msgstr "Jelölje meg az ágakat"
+
+#: shitk:4100
+msgid "Limit to first parent"
+msgstr "Korlátozás az első szülőre"
+
+#: shitk:4101
+msgid "Simple history"
+msgstr "Egyszerű history"
+
+#: shitk:4102
+msgid "Additional arguments to shit log:"
+msgstr "További argumentok a shit log-hoz:"
+
+#: shitk:4103
+msgid "Enter files and directories to include, one per line:"
+msgstr "Fájlok és könyvtárak bejegyzése amiket tartalmaz, soronként:"
+
+#: shitk:4104
+msgid "Command to generate more commits to include:"
+msgstr "Parancs több tartalmazó commit generálására:"
+
+#: shitk:4228
+msgid "shitk: edit view"
+msgstr "shitk: szerkesztés nézet"
+
+#: shitk:4236
+msgid "-- criteria for selecting revisions"
+msgstr "-- kritériumok a revíziók kiválasztásához"
+
+#: shitk:4241
+msgid "View Name"
+msgstr "Nézet neve"
+
+#: shitk:4316
+msgid "Apply (F5)"
+msgstr "Alkalmaz (F5)"
+
+#: shitk:4354
+msgid "Error in commit selection arguments:"
+msgstr "Hiba történt a commit argumentumok kiválasztása közben:"
+
+#: shitk:4409 shitk:4462 shitk:4924 shitk:4938 shitk:6208 shitk:12373 shitk:12374
+msgid "None"
+msgstr "Keine"
+
+#: shitk:5021 shitk:5026
+msgid "Descendant"
+msgstr "Leszármazott"
+
+#: shitk:5022
+msgid "Not descendant"
+msgstr "Nem leszármazott"
+
+#: shitk:5029 shitk:5034
+msgid "Ancestor"
+msgstr "Előd"
+
+#: shitk:5030
+msgid "Not ancestor"
+msgstr "Nem előd"
+
+#: shitk:5324
+msgid "Local changes checked in to index but not committed"
+msgstr ""
+"Lokális változtatások, melyek be vannak téve az indexbe, de még nincsenek "
+"commitolva"
+
+#: shitk:5360
+msgid "Local uncommitted changes, not checked in to index"
+msgstr "Lokális nem commitolt változások, nincsenek betéve az indexbe"
+
+#: shitk:7134
+msgid "and many more"
+msgstr ""
+
+#: shitk:7137
+msgid "many"
+msgstr "sok"
+
+#: shitk:7328
+msgid "Tags:"
+msgstr "Tagek:"
+
+#: shitk:7345 shitk:7351 shitk:8825
+msgid "Parent"
+msgstr "Eltern"
+
+#: shitk:7356
+msgid "Child"
+msgstr "Gyerek"
+
+#: shitk:7365
+msgid "Branch"
+msgstr "Ág"
+
+#: shitk:7368
+msgid "Follows"
+msgstr "Következők"
+
+#: shitk:7371
+msgid "Precedes"
+msgstr "Megelőzők"
+
+#: shitk:7966
+#, tcl-format
+msgid "Error getting diffs: %s"
+msgstr "Hiba történt a diff-ek letöltése közben: %s"
+
+#: shitk:8650
+msgid "Goto:"
+msgstr "Menj:"
+
+#: shitk:8671
+#, tcl-format
+msgid "Short SHA1 id %s is ambiguous"
+msgstr "Rövid SHA1 id %s félreérthető"
+
+#: shitk:8678
+#, tcl-format
+msgid "Revision %s is not known"
+msgstr "A(z) %s revízió nem ismert"
+
+#: shitk:8688
+#, tcl-format
+msgid "SHA1 id %s is not known"
+msgstr "SHA1 id %s nem ismert"
+
+#: shitk:8690
+#, tcl-format
+msgid "Revision %s is not in the current view"
+msgstr "A(z) %s revízió nincs a jelenlegi nézetben"
+
+#: shitk:8832 shitk:8847
+msgid "Date"
+msgstr "Dátum"
+
+#: shitk:8835
+msgid "Children"
+msgstr "Gyerekek"
+
+#: shitk:8898
+#, tcl-format
+msgid "Reset %s branch to here"
+msgstr "Állítsd vissza a %s branch-ot ide"
+
+#: shitk:8900
+msgid "Detached head: can't reset"
+msgstr "Elkülönített head: nem lehet visszaállítani"
+
+#: shitk:9005 shitk:9011
+msgid "Skipping merge commit "
+msgstr "Merge commit kihagyása "
+
+#: shitk:9020 shitk:9025
+msgid "Error getting patch ID for "
+msgstr "Hiba történt a patch ID megszerzése közben a következőnél "
+
+#: shitk:9021 shitk:9026
+msgid " - stopping\n"
+msgstr " - abbahagyás\n"
+
+#: shitk:9031 shitk:9034 shitk:9042 shitk:9056 shitk:9065
+msgid "Commit "
+msgstr "Commit "
+
+#: shitk:9035
+msgid ""
+" is the same patch as\n"
+"       "
+msgstr ""
+" Ugyanaz a patch mint\n"
+"       "
+
+#: shitk:9043
+msgid ""
+" differs from\n"
+"       "
+msgstr ""
+" különbözik innentől\n"
+"       "
+
+#: shitk:9045
+msgid ""
+"Diff of commits:\n"
+"\n"
+msgstr ""
+"A commitok diffje:\n"
+"\n"
+
+#: shitk:9057 shitk:9066
+#, tcl-format
+msgid " has %s children - stopping\n"
+msgstr " %s gyereke van. abbahagyás\n"
+
+#: shitk:9085
+#, tcl-format
+msgid "Error writing commit to file: %s"
+msgstr "Hiba történt a commit fájlba írása közben: %s"
+
+#: shitk:9091
+#, tcl-format
+msgid "Error diffing commits: %s"
+msgstr "Hiba történt a commitok diffelése közben: %s"
+
+#: shitk:9137
+msgid "Top"
+msgstr "Teteje"
+
+#: shitk:9138
+msgid "From"
+msgstr "Innen"
+
+#: shitk:9143
+msgid "To"
+msgstr "Ide"
+
+#: shitk:9167
+msgid "Generate patch"
+msgstr "Patch generálása"
+
+#: shitk:9169
+msgid "From:"
+msgstr "Innen:"
+
+#: shitk:9178
+msgid "To:"
+msgstr "Ide:"
+
+#: shitk:9187
+msgid "Reverse"
+msgstr "Visszafele"
+
+#: shitk:9189 shitk:9385
+msgid "Output file:"
+msgstr "Kimeneti fájl:"
+
+#: shitk:9195
+msgid "Generate"
+msgstr "Generálás"
+
+#: shitk:9233
+msgid "Error creating patch:"
+msgstr "Hiba törtét a patch készítése közben:"
+
+#: shitk:9256 shitk:9373 shitk:9430
+msgid "ID:"
+msgstr "ID:"
+
+#: shitk:9265
+msgid "Tag name:"
+msgstr "Tag név:"
+
+#: shitk:9268
+msgid "Tag message is optional"
+msgstr ""
+
+#: shitk:9270
+#, fuzzy
+msgid "Tag message:"
+msgstr "Tag név:"
+
+#: shitk:9274 shitk:9439
+msgid "Create"
+msgstr "Létrehozás"
+
+#: shitk:9292
+msgid "No tag name specified"
+msgstr "A tag neve nincsen megadva"
+
+#: shitk:9296
+#, tcl-format
+msgid "Tag \"%s\" already exists"
+msgstr "%s Tag már létezik"
+
+#: shitk:9306
+msgid "Error creating tag:"
+msgstr "Hiba történt a tag létrehozása közben:"
+
+#: shitk:9382
+msgid "Command:"
+msgstr "Parancs:"
+
+#: shitk:9390
+msgid "Write"
+msgstr "Írás"
+
+#: shitk:9408
+msgid "Error writing commit:"
+msgstr "Hiba történt a commit írása közben:"
+
+#: shitk:9435
+msgid "Name:"
+msgstr "Név:"
+
+#: shitk:9458
+msgid "Please specify a name for the new branch"
+msgstr "Kérem adja meg a nevét az új branchhoz"
+
+#: shitk:9463
+#, tcl-format
+msgid "Branch '%s' already exists. Overwrite?"
+msgstr "%s branch már létezik. Felülírja?"
+
+#: shitk:9530
+#, tcl-format
+msgid "Commit %s is already included in branch %s -- really re-apply it?"
+msgstr ""
+"%s commit már benne van a %s branchban -- biztos hogy újra csinálja ?"
+"eintragen?"
+
+#: shitk:9535
+msgid "Cherry-picking"
+msgstr "Cherry-picking"
+
+#: shitk:9544
+#, tcl-format
+msgid ""
+"Cherry-pick failed because of local changes to file '%s'.\n"
+"Please commit, reset or stash your changes and try again."
+msgstr ""
+"Cherry-pick hiba történt lokális váltotások miatt a '%s' fájlban.\n"
+"Kérem commitolja, indítsa újra vagy rejtse el a változtatásait és próbálja "
+"újra."
+
+#: shitk:9550
+msgid ""
+"Cherry-pick failed because of merge conflict.\n"
+"Do you wish to run shit citool to resolve it?"
+msgstr ""
+"Cherry-pick hiba történt merge konfliktus miatt.\n"
+"Kívánja futtatni a shit citool-t a probléma megoldásához?"
+
+#: shitk:9566 shitk:9624
+msgid "No changes committed"
+msgstr "Nincsen változás commitolva"
+
+#: shitk:9593
+#, fuzzy, tcl-format
+msgid "Commit %s is not included in branch %s -- really revert it?"
+msgstr ""
+"%s commit már benne van a %s branchban -- biztos hogy újra csinálja ?"
+"eintragen?"
+
+#: shitk:9598
+#, fuzzy
+msgid "Reverting"
+msgstr "Újraindítás"
+
+#: shitk:9606
+#, fuzzy, tcl-format
+msgid ""
+"Revert failed because of local changes to the following files:%s Please "
+"commit, reset or stash  your changes and try again."
+msgstr ""
+"Cherry-pick hiba történt lokális váltotások miatt a '%s' fájlban.\n"
+"Kérem commitolja, indítsa újra vagy rejtse el a változtatásait és próbálja "
+"újra."
+
+#: shitk:9610
+#, fuzzy
+msgid ""
+"Revert failed because of merge conflict.\n"
+" Do you wish to run shit citool to resolve it?"
+msgstr ""
+"Cherry-pick hiba történt merge konfliktus miatt.\n"
+"Kívánja futtatni a shit citool-t a probléma megoldásához?"
+
+#: shitk:9653
+msgid "Confirm reset"
+msgstr "Újraindítás megerősítése"
+
+#: shitk:9655
+#, tcl-format
+msgid "Reset branch %s to %s?"
+msgstr "Újraindítja a %s branchot %s-ig?"
+
+#: shitk:9657
+msgid "Reset type:"
+msgstr "Újraindítás típusa:"
+
+#: shitk:9660
+msgid "Soft: Leave working tree and index untouched"
+msgstr "Soft: Hagyd a working tree-t és az indexet érintetlenül"
+
+#: shitk:9663
+msgid "Mixed: Leave working tree untouched, reset index"
+msgstr "Kevert: Hagyd a working tree-t érintetlenül, töröld az indexet"
+
+#: shitk:9666
+msgid ""
+"Hard: Reset working tree and index\n"
+"(discard ALL local changes)"
+msgstr ""
+"Hard: Indítsd újra a working tree-t és az indexet\n"
+"(MINDEN lokális változás eldobása)"
+
+#: shitk:9683
+msgid "Resetting"
+msgstr "Újraindítás"
+
+#: shitk:9743
+msgid "Checking out"
+msgstr "Kivesz"
+
+#: shitk:9796
+msgid "Cannot delete the currently checked-out branch"
+msgstr "Nem lehet a jelenleg kivett branch-ot törölni"
+
+#: shitk:9802
+#, tcl-format
+msgid ""
+"The commits on branch %s aren't on any other branch.\n"
+"Really delete branch %s?"
+msgstr ""
+"A %s branchon található commit nem található meg semelyik másik branchon.\n"
+"Tényleg törli a %s branchot?"
+
+#: shitk:9833
+#, tcl-format
+msgid "Tags and heads: %s"
+msgstr "Tagek és headek: %s"
+
+#: shitk:9850
+msgid "Filter"
+msgstr "Szűrő"
+
+#: shitk:10146
+msgid ""
+"Error reading commit topology information; branch and preceding/following "
+"tag information will be incomplete."
+msgstr ""
+"Hiba történt a commit topológiai információ olvasása közben; branch ésa "
+"megelőző/következő információ nem lesz teljes."
+
+#: shitk:11123
+msgid "Tag"
+msgstr "Tag"
+
+#: shitk:11127
+msgid "Id"
+msgstr "Id"
+
+#: shitk:11210
+msgid "shitk font chooser"
+msgstr "shitk-betű kiválasztó"
+
+#: shitk:11227
+msgid "B"
+msgstr "F"
+
+#: shitk:11230
+msgid "I"
+msgstr "K"
+
+#: shitk:11348
+msgid "Commit list display options"
+msgstr "Commit lista kijelzési opciók"
+
+#: shitk:11351
+msgid "Maximum graph width (lines)"
+msgstr "Maximális grafikon szélesség (sorok)"
+
+#: shitk:11355
+#, no-tcl-format
+msgid "Maximum graph width (% of pane)"
+msgstr "Maximális grafikon szélesség (táble %-je)"
+
+#: shitk:11358
+msgid "Show local changes"
+msgstr "Mutasd a lokális változtatásokat"
+
+#: shitk:11361
+#, fuzzy
+msgid "Auto-select SHA1 (length)"
+msgstr "SHA1 Automatikus kiválasztása"
+
+#: shitk:11365
+msgid "Hide remote refs"
+msgstr "A távoli refek elrejtése"
+
+#: shitk:11369
+msgid "Diff display options"
+msgstr "Diff kijelző opciók"
+
+#: shitk:11371
+msgid "Tab spacing"
+msgstr "Tab sorköz"
+
+#: shitk:11374
+#, fuzzy
+msgid "Display nearby tags/heads"
+msgstr "Szomszédos tagek kijelzése"
+
+#: shitk:11377
+msgid "Maximum # tags/heads to show"
+msgstr ""
+
+#: shitk:11380
+msgid "Limit diffs to listed paths"
+msgstr "Korlátozott diffek a kilistázott útvonalakhoz"
+
+#: shitk:11383
+msgid "Support per-file encodings"
+msgstr "Fájlonkénti kódolás támgatása"
+
+#: shitk:11389 shitk:11536
+msgid "External diff tool"
+msgstr "Külső diff alkalmazás"
+
+#: shitk:11390
+msgid "Choose..."
+msgstr "Válaszd ..."
+
+#: shitk:11395
+msgid "General options"
+msgstr "Általános opciók"
+
+#: shitk:11398
+msgid "Use themed widgets"
+msgstr "Témázott vezérlők használata"
+
+#: shitk:11400
+msgid "(change requires restart)"
+msgstr "(a változás újraindítást igényel)"
+
+#: shitk:11402
+msgid "(currently unavailable)"
+msgstr "(jelenleg nem elérhető)"
+
+#: shitk:11413
+msgid "Colors: press to choose"
+msgstr "Színek: nyomja meg a kiválasztáshoz"
+
+#: shitk:11416
+msgid "Interface"
+msgstr "Interfész"
+
+#: shitk:11417
+msgid "interface"
+msgstr "interfész"
+
+#: shitk:11420
+msgid "Background"
+msgstr "Háttér"
+
+#: shitk:11421 shitk:11451
+msgid "background"
+msgstr "háttér"
+
+#: shitk:11424
+msgid "Foreground"
+msgstr "Előtér"
+
+#: shitk:11425
+msgid "foreground"
+msgstr "előtér"
+
+#: shitk:11428
+msgid "Diff: old lines"
+msgstr "Diff: régi sorok"
+
+#: shitk:11429
+msgid "diff old lines"
+msgstr "diff régi sorok"
+
+#: shitk:11433
+msgid "Diff: new lines"
+msgstr "Diff: új sorok"
+
+#: shitk:11434
+msgid "diff new lines"
+msgstr "diff - új sorok"
+
+#: shitk:11438
+msgid "Diff: hunk header"
+msgstr "Diff: nagy headerök"
+
+#: shitk:11440
+msgid "diff hunk header"
+msgstr "diff - nagy headerök"
+
+#: shitk:11444
+msgid "Marked line bg"
+msgstr "Megjelölt sor háttér"
+
+#: shitk:11446
+msgid "marked line background"
+msgstr "megjelölt sor háttér"
+
+#: shitk:11450
+msgid "Select bg"
+msgstr "Válasszon hátteret"
+
+#: shitk:11459
+msgid "Fonts: press to choose"
+msgstr "Betű: nyomja meg a kiválasztáshoz"
+
+#: shitk:11461
+msgid "Main font"
+msgstr "Fő betű"
+
+#: shitk:11462
+msgid "Diff display font"
+msgstr "Diff kijelző betű"
+
+#: shitk:11463
+msgid "User interface font"
+msgstr "Felhasználói interfész betű"
+
+#: shitk:11485
+msgid "shitk preferences"
+msgstr "shitk beállítások"
+
+#: shitk:11494
+#, fuzzy
+msgid "General"
+msgstr "Generálás"
+
+#: shitk:11495
+msgid "Colors"
+msgstr ""
+
+#: shitk:11496
+msgid "Fonts"
+msgstr ""
+
+#: shitk:11546
+#, tcl-format
+msgid "shitk: choose color for %s"
+msgstr "shitk: válasszon színt a %s-ra"
+
+#: shitk:12059
+msgid ""
+"Sorry, shitk cannot run with this version of Tcl/Tk.\n"
+" shitk requires at least Tcl/Tk 8.4."
+msgstr ""
+"Sajnáljuk, de a shitk nem futtatható ezzel a Tcl/Tk verzióval.\n"
+"shitk futtatásához legalább Tcl/Tk 8.4 szükséges."
+
+#: shitk:12269
+msgid "Cannot find a shit repository here."
+msgstr "Nem találhatü shit repository itt."
+
+#: shitk:12316
+#, tcl-format
+msgid "Ambiguous argument '%s': both revision and filename"
+msgstr "Félreérthető argumentum '%s': revízió és fájlnév is"
+
+#: shitk:12328
+msgid "Bad arguments to shitk:"
+msgstr "Rossz shitk argumentumok:"
+
+#~ msgid "mc"
+#~ msgstr "mc"
+
+#~ msgid "SHA1 ID: "
+#~ msgstr "SHA1 ID: "
+
+#~ msgid "next"
+#~ msgstr "következő"
+
+#~ msgid "prev"
+#~ msgstr "előző"
+
+#~ msgid "CDate"
+#~ msgstr "Dátum"
+
+#~ msgid "Cannot find the shit directory \"%s\"."
+#~ msgstr "Nem található a \"%s\" könyvtár."
+
+#~ msgid "Use all refs"
+#~ msgstr "Használd az összes referenciát"
+
+#~ msgid "Max count:"
+#~ msgstr "Max. szám:"
+
+#~ msgid "Skip:"
+#~ msgstr "Kihagy:"
+
+#~ msgid "Name"
+#~ msgstr "Név"
+
+#~ msgid "Tag/Head %s is not known"
+#~ msgstr "Tag/Head %s nem ismert"
+
+#~ msgid "- stopping\n"
+#~ msgstr "- abbahagyás.\n"

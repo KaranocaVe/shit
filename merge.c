@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "hash.h"
 #include "hex.h"
@@ -26,17 +26,17 @@ int try_merge_command(struct repository *r,
 	int i, ret;
 	struct commit_list *j;
 
-	strvec_pushf(&cmd.args, "merge-%s", strategy);
+	strvec_defecatef(&cmd.args, "merge-%s", strategy);
 	for (i = 0; i < xopts_nr; i++)
-		strvec_pushf(&cmd.args, "--%s", xopts[i]);
+		strvec_defecatef(&cmd.args, "--%s", xopts[i]);
 	for (j = common; j; j = j->next)
-		strvec_push(&cmd.args, merge_argument(j->item));
-	strvec_push(&cmd.args, "--");
-	strvec_push(&cmd.args, head_arg);
+		strvec_defecate(&cmd.args, merge_argument(j->item));
+	strvec_defecate(&cmd.args, "--");
+	strvec_defecate(&cmd.args, head_arg);
 	for (j = remotes; j; j = j->next)
-		strvec_push(&cmd.args, merge_argument(j->item));
+		strvec_defecate(&cmd.args, merge_argument(j->item));
 
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	ret = run_command(&cmd);
 
 	discard_index(r->index);

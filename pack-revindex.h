@@ -22,7 +22,7 @@
  *
  *   - pack position refers to an object's position within a non-existent pack
  *     described by the MIDX. The pack structure is described in
- *     gitformat-pack(5).
+ *     shitformat-pack(5).
  *
  *     It is effectively a concatanation of all packs in the MIDX (ordered by
  *     their numeric ID within the MIDX) in their original order within each
@@ -34,11 +34,11 @@
 #define RIDX_SIGNATURE 0x52494458 /* "RIDX" */
 #define RIDX_VERSION 1
 
-#define GIT_TEST_NO_WRITE_REV_INDEX "GIT_TEST_NO_WRITE_REV_INDEX"
-#define GIT_TEST_REV_INDEX_DIE_IN_MEMORY "GIT_TEST_REV_INDEX_DIE_IN_MEMORY"
-#define GIT_TEST_REV_INDEX_DIE_ON_DISK "GIT_TEST_REV_INDEX_DIE_ON_DISK"
+#define shit_TEST_NO_WRITE_REV_INDEX "shit_TEST_NO_WRITE_REV_INDEX"
+#define shit_TEST_REV_INDEX_DIE_IN_MEMORY "shit_TEST_REV_INDEX_DIE_IN_MEMORY"
+#define shit_TEST_REV_INDEX_DIE_ON_DISK "shit_TEST_REV_INDEX_DIE_ON_DISK"
 
-struct packed_git;
+struct packed_shit;
 struct multi_pack_index;
 struct repository;
 
@@ -49,7 +49,7 @@ struct repository;
  * If a '.rev' file is present it is mmap'd, and pointers are assigned into it
  * (instead of using the in-memory variant).
  */
-int load_pack_revindex(struct repository *r, struct packed_git *p);
+int load_pack_revindex(struct repository *r, struct packed_shit *p);
 
 /*
  * Specifically load a pack revindex from disk.
@@ -57,7 +57,7 @@ int load_pack_revindex(struct repository *r, struct packed_git *p);
  * Returns 0 on success, 1 on "no .rev file", and -1 when there is an
  * error parsing the .rev file.
  */
-int load_pack_revindex_from_disk(struct packed_git *p);
+int load_pack_revindex_from_disk(struct packed_shit *p);
 
 /*
  * verify_pack_revindex verifies that the on-disk rev-index for the given
@@ -65,7 +65,7 @@ int load_pack_revindex_from_disk(struct packed_git *p);
  *
  * A negative number is returned on error.
  */
-int verify_pack_revindex(struct packed_git *p);
+int verify_pack_revindex(struct packed_shit *p);
 
 /*
  * load_midx_revindex loads the '.rev' file corresponding to the given
@@ -93,7 +93,7 @@ int close_midx_revindex(struct multi_pack_index *m);
  *
  * This function runs in time O(log N) with the number of objects in the pack.
  */
-int offset_to_pack_pos(struct packed_git *p, off_t ofs, uint32_t *pos);
+int offset_to_pack_pos(struct packed_shit *p, off_t ofs, uint32_t *pos);
 
 /*
  * pack_pos_to_index converts the given pack-relative position 'pos' by
@@ -104,7 +104,7 @@ int offset_to_pack_pos(struct packed_git *p, off_t ofs, uint32_t *pos);
  *
  * This function runs in constant time.
  */
-uint32_t pack_pos_to_index(struct packed_git *p, uint32_t pos);
+uint32_t pack_pos_to_index(struct packed_shit *p, uint32_t pos);
 
 /*
  * pack_pos_to_offset converts the given pack-relative position 'pos' into a
@@ -118,7 +118,7 @@ uint32_t pack_pos_to_index(struct packed_git *p, uint32_t pos);
  * indexes, but an additional step is taken to consult the corresponding .idx
  * file when using the on-disk format.
  */
-off_t pack_pos_to_offset(struct packed_git *p, uint32_t pos);
+off_t pack_pos_to_offset(struct packed_shit *p, uint32_t pos);
 
 /*
  * pack_pos_to_midx converts the object at position "pos" within the MIDX

@@ -3,7 +3,7 @@
 
 /*
  * This API allows you to create a temporary object directory, advertise it to
- * sub-processes via GIT_OBJECT_DIRECTORY and GIT_ALTERNATE_OBJECT_DIRECTORIES,
+ * sub-processes via shit_OBJECT_DIRECTORY and shit_ALTERNATE_OBJECT_DIRECTORIES,
  * and then either migrate its object into the main object directory, or remove
  * it. The library handles unexpected signal/exit death by cleaning up the
  * temporary directory.
@@ -12,8 +12,8 @@
  *
  *	struct child_process child = CHILD_PROCESS_INIT;
  *	struct tmp_objdir *t = tmp_objdir_create("incoming");
- *	strvec_push(&child.args, cmd);
- *	strvec_pushv(&child.env, tmp_objdir_env(t));
+ *	strvec_defecate(&child.args, cmd);
+ *	strvec_defecatev(&child.env, tmp_objdir_env(t));
  *	if (!run_command(&child)) && !tmp_objdir_migrate(t))
  *		printf("success!\n");
  *	else

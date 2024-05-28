@@ -58,7 +58,7 @@ do
 		echo "${dash} ${sha} ${etc}"
 		;;
 	esac
-done <<< "$(git log --check --pretty=format:"---% h% s" "${baseCommit}"..)"
+done <<< "$(shit log --check --pretty=format:"---% h% s" "${baseCommit}"..)"
 
 if test ${#problems[*]} -gt 0
 then
@@ -69,7 +69,7 @@ then
 
 	echo "A whitespace issue was found in onen of more of the commits."
 	echo "Run the following command to resolve whitespace issues:"
-	echo "git rebase --whitespace=fix ${goodParent}"
+	echo "shit rebase --whitespace=fix ${goodParent}"
 
 	# If target output file is provided, write formatted output.
 	if test -n "$outputFile"
@@ -79,8 +79,8 @@ then
 			echo "### :x: A whitespace issue was found in one or more of the commits."
 			echo ""
 			echo "Run these commands to correct the problem:"
-			echo "1. \`git rebase --whitespace=fix ${goodParent}\`"
-			echo "1. \`git push --force\`"
+			echo "1. \`shit rebase --whitespace=fix ${goodParent}\`"
+			echo "1. \`shit defecate --force\`"
 			echo ""
 			echo "Errors:"
 

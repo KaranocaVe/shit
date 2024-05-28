@@ -1,17 +1,17 @@
-git-send-email(1)
+shit-send-email(1)
 =================
 
 NAME
 ----
-git-send-email - Send a collection of patches as emails
+shit-send-email - Send a collection of patches as emails
 
 
 SYNOPSIS
 --------
 [verse]
-'git send-email' [<options>] (<file>|<directory>)...
-'git send-email' [<options>] <format-patch-options>
-'git send-email' --dump-aliases
+'shit send-email' [<options>] (<file>|<directory>)...
+'shit send-email' [<options>] <format-patch-options>
+'shit send-email' --dump-aliases
 
 
 DESCRIPTION
@@ -19,9 +19,9 @@ DESCRIPTION
 Takes the patches given on the command line and emails them out.
 Patches can be specified as files, directories (which will send all
 files in the directory), or directly as a revision list.  In the
-last case, any format accepted by linkgit:git-format-patch[1] can
-be passed to git send-email, as well as options understood by
-linkgit:git-format-patch[1].
+last case, any format accepted by linkshit:shit-format-patch[1] can
+be passed to shit send-email, as well as options understood by
+linkshit:shit-format-patch[1].
 
 The header of the email is configurable via command-line options.  If not
 specified on the command line, the user will be prompted with a ReadLine
@@ -31,7 +31,7 @@ There are two formats accepted for patch files:
 
 1. mbox format files
 +
-This is what linkgit:git-format-patch[1] generates.  Most headers and MIME
+This is what linkshit:shit-format-patch[1] generates.  Most headers and MIME
 formatting are ignored.
 
 2. The original format used by Greg Kroah-Hartman's 'send_lots_of_email.pl'
@@ -65,13 +65,13 @@ This option may be specified multiple times.
 This option may be specified multiple times.
 
 --compose::
-	Invoke a text editor (see GIT_EDITOR in linkgit:git-var[1])
+	Invoke a text editor (see shit_EDITOR in linkshit:shit-var[1])
 	to edit an introductory message for the patch series.
 +
-When `--compose` is used, git send-email will use the From, To, Cc, Bcc,
+When `--compose` is used, shit send-email will use the From, To, Cc, Bcc,
 Subject, Reply-To, and In-Reply-To headers specified in the message. If
 the body of the message (what you type after the headers and a blank
-line) only contains blank (or Git: prefixed) lines, the summary won't be
+line) only contains blank (or shit: prefixed) lines, the summary won't be
 sent, but the headers mentioned above will be used unless they are
 removed.
 +
@@ -84,8 +84,8 @@ See the CONFIGURATION section for `sendemail.multiEdit`.
 	the value of the `sendemail.from` configuration option is used.  If
 	neither the command-line option nor `sendemail.from` are set, then the
 	user will be prompted for the value.  The default for the prompt will be
-	the value of GIT_AUTHOR_IDENT, or GIT_COMMITTER_IDENT if that is not
-	set, as returned by "git var -l".
+	the value of shit_AUTHOR_IDENT, or shit_COMMITTER_IDENT if that is not
+	set, as returned by "shit var -l".
 
 --reply-to=<address>::
 	Specify the address where replies from recipients should go to.
@@ -175,7 +175,7 @@ Sending
 	be sendmail-like; specifically, it must support the `-i` option.
 	The command will be executed in the shell if necessary.  Default
 	is the value of `sendemail.sendmailCmd`.  If unspecified, and if
-	--smtp-server is also unspecified, git-send-email will search
+	--smtp-server is also unspecified, shit-send-email will search
 	for `sendmail` in `/usr/sbin`, `/usr/lib` and $PATH.
 
 --smtp-encryption=<encryption>::
@@ -195,7 +195,7 @@ Sending
 --smtp-domain=<FQDN>::
 	Specifies the Fully Qualified Domain Name (FQDN) used in the
 	HELO/EHLO command to the SMTP server.  Some servers require the
-	FQDN to match your IP address.  If not set, git send-email attempts
+	FQDN to match your IP address.  If not set, shit send-email attempts
 	to determine your FQDN automatically.  Default is the value of
 	`sendemail.smtpDomain`.
 
@@ -204,7 +204,7 @@ Sending
 	forces using only the listed mechanisms. Example:
 +
 ------
-$ git send-email --smtp-auth="PLAIN LOGIN GSSAPI" ...
+$ shit send-email --smtp-auth="PLAIN LOGIN GSSAPI" ...
 ------
 +
 If at least one of the specified mechanisms matches the ones advertised by the
@@ -224,7 +224,7 @@ Furthermore, passwords need not be specified in configuration files
 or on the command line. If a username has been specified (with
 `--smtp-user` or a `sendemail.smtpUser`), but no password has been
 specified (with `--smtp-pass` or `sendemail.smtpPass`), then
-a password is obtained using 'git-credential'.
+a password is obtained using 'shit-credential'.
 
 --no-smtp-auth::
 	Disable SMTP authentication. Short hand for `--smtp-auth=none`
@@ -398,7 +398,7 @@ specified, as well as 'body' if --no-signed-off-cc is specified.
 --[no-]thread::
 	If this is set, the In-Reply-To and References headers will be
 	added to each email sent.  Whether each mail refers to the
-	previous email (`deep` threading per 'git format-patch'
+	previous email (`deep` threading per 'shit format-patch'
 	wording) or to the first email (`shallow` threading) is
 	governed by "--[no-]chain-reply-to".
 +
@@ -408,8 +408,8 @@ If disabled with "--no-thread", those headers will not be added
 default to --thread.
 +
 It is up to the user to ensure that no In-Reply-To header already
-exists when 'git send-email' is asked to add it (especially note that
-'git format-patch' can be configured to do the threading itself).
+exists when 'shit send-email' is asked to add it (especially note that
+'shit format-patch' can be configured to do the threading itself).
 Failure to do so may not produce the expected result in the
 recipient's MUA.
 
@@ -440,10 +440,10 @@ have been specified, in which case default to 'compose'.
 	When an argument may be understood either as a reference or as a file name,
 	choose to understand it as a format-patch argument (`--format-patch`)
 	or as a file name (`--no-format-patch`). By default, when such a conflict
-	occurs, git send-email will fail.
+	occurs, shit send-email will fail.
 
 --quiet::
-	Make git-send-email less verbose.  One line per email should be
+	Make shit-send-email less verbose.  One line per email should be
 	all that is output.
 
 --[no-]validate::
@@ -451,7 +451,7 @@ have been specified, in which case default to 'compose'.
 	Currently, validation means the following:
 +
 --
-		*	Invoke the sendemail-validate hook if present (see linkgit:githooks[5]).
+		*	Invoke the sendemail-validate hook if present (see linkshit:shithooks[5]).
 		*	Warn of patches that contain lines longer than
 			998 characters unless a suitable transfer encoding
 			('auto', 'base64', or 'quoted-printable') is used;
@@ -487,8 +487,8 @@ EXAMPLES
 --------
 Use gmail as the smtp server
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To use 'git send-email' to send your patches through the GMail SMTP server,
-edit ~/.gitconfig to specify your account settings:
+To use 'shit send-email' to send your patches through the GMail SMTP server,
+edit ~/.shitconfig to specify your account settings:
 
 ----
 [sendemail]
@@ -499,19 +499,19 @@ edit ~/.gitconfig to specify your account settings:
 ----
 
 If you have multi-factor authentication set up on your Gmail account, you can
-generate an app-specific password for use with 'git send-email'. Visit
+generate an app-specific password for use with 'shit send-email'. Visit
 https://security.google.com/settings/security/apppasswords to create it.
 
 Once your commits are ready to be sent to the mailing list, run the
 following commands:
 
-	$ git format-patch --cover-letter -M origin/master -o outgoing/
+	$ shit format-patch --cover-letter -M origin/master -o outgoing/
 	$ edit outgoing/0000-*
-	$ git send-email outgoing/*
+	$ shit send-email outgoing/*
 
 The first time you run it, you will be prompted for your credentials.  Enter the
 app-specific or your regular password as appropriate.  If you have credential
-helper configured (see linkgit:git-credential[1]), the password will be saved in
+helper configured (see linkshit:shit-credential[1]), the password will be saved in
 the credential store so you won't have to type it the next time.
 
 Note: the following core Perl modules that may be installed with your
@@ -523,8 +523,8 @@ Authen::SASL and Mail::Address.
 
 SEE ALSO
 --------
-linkgit:git-format-patch[1], linkgit:git-imap-send[1], mbox(5)
+linkshit:shit-format-patch[1], linkshit:shit-imap-send[1], mbox(5)
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

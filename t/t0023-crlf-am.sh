@@ -16,7 +16,7 @@ Subject: test1
  1 files changed, 1 insertions(+), 0 deletions(-)
  create mode 100644 foo
 
-diff --git a/foo b/foo
+diff --shit a/foo b/foo
 new file mode 100644
 index 0000000000000000000000000000000000000000..5716ca5987cbf97d6bb54920bea6adde242d87e6
 --- /dev/null
@@ -27,18 +27,18 @@ EOF
 
 test_expect_success 'setup' '
 
-	git config core.autocrlf true &&
+	shit config core.autocrlf true &&
 	echo foo >bar &&
-	git add bar &&
+	shit add bar &&
 	test_tick &&
-	git commit -m initial
+	shit commit -m initial
 
 '
 
 test_expect_success 'am' '
 
-	git am -3 <patchfile &&
-	git diff-files --name-status --exit-code
+	shit am -3 <patchfile &&
+	shit diff-files --name-status --exit-code
 
 '
 

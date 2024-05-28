@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2005, 2006 Rene Scharfe
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "gettext.h"
-#include "git-zlib.h"
+#include "shit-zlib.h"
 #include "hex.h"
 #include "tar.h"
 #include "archive.h"
@@ -27,7 +27,7 @@ static int write_tar_filter_archive(const struct archiver *ar,
 
 /*
  * This is the max value that a ustar size header can specify, as it is fixed
- * at 11 octal digits. POSIX specifies that we switch to extended headers at
+ * at 11 octal dishits. POSIX specifies that we switch to extended headers at
  * this size.
  *
  * Likewise for the mtime (which happens to use a buffer of the same size).
@@ -126,7 +126,7 @@ static void write_trailer(void)
  */
 static int stream_blocked(struct repository *r, const struct object_id *oid)
 {
-	struct git_istream *st;
+	struct shit_istream *st;
 	enum object_type type;
 	unsigned long sz;
 	char buf[BLOCKSIZE];
@@ -264,7 +264,7 @@ static int write_tar_entry(struct archiver_args *args,
 
 	memset(&header, 0, sizeof(header));
 
-	if (S_ISDIR(mode) || S_ISGITLINK(mode)) {
+	if (S_ISDIR(mode) || S_ISshitLINK(mode)) {
 		*header.typeflag = TYPEFLAG_DIR;
 		mode = (mode | 0777) & ~tar_umask;
 	} else if (S_ISLNK(mode)) {
@@ -401,7 +401,7 @@ static int tar_filter_config(const char *var, const char *value,
 		return 0;
 	}
 	if (!strcmp(type, "remote")) {
-		if (git_config_bool(var, value))
+		if (shit_config_bool(var, value))
 			ar->flags |= ARCHIVER_REMOTE;
 		else
 			ar->flags &= ~ARCHIVER_REMOTE;
@@ -411,7 +411,7 @@ static int tar_filter_config(const char *var, const char *value,
 	return 0;
 }
 
-static int git_tar_config(const char *var, const char *value,
+static int shit_tar_config(const char *var, const char *value,
 			  const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "tar.umask")) {
@@ -419,7 +419,7 @@ static int git_tar_config(const char *var, const char *value,
 			tar_umask = umask(0);
 			umask(tar_umask);
 		} else {
-			tar_umask = git_config_int(var, value, ctx->kvi);
+			tar_umask = shit_config_int(var, value, ctx->kvi);
 		}
 		return 0;
 	}
@@ -439,13 +439,13 @@ static int write_tar_archive(const struct archiver *ar UNUSED,
 	return err;
 }
 
-static git_zstream gzstream;
+static shit_zstream gzstream;
 static unsigned char outbuf[16384];
 
 static void tgz_deflate(int flush)
 {
 	while (gzstream.avail_in || flush == Z_FINISH) {
-		int status = git_deflate(&gzstream, flush);
+		int status = shit_deflate(&gzstream, flush);
 		if (!gzstream.avail_out || status == Z_STREAM_END) {
 			write_or_die(1, outbuf, gzstream.next_out - outbuf);
 			gzstream.next_out = outbuf;
@@ -465,7 +465,7 @@ static void tgz_write_block(const void *data)
 	tgz_deflate(Z_NO_FLUSH);
 }
 
-static const char internal_gzip_command[] = "git archive gzip";
+static const char internal_gzip_command[] = "shit archive gzip";
 
 static int write_tar_filter_archive(const struct archiver *ar,
 				    struct archiver_args *args)
@@ -482,7 +482,7 @@ static int write_tar_filter_archive(const struct archiver *ar,
 
 	if (!strcmp(ar->filter_command, internal_gzip_command)) {
 		write_block = tgz_write_block;
-		git_deflate_init_gzip(&gzstream, args->compression_level);
+		shit_deflate_init_gzip(&gzstream, args->compression_level);
 #if ZLIB_VERNUM >= 0x1221
 		if (deflateSetHeader(&gzstream.z, &gzhead) != Z_OK)
 			BUG("deflateSetHeader() called too late");
@@ -493,7 +493,7 @@ static int write_tar_filter_archive(const struct archiver *ar,
 		r = write_tar_archive(ar, args);
 
 		tgz_deflate(Z_FINISH);
-		git_deflate_end(&gzstream);
+		shit_deflate_end(&gzstream);
 		return r;
 	}
 
@@ -501,7 +501,7 @@ static int write_tar_filter_archive(const struct archiver *ar,
 	if (args->compression_level >= 0)
 		strbuf_addf(&cmd, " -%d", args->compression_level);
 
-	strvec_push(&filter.args, cmd.buf);
+	strvec_defecate(&filter.args, cmd.buf);
 	filter.use_shell = 1;
 	filter.in = -1;
 	filter.silent_exec_failure = 1;
@@ -538,7 +538,7 @@ void init_tar_archiver(void)
 	tar_filter_config("tar.tgz.remote", "true", NULL);
 	tar_filter_config("tar.tar.gz.command", internal_gzip_command, NULL);
 	tar_filter_config("tar.tar.gz.remote", "true", NULL);
-	git_config(git_tar_config, NULL);
+	shit_config(shit_tar_config, NULL);
 	for (i = 0; i < nr_tar_filters; i++) {
 		/* omit any filters that never had a command configured */
 		if (tar_filters[i]->filter_command)

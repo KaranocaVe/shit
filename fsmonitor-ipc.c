@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "simple-ipc.h"
 #include "fsmonitor-ipc.h"
@@ -57,10 +57,10 @@ static int spawn_daemon(void)
 {
 	struct child_process cmd = CHILD_PROCESS_INIT;
 
-	cmd.git_cmd = 1;
+	cmd.shit_cmd = 1;
 	cmd.no_stdin = 1;
 	cmd.trace2_child_class = "fsmonitor";
-	strvec_pushl(&cmd.args, "fsmonitor--daemon", "start", NULL);
+	strvec_defecatel(&cmd.args, "fsmonitor--daemon", "start", NULL);
 
 	return run_command(&cmd);
 }

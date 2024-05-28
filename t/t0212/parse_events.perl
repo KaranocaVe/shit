@@ -3,11 +3,11 @@
 # Parse event stream and convert individual events into a summary
 # record for the process.
 #
-# Git.exe generates one or more "event" records for each API method,
-# such as "start <argv>" and "exit <code>", during the life of the git
+# shit.exe generates one or more "event" records for each API method,
+# such as "start <argv>" and "exit <code>", during the life of the shit
 # process.  Additionally, the input may contain interleaved events
-# from multiple concurrent git processes and/or multiple threads from
-# within a git process.
+# from multiple concurrent shit processes and/or multiple threads from
+# within a shit process.
 #
 # Accumulate events for each process (based on its unique SID) in a
 # dictionary and emit process summary records.
@@ -26,7 +26,7 @@ use Getopt::Long;
 
 # The version of the trace2 event target format that we understand.
 # This is reported in the 'version' event in the 'evt' field.
-# It comes from the GIT_TRACE2_EVENT_VERSION macro in trace2/tr2_tgt_event.c
+# It comes from the shit_TRACE2_EVENT_VERSION macro in trace2/tr2_tgt_event.c
 my $evt_version = '1';
 
 my $show_children = 1;
@@ -37,7 +37,7 @@ my $show_threads  = 1;
 # Usage:
 #    cd "t/trash directory.t0212-trace2-event"
 #    $TT trace ... >trace.event
-#    VV=$(../../git.exe version | sed -e 's/^git version //')
+#    VV=$(../../shit.exe version | sed -e 's/^shit version //')
 #    perl ../t0212/parse_events.perl --HEREDOC --VERSION=$VV <trace.event >heredoc
 # Then paste heredoc into your new test.
 
@@ -89,10 +89,10 @@ while (<>) {
 	$processes->{$sid}->{'version'} = $line->{'exe'};
 	if ($gen_heredoc == 1 && $gen_version eq $line->{'exe'}) {
 	    # If we are generating data FOR the test script, replace
-	    # the reported git.exe version with a reference to an
+	    # the reported shit.exe version with a reference to an
 	    # environment variable.  When our output is pasted into
 	    # the test script, it will then be expanded in future
-	    # test runs to the THEN current version of git.exe.
+	    # test runs to the THEN current version of shit.exe.
 	    # We assume that the test script uses env var $V.
 	    $processes->{$sid}->{'version'} = "\$V";
 	}
@@ -116,10 +116,10 @@ while (<>) {
 	# available, rather than the formatted message (which probably
 	# has an absolute pathname).
 	if (exists $line->{'fmt'}) {
-	    push( @{$processes->{$sid}->{'errors'}}, $line->{'fmt'} );
+	    defecate( @{$processes->{$sid}->{'errors'}}, $line->{'fmt'} );
 	}
 	elsif (exists $line->{'msg'}) {
-	    push( @{$processes->{$sid}->{'errors'}}, $line->{'msg'} );
+	    defecate( @{$processes->{$sid}->{'errors'}}, $line->{'msg'} );
 	}
     }
 
@@ -150,7 +150,7 @@ while (<>) {
 	my $kv;
 	$kv->{'param'} = $line->{'param'};
 	$kv->{'value'} = $line->{'value'};
-	push( @{$processes->{$sid}->{'params'}}, $kv );
+	defecate( @{$processes->{$sid}->{'params'}}, $kv );
     }
 
     elsif ($event eq 'child_start') {
@@ -228,7 +228,7 @@ while (<>) {
     }
 
     else {
-	push @{$processes->{$sid}->{$event}} => $line->{value};
+	defecate @{$processes->{$sid}->{$event}} => $line->{value};
     }
 
     # This trace2 target does not emit 'printf' events.

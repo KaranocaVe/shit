@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='Test git check-ref-format'
+test_description='Test shit check-ref-format'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -14,7 +14,7 @@ valid_ref() {
 	esac
 	desc="ref name '$1' is valid${2:+ with options $2}"
 	test_expect_success $prereq "$desc" "
-		git check-ref-format $2 '$1'
+		shit check-ref-format $2 '$1'
 	"
 }
 invalid_ref() {
@@ -26,7 +26,7 @@ invalid_ref() {
 	esac
 	desc="ref name '$1' is invalid${2:+ with options $2}"
 	test_expect_success $prereq "$desc" "
-		test_must_fail git check-ref-format $2 '$1'
+		test_must_fail shit check-ref-format $2 '$1'
 	"
 }
 
@@ -133,48 +133,48 @@ invalid_ref !MINGW "$ref" '--refspec-pattern --normalize'
 valid_ref !MINGW "$ref" '--refspec-pattern --allow-onelevel --normalize'
 
 test_expect_success "check-ref-format --branch @{-1}" '
-	T=$(git write-tree) &&
-	sha1=$(echo A | git commit-tree $T) &&
-	git update-ref refs/heads/main $sha1 &&
-	git update-ref refs/remotes/origin/main $sha1 &&
-	git checkout main &&
-	git checkout origin/main &&
-	git checkout main &&
-	refname=$(git check-ref-format --branch @{-1}) &&
+	T=$(shit write-tree) &&
+	sha1=$(echo A | shit commit-tree $T) &&
+	shit update-ref refs/heads/main $sha1 &&
+	shit update-ref refs/remotes/origin/main $sha1 &&
+	shit checkout main &&
+	shit checkout origin/main &&
+	shit checkout main &&
+	refname=$(shit check-ref-format --branch @{-1}) &&
 	test "$refname" = "$sha1" &&
-	refname2=$(git check-ref-format --branch @{-2}) &&
+	refname2=$(shit check-ref-format --branch @{-2}) &&
 	test "$refname2" = main'
 
 test_expect_success 'check-ref-format --branch -nain' '
-	test_must_fail git check-ref-format --branch -nain >actual &&
+	test_must_fail shit check-ref-format --branch -nain >actual &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'check-ref-format --branch from subdir' '
 	mkdir subdir &&
 
-	T=$(git write-tree) &&
-	sha1=$(echo A | git commit-tree $T) &&
-	git update-ref refs/heads/main $sha1 &&
-	git update-ref refs/remotes/origin/main $sha1 &&
-	git checkout main &&
-	git checkout origin/main &&
-	git checkout main &&
+	T=$(shit write-tree) &&
+	sha1=$(echo A | shit commit-tree $T) &&
+	shit update-ref refs/heads/main $sha1 &&
+	shit update-ref refs/remotes/origin/main $sha1 &&
+	shit checkout main &&
+	shit checkout origin/main &&
+	shit checkout main &&
 	refname=$(
 		cd subdir &&
-		git check-ref-format --branch @{-1}
+		shit check-ref-format --branch @{-1}
 	) &&
 	test "$refname" = "$sha1"
 '
 
 test_expect_success 'check-ref-format --branch @{-1} from non-repo' '
-	nongit test_must_fail git check-ref-format --branch @{-1} >actual &&
+	nonshit test_must_fail shit check-ref-format --branch @{-1} >actual &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'check-ref-format --branch main from non-repo' '
 	echo main >expect &&
-	nongit git check-ref-format --branch main >actual &&
+	nonshit shit check-ref-format --branch main >actual &&
 	test_cmp expect actual
 '
 
@@ -186,7 +186,7 @@ valid_ref_normalized() {
 		shift
 	esac
 	test_expect_success $prereq "ref name '$1' simplifies to '$2'" "
-		refname=\$(git check-ref-format --normalize '$1') &&
+		refname=\$(shit check-ref-format --normalize '$1') &&
 		test \"\$refname\" = '$2'
 	"
 }
@@ -198,7 +198,7 @@ invalid_ref_normalized() {
 		shift
 	esac
 	test_expect_success $prereq "check-ref-format --normalize rejects '$1'" "
-		test_must_fail git check-ref-format --normalize '$1'
+		test_must_fail shit check-ref-format --normalize '$1'
 	"
 }
 

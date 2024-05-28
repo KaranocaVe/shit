@@ -21,13 +21,13 @@ static void test_copy(struct reftable_record *rec)
 
 	typ = reftable_record_type(rec);
 	reftable_record_init(&copy, typ);
-	reftable_record_copy_from(&copy, rec, GIT_SHA1_RAWSZ);
+	reftable_record_copy_from(&copy, rec, shit_SHA1_RAWSZ);
 	/* do it twice to catch memory leaks */
-	reftable_record_copy_from(&copy, rec, GIT_SHA1_RAWSZ);
-	EXPECT(reftable_record_equal(rec, &copy, GIT_SHA1_RAWSZ));
+	reftable_record_copy_from(&copy, rec, shit_SHA1_RAWSZ);
+	EXPECT(reftable_record_equal(rec, &copy, shit_SHA1_RAWSZ));
 
 	puts("testing print coverage:\n");
-	reftable_record_print(&copy, GIT_SHA1_RAWSZ);
+	reftable_record_print(&copy, shit_SHA1_RAWSZ);
 
 	reftable_record_release(&copy);
 }
@@ -92,7 +92,7 @@ static void test_common_prefix(void)
 static void set_hash(uint8_t *h, int j)
 {
 	int i = 0;
-	for (i = 0; i < hash_size(GIT_SHA1_FORMAT_ID); i++) {
+	for (i = 0; i < hash_size(shit_SHA1_FORMAT_ID); i++) {
 		h[i] = (j >> i) & 0xff;
 	}
 }
@@ -137,15 +137,15 @@ static void test_reftable_ref_record_roundtrip(void)
 		EXPECT(reftable_record_val_type(&in) == i);
 
 		reftable_record_key(&in, &key);
-		n = reftable_record_encode(&in, dest, GIT_SHA1_RAWSZ);
+		n = reftable_record_encode(&in, dest, shit_SHA1_RAWSZ);
 		EXPECT(n > 0);
 
 		/* decode into a non-zero reftable_record to test for leaks. */
-		m = reftable_record_decode(&out, key, i, dest, GIT_SHA1_RAWSZ, &scratch);
+		m = reftable_record_decode(&out, key, i, dest, shit_SHA1_RAWSZ, &scratch);
 		EXPECT(n == m);
 
 		EXPECT(reftable_ref_record_equal(&in.u.ref, &out.u.ref,
-						 GIT_SHA1_RAWSZ));
+						 shit_SHA1_RAWSZ));
 		reftable_record_release(&in);
 
 		strbuf_release(&key);
@@ -168,9 +168,9 @@ static void test_reftable_log_record_equal(void)
 		}
 	};
 
-	EXPECT(!reftable_log_record_equal(&in[0], &in[1], GIT_SHA1_RAWSZ));
+	EXPECT(!reftable_log_record_equal(&in[0], &in[1], shit_SHA1_RAWSZ));
 	in[1].update_index = in[0].update_index;
-	EXPECT(reftable_log_record_equal(&in[0], &in[1], GIT_SHA1_RAWSZ));
+	EXPECT(reftable_log_record_equal(&in[0], &in[1], shit_SHA1_RAWSZ));
 	reftable_log_record_release(&in[0]);
 	reftable_log_record_release(&in[1]);
 }
@@ -241,15 +241,15 @@ static void test_reftable_log_record_roundtrip(void)
 
 		reftable_record_key(&rec, &key);
 
-		n = reftable_record_encode(&rec, dest, GIT_SHA1_RAWSZ);
+		n = reftable_record_encode(&rec, dest, shit_SHA1_RAWSZ);
 		EXPECT(n >= 0);
 		valtype = reftable_record_val_type(&rec);
 		m = reftable_record_decode(&out, key, valtype, dest,
-					   GIT_SHA1_RAWSZ, &scratch);
+					   shit_SHA1_RAWSZ, &scratch);
 		EXPECT(n == m);
 
 		EXPECT(reftable_log_record_equal(&in[i], &out.u.log,
-						 GIT_SHA1_RAWSZ));
+						 shit_SHA1_RAWSZ));
 		reftable_log_record_release(&in[i]);
 		strbuf_release(&key);
 		reftable_record_release(&out);
@@ -303,7 +303,7 @@ static void test_key_roundtrip(void)
 
 static void test_reftable_obj_record_roundtrip(void)
 {
-	uint8_t testHash1[GIT_SHA1_RAWSZ] = { 1, 2, 3, 4, 0 };
+	uint8_t testHash1[shit_SHA1_RAWSZ] = { 1, 2, 3, 4, 0 };
 	uint64_t till9[] = { 1, 2, 3, 4, 500, 600, 700, 800, 9000 };
 	struct reftable_obj_record recs[3] = {
 		{
@@ -345,14 +345,14 @@ static void test_reftable_obj_record_roundtrip(void)
 
 		test_copy(&in);
 		reftable_record_key(&in, &key);
-		n = reftable_record_encode(&in, dest, GIT_SHA1_RAWSZ);
+		n = reftable_record_encode(&in, dest, shit_SHA1_RAWSZ);
 		EXPECT(n > 0);
 		extra = reftable_record_val_type(&in);
 		m = reftable_record_decode(&out, key, extra, dest,
-					   GIT_SHA1_RAWSZ, &scratch);
+					   shit_SHA1_RAWSZ, &scratch);
 		EXPECT(n == m);
 
-		EXPECT(reftable_record_equal(&in, &out, GIT_SHA1_RAWSZ));
+		EXPECT(reftable_record_equal(&in, &out, shit_SHA1_RAWSZ));
 		strbuf_release(&key);
 		reftable_record_release(&out);
 	}
@@ -388,15 +388,15 @@ static void test_reftable_index_record_roundtrip(void)
 	test_copy(&in);
 
 	EXPECT(0 == strbuf_cmp(&key, &in.u.idx.last_key));
-	n = reftable_record_encode(&in, dest, GIT_SHA1_RAWSZ);
+	n = reftable_record_encode(&in, dest, shit_SHA1_RAWSZ);
 	EXPECT(n > 0);
 
 	extra = reftable_record_val_type(&in);
-	m = reftable_record_decode(&out, key, extra, dest, GIT_SHA1_RAWSZ,
+	m = reftable_record_decode(&out, key, extra, dest, shit_SHA1_RAWSZ,
 				   &scratch);
 	EXPECT(m == n);
 
-	EXPECT(reftable_record_equal(&in, &out, GIT_SHA1_RAWSZ));
+	EXPECT(reftable_record_equal(&in, &out, shit_SHA1_RAWSZ));
 
 	reftable_record_release(&out);
 	strbuf_release(&key);

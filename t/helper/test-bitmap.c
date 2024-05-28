@@ -1,5 +1,5 @@
 #include "test-tool.h"
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "pack-bitmap.h"
 #include "setup.h"
 
@@ -15,7 +15,7 @@ static int bitmap_dump_hashes(void)
 
 int cmd__bitmap(int argc, const char **argv)
 {
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (argc != 2)
 		goto usage;

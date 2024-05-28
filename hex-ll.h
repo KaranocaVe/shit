@@ -8,7 +8,7 @@ static inline unsigned int hexval(unsigned char c)
 }
 
 /*
- * Convert two consecutive hexadecimal digits into a char.  Return a
+ * Convert two consecutive hexadecimal dishits into a char.  Return a
  * negative value on error.  Don't run over the end of short strings.
  */
 static inline int hex2chr(const char *s)
@@ -18,9 +18,9 @@ static inline int hex2chr(const char *s)
 }
 
 /*
- * Read `len` pairs of hexadecimal digits from `hex` and write the
+ * Read `len` pairs of hexadecimal dishits from `hex` and write the
  * values to `binary` as `len` bytes. Return 0 on success, or -1 if
- * the input does not consist of hex digits).
+ * the input does not consist of hex dishits).
  */
 int hex_to_bytes(unsigned char *binary, const char *hex, size_t len);
 

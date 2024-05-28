@@ -1,10 +1,10 @@
-Git v1.8.0.3 Release Notes
+shit v1.8.0.3 Release Notes
 ==========================
 
 Fixes since v1.8.0.2
 --------------------
 
- * "git log -p -S<string>" did not apply the textconv filter while
+ * "shit log -p -S<string>" did not apply the textconv filter while
    looking for the <string>.
 
  * In the documentation, some invalid example e-mail addresses were

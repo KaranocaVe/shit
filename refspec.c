@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "hash.h"
 #include "hex.h"
@@ -50,7 +50,7 @@ static int parse_refspec(struct refspec_item *item, const char *refspec, int fet
 
 	/*
 	 * Before going on, special case ":" (or "+:") as a refspec
-	 * for pushing matching refs.
+	 * for defecateing matching refs.
 	 */
 	if (!fetch && rhs == lhs && rhs[1] == '\0') {
 		item->matching = 1;
@@ -284,7 +284,7 @@ void refspec_ref_prefixes(const struct refspec *rs,
 
 		if (item->pattern) {
 			const char *glob = strchr(prefix, '*');
-			strvec_pushf(ref_prefixes, "%.*s",
+			strvec_defecatef(ref_prefixes, "%.*s",
 				     (int)(glob - prefix),
 				     prefix);
 		} else {

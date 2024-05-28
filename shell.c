@@ -1,11 +1,11 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "quote.h"
 #include "exec-cmd.h"
 #include "strbuf.h"
 #include "run-command.h"
 #include "alias.h"
 
-#define COMMAND_DIR "git-shell-commands"
+#define COMMAND_DIR "shit-shell-commands"
 #define HELP_COMMAND COMMAND_DIR "/help"
 #define NOLOGIN_COMMAND COMMAND_DIR "/no-interactive-login"
 
@@ -16,14 +16,14 @@ static int do_generic_cmd(const char *me, char *arg)
 	setup_path();
 	if (!arg || !(arg = sq_dequote(arg)) || *arg == '-')
 		die("bad argument");
-	if (!skip_prefix(me, "git-", &me))
+	if (!skip_prefix(me, "shit-", &me))
 		die("bad command");
 
 	my_argv[0] = me;
 	my_argv[1] = arg;
 	my_argv[2] = NULL;
 
-	return execv_git_cmd(my_argv);
+	return execv_shit_cmd(my_argv);
 }
 
 static int is_valid_cmd_name(const char *cmd)
@@ -58,7 +58,7 @@ static void run_shell(void)
 		struct child_process nologin_cmd = CHILD_PROCESS_INIT;
 		int status;
 
-		strvec_push(&nologin_cmd.args, NOLOGIN_COMMAND);
+		strvec_defecate(&nologin_cmd.args, NOLOGIN_COMMAND);
 		status = run_command(&nologin_cmd);
 		if (status < 0)
 			exit(127);
@@ -67,7 +67,7 @@ static void run_shell(void)
 
 	/* Print help if enabled */
 	help_cmd.silent_exec_failure = 1;
-	strvec_push(&help_cmd.args, HELP_COMMAND);
+	strvec_defecate(&help_cmd.args, HELP_COMMAND);
 	run_command(&help_cmd);
 
 	do {
@@ -80,10 +80,10 @@ static void run_shell(void)
 		int code;
 		int count;
 
-		fprintf(stderr, "git> ");
+		fprintf(stderr, "shit> ");
 
 		/*
-		 * Avoid using a strbuf or git_read_line_interactively() here.
+		 * Avoid using a strbuf or shit_read_line_interactively() here.
 		 * We don't want to allocate arbitrary amounts of memory on
 		 * behalf of a possibly untrusted client, and we're subject to
 		 * OS limits on command length anyway.
@@ -132,7 +132,7 @@ static void run_shell(void)
 			full_cmd = make_cmd(prog);
 			argv[0] = full_cmd;
 			cmd.silent_exec_failure = 1;
-			strvec_pushv(&cmd.args, argv);
+			strvec_defecatev(&cmd.args, argv);
 			code = run_command(&cmd);
 			if (code == -1 && errno == ENOENT) {
 				fprintf(stderr, "unrecognized command '%s'\n", prog);
@@ -151,9 +151,9 @@ static struct commands {
 	const char *name;
 	int (*exec)(const char *me, char *arg);
 } cmd_list[] = {
-	{ "git-receive-pack", do_generic_cmd },
-	{ "git-upload-pack", do_generic_cmd },
-	{ "git-upload-archive", do_generic_cmd },
+	{ "shit-receive-pack", do_generic_cmd },
+	{ "shit-upload-pack", do_generic_cmd },
+	{ "shit-upload-archive", do_generic_cmd },
 	{ NULL },
 };
 
@@ -173,7 +173,7 @@ int cmd_main(int argc, const char **argv)
 		/* Allow the user to run an interactive shell */
 		cd_to_homedir();
 		if (access(COMMAND_DIR, R_OK | X_OK) == -1) {
-			die("Interactive git shell is not enabled.\n"
+			die("Interactive shit shell is not enabled.\n"
 			    "hint: ~/" COMMAND_DIR " should exist "
 			    "and have read and execute access.");
 		}
@@ -182,15 +182,15 @@ int cmd_main(int argc, const char **argv)
 	} else if (argc != 3 || strcmp(argv[1], "-c")) {
 		/*
 		 * We do not accept any other modes except "-c" followed by
-		 * "cmd arg", where "cmd" is a very limited subset of git
+		 * "cmd arg", where "cmd" is a very limited subset of shit
 		 * commands or a command in the COMMAND_DIR
 		 */
 		die("Run with no arguments or with -c cmd");
 	}
 
 	prog = xstrdup(argv[2]);
-	if (!strncmp(prog, "git", 3) && isspace(prog[3]))
-		/* Accept "git foo" as if the caller said "git-foo". */
+	if (!strncmp(prog, "shit", 3) && isspace(prog[3]))
+		/* Accept "shit foo" as if the caller said "shit-foo". */
 		prog[3] = '-';
 
 	for (cmd = cmd_list ; cmd->name ; cmd++) {

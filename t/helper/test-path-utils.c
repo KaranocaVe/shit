@@ -11,7 +11,7 @@
 
 /*
  * A "string_list_each_func_t" function that normalizes an entry from
- * GIT_CEILING_DIRECTORIES.  If the path is unusable for some reason,
+ * shit_CEILING_DIRECTORIES.  If the path is unusable for some reason,
  * die with an explanation.
  */
 static int normalize_ceiling_entry(struct string_list_item *item,
@@ -188,10 +188,10 @@ static int check_dotfile(const char *x, const char **argv,
 		if (!strcmp("--not", *argv))
 			expect = !expect;
 		else if (expect != (is_hfs(*argv) || is_ntfs(*argv)))
-			res = error("'%s' is %s.git%s", *argv,
+			res = error("'%s' is %s.shit%s", *argv,
 				    expect ? "not " : "", x);
 		else
-			fprintf(stderr, "ok: '%s' is %s.git%s\n",
+			fprintf(stderr, "ok: '%s' is %s.shit%s\n",
 				*argv, expect ? "" : "not ", x);
 	}
 	return !!res;
@@ -340,7 +340,7 @@ int cmd__path_utils(int argc, const char **argv)
 		 * absolute POSIX paths or colon-separate lists of
 		 * absolute POSIX paths into DOS paths (e.g.,
 		 * "/foo:/foo/bar" might be converted to
-		 * "D:\Src\msysgit\foo;D:\Src\msysgit\foo\bar"),
+		 * "D:\Src\msysshit\foo;D:\Src\msysshit\foo\bar"),
 		 * whereas longest_ancestor_length() requires paths
 		 * that use forward slashes.
 		 */
@@ -359,8 +359,8 @@ int cmd__path_utils(int argc, const char **argv)
 	if (argc >= 4 && !strcmp(argv[1], "prefix_path")) {
 		const char *prefix = argv[2];
 		int prefix_len = strlen(prefix);
-		int nongit_ok;
-		setup_git_directory_gently(&nongit_ok);
+		int nonshit_ok;
+		setup_shit_directory_gently(&nonshit_ok);
 		while (argc > 3) {
 			char *pfx = prefix_path(prefix, prefix_len, argv[3]);
 
@@ -404,20 +404,20 @@ int cmd__path_utils(int argc, const char **argv)
 	if (argc == 2 && !strcmp(argv[1], "dirname"))
 		return test_function(dirname_data, posix_dirname, argv[1]);
 
-	if (argc > 2 && !strcmp(argv[1], "is_dotgitmodules")) {
+	if (argc > 2 && !strcmp(argv[1], "is_dotshitmodules")) {
 		return check_dotfile("modules", argv + 2,
-				     is_hfs_dotgitmodules,
-				     is_ntfs_dotgitmodules);
+				     is_hfs_dotshitmodules,
+				     is_ntfs_dotshitmodules);
 	}
-	if (argc > 2 && !strcmp(argv[1], "is_dotgitignore")) {
+	if (argc > 2 && !strcmp(argv[1], "is_dotshitignore")) {
 		return check_dotfile("ignore", argv + 2,
-				     is_hfs_dotgitignore,
-				     is_ntfs_dotgitignore);
+				     is_hfs_dotshitignore,
+				     is_ntfs_dotshitignore);
 	}
-	if (argc > 2 && !strcmp(argv[1], "is_dotgitattributes")) {
+	if (argc > 2 && !strcmp(argv[1], "is_dotshitattributes")) {
 		return check_dotfile("attributes", argv + 2,
-				     is_hfs_dotgitattributes,
-				     is_ntfs_dotgitattributes);
+				     is_hfs_dotshitattributes,
+				     is_ntfs_dotshitattributes);
 	}
 	if (argc > 2 && !strcmp(argv[1], "is_dotmailmap")) {
 		return check_dotfile("mailmap", argv + 2,

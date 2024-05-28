@@ -1,9 +1,9 @@
-gitprotocol-common(5)
+shitprotocol-common(5)
 =====================
 
 NAME
 ----
-gitprotocol-common - Things common to various protocols
+shitprotocol-common - Things common to various protocols
 
 SYNOPSIS
 --------
@@ -14,7 +14,7 @@ DESCRIPTION
 -----------
 
 This document defines things common to various over-the-wire
-protocols and file formats used in Git.
+protocols and file formats used in shit.
 
 ABNF Notation
 -------------
@@ -22,21 +22,21 @@ ABNF Notation
 ABNF notation as described by RFC 5234 is used within the protocol documents,
 except the following replacement core rules are used:
 ----
-  HEXDIG    =  DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
+  HEXDIG    =  DIshit / "a" / "b" / "c" / "d" / "e" / "f"
 ----
 
 We also define the following common rules:
 ----
   NUL       =  %x00
   zero-id   =  40*"0"
-  obj-id    =  40*(HEXDIGIT)
+  obj-id    =  40*(HEXDIshit)
 
   refname  =  "HEAD"
   refname /=  "refs/" <see discussion below>
 ----
 
 A refname is a hierarchical octet string beginning with "refs/" and
-not violating the 'git-check-ref-format' command's validation rules.
+not violating the 'shit-check-ref-format' command's validation rules.
 More specifically, they:
 
 . They can include slash `/` for hierarchical (directory)
@@ -113,6 +113,6 @@ Examples (as C-style strings):
   "0004"            ""
 ----
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

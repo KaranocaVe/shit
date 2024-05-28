@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git apply for contextually independent diffs'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+test_description='shit apply for contextually independent diffs'
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -17,20 +17,20 @@ echo '1
 8' >file
 
 test_expect_success 'setup' \
-	'git add file &&
-	git commit -q -m 1 &&
-	git checkout -b test &&
+	'shit add file &&
+	shit commit -q -m 1 &&
+	shit checkout -b test &&
 	mv file file.tmp &&
 	echo 0 >file &&
 	cat file.tmp >>file &&
 	rm file.tmp &&
-	git commit -a -q -m 2 &&
+	shit commit -a -q -m 2 &&
 	echo 9 >>file &&
-	git commit -a -q -m 3 &&
-	git checkout main'
+	shit commit -a -q -m 3 &&
+	shit checkout main'
 
 test_expect_success \
 	'check if contextually independent diffs for the same file apply' \
-	'( git diff test~2 test~1 && git diff test~1 test~0 )| git apply'
+	'( shit diff test~2 test~1 && shit diff test~1 test~0 )| shit apply'
 
 test_done

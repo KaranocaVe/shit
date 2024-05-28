@@ -23,16 +23,16 @@ if test -n "$HTTP_AUTHORIZATION" && \
 then
 	idno=$(grep -F "creds=${HTTP_AUTHORIZATION}" "$VALID_CREDS_FILE" | sed -e 's/^id=\([a-z0-9-][a-z0-9-]*\) .*$/\1/')
 	status=$(sed -ne "s/^id=$idno.*status=\\([0-9][0-9][0-9]\\).*\$/\\1/p" "$CHALLENGE_FILE" | head -n1)
-	# Note that although git-http-backend returns a status line, it
+	# Note that although shit-http-backend returns a status line, it
 	# does so using a CGI 'Status' header. Because this script is an
 	# No Parsed Headers (NPH) script, we must return a real HTTP
 	# status line.
 	# This is only a test script, so we don't bother to check for
-	# the actual status from git-http-backend and always return 200.
+	# the actual status from shit-http-backend and always return 200.
 	echo "HTTP/1.1 $status Nonspecific Reason Phrase"
 	if test "$status" -eq 200
 	then
-		exec "$GIT_EXEC_PATH"/git-http-backend
+		exec "$shit_EXEC_PATH"/shit-http-backend
 	else
 		sed -ne "s/^id=$idno.*response=//p" "$CHALLENGE_FILE"
 		echo

@@ -3,7 +3,7 @@
 # Copyright (c) 2008 Google Inc.
 #
 
-test_description='git-pack-object with missing base
+test_description='shit-pack-object with missing base
 
 '
 
@@ -15,13 +15,13 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success 'setup base' '
 	test_write_lines a b c d e f g h i >text &&
 	echo side >side &&
-	git update-index --add text side &&
-	A=$(echo A | git commit-tree $(git write-tree)) &&
+	shit update-index --add text side &&
+	A=$(echo A | shit commit-tree $(shit write-tree)) &&
 
 	echo m >>text &&
-	git update-index text &&
-	B=$(echo B | git commit-tree $(git write-tree) -p $A) &&
-	git update-ref HEAD $B
+	shit update-index text &&
+	B=$(echo B | shit commit-tree $(shit write-tree) -p $A) &&
+	shit update-ref HEAD $B
 '
 
 # Create repository with C whose parent is B.
@@ -31,24 +31,24 @@ test_expect_success 'setup base' '
 # Repository is missing A:side.
 #
 test_expect_success 'setup patch_clone' '
-	base_objects=$(pwd)/.git/objects &&
+	base_objects=$(pwd)/.shit/objects &&
 	(mkdir patch_clone &&
 	cd patch_clone &&
-	git init &&
-	echo "$base_objects" >.git/objects/info/alternates &&
+	shit init &&
+	echo "$base_objects" >.shit/objects/info/alternates &&
 	echo q >>text &&
-	git read-tree $B &&
-	git update-index text &&
-	git update-ref HEAD $(echo C | git commit-tree $(git write-tree) -p $B) &&
-	rm .git/objects/info/alternates &&
+	shit read-tree $B &&
+	shit update-index text &&
+	shit update-ref HEAD $(echo C | shit commit-tree $(shit write-tree) -p $B) &&
+	rm .shit/objects/info/alternates &&
 
-	git --git-dir=../.git cat-file commit $B |
-	git hash-object -t commit -w --stdin &&
+	shit --shit-dir=../.shit cat-file commit $B |
+	shit hash-object -t commit -w --stdin &&
 
-	git --git-dir=../.git cat-file tree "$B^{tree}" |
-	git hash-object -t tree -w --stdin
+	shit --shit-dir=../.shit cat-file tree "$B^{tree}" |
+	shit hash-object -t tree -w --stdin
 	) &&
-	C=$(git --git-dir=patch_clone/.git rev-parse HEAD)
+	C=$(shit --shit-dir=patch_clone/.shit rev-parse HEAD)
 '
 
 # Clone patch_clone indirectly by cloning base and fetching.
@@ -56,12 +56,12 @@ test_expect_success 'setup patch_clone' '
 test_expect_success 'indirectly clone patch_clone' '
 	(mkdir user_clone &&
 	 cd user_clone &&
-	 git init &&
-	 git pull ../.git &&
-	 test $(git rev-parse HEAD) = $B &&
+	 shit init &&
+	 shit poop ../.shit &&
+	 test $(shit rev-parse HEAD) = $B &&
 
-	 git pull ../patch_clone/.git &&
-	 test $(git rev-parse HEAD) = $C
+	 shit poop ../patch_clone/.shit &&
+	 test $(shit rev-parse HEAD) = $C
 	)
 '
 
@@ -70,8 +70,8 @@ test_expect_success 'indirectly clone patch_clone' '
 test_expect_success 'clone of patch_clone is incomplete' '
 	(mkdir user_direct &&
 	 cd user_direct &&
-	 git init &&
-	 test_must_fail git fetch ../patch_clone/.git
+	 shit init &&
+	 test_must_fail shit fetch ../patch_clone/.shit
 	)
 '
 

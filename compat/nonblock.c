@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "nonblock.h"
 
 #ifdef O_NONBLOCK
@@ -12,7 +12,7 @@ int enable_pipe_nonblock(int fd)
 	return fcntl(fd, F_SETFL, flags);
 }
 
-#elif defined(GIT_WINDOWS_NATIVE)
+#elif defined(shit_WINDOWS_NATIVE)
 
 #include "win32.h"
 

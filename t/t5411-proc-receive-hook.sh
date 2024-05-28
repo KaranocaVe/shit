@@ -5,8 +5,8 @@
 
 test_description='Test proc-receive hook'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -16,27 +16,27 @@ setup_upstream_and_workbench () {
 	# Refs of upstream : main(A)
 	# Refs of workbench: main(A)  tags/v123
 	test_expect_success "setup upstream and workbench" '
-		rm -rf upstream.git &&
+		rm -rf upstream.shit &&
 		rm -rf workbench &&
-		git init --bare upstream.git &&
-		git init workbench &&
+		shit init --bare upstream.shit &&
+		shit init workbench &&
 		create_commits_in workbench A B &&
 		(
 			cd workbench &&
 			# Try to make a stable fixed width for abbreviated commit ID,
 			# this fixed-width oid will be replaced with "<OID>".
-			git config core.abbrev 7 &&
-			git tag -m "v123" v123 $A &&
-			git remote add origin ../upstream.git &&
-			git push origin main &&
-			git update-ref refs/heads/main $A $B &&
-			git -C ../upstream.git update-ref \
+			shit config core.abbrev 7 &&
+			shit tag -m "v123" v123 $A &&
+			shit remote add origin ../upstream.shit &&
+			shit defecate origin main &&
+			shit update-ref refs/heads/main $A $B &&
+			shit -C ../upstream.shit update-ref \
 				refs/heads/main $A $B
 		) &&
-		TAG=$(git -C workbench rev-parse v123) &&
+		TAG=$(shit -C workbench rev-parse v123) &&
 
 		# setup pre-receive hook
-		test_hook --setup -C upstream.git pre-receive <<-\EOF &&
+		test_hook --setup -C upstream.shit pre-receive <<-\EOF &&
 		exec >&2
 		echo "# pre-receive hook"
 		while read old new ref
@@ -46,7 +46,7 @@ setup_upstream_and_workbench () {
 		EOF
 
 		# setup post-receive hook
-		test_hook --setup -C upstream.git post-receive <<-\EOF &&
+		test_hook --setup -C upstream.shit post-receive <<-\EOF &&
 		exec >&2
 		echo "# post-receive hook"
 		while read old new ref
@@ -55,7 +55,7 @@ setup_upstream_and_workbench () {
 		done
 		EOF
 
-		upstream=upstream.git
+		upstream=upstream.shit
 	'
 }
 
@@ -105,10 +105,10 @@ setup_upstream_and_workbench
 # Refs of upstream : main(A)
 # Refs of workbench: main(A)  tags/v123
 test_expect_success "setup for HTTP protocol" '
-	git -C upstream.git config http.receivepack true &&
-	upstream="$HTTPD_DOCUMENT_ROOT_PATH/upstream.git" &&
-	mv upstream.git "$upstream" &&
-	git -C workbench remote set-url origin "$HTTPD_URL/auth-push/smart/upstream.git" &&
+	shit -C upstream.shit config http.receivepack true &&
+	upstream="$HTTPD_DOCUMENT_ROOT_PATH/upstream.shit" &&
+	mv upstream.shit "$upstream" &&
+	shit -C workbench remote set-url origin "$HTTPD_URL/auth-defecate/smart/upstream.shit" &&
 	set_askpass user@host pass@host
 '
 

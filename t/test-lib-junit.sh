@@ -1,5 +1,5 @@
 # Library of functions to format test scripts' output in JUnit XML
-# format, to support Git's test suite result to be presented in an
+# format, to support shit's test suite result to be presented in an
 # easily digestible way on Azure Pipelines.
 #
 # Copyright (c) 2022 Johannes Schindelin
@@ -31,9 +31,9 @@ start_test_output () {
 		date +%Y-%m-%dT%H:%M:%S)\""
 	write_junit_xml --truncate "<testsuites>" "  <testsuite $junit_attrs>"
 	junit_suite_start=$(test-tool date getnanos)
-	if test -n "$GIT_TEST_TEE_OUTPUT_FILE"
+	if test -n "$shit_TEST_TEE_OUTPUT_FILE"
 	then
-		GIT_TEST_TEE_OFFSET=0
+		shit_TEST_TEE_OFFSET=0
 	fi
 }
 
@@ -52,18 +52,18 @@ finalize_test_case_output () {
 		junit_insert="<failure message=\"not ok $test_count -"
 		junit_insert="$junit_insert $(xml_attr_encode --no-lf "$1")\">"
 		junit_insert="$junit_insert $(xml_attr_encode \
-			"$(if test -n "$GIT_TEST_TEE_OUTPUT_FILE"
+			"$(if test -n "$shit_TEST_TEE_OUTPUT_FILE"
 			   then
 				test-tool path-utils skip-n-bytes \
-					"$GIT_TEST_TEE_OUTPUT_FILE" $GIT_TEST_TEE_OFFSET
+					"$shit_TEST_TEE_OUTPUT_FILE" $shit_TEST_TEE_OFFSET
 			   else
 				printf '%s\n' "$@" | sed 1d
 			   fi)")"
 		junit_insert="$junit_insert</failure>"
-		if test -n "$GIT_TEST_TEE_OUTPUT_FILE"
+		if test -n "$shit_TEST_TEE_OUTPUT_FILE"
 		then
 			junit_insert="$junit_insert<system-err>$(xml_attr_encode \
-				"$(cat "$GIT_TEST_TEE_OUTPUT_FILE")")</system-err>"
+				"$(cat "$shit_TEST_TEE_OUTPUT_FILE")")</system-err>"
 		fi
 		set -- "$1" "      $junit_insert"
 		;;

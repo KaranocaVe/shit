@@ -1,6 +1,6 @@
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
-void *git_mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
+void *shit_mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
 {
 	HANDLE osfhandle, hmap;
 	void *temp;
@@ -40,7 +40,7 @@ void *git_mmap(void *start, size_t length, int prot, int flags, int fd, off_t of
 	return MAP_FAILED;
 }
 
-int git_munmap(void *start, size_t length)
+int shit_munmap(void *start, size_t length)
 {
 	return !UnmapViewOfFile(start);
 }

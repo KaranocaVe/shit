@@ -54,7 +54,7 @@ int cmd__revision_walking(int argc, const char **argv)
 	if (argc < 2)
 		return 1;
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (!strcmp(argv[1], "run-twice")) {
 		printf("1st\n");

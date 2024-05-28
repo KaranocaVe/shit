@@ -197,8 +197,8 @@ static struct atom_str **atom_table;
 static struct pack_idx_option pack_idx_opts;
 static unsigned int pack_id;
 static struct hashfile *pack_file;
-static struct packed_git *pack_data;
-static struct packed_git **all_packs;
+static struct packed_shit *pack_data;
+static struct packed_shit **all_packs;
 static off_t pack_size;
 
 /* Table of objects we've written. */
@@ -324,7 +324,7 @@ static void write_branch_report(FILE *rpt, struct branch *b)
 
 static void write_crash_report(const char *err)
 {
-	char *loc = git_pathdup("fast_import_crash_%"PRIuMAX, (uintmax_t) getpid());
+	char *loc = shit_pathdup("fast_import_crash_%"PRIuMAX, (uintmax_t) getpid());
 	FILE *rpt = fopen(loc, "w");
 	struct branch *b;
 	unsigned long lu;
@@ -622,7 +622,7 @@ static struct branch *new_branch(const char *name)
 	if (b)
 		die("Invalid attempt to create duplicate branch: %s", name);
 	if (check_refname_format(name, REFNAME_ALLOW_ONELEVEL))
-		die("Branch name doesn't conform to GIT standards: %s", name);
+		die("Branch name doesn't conform to shit standards: %s", name);
 
 	b = mem_pool_calloc(&fi_mem_pool, 1, sizeof(struct branch));
 	b->name = mem_pool_strdup(&fi_mem_pool, name);
@@ -756,7 +756,7 @@ static struct tree_content *dup_tree_content(struct tree_content *s)
 static void start_packfile(void)
 {
 	struct strbuf tmp_file = STRBUF_INIT;
-	struct packed_git *p;
+	struct packed_shit *p;
 	int pack_fd;
 
 	pack_fd = odb_mkstemp(&tmp_file, "pack/tmp_pack_XXXXXX");
@@ -830,14 +830,14 @@ static void unkeep_all_packs(void)
 	int k;
 
 	for (k = 0; k < pack_id; k++) {
-		struct packed_git *p = all_packs[k];
+		struct packed_shit *p = all_packs[k];
 		odb_pack_name(&name, p->hash, "keep");
 		unlink_or_warn(name.buf);
 	}
 	strbuf_release(&name);
 }
 
-static int loosen_small_pack(const struct packed_git *p)
+static int loosen_small_pack(const struct packed_shit *p)
 {
 	struct child_process unpack = CHILD_PROCESS_INIT;
 
@@ -845,11 +845,11 @@ static int loosen_small_pack(const struct packed_git *p)
 		die_errno("Failed seeking to start of '%s'", p->pack_name);
 
 	unpack.in = p->pack_fd;
-	unpack.git_cmd = 1;
+	unpack.shit_cmd = 1;
 	unpack.stdout_to_stderr = 1;
-	strvec_push(&unpack.args, "unpack-objects");
+	strvec_defecate(&unpack.args, "unpack-objects");
 	if (!show_stats)
-		strvec_push(&unpack.args, "-q");
+		strvec_defecate(&unpack.args, "-q");
 
 	return run_command(&unpack);
 }
@@ -864,7 +864,7 @@ static void end_packfile(void)
 	running = 1;
 	clear_delta_base_cache();
 	if (object_count) {
-		struct packed_git *new_p;
+		struct packed_shit *new_p;
 		struct object_id cur_pack_oid;
 		char *idx_name;
 		int i;
@@ -887,12 +887,12 @@ static void end_packfile(void)
 		close(pack_data->pack_fd);
 		idx_name = keep_pack(create_index());
 
-		/* Register the packfile with core git's machinery. */
-		new_p = add_packed_git(idx_name, strlen(idx_name), 1);
+		/* Register the packfile with core shit's machinery. */
+		new_p = add_packed_shit(idx_name, strlen(idx_name), 1);
 		if (!new_p)
-			die("core git rejected index %s", idx_name);
+			die("core shit rejected index %s", idx_name);
 		all_packs[pack_id] = new_p;
-		install_packed_git(the_repository, new_p);
+		install_packed_shit(the_repository, new_p);
 		free(idx_name);
 
 		/* Print the boundary */
@@ -948,8 +948,8 @@ static int store_object(
 	unsigned char hdr[96];
 	struct object_id oid;
 	unsigned long hdrlen, deltalen;
-	git_hash_ctx c;
-	git_zstream s;
+	shit_hash_ctx c;
+	shit_zstream s;
 
 	hdrlen = format_object_header((char *)hdr, sizeof(hdr), type,
 				      dat->len);
@@ -985,7 +985,7 @@ static int store_object(
 	} else
 		delta = NULL;
 
-	git_deflate_init(&s, pack_compression_level);
+	shit_deflate_init(&s, pack_compression_level);
 	if (delta) {
 		s.next_in = delta;
 		s.avail_in = deltalen;
@@ -993,11 +993,11 @@ static int store_object(
 		s.next_in = (void *)dat->buf;
 		s.avail_in = dat->len;
 	}
-	s.avail_out = git_deflate_bound(&s, s.avail_in);
+	s.avail_out = shit_deflate_bound(&s, s.avail_in);
 	s.next_out = out = xmalloc(s.avail_out);
-	while (git_deflate(&s, Z_FINISH) == Z_OK)
+	while (shit_deflate(&s, Z_FINISH) == Z_OK)
 		; /* nothing */
-	git_deflate_end(&s);
+	shit_deflate_end(&s);
 
 	/* Determine if we should auto-checkpoint. */
 	if ((max_packsize
@@ -1012,14 +1012,14 @@ static int store_object(
 		if (delta) {
 			FREE_AND_NULL(delta);
 
-			git_deflate_init(&s, pack_compression_level);
+			shit_deflate_init(&s, pack_compression_level);
 			s.next_in = (void *)dat->buf;
 			s.avail_in = dat->len;
-			s.avail_out = git_deflate_bound(&s, s.avail_in);
+			s.avail_out = shit_deflate_bound(&s, s.avail_in);
 			s.next_out = out = xrealloc(out, s.avail_out);
-			while (git_deflate(&s, Z_FINISH) == Z_OK)
+			while (shit_deflate(&s, Z_FINISH) == Z_OK)
 				; /* nothing */
-			git_deflate_end(&s);
+			shit_deflate_end(&s);
 		}
 	}
 
@@ -1091,8 +1091,8 @@ static void stream_blob(uintmax_t len, struct object_id *oidout, uintmax_t mark)
 	struct object_id oid;
 	unsigned long hdrlen;
 	off_t offset;
-	git_hash_ctx c;
-	git_zstream s;
+	shit_hash_ctx c;
+	shit_zstream s;
 	struct hashfile_checkpoint checkpoint;
 	int status = Z_OK;
 
@@ -1113,7 +1113,7 @@ static void stream_blob(uintmax_t len, struct object_id *oidout, uintmax_t mark)
 
 	crc32_begin(pack_file);
 
-	git_deflate_init(&s, pack_compression_level);
+	shit_deflate_init(&s, pack_compression_level);
 
 	hdrlen = encode_in_pack_object_header(out_buf, out_sz, OBJ_BLOB, len);
 
@@ -1133,7 +1133,7 @@ static void stream_blob(uintmax_t len, struct object_id *oidout, uintmax_t mark)
 			len -= n;
 		}
 
-		status = git_deflate(&s, len ? 0 : Z_FINISH);
+		status = shit_deflate(&s, len ? 0 : Z_FINISH);
 
 		if (!s.avail_out || status == Z_STREAM_END) {
 			size_t n = s.next_out - out_buf;
@@ -1152,7 +1152,7 @@ static void stream_blob(uintmax_t len, struct object_id *oidout, uintmax_t mark)
 			die("unexpected deflate failure: %d", status);
 		}
 	}
-	git_deflate_end(&s);
+	shit_deflate_end(&s);
 	the_hash_algo->final_oid_fn(&oid, &c);
 
 	if (oidout)
@@ -1212,7 +1212,7 @@ static void *gfi_unpack_entry(
 	unsigned long *sizep)
 {
 	enum object_type type;
-	struct packed_git *p = all_packs[oe->pack_id];
+	struct packed_shit *p = all_packs[oe->pack_id];
 	if (p == pack_data && p->pack_size < (pack_size + the_hash_algo->rawsz)) {
 		/* The object is stored in the packfile we are writing to
 		 * and we have modified it since the last time we scanned
@@ -1770,7 +1770,7 @@ static void read_mark_file(struct mark_set **s, FILE *f, mark_set_inserter_t ins
 		mark = strtoumax(line + 1, &end, 10);
 		if (!mark || end == line + 1
 			|| *end != ' '
-			|| get_oid_hex_any(end + 1, &oid) == GIT_HASH_UNKNOWN)
+			|| get_oid_hex_any(end + 1, &oid) == shit_HASH_UNKNOWN)
 			die("corrupt mark line: %s", line);
 		inserter(s, &oid, mark);
 	}
@@ -2102,8 +2102,8 @@ static uintmax_t do_change_note_fanout(
 	unsigned int i, tmp_hex_oid_len, tmp_fullpath_len;
 	uintmax_t num_notes = 0;
 	struct object_id oid;
-	/* hex oid + '/' between each pair of hex digits + NUL */
-	char realpath[GIT_MAX_HEXSZ + ((GIT_MAX_HEXSZ / 2) - 1) + 1];
+	/* hex oid + '/' between each pair of hex dishits + NUL */
+	char realpath[shit_MAX_HEXSZ + ((shit_MAX_HEXSZ / 2) - 1) + 1];
 	const unsigned hexsz = the_hash_algo->hexsz;
 
 	if (!root->tree)
@@ -2176,12 +2176,12 @@ static uintmax_t change_note_fanout(struct tree_entry *root,
 		unsigned char fanout)
 {
 	/*
-	 * The size of path is due to one slash between every two hex digits,
+	 * The size of path is due to one slash between every two hex dishits,
 	 * plus the terminating NUL.  Note that there is no slash at the end, so
 	 * the number of slashes is one less than half the number of hex
 	 * characters.
 	 */
-	char hex_oid[GIT_MAX_HEXSZ], path[GIT_MAX_HEXSZ + (GIT_MAX_HEXSZ / 2) - 1 + 1];
+	char hex_oid[shit_MAX_HEXSZ], path[shit_MAX_HEXSZ + (shit_MAX_HEXSZ / 2) - 1 + 1];
 	return do_change_note_fanout(root, root, hex_oid, 0, path, 0, fanout);
 }
 
@@ -2194,7 +2194,7 @@ static int parse_mapped_oid_hex(const char *hex, struct object_id *oid, const ch
 	memset(oid->hash, 0, sizeof(oid->hash));
 
 	algo = parse_oid_hex_any(hex, oid, end);
-	if (algo == GIT_HASH_UNKNOWN)
+	if (algo == shit_HASH_UNKNOWN)
 		return -1;
 
 	it = kh_get_oid_map(sub_oid_map, *oid);
@@ -2333,7 +2333,7 @@ static void file_change_m(const char *p, struct branch *b)
 	case S_IFREG | 0755:
 	case S_IFLNK:
 	case S_IFDIR:
-	case S_IFGITLINK:
+	case S_IFshitLINK:
 		/* ok */
 		break;
 	default:
@@ -2357,15 +2357,15 @@ static void file_change_m(const char *p, struct branch *b)
 	strbuf_reset(&path);
 	parse_path_eol(&path, p, "path");
 
-	/* Git does not track empty, non-toplevel directories. */
+	/* shit does not track empty, non-toplevel directories. */
 	if (S_ISDIR(mode) && is_empty_tree_oid(&oid) && *path.buf) {
 		tree_content_remove(&b->branch_tree, path.buf, NULL, 0);
 		return;
 	}
 
-	if (S_ISGITLINK(mode)) {
+	if (S_ISshitLINK(mode)) {
 		if (inline_data)
-			die("Git links cannot be specified 'inline': %s",
+			die("shit links cannot be specified 'inline': %s",
 				command_buf.buf);
 		else if (oe) {
 			if (oe->type != OBJ_COMMIT)
@@ -2457,7 +2457,7 @@ static void note_change_n(const char *p, struct branch *b, unsigned char *old_fa
 	struct object_entry *oe;
 	struct branch *s;
 	struct object_id oid, commit_oid;
-	char path[GIT_MAX_RAWSZ * 3];
+	char path[shit_MAX_RAWSZ * 3];
 	uint16_t inline_data = 0;
 	unsigned char new_fanout;
 
@@ -2990,7 +2990,7 @@ static void cat_blob(struct object_entry *oe, struct object_id *oid)
 static void parse_get_mark(const char *p)
 {
 	struct object_entry *oe;
-	char output[GIT_MAX_HEXSZ + 2];
+	char output[shit_MAX_HEXSZ + 2];
 
 	/* get-mark SP <object> LF */
 	if (*p != ':')
@@ -3146,7 +3146,7 @@ static void print_ls(int mode, const unsigned char *hash, const char *path)
 
 	/* See show_tree(). */
 	const char *type =
-		S_ISGITLINK(mode) ? commit_type :
+		S_ISshitLINK(mode) ? commit_type :
 		S_ISDIR(mode) ? tree_type :
 		blob_type;
 
@@ -3254,7 +3254,7 @@ static char* make_fast_import_path(const char *path)
 {
 	if (!relative_marks_paths || is_absolute_path(path))
 		return prefix_filename(global_prefix, path);
-	return git_pathdup("info/fast-import/%s", path);
+	return shit_pathdup("info/fast-import/%s", path);
 }
 
 static void option_import_marks(const char *marks,
@@ -3358,7 +3358,7 @@ static int parse_one_option(const char *option)
 {
 	if (skip_prefix(option, "max-pack-size=", &option)) {
 		unsigned long v;
-		if (!git_parse_ulong(option, &v))
+		if (!shit_parse_ulong(option, &v))
 			return 0;
 		if (v < 8192) {
 			warning("max-pack-size is now in bytes, assuming --max-pack-size=%lum", v);
@@ -3370,7 +3370,7 @@ static int parse_one_option(const char *option)
 		max_packsize = v;
 	} else if (skip_prefix(option, "big-file-threshold=", &option)) {
 		unsigned long v;
-		if (!git_parse_ulong(option, &v))
+		if (!shit_parse_ulong(option, &v))
 			return 0;
 		big_file_threshold = v;
 	} else if (skip_prefix(option, "depth=", &option)) {
@@ -3463,35 +3463,35 @@ static void parse_option(const char *option)
 	die("This version of fast-import does not support option: %s", option);
 }
 
-static void git_pack_config(void)
+static void shit_pack_config(void)
 {
 	int indexversion_value;
 	int limit;
 	unsigned long packsizelimit_value;
 
-	if (!git_config_get_ulong("pack.depth", &max_depth)) {
+	if (!shit_config_get_ulong("pack.depth", &max_depth)) {
 		if (max_depth > MAX_DEPTH)
 			max_depth = MAX_DEPTH;
 	}
-	if (!git_config_get_int("pack.indexversion", &indexversion_value)) {
+	if (!shit_config_get_int("pack.indexversion", &indexversion_value)) {
 		pack_idx_opts.version = indexversion_value;
 		if (pack_idx_opts.version > 2)
-			git_die_config("pack.indexversion",
+			shit_die_config("pack.indexversion",
 					"bad pack.indexVersion=%"PRIu32, pack_idx_opts.version);
 	}
-	if (!git_config_get_ulong("pack.packsizelimit", &packsizelimit_value))
+	if (!shit_config_get_ulong("pack.packsizelimit", &packsizelimit_value))
 		max_packsize = packsizelimit_value;
 
-	if (!git_config_get_int("fastimport.unpacklimit", &limit))
+	if (!shit_config_get_int("fastimport.unpacklimit", &limit))
 		unpack_limit = limit;
-	else if (!git_config_get_int("transfer.unpacklimit", &limit))
+	else if (!shit_config_get_int("transfer.unpacklimit", &limit))
 		unpack_limit = limit;
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 }
 
 static const char fast_import_usage[] =
-"git fast-import [--date-format=<f>] [--max-pack-size=<n>] [--big-file-threshold=<n>] [--depth=<n>] [--active-branches=<n>] [--export-marks=<marks.file>]";
+"shit fast-import [--date-format=<f>] [--max-pack-size=<n>] [--big-file-threshold=<n>] [--depth=<n>] [--active-branches=<n>] [--export-marks=<marks.file>]";
 
 static void parse_argv(void)
 {
@@ -3536,7 +3536,7 @@ int cmd_fast_import(int argc, const char **argv, const char *prefix)
 		usage(fast_import_usage);
 
 	reset_pack_idx_option(&pack_idx_opts);
-	git_pack_config();
+	shit_pack_config();
 
 	alloc_objects(object_entry_alloc);
 	strbuf_init(&command_buf, 0);
@@ -3599,10 +3599,10 @@ int cmd_fast_import(int argc, const char **argv, const char *prefix)
 			parse_progress();
 		else if (skip_prefix(command_buf.buf, "feature ", &v))
 			parse_feature(v);
-		else if (skip_prefix(command_buf.buf, "option git ", &v))
+		else if (skip_prefix(command_buf.buf, "option shit ", &v))
 			parse_option(v);
 		else if (starts_with(command_buf.buf, "option "))
-			/* ignore non-git options*/;
+			/* ignore non-shit options*/;
 		else
 			die("Unsupported command: %s", command_buf.buf);
 

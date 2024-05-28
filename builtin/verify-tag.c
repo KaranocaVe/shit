@@ -1,9 +1,9 @@
 /*
- * Builtin "git verify-tag"
+ * Builtin "shit verify-tag"
  *
  * Copyright (c) 2007 Carlos Rica <jasampler@gmail.com>
  *
- * Based on git-verify-tag.sh
+ * Based on shit-verify-tag.sh
  */
 #include "builtin.h"
 #include "config.h"
@@ -15,7 +15,7 @@
 #include "ref-filter.h"
 
 static const char * const verify_tag_usage[] = {
-		N_("git verify-tag [-v | --verbose] [--format=<format>] [--raw] <tag>..."),
+		N_("shit verify-tag [-v | --verbose] [--format=<format>] [--raw] <tag>..."),
 		NULL
 };
 
@@ -31,7 +31,7 @@ int cmd_verify_tag(int argc, const char **argv, const char *prefix)
 		OPT_END()
 	};
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	argc = parse_options(argc, argv, prefix, verify_tag_options,
 			     verify_tag_usage, PARSE_OPT_KEEP_ARGV0);

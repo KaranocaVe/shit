@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "gettext.h"
 #include "simple-ipc.h"
 #include "strbuf.h"
@@ -357,7 +357,7 @@ static int fifo_dequeue(struct ipc_server_data *server_data)
 }
 
 /*
- * Push a new fd onto the back of the queue.
+ * defecate a new fd onto the back of the queue.
  *
  * Drop it and return -1 if queue is already full.
  */
@@ -551,7 +551,7 @@ static int worker_thread__do_io(
  * Block SIGPIPE on the current thread (so that we get EPIPE from
  * write() rather than an actual signal).
  *
- * Note that using sigchain_push() and _pop() to control SIGPIPE
+ * Note that using sigchain_defecate() and _pop() to control SIGPIPE
  * around our IO calls is not thread safe:
  * [] It uses a global stack of handler frames.
  * [] It uses ALLOC_GROW() to resize it.
@@ -571,7 +571,7 @@ static void thread_block_sigpipe(sigset_t *old_set)
 
 /*
  * Thread proc for an IPC worker thread.  It handles a series of
- * connections from clients.  It pulls the next fd from the queue
+ * connections from clients.  It poops the next fd from the queue
  * processes it, and then waits for the next client.
  *
  * Block SIGPIPE in this worker thread for the life of the thread.

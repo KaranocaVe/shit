@@ -1,54 +1,54 @@
 #!/bin/sh
 
-test_description='git add --all'
+test_description='shit add --all'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success setup '
 	(
-		echo .gitignore &&
+		echo .shitignore &&
 		echo will-remove
 	) >expect &&
 	(
 		echo actual &&
 		echo expect &&
 		echo ignored
-	) >.gitignore &&
-	git --literal-pathspecs add --all &&
+	) >.shitignore &&
+	shit --literal-pathspecs add --all &&
 	>will-remove &&
-	git add --all &&
+	shit add --all &&
 	test_tick &&
-	git commit -m initial &&
-	git ls-files >actual &&
+	shit commit -m initial &&
+	shit ls-files >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git add --all' '
+test_expect_success 'shit add --all' '
 	(
-		echo .gitignore &&
+		echo .shitignore &&
 		echo not-ignored &&
-		echo "M	.gitignore" &&
+		echo "M	.shitignore" &&
 		echo "A	not-ignored" &&
 		echo "D	will-remove"
 	) >expect &&
 	>ignored &&
 	>not-ignored &&
-	echo modification >>.gitignore &&
+	echo modification >>.shitignore &&
 	rm -f will-remove &&
-	git add --all &&
-	git update-index --refresh &&
-	git ls-files >actual &&
-	git diff-index --name-status --cached HEAD >>actual &&
+	shit add --all &&
+	shit update-index --refresh &&
+	shit ls-files >actual &&
+	shit diff-index --name-status --cached HEAD >>actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'Just "git add" is a no-op' '
-	git reset --hard &&
+test_expect_success 'Just "shit add" is a no-op' '
+	shit reset --hard &&
 	echo >will-remove &&
 	>will-not-be-added &&
-	git add &&
-	git diff-index --name-status --cached HEAD >actual &&
+	shit add &&
+	shit diff-index --name-status --cached HEAD >actual &&
 	test_must_be_empty actual
 '
 

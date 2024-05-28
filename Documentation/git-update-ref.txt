@@ -1,25 +1,25 @@
-git-update-ref(1)
+shit-update-ref(1)
 =================
 
 NAME
 ----
-git-update-ref - Update the object name stored in a ref safely
+shit-update-ref - Update the object name stored in a ref safely
 
 SYNOPSIS
 --------
 [verse]
-'git update-ref' [-m <reason>] [--no-deref] (-d <ref> [<old-oid>] | [--create-reflog] <ref> <new-oid> [<old-oid>] | --stdin [-z])
+'shit update-ref' [-m <reason>] [--no-deref] (-d <ref> [<old-oid>] | [--create-reflog] <ref> <new-oid> [<old-oid>] | --stdin [-z])
 
 DESCRIPTION
 -----------
 Given two arguments, stores the <new-oid> in the <ref>, possibly
-dereferencing the symbolic refs.  E.g. `git update-ref HEAD
+dereferencing the symbolic refs.  E.g. `shit update-ref HEAD
 <new-oid>` updates the current branch head to the new object.
 
 Given three arguments, stores the <new-oid> in the <ref>,
 possibly dereferencing the symbolic refs, after verifying that
 the current value of the <ref> matches <old-oid>.
-E.g. `git update-ref refs/heads/master <new-oid> <old-oid>`
+E.g. `shit update-ref refs/heads/master <new-oid> <old-oid>`
 updates the master branch head to <new-oid> only if its current
 value is <old-oid>.  You can specify 40 "0" or an empty string
 as <old-oid> to make sure that the ref you are creating does
@@ -42,11 +42,11 @@ the result of following the symbolic pointers.
 
 In general, using
 
-	git update-ref HEAD "$head"
+	shit update-ref HEAD "$head"
 
 should be a _lot_ safer than doing
 
-	echo "$head" > "$GIT_DIR/HEAD"
+	echo "$head" > "$shit_DIR/HEAD"
 
 both from a symlink following standpoint *and* an error checking
 standpoint.  The "refs/" rule for symlinks means that symlinks
@@ -95,7 +95,7 @@ quoting:
 In this format, use 40 "0" to specify a zero value, and use the empty
 string to specify a missing value.
 
-In either format, values can be specified in any form that Git
+In either format, values can be specified in any form that shit
 recognizes as an object name.  Commands in any other format or a
 repeated <ref> produce an error.  Command meanings are:
 
@@ -151,9 +151,9 @@ LOGGING UPDATES
 ---------------
 If config parameter "core.logAllRefUpdates" is true and the ref is one
 under "refs/heads/", "refs/remotes/", "refs/notes/", or a pseudoref
-like HEAD or ORIG_HEAD; or the file "$GIT_DIR/logs/<ref>" exists then
-`git update-ref` will append a line to the log file
-"$GIT_DIR/logs/<ref>" (dereferencing all symbolic refs before creating
+like HEAD or ORIG_HEAD; or the file "$shit_DIR/logs/<ref>" exists then
+`shit update-ref` will append a line to the log file
+"$shit_DIR/logs/<ref>" (dereferencing all symbolic refs before creating
 the log name) describing the change in ref value.  Log lines are
 formatted as:
 
@@ -162,7 +162,7 @@ formatted as:
 Where "oldsha1" is the 40 character hexadecimal value previously
 stored in <ref>, "newsha1" is the 40 character hexadecimal value of
 <new-oid> and "committer" is the committer's name, email address
-and date in the standard Git committer ident format.
+and date in the standard shit committer ident format.
 
 Optionally with -m:
 
@@ -175,6 +175,6 @@ An update will fail (without changing <ref>) if the current user is
 unable to create a new log file, append to the existing log file
 or does not have committer information available.
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

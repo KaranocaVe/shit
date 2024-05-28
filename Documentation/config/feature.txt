@@ -1,11 +1,11 @@
 feature.*::
 	The config settings that start with `feature.` modify the defaults of
-	a group of other config settings. These groups are created by the Git
+	a group of other config settings. These groups are created by the shit
 	developer community as recommended defaults and are subject to change.
 	In particular, new config options may be added with different defaults.
 
 feature.experimental::
-	Enable config options that are new to Git, and are being considered for
+	Enable config options that are new to shit, and are being considered for
 	future defaults. Config settings included here may be added or removed
 	with each release, including minor version updates. These settings may
 	have unintended interactions since they are so new. Please enable this
@@ -23,13 +23,13 @@ reusing objects from multiple packs instead of just one.
 
 feature.manyFiles::
 	Enable config options that optimize for repos with many files in the
-	working directory. With many files, commands such as `git status` and
-	`git checkout` may be slow and these new defaults improve performance:
+	working directory. With many files, commands such as `shit status` and
+	`shit checkout` may be slow and these new defaults improve performance:
 +
 * `index.skipHash=true` speeds up index writes by not computing a trailing
-  checksum. Note that this will cause Git versions earlier than 2.13.0 to
-  refuse to parse the index and Git versions earlier than 2.40.0 will report
-  a corrupted index during `git fsck`.
+  checksum. Note that this will cause shit versions earlier than 2.13.0 to
+  refuse to parse the index and shit versions earlier than 2.40.0 will report
+  a corrupted index during `shit fsck`.
 +
 * `index.version=4` enables path-prefix compression in the index.
 +

@@ -1,9 +1,9 @@
 #ifndef HTTP_H
 #define HTTP_H
 
-struct packed_git;
+struct packed_shit;
 
-#include "git-zlib.h"
+#include "shit-zlib.h"
 
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -67,7 +67,7 @@ void http_init(struct remote *remote, const char *url,
 void http_cleanup(void);
 struct curl_slist *http_copy_default_headers(void);
 
-extern long int git_curl_ipresolve;
+extern long int shit_curl_ipresolve;
 extern int active_requests;
 extern int http_is_verbose;
 extern ssize_t http_post_buffer;
@@ -107,9 +107,9 @@ void normalize_curl_result(CURLcode *result, long http_code, char *errorstr,
 /* Helpers for modifying and creating URLs */
 void append_remote_object_url(struct strbuf *buf, const char *url,
 			      const char *hex,
-			      int only_two_digit_prefix);
+			      int only_two_dishit_prefix);
 char *get_remote_object_url(const char *url, const char *hex,
-			    int only_two_digit_prefix);
+			    int only_two_dishit_prefix);
 
 /* Options for http_get_*() */
 struct http_get_options {
@@ -180,7 +180,7 @@ struct curl_slist *http_append_auth_header(const struct credential *c,
 
 /* Helpers for fetching packs */
 int http_get_info_packs(const char *base_url,
-			struct packed_git **packs_head);
+			struct packed_shit **packs_head);
 
 /* Helper for getting Accept-Language header */
 const char *http_get_accept_language_header(void);
@@ -203,20 +203,20 @@ struct http_pack_request {
 };
 
 struct http_pack_request *new_http_pack_request(
-	const unsigned char *packed_git_hash, const char *base_url);
+	const unsigned char *packed_shit_hash, const char *base_url);
 struct http_pack_request *new_direct_http_pack_request(
-	const unsigned char *packed_git_hash, char *url);
+	const unsigned char *packed_shit_hash, char *url);
 int finish_http_pack_request(struct http_pack_request *preq);
 void release_http_pack_request(struct http_pack_request *preq);
 
 /*
- * Remove p from the given list, and invoke install_packed_git() on it.
+ * Remove p from the given list, and invoke install_packed_shit() on it.
  *
  * This is a convenience function for users that have obtained a list of packs
  * from http_get_info_packs() and have chosen a specific pack to fetch.
  */
-void http_install_packfile(struct packed_git *p,
-			   struct packed_git **list_to_remove_from);
+void http_install_packfile(struct packed_shit *p,
+			   struct packed_shit **list_to_remove_from);
 
 /* Helpers for fetching object */
 struct http_object_request {
@@ -228,8 +228,8 @@ struct http_object_request {
 	long http_code;
 	struct object_id oid;
 	struct object_id real_oid;
-	git_hash_ctx c;
-	git_zstream stream;
+	shit_hash_ctx c;
+	shit_zstream stream;
 	int zret;
 	int rename;
 	struct active_request_slot *slot;
@@ -245,7 +245,7 @@ void release_http_object_request(struct http_object_request *freq);
 
 /*
  * Instead of using environment variables to determine if curl tracing happens,
- * behave as if GIT_TRACE_CURL=1 and GIT_TRACE_CURL_NO_DATA=1 is set. Call this
+ * behave as if shit_TRACE_CURL=1 and shit_TRACE_CURL_NO_DATA=1 is set. Call this
  * before calling setup_curl_trace().
  */
 void http_trace_curl_no_data(void);

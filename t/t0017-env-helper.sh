@@ -83,17 +83,17 @@ test_expect_success 'test-tool env-helper --type=ulong' '
 
 test_expect_success 'test-tool env-helper reads config thanks to trace2' '
 	mkdir home &&
-	git config -f home/.gitconfig include.path cycle &&
-	git config -f home/cycle include.path .gitconfig &&
+	shit config -f home/.shitconfig include.path cycle &&
+	shit config -f home/cycle include.path .shitconfig &&
 
 	test_must_fail \
 		env HOME="$(pwd)/home" \
-		git config -l 2>err &&
+		shit config -l 2>err &&
 	grep "exceeded maximum include depth" err &&
 
 	test_must_fail \
-		env HOME="$(pwd)/home" GIT_TEST_ENV_HELPER=true \
-		test-tool -C cycle env-helper --type=bool --default=0 --exit-code GIT_TEST_ENV_HELPER 2>err &&
+		env HOME="$(pwd)/home" shit_TEST_ENV_HELPER=true \
+		test-tool -C cycle env-helper --type=bool --default=0 --exit-code shit_TEST_ENV_HELPER 2>err &&
 	grep "exceeded maximum include depth" err
 '
 

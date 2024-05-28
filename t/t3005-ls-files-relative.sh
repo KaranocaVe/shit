@@ -2,7 +2,7 @@
 
 test_description='ls-files tests with relative paths
 
-This test runs git ls-files with various relative path arguments.
+This test runs shit ls-files with various relative path arguments.
 '
 
 TEST_PASSES_SANITIZE_LEAK=true
@@ -10,7 +10,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 
 test_expect_success 'prepare' '
 	: >never-mind-me &&
-	git add never-mind-me &&
+	shit add never-mind-me &&
 	mkdir top &&
 	(
 		cd top &&
@@ -20,7 +20,7 @@ test_expect_success 'prepare' '
 		touch $x &&
 		touch $y &&
 		cd sub &&
-		git add ../x*
+		shit add ../x*
 	)
 '
 
@@ -31,7 +31,7 @@ test_expect_success 'ls-files with mixed levels' '
 		../../never-mind-me
 		../x
 		EOF
-		git ls-files $(cat expect) >actual &&
+		shit ls-files $(cat expect) >actual &&
 		test_cmp expect actual
 	)
 '
@@ -39,10 +39,10 @@ test_expect_success 'ls-files with mixed levels' '
 test_expect_success 'ls-files -c' '
 	(
 		cd top/sub &&
-		printf "error: pathspec $SQ%s$SQ did not match any file(s) known to git\n" ../y* >expect.err &&
-		echo "Did you forget to ${SQ}git add${SQ}?" >>expect.err &&
+		printf "error: pathspec $SQ%s$SQ did not match any file(s) known to shit\n" ../y* >expect.err &&
+		echo "Did you forget to ${SQ}shit add${SQ}?" >>expect.err &&
 		ls ../x* >expect.out &&
-		test_must_fail git ls-files -c --error-unmatch ../[xy]* >actual.out 2>actual.err &&
+		test_must_fail shit ls-files -c --error-unmatch ../[xy]* >actual.out 2>actual.err &&
 		test_cmp expect.out actual.out &&
 		test_cmp expect.err actual.err
 	)
@@ -51,10 +51,10 @@ test_expect_success 'ls-files -c' '
 test_expect_success 'ls-files -o' '
 	(
 		cd top/sub &&
-		printf "error: pathspec $SQ%s$SQ did not match any file(s) known to git\n" ../x* >expect.err &&
-		echo "Did you forget to ${SQ}git add${SQ}?" >>expect.err &&
+		printf "error: pathspec $SQ%s$SQ did not match any file(s) known to shit\n" ../x* >expect.err &&
+		echo "Did you forget to ${SQ}shit add${SQ}?" >>expect.err &&
 		ls ../y* >expect.out &&
-		test_must_fail git ls-files -o --error-unmatch ../[xy]* >actual.out 2>actual.err &&
+		test_must_fail shit ls-files -o --error-unmatch ../[xy]* >actual.out 2>actual.err &&
 		test_cmp expect.out actual.out &&
 		test_cmp expect.err actual.err
 	)

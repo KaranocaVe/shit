@@ -1,4 +1,4 @@
-# Test framework for git.  See t/README for usage.
+# Test framework for shit.  See t/README for usage.
 #
 # Copyright (c) 2005 Junio C Hamano
 #
@@ -24,13 +24,13 @@ then
 	TEST_DIRECTORY=$(pwd)
 else
 	# The TEST_DIRECTORY will always be the path to the "t"
-	# directory in the git.git checkout. This is overridden by
+	# directory in the shit.shit checkout. This is overridden by
 	# e.g. t/lib-subtest.sh, but only because its $(pwd) is
 	# different. Those tests still set "$TEST_DIRECTORY" to the
 	# same path.
 	#
-	# See use of "$GIT_BUILD_DIR" and "$TEST_DIRECTORY" below for
-	# hard assumptions about "$GIT_BUILD_DIR/t" existing and being
+	# See use of "$shit_BUILD_DIR" and "$TEST_DIRECTORY" below for
+	# hard assumptions about "$shit_BUILD_DIR/t" existing and being
 	# the "$TEST_DIRECTORY", and e.g. "$TEST_DIRECTORY/helper"
 	# needing to exist.
 	TEST_DIRECTORY=$(cd "$TEST_DIRECTORY" && pwd) || exit 1
@@ -41,19 +41,19 @@ then
 	# elsewhere
 	TEST_OUTPUT_DIRECTORY=$TEST_DIRECTORY
 fi
-GIT_BUILD_DIR="${TEST_DIRECTORY%/t}"
-if test "$TEST_DIRECTORY" = "$GIT_BUILD_DIR"
+shit_BUILD_DIR="${TEST_DIRECTORY%/t}"
+if test "$TEST_DIRECTORY" = "$shit_BUILD_DIR"
 then
 	echo "PANIC: Running in a $TEST_DIRECTORY that doesn't end in '/t'?" >&2
 	exit 1
 fi
-if test -f "$GIT_BUILD_DIR/GIT-BUILD-DIR"
+if test -f "$shit_BUILD_DIR/shit-BUILD-DIR"
 then
-	GIT_BUILD_DIR="$(cat "$GIT_BUILD_DIR/GIT-BUILD-DIR")" || exit 1
+	shit_BUILD_DIR="$(cat "$shit_BUILD_DIR/shit-BUILD-DIR")" || exit 1
 	# On Windows, we must convert Windows paths lest they contain a colon
 	case "$(uname -s)" in
 	*MINGW*)
-		GIT_BUILD_DIR="$(cygpath -au "$GIT_BUILD_DIR")"
+		shit_BUILD_DIR="$(cygpath -au "$shit_BUILD_DIR")"
 		;;
 	esac
 fi
@@ -71,33 +71,33 @@ prepend_var () {
 }
 
 # If [AL]SAN is in effect we want to abort so that we notice
-# problems. The GIT_SAN_OPTIONS variable can be used to set common
+# problems. The shit_SAN_OPTIONS variable can be used to set common
 # defaults shared between [AL]SAN_OPTIONS.
-prepend_var GIT_SAN_OPTIONS : abort_on_error=1
-prepend_var GIT_SAN_OPTIONS : strip_path_prefix="$GIT_BUILD_DIR/"
+prepend_var shit_SAN_OPTIONS : abort_on_error=1
+prepend_var shit_SAN_OPTIONS : strip_path_prefix="$shit_BUILD_DIR/"
 
 # If we were built with ASAN, it may complain about leaks
 # of program-lifetime variables. Disable it by default to lower
 # the noise level. This needs to happen at the start of the script,
-# before we even do our "did we build git yet" check (since we don't
+# before we even do our "did we build shit yet" check (since we don't
 # want that one to complain to stderr).
-prepend_var ASAN_OPTIONS : $GIT_SAN_OPTIONS
+prepend_var ASAN_OPTIONS : $shit_SAN_OPTIONS
 prepend_var ASAN_OPTIONS : detect_leaks=0
 export ASAN_OPTIONS
 
-prepend_var LSAN_OPTIONS : $GIT_SAN_OPTIONS
+prepend_var LSAN_OPTIONS : $shit_SAN_OPTIONS
 prepend_var LSAN_OPTIONS : fast_unwind_on_malloc=0
 export LSAN_OPTIONS
 
-prepend_var UBSAN_OPTIONS : $GIT_SAN_OPTIONS
+prepend_var UBSAN_OPTIONS : $shit_SAN_OPTIONS
 export UBSAN_OPTIONS
 
-if test ! -f "$GIT_BUILD_DIR"/GIT-BUILD-OPTIONS
+if test ! -f "$shit_BUILD_DIR"/shit-BUILD-OPTIONS
 then
-	echo >&2 'error: GIT-BUILD-OPTIONS missing (has Git been built?).'
+	echo >&2 'error: shit-BUILD-OPTIONS missing (has shit been built?).'
 	exit 1
 fi
-. "$GIT_BUILD_DIR"/GIT-BUILD-OPTIONS
+. "$shit_BUILD_DIR"/shit-BUILD-OPTIONS
 export PERL_PATH SHELL_PATH
 
 # In t0000, we need to override test directories of nested testcases. In case
@@ -110,27 +110,27 @@ then
 fi
 
 # Disallow the use of abbreviated options in the test suite by default
-if test -z "${GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS}"
+if test -z "${shit_TEST_DISALLOW_ABBREVIATED_OPTIONS}"
 then
-	GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS=true
-	export GIT_TEST_DISALLOW_ABBREVIATED_OPTIONS
+	shit_TEST_DISALLOW_ABBREVIATED_OPTIONS=true
+	export shit_TEST_DISALLOW_ABBREVIATED_OPTIONS
 fi
 
 # Explicitly set the default branch name for testing, to avoid the
-# transitory "git init" warning under --verbose.
-: ${GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME:=master}
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+# transitory "shit init" warning under --verbose.
+: ${shit_TEST_DEFAULT_INITIAL_BRANCH_NAME:=master}
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 ################################################################
 # It appears that people try to run tests without building...
-"${GIT_TEST_INSTALLED:-$GIT_BUILD_DIR}/git$X" >/dev/null
+"${shit_TEST_INSTALLED:-$shit_BUILD_DIR}/shit$X" >/dev/null
 if test $? != 1
 then
-	if test -n "$GIT_TEST_INSTALLED"
+	if test -n "$shit_TEST_INSTALLED"
 	then
-		echo >&2 "error: there is no working Git at '$GIT_TEST_INSTALLED'"
+		echo >&2 "error: there is no working shit at '$shit_TEST_INSTALLED'"
 	else
-		echo >&2 'error: you do not seem to have built git yet.'
+		echo >&2 'error: you do not seem to have built shit yet.'
 	fi
 	exit 1
 fi
@@ -165,7 +165,7 @@ parse_option () {
 	-i|--i|--im|--imm|--imme|--immed|--immedi|--immedia|--immediat|--immediate)
 		immediate=t ;;
 	-l|--l|--lo|--lon|--long|--long-|--long-t|--long-te|--long-tes|--long-test|--long-tests)
-		GIT_TEST_LONG=t; export GIT_TEST_LONG ;;
+		shit_TEST_LONG=t; export shit_TEST_LONG ;;
 	-r)
 		mark_option_requires_arg "$opt" run_list
 		;;
@@ -205,9 +205,9 @@ parse_option () {
 	--root=*)
 		root=${opt#--*=} ;;
 	--chain-lint)
-		GIT_TEST_CHAIN_LINT=1 ;;
+		shit_TEST_CHAIN_LINT=1 ;;
 	--no-chain-lint)
-		GIT_TEST_CHAIN_LINT=0 ;;
+		shit_TEST_CHAIN_LINT=0 ;;
 	-x)
 		trace=t ;;
 	-V|--verbose-log)
@@ -217,8 +217,8 @@ parse_option () {
 	--write-junit-xml)
 		. "$TEST_DIRECTORY/test-lib-junit.sh"
 		;;
-	--github-workflow-markup)
-		. "$TEST_DIRECTORY/test-lib-github-workflow-markup.sh"
+	--shithub-workflow-markup)
+		. "$TEST_DIRECTORY/test-lib-shithub-workflow-markup.sh"
 		;;
 	--stress)
 		stress=t ;;
@@ -312,7 +312,7 @@ then
 	immediate=t
 fi
 
-TEST_STRESS_JOB_SFX="${GIT_TEST_STRESS_JOB_NR:+.stress-$GIT_TEST_STRESS_JOB_NR}"
+TEST_STRESS_JOB_SFX="${shit_TEST_STRESS_JOB_NR:+.stress-$shit_TEST_STRESS_JOB_NR}"
 TEST_NAME="$(basename "$0" .sh)"
 TEST_NUMBER="${TEST_NAME%%-*}"
 TEST_NUMBER="${TEST_NUMBER#t}"
@@ -342,7 +342,7 @@ nr_san_dir_leaks_ () {
 }
 
 # If --stress was passed, run this test repeatedly in several parallel loops.
-if test "$GIT_TEST_STRESS_STARTED" = "done"
+if test "$shit_TEST_STRESS_STARTED" = "done"
 then
 	: # Don't stress test again.
 elif test -n "$stress"
@@ -350,9 +350,9 @@ then
 	if test -n "$stress_jobs"
 	then
 		job_count=$stress_jobs
-	elif test -n "$GIT_TEST_STRESS_LOAD"
+	elif test -n "$shit_TEST_STRESS_LOAD"
 	then
-		job_count="$GIT_TEST_STRESS_LOAD"
+		job_count="$shit_TEST_STRESS_LOAD"
 	elif job_count=$(getconf _NPROCESSORS_ONLN 2>/dev/null) &&
 	     test -n "$job_count"
 	then
@@ -377,9 +377,9 @@ then
 	while test $job_nr -lt "$job_count"
 	do
 		(
-			GIT_TEST_STRESS_STARTED=done
-			GIT_TEST_STRESS_JOB_NR=$job_nr
-			export GIT_TEST_STRESS_STARTED GIT_TEST_STRESS_JOB_NR
+			shit_TEST_STRESS_STARTED=done
+			shit_TEST_STRESS_JOB_NR=$job_nr
+			export shit_TEST_STRESS_STARTED shit_TEST_STRESS_JOB_NR
 
 			trap '
 				kill $test_pid 2>/dev/null
@@ -397,10 +397,10 @@ then
 
 				if wait $test_pid
 				then
-					printf "OK   %2d.%d\n" $GIT_TEST_STRESS_JOB_NR $cnt
+					printf "OK   %2d.%d\n" $shit_TEST_STRESS_JOB_NR $cnt
 				else
-					echo $GIT_TEST_STRESS_JOB_NR >>"$stressfail"
-					printf "FAIL %2d.%d\n" $GIT_TEST_STRESS_JOB_NR $cnt
+					echo $shit_TEST_STRESS_JOB_NR >>"$stressfail"
+					printf "FAIL %2d.%d\n" $shit_TEST_STRESS_JOB_NR $cnt
 				fi
 				cnt=$(($cnt + 1))
 			done
@@ -430,7 +430,7 @@ fi
 
 # if --tee was passed, write the output not only to the terminal, but
 # additionally to the file test-results/$BASENAME.out, too.
-if test "$GIT_TEST_TEE_STARTED" = "done"
+if test "$shit_TEST_TEE_STARTED" = "done"
 then
 	: # do not redirect again
 elif test -n "$tee"
@@ -439,15 +439,15 @@ then
 
 	# Make this filename available to the sub-process in case it is using
 	# --verbose-log.
-	GIT_TEST_TEE_OUTPUT_FILE=$TEST_RESULTS_BASE.out
-	export GIT_TEST_TEE_OUTPUT_FILE
+	shit_TEST_TEE_OUTPUT_FILE=$TEST_RESULTS_BASE.out
+	export shit_TEST_TEE_OUTPUT_FILE
 
 	# Truncate before calling "tee -a" to get rid of the results
 	# from any previous runs.
-	>"$GIT_TEST_TEE_OUTPUT_FILE"
+	>"$shit_TEST_TEE_OUTPUT_FILE"
 
-	(GIT_TEST_TEE_STARTED=done ${TEST_SHELL_PATH} "$0" "$@" 2>&1;
-	 echo $? >"$TEST_RESULTS_BASE.exit") | tee -a "$GIT_TEST_TEE_OUTPUT_FILE"
+	(shit_TEST_TEE_STARTED=done ${TEST_SHELL_PATH} "$0" "$@" 2>&1;
+	 echo $? >"$TEST_RESULTS_BASE.exit") | tee -a "$shit_TEST_TEE_OUTPUT_FILE"
 	test "$(cat "$TEST_RESULTS_BASE.exit")" = 0
 	exit
 fi
@@ -514,67 +514,67 @@ unset VISUAL EMAIL LANGUAGE $("$PERL_PATH" -e '
 		CURL_VERBOSE
 		TRACE_CURL
 	));
-	my @vars = grep(/^GIT_/ && !/^GIT_($ok)/o, @env);
+	my @vars = grep(/^shit_/ && !/^shit_($ok)/o, @env);
 	print join("\n", @vars);
 ')
 unset XDG_CACHE_HOME
 unset XDG_CONFIG_HOME
-unset GITPERLLIB
-unset GIT_TRACE2_PARENT_NAME
-unset GIT_TRACE2_PARENT_SID
+unset shitPERLLIB
+unset shit_TRACE2_PARENT_NAME
+unset shit_TRACE2_PARENT_SID
 TEST_AUTHOR_LOCALNAME=author
 TEST_AUTHOR_DOMAIN=example.com
-GIT_AUTHOR_EMAIL=${TEST_AUTHOR_LOCALNAME}@${TEST_AUTHOR_DOMAIN}
-GIT_AUTHOR_NAME='A U Thor'
-GIT_AUTHOR_DATE='1112354055 +0200'
+shit_AUTHOR_EMAIL=${TEST_AUTHOR_LOCALNAME}@${TEST_AUTHOR_DOMAIN}
+shit_AUTHOR_NAME='A U Thor'
+shit_AUTHOR_DATE='1112354055 +0200'
 TEST_COMMITTER_LOCALNAME=committer
 TEST_COMMITTER_DOMAIN=example.com
-GIT_COMMITTER_EMAIL=${TEST_COMMITTER_LOCALNAME}@${TEST_COMMITTER_DOMAIN}
-GIT_COMMITTER_NAME='C O Mitter'
-GIT_COMMITTER_DATE='1112354055 +0200'
-GIT_MERGE_VERBOSITY=5
-GIT_MERGE_AUTOEDIT=no
-export GIT_MERGE_VERBOSITY GIT_MERGE_AUTOEDIT
-export GIT_AUTHOR_EMAIL GIT_AUTHOR_NAME
-export GIT_COMMITTER_EMAIL GIT_COMMITTER_NAME
-export GIT_COMMITTER_DATE GIT_AUTHOR_DATE
+shit_COMMITTER_EMAIL=${TEST_COMMITTER_LOCALNAME}@${TEST_COMMITTER_DOMAIN}
+shit_COMMITTER_NAME='C O Mitter'
+shit_COMMITTER_DATE='1112354055 +0200'
+shit_MERGE_VERBOSITY=5
+shit_MERGE_AUTOEDIT=no
+export shit_MERGE_VERBOSITY shit_MERGE_AUTOEDIT
+export shit_AUTHOR_EMAIL shit_AUTHOR_NAME
+export shit_COMMITTER_EMAIL shit_COMMITTER_NAME
+export shit_COMMITTER_DATE shit_AUTHOR_DATE
 export EDITOR
 
-GIT_DEFAULT_HASH="${GIT_TEST_DEFAULT_HASH:-sha1}"
-export GIT_DEFAULT_HASH
-GIT_DEFAULT_REF_FORMAT="${GIT_TEST_DEFAULT_REF_FORMAT:-files}"
-export GIT_DEFAULT_REF_FORMAT
-GIT_TEST_MERGE_ALGORITHM="${GIT_TEST_MERGE_ALGORITHM:-ort}"
-export GIT_TEST_MERGE_ALGORITHM
+shit_DEFAULT_HASH="${shit_TEST_DEFAULT_HASH:-sha1}"
+export shit_DEFAULT_HASH
+shit_DEFAULT_REF_FORMAT="${shit_TEST_DEFAULT_REF_FORMAT:-files}"
+export shit_DEFAULT_REF_FORMAT
+shit_TEST_MERGE_ALGORITHM="${shit_TEST_MERGE_ALGORITHM:-ort}"
+export shit_TEST_MERGE_ALGORITHM
 
-# Tests using GIT_TRACE typically don't want <timestamp> <file>:<line> output
-GIT_TRACE_BARE=1
-export GIT_TRACE_BARE
+# Tests using shit_TRACE typically don't want <timestamp> <file>:<line> output
+shit_TRACE_BARE=1
+export shit_TRACE_BARE
 
-# Some tests scan the GIT_TRACE2_EVENT feed for events, but the
+# Some tests scan the shit_TRACE2_EVENT feed for events, but the
 # default depth is 2, which frequently causes issues when the
 # events are wrapped in new regions. Set it to a sufficiently
 # large depth to avoid custom changes in the test suite.
-GIT_TRACE2_EVENT_NESTING=100
-export GIT_TRACE2_EVENT_NESTING
+shit_TRACE2_EVENT_NESTING=100
+export shit_TRACE2_EVENT_NESTING
 
 # Use specific version of the index file format
-if test -n "${GIT_TEST_INDEX_VERSION:+isset}"
+if test -n "${shit_TEST_INDEX_VERSION:+isset}"
 then
-	GIT_INDEX_VERSION="$GIT_TEST_INDEX_VERSION"
-	export GIT_INDEX_VERSION
+	shit_INDEX_VERSION="$shit_TEST_INDEX_VERSION"
+	export shit_INDEX_VERSION
 fi
 
-if test -n "$GIT_TEST_PERL_FATAL_WARNINGS"
+if test -n "$shit_TEST_PERL_FATAL_WARNINGS"
 then
-	GIT_PERL_FATAL_WARNINGS=1
-	export GIT_PERL_FATAL_WARNINGS
+	shit_PERL_FATAL_WARNINGS=1
+	export shit_PERL_FATAL_WARNINGS
 fi
 
-case $GIT_TEST_FSYNC in
+case $shit_TEST_FSYNC in
 '')
-	GIT_TEST_FSYNC=0
-	export GIT_TEST_FSYNC
+	shit_TEST_FSYNC=0
+	export shit_TEST_FSYNC
 	;;
 esac
 
@@ -632,9 +632,9 @@ unset CDPATH
 unset GREP_OPTIONS
 unset UNZIP
 
-case $(echo $GIT_TRACE |tr "[A-Z]" "[a-z]") in
+case $(echo $shit_TRACE |tr "[A-Z]" "[a-z]") in
 1|2|true)
-	GIT_TRACE=4
+	shit_TRACE=4
 	;;
 esac
 
@@ -709,7 +709,7 @@ exec 7>&2
 
 _error_exit () {
 	finalize_test_output
-	GIT_EXIT_OK=t
+	shit_EXIT_OK=t
 	exit 1
 }
 
@@ -757,7 +757,7 @@ fi
 
 if test "$verbose_log" = "t"
 then
-	exec 3>>"$GIT_TEST_TEE_OUTPUT_FILE" 4>&3
+	exec 3>>"$shit_TEST_TEE_OUTPUT_FILE" 4>&3
 elif test "$verbose" = "t"
 then
 	exec 4>&2 3>&1
@@ -794,7 +794,7 @@ die () {
 	# test script run with '--immediate' fails, or when the user hits
 	# ctrl-C, i.e. when 'test_done' is not invoked at all.
 	test_atexit_handler || code=$?
-	if test -n "$GIT_EXIT_OK"
+	if test -n "$shit_EXIT_OK"
 	then
 		exit $code
 	else
@@ -803,7 +803,7 @@ die () {
 	fi
 }
 
-GIT_EXIT_OK=
+shit_EXIT_OK=
 trap 'die' EXIT
 # Disable '-x' tracing, because with some shells, notably dash, it
 # prevents running the cleanup commands when a test script run with
@@ -845,7 +845,7 @@ test_failure_ () {
 		then
 			finalize_test_output
 			_invert_exit_code_failure_end_blurb
-			GIT_EXIT_OK=t
+			shit_EXIT_OK=t
 			exit 0
 		fi
 		_error_exit
@@ -1017,21 +1017,21 @@ maybe_setup_verbose () {
 }
 
 maybe_teardown_valgrind () {
-	test -z "$GIT_VALGRIND" && return
-	GIT_VALGRIND_ENABLED=
+	test -z "$shit_VALGRIND" && return
+	shit_VALGRIND_ENABLED=
 }
 
 maybe_setup_valgrind () {
-	test -z "$GIT_VALGRIND" && return
+	test -z "$shit_VALGRIND" && return
 	if test -z "$valgrind_only"
 	then
-		GIT_VALGRIND_ENABLED=t
+		shit_VALGRIND_ENABLED=t
 		return
 	fi
-	GIT_VALGRIND_ENABLED=
+	shit_VALGRIND_ENABLED=
 	if match_pattern_list $test_count "$valgrind_only"
 	then
-		GIT_VALGRIND_ENABLED=t
+		shit_VALGRIND_ENABLED=t
 	fi
 }
 
@@ -1100,7 +1100,7 @@ test_run_ () {
 	test_cleanup=:
 	expecting_failure=$2
 
-	if test "${GIT_TEST_CHAIN_LINT:-1}" != 0; then
+	if test "${shit_TEST_CHAIN_LINT:-1}" != 0; then
 		# 117 is magic because it is unlikely to match the exit
 		# code of other programs
 		test_eval_inner_ "fail_117 && $1" </dev/null >&3 2>&4
@@ -1140,20 +1140,20 @@ test_finish_ () {
 	echo >&3 ""
 	maybe_teardown_valgrind
 	maybe_teardown_verbose
-	if test -n "$GIT_TEST_TEE_OFFSET"
+	if test -n "$shit_TEST_TEE_OFFSET"
 	then
-		GIT_TEST_TEE_OFFSET=$(test-tool path-utils file-size \
-			"$GIT_TEST_TEE_OUTPUT_FILE")
+		shit_TEST_TEE_OFFSET=$(test-tool path-utils file-size \
+			"$shit_TEST_TEE_OUTPUT_FILE")
 	fi
 }
 
 test_skip () {
 	to_skip=
 	skipped_reason=
-	if match_pattern_list $this_test.$test_count "$GIT_SKIP_TESTS"
+	if match_pattern_list $this_test.$test_count "$shit_SKIP_TESTS"
 	then
 		to_skip=t
-		skipped_reason="GIT_SKIP_TESTS"
+		skipped_reason="shit_SKIP_TESTS"
 	fi
 	if test -z "$to_skip" && test -n "$run_list" &&
 	   ! match_test_selector_list '--run' "$1" $test_count "$run_list"
@@ -1222,7 +1222,7 @@ sanitize_leak_log_message_ () {
 
 	printf "With SANITIZE=leak at exit we have %d leak logs, but started with %d
 
-This means that we have a blindspot where git is leaking but we're
+This means that we have a blindspot where shit is leaking but we're
 losing the exit code somewhere, or not propagating it appropriately
 upwards!
 
@@ -1263,14 +1263,14 @@ check_test_results_san_file_ () {
 		invert_exit_code=
 	elif test -n "$sanitize_leak_check" && test "$test_failure" = 0
 	then
-		say "As TEST_PASSES_SANITIZE_LEAK=true isn't set the above leak is 'ok' with GIT_TEST_PASSING_SANITIZE_LEAK=check" &&
+		say "As TEST_PASSES_SANITIZE_LEAK=true isn't set the above leak is 'ok' with shit_TEST_PASSING_SANITIZE_LEAK=check" &&
 		invert_exit_code=
 	elif test -n "$sanitize_leak_check"
 	then
-		say "As TEST_PASSES_SANITIZE_LEAK=true isn't set the above leak is 'ok' with GIT_TEST_PASSING_SANITIZE_LEAK=check" &&
+		say "As TEST_PASSES_SANITIZE_LEAK=true isn't set the above leak is 'ok' with shit_TEST_PASSING_SANITIZE_LEAK=check" &&
 		invert_exit_code=t
 	else
-		say "With GIT_TEST_SANITIZE_LEAK_LOG=true our logs revealed a memory leak, exit non-zero!" &&
+		say "With shit_TEST_SANITIZE_LEAK_LOG=true our logs revealed a memory leak, exit non-zero!" &&
 		invert_exit_code=t
 	fi
 }
@@ -1364,13 +1364,13 @@ test_done () {
 		if test -z "$skip_all" && test -n "$invert_exit_code"
 		then
 			say_color warn "# faking up non-zero exit with --invert-exit-code"
-			GIT_EXIT_OK=t
+			shit_EXIT_OK=t
 			exit 1
 		fi
 
 		test_at_end_hook_
 
-		GIT_EXIT_OK=t
+		shit_EXIT_OK=t
 		exit 0 ;;
 
 	*)
@@ -1382,11 +1382,11 @@ test_done () {
 		if test -n "$invert_exit_code"
 		then
 			_invert_exit_code_failure_end_blurb
-			GIT_EXIT_OK=t
+			shit_EXIT_OK=t
 			exit 0
 		fi
 
-		GIT_EXIT_OK=t
+		shit_EXIT_OK=t
 		exit 1 ;;
 
 	esac
@@ -1423,10 +1423,10 @@ then
 		base=$(basename "$1")
 		case "$base" in
 		test-*)
-			symlink_target="$GIT_BUILD_DIR/t/helper/$base"
+			symlink_target="$shit_BUILD_DIR/t/helper/$base"
 			;;
 		*)
-			symlink_target="$GIT_BUILD_DIR/$base"
+			symlink_target="$shit_BUILD_DIR/$base"
 			;;
 		esac
 		# do not override scripts
@@ -1441,88 +1441,88 @@ then
 			symlink_target=../unprocessed-script
 		esac
 		# create the link, or replace it if it is out of date
-		make_symlink "$symlink_target" "$GIT_VALGRIND/bin/$base" || exit
+		make_symlink "$symlink_target" "$shit_VALGRIND/bin/$base" || exit
 	}
 
-	# override all git executables in TEST_DIRECTORY/..
-	GIT_VALGRIND=$TEST_DIRECTORY/valgrind
-	mkdir -p "$GIT_VALGRIND"/bin
-	for file in $GIT_BUILD_DIR/git* $GIT_BUILD_DIR/t/helper/test-*
+	# override all shit executables in TEST_DIRECTORY/..
+	shit_VALGRIND=$TEST_DIRECTORY/valgrind
+	mkdir -p "$shit_VALGRIND"/bin
+	for file in $shit_BUILD_DIR/shit* $shit_BUILD_DIR/t/helper/test-*
 	do
 		make_valgrind_symlink $file
 	done
 	# special-case the mergetools loadables
-	make_symlink "$GIT_BUILD_DIR"/mergetools "$GIT_VALGRIND/bin/mergetools"
+	make_symlink "$shit_BUILD_DIR"/mergetools "$shit_VALGRIND/bin/mergetools"
 	OLDIFS=$IFS
 	IFS=:
 	for path in $PATH
 	do
-		ls "$path"/git-* 2> /dev/null |
+		ls "$path"/shit-* 2> /dev/null |
 		while read file
 		do
 			make_valgrind_symlink "$file"
 		done
 	done
 	IFS=$OLDIFS
-	PATH=$GIT_VALGRIND/bin:$PATH
-	GIT_EXEC_PATH=$GIT_VALGRIND/bin
-	export GIT_VALGRIND
-	GIT_VALGRIND_MODE="$valgrind"
-	export GIT_VALGRIND_MODE
-	GIT_VALGRIND_ENABLED=t
-	test -n "$valgrind_only" && GIT_VALGRIND_ENABLED=
-	export GIT_VALGRIND_ENABLED
-elif test -n "$GIT_TEST_INSTALLED"
+	PATH=$shit_VALGRIND/bin:$PATH
+	shit_EXEC_PATH=$shit_VALGRIND/bin
+	export shit_VALGRIND
+	shit_VALGRIND_MODE="$valgrind"
+	export shit_VALGRIND_MODE
+	shit_VALGRIND_ENABLED=t
+	test -n "$valgrind_only" && shit_VALGRIND_ENABLED=
+	export shit_VALGRIND_ENABLED
+elif test -n "$shit_TEST_INSTALLED"
 then
-	GIT_EXEC_PATH=$($GIT_TEST_INSTALLED/git --exec-path)  ||
-	error "Cannot run git from $GIT_TEST_INSTALLED."
-	PATH=$GIT_TEST_INSTALLED:$GIT_BUILD_DIR/t/helper:$PATH
-	GIT_EXEC_PATH=${GIT_TEST_EXEC_PATH:-$GIT_EXEC_PATH}
+	shit_EXEC_PATH=$($shit_TEST_INSTALLED/shit --exec-path)  ||
+	error "Cannot run shit from $shit_TEST_INSTALLED."
+	PATH=$shit_TEST_INSTALLED:$shit_BUILD_DIR/t/helper:$PATH
+	shit_EXEC_PATH=${shit_TEST_EXEC_PATH:-$shit_EXEC_PATH}
 else # normal case, use ../bin-wrappers only unless $with_dashes:
 	if test -n "$no_bin_wrappers"
 	then
 		with_dashes=t
 	else
-		git_bin_dir="$GIT_BUILD_DIR/bin-wrappers"
-		if ! test -x "$git_bin_dir/git"
+		shit_bin_dir="$shit_BUILD_DIR/bin-wrappers"
+		if ! test -x "$shit_bin_dir/shit"
 		then
 			if test -z "$with_dashes"
 			then
-				say "$git_bin_dir/git is not executable; using GIT_EXEC_PATH"
+				say "$shit_bin_dir/shit is not executable; using shit_EXEC_PATH"
 			fi
 			with_dashes=t
 		fi
-		PATH="$git_bin_dir:$PATH"
+		PATH="$shit_bin_dir:$PATH"
 	fi
-	GIT_EXEC_PATH=$GIT_BUILD_DIR
+	shit_EXEC_PATH=$shit_BUILD_DIR
 	if test -n "$with_dashes"
 	then
-		PATH="$GIT_BUILD_DIR:$GIT_BUILD_DIR/t/helper:$PATH"
+		PATH="$shit_BUILD_DIR:$shit_BUILD_DIR/t/helper:$PATH"
 	fi
 fi
-GIT_TEMPLATE_DIR="$GIT_BUILD_DIR"/templates/blt
-GIT_CONFIG_NOSYSTEM=1
-GIT_ATTR_NOSYSTEM=1
-GIT_CEILING_DIRECTORIES="$TRASH_DIRECTORY/.."
-export PATH GIT_EXEC_PATH GIT_TEMPLATE_DIR GIT_CONFIG_NOSYSTEM GIT_ATTR_NOSYSTEM GIT_CEILING_DIRECTORIES
+shit_TEMPLATE_DIR="$shit_BUILD_DIR"/templates/blt
+shit_CONFIG_NOSYSTEM=1
+shit_ATTR_NOSYSTEM=1
+shit_CEILING_DIRECTORIES="$TRASH_DIRECTORY/.."
+export PATH shit_EXEC_PATH shit_TEMPLATE_DIR shit_CONFIG_NOSYSTEM shit_ATTR_NOSYSTEM shit_CEILING_DIRECTORIES
 
-if test -z "$GIT_TEST_CMP"
+if test -z "$shit_TEST_CMP"
 then
-	if test -n "$GIT_TEST_CMP_USE_COPIED_CONTEXT"
+	if test -n "$shit_TEST_CMP_USE_COPIED_CONTEXT"
 	then
-		GIT_TEST_CMP="$DIFF -c"
+		shit_TEST_CMP="$DIFF -c"
 	else
-		GIT_TEST_CMP="$DIFF -u"
+		shit_TEST_CMP="$DIFF -u"
 	fi
 fi
 
-GITPERLLIB="$GIT_BUILD_DIR"/perl/build/lib
-export GITPERLLIB
-test -d "$GIT_BUILD_DIR"/templates/blt || {
+shitPERLLIB="$shit_BUILD_DIR"/perl/build/lib
+export shitPERLLIB
+test -d "$shit_BUILD_DIR"/templates/blt || {
 	BAIL_OUT "You haven't built things yet, have you?"
 }
 
-if ! test -x "$GIT_BUILD_DIR"/t/helper/test-tool$X
+if ! test -x "$shit_BUILD_DIR"/t/helper/test-tool$X
 then
 	BAIL_OUT 'You need to build test-tool; Run "make t/helper/test-tool" in the source (toplevel) directory'
 fi
@@ -1531,7 +1531,7 @@ fi
 remove_trash=
 this_test=${0##*/}
 this_test=${this_test%%-*}
-if match_pattern_list "$this_test" "$GIT_SKIP_TESTS"
+if match_pattern_list "$this_test" "$shit_SKIP_TESTS"
 then
 	say_color info >&3 "skipping test $this_test altogether"
 	skip_all="skip all tests in $this_test"
@@ -1555,27 +1555,27 @@ then
 		passes_sanitize_leak=t
 	fi
 
-	if test "$GIT_TEST_PASSING_SANITIZE_LEAK" = "check"
+	if test "$shit_TEST_PASSING_SANITIZE_LEAK" = "check"
 	then
 		sanitize_leak_check=t
 		if test -n "$invert_exit_code"
 		then
-			BAIL_OUT "cannot use --invert-exit-code under GIT_TEST_PASSING_SANITIZE_LEAK=check"
+			BAIL_OUT "cannot use --invert-exit-code under shit_TEST_PASSING_SANITIZE_LEAK=check"
 		fi
 
 		if test -z "$passes_sanitize_leak"
 		then
-			say "in GIT_TEST_PASSING_SANITIZE_LEAK=check mode, setting --invert-exit-code for TEST_PASSES_SANITIZE_LEAK != true"
+			say "in shit_TEST_PASSING_SANITIZE_LEAK=check mode, setting --invert-exit-code for TEST_PASSES_SANITIZE_LEAK != true"
 			invert_exit_code=t
 		fi
 	elif test -z "$passes_sanitize_leak" &&
-	     test_bool_env GIT_TEST_PASSING_SANITIZE_LEAK false
+	     test_bool_env shit_TEST_PASSING_SANITIZE_LEAK false
 	then
-		skip_all="skipping $this_test under GIT_TEST_PASSING_SANITIZE_LEAK=true"
+		skip_all="skipping $this_test under shit_TEST_PASSING_SANITIZE_LEAK=true"
 		test_done
 	fi
 
-	if test_bool_env GIT_TEST_SANITIZE_LEAK_LOG false
+	if test_bool_env shit_TEST_SANITIZE_LEAK_LOG false
 	then
 		if ! mkdir -p "$TEST_RESULTS_SAN_DIR"
 		then
@@ -1595,17 +1595,17 @@ then
 		prepend_var LSAN_OPTIONS : log_path=\"$TEST_RESULTS_SAN_FILE\"
 		export LSAN_OPTIONS
 	fi
-elif test "$GIT_TEST_PASSING_SANITIZE_LEAK" = "check" ||
-     test_bool_env GIT_TEST_PASSING_SANITIZE_LEAK false
+elif test "$shit_TEST_PASSING_SANITIZE_LEAK" = "check" ||
+     test_bool_env shit_TEST_PASSING_SANITIZE_LEAK false
 then
-	BAIL_OUT_ENV_NEEDS_SANITIZE_LEAK "GIT_TEST_PASSING_SANITIZE_LEAK=true"
-elif test_bool_env GIT_TEST_SANITIZE_LEAK_LOG false
+	BAIL_OUT_ENV_NEEDS_SANITIZE_LEAK "shit_TEST_PASSING_SANITIZE_LEAK=true"
+elif test_bool_env shit_TEST_SANITIZE_LEAK_LOG false
 then
-	BAIL_OUT_ENV_NEEDS_SANITIZE_LEAK "GIT_TEST_SANITIZE_LEAK_LOG=true"
+	BAIL_OUT_ENV_NEEDS_SANITIZE_LEAK "shit_TEST_SANITIZE_LEAK_LOG=true"
 fi
 
-if test "${GIT_TEST_CHAIN_LINT:-1}" != 0 &&
-   test "${GIT_TEST_EXT_CHAIN_LINT:-1}" != 0
+if test "${shit_TEST_CHAIN_LINT:-1}" != 0 &&
+   test "${shit_TEST_EXT_CHAIN_LINT:-1}" != 0
 then
 	"$PERL_PATH" "$TEST_DIRECTORY/chainlint.pl" "$0" ||
 		BUG "lint error (see '?!...!? annotations above)"
@@ -1637,22 +1637,22 @@ remove_trash_directory "$TRASH_DIRECTORY" || {
 remove_trash=t
 if test -z "$TEST_NO_CREATE_REPO"
 then
-	git init \
+	shit init \
 	    ${TEST_CREATE_REPO_NO_TEMPLATE:+--template=} \
 	    "$TRASH_DIRECTORY" >&3 2>&4 ||
-	error "cannot run git init"
+	error "cannot run shit init"
 else
 	mkdir -p "$TRASH_DIRECTORY"
 fi
 
 # Use -P to resolve symlinks in our working directory so that the cwd
-# in subprocesses like git equals our $PWD (for pathname comparisons).
+# in subprocesses like shit equals our $PWD (for pathname comparisons).
 cd -P "$TRASH_DIRECTORY" || BAIL_OUT "cannot cd -P to \"$TRASH_DIRECTORY\""
 
 start_test_output "$0"
 
 # Convenience
-# A regexp to match 5 and 35 hexdigits
+# A regexp to match 5 and 35 hexdishits
 _x05='[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]'
 _x35="$_x05$_x05$_x05$_x05$_x05$_x05$_x05"
 
@@ -1685,22 +1685,22 @@ yes () {
 	done
 }
 
-# The GIT_TEST_FAIL_PREREQS code hooks into test_set_prereq(), and
+# The shit_TEST_FAIL_PREREQS code hooks into test_set_prereq(), and
 # thus needs to be set up really early, and set an internal variable
 # for convenience so the hot test_set_prereq() codepath doesn't need
 # to call "test-tool env-helper" (via test_bool_env). Only do that work
-# if needed by seeing if GIT_TEST_FAIL_PREREQS is set at all.
-GIT_TEST_FAIL_PREREQS_INTERNAL=
-if test -n "$GIT_TEST_FAIL_PREREQS"
+# if needed by seeing if shit_TEST_FAIL_PREREQS is set at all.
+shit_TEST_FAIL_PREREQS_INTERNAL=
+if test -n "$shit_TEST_FAIL_PREREQS"
 then
-	if test_bool_env GIT_TEST_FAIL_PREREQS false
+	if test_bool_env shit_TEST_FAIL_PREREQS false
 	then
-		GIT_TEST_FAIL_PREREQS_INTERNAL=true
+		shit_TEST_FAIL_PREREQS_INTERNAL=true
 		test_set_prereq FAIL_PREREQS
 	fi
 else
 	test_lazy_prereq FAIL_PREREQS '
-		test_bool_env GIT_TEST_FAIL_PREREQS false
+		test_bool_env shit_TEST_FAIL_PREREQS false
 	'
 fi
 
@@ -1715,7 +1715,7 @@ case $uname_s in
 	find () {
 		/usr/bin/find "$@"
 	}
-	# git sees Windows-style pwd
+	# shit sees Windows-style pwd
 	pwd () {
 		builtin pwd -W
 	}
@@ -1727,7 +1727,7 @@ case $uname_s in
 	test_set_prereq SED_STRIPS_CR
 	test_set_prereq GREP_STRIPS_CR
 	test_set_prereq WINDOWS
-	GIT_TEST_CMP="GIT_DIR=/dev/null git diff --no-index --ignore-cr-at-eol --"
+	shit_TEST_CMP="shit_DIR=/dev/null shit diff --no-index --ignore-cr-at-eol --"
 	;;
 *CYGWIN*)
 	test_set_prereq POSIXPERM
@@ -1752,13 +1752,13 @@ parisc* | hppa*)
 	;;
 esac
 
-case "$GIT_DEFAULT_REF_FORMAT" in
+case "$shit_DEFAULT_REF_FORMAT" in
 files)
 	test_set_prereq REFFILES;;
 reftable)
 	test_set_prereq REFTABLE;;
 *)
-	echo 2>&1 "error: unknown ref format $GIT_DEFAULT_REF_FORMAT"
+	echo 2>&1 "error: unknown ref format $shit_DEFAULT_REF_FORMAT"
 	exit 1
 	;;
 esac
@@ -1772,12 +1772,12 @@ test -n "$USE_LIBPCRE2" && test_set_prereq PCRE
 test -n "$USE_LIBPCRE2" && test_set_prereq LIBPCRE2
 test -z "$NO_GETTEXT" && test_set_prereq GETTEXT
 test -n "$SANITIZE_LEAK" && test_set_prereq SANITIZE_LEAK
-test -n "$GIT_VALGRIND_ENABLED" && test_set_prereq VALGRIND
+test -n "$shit_VALGRIND_ENABLED" && test_set_prereq VALGRIND
 
-if test -z "$GIT_TEST_CHECK_CACHE_TREE"
+if test -z "$shit_TEST_CHECK_CACHE_TREE"
 then
-	GIT_TEST_CHECK_CACHE_TREE=true
-	export GIT_TEST_CHECK_CACHE_TREE
+	shit_TEST_CHECK_CACHE_TREE=true
+	export shit_TEST_CHECK_CACHE_TREE
 fi
 
 test_lazy_prereq PIPE '
@@ -1798,7 +1798,7 @@ test_lazy_prereq SYMLINKS_WINDOWS '
 '
 
 test_lazy_prereq FILEMODE '
-	test "$(git config --bool core.filemode)" = true
+	test "$(shit config --bool core.filemode)" = true
 '
 
 test_lazy_prereq CASE_INSENSITIVE_FS '
@@ -1830,13 +1830,13 @@ test_lazy_prereq UTF8_NFD_TO_NFC '
 '
 
 test_lazy_prereq AUTOIDENT '
-	sane_unset GIT_AUTHOR_NAME &&
-	sane_unset GIT_AUTHOR_EMAIL &&
-	git var GIT_AUTHOR_IDENT
+	sane_unset shit_AUTHOR_NAME &&
+	sane_unset shit_AUTHOR_EMAIL &&
+	shit var shit_AUTHOR_IDENT
 '
 
 test_lazy_prereq EXPENSIVE '
-	test -n "$GIT_TEST_LONG"
+	test -n "$shit_TEST_LONG"
 '
 
 test_lazy_prereq EXPENSIVE_ON_WINDOWS '
@@ -1852,8 +1852,8 @@ test_lazy_prereq NOT_ROOT '
 	test "$uid" != 0
 '
 
-test_lazy_prereq JGIT '
-	jgit --version
+test_lazy_prereq Jshit '
+	jshit --version
 '
 
 # SANITY is about "can you correctly predict what the filesystem would
@@ -1887,10 +1887,10 @@ test_lazy_prereq SANITY '
 	return $status
 '
 
-test FreeBSD != $uname_s || GIT_UNZIP=${GIT_UNZIP:-/usr/local/bin/unzip}
-GIT_UNZIP=${GIT_UNZIP:-unzip}
+test FreeBSD != $uname_s || shit_UNZIP=${shit_UNZIP:-/usr/local/bin/unzip}
+shit_UNZIP=${shit_UNZIP:-unzip}
 test_lazy_prereq UNZIP '
-	"$GIT_UNZIP" -v
+	"$shit_UNZIP" -v
 	test $? -ne 127
 '
 
@@ -1922,7 +1922,7 @@ test_lazy_prereq ULIMIT_FILE_DESCRIPTORS '
 '
 
 build_option () {
-	git version --build-options |
+	shit version --build-options |
 	sed -ne "s/^$1: //p"
 }
 
@@ -1945,9 +1945,9 @@ test_lazy_prereq CURL '
 # which will not work with other hash algorithms and tests that work but don't
 # test anything meaningful (e.g. special values which cause short collisions).
 test_lazy_prereq SHA1 '
-	case "$GIT_DEFAULT_HASH" in
+	case "$shit_DEFAULT_HASH" in
 	sha1) true ;;
-	"") test $(git hash-object /dev/null) = e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 ;;
+	"") test $(shit hash-object /dev/null) = e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 ;;
 	*) false ;;
 	esac
 '
@@ -1956,17 +1956,17 @@ test_lazy_prereq DEFAULT_REPO_FORMAT '
 	test_have_prereq SHA1,REFFILES
 '
 
-# Ensure that no test accidentally triggers a Git command
+# Ensure that no test accidentally triggers a shit command
 # that runs the actual maintenance scheduler, affecting a user's
 # system permanently.
 # Tests that verify the scheduler integration must set this locally
 # to avoid errors.
-GIT_TEST_MAINT_SCHEDULER="none:exit 1"
-export GIT_TEST_MAINT_SCHEDULER
+shit_TEST_MAINT_SCHEDULER="none:exit 1"
+export shit_TEST_MAINT_SCHEDULER
 
-# Does this platform support `git fsmonitor--daemon`
+# Does this platform support `shit fsmonitor--daemon`
 #
 test_lazy_prereq FSMONITOR_DAEMON '
-	git version --build-options >output &&
+	shit version --build-options >output &&
 	grep "feature: fsmonitor--daemon" output
 '

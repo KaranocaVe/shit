@@ -3,7 +3,7 @@
 # Copyright (c) 2005 Junio C Hamano
 #
 
-test_description='git ls-files -k and -m flags test.
+test_description='shit ls-files -k and -m flags test.
 
 This test prepares the following in the cache:
 
@@ -28,7 +28,7 @@ and the following on the filesystem:
     submod1/	- a submodule (modified from the cache)
     submod2/	- a submodule (matches the cache)
 
-git ls-files -k should report that existing filesystem objects
+shit ls-files -k should report that existing filesystem objects
 path0/*, path1/*, path2 and path3 to be killed.
 
 Also for modification test, the cache and working tree have:
@@ -45,7 +45,7 @@ modified without reporting path9 and path10.  submod1 is also modified.
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
-test_expect_success 'git update-index --add to add various paths.' '
+test_expect_success 'shit update-index --add to add various paths.' '
 	date >path0 &&
 	test_ln_s_add xyzzy path1 &&
 	mkdir path2 path3 pathx &&
@@ -56,20 +56,20 @@ test_expect_success 'git update-index --add to add various paths.' '
 	date >path8 &&
 	: >path9 &&
 	date >path10 &&
-	git update-index --add -- path0 path?/file? pathx/ju path7 path8 path9 path10 &&
-	git init submod1 &&
-	git -C submod1 commit --allow-empty -m "empty 1" &&
-	git init submod2 &&
-	git -C submod2 commit --allow-empty -m "empty 2" &&
-	git update-index --add submod[12] &&
+	shit update-index --add -- path0 path?/file? pathx/ju path7 path8 path9 path10 &&
+	shit init submod1 &&
+	shit -C submod1 commit --allow-empty -m "empty 1" &&
+	shit init submod2 &&
+	shit -C submod2 commit --allow-empty -m "empty 2" &&
+	shit update-index --add submod[12] &&
 	(
 		cd submod1 &&
-		git commit --allow-empty -m "empty 1 (updated)"
+		shit commit --allow-empty -m "empty 1 (updated)"
 	) &&
 	rm -fr path?	# leave path10 alone
 '
 
-test_expect_success 'git ls-files -k to show killed files.' '
+test_expect_success 'shit ls-files -k to show killed files.' '
 	date >path2 &&
 	if test_have_prereq SYMLINKS
 	then
@@ -97,21 +97,21 @@ test_expect_success 'git ls-files -k to show killed files.' '
 	EOF
 '
 
-test_expect_success 'git ls-files -k output (w/o icase)' '
-	git ls-files -k >.output &&
+test_expect_success 'shit ls-files -k output (w/o icase)' '
+	shit ls-files -k >.output &&
 	test_cmp .expected .output
 '
 
-test_expect_success 'git ls-files -k output (w/ icase)' '
-	git -c core.ignorecase=true ls-files -k >.output &&
+test_expect_success 'shit ls-files -k output (w/ icase)' '
+	shit -c core.ignorecase=true ls-files -k >.output &&
 	test_cmp .expected .output
 '
 
-test_expect_success 'git ls-files -m to show modified files.' '
-	git ls-files -m >.output
+test_expect_success 'shit ls-files -m to show modified files.' '
+	shit ls-files -m >.output
 '
 
-test_expect_success 'validate git ls-files -m output.' '
+test_expect_success 'validate shit ls-files -m output.' '
 	cat >.expected <<-\EOF &&
 	path0
 	path1

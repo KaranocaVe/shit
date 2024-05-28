@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 /*
  * When linking the fuzzers, we link against common-main.o to pick up some

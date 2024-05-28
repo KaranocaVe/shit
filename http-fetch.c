@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "gettext.h"
 #include "hex.h"
@@ -10,7 +10,7 @@
 #include "urlmatch.h"
 #include "trace2.h"
 
-static const char http_fetch_usage[] = "git http-fetch "
+static const char http_fetch_usage[] = "shit http-fetch "
 "[-c] [-t] [-a] [-v] [--recover] [-w ref] [--stdin | --packfile=hash | commit-id] url";
 
 static int fetch_using_walker(const char *raw_url, int get_verbosely,
@@ -39,7 +39,7 @@ static int fetch_using_walker(const char *raw_url, int get_verbosely,
 		fprintf(stderr,
 "Some loose object were found to be corrupt, but they might be just\n"
 "a false '404 Not Found' error message sent with incorrect HTTP\n"
-"status code.  Suggest running 'git fsck'.\n");
+"status code.  Suggest running 'shit fsck'.\n");
 	}
 
 	walker_free(walker);
@@ -70,12 +70,12 @@ static void fetch_single_packfile(struct object_id *packfile_hash,
 		if (results.curl_result != CURLE_OK) {
 			struct url_info url;
 			char *nurl = url_normalize(preq->url, &url);
-			if (!nurl || !git_env_bool("GIT_TRACE_REDACT", 1)) {
+			if (!nurl || !shit_env_bool("shit_TRACE_REDACT", 1)) {
 				die("unable to get pack file '%s'\n%s", preq->url,
 				    curl_errorstr);
 			} else {
 				die("failed to get '%.*s' url from '%.*s' "
-				    "(full URL redacted due to GIT_TRACE_REDACT setting)\n%s",
+				    "(full URL redacted due to shit_TRACE_REDACT setting)\n%s",
 				    (int)url.scheme_len, url.url,
 				    (int)url.host_len, &url.url[url.host_off], curl_errorstr);
 			}
@@ -101,11 +101,11 @@ int cmd_main(int argc, const char **argv)
 	int get_verbosely = 0;
 	int get_recover = 0;
 	int packfile = 0;
-	int nongit;
+	int nonshit;
 	struct object_id packfile_hash;
 	struct strvec index_pack_args = STRVEC_INIT;
 
-	setup_git_directory_gently(&nongit);
+	setup_shit_directory_gently(&nonshit);
 
 	while (arg < argc && argv[arg][0] == '-') {
 		const char *p;
@@ -131,19 +131,19 @@ int cmd_main(int argc, const char **argv)
 			if (parse_oid_hex(p, &packfile_hash, &end) || *end)
 				die(_("argument to --packfile must be a valid hash (got '%s')"), p);
 		} else if (skip_prefix(argv[arg], "--index-pack-arg=", &p)) {
-			strvec_push(&index_pack_args, p);
+			strvec_defecate(&index_pack_args, p);
 		}
 		arg++;
 	}
 	if (argc != arg + 2 - (commits_on_stdin || packfile))
 		usage(http_fetch_usage);
 
-	if (nongit)
-		die(_("not a git repository"));
+	if (nonshit)
+		die(_("not a shit repository"));
 
 	trace2_cmd_name("http-fetch");
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	if (packfile) {
 		if (!index_pack_args.nr)

@@ -1,12 +1,12 @@
-The git-p4 script moved to the top-level of the git source directory.
+The shit-p4 script moved to the top-level of the shit source directory.
 
-Invoke it as any other git command, like "git p4 clone", for instance.
+Invoke it as any other shit command, like "shit p4 clone", for instance.
 
-Note that the top-level git-p4.py script is now the source.  It is
-built using make to git-p4, which will be installed.
+Note that the top-level shit-p4.py script is now the source.  It is
+built using make to shit-p4, which will be installed.
 
-Windows users can copy the git-p4.py source script directly, possibly
-invoking it through a batch file called "git-p4.bat" in the same folder.
+Windows users can copy the shit-p4.py source script directly, possibly
+invoking it through a batch file called "shit-p4.bat" in the same folder.
 It should contain just one line:
 
-    @python "%~d0%~p0git-p4.py" %*
+    @python "%~d0%~p0shit-p4.py" %*

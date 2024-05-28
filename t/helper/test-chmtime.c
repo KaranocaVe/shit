@@ -37,7 +37,7 @@
  *
  */
 #include "test-tool.h"
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include <utime.h>
 
 static const char usage_str[] =
@@ -114,7 +114,7 @@ int cmd__chmtime(int argc, const char **argv)
 			continue;
 		}
 
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 		if (!(sb.st_mode & S_IWUSR) &&
 				chmod(argv[i], sb.st_mode | S_IWUSR)) {
 			fprintf(stderr, "Could not make user-writable %s: %s",
@@ -134,7 +134,7 @@ int cmd__chmtime(int argc, const char **argv)
 		}
 
 		if (utb.modtime != sb.st_mtime && utime(argv[i], &utb) < 0) {
-#ifdef GIT_WINDOWS_NATIVE
+#ifdef shit_WINDOWS_NATIVE
 			if (S_ISDIR(sb.st_mode)) {
 				/*
 				 * NEEDSWORK: The Windows version of `utime()`

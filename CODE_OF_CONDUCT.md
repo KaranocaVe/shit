@@ -1,7 +1,7 @@
-# Git Code of Conduct
+# shit Code of Conduct
 
 This code of conduct outlines our expectations for participants within
-the Git community, as well as steps for reporting unacceptable behavior.
+the shit community, as well as steps for reporting unacceptable behavior.
 We are committed to providing a welcoming and inspiring community for
 all and expect our code of conduct to be honored. Anyone who violates
 this code of conduct may be banned from the community.
@@ -66,11 +66,11 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-git@sfconservancy.org, or individually:
+shit@sfconservancy.org, or individually:
 
   - Ævar Arnfjörð Bjarmason <avarab@gmail.com>
   - Christian Couder <christian.couder@gmail.com>
-  - Junio C Hamano <gitster@pobox.com>
+  - Junio C Hamano <shitster@pobox.com>
   - Taylor Blau <me@ttaylorr.com>
 
 All complaints will be reviewed and investigated promptly and fairly.
@@ -139,7 +139,7 @@ at [https://www.contributor-covenant.org/translations][translations].
 
 [homepage]: https://www.contributor-covenant.org
 [v2.0]: https://www.contributor-covenant.org/version/2/0/code_of_conduct.html
-[Mozilla CoC]: https://github.com/mozilla/diversity
+[Mozilla CoC]: https://shithub.com/mozilla/diversity
 [FAQ]: https://www.contributor-covenant.org/faq
 [translations]: https://www.contributor-covenant.org/translations
 

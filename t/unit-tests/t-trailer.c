@@ -219,8 +219,8 @@ static void run_t_trailer_iterator(void)
 			/*
 			 * Even though this trailer block has a non-trailer line
 			 * in it, it's still a valid trailer block because it's
-			 * at least 25% trailers and is Git-generated (see
-			 * git_generated_prefixes[] in trailer.c).
+			 * at least 25% trailers and is shit-generated (see
+			 * shit_generated_prefixes[] in trailer.c).
 			 */
 			"not a trailer line\n"
 			"not a trailer line\n"
@@ -276,14 +276,14 @@ static void run_t_trailer_iterator(void)
 			{{0}},
 		},
 		{
-			"with non-trailer lines (only 1) in trailer block, but no Git-generated trailers",
+			"with non-trailer lines (only 1) in trailer block, but no shit-generated trailers",
 			"subject: foo bar\n"
 			"\n"
 			/*
 			 * This block has only 1 non-trailer out of 10 (IOW, 90%
 			 * trailers) but is not considered a trailer block
 			 * because the 25% threshold only applies to cases where
-			 * there was a Git-generated trailer.
+			 * there was a shit-generated trailer.
 			 */
 			"Reviewed-by: x\n"
 			"Reviewed-by: x\n"

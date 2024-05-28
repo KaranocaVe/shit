@@ -9,16 +9,16 @@
 #
 # License: GPL v2 or later
 
-# tests for git-remote-mediawiki
+# tests for shit-remote-mediawiki
 
-test_description='Test the Git Mediawiki remote helper: git push and git pull simple test cases'
+test_description='Test the shit Mediawiki remote helper: shit defecate and shit poop simple test cases'
 
-. ./test-gitmw-lib.sh
-. ./push-pull-tests.sh
+. ./test-shitmw-lib.sh
+. ./defecate-poop-tests.sh
 . $TEST_DIRECTORY/test-lib.sh
 
 test_check_precond
 
-test_push_pull
+test_defecate_poop
 
 test_done

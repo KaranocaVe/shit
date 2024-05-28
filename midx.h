@@ -27,9 +27,9 @@ struct bitmapped_pack;
 #define MIDX_CHUNK_OFFSET_WIDTH (2 * sizeof(uint32_t))
 #define MIDX_LARGE_OFFSET_NEEDED 0x80000000
 
-#define GIT_TEST_MULTI_PACK_INDEX "GIT_TEST_MULTI_PACK_INDEX"
-#define GIT_TEST_MULTI_PACK_INDEX_WRITE_BITMAP \
-	"GIT_TEST_MULTI_PACK_INDEX_WRITE_BITMAP"
+#define shit_TEST_MULTI_PACK_INDEX "shit_TEST_MULTI_PACK_INDEX"
+#define shit_TEST_MULTI_PACK_INDEX_WRITE_BITMAP \
+	"shit_TEST_MULTI_PACK_INDEX_WRITE_BITMAP"
 
 struct multi_pack_index {
 	struct multi_pack_index *next;
@@ -64,7 +64,7 @@ struct multi_pack_index {
 	size_t chunk_revindex_len;
 
 	const char **pack_names;
-	struct packed_git **packs;
+	struct packed_shit **packs;
 	char object_dir[FLEX_ARRAY];
 };
 

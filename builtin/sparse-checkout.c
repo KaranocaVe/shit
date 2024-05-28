@@ -20,7 +20,7 @@
 static const char *empty_base = "";
 
 static char const * const builtin_sparse_checkout_usage[] = {
-	N_("git sparse-checkout (init | list | set | add | reapply | disable | check-rules) [<options>]"),
+	N_("shit sparse-checkout (init | list | set | add | reapply | disable | check-rules) [<options>]"),
 	NULL
 };
 
@@ -44,7 +44,7 @@ static void write_patterns_to_file(FILE *fp, struct pattern_list *pl)
 }
 
 static char const * const builtin_sparse_checkout_list_usage[] = {
-	"git sparse-checkout list",
+	"shit sparse-checkout list",
 	NULL
 };
 
@@ -169,7 +169,7 @@ static void clean_tracked_sparse_directories(struct repository *r)
 		dir.flags |= DIR_SHOW_IGNORED_TOO;
 
 		setup_standard_excludes(&dir);
-		strvec_push(&s, path.buf);
+		strvec_defecate(&s, path.buf);
 
 		parse_pathspec(&p, PATHSPEC_GLOB, 0, NULL, s.v);
 		fill_directory(&dir, r->index, &p);
@@ -425,7 +425,7 @@ static int update_modes(int *cone_mode, int *sparse_index)
 }
 
 static char const * const builtin_sparse_checkout_init_usage[] = {
-	"git sparse-checkout init [--cone] [--[no-]sparse-index]",
+	"shit sparse-checkout init [--cone] [--[no-]sparse-index]",
 	NULL
 };
 
@@ -740,12 +740,12 @@ static void sanitize_paths(int argc, const char **argv,
 		if (core_sparse_checkout_cone)
 			die(_("'%s' is not a directory; to treat it as a directory anyway, rerun with --skip-checks"), argv[i]);
 		else
-			warning(_("pass a leading slash before paths such as '%s' if you want a single file (see NON-CONE PROBLEMS in the git-sparse-checkout manual)."), argv[i]);
+			warning(_("pass a leading slash before paths such as '%s' if you want a single file (see NON-CONE PROBLEMS in the shit-sparse-checkout manual)."), argv[i]);
 	}
 }
 
 static char const * const builtin_sparse_checkout_add_usage[] = {
-	N_("git sparse-checkout add [--skip-checks] (--stdin | <patterns>)"),
+	N_("shit sparse-checkout add [--skip-checks] (--stdin | <patterns>)"),
 	NULL
 };
 
@@ -781,7 +781,7 @@ static int sparse_checkout_add(int argc, const char **argv, const char *prefix)
 }
 
 static char const * const builtin_sparse_checkout_set_usage[] = {
-	N_("git sparse-checkout set [--[no-]cone] [--[no-]sparse-index] [--skip-checks] (--stdin | <patterns>)"),
+	N_("shit sparse-checkout set [--[no-]cone] [--[no-]sparse-index] [--skip-checks] (--stdin | <patterns>)"),
 	NULL
 };
 
@@ -840,7 +840,7 @@ static int sparse_checkout_set(int argc, const char **argv, const char *prefix)
 }
 
 static char const * const builtin_sparse_checkout_reapply_usage[] = {
-	"git sparse-checkout reapply [--[no-]cone] [--[no-]sparse-index]",
+	"shit sparse-checkout reapply [--[no-]cone] [--[no-]sparse-index]",
 	NULL
 };
 
@@ -880,7 +880,7 @@ static int sparse_checkout_reapply(int argc, const char **argv,
 }
 
 static char const * const builtin_sparse_checkout_disable_usage[] = {
-	"git sparse-checkout disable",
+	"shit sparse-checkout disable",
 	NULL
 };
 
@@ -896,7 +896,7 @@ static int sparse_checkout_disable(int argc, const char **argv,
 	/*
 	 * We do not exit early if !core_apply_sparse_checkout; due to the
 	 * ability for users to manually muck things up between
-	 *   direct editing of .git/info/sparse-checkout
+	 *   direct editing of .shit/info/sparse-checkout
 	 *   running read-tree -m u HEAD or update-index --skip-worktree
 	 *   direct toggling of config options
 	 * users might end up with an index with SKIP_WORKTREE bit set on
@@ -931,7 +931,7 @@ static int sparse_checkout_disable(int argc, const char **argv,
 }
 
 static char const * const builtin_sparse_checkout_check_rules_usage[] = {
-	N_("git sparse-checkout check-rules [-z] [--skip-checks]"
+	N_("shit sparse-checkout check-rules [-z] [--skip-checks]"
 	   "[--[no-]cone] [--rules-file <file>]"),
 	NULL
 };
@@ -1032,7 +1032,7 @@ int cmd_sparse_checkout(int argc, const char **argv, const char *prefix)
 			     builtin_sparse_checkout_options,
 			     builtin_sparse_checkout_usage, 0);
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	prepare_repo_settings(the_repository);
 	the_repository->settings.command_requires_full_index = 0;

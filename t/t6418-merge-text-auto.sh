@@ -2,18 +2,18 @@
 
 test_description='CRLF merge conflict across text=auto change
 
-* [main] remove .gitattributes
+* [main] remove .shitattributes
  ! [side] add line from b
 --
  + [side] add line from b
-*  [main] remove .gitattributes
+*  [main] remove .shitattributes
 *  [main^] add line from a
 *  [main~2] normalize file
 *+ [side^] Initial
 '
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -28,47 +28,47 @@ compare_files () {
 }
 
 test_expect_success setup '
-	git config core.autocrlf false &&
+	shit config core.autocrlf false &&
 
 	echo first line | append_cr >file &&
 	echo first line >control_file &&
 	echo only line >inert_file &&
 
-	git add file control_file inert_file &&
+	shit add file control_file inert_file &&
 	test_tick &&
-	git commit -m "Initial" &&
-	git tag initial &&
-	git branch side &&
+	shit commit -m "Initial" &&
+	shit tag initial &&
+	shit branch side &&
 
-	echo "* text=auto" >.gitattributes &&
+	echo "* text=auto" >.shitattributes &&
 	echo first line >file &&
-	git add .gitattributes file &&
+	shit add .shitattributes file &&
 	test_tick &&
-	git commit -m "normalize file" &&
+	shit commit -m "normalize file" &&
 
 	echo same line | append_cr >>file &&
 	echo same line >>control_file &&
-	git add file control_file &&
+	shit add file control_file &&
 	test_tick &&
-	git commit -m "add line from a" &&
-	git tag a &&
+	shit commit -m "add line from a" &&
+	shit tag a &&
 
-	git rm .gitattributes &&
+	shit rm .shitattributes &&
 	rm file &&
-	git checkout file &&
+	shit checkout file &&
 	test_tick &&
-	git commit -m "remove .gitattributes" &&
-	git tag c &&
+	shit commit -m "remove .shitattributes" &&
+	shit tag c &&
 
-	git checkout side &&
+	shit checkout side &&
 	echo same line | append_cr >>file &&
 	echo same line >>control_file &&
-	git add file control_file &&
+	shit add file control_file &&
 	test_tick &&
-	git commit -m "add line from b" &&
-	git tag b &&
+	shit commit -m "add line from b" &&
+	shit tag b &&
 
-	git checkout main
+	shit checkout main
 '
 
 test_expect_success 'set up fuzz_conflict() helper' '
@@ -87,31 +87,31 @@ test_expect_success 'Merge after setting text=auto' '
 		append_cr <expected >expected.temp &&
 		mv expected.temp expected
 	fi &&
-	git config merge.renormalize true &&
-	git rm -fr . &&
-	rm -f .gitattributes &&
-	git reset --hard a &&
-	git merge b &&
+	shit config merge.renormalize true &&
+	shit rm -fr . &&
+	rm -f .shitattributes &&
+	shit reset --hard a &&
+	shit merge b &&
 	compare_files expected file
 '
 
 test_expect_success 'Merge addition of text=auto eol=LF' '
-	git config core.eol lf &&
+	shit config core.eol lf &&
 	cat <<-\EOF >expected &&
 	first line
 	same line
 	EOF
 
-	git config merge.renormalize true &&
-	git rm -fr . &&
-	rm -f .gitattributes &&
-	git reset --hard b &&
-	git merge a &&
+	shit config merge.renormalize true &&
+	shit rm -fr . &&
+	rm -f .shitattributes &&
+	shit reset --hard b &&
+	shit merge a &&
 	compare_files  expected file
 '
 
 test_expect_success 'Merge addition of text=auto eol=CRLF' '
-	git config core.eol crlf &&
+	shit config core.eol crlf &&
 	cat <<-\EOF >expected &&
 	first line
 	same line
@@ -119,18 +119,18 @@ test_expect_success 'Merge addition of text=auto eol=CRLF' '
 
 	append_cr <expected >expected.temp &&
 	mv expected.temp expected &&
-	git config merge.renormalize true &&
-	git rm -fr . &&
-	rm -f .gitattributes &&
-	git reset --hard b &&
-	echo >&2 "After git reset --hard b" &&
-	git ls-files -s --eol >&2 &&
-	git merge a &&
+	shit config merge.renormalize true &&
+	shit rm -fr . &&
+	rm -f .shitattributes &&
+	shit reset --hard b &&
+	echo >&2 "After shit reset --hard b" &&
+	shit ls-files -s --eol >&2 &&
+	shit merge a &&
 	compare_files  expected file
 '
 
 test_expect_success 'Detect CRLF/LF conflict after setting text=auto' '
-	git config core.eol native &&
+	shit config core.eol native &&
 	echo "<<<<<<<" >expected &&
 	echo first line >>expected &&
 	echo same line >>expected &&
@@ -138,10 +138,10 @@ test_expect_success 'Detect CRLF/LF conflict after setting text=auto' '
 	echo first line | append_cr >>expected &&
 	echo same line | append_cr >>expected &&
 	echo ">>>>>>>" >>expected &&
-	git config merge.renormalize false &&
-	rm -f .gitattributes &&
-	git reset --hard a &&
-	test_must_fail git merge b &&
+	shit config merge.renormalize false &&
+	rm -f .shitattributes &&
+	shit reset --hard a &&
+	test_must_fail shit merge b &&
 	fuzz_conflict file >file.fuzzy &&
 	compare_files expected file.fuzzy
 '
@@ -154,10 +154,10 @@ test_expect_success 'Detect LF/CRLF conflict from addition of text=auto' '
 	echo first line >>expected &&
 	echo same line >>expected &&
 	echo ">>>>>>>" >>expected &&
-	git config merge.renormalize false &&
-	rm -f .gitattributes &&
-	git reset --hard b &&
-	test_must_fail git merge a &&
+	shit config merge.renormalize false &&
+	rm -f .shitattributes &&
+	shit reset --hard b &&
+	test_must_fail shit merge a &&
 	fuzz_conflict file >file.fuzzy &&
 	compare_files expected file.fuzzy
 '
@@ -168,13 +168,13 @@ test_expect_success 'checkout -m after setting text=auto' '
 	same line
 	EOF
 
-	git config merge.renormalize true &&
-	git rm -fr . &&
-	rm -f .gitattributes &&
-	git reset --hard initial &&
-	git restore --source=a -- . &&
-	git checkout -m b &&
-	git diff --no-index --ignore-cr-at-eol expected file
+	shit config merge.renormalize true &&
+	shit rm -fr . &&
+	rm -f .shitattributes &&
+	shit reset --hard initial &&
+	shit restore --source=a -- . &&
+	shit checkout -m b &&
+	shit diff --no-index --ignore-cr-at-eol expected file
 '
 
 test_expect_success 'checkout -m addition of text=auto' '
@@ -183,49 +183,49 @@ test_expect_success 'checkout -m addition of text=auto' '
 	same line
 	EOF
 
-	git config merge.renormalize true &&
-	git rm -fr . &&
-	rm -f .gitattributes file &&
-	git reset --hard initial &&
-	git restore --source=b -- . &&
-	git checkout -m a &&
-	git diff --no-index --ignore-cr-at-eol expected file
+	shit config merge.renormalize true &&
+	shit rm -fr . &&
+	rm -f .shitattributes file &&
+	shit reset --hard initial &&
+	shit restore --source=b -- . &&
+	shit checkout -m a &&
+	shit diff --no-index --ignore-cr-at-eol expected file
 '
 
 test_expect_success 'Test delete/normalize conflict' '
-	git checkout -f side &&
-	git rm -fr . &&
-	rm -f .gitattributes &&
-	git reset --hard initial &&
-	git rm file &&
-	git commit -m "remove file" &&
-	git checkout main &&
-	git reset --hard a^ &&
-	git merge side &&
+	shit checkout -f side &&
+	shit rm -fr . &&
+	rm -f .shitattributes &&
+	shit reset --hard initial &&
+	shit rm file &&
+	shit commit -m "remove file" &&
+	shit checkout main &&
+	shit reset --hard a^ &&
+	shit merge side &&
 	test_path_is_missing file
 '
 
 test_expect_success 'rename/delete vs. renormalization' '
-	git init subrepo &&
+	shit init subrepo &&
 	(
 		cd subrepo &&
 		echo foo >oldfile &&
-		git add oldfile &&
-		git commit -m original &&
+		shit add oldfile &&
+		shit commit -m original &&
 
-		git branch rename &&
-		git branch nuke &&
+		shit branch rename &&
+		shit branch nuke &&
 
-		git checkout rename &&
-		git mv oldfile newfile &&
-		git commit -m renamed &&
+		shit checkout rename &&
+		shit mv oldfile newfile &&
+		shit commit -m renamed &&
 
-		git checkout nuke &&
-		git rm oldfile &&
-		git commit -m deleted &&
+		shit checkout nuke &&
+		shit rm oldfile &&
+		shit commit -m deleted &&
 
-		git checkout rename^0 &&
-		test_must_fail git -c merge.renormalize=true merge nuke >out &&
+		shit checkout rename^0 &&
+		test_must_fail shit -c merge.renormalize=true merge nuke >out &&
 
 		grep "rename/delete" out
 	)

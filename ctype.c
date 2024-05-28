@@ -3,18 +3,18 @@
  *
  * No surprises, and works with signed and unsigned chars.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 enum {
-	S = GIT_SPACE,
-	A = GIT_ALPHA,
-	D = GIT_DIGIT,
-	G = GIT_GLOB_SPECIAL,	/* *, ?, [, \\ */
-	R = GIT_REGEX_SPECIAL,	/* $, (, ), +, ., ^, {, | */
-	P = GIT_PATHSPEC_MAGIC, /* other non-alnum, except for ] and } */
-	X = GIT_CNTRL,
-	U = GIT_PUNCT,
-	Z = GIT_CNTRL | GIT_SPACE
+	S = shit_SPACE,
+	A = shit_ALPHA,
+	D = shit_DIshit,
+	G = shit_GLOB_SPECIAL,	/* *, ?, [, \\ */
+	R = shit_REGEX_SPECIAL,	/* $, (, ), +, ., ^, {, | */
+	P = shit_PATHSPEC_MAGIC, /* other non-alnum, except for ] and } */
+	X = shit_CNTRL,
+	U = shit_PUNCT,
+	Z = shit_CNTRL | shit_SPACE
 };
 
 const unsigned char sane_ctype[256] = {

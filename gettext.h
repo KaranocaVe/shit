@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010-2011 Ævar Arnfjörð Bjarmason
  *
- * This is a skeleton no-op implementation of gettext for Git.
+ * This is a skeleton no-op implementation of gettext for shit.
  * You can replace it with something that uses libintl.h and wraps
  * gettext() to try out the translations.
  */
@@ -29,12 +29,12 @@
 #define FORMAT_PRESERVING(n) __attribute__((format_arg(n)))
 
 #ifndef NO_GETTEXT
-extern int git_gettext_enabled;
-void git_setup_gettext(void);
+extern int shit_gettext_enabled;
+void shit_setup_gettext(void);
 int gettext_width(const char *s);
 #else
-#define git_gettext_enabled (0)
-static inline void git_setup_gettext(void)
+#define shit_gettext_enabled (0)
+static inline void shit_setup_gettext(void)
 {
 }
 static inline int gettext_width(const char *s)
@@ -47,7 +47,7 @@ static inline FORMAT_PRESERVING(1) const char *_(const char *msgid)
 {
 	if (!*msgid)
 		return "";
-	if (!git_gettext_enabled)
+	if (!shit_gettext_enabled)
 		return msgid;
 	return gettext(msgid);
 }
@@ -55,7 +55,7 @@ static inline FORMAT_PRESERVING(1) const char *_(const char *msgid)
 static inline FORMAT_PRESERVING(1) FORMAT_PRESERVING(2)
 const char *Q_(const char *msgid, const char *plu, unsigned long n)
 {
-	if (!git_gettext_enabled)
+	if (!shit_gettext_enabled)
 		return n == 1 ? msgid : plu;
 	return ngettext(msgid, plu, n);
 }

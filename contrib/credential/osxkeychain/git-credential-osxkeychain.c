@@ -251,7 +251,7 @@ static OSStatus delete_internet_password(void)
 	OSStatus result;
 
 	/*
-	 * Require at least a protocol and host for removal, which is what git
+	 * Require at least a protocol and host for removal, which is what shit
 	 * will give us; if you want to do something more fancy, use the
 	 * Keychain manager.
 	 */
@@ -397,7 +397,7 @@ static void read_credential(void)
 							   strlen(v));
 		/*
 		 * Ignore other lines; we don't know what they mean, but
-		 * this future-proofs us when later versions of git do
+		 * this future-proofs us when later versions of shit do
 		 * learn new lines, and the helpers are updated to match.
 		 */
 	}
@@ -409,7 +409,7 @@ int main(int argc, const char **argv)
 {
 	OSStatus result = 0;
 	const char *usage =
-		"usage: git credential-osxkeychain <get|store|erase>";
+		"usage: shit credential-osxkeychain <get|store|erase>";
 
 	if (!argv[1])
 		die("%s", usage);

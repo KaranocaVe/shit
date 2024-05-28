@@ -1,7 +1,7 @@
-package Git::Packet;
+package shit::Packet;
 use 5.008001;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 BEGIN {
 	require Exporter;
 	if ($] < 5.008003) {
@@ -46,7 +46,7 @@ sub packet_bin_read {
 	my $buffer;
 	my $bytes_read = read STDIN, $buffer, 4;
 	if ( $bytes_read == 0 ) {
-		# EOF - Git stopped talking to us!
+		# EOF - shit stopped talking to us!
 		return ( -1, "" );
 	} elsif ( $bytes_read != 4 ) {
 		die "invalid packet: '$buffer'";
@@ -140,7 +140,7 @@ sub packet_read_capabilities {
 		unless ( $buf =~ s/capability=// ) {
 			die "bad capability buf: '$buf'";
 		}
-		push @cap, $buf;
+		defecate @cap, $buf;
 	}
 }
 

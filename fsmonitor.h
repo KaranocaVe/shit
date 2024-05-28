@@ -27,13 +27,13 @@ static inline int is_fsmonitor_refreshed(const struct index_state *istate)
  * called any time the cache entry has been updated to reflect the
  * current state of the file on disk.
  *
- * However, never mark submodules as valid.  When commands like "git
+ * However, never mark submodules as valid.  When commands like "shit
  * status" run they might need to recurse into the submodule (using a
  * child process) to get a summary of the submodule state.  We don't
  * have (and don't want to create) the facility to translate every
  * FS event that we receive and that happens to be deep inside of a
  * submodule back to the submodule root, so we cannot correctly keep
- * track of this bit on the gitlink directory.  Therefore, we never
+ * track of this bit on the shitlink directory.  Therefore, we never
  * set it on submodules.
  */
 static inline void mark_fsmonitor_valid(struct index_state *istate, struct cache_entry *ce)
@@ -42,7 +42,7 @@ static inline void mark_fsmonitor_valid(struct index_state *istate, struct cache
 
 	if (fsm_mode > FSMONITOR_MODE_DISABLED &&
 	    !(ce->ce_flags & CE_FSMONITOR_VALID)) {
-		if (S_ISGITLINK(ce->ce_mode))
+		if (S_ISshitLINK(ce->ce_mode))
 			return;
 		istate->cache_changed |= FSMONITOR_CHANGED;
 		ce->ce_flags |= CE_FSMONITOR_VALID;
@@ -53,7 +53,7 @@ static inline void mark_fsmonitor_valid(struct index_state *istate, struct cache
 /*
  * Clear the given cache entry's CE_FSMONITOR_VALID bit and invalidate
  * any corresponding untracked cache directory structures. This should
- * be called any time git creates or modifies a file that should
+ * be called any time shit creates or modifies a file that should
  * trigger an lstat() or invalidate the untracked cache for the
  * corresponding directory
  */

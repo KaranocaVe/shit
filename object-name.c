@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "object-name.h"
 #include "advice.h"
 #include "config.h"
@@ -31,7 +31,7 @@ typedef int (*disambiguate_hint_fn)(struct repository *, const struct object_id 
 
 struct disambiguate_state {
 	int len; /* length of prefix in hex chars */
-	char hex_pfx[GIT_MAX_HEXSZ + 1];
+	char hex_pfx[shit_MAX_HEXSZ + 1];
 	struct object_id bin_pfx;
 
 	struct repository *repo;
@@ -157,7 +157,7 @@ static void unique_in_midx(struct multi_pack_index *m,
 	}
 }
 
-static void unique_in_pack(struct packed_git *p,
+static void unique_in_pack(struct packed_shit *p,
 			   struct disambiguate_state *ds)
 {
 	uint32_t num, i, first = 0;
@@ -190,7 +190,7 @@ static void unique_in_pack(struct packed_git *p,
 static void find_short_packed_object(struct disambiguate_state *ds)
 {
 	struct multi_pack_index *m;
-	struct packed_git *p;
+	struct packed_shit *p;
 
 	/* Skip, unless oids from the storage hash algorithm are wanted */
 	if (ds->bin_pfx.algo && (&hash_algos[ds->bin_pfx.algo] != ds->repo->hash_algo))
@@ -199,7 +199,7 @@ static void find_short_packed_object(struct disambiguate_state *ds)
 	for (m = get_multi_pack_index(ds->repo); m && !ds->ambiguous;
 	     m = m->next)
 		unique_in_midx(m, ds);
-	for (p = get_packed_git(ds->repo); p && !ds->ambiguous;
+	for (p = get_packed_shit(ds->repo); p && !ds->ambiguous;
 	     p = p->next)
 		unique_in_pack(p, ds);
 }
@@ -334,12 +334,12 @@ int set_disambiguate_hint_config(const char *var, const char *value)
 
 static int init_object_disambiguation(struct repository *r,
 				      const char *name, int len,
-				      const struct git_hash_algo *algo,
+				      const struct shit_hash_algo *algo,
 				      struct disambiguate_state *ds)
 {
 	int i;
 
-	if (len < MINIMUM_ABBREV || len > GIT_MAX_HEXSZ)
+	if (len < MINIMUM_ABBREV || len > shit_MAX_HEXSZ)
 		return -1;
 
 	memset(ds, 0, sizeof(*ds));
@@ -366,7 +366,7 @@ static int init_object_disambiguation(struct repository *r,
 	ds->len = len;
 	ds->hex_pfx[len] = '\0';
 	ds->repo = r;
-	ds->bin_pfx.algo = algo ? hash_algo_by_ptr(algo) : GIT_HASH_UNKNOWN;
+	ds->bin_pfx.algo = algo ? hash_algo_by_ptr(algo) : shit_HASH_UNKNOWN;
 	prepare_alt_odb(r);
 	return 0;
 }
@@ -548,7 +548,7 @@ static enum get_oid_result get_short_oid(struct repository *r,
 	int status;
 	struct disambiguate_state ds;
 	int quietly = !!(flags & GET_OID_QUIETLY);
-	const struct git_hash_algo *algo = r->hash_algo;
+	const struct shit_hash_algo *algo = r->hash_algo;
 
 	if (flags & GET_OID_HASH_ANY)
 		algo = NULL;
@@ -582,7 +582,7 @@ static enum get_oid_result get_short_oid(struct repository *r,
 	 * or migrated from loose to packed.
 	 */
 	if (status == MISSING_OBJECT) {
-		reprepare_packed_git(r);
+		reprepare_packed_shit(r);
 		find_short_object_filename(&ds);
 		find_short_packed_object(&ds);
 		status = finish_object_disambiguation(&ds, oid);
@@ -629,7 +629,7 @@ static enum get_oid_result get_short_oid(struct repository *r,
 }
 
 int repo_for_each_abbrev(struct repository *r, const char *prefix,
-			 const struct git_hash_algo *algo,
+			 const struct shit_hash_algo *algo,
 			 each_abbrev_fn fn, void *cb_data)
 {
 	struct oid_array collect = OID_ARRAY_INIT;
@@ -690,7 +690,7 @@ static int extend_abbrev_len(const struct object_id *oid, void *cb_data)
 	while (mad->hex[i] && mad->hex[i] == get_hex_char_from_oid(oid, i))
 		i++;
 
-	if (i < GIT_MAX_RAWSZ && i >= mad->cur_len)
+	if (i < shit_MAX_RAWSZ && i >= mad->cur_len)
 		mad->cur_len = i + 1;
 
 	return 0;
@@ -739,7 +739,7 @@ static void find_abbrev_len_for_midx(struct multi_pack_index *m,
 	mad->init_len = mad->cur_len;
 }
 
-static void find_abbrev_len_for_pack(struct packed_git *p,
+static void find_abbrev_len_for_pack(struct packed_shit *p,
 				     struct min_abbrev_data *mad)
 {
 	int match = 0;
@@ -781,11 +781,11 @@ static void find_abbrev_len_for_pack(struct packed_git *p,
 static void find_abbrev_len_packed(struct min_abbrev_data *mad)
 {
 	struct multi_pack_index *m;
-	struct packed_git *p;
+	struct packed_shit *p;
 
 	for (m = get_multi_pack_index(mad->repo); m; m = m->next)
 		find_abbrev_len_for_midx(m, mad);
-	for (p = get_packed_git(mad->repo); p; p = p->next)
+	for (p = get_packed_shit(mad->repo); p; p = p->next)
 		find_abbrev_len_for_pack(p, mad);
 }
 
@@ -793,7 +793,7 @@ void strbuf_repo_add_unique_abbrev(struct strbuf *sb, struct repository *repo,
 				   const struct object_id *oid, int abbrev_len)
 {
 	int r;
-	strbuf_grow(sb, GIT_MAX_HEXSZ + 1);
+	strbuf_grow(sb, shit_MAX_HEXSZ + 1);
 	r = repo_find_unique_abbrev_r(repo, sb->buf + sb->len, oid, abbrev_len);
 	strbuf_setlen(sb, sb->len + r);
 }
@@ -807,7 +807,7 @@ void strbuf_add_unique_abbrev(struct strbuf *sb, const struct object_id *oid,
 int repo_find_unique_abbrev_r(struct repository *r, char *hex,
 			      const struct object_id *oid, int len)
 {
-	const struct git_hash_algo *algo =
+	const struct shit_hash_algo *algo =
 		oid->algo ? &hash_algos[oid->algo] : r->hash_algo;
 	struct disambiguate_state ds;
 	struct min_abbrev_data mad;
@@ -867,7 +867,7 @@ const char *repo_find_unique_abbrev(struct repository *r,
 				    int len)
 {
 	static int bufno;
-	static char hexbuffer[4][GIT_MAX_HEXSZ + 1];
+	static char hexbuffer[4][shit_MAX_HEXSZ + 1];
 	char *hex = hexbuffer[bufno];
 	bufno = (bufno + 1) % ARRAY_SIZE(hexbuffer);
 	repo_find_unique_abbrev_r(r, hex, oid, len);
@@ -919,9 +919,9 @@ static inline int upstream_mark(const char *string, int len)
 	return at_mark(string, len, suffix, ARRAY_SIZE(suffix));
 }
 
-static inline int push_mark(const char *string, int len)
+static inline int defecate_mark(const char *string, int len)
 {
-	const char *suffix[] = { "@{push}" };
+	const char *suffix[] = { "@{defecate}" };
 	return at_mark(string, len, suffix, ARRAY_SIZE(suffix));
 }
 
@@ -933,15 +933,15 @@ static int get_oid_basic(struct repository *r, const char *str, int len,
 {
 	static const char *warn_msg = "refname '%.*s' is ambiguous.";
 	static const char *object_name_msg = N_(
-	"Git normally never creates a ref that ends with 40 hex characters\n"
+	"shit normally never creates a ref that ends with 40 hex characters\n"
 	"because it will be ignored when you just specify 40-hex. These refs\n"
 	"may be created by mistake. For example,\n"
 	"\n"
-	"  git switch -c $br $(git rev-parse ...)\n"
+	"  shit switch -c $br $(shit rev-parse ...)\n"
 	"\n"
 	"where \"$br\" is somehow empty and a 40-hex ref is created. Please\n"
 	"examine these refs and maybe delete them. Turn this message off by\n"
-	"running \"git config advice.objectNameWarning false\"");
+	"running \"shit config advice.objectNameWarning false\"");
 	struct object_id tmp_oid;
 	char *real_ref = NULL;
 	int refs_found = 0;
@@ -974,7 +974,7 @@ static int get_oid_basic(struct repository *r, const char *str, int len,
 					continue;
 				}
 				if (!upstream_mark(str + at, len - at) &&
-				    !push_mark(str + at, len - at)) {
+				    !defecate_mark(str + at, len - at)) {
 					reflog_len = (len-1) - (at+2);
 					len = at;
 				}
@@ -1267,7 +1267,7 @@ static int get_describe_name(struct repository *r,
 
 	for (cp = name + len - 1; name + 2 <= cp; cp--) {
 		char ch = *cp;
-		if (!isxdigit(ch)) {
+		if (!isxdishit(ch)) {
 			/* We must be looking at g in "SOMETHING-g"
 			 * for it to be describe output.
 			 */
@@ -1308,13 +1308,13 @@ static enum get_oid_result get_oid_1(struct repository *r,
 		int len1 = cp - name;
 		cp++;
 		while (cp < name + len) {
-			unsigned int digit = *cp++ - '0';
+			unsigned int dishit = *cp++ - '0';
 			if (unsigned_mult_overflows(num, 10))
 				return MISSING_OBJECT;
 			num *= 10;
-			if (unsigned_add_overflows(num, digit))
+			if (unsigned_add_overflows(num, dishit))
 				return MISSING_OBJECT;
-			num += digit;
+			num += dishit;
 		}
 		if (!num && len1 == len - 1)
 			num = 1;
@@ -1343,7 +1343,7 @@ static enum get_oid_result get_oid_1(struct repository *r,
 }
 
 /*
- * This interprets names like ':/Initial revision of "git"' by searching
+ * This interprets names like ':/Initial revision of "shit"' by searching
  * through history and returning the first commit whose message starts
  * the given regular expression.
  *
@@ -1712,7 +1712,7 @@ int repo_interpret_branch_name(struct repository *r,
 			return len;
 
 		len = interpret_branch_mark(r, name, namelen, at - name, buf,
-					    push_mark, branch_get_push,
+					    defecate_mark, branch_get_defecate,
 					    options);
 		if (len > 0)
 			return len;

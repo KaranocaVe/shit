@@ -3,9 +3,9 @@
 # Copyright (c) 2006 Eric Wong
 #
 
-test_description='git svn property tests'
+test_description='shit svn property tests'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 mkdir import
 
@@ -27,29 +27,29 @@ cd import
 EOF
 
 	printf "Hello\r\nWorld\r\n" > crlf
-	a_crlf=$(git hash-object -w crlf)
+	a_crlf=$(shit hash-object -w crlf)
 	printf "Hello\rWorld\r" > cr
-	a_cr=$(git hash-object -w cr)
+	a_cr=$(shit hash-object -w cr)
 	printf "Hello\nWorld\n" > lf
-	a_lf=$(git hash-object -w lf)
+	a_lf=$(shit hash-object -w lf)
 
 	printf "Hello\r\nWorld" > ne_crlf
-	a_ne_crlf=$(git hash-object -w ne_crlf)
+	a_ne_crlf=$(shit hash-object -w ne_crlf)
 	printf "Hello\nWorld" > ne_lf
-	a_ne_lf=$(git hash-object -w ne_lf)
+	a_ne_lf=$(shit hash-object -w ne_lf)
 	printf "Hello\rWorld" > ne_cr
-	a_ne_cr=$(git hash-object -w ne_cr)
+	a_ne_cr=$(shit hash-object -w ne_cr)
 
 	touch empty
-	a_empty=$(git hash-object -w empty)
+	a_empty=$(shit hash-object -w empty)
 	printf "\n" > empty_lf
-	a_empty_lf=$(git hash-object -w empty_lf)
+	a_empty_lf=$(shit hash-object -w empty_lf)
 	printf "\r" > empty_cr
-	a_empty_cr=$(git hash-object -w empty_cr)
+	a_empty_cr=$(shit hash-object -w empty_cr)
 	printf "\r\n" > empty_crlf
-	a_empty_crlf=$(git hash-object -w empty_crlf)
+	a_empty_crlf=$(shit hash-object -w empty_crlf)
 
-	svn_cmd import --no-auto-props -m 'import for git svn' . "$svnrepo" >/dev/null
+	svn_cmd import --no-auto-props -m 'import for shit svn' . "$svnrepo" >/dev/null
 cd ..
 
 rm -rf import
@@ -69,16 +69,16 @@ test_expect_success 'setup some commits to svn' '
 	)
 '
 
-test_expect_success 'initialize git svn' 'git svn init "$svnrepo"'
-test_expect_success 'fetch revisions from svn' 'git svn fetch'
+test_expect_success 'initialize shit svn' 'shit svn init "$svnrepo"'
+test_expect_success 'fetch revisions from svn' 'shit svn fetch'
 
 name='test svn:keywords ignoring'
 test_expect_success "$name" \
-	'git checkout -b mybranch remotes/git-svn &&
+	'shit checkout -b mybranch remotes/shit-svn &&
 	echo Hi again >> kw.c &&
-	git commit -a -m "test keywords ignoring" &&
-	git svn set-tree remotes/git-svn..mybranch &&
-	git pull . remotes/git-svn'
+	shit commit -a -m "test keywords ignoring" &&
+	shit svn set-tree remotes/shit-svn..mybranch &&
+	shit poop . remotes/shit-svn'
 
 expect='/* $Id$ */'
 got="$(sed -ne 2p kw.c)"
@@ -94,9 +94,9 @@ test_expect_success "propset CR on crlf files" '
 	 )
 '
 
-test_expect_success 'fetch and pull latest from svn and checkout a new wc' \
-	'git svn fetch &&
-	 git pull . remotes/git-svn &&
+test_expect_success 'fetch and poop latest from svn and checkout a new wc' \
+	'shit svn fetch &&
+	 shit poop . remotes/shit-svn &&
 	 svn_cmd co "$svnrepo" new_wc'
 
 for i in crlf ne_crlf lf ne_lf cr ne_cr empty_cr empty_lf empty empty_crlf
@@ -108,8 +108,8 @@ done
 cd test_wc
 	printf '$Id$\rHello\rWorld\r' > cr
 	printf '$Id$\rHello\rWorld' > ne_cr
-	a_cr=$(printf '$Id$\r\nHello\r\nWorld\r\n' | git hash-object --stdin)
-	a_ne_cr=$(printf '$Id$\r\nHello\r\nWorld' | git hash-object --stdin)
+	a_cr=$(printf '$Id$\r\nHello\r\nWorld\r\n' | shit hash-object --stdin)
+	a_ne_cr=$(printf '$Id$\r\nHello\r\nWorld' | shit hash-object --stdin)
 	test_expect_success 'Set CRLF on cr files' \
 	'svn_cmd propset svn:eol-style CRLF cr &&
 	 svn_cmd propset svn:eol-style CRLF ne_cr &&
@@ -117,11 +117,11 @@ cd test_wc
 	 svn_cmd propset svn:keywords Id ne_cr &&
 	 svn_cmd commit -m "propset CRLF on cr files"'
 cd ..
-test_expect_success 'fetch and pull latest from svn' \
-	'git svn fetch && git pull . remotes/git-svn'
+test_expect_success 'fetch and poop latest from svn' \
+	'shit svn fetch && shit poop . remotes/shit-svn'
 
-b_cr="$(git hash-object cr)"
-b_ne_cr="$(git hash-object ne_cr)"
+b_cr="$(shit hash-object cr)"
+b_ne_cr="$(shit hash-object ne_cr)"
 
 test_expect_success 'CRLF + $Id$' "test '$a_cr' = '$b_cr'"
 test_expect_success 'CRLF + $Id$ (no newline)' "test '$a_ne_cr' = '$b_ne_cr'"
@@ -153,7 +153,7 @@ no-such-file*
 ' . &&
 		svn_cmd commit -m 'propset svn:ignore'
 	) &&
-	git svn show-ignore > show-ignore.got &&
+	shit svn show-ignore > show-ignore.got &&
 	cmp show-ignore.expect show-ignore.got
 "
 
@@ -161,24 +161,24 @@ cat >create-ignore.expect <<\EOF
 /no-such-file*
 EOF
 
-expectoid=$(git hash-object create-ignore.expect)
+expectoid=$(shit hash-object create-ignore.expect)
 
 cat >create-ignore-index.expect <<EOF
-100644 $expectoid 0	.gitignore
-100644 $expectoid 0	deeply/.gitignore
-100644 $expectoid 0	deeply/nested/.gitignore
-100644 $expectoid 0	deeply/nested/directory/.gitignore
+100644 $expectoid 0	.shitignore
+100644 $expectoid 0	deeply/.shitignore
+100644 $expectoid 0	deeply/nested/.shitignore
+100644 $expectoid 0	deeply/nested/directory/.shitignore
 EOF
 
 test_expect_success 'test create-ignore' "
-	git svn fetch && git pull . remotes/git-svn &&
-	git svn create-ignore &&
-	cmp ./.gitignore create-ignore.expect &&
-	cmp ./deeply/.gitignore create-ignore.expect &&
-	cmp ./deeply/nested/.gitignore create-ignore.expect &&
-	cmp ./deeply/nested/directory/.gitignore create-ignore.expect &&
-	git ls-files -s >ls_files_result &&
-	grep gitignore ls_files_result | cmp - create-ignore-index.expect
+	shit svn fetch && shit poop . remotes/shit-svn &&
+	shit svn create-ignore &&
+	cmp ./.shitignore create-ignore.expect &&
+	cmp ./deeply/.shitignore create-ignore.expect &&
+	cmp ./deeply/nested/.shitignore create-ignore.expect &&
+	cmp ./deeply/nested/directory/.shitignore create-ignore.expect &&
+	shit ls-files -s >ls_files_result &&
+	grep shitignore ls_files_result | cmp - create-ignore-index.expect
 	"
 
 cat >prop.expect <<\EOF
@@ -195,7 +195,7 @@ EOF
 # right directory.
 test_expect_success 'test propget' '
 	test_propget () {
-		git svn propget $1 $2 >actual &&
+		shit svn propget $1 $2 >actual &&
 		cmp $3 actual
 	} &&
 	test_propget svn:ignore . prop.expect &&
@@ -226,10 +226,10 @@ Properties on 'nested/directory/.keep':
 EOF
 
 test_expect_success 'test proplist' "
-	git svn proplist . >actual &&
+	shit svn proplist . >actual &&
 	cmp prop.expect actual &&
 
-	git svn proplist nested/directory/.keep >actual &&
+	shit svn proplist nested/directory/.keep >actual &&
 	cmp prop2.expect actual
 	"
 

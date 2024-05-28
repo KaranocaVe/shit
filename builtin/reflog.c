@@ -11,22 +11,22 @@
 #include "parse-options.h"
 
 #define BUILTIN_REFLOG_SHOW_USAGE \
-	N_("git reflog [show] [<log-options>] [<ref>]")
+	N_("shit reflog [show] [<log-options>] [<ref>]")
 
 #define BUILTIN_REFLOG_LIST_USAGE \
-	N_("git reflog list")
+	N_("shit reflog list")
 
 #define BUILTIN_REFLOG_EXPIRE_USAGE \
-	N_("git reflog expire [--expire=<time>] [--expire-unreachable=<time>]\n" \
+	N_("shit reflog expire [--expire=<time>] [--expire-unreachable=<time>]\n" \
 	   "                  [--rewrite] [--updateref] [--stale-fix]\n" \
 	   "                  [--dry-run | -n] [--verbose] [--all [--single-worktree] | <refs>...]")
 
 #define BUILTIN_REFLOG_DELETE_USAGE \
-	N_("git reflog delete [--rewrite] [--updateref]\n" \
+	N_("shit reflog delete [--rewrite] [--updateref]\n" \
 	   "                  [--dry-run | -n] [--verbose] <ref>@{<specifier>}...")
 
 #define BUILTIN_REFLOG_EXISTS_USAGE \
-	N_("git reflog exists <ref>")
+	N_("shit reflog exists <ref>")
 
 static const char *const reflog_show_usage[] = {
 	BUILTIN_REFLOG_SHOW_USAGE,
@@ -128,18 +128,18 @@ static int reflog_expire_config(const char *var, const char *value,
 	struct reflog_expire_cfg *ent;
 
 	if (parse_config_key(var, "gc", &pattern, &pattern_len, &key) < 0)
-		return git_default_config(var, value, ctx, cb);
+		return shit_default_config(var, value, ctx, cb);
 
 	if (!strcmp(key, "reflogexpire")) {
 		slot = EXPIRE_TOTAL;
-		if (git_config_expiry_date(&expire, var, value))
+		if (shit_config_expiry_date(&expire, var, value))
 			return -1;
 	} else if (!strcmp(key, "reflogexpireunreachable")) {
 		slot = EXPIRE_UNREACH;
-		if (git_config_expiry_date(&expire, var, value))
+		if (shit_config_expiry_date(&expire, var, value))
 			return -1;
 	} else
-		return git_default_config(var, value, ctx, cb);
+		return shit_default_config(var, value, ctx, cb);
 
 	if (!pattern) {
 		switch (slot) {
@@ -306,7 +306,7 @@ static int cmd_reflog_expire(int argc, const char **argv, const char *prefix)
 
 	default_reflog_expire_unreachable = now - 30 * 24 * 3600;
 	default_reflog_expire = now - 90 * 24 * 3600;
-	git_config(reflog_expire_config, NULL);
+	shit_config(reflog_expire_config, NULL);
 
 	save_commit_buffer = 0;
 	do_all = status = 0;
@@ -323,7 +323,7 @@ static int cmd_reflog_expire(int argc, const char **argv, const char *prefix)
 	/*
 	 * We can trust the commits and objects reachable from refs
 	 * even in older repository.  We cannot trust what's reachable
-	 * from reflog if the repository was pruned with older git.
+	 * from reflog if the repository was pruned with older shit.
 	 */
 	if (cmd.stalefix) {
 		struct rev_info revs;

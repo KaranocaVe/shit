@@ -97,7 +97,7 @@ static int cmd__submodule_is_active(int argc, const char **argv)
 	if (argc != 1)
 		usage_with_options(submodule_is_active_usage, options);
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	return !is_submodule_active(the_repository, argv[0]);
 }
@@ -140,10 +140,10 @@ static int cmd__submodule_config_list(int argc, const char **argv)
 	argc = parse_options(argc, argv, "test-tools", options, usage,
 			     PARSE_OPT_KEEP_ARGV0);
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (argc == 2)
-		return print_config_from_gitmodules(the_repository, argv[1]);
+		return print_config_from_shitmodules(the_repository, argv[1]);
 	usage_with_options(usage, options);
 }
 
@@ -159,14 +159,14 @@ static int cmd__submodule_config_set(int argc, const char **argv)
 	argc = parse_options(argc, argv, "test-tools", options, usage,
 			     PARSE_OPT_KEEP_ARGV0);
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	/* Equivalent to ACTION_SET in builtin/config.c */
 	if (argc == 3) {
-		if (!is_writing_gitmodules_ok())
-			die("please make sure that the .gitmodules file is in the working tree");
+		if (!is_writing_shitmodules_ok())
+			die("please make sure that the .shitmodules file is in the working tree");
 
-		return config_set_in_gitmodules_file_gently(argv[1], argv[2]);
+		return config_set_in_shitmodules_file_gently(argv[1], argv[2]);
 	}
 	usage_with_options(usage, options);
 }
@@ -181,12 +181,12 @@ static int cmd__submodule_config_unset(int argc, const char **argv)
 		NULL
 	};
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (argc == 2) {
-		if (!is_writing_gitmodules_ok())
-			die("please make sure that the .gitmodules file is in the working tree");
-		return config_set_in_gitmodules_file_gently(argv[1], NULL);
+		if (!is_writing_shitmodules_ok())
+			die("please make sure that the .shitmodules file is in the working tree");
+		return config_set_in_shitmodules_file_gently(argv[1], NULL);
 	}
 	usage_with_options(usage, options);
 }
@@ -200,10 +200,10 @@ static int cmd__submodule_config_writeable(int argc, const char **argv UNUSED)
 		"test-tool submodule config-writeable",
 		NULL
 	};
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (argc == 1)
-		return is_writing_gitmodules_ok() ? 0 : -1;
+		return is_writing_shitmodules_ok() ? 0 : -1;
 
 	usage_with_options(usage, options);
 }

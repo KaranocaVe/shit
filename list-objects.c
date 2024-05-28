@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "tag.h"
 #include "commit.h"
 #include "gettext.h"
@@ -127,8 +127,8 @@ static void process_tree_contents(struct traversal_context *ctx,
 			process_tree(ctx, t, base, entry.path);
 			ctx->depth--;
 		}
-		else if (S_ISGITLINK(entry.mode))
-			; /* ignore gitlink */
+		else if (S_ISshitLINK(entry.mode))
+			; /* ignore shitlink */
 		else {
 			struct blob *b = lookup_blob(ctx->revs->repo, &entry.oid);
 			if (!b) {

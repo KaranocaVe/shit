@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "gettext.h"
 #include "grep.h"
@@ -64,7 +64,7 @@ int grep_config(const char *var, const char *value,
 		return -1;
 
 	if (!strcmp(var, "grep.extendedregexp")) {
-		opt->extended_regexp_option = git_config_bool(var, value);
+		opt->extended_regexp_option = shit_config_bool(var, value);
 		return 0;
 	}
 
@@ -74,21 +74,21 @@ int grep_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, "grep.linenumber")) {
-		opt->linenum = git_config_bool(var, value);
+		opt->linenum = shit_config_bool(var, value);
 		return 0;
 	}
 	if (!strcmp(var, "grep.column")) {
-		opt->columnnum = git_config_bool(var, value);
+		opt->columnnum = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp(var, "grep.fullname")) {
-		opt->relative = !git_config_bool(var, value);
+		opt->relative = !shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (!strcmp(var, "color.grep"))
-		opt->color = git_config_colorbool(var, value);
+		opt->color = shit_config_colorbool(var, value);
 	if (!strcmp(var, "color.grep.match")) {
 		if (grep_config("color.grep.matchcontext", value, ctx, cb) < 0)
 			return -1;
@@ -323,16 +323,16 @@ static void compile_pcre2_pattern(struct grep_pat *p, const struct grep_opt *opt
 	if (!opt->ignore_locale && is_utf8_locale() && !literal)
 		options |= (PCRE2_UTF | PCRE2_UCP | PCRE2_MATCH_INVALID_UTF);
 
-#ifndef GIT_PCRE2_VERSION_10_35_OR_HIGHER
+#ifndef shit_PCRE2_VERSION_10_35_OR_HIGHER
 	/*
 	 * Work around a JIT bug related to invalid Unicode character handling
 	 * fixed in 10.35:
-	 * https://github.com/PCRE2Project/pcre2/commit/c21bd977547d
+	 * https://shithub.com/PCRE2Project/pcre2/commit/c21bd977547d
 	 */
 	options &= ~PCRE2_UCP;
 #endif
 
-#ifndef GIT_PCRE2_VERSION_10_36_OR_HIGHER
+#ifndef shit_PCRE2_VERSION_10_36_OR_HIGHER
 	/* Work around https://bugs.exim.org/show_bug.cgi?id=2642 fixed in 10.36 */
 	if (PCRE2_MATCH_INVALID_UTF && options & (PCRE2_UTF | PCRE2_CASELESS))
 		options |= PCRE2_NO_START_OPTIMIZE;
@@ -443,7 +443,7 @@ static void free_pcre2_pattern(struct grep_pat *p)
 	pcre2_compile_context_free(p->pcre2_compile_context);
 	pcre2_code_free(p->pcre2_pattern);
 	pcre2_match_data_free(p->pcre2_match_data);
-#ifdef GIT_PCRE2_VERSION_10_34_OR_HIGHER
+#ifdef shit_PCRE2_VERSION_10_34_OR_HIGHER
 	pcre2_maketables_free(p->pcre2_general_context, p->pcre2_tables);
 #else
 	free((void *)p->pcre2_tables);
@@ -883,7 +883,7 @@ static void output_color(struct grep_opt *opt, const void *data, size_t size,
 	if (want_color(opt->color) && color && color[0]) {
 		opt->output(opt, color, strlen(color));
 		opt->output(opt, data, size);
-		opt->output(opt, GIT_COLOR_RESET, strlen(GIT_COLOR_RESET));
+		opt->output(opt, shit_COLOR_RESET, strlen(shit_COLOR_RESET));
 	} else
 		opt->output(opt, data, size);
 }
@@ -1301,7 +1301,7 @@ static void show_line(struct grep_opt *opt,
 int grep_use_locks;
 
 /*
- * This lock protects access to the gitattributes machinery, which is
+ * This lock protects access to the shitattributes machinery, which is
  * not thread-safe.
  */
 pthread_mutex_t grep_attr_mutex;
@@ -1518,13 +1518,13 @@ static int fill_textconv_grep(struct repository *r,
 	 * fill_textconv is not remotely thread-safe; it modifies the global
 	 * diff tempfile structure, writes to the_repo's odb and might
 	 * internally call thread-unsafe functions such as the
-	 * prepare_packed_git() lazy-initializator. Because of the last two, we
+	 * prepare_packed_shit() lazy-initializator. Because of the last two, we
 	 * must ensure mutual exclusion between this call and the object reading
 	 * API, thus we use obj_read_lock() here.
 	 *
 	 * TODO: allowing text conversion to run in parallel with object
 	 * reading operations might increase performance in the multithreaded
-	 * non-worktreee git-grep with --textconv.
+	 * non-worktreee shit-grep with --textconv.
 	 */
 	obj_read_lock();
 	size = fill_textconv(r, driver, df, &buf);

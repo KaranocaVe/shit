@@ -6,12 +6,12 @@
 
 /*
  * Prints the size of the object corresponding to the given hash in a specific
- * gitdir. This is similar to "git -C gitdir cat-file -s", except that this
+ * shitdir. This is similar to "shit -C shitdir cat-file -s", except that this
  * exercises the code that accesses the object of an arbitrary repository that
- * is not the_repository. ("git -C gitdir" makes it so that the_repository is
- * the one in gitdir.)
+ * is not the_repository. ("shit -C shitdir" makes it so that the_repository is
+ * the one in shitdir.)
  */
-static void object_info(const char *gitdir, const char *oid_hex)
+static void object_info(const char *shitdir, const char *oid_hex)
 {
 	struct repository r;
 	struct object_id oid;
@@ -19,7 +19,7 @@ static void object_info(const char *gitdir, const char *oid_hex)
 	struct object_info oi = {.sizep = &size};
 	const char *p;
 
-	if (repo_init(&r, gitdir, NULL))
+	if (repo_init(&r, shitdir, NULL))
 		die("could not init repo");
 	if (parse_oid_hex(oid_hex, &oid, &p))
 		die("could not parse oid");
@@ -30,7 +30,7 @@ static void object_info(const char *gitdir, const char *oid_hex)
 
 int cmd__partial_clone(int argc, const char **argv)
 {
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (argc < 4)
 		die("too few arguments");

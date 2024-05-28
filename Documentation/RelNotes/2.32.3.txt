@@ -1,4 +1,4 @@
-Git v2.32.3 Release Notes
+shit v2.32.3 Release Notes
 =========================
 
 This release merges up the fixes that appear in v2.30.5 and

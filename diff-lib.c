@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 Junio C Hamano
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "commit.h"
 #include "diff.h"
 #include "diffcore.h"
@@ -55,7 +55,7 @@ static int check_removed(const struct cache_entry *ce, struct stat *st)
 		struct object_id sub;
 
 		/*
-		 * If ce is already a gitlink, we can have a plain
+		 * If ce is already a shitlink, we can have a plain
 		 * directory (i.e. the submodule is not checked out),
 		 * or a checked out submodule.  Either case this is not
 		 * a case where something was removed from the work tree,
@@ -65,8 +65,8 @@ static int check_removed(const struct cache_entry *ce, struct stat *st)
 		 * repository, that means ce which was a blob turned into
 		 * a directory --- the blob was removed!
 		 */
-		if (!S_ISGITLINK(ce->ce_mode) &&
-		    resolve_gitlink_ref(ce->name, "HEAD", &sub))
+		if (!S_ISshitLINK(ce->ce_mode) &&
+		    resolve_shitlink_ref(ce->name, "HEAD", &sub))
 			return 1;
 	}
 	return 0;
@@ -86,7 +86,7 @@ static int match_stat_with_submodule(struct diff_options *diffopt,
 				     unsigned *dirty_submodule)
 {
 	int changed = ie_match_stat(diffopt->repo->index, ce, st, ce_option);
-	if (S_ISGITLINK(ce->ce_mode)) {
+	if (S_ISshitLINK(ce->ce_mode)) {
 		struct diff_flags orig_flags = diffopt->flags;
 		if (!diffopt->flags.override_submodule_config)
 			set_diffopt_flags_from_submodule_config(diffopt, ce->name);
@@ -134,7 +134,7 @@ void run_diff_files(struct rev_info *revs, unsigned int option)
 		 * a pathspec element that matched only to paths outside the
 		 * current directory is like not matching anything at all;
 		 * the handling of ps_matched[] here may become problematic
-		 * if/when we add the "--error-unmatch" option to "git diff".
+		 * if/when we add the "--error-unmatch" option to "shit diff".
 		 */
 		if (!ce_path_match(istate, ce, &revs->prune_data, revs->ps_matched))
 			continue;
@@ -625,7 +625,7 @@ void run_diff_index(struct rev_info *revs, unsigned int option)
 	int merge_base = !!(option & DIFF_INDEX_MERGE_BASE);
 	struct object_id oid;
 	const char *name;
-	char merge_base_hex[GIT_MAX_HEXSZ + 1];
+	char merge_base_hex[shit_MAX_HEXSZ + 1];
 	struct index_state *istate = revs->diffopt.repo->index;
 
 	if (revs->pending.nr != 1)

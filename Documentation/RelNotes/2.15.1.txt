@@ -1,4 +1,4 @@
-Git v2.15.1 Release Notes
+shit v2.15.1 Release Notes
 =========================
 
 Fixes since v2.15
@@ -23,21 +23,21 @@ Fixes since v2.15
  * Some codepaths did not check for errors when asking what branch the
    HEAD points at, which have been fixed.
 
- * "git commit", after making a commit, did not check for errors when
+ * "shit commit", after making a commit, did not check for errors when
    asking on what branch it made the commit, which has been corrected.
 
- * "git status --ignored -u" did not stop at a working tree of a
+ * "shit status --ignored -u" did not stop at a working tree of a
    separate project that is embedded in an ignored directory and
    listed files in that other project, instead of just showing the
    directory itself as ignored.
 
- * A broken access to object databases in recent update to "git grep
+ * A broken access to object databases in recent update to "shit grep
    --recurse-submodules" has been fixed.
 
- * A recent regression in "git rebase -i" that broke execution of git
+ * A recent regression in "shit rebase -i" that broke execution of shit
    commands from subdirectories via "exec" instruction has been fixed.
 
- * "git check-ref-format --branch @{-1}" bit a "BUG()" when run
+ * "shit check-ref-format --branch @{-1}" bit a "BUG()" when run
    outside a repository for obvious reasons; clarify the documentation
    and make sure we do not even try to expand the at-mark magic in
    such a case, but still call the validation logic for branch names.
@@ -45,7 +45,7 @@ Fixes since v2.15
  * Command line completion (in contrib/) update.
 
  * Description of blame.{showroot,blankboundary,showemail,date}
-   configuration variables have been added to "git config --help".
+   configuration variables have been added to "shit config --help".
 
  * After an error from lstat(), diff_populate_filespec() function
    sometimes still went ahead and used invalid data in struct stat,
@@ -56,7 +56,7 @@ Fixes since v2.15
 
  * Correct start-up sequence so that a repository could be placed
    immediately under the root directory again (which was broken at
-   around Git 2.13).
+   around shit 2.13).
 
  * The credential helper for libsecret (in contrib/) has been improved
    to allow possibly prompting the end user to unlock secrets that are
@@ -64,7 +64,7 @@ Fixes since v2.15
 
  * Updates from GfW project.
 
- * "git rebase -i" recently started misbehaving when a submodule that
+ * "shit rebase -i" recently started misbehaving when a submodule that
    is configured with 'submodule.<name>.ignore' is dirty; this has
    been corrected.
 
@@ -76,10 +76,10 @@ Fixes since v2.15
  * We used to add an empty alternate object database to the system
    that does not help anything; it has been corrected.
 
- * Error checking in "git imap-send" for empty response has been
+ * Error checking in "shit imap-send" for empty response has been
    improved.
 
- * An ancient bug in "git apply --ignore-space-change" codepath has
+ * An ancient bug in "shit apply --ignore-space-change" codepath has
    been fixed.
 
  * There was a recent semantic mismerge in the codepath to write out a

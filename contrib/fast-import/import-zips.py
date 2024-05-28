@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-## zip archive frontend for git-fast-import
+## zip archive frontend for shit-fast-import
 ##
 ## For example:
 ##
-##  mkdir project; cd project; git init
+##  mkdir project; cd project; shit init
 ##  python import-zips.py *.zip
-##  git log --stat import-zips
+##  shit log --stat import-zips
 
 from os import popen, path
 from sys import argv, exit, hexversion, stderr
@@ -26,7 +26,7 @@ branch_ref = 'refs/heads/import-zips'
 committer_name = 'Z Ip Creator'
 committer_email = 'zip@example.com'
 
-fast_import = popen('git fast-import --quiet', 'w')
+fast_import = popen('shit fast-import --quiet', 'w')
 def printlines(list):
     for str in list:
         fast_import.write(str + "\n")

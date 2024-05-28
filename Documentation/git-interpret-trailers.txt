@@ -1,14 +1,14 @@
-git-interpret-trailers(1)
+shit-interpret-trailers(1)
 =========================
 
 NAME
 ----
-git-interpret-trailers - Add or parse structured information in commit messages
+shit-interpret-trailers - Add or parse structured information in commit messages
 
 SYNOPSIS
 --------
 [verse]
-'git interpret-trailers' [--in-place] [--trim-empty]
+'shit interpret-trailers' [--in-place] [--trim-empty]
 			[(--trailer (<key>|<key-alias>)[(=|:)<value>])...]
 			[--parse] [<file>...]
 
@@ -41,7 +41,7 @@ as well as any command line arguments that can override configuration
 variables (such as `--trailer=...` which could also add new trailers),
 to each input file. The result is emitted on the standard output.
 
-This command can also operate on the output of linkgit:git-format-patch[1],
+This command can also operate on the output of linkshit:shit-format-patch[1],
 which is more elaborate than a plain commit message. Namely, such output
 includes a commit message (as above), a "---" divider line, and a patch part.
 For these inputs, the divider and patch parts are not modified by
@@ -87,7 +87,7 @@ trailer if there isn't one already.
 
 Existing trailers are extracted from the input by looking for
 a group of one or more lines that (i) is all trailers, or (ii) contains at
-least one Git-generated or user-configured trailer and consists of at
+least one shit-generated or user-configured trailer and consists of at
 least 25% trailers.
 The group must be preceded by one or more empty (or whitespace-only) lines.
 The group must either be at the end of the input or be the last
@@ -181,7 +181,7 @@ OPTIONS
 --no-divider::
 	Do not treat `---` as the end of the commit message. Use this
 	when you know your input contains just the commit message itself
-	(and not an email or the output of `git format-patch`).
+	(and not an email or the output of `shit format-patch`).
 
 CONFIGURATION VARIABLES
 -----------------------
@@ -190,7 +190,7 @@ trailer.separators::
 	This option tells which characters are recognized as trailer
 	separators. By default only ':' is recognized as a trailer
 	separator, except that '=' is always accepted on the command
-	line for compatibility with other git commands.
+	line for compatibility with other shit commands.
 +
 The first character given by this option will be the default character
 used when another separator is not specified in the config for this
@@ -260,7 +260,7 @@ With `doNothing`, nothing will be done.
 
 trailer.<keyAlias>.key::
 	Defines a <keyAlias> for the <key>. The <keyAlias> must be a
-	prefix (case does not matter) of the <key>. For example, in `git
+	prefix (case does not matter) of the <key>. For example, in `shit
 	config trailer.ack.key "Acked-by"` the "Acked-by" is the <key> and
 	the "ack" is the <keyAlias>. This configuration allows the shorter
 	`--trailer "ack:..."` invocation on the command line using the "ack"
@@ -312,7 +312,7 @@ trailer.<keyAlias>.cmd::
 When the specified command is first called to add a trailer
 with the specified <keyAlias>, the behavior is as if a special
 '--trailer <keyAlias>=<value>' argument was added at the beginning
-of the "git interpret-trailers" command, where <value>
+of the "shit interpret-trailers" command, where <value>
 is taken to be the standard output of the command with any
 leading and trailing whitespace trimmed off.
 +
@@ -330,12 +330,12 @@ EXAMPLES
   add two of these trailers to a commit message file:
 +
 ------------
-$ git config trailer.sign.key "Signed-off-by"
+$ shit config trailer.sign.key "Signed-off-by"
 $ cat msg.txt
 subject
 
 body text
-$ git interpret-trailers --trailer 'sign: Alice <alice@example.com>' --trailer 'sign: Bob <bob@example.com>' <msg.txt
+$ shit interpret-trailers --trailer 'sign: Alice <alice@example.com>' --trailer 'sign: Bob <bob@example.com>' <msg.txt
 subject
 
 body text
@@ -353,7 +353,7 @@ subject
 body text
 
 Signed-off-by: Bob <bob@example.com>
-$ git interpret-trailers --trailer 'Acked-by: Alice <alice@example.com>' --in-place msg.txt
+$ shit interpret-trailers --trailer 'Acked-by: Alice <alice@example.com>' --in-place msg.txt
 $ cat msg.txt
 subject
 
@@ -367,9 +367,9 @@ Acked-by: Alice <alice@example.com>
   'Reviewed-by' trailer to it:
 +
 ------------
-$ git format-patch -1
+$ shit format-patch -1
 0001-foo.patch
-$ git interpret-trailers --trailer 'Cc: Alice <alice@example.com>' --trailer 'Reviewed-by: Bob <bob@example.com>' 0001-foo.patch >0001-bar.patch
+$ shit interpret-trailers --trailer 'Cc: Alice <alice@example.com>' --trailer 'Reviewed-by: Bob <bob@example.com>' 0001-foo.patch >0001-bar.patch
 ------------
 
 * Configure a 'sign' trailer with a command to automatically add a
@@ -381,11 +381,11 @@ $ cat msg1.txt
 subject
 
 body text
-$ git config trailer.sign.key "Signed-off-by: "
-$ git config trailer.sign.ifmissing add
-$ git config trailer.sign.ifexists doNothing
-$ git config trailer.sign.cmd 'echo "$(git config user.name) <$(git config user.email)>"'
-$ git interpret-trailers --trailer sign <msg1.txt
+$ shit config trailer.sign.key "Signed-off-by: "
+$ shit config trailer.sign.ifmissing add
+$ shit config trailer.sign.ifexists doNothing
+$ shit config trailer.sign.cmd 'echo "$(shit config user.name) <$(shit config user.email)>"'
+$ shit interpret-trailers --trailer sign <msg1.txt
 subject
 
 body text
@@ -397,7 +397,7 @@ subject
 body text
 
 Signed-off-by: Alice <alice@example.com>
-$ git interpret-trailers --trailer sign <msg2.txt
+$ shit interpret-trailers --trailer sign <msg2.txt
 subject
 
 body text
@@ -409,54 +409,54 @@ Signed-off-by: Alice <alice@example.com>
   space after this character, and show how it works:
 +
 ------------
-$ git config trailer.separators ":#"
-$ git config trailer.fix.key "Fix #"
-$ echo "subject" | git interpret-trailers --trailer fix=42
+$ shit config trailer.separators ":#"
+$ shit config trailer.fix.key "Fix #"
+$ echo "subject" | shit interpret-trailers --trailer fix=42
 subject
 
 Fix #42
 ------------
 
 * Configure a 'help' trailer with a cmd use a script `glog-find-author`
-  which search specified author identity from git log in git repository
+  which search specified author identity from shit log in shit repository
   and show how it works:
 +
 ------------
 $ cat ~/bin/glog-find-author
 #!/bin/sh
-test -n "$1" && git log --author="$1" --pretty="%an <%ae>" -1 || true
+test -n "$1" && shit log --author="$1" --pretty="%an <%ae>" -1 || true
 $ cat msg.txt
 subject
 
 body text
-$ git config trailer.help.key "Helped-by: "
-$ git config trailer.help.ifExists "addIfDifferentNeighbor"
-$ git config trailer.help.cmd "~/bin/glog-find-author"
-$ git interpret-trailers --trailer="help:Junio" --trailer="help:Couder" <msg.txt
+$ shit config trailer.help.key "Helped-by: "
+$ shit config trailer.help.ifExists "addIfDifferentNeighbor"
+$ shit config trailer.help.cmd "~/bin/glog-find-author"
+$ shit interpret-trailers --trailer="help:Junio" --trailer="help:Couder" <msg.txt
 subject
 
 body text
 
-Helped-by: Junio C Hamano <gitster@pobox.com>
+Helped-by: Junio C Hamano <shitster@pobox.com>
 Helped-by: Christian Couder <christian.couder@gmail.com>
 ------------
 
 * Configure a 'ref' trailer with a cmd use a script `glog-grep`
-  to grep last relevant commit from git log in the git repository
+  to grep last relevant commit from shit log in the shit repository
   and show how it works:
 +
 ------------
 $ cat ~/bin/glog-grep
 #!/bin/sh
-test -n "$1" && git log --grep "$1" --pretty=reference -1 || true
+test -n "$1" && shit log --grep "$1" --pretty=reference -1 || true
 $ cat msg.txt
 subject
 
 body text
-$ git config trailer.ref.key "Reference-to: "
-$ git config trailer.ref.ifExists "replace"
-$ git config trailer.ref.cmd "~/bin/glog-grep"
-$ git interpret-trailers --trailer="ref:Add copyright notices." <msg.txt
+$ shit config trailer.ref.key "Reference-to: "
+$ shit config trailer.ref.ifExists "replace"
+$ shit config trailer.ref.cmd "~/bin/glog-grep"
+$ shit interpret-trailers --trailer="ref:Add copyright notices." <msg.txt
 subject
 
 body text
@@ -476,12 +476,12 @@ body text
 see: HEAD~2
 $ cat ~/bin/glog-ref
 #!/bin/sh
-git log -1 --oneline --format="%h (%s)" --abbrev-commit --abbrev=14
-$ git config trailer.see.key "See-also: "
-$ git config trailer.see.ifExists "replace"
-$ git config trailer.see.ifMissing "doNothing"
-$ git config trailer.see.cmd "glog-ref"
-$ git interpret-trailers --trailer=see <msg.txt
+shit log -1 --oneline --format="%h (%s)" --abbrev-commit --abbrev=14
+$ shit config trailer.see.key "See-also: "
+$ shit config trailer.see.ifExists "replace"
+$ shit config trailer.see.ifMissing "doNothing"
+$ shit config trailer.see.cmd "glog-ref"
+$ shit interpret-trailers --trailer=see <msg.txt
 subject
 
 body text
@@ -492,8 +492,8 @@ See-also: fe3187489d69c4 (subject of related commit)
 * Configure a commit template with some trailers with empty values
   (using sed to show and keep the trailing spaces at the end of the
   trailers), then configure a commit-msg hook that uses
-  'git interpret-trailers' to remove trailers with empty values and
-  to add a 'git-version' trailer:
+  'shit interpret-trailers' to remove trailers with empty values and
+  to add a 'shit-version' trailer:
 +
 ------------
 $ cat temp.txt
@@ -506,18 +506,18 @@ Cc: Z
 Reviewed-by: Z
 Signed-off-by: Z
 $ sed -e 's/ Z$/ /' temp.txt > commit_template.txt
-$ git config commit.template commit_template.txt
-$ cat .git/hooks/commit-msg
+$ shit config commit.template commit_template.txt
+$ cat .shit/hooks/commit-msg
 #!/bin/sh
-git interpret-trailers --trim-empty --trailer "git-version: \$(git describe)" "\$1" > "\$1.new"
+shit interpret-trailers --trim-empty --trailer "shit-version: \$(shit describe)" "\$1" > "\$1.new"
 mv "\$1.new" "\$1"
-$ chmod +x .git/hooks/commit-msg
+$ chmod +x .shit/hooks/commit-msg
 ------------
 
 SEE ALSO
 --------
-linkgit:git-commit[1], linkgit:git-format-patch[1], linkgit:git-config[1]
+linkshit:shit-commit[1], linkshit:shit-format-patch[1], linkshit:shit-config[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

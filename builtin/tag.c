@@ -1,9 +1,9 @@
 /*
- * Builtin "git tag"
+ * Builtin "shit tag"
  *
  * Copyright (c) 2007 Kristian Høgsberg <krh@redhat.com>,
  *                    Carlos Rica <jasampler@gmail.com>
- * Based on git-tag.sh and mktag.c by Linus Torvalds.
+ * Based on shit-tag.sh and mktag.c by Linus Torvalds.
  */
 
 #include "builtin.h"
@@ -30,16 +30,16 @@
 #include "object-file-convert.h"
 #include "trailer.h"
 
-static const char * const git_tag_usage[] = {
-	N_("git tag [-a | -s | -u <key-id>] [-f] [-m <msg> | -F <file>] [-e]\n"
+static const char * const shit_tag_usage[] = {
+	N_("shit tag [-a | -s | -u <key-id>] [-f] [-m <msg> | -F <file>] [-e]\n"
 	   "        [(--trailer <token>[(=|:)<value>])...]\n"
 	   "        <tagname> [<commit> | <object>]"),
-	N_("git tag -d <tagname>..."),
-	N_("git tag [-n[<num>]] -l [--contains <commit>] [--no-contains <commit>]\n"
+	N_("shit tag -d <tagname>..."),
+	N_("shit tag [-n[<num>]] -l [--contains <commit>] [--no-contains <commit>]\n"
 	   "        [--points-at <object>] [--column[=<options>] | --no-column]\n"
 	   "        [--create-reflog] [--sort=<key>] [--format=<format>]\n"
 	   "        [--merged <commit>] [--no-merged <commit>] [<pattern>...]"),
-	N_("git tag -v [--format=<format>] <tagname>..."),
+	N_("shit tag -v [--format=<format>] <tagname>..."),
 	NULL
 };
 
@@ -157,7 +157,7 @@ static int verify_tag(const char *name, const char *ref UNUSED,
 static int do_sign(struct strbuf *buffer, struct object_id **compat_oid,
 		   struct object_id *compat_oid_buf)
 {
-	const struct git_hash_algo *compat = the_repository->compat_hash_algo;
+	const struct shit_hash_algo *compat = the_repository->compat_hash_algo;
 	struct strbuf sig = STRBUF_INIT, compat_sig = STRBUF_INIT;
 	struct strbuf compat_buf = STRBUF_INIT;
 	const char *keyid = get_signing_key();
@@ -167,7 +167,7 @@ static int do_sign(struct strbuf *buffer, struct object_id **compat_oid,
 		return -1;
 
 	if (compat) {
-		const struct git_hash_algo *algo = the_repository->hash_algo;
+		const struct shit_hash_algo *algo = the_repository->hash_algo;
 
 		if (convert_object_file(&compat_buf, algo, compat,
 					buffer->buf, buffer->len, OBJ_TAG, 1))
@@ -202,11 +202,11 @@ static const char tag_template_nocleanup[] =
 	"Lines starting with '%s' will be kept; you may remove them"
 	" yourself if you want to.\n");
 
-static int git_tag_config(const char *var, const char *value,
+static int shit_tag_config(const char *var, const char *value,
 			  const struct config_context *ctx, void *cb)
 {
 	if (!strcmp(var, "tag.gpgsign")) {
-		config_sign_tag = git_config_bool(var, value);
+		config_sign_tag = shit_config_bool(var, value);
 		return 0;
 	}
 
@@ -218,17 +218,17 @@ static int git_tag_config(const char *var, const char *value,
 	}
 
 	if (!strcmp(var, "tag.forcesignannotated")) {
-		force_sign_annotate = git_config_bool(var, value);
+		force_sign_annotate = shit_config_bool(var, value);
 		return 0;
 	}
 
 	if (starts_with(var, "column."))
-		return git_column_config(var, value, "tag", &colopts);
+		return shit_column_config(var, value, "tag", &colopts);
 
-	if (git_color_config(var, value, cb) < 0)
+	if (shit_color_config(var, value, cb) < 0)
 		return -1;
 
-	return git_default_config(var, value, ctx, cb);
+	return shit_default_config(var, value, ctx, cb);
 }
 
 static void write_tag_body(int fd, const struct object_id *oid)
@@ -287,7 +287,7 @@ static const char message_advice_nested_tag[] =
 	N_("You have created a nested tag. The object referred to by your new tag is\n"
 	   "already a tag. If you meant to tag the object that it points to, use:\n"
 	   "\n"
-	   "\tgit tag -f %s %s^{}");
+	   "\tshit tag -f %s %s^{}");
 
 static void create_tag(const struct object_id *object, const char *object_ref,
 		       const char *tag,
@@ -315,7 +315,7 @@ static void create_tag(const struct object_id *object, const char *object_ref,
 		    oid_to_hex(object),
 		    type_name(type),
 		    tag,
-		    git_committer_info(IDENT_STRICT));
+		    shit_committer_info(IDENT_STRICT));
 
 	should_edit = opt->use_editor || !opt->message_given;
 	if (should_edit || trailer_args->nr) {
@@ -387,7 +387,7 @@ static void create_reflog_msg(const struct object_id *oid, struct strbuf *sb)
 	int subject_len = 0;
 	const char *subject_start;
 
-	char *rla = getenv("GIT_REFLOG_ACTION");
+	char *rla = getenv("shit_REFLOG_ACTION");
 	if (rla) {
 		strbuf_addstr(sb, rla);
 	} else {
@@ -537,7 +537,7 @@ int cmd_tag(int argc, const char **argv, const char *prefix)
 	 * Try to set sort keys from config. If config does not set any,
 	 * fall back on default (refname) sorting.
 	 */
-	git_config(git_tag_config, &sorting_options);
+	shit_config(shit_tag_config, &sorting_options);
 	if (!sorting_options.nr)
 		string_list_append(&sorting_options, "refname");
 
@@ -545,7 +545,7 @@ int cmd_tag(int argc, const char **argv, const char *prefix)
 	filter.lines = -1;
 	opt.sign = -1;
 
-	argc = parse_options(argc, argv, prefix, options, git_tag_usage, 0);
+	argc = parse_options(argc, argv, prefix, options, shit_tag_usage, 0);
 
 	if (!cmdmode) {
 		if (argc == 0)
@@ -570,7 +570,7 @@ int cmd_tag(int argc, const char **argv, const char *prefix)
 			     edit_flag || trailer_args.nr);
 
 	if ((create_tag_object || force) && (cmdmode != 0))
-		usage_with_options(git_tag_usage, options);
+		usage_with_options(shit_tag_usage, options);
 
 	finalize_colopts(&colopts, -1);
 	if (cmdmode == 'l' && filter.lines != -1) {
@@ -587,7 +587,7 @@ int cmd_tag(int argc, const char **argv, const char *prefix)
 			memset(&copts, 0, sizeof(copts));
 			copts.padding = 2;
 			if (run_column_filter(colopts, &copts))
-				die(_("could not start 'git column'"));
+				die(_("could not start 'shit column'"));
 		}
 		filter.name_patterns = argv;
 		ret = list_tags(&filter, sorting, &format);
@@ -615,7 +615,7 @@ int cmd_tag(int argc, const char **argv, const char *prefix)
 	}
 	if (cmdmode == 'v') {
 		if (format.format && verify_ref_format(&format))
-			usage_with_options(git_tag_usage, options);
+			usage_with_options(shit_tag_usage, options);
 		ret = for_each_tag_name(argv, verify_tag, &format);
 		goto cleanup;
 	}
@@ -671,7 +671,7 @@ int cmd_tag(int argc, const char **argv, const char *prefix)
 	if (create_tag_object) {
 		if (force_sign_annotate && !annotate)
 			opt.sign = 1;
-		path = git_pathdup("TAG_EDITMSG");
+		path = shit_pathdup("TAG_EDITMSG");
 		create_tag(&object, object_ref, tag, &buf, &opt, &prev, &object,
 			   &trailer_args, path);
 	}

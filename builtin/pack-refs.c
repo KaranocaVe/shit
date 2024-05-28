@@ -7,7 +7,7 @@
 #include "revision.h"
 
 static char const * const pack_refs_usage[] = {
-	N_("git pack-refs [--all] [--no-prune] [--auto] [--include <pattern>] [--exclude <pattern>]"),
+	N_("shit pack-refs [--all] [--no-prune] [--auto] [--include <pattern>] [--exclude <pattern>]"),
 	NULL
 };
 
@@ -35,7 +35,7 @@ int cmd_pack_refs(int argc, const char **argv, const char *prefix)
 			N_("references to exclude")),
 		OPT_END(),
 	};
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 	if (parse_options(argc, argv, prefix, opts, pack_refs_usage, 0))
 		usage_with_options(pack_refs_usage, opts);
 

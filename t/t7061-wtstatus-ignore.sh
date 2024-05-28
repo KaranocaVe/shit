@@ -1,11 +1,11 @@
 #!/bin/sh
 
-test_description='git-status ignored files'
+test_description='shit-status ignored files'
 
 . ./test-lib.sh
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 ?? untracked/
@@ -13,50 +13,50 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'status untracked directory with --ignored' '
-	echo "ignored" >.gitignore &&
+	echo "ignored" >.shitignore &&
 	mkdir untracked &&
 	: >untracked/ignored &&
 	: >untracked/uncommitted &&
-	git status --porcelain --ignored >actual &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
-test_expect_success 'same with gitignore starting with BOM' '
-	printf "\357\273\277ignored\n" >.gitignore &&
+test_expect_success 'same with shitignore starting with BOM' '
+	printf "\357\273\277ignored\n" >.shitignore &&
 	mkdir -p untracked &&
 	: >untracked/ignored &&
 	: >untracked/uncommitted &&
-	git status --porcelain --ignored >actual &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'status untracked files --ignored with pathspec (no match)' '
-	git status --porcelain --ignored -- untracked/i >actual &&
+	shit status --porcelain --ignored -- untracked/i >actual &&
 	test_must_be_empty actual &&
-	git status --porcelain --ignored -- untracked/u >actual &&
+	shit status --porcelain --ignored -- untracked/u >actual &&
 	test_must_be_empty actual
 '
 
 test_expect_success 'status untracked files --ignored with pathspec (literal match)' '
-	git status --porcelain --ignored -- untracked/ignored >actual &&
+	shit status --porcelain --ignored -- untracked/ignored >actual &&
 	echo "!! untracked/ignored" >expected &&
 	test_cmp expected actual &&
-	git status --porcelain --ignored -- untracked/uncommitted >actual &&
+	shit status --porcelain --ignored -- untracked/uncommitted >actual &&
 	echo "?? untracked/uncommitted" >expected &&
 	test_cmp expected actual
 '
 
 test_expect_success 'status untracked files --ignored with pathspec (glob match)' '
-	git status --porcelain --ignored -- untracked/i\* >actual &&
+	shit status --porcelain --ignored -- untracked/i\* >actual &&
 	echo "!! untracked/ignored" >expected &&
 	test_cmp expected actual &&
-	git status --porcelain --ignored -- untracked/u\* >actual &&
+	shit status --porcelain --ignored -- untracked/u\* >actual &&
 	echo "?? untracked/uncommitted" >expected &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 ?? untracked/uncommitted
@@ -64,7 +64,7 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'status untracked directory with --ignored -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 cat >expected <<\EOF
@@ -73,12 +73,12 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'status of untracked directory with --ignored works with or without prefix' '
-	git status --porcelain --ignored >tmp &&
+	shit status --porcelain --ignored >tmp &&
 	grep untracked/ tmp >actual &&
 	rm tmp &&
 	test_cmp expected actual &&
 
-	git status --porcelain --ignored untracked/ >actual &&
+	shit status --porcelain --ignored untracked/ >actual &&
 	test_cmp expected actual
 '
 
@@ -88,12 +88,12 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'status prefixed untracked sub-directory with --ignored -u' '
-	git status --porcelain --ignored -u untracked/ >actual &&
+	shit status --porcelain --ignored -u untracked/ >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! ignored/
@@ -103,24 +103,24 @@ test_expect_success 'status ignored directory with --ignore' '
 	rm -rf untracked &&
 	mkdir ignored &&
 	: >ignored/uncommitted &&
-	git status --porcelain --ignored >actual &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! ignored/uncommitted
 EOF
 
 test_expect_success 'status ignored directory with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 EOF
@@ -129,23 +129,23 @@ test_expect_success 'status empty untracked directory with --ignore' '
 	rm -rf ignored &&
 	mkdir untracked-ignored &&
 	mkdir untracked-ignored/test &&
-	git status --porcelain --ignored >actual &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 EOF
 
 test_expect_success 'status empty untracked directory with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! untracked-ignored/
@@ -154,12 +154,12 @@ EOF
 test_expect_success 'status untracked directory with ignored files with --ignore' '
 	: >untracked-ignored/ignored &&
 	: >untracked-ignored/test/ignored &&
-	git status --porcelain --ignored >actual &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! untracked-ignored/ignored
@@ -167,12 +167,12 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'status untracked directory with ignored files with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 EOF
@@ -181,75 +181,75 @@ test_expect_success 'status ignored tracked directory with --ignore' '
 	rm -rf untracked-ignored &&
 	mkdir tracked &&
 	: >tracked/committed &&
-	git add tracked/committed &&
-	git commit -m. &&
-	echo "tracked" >.gitignore &&
-	git status --porcelain --ignored >actual &&
+	shit add tracked/committed &&
+	shit commit -m. &&
+	echo "tracked" >.shitignore &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 EOF
 
 test_expect_success 'status ignored tracked directory with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 EOF
 
 test_expect_success 'status ignored tracked directory and ignored file with --ignore' '
-	echo "committed" >>.gitignore &&
-	git status --porcelain --ignored >actual &&
+	echo "committed" >>.shitignore &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 EOF
 
 test_expect_success 'status ignored tracked directory and ignored file with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! tracked/uncommitted
 EOF
 
 test_expect_success 'status ignored tracked directory and uncommitted file with --ignore' '
-	echo "tracked" >.gitignore &&
+	echo "tracked" >.shitignore &&
 	: >tracked/uncommitted &&
-	git status --porcelain --ignored >actual &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! tracked/uncommitted
 EOF
 
 test_expect_success 'status ignored tracked directory and uncommitted file with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! tracked/ignored/
@@ -259,24 +259,24 @@ test_expect_success 'status ignored tracked directory with uncommitted file in u
 	rm -rf tracked/uncommitted &&
 	mkdir tracked/ignored &&
 	: >tracked/ignored/uncommitted &&
-	git status --porcelain --ignored >actual &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! tracked/ignored/uncommitted
 EOF
 
 test_expect_success 'status ignored tracked directory with uncommitted file in untracked subdir with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! tracked/ignored/uncommitted
@@ -284,21 +284,21 @@ EOF
 
 test_expect_success 'status ignored tracked directory with uncommitted file in tracked subdir with --ignore' '
 	: >tracked/ignored/committed &&
-	git add -f tracked/ignored/committed &&
-	git commit -m. &&
-	git status --porcelain --ignored >actual &&
+	shit add -f tracked/ignored/committed &&
+	shit commit -m. &&
+	shit status --porcelain --ignored >actual &&
 	test_cmp expected actual
 '
 
 cat >expected <<\EOF
-?? .gitignore
+?? .shitignore
 ?? actual
 ?? expected
 !! tracked/ignored/uncommitted
 EOF
 
 test_expect_success 'status ignored tracked directory with uncommitted file in tracked subdir with --ignore -u' '
-	git status --porcelain --ignored -u >actual &&
+	shit status --porcelain --ignored -u >actual &&
 	test_cmp expected actual
 '
 
@@ -307,9 +307,9 @@ cat >expected <<\EOF
 EOF
 
 test_expect_success 'status ignores submodule in excluded directory' '
-	git init tracked/submodule &&
+	shit init tracked/submodule &&
 	test_commit -C tracked/submodule initial &&
-	git status --porcelain --ignored -u tracked/submodule >actual &&
+	shit status --porcelain --ignored -u tracked/submodule >actual &&
 	test_cmp expected actual
 '
 

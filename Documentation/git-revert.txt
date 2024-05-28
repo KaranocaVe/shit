@@ -1,15 +1,15 @@
-git-revert(1)
+shit-revert(1)
 =============
 
 NAME
 ----
-git-revert - Revert some existing commits
+shit-revert - Revert some existing commits
 
 SYNOPSIS
 --------
 [verse]
-'git revert' [--[no-]edit] [-n] [-m <parent-number>] [-s] [-S[<keyid>]] <commit>...
-'git revert' (--continue | --skip | --abort | --quit)
+'shit revert' [--[no-]edit] [-n] [-m <parent-number>] [-s] [-S[<keyid>]] <commit>...
+'shit revert' (--continue | --skip | --abort | --quit)
 
 DESCRIPTION
 -----------
@@ -19,16 +19,16 @@ related patches introduce, and record some new commits that record
 them.  This requires your working tree to be clean (no modifications
 from the HEAD commit).
 
-Note: 'git revert' is used to record some new commits to reverse the
+Note: 'shit revert' is used to record some new commits to reverse the
 effect of some earlier commits (often only a faulty one).  If you want to
 throw away all uncommitted changes in your working directory, you
-should see linkgit:git-reset[1], particularly the `--hard` option.  If
+should see linkshit:shit-reset[1], particularly the `--hard` option.  If
 you want to extract specific files as they were in another commit, you
-should see linkgit:git-restore[1], specifically the `--source`
+should see linkshit:shit-restore[1], specifically the `--source`
 option. Take care with these alternatives as
 both will discard uncommitted changes in your working directory.
 
-See "Reset, restore and revert" in linkgit:git[1] for the differences
+See "Reset, restore and revert" in linkshit:shit[1] for the differences
 between the three commands.
 
 OPTIONS
@@ -36,14 +36,14 @@ OPTIONS
 <commit>...::
 	Commits to revert.
 	For a more complete list of ways to spell commit names, see
-	linkgit:gitrevisions[7].
+	linkshit:shitrevisions[7].
 	Sets of commits can also be given but no traversal is done by
-	default, see linkgit:git-rev-list[1] and its `--no-walk`
+	default, see linkshit:shit-rev-list[1] and its `--no-walk`
 	option.
 
 -e::
 --edit::
-	With this option, 'git revert' will let you edit the commit
+	With this option, 'shit revert' will let you edit the commit
 	message prior to committing the revert. This is the default if
 	you run the command from a terminal.
 
@@ -64,12 +64,12 @@ See the link:howto/revert-a-faulty-merge.html[revert-a-faulty-merge How-To] for
 more details.
 
 --no-edit::
-	With this option, 'git revert' will not start the commit
+	With this option, 'shit revert' will not start the commit
 	message editor.
 
 --cleanup=<mode>::
 	This option determines how the commit message will be cleaned up before
-	being passed on to the commit machinery. See linkgit:git-commit[1] for more
+	being passed on to the commit machinery. See linkshit:shit-commit[1] for more
 	details. In particular, if the '<mode>' is given a value of `scissors`,
 	scissors will be appended to `MERGE_MSG` before being passed on in the case
 	of a conflict.
@@ -100,17 +100,17 @@ effect to your index in a row.
 -s::
 --signoff::
 	Add a `Signed-off-by` trailer at the end of the commit message.
-	See the signoff option in linkgit:git-commit[1] for more information.
+	See the signoff option in linkshit:shit-commit[1] for more information.
 
 --strategy=<strategy>::
 	Use the given merge strategy.  Should only be used once.
-	See the MERGE STRATEGIES section in linkgit:git-merge[1]
+	See the MERGE STRATEGIES section in linkshit:shit-merge[1]
 	for details.
 
 -X<option>::
 --strategy-option=<option>::
 	Pass the merge strategy-specific option through to the
-	merge strategy.  See linkgit:git-merge[1] for details.
+	merge strategy.  See linkshit:shit-merge[1] for details.
 
 include::rerere-options.txt[]
 
@@ -118,7 +118,7 @@ include::rerere-options.txt[]
 	Instead of starting the body of the log message with "This
 	reverts <full-object-name-of-the-commit-being-reverted>.",
 	refer to the commit using "--pretty=reference" format
-	(cf. linkgit:git-log[1]).  The `revert.reference`
+	(cf. linkshit:shit-log[1]).  The `revert.reference`
 	configuration variable can be used to enable this option by
 	default.
 
@@ -129,12 +129,12 @@ include::sequencer.txt[]
 
 EXAMPLES
 --------
-`git revert HEAD~3`::
+`shit revert HEAD~3`::
 
 	Revert the changes specified by the fourth last commit in HEAD
 	and create a new commit with the reverted changes.
 
-`git revert -n master~5..master~2`::
+`shit revert -n master~5..master~2`::
 
 	Revert the changes done by commits from the fifth last commit
 	in master (included) to the third last commit in master
@@ -145,7 +145,7 @@ EXAMPLES
 DISCUSSION
 ----------
 
-While git creates a basic commit message automatically, it is
+While shit creates a basic commit message automatically, it is
 _strongly_ recommended to explain why the original commit is being
 reverted.
 In addition, repeatedly reverting reverts will result in increasingly
@@ -161,8 +161,8 @@ include::config/revert.txt[]
 
 SEE ALSO
 --------
-linkgit:git-cherry-pick[1]
+linkshit:shit-cherry-pick[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

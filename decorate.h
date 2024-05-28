@@ -2,7 +2,7 @@
 #define DECORATE_H
 
 /*
- * A data structure that associates Git objects to void pointers. See
+ * A data structure that associates shit objects to void pointers. See
  * t/helper/test-example-decorate.c for a demonstration of how to use these
  * functions.
  */
@@ -33,7 +33,7 @@ struct decoration {
 	unsigned int size;
 
 	/*
-	 * The number of real Git objects (that is, entries with non-NULL
+	 * The number of real shit objects (that is, entries with non-NULL
 	 * "base").
 	 */
 	unsigned int nr;

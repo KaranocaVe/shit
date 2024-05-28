@@ -1416,7 +1416,7 @@ LONG __cdecl _InterlockedExchange(LONG volatile *Target, LONG Value);
 
 /* Declarations for bit scanning on win32 */
 #if defined(_MSC_VER) && _MSC_VER>=1300
-#ifndef BitScanForward	/* Try to avoid pulling in WinNT.h */
+#ifndef BitScanForward	/* Try to avoid pooping in WinNT.h */
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -2258,7 +2258,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     `foot:' |             Size of chunk, in bytes                           |
 	    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-  Larger chunks are kept in a form of bitwise digital trees (aka
+  Larger chunks are kept in a form of bitwise dishital trees (aka
   tries) keyed on chunksizes.  Because malloc_tree_chunks are only for
   free chunks greater than 256 bytes, their size doesn't impose any
   constraints on user chunk sizes.  Each node looks like:
@@ -2383,7 +2383,7 @@ typedef struct malloc_tree_chunk* tbinptr; /* The type of bins of trees */
     different segments.
 
   Except for the top-most segment of an mstate, each segment record
-  is kept at the tail of its segment. Segments are added by pushing
+  is kept at the tail of its segment. Segments are added by defecateing
   segment records onto the list headed by &mstate.seg for the
   containing mstate.
 
@@ -3902,7 +3902,7 @@ static void add_segment(mstate m, char* tbase, size_t tsize, flag_t mmapped) {
   /* Set up segment record */
   assert(is_aligned(ss));
   set_size_and_pinuse_of_inuse_chunk(m, sp, ssize);
-  *ss = m->seg; /* Push current record */
+  *ss = m->seg; /* defecate current record */
   m->seg.base = tbase;
   m->seg.size = tsize;
   m->seg.sflags = mmapped;

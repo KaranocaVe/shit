@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "default.h"
 #include "../commit.h"
 #include "../fetch-negotiator.h"
@@ -20,7 +20,7 @@ struct negotiation_state {
 	int non_common_revs;
 };
 
-static void rev_list_push(struct negotiation_state *ns,
+static void rev_list_defecate(struct negotiation_state *ns,
 			  struct commit *commit, int mark)
 {
 	if (!(commit->object.flags & mark)) {
@@ -72,7 +72,7 @@ static void mark_common(struct negotiation_state *ns, struct commit *commit,
 		struct object *o = (struct object *)commit;
 
 		if (!(o->flags & SEEN))
-			rev_list_push(ns, commit, SEEN);
+			rev_list_defecate(ns, commit, SEEN);
 		else {
 			struct commit_list *parents;
 
@@ -136,7 +136,7 @@ static const struct object_id *get_rev(struct negotiation_state *ns)
 
 		while (parents) {
 			if (!(parents->item->object.flags & SEEN))
-				rev_list_push(ns, parents->item, mark);
+				rev_list_defecate(ns, parents->item, mark);
 			if (mark & COMMON)
 				mark_common(ns, parents->item, 1, 0);
 			parents = parents->next;
@@ -149,7 +149,7 @@ static const struct object_id *get_rev(struct negotiation_state *ns)
 static void known_common(struct fetch_negotiator *n, struct commit *c)
 {
 	if (!(c->object.flags & SEEN)) {
-		rev_list_push(n->data, c, COMMON_REF | SEEN);
+		rev_list_defecate(n->data, c, COMMON_REF | SEEN);
 		mark_common(n->data, c, 1, 1);
 	}
 }
@@ -157,7 +157,7 @@ static void known_common(struct fetch_negotiator *n, struct commit *c)
 static void add_tip(struct fetch_negotiator *n, struct commit *c)
 {
 	n->known_common = NULL;
-	rev_list_push(n->data, c, SEEN);
+	rev_list_defecate(n->data, c, SEEN);
 }
 
 static const struct object_id *next(struct fetch_negotiator *n)

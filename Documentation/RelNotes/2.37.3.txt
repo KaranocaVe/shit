@@ -1,4 +1,4 @@
-Git 2.37.3 Release Notes
+shit 2.37.3 Release Notes
 ========================
 
 This primarily is to backport various fixes accumulated on the 'master'
@@ -31,7 +31,7 @@ Fixes since v2.37.2
 
  * "vimdiff3" regression has been corrected.
 
- * "git fsck" reads mode from tree objects but canonicalizes the mode
+ * "shit fsck" reads mode from tree objects but canonicalizes the mode
    before passing it to the logic to check object sanity, which has
    hid broken tree objects from the checking logic.  This has been
    corrected, but to help exiting projects with broken tree objects
@@ -41,6 +41,6 @@ Fixes since v2.37.2
  * Fixes to sparse index compatibility work for "reset" and "checkout"
    commands.
 
- * Documentation for "git add --renormalize" has been improved.
+ * Documentation for "shit add --renormalize" has been improved.
 
 Also contains other minor documentation updates and code clean-ups.

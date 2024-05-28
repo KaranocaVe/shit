@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010, Google Inc.
- * and other copyright owners as documented in JGit's IP log.
+ * and other copyright owners as documented in Jshit's IP log.
  *
  * This program and the accompanying materials are made available
  * under the terms of the Eclipse Distribution License v1.0 which

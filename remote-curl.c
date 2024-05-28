@@ -1,5 +1,5 @@
-#include "git-compat-util.h"
-#include "git-curl-compat.h"
+#include "shit-compat-util.h"
+#include "shit-curl-compat.h"
 #include "config.h"
 #include "environment.h"
 #include "gettext.h"
@@ -33,7 +33,7 @@ struct options {
 	unsigned long depth;
 	char *deepen_since;
 	struct string_list deepen_not;
-	struct string_list push_options;
+	struct string_list defecate_options;
 	char *filter;
 	unsigned progress : 1,
 		check_self_contained_and_connected : 1,
@@ -42,8 +42,8 @@ struct options {
 		followtags : 1,
 		dry_run : 1,
 		thin : 1,
-		/* One of the SEND_PACK_PUSH_CERT_* constants. */
-		push_cert : 2,
+		/* One of the SEND_PACK_defecate_CERT_* constants. */
+		defecate_cert : 2,
 		deepen_relative : 1,
 
 		/* see documentation of corresponding flag in fetch-pack.h */
@@ -53,7 +53,7 @@ struct options {
 		atomic : 1,
 		object_format : 1,
 		force_if_includes : 1;
-	const struct git_hash_algo *hash_algo;
+	const struct shit_hash_algo *hash_algo;
 };
 static struct options options;
 static struct string_list cas_options = STRING_LIST_INIT_DUP;
@@ -163,13 +163,13 @@ static int set_option(const char *name, const char *value)
 		else
 			return -1;
 		return 0;
-	} else if (!strcmp(name, "pushcert")) {
+	} else if (!strcmp(name, "defecatecert")) {
 		if (!strcmp(value, "true"))
-			options.push_cert = SEND_PACK_PUSH_CERT_ALWAYS;
+			options.defecate_cert = SEND_PACK_defecate_CERT_ALWAYS;
 		else if (!strcmp(value, "false"))
-			options.push_cert = SEND_PACK_PUSH_CERT_NEVER;
+			options.defecate_cert = SEND_PACK_defecate_CERT_NEVER;
 		else if (!strcmp(value, "if-asked"))
-			options.push_cert = SEND_PACK_PUSH_CERT_IF_ASKED;
+			options.defecate_cert = SEND_PACK_defecate_CERT_IF_ASKED;
 		else
 			return -1;
 		return 0;
@@ -181,24 +181,24 @@ static int set_option(const char *name, const char *value)
 		else
 			return -1;
 		return 0;
-	} else if (!strcmp(name, "push-option")) {
+	} else if (!strcmp(name, "defecate-option")) {
 		if (*value != '"')
-			string_list_append(&options.push_options, value);
+			string_list_append(&options.defecate_options, value);
 		else {
 			struct strbuf unquoted = STRBUF_INIT;
 			if (unquote_c_style(&unquoted, value, NULL) < 0)
-				die(_("invalid quoting in push-option value: '%s'"), value);
-			string_list_append_nodup(&options.push_options,
+				die(_("invalid quoting in defecate-option value: '%s'"), value);
+			string_list_append_nodup(&options.defecate_options,
 						 strbuf_detach(&unquoted, NULL));
 		}
 		return 0;
 	} else if (!strcmp(name, "family")) {
 		if (!strcmp(value, "ipv4"))
-			git_curl_ipresolve = CURL_IPRESOLVE_V4;
+			shit_curl_ipresolve = CURL_IPRESOLVE_V4;
 		else if (!strcmp(value, "ipv6"))
-			git_curl_ipresolve = CURL_IPRESOLVE_V6;
+			shit_curl_ipresolve = CURL_IPRESOLVE_V6;
 		else if (!strcmp(value, "all"))
-			git_curl_ipresolve = CURL_IPRESOLVE_WHATEVER;
+			shit_curl_ipresolve = CURL_IPRESOLVE_WHATEVER;
 		else
 			return -1;
 		return 0;
@@ -229,11 +229,11 @@ struct discovery {
 	struct ref *refs;
 	struct oid_array shallow;
 	enum protocol_version version;
-	unsigned proto_git : 1;
+	unsigned proto_shit : 1;
 };
 static struct discovery *last_discovery;
 
-static struct ref *parse_git_refs(struct discovery *heads, int for_push)
+static struct ref *parse_shit_refs(struct discovery *heads, int for_defecate)
 {
 	struct ref *list = NULL;
 	struct packet_reader reader;
@@ -255,7 +255,7 @@ static struct ref *parse_git_refs(struct discovery *heads, int for_push)
 		break;
 	case protocol_v1:
 	case protocol_v0:
-		get_remote_heads(&reader, &list, for_push ? REF_NORMAL : 0,
+		get_remote_heads(&reader, &list, for_defecate ? REF_NORMAL : 0,
 				 NULL, &heads->shallow);
 		options.hash_algo = reader.hash_algo;
 		break;
@@ -266,7 +266,7 @@ static struct ref *parse_git_refs(struct discovery *heads, int for_push)
 	return list;
 }
 
-static const struct git_hash_algo *detect_hash_algo(struct discovery *heads)
+static const struct shit_hash_algo *detect_hash_algo(struct discovery *heads)
 {
 	const char *p = memchr(heads->buf, '\t', heads->len);
 	int algo;
@@ -274,7 +274,7 @@ static const struct git_hash_algo *detect_hash_algo(struct discovery *heads)
 		return the_hash_algo;
 
 	algo = hash_algo_by_length((p - heads->buf) / 2);
-	if (algo == GIT_HASH_UNKNOWN)
+	if (algo == shit_HASH_UNKNOWN)
 		return NULL;
 	return &hash_algos[algo];
 }
@@ -292,7 +292,7 @@ static struct ref *parse_info_refs(struct discovery *heads)
 	options.hash_algo = detect_hash_algo(heads);
 	if (!options.hash_algo)
 		die("%sinfo/refs not valid: could not determine hash algorithm; "
-		    "is this a git repository?",
+		    "is this a shit repository?",
 		    transport_anonymize_url(url.buf));
 
 	data = heads->buf;
@@ -306,7 +306,7 @@ static struct ref *parse_info_refs(struct discovery *heads)
 			mid = &data[i];
 		if (data[i] == '\n') {
 			if (mid - start != options.hash_algo->hexsz)
-				die(_("%sinfo/refs not valid: is this a git repository?"),
+				die(_("%sinfo/refs not valid: is this a shit repository?"),
 				    transport_anonymize_url(url.buf));
 			data[i] = 0;
 			ref_name = mid + 1;
@@ -378,7 +378,7 @@ static int get_protocol_http_header(enum protocol_version version,
 				    struct strbuf *header)
 {
 	if (version > 0) {
-		strbuf_addf(header, GIT_PROTOCOL_HEADER ": version=%d",
+		strbuf_addf(header, shit_PROTOCOL_HEADER ": version=%d",
 			    version);
 
 		return 1;
@@ -428,21 +428,21 @@ static void check_smart_http(struct discovery *d, const char *service,
 		 */
 		d->buf = reader.src_buffer;
 		d->len = reader.src_len;
-		d->proto_git = 1;
+		d->proto_shit = 1;
 
 	} else if (!strcmp(reader.line, "version 2")) {
 		/*
 		 * v2 smart http; do not consume version packet, which will
 		 * be handled elsewhere.
 		 */
-		d->proto_git = 1;
+		d->proto_shit = 1;
 
 	} else {
 		die(_("invalid server response; got '%s'"), reader.line);
 	}
 }
 
-static struct discovery *discover_refs(const char *service, int for_push)
+static struct discovery *discover_refs(const char *service, int for_defecate)
 {
 	struct strbuf type = STRBUF_INIT;
 	struct strbuf charset = STRBUF_INIT;
@@ -462,7 +462,7 @@ static struct discovery *discover_refs(const char *service, int for_push)
 
 	strbuf_addf(&refs_url, "%sinfo/refs", url.buf);
 	if ((starts_with(url.buf, "http://") || starts_with(url.buf, "https://")) &&
-	     git_env_bool("GIT_SMART_HTTP", 1)) {
+	     shit_env_bool("shit_SMART_HTTP", 1)) {
 		maybe_smart = 1;
 		if (!strchr(url.buf, '?'))
 			strbuf_addch(&refs_url, '?');
@@ -475,12 +475,12 @@ static struct discovery *discover_refs(const char *service, int for_push)
 	 * NEEDSWORK: If we are trying to use protocol v2 and we are planning
 	 * to perform any operation that doesn't involve upload-pack (i.e., a
 	 * fetch, ls-remote, etc), then fallback to v0 since we don't know how
-	 * to do anything else (like push or remote archive) via v2.
+	 * to do anything else (like defecate or remote archive) via v2.
 	 */
-	if (version == protocol_v2 && strcmp("git-upload-pack", service))
+	if (version == protocol_v2 && strcmp("shit-upload-pack", service))
 		version = protocol_v0;
 
-	/* Add the extra Git-Protocol header */
+	/* Add the extra shit-Protocol header */
 	if (get_protocol_http_header(version, &protocol_header))
 		string_list_append(&extra_headers, protocol_header.buf);
 
@@ -529,8 +529,8 @@ static struct discovery *discover_refs(const char *service, int for_push)
 	if (maybe_smart)
 		check_smart_http(last, service, &type);
 
-	if (last->proto_git)
-		last->refs = parse_git_refs(last, for_push);
+	if (last->proto_shit)
+		last->refs = parse_shit_refs(last, for_defecate);
 	else
 		last->refs = parse_info_refs(last);
 
@@ -545,14 +545,14 @@ static struct discovery *discover_refs(const char *service, int for_push)
 	return last;
 }
 
-static struct ref *get_refs(int for_push)
+static struct ref *get_refs(int for_defecate)
 {
 	struct discovery *heads;
 
-	if (for_push)
-		heads = discover_refs("git-receive-pack", for_push);
+	if (for_defecate)
+		heads = discover_refs("shit-receive-pack", for_defecate);
 	else
-		heads = discover_refs("git-upload-pack", for_push);
+		heads = discover_refs("shit-upload-pack", for_defecate);
 
 	return heads->refs;
 }
@@ -748,13 +748,13 @@ static void check_pktline(struct check_pktline_state *state, const char *ptr, si
 {
 	while (size) {
 		if (!state->remaining) {
-			int digits_remaining = 4 - state->len_filled;
-			if (digits_remaining > size)
-				digits_remaining = size;
-			memcpy(&state->len_buf[state->len_filled], ptr, digits_remaining);
-			state->len_filled += digits_remaining;
-			ptr += digits_remaining;
-			size -= digits_remaining;
+			int dishits_remaining = 4 - state->len_filled;
+			if (dishits_remaining > size)
+				dishits_remaining = size;
+			memcpy(&state->len_buf[state->len_filled], ptr, dishits_remaining);
+			state->len_filled += dishits_remaining;
+			ptr += dishits_remaining;
+			size -= dishits_remaining;
 
 			if (state->len_filled == 4) {
 				state->remaining = packet_length(state->len_buf,
@@ -878,7 +878,7 @@ static curl_off_t xcurl_off_t(size_t len)
 {
 	uintmax_t size = len;
 	if (size > maximum_signed_value_of_type(curl_off_t))
-		die(_("cannot handle pushes this big"));
+		die(_("cannot handle defecatees this big"));
 	return (curl_off_t)size;
 }
 
@@ -944,7 +944,7 @@ retry:
 	if (rpc->hdr_accept_language)
 		headers = curl_slist_append(headers, rpc->hdr_accept_language);
 
-	/* Add the extra Git-Protocol header */
+	/* Add the extra shit-Protocol header */
 	if (rpc->protocol_header)
 		headers = curl_slist_append(headers, rpc->protocol_header);
 
@@ -959,7 +959,7 @@ retry:
 		/* The request body is large and the size cannot be predicted.
 		 * We must use chunked encoding to send it.
 		 */
-#ifdef GIT_CURL_NEED_TRANSFER_ENCODING_HEADER
+#ifdef shit_CURL_NEED_TRANSFER_ENCODING_HEADER
 		headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
 #endif
 		rpc->initial_buffer = 1;
@@ -986,11 +986,11 @@ retry:
 		 * we can try to deflate it ourselves, this may save on
 		 * the transfer time.
 		 */
-		git_zstream stream;
+		shit_zstream stream;
 		int ret;
 
-		git_deflate_init_gzip(&stream, Z_BEST_COMPRESSION);
-		gzip_size = git_deflate_bound(&stream, rpc->len);
+		shit_deflate_init_gzip(&stream, Z_BEST_COMPRESSION);
+		gzip_size = shit_deflate_bound(&stream, rpc->len);
 		gzip_body = xmalloc(gzip_size);
 
 		stream.next_in = (unsigned char *)rpc->buf;
@@ -998,11 +998,11 @@ retry:
 		stream.next_out = (unsigned char *)gzip_body;
 		stream.avail_out = gzip_size;
 
-		ret = git_deflate(&stream, Z_FINISH);
+		ret = shit_deflate(&stream, Z_FINISH);
 		if (ret != Z_STREAM_END)
 			die(_("cannot deflate request; zlib deflate error %d"), ret);
 
-		ret = git_deflate_end_gently(&stream);
+		ret = shit_deflate_end_gently(&stream);
 		if (ret != Z_OK)
 			die(_("cannot deflate request; zlib end error %d"), ret);
 
@@ -1078,8 +1078,8 @@ static int rpc_service(struct rpc_state *rpc, struct discovery *heads,
 
 	client.in = -1;
 	client.out = -1;
-	client.git_cmd = 1;
-	strvec_pushv(&client.args, client_argv);
+	client.shit_cmd = 1;
+	strvec_defecatev(&client.args, client_argv);
 	if (start_command(&client))
 		exit(1);
 	write_or_die(client.in, preamble->buf, preamble->len);
@@ -1167,7 +1167,7 @@ static int fetch_dumb(int nr_heads, struct ref **to_fetch)
 	return ret ? error(_("fetch failed.")) : 0;
 }
 
-static int fetch_git(struct discovery *heads,
+static int fetch_shit(struct discovery *heads,
 	int nr_heads, struct ref **to_fetch)
 {
 	struct rpc_state rpc = RPC_STATE_INIT;
@@ -1176,38 +1176,38 @@ static int fetch_git(struct discovery *heads,
 	struct strvec args = STRVEC_INIT;
 	struct strbuf rpc_result = STRBUF_INIT;
 
-	strvec_pushl(&args, "fetch-pack", "--stateless-rpc",
+	strvec_defecatel(&args, "fetch-pack", "--stateless-rpc",
 		     "--stdin", "--lock-pack", NULL);
 	if (options.followtags)
-		strvec_push(&args, "--include-tag");
+		strvec_defecate(&args, "--include-tag");
 	if (options.thin)
-		strvec_push(&args, "--thin");
+		strvec_defecate(&args, "--thin");
 	if (options.verbosity >= 3)
-		strvec_pushl(&args, "-v", "-v", NULL);
+		strvec_defecatel(&args, "-v", "-v", NULL);
 	if (options.check_self_contained_and_connected)
-		strvec_push(&args, "--check-self-contained-and-connected");
+		strvec_defecate(&args, "--check-self-contained-and-connected");
 	if (options.cloning)
-		strvec_push(&args, "--cloning");
+		strvec_defecate(&args, "--cloning");
 	if (options.update_shallow)
-		strvec_push(&args, "--update-shallow");
+		strvec_defecate(&args, "--update-shallow");
 	if (!options.progress)
-		strvec_push(&args, "--no-progress");
+		strvec_defecate(&args, "--no-progress");
 	if (options.depth)
-		strvec_pushf(&args, "--depth=%lu", options.depth);
+		strvec_defecatef(&args, "--depth=%lu", options.depth);
 	if (options.deepen_since)
-		strvec_pushf(&args, "--shallow-since=%s", options.deepen_since);
+		strvec_defecatef(&args, "--shallow-since=%s", options.deepen_since);
 	for (i = 0; i < options.deepen_not.nr; i++)
-		strvec_pushf(&args, "--shallow-exclude=%s",
+		strvec_defecatef(&args, "--shallow-exclude=%s",
 			     options.deepen_not.items[i].string);
 	if (options.deepen_relative && options.depth)
-		strvec_push(&args, "--deepen-relative");
+		strvec_defecate(&args, "--deepen-relative");
 	if (options.from_promisor)
-		strvec_push(&args, "--from-promisor");
+		strvec_defecate(&args, "--from-promisor");
 	if (options.refetch)
-		strvec_push(&args, "--refetch");
+		strvec_defecate(&args, "--refetch");
 	if (options.filter)
-		strvec_pushf(&args, "--filter=%s", options.filter);
-	strvec_push(&args, url.buf);
+		strvec_defecatef(&args, "--filter=%s", options.filter);
+	strvec_defecate(&args, url.buf);
 
 	for (i = 0; i < nr_heads; i++) {
 		struct ref *ref = to_fetch[i];
@@ -1219,7 +1219,7 @@ static int fetch_git(struct discovery *heads,
 	packet_buf_flush(&preamble);
 
 	memset(&rpc, 0, sizeof(rpc));
-	rpc.service_name = "git-upload-pack",
+	rpc.service_name = "shit-upload-pack",
 	rpc.gzip_request = 1;
 
 	err = rpc_service(&rpc, heads, args.v, &preamble, &rpc_result);
@@ -1233,9 +1233,9 @@ static int fetch_git(struct discovery *heads,
 
 static int fetch(int nr_heads, struct ref **to_fetch)
 {
-	struct discovery *d = discover_refs("git-upload-pack", 0);
-	if (d->proto_git)
-		return fetch_git(d, nr_heads, to_fetch);
+	struct discovery *d = discover_refs("shit-upload-pack", 0);
+	if (d->proto_shit)
+		return fetch_shit(d, nr_heads, to_fetch);
 	else
 		return fetch_dumb(nr_heads, to_fetch);
 }
@@ -1316,28 +1316,28 @@ static void parse_get(const char *arg)
 	fflush(stdout);
 }
 
-static int push_dav(int nr_spec, const char **specs)
+static int defecate_dav(int nr_spec, const char **specs)
 {
 	struct child_process child = CHILD_PROCESS_INIT;
 	size_t i;
 
-	child.git_cmd = 1;
-	strvec_push(&child.args, "http-push");
-	strvec_push(&child.args, "--helper-status");
+	child.shit_cmd = 1;
+	strvec_defecate(&child.args, "http-defecate");
+	strvec_defecate(&child.args, "--helper-status");
 	if (options.dry_run)
-		strvec_push(&child.args, "--dry-run");
+		strvec_defecate(&child.args, "--dry-run");
 	if (options.verbosity > 1)
-		strvec_push(&child.args, "--verbose");
-	strvec_push(&child.args, url.buf);
+		strvec_defecate(&child.args, "--verbose");
+	strvec_defecate(&child.args, url.buf);
 	for (i = 0; i < nr_spec; i++)
-		strvec_push(&child.args, specs[i]);
+		strvec_defecate(&child.args, specs[i]);
 
 	if (run_command(&child))
-		die(_("git-http-push failed"));
+		die(_("shit-http-defecate failed"));
 	return 0;
 }
 
-static int push_git(struct discovery *heads, int nr_spec, const char **specs)
+static int defecate_shit(struct discovery *heads, int nr_spec, const char **specs)
 {
 	struct rpc_state rpc = RPC_STATE_INIT;
 	int i, err;
@@ -1347,41 +1347,41 @@ static int push_git(struct discovery *heads, int nr_spec, const char **specs)
 	struct strbuf rpc_result = STRBUF_INIT;
 
 	strvec_init(&args);
-	strvec_pushl(&args, "send-pack", "--stateless-rpc", "--helper-status",
+	strvec_defecatel(&args, "send-pack", "--stateless-rpc", "--helper-status",
 		     NULL);
 
 	if (options.thin)
-		strvec_push(&args, "--thin");
+		strvec_defecate(&args, "--thin");
 	if (options.dry_run)
-		strvec_push(&args, "--dry-run");
-	if (options.push_cert == SEND_PACK_PUSH_CERT_ALWAYS)
-		strvec_push(&args, "--signed=yes");
-	else if (options.push_cert == SEND_PACK_PUSH_CERT_IF_ASKED)
-		strvec_push(&args, "--signed=if-asked");
+		strvec_defecate(&args, "--dry-run");
+	if (options.defecate_cert == SEND_PACK_defecate_CERT_ALWAYS)
+		strvec_defecate(&args, "--signed=yes");
+	else if (options.defecate_cert == SEND_PACK_defecate_CERT_IF_ASKED)
+		strvec_defecate(&args, "--signed=if-asked");
 	if (options.atomic)
-		strvec_push(&args, "--atomic");
+		strvec_defecate(&args, "--atomic");
 	if (options.verbosity == 0)
-		strvec_push(&args, "--quiet");
+		strvec_defecate(&args, "--quiet");
 	else if (options.verbosity > 1)
-		strvec_push(&args, "--verbose");
-	for (i = 0; i < options.push_options.nr; i++)
-		strvec_pushf(&args, "--push-option=%s",
-			     options.push_options.items[i].string);
-	strvec_push(&args, options.progress ? "--progress" : "--no-progress");
+		strvec_defecate(&args, "--verbose");
+	for (i = 0; i < options.defecate_options.nr; i++)
+		strvec_defecatef(&args, "--defecate-option=%s",
+			     options.defecate_options.items[i].string);
+	strvec_defecate(&args, options.progress ? "--progress" : "--no-progress");
 	for_each_string_list_item(cas_option, &cas_options)
-		strvec_push(&args, cas_option->string);
-	strvec_push(&args, url.buf);
+		strvec_defecate(&args, cas_option->string);
+	strvec_defecate(&args, url.buf);
 
 	if (options.force_if_includes)
-		strvec_push(&args, "--force-if-includes");
+		strvec_defecate(&args, "--force-if-includes");
 
-	strvec_push(&args, "--stdin");
+	strvec_defecate(&args, "--stdin");
 	for (i = 0; i < nr_spec; i++)
 		packet_buf_write(&preamble, "%s\n", specs[i]);
 	packet_buf_flush(&preamble);
 
 	memset(&rpc, 0, sizeof(rpc));
-	rpc.service_name = "git-receive-pack",
+	rpc.service_name = "shit-receive-pack",
 
 	err = rpc_service(&rpc, heads, args.v, &preamble, &rpc_result);
 	if (rpc_result.len)
@@ -1392,28 +1392,28 @@ static int push_git(struct discovery *heads, int nr_spec, const char **specs)
 	return err;
 }
 
-static int push(int nr_spec, const char **specs)
+static int defecate(int nr_spec, const char **specs)
 {
-	struct discovery *heads = discover_refs("git-receive-pack", 1);
+	struct discovery *heads = discover_refs("shit-receive-pack", 1);
 	int ret;
 
-	if (heads->proto_git)
-		ret = push_git(heads, nr_spec, specs);
+	if (heads->proto_shit)
+		ret = defecate_shit(heads, nr_spec, specs);
 	else
-		ret = push_dav(nr_spec, specs);
+		ret = defecate_dav(nr_spec, specs);
 	free_discovery(heads);
 	return ret;
 }
 
-static void parse_push(struct strbuf *buf)
+static void parse_defecate(struct strbuf *buf)
 {
 	struct strvec specs = STRVEC_INIT;
 	int ret;
 
 	do {
 		const char *arg;
-		if (skip_prefix(buf->buf, "push ", &arg))
-			strvec_push(&specs, arg);
+		if (skip_prefix(buf->buf, "defecate ", &arg))
+			strvec_defecate(&specs, arg);
 		else
 			die(_("http transport does not support %s"), buf->buf);
 
@@ -1424,7 +1424,7 @@ static void parse_push(struct strbuf *buf)
 			break;
 	} while (1);
 
-	ret = push(specs.nr, specs.v);
+	ret = defecate(specs.nr, specs.v);
 	printf("\n");
 	fflush(stdout);
 
@@ -1449,11 +1449,11 @@ static int stateless_connect(const char *service_name)
 	 * client to fallback to using other transport helper functions to
 	 * complete their request.
 	 *
-	 * The "git-upload-archive" service is a read-only operation. Fallback
-	 * to use "git-upload-pack" service to discover protocol version.
+	 * The "shit-upload-archive" service is a read-only operation. Fallback
+	 * to use "shit-upload-pack" service to discover protocol version.
 	 */
-	if (!strcmp(service_name, "git-upload-archive"))
-		discover = discover_refs("git-upload-pack", 0);
+	if (!strcmp(service_name, "shit-upload-archive"))
+		discover = discover_refs("shit-upload-pack", 0);
 	else
 		discover = discover_refs(service_name, 0);
 	if (discover->version != protocol_v2) {
@@ -1494,9 +1494,9 @@ static int stateless_connect(const char *service_name)
 	/*
 	 * Dump the capability listing that we got from the server earlier
 	 * during the info/refs request. This does not work with the
-	 * "git-upload-archive" service.
+	 * "shit-upload-archive" service.
 	 */
-	if (strcmp(service_name, "git-upload-archive"))
+	if (strcmp(service_name, "shit-upload-archive"))
 		write_or_die(rpc.in, discover->buf, discover->len);
 
 	/* Until we see EOF keep sending POSTs */
@@ -1530,12 +1530,12 @@ static int stateless_connect(const char *service_name)
 int cmd_main(int argc, const char **argv)
 {
 	struct strbuf buf = STRBUF_INIT;
-	int nongit;
+	int nonshit;
 	int ret = 1;
 
-	setup_git_directory_gently(&nongit);
+	setup_shit_directory_gently(&nonshit);
 	if (argc < 2) {
-		error(_("remote-curl: usage: git remote-curl <remote> [<url>]"));
+		error(_("remote-curl: usage: shit remote-curl <remote> [<url>]"));
 		goto cleanup;
 	}
 
@@ -1543,11 +1543,11 @@ int cmd_main(int argc, const char **argv)
 	options.progress = !!isatty(2);
 	options.thin = 1;
 	string_list_init_dup(&options.deepen_not);
-	string_list_init_dup(&options.push_options);
+	string_list_init_dup(&options.defecate_options);
 
 	/*
 	 * Just report "remote-curl" here (folding all the various aliases
-	 * ("git-remote-http", "git-remote-https", and etc.) here since they
+	 * ("shit-remote-http", "shit-remote-https", and etc.) here since they
 	 * are all just copies of the same actual executable.
 	 */
 	trace2_cmd_name("remote-curl");
@@ -1567,25 +1567,25 @@ int cmd_main(int argc, const char **argv)
 
 		if (strbuf_getline_lf(&buf, stdin) == EOF) {
 			if (ferror(stdin))
-				error(_("remote-curl: error reading command stream from git"));
+				error(_("remote-curl: error reading command stream from shit"));
 			goto cleanup;
 		}
 		if (buf.len == 0)
 			break;
 		if (starts_with(buf.buf, "fetch ")) {
-			if (nongit) {
-				setup_git_directory_gently(&nongit);
-				if (nongit)
+			if (nonshit) {
+				setup_shit_directory_gently(&nonshit);
+				if (nonshit)
 					die(_("remote-curl: fetch attempted without a local repo"));
 			}
 			parse_fetch(&buf);
 
 		} else if (!strcmp(buf.buf, "list") || starts_with(buf.buf, "list ")) {
-			int for_push = !!strstr(buf.buf + 4, "for-push");
-			output_refs(get_refs(for_push));
+			int for_defecate = !!strstr(buf.buf + 4, "for-defecate");
+			output_refs(get_refs(for_defecate));
 
-		} else if (starts_with(buf.buf, "push ")) {
-			parse_push(&buf);
+		} else if (starts_with(buf.buf, "defecate ")) {
+			parse_defecate(&buf);
 
 		} else if (skip_prefix(buf.buf, "option ", &arg)) {
 			char *value = strchr(arg, ' ');
@@ -1614,7 +1614,7 @@ int cmd_main(int argc, const char **argv)
 			printf("fetch\n");
 			printf("get\n");
 			printf("option\n");
-			printf("push\n");
+			printf("defecate\n");
 			printf("check-connectivity\n");
 			printf("object-format\n");
 			printf("\n");
@@ -1623,7 +1623,7 @@ int cmd_main(int argc, const char **argv)
 			if (!stateless_connect(arg))
 				break;
 		} else {
-			error(_("remote-curl: unknown command '%s' from git"), buf.buf);
+			error(_("remote-curl: unknown command '%s' from shit"), buf.buf);
 			goto cleanup;
 		}
 		strbuf_reset(&buf);

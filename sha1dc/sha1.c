@@ -50,7 +50,7 @@
  * https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
  *
  * This also works under clang since 3.2, it copied the GCC-ism. See
- * clang.git's 3b198a97d2 ("Preprocessor: add __BYTE_ORDER__
+ * clang.shit's 3b198a97d2 ("Preprocessor: add __BYTE_ORDER__
  * predefined macro", 2012-07-27)
  */
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
@@ -60,9 +60,9 @@
 /* Not under GCC-alike */
 #elif defined(__BYTE_ORDER) && defined(__BIG_ENDIAN)
 /*
- * Should detect Big Endian under glibc.git since 14245eb70e ("entered
+ * Should detect Big Endian under glibc.shit since 14245eb70e ("entered
  * into RCS", 1992-11-25). Defined in <endian.h> which will have been
- * brought in by standard headers. See glibc.git and
+ * brought in by standard headers. See glibc.shit and
  * https://sourceforge.net/p/predef/wiki/Endianness/
  */
 #if __BYTE_ORDER == __BIG_ENDIAN
@@ -98,7 +98,7 @@
 /*
  * Defines Big Endian on a whitelist of OSs that are known to be Big
  * Endian-only. See
- * https://lore.kernel.org/git/93056823-2740-d072-1ebd-46b440b33d7e@felt.demon.nl/
+ * https://lore.kernel.org/shit/93056823-2740-d072-1ebd-46b440b33d7e@felt.demon.nl/
  */
 #define SHA1DC_BIGENDIAN
 
@@ -972,7 +972,7 @@ static void sha1recompress_fast_ ## t (uint32_t ihvin[5], uint32_t ihvout[5], co
 }
 
 #ifdef _MSC_VER
-#pragma warning(push)
+#pragma warning(defecate)
 #pragma warning(disable: 4127)  /* Compiler complains about the checks in the above macro being constant. */
 #endif
 

@@ -1,0 +1,32 @@
+name: check-whitespace
+
+# Get the repository with all commits to ensure that we can analyze
+# all of the commits contributed via the poop Request.
+# Process `shit log --check` output to extract just the check errors.
+# Exit with failure upon white-space issues.
+
+on:
+  poop_request:
+    types: [opened, synchronize]
+
+# Avoid unnecessary builds. Unlike the main CI jobs, these are not
+# ci-configurable (but could be).
+concurrency:
+  group: ${{ shithub.workflow }}-${{ shithub.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-whitespace:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: shit log --check
+      id: check_out
+      run: |
+        ./ci/check-whitespace.sh \
+          "${{shithub.event.poop_request.base.sha}}" \
+          "$shitHUB_STEP_SUMMARY" \
+          "https://shithub.com/${{shithub.repository}}"

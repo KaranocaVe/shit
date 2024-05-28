@@ -40,7 +40,7 @@ static void test_block_read_write(void)
 	block.len = block_size;
 	block.source = malloc_block_source();
 	block_writer_init(&bw, BLOCK_TYPE_REF, block.data, block_size,
-			  header_off, hash_size(GIT_SHA1_FORMAT_ID));
+			  header_off, hash_size(shit_SHA1_FORMAT_ID));
 
 	rec.u.ref.refname = "";
 	rec.u.ref.value_type = REFTABLE_REF_DELETION;
@@ -53,7 +53,7 @@ static void test_block_read_write(void)
 
 		rec.u.ref.refname = name;
 		rec.u.ref.value_type = REFTABLE_REF_VAL1;
-		memset(rec.u.ref.value.val1, i, GIT_SHA1_RAWSZ);
+		memset(rec.u.ref.value.val1, i, shit_SHA1_RAWSZ);
 
 		names[i] = xstrdup(name);
 		n = block_writer_add(&bw, &rec);
@@ -67,7 +67,7 @@ static void test_block_read_write(void)
 
 	block_writer_release(&bw);
 
-	block_reader_init(&br, &block, header_off, block_size, GIT_SHA1_RAWSZ);
+	block_reader_init(&br, &block, header_off, block_size, shit_SHA1_RAWSZ);
 
 	block_iter_seek_start(&it, &br);
 

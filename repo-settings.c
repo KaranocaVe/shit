@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "repository.h"
 #include "midx.h"
@@ -24,7 +24,7 @@ void prepare_repo_settings(struct repository *r)
 	const char *strval;
 	int manyfiles;
 
-	if (!r->gitdir)
+	if (!r->shitdir)
 		BUG("Cannot add settings for uninitialized repository");
 
 	if (r->settings.initialized++)
@@ -70,13 +70,13 @@ void prepare_repo_settings(struct repository *r)
 	repo_cfg_bool(r, "core.usereplacerefs", &r->settings.read_replace_refs, 1);
 
 	/*
-	 * The GIT_TEST_MULTI_PACK_INDEX variable is special in that
+	 * The shit_TEST_MULTI_PACK_INDEX variable is special in that
 	 * either it *or* the config sets
 	 * r->settings.core_multi_pack_index if true. We don't take
 	 * the environment variable if it exists (even if false) over
 	 * any config, as in most other cases.
 	 */
-	if (git_env_bool(GIT_TEST_MULTI_PACK_INDEX, 0))
+	if (shit_env_bool(shit_TEST_MULTI_PACK_INDEX, 0))
 		r->settings.core_multi_pack_index = 1;
 
 	/*
@@ -86,7 +86,7 @@ void prepare_repo_settings(struct repository *r)
 		r->settings.index_version = value;
 
 	if (!repo_config_get_string_tmp(r, "core.untrackedcache", &strval)) {
-		int v = git_parse_maybe_bool(strval);
+		int v = shit_parse_maybe_bool(strval);
 
 		/*
 		 * If it's set to "keep", or some other non-boolean

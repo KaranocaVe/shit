@@ -1,9 +1,9 @@
 #!/bin/sh
 
-test_description='git rebase - test patch id computation'
+test_description='shit rebase - test patch id computation'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -22,96 +22,96 @@ scramble () {
 }
 
 test_expect_success 'setup' '
-	git commit --allow-empty -m initial &&
-	git tag root
+	shit commit --allow-empty -m initial &&
+	shit tag root
 '
 
 test_expect_success 'setup: 500 lines' '
-	rm -f .gitattributes &&
-	git checkout -q -f main &&
-	git reset --hard root &&
+	rm -f .shitattributes &&
+	shit checkout -q -f main &&
+	shit reset --hard root &&
 	test_seq 500 >file &&
-	git add file &&
-	git commit -q -m initial &&
-	git branch -f other &&
+	shit add file &&
+	shit commit -q -m initial &&
+	shit branch -f other &&
 
 	scramble file &&
-	git add file &&
-	git commit -q -m "change big file" &&
+	shit add file &&
+	shit commit -q -m "change big file" &&
 
-	git checkout -q other &&
+	shit checkout -q other &&
 	: >newfile &&
-	git add newfile &&
-	git commit -q -m "add small file" &&
+	shit add newfile &&
+	shit commit -q -m "add small file" &&
 
-	git cherry-pick main >/dev/null 2>&1 &&
+	shit cherry-pick main >/dev/null 2>&1 &&
 
-	git branch -f squashed main &&
-	git checkout -q -f squashed &&
-	git reset -q --soft HEAD~2 &&
-	git commit -q -m squashed &&
+	shit branch -f squashed main &&
+	shit checkout -q -f squashed &&
+	shit reset -q --soft HEAD~2 &&
+	shit commit -q -m squashed &&
 
-	git branch -f mode main &&
-	git checkout -q -f mode &&
+	shit branch -f mode main &&
+	shit checkout -q -f mode &&
 	test_chmod +x file &&
-	git commit -q -a --amend &&
+	shit commit -q -a --amend &&
 
-	git branch -f modeother other &&
-	git checkout -q -f modeother &&
+	shit branch -f modeother other &&
+	shit checkout -q -f modeother &&
 	test_chmod +x file &&
-	git commit -q -a --amend
+	shit commit -q -a --amend
 '
 
 test_expect_success 'detect upstream patch' '
-	git checkout -q main^{} &&
+	shit checkout -q main^{} &&
 	scramble file &&
-	git add file &&
-	git commit -q -m "change big file again" &&
-	git checkout -q other^{} &&
-	git rebase main &&
-	git rev-list main...HEAD~ >revs &&
+	shit add file &&
+	shit commit -q -m "change big file again" &&
+	shit checkout -q other^{} &&
+	shit rebase main &&
+	shit rev-list main...HEAD~ >revs &&
 	test_must_be_empty revs
 '
 
 test_expect_success 'detect upstream patch binary' '
-	echo "file binary" >.gitattributes &&
-	git checkout -q other^{} &&
-	git rebase main &&
-	git rev-list main...HEAD~ >revs &&
+	echo "file binary" >.shitattributes &&
+	shit checkout -q other^{} &&
+	shit rebase main &&
+	shit rev-list main...HEAD~ >revs &&
 	test_must_be_empty revs &&
-	test_when_finished "rm .gitattributes"
+	test_when_finished "rm .shitattributes"
 '
 
 test_expect_success 'detect upstream patch modechange' '
-	git checkout -q modeother^{} &&
-	git rebase mode &&
-	git rev-list mode...HEAD~ >revs &&
+	shit checkout -q modeother^{} &&
+	shit rebase mode &&
+	shit rev-list mode...HEAD~ >revs &&
 	test_must_be_empty revs
 '
 
 test_expect_success 'do not drop patch' '
-	git checkout -q other^{} &&
-	test_must_fail git rebase squashed &&
-	test_when_finished "git rebase --abort"
+	shit checkout -q other^{} &&
+	test_must_fail shit rebase squashed &&
+	test_when_finished "shit rebase --abort"
 '
 
 test_expect_success 'do not drop patch binary' '
-	echo "file binary" >.gitattributes &&
-	git checkout -q other^{} &&
-	test_must_fail git rebase squashed &&
-	test_when_finished "git rebase --abort" &&
-	test_when_finished "rm .gitattributes"
+	echo "file binary" >.shitattributes &&
+	shit checkout -q other^{} &&
+	test_must_fail shit rebase squashed &&
+	test_when_finished "shit rebase --abort" &&
+	test_when_finished "rm .shitattributes"
 '
 
 test_expect_success 'do not drop patch modechange' '
-	git checkout -q modeother^{} &&
-	git rebase other &&
+	shit checkout -q modeother^{} &&
+	shit rebase other &&
 	cat >expected <<-\EOF &&
-	diff --git a/file b/file
+	diff --shit a/file b/file
 	old mode 100644
 	new mode 100755
 	EOF
-	git diff HEAD~ >modediff &&
+	shit diff HEAD~ >modediff &&
 	test_cmp expected modediff
 '
 

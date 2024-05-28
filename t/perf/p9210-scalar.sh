@@ -6,8 +6,8 @@ test_description='test scalar performance'
 test_perf_large_repo "$TRASH_DIRECTORY/to-clone"
 
 test_expect_success 'enable server-side partial clone' '
-	git -C to-clone config uploadpack.allowFilter true &&
-	git -C to-clone config uploadpack.allowAnySHA1InWant true
+	shit -C to-clone config uploadpack.allowFilter true &&
+	shit -C to-clone config uploadpack.allowAnySHA1InWant true
 '
 
 test_perf 'scalar clone' '
@@ -15,9 +15,9 @@ test_perf 'scalar clone' '
 	scalar clone "file://$(pwd)/to-clone" scalar-clone
 '
 
-test_perf 'git clone' '
-	rm -rf git-clone &&
-	git clone "file://$(pwd)/to-clone" git-clone
+test_perf 'shit clone' '
+	rm -rf shit-clone &&
+	shit clone "file://$(pwd)/to-clone" shit-clone
 '
 
 test_compare_perf () {
@@ -29,11 +29,11 @@ test_compare_perf () {
 	"
 
 	test_perf "$command $args (non-scalar)" "
-		$command -C git-clone $args
+		$command -C shit-clone $args
 	"
 }
 
-test_compare_perf git status
+test_compare_perf shit status
 test_compare_perf test_commit --append --no-tag A
 
 test_done

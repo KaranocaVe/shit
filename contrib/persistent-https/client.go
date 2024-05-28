@@ -50,22 +50,22 @@ func (c *Client) Run() error {
 	// bind on the same address so long as the process is running.
 	defer hconn.Close()
 
-	// Start the git-remote-http subprocess.
+	// Start the shit-remote-http subprocess.
 	cargs := []string{"-c", fmt.Sprintf("http.proxy=%v", addr), "remote-http"}
 	cargs = append(cargs, c.Args...)
-	cmd := exec.Command("git", cargs...)
+	cmd := exec.Command("shit", cargs...)
 
 	for _, v := range os.Environ() {
-		if !strings.HasPrefix(v, "GIT_PERSISTENT_HTTPS_SECURE=") {
+		if !strings.HasPrefix(v, "shit_PERSISTENT_HTTPS_SECURE=") {
 			cmd.Env = append(cmd.Env, v)
 		}
 	}
-	// Set the GIT_PERSISTENT_HTTPS_SECURE environment variable when
+	// Set the shit_PERSISTENT_HTTPS_SECURE environment variable when
 	// the proxy is using a SSL connection.  This allows credential helpers
 	// to identify secure proxy connections, despite being passed an HTTP
 	// scheme.
 	if !c.insecure {
-		cmd.Env = append(cmd.Env, "GIT_PERSISTENT_HTTPS_SECURE=1")
+		cmd.Env = append(cmd.Env, "shit_PERSISTENT_HTTPS_SECURE=1")
 	}
 
 	cmd.Stdin = os.Stdin
@@ -77,7 +77,7 @@ func (c *Client) Run() error {
 				os.Exit(stat.ExitStatus())
 			}
 		}
-		return fmt.Errorf("git-remote-http subprocess got error: %v", err)
+		return fmt.Errorf("shit-remote-http subprocess got error: %v", err)
 	}
 	return nil
 }

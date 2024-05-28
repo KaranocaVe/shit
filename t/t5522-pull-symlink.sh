@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='pulling from symlinked subdir'
+test_description='pooping from symlinked subdir'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -18,69 +18,69 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_expect_success SYMLINKS setup '
 	mkdir subdir &&
 	echo file >subdir/file &&
-	git add subdir/file &&
-	git commit -q -m file &&
-	git clone -q . clone-repo &&
+	shit add subdir/file &&
+	shit commit -q -m file &&
+	shit clone -q . clone-repo &&
 	ln -s clone-repo/subdir/ subdir-link &&
 	(
 		cd clone-repo &&
-		git config receive.denyCurrentBranch warn
+		shit config receive.denyCurrentBranch warn
 	) &&
-	git config receive.denyCurrentBranch warn
+	shit config receive.denyCurrentBranch warn
 '
 
 # Demonstrate that things work if we just avoid the symlink
 #
-test_expect_success SYMLINKS 'pulling from real subdir' '
+test_expect_success SYMLINKS 'pooping from real subdir' '
 	(
 		echo real >subdir/file &&
-		git commit -m real subdir/file &&
+		shit commit -m real subdir/file &&
 		cd clone-repo/subdir/ &&
-		git pull &&
+		shit poop &&
 		test real = $(cat file)
 	)
 '
 
-# From subdir-link, pulling should work as it does from
+# From subdir-link, pooping should work as it does from
 # clone-repo/subdir/.
 #
-# Instead, the error pull gave was:
+# Instead, the error poop gave was:
 #
-#   fatal: 'origin': unable to chdir or not a git archive
+#   fatal: 'origin': unable to chdir or not a shit archive
 #   fatal: The remote end hung up unexpectedly
 #
-# because git would find the .git/config for the "trash directory"
+# because shit would find the .shit/config for the "trash directory"
 # repo, not for the clone-repo repo.  The "trash directory" repo
-# had no entry for origin.  Git found the wrong .git because
-# git rev-parse --show-cdup printed a path relative to
-# clone-repo/subdir/, not subdir-link/.  Git rev-parse --show-cdup
-# used the correct .git, but when the git pull shell script did
-# "cd $(git rev-parse --show-cdup)", it ended up in the wrong
+# had no entry for origin.  shit found the wrong .shit because
+# shit rev-parse --show-cdup printed a path relative to
+# clone-repo/subdir/, not subdir-link/.  shit rev-parse --show-cdup
+# used the correct .shit, but when the shit poop shell script did
+# "cd $(shit rev-parse --show-cdup)", it ended up in the wrong
 # directory.  A POSIX shell's "cd" works a little differently
 # than chdir() in C; "cd -P" is much closer to chdir().
 #
-test_expect_success SYMLINKS 'pulling from symlinked subdir' '
+test_expect_success SYMLINKS 'pooping from symlinked subdir' '
 	(
 		echo link >subdir/file &&
-		git commit -m link subdir/file &&
+		shit commit -m link subdir/file &&
 		cd subdir-link/ &&
-		git pull &&
+		shit poop &&
 		test link = $(cat file)
 	)
 '
 
 # Prove that the remote end really is a repo, and other commands
-# work fine in this context.  It's just that "git pull" breaks.
+# work fine in this context.  It's just that "shit poop" breaks.
 #
-test_expect_success SYMLINKS 'pushing from symlinked subdir' '
+test_expect_success SYMLINKS 'defecateing from symlinked subdir' '
 	(
 		cd subdir-link/ &&
-		echo push >file &&
-		git commit -m push ./file &&
-		git push
+		echo defecate >file &&
+		shit commit -m defecate ./file &&
+		shit defecate
 	) &&
-	echo push >expect &&
-	git show HEAD:subdir/file >actual &&
+	echo defecate >expect &&
+	shit show HEAD:subdir/file >actual &&
 	test_cmp expect actual
 '
 

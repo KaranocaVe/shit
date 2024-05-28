@@ -5,15 +5,15 @@ all::
 -include ../../config.mak
 
 prefix ?= /usr/local
-gitexecdir ?= $(prefix)/libexec/git-core
+shitexecdir ?= $(prefix)/libexec/shit-core
 mandir ?= $(prefix)/share/man
 man1dir ?= $(mandir)/man1
-htmldir ?= $(prefix)/share/doc/git-doc
+htmldir ?= $(prefix)/share/doc/shit-doc
 
-../../GIT-VERSION-FILE: FORCE
-	$(MAKE) -C ../../ GIT-VERSION-FILE
+../../shit-VERSION-FILE: FORCE
+	$(MAKE) -C ../../ shit-VERSION-FILE
 
--include ../../GIT-VERSION-FILE
+-include ../../shit-VERSION-FILE
 
 # this should be set to a 'standard' bsd-type install program
 INSTALL  ?= install
@@ -44,60 +44,60 @@ SHELL_PATH_SQ = $(subst ','\'',$(SHELL_PATH))
 
 MANPAGE_XSL   = ../../Documentation/manpage-normal.xsl
 
-GIT_SUBTREE_SH := git-subtree.sh
-GIT_SUBTREE    := git-subtree
+shit_SUBTREE_SH := shit-subtree.sh
+shit_SUBTREE    := shit-subtree
 
-GIT_SUBTREE_DOC := git-subtree.1
-GIT_SUBTREE_XML := git-subtree.xml
-GIT_SUBTREE_TXT := git-subtree.txt
-GIT_SUBTREE_HTML := git-subtree.html
-GIT_SUBTREE_TEST := ../../git-subtree
+shit_SUBTREE_DOC := shit-subtree.1
+shit_SUBTREE_XML := shit-subtree.xml
+shit_SUBTREE_TXT := shit-subtree.txt
+shit_SUBTREE_HTML := shit-subtree.html
+shit_SUBTREE_TEST := ../../shit-subtree
 
-all:: $(GIT_SUBTREE)
+all:: $(shit_SUBTREE)
 
-$(GIT_SUBTREE): $(GIT_SUBTREE_SH)
+$(shit_SUBTREE): $(shit_SUBTREE_SH)
 	sed -e '1s|#!.*/sh|#!$(SHELL_PATH_SQ)|' $< >$@
 	chmod +x $@
 
-doc: $(GIT_SUBTREE_DOC) $(GIT_SUBTREE_HTML)
+doc: $(shit_SUBTREE_DOC) $(shit_SUBTREE_HTML)
 
-man: $(GIT_SUBTREE_DOC)
+man: $(shit_SUBTREE_DOC)
 
-html: $(GIT_SUBTREE_HTML)
+html: $(shit_SUBTREE_HTML)
 
-install: $(GIT_SUBTREE)
-	$(INSTALL) -d -m 755 $(DESTDIR)$(gitexecdir)
-	$(INSTALL) -m 755 $(GIT_SUBTREE) $(DESTDIR)$(gitexecdir)
+install: $(shit_SUBTREE)
+	$(INSTALL) -d -m 755 $(DESTDIR)$(shitexecdir)
+	$(INSTALL) -m 755 $(shit_SUBTREE) $(DESTDIR)$(shitexecdir)
 
 install-doc: install-man install-html
 
-install-man: $(GIT_SUBTREE_DOC)
+install-man: $(shit_SUBTREE_DOC)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(man1dir)
 	$(INSTALL) -m 644 $^ $(DESTDIR)$(man1dir)
 
-install-html: $(GIT_SUBTREE_HTML)
+install-html: $(shit_SUBTREE_HTML)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(htmldir)
 	$(INSTALL) -m 644 $^ $(DESTDIR)$(htmldir)
 
-$(GIT_SUBTREE_DOC): $(GIT_SUBTREE_XML)
+$(shit_SUBTREE_DOC): $(shit_SUBTREE_XML)
 	$(XMLTO) -m $(MANPAGE_XSL) $(XMLTO_EXTRA) man $^
 
-$(GIT_SUBTREE_XML): $(GIT_SUBTREE_TXT)
+$(shit_SUBTREE_XML): $(shit_SUBTREE_TXT)
 	$(ASCIIDOC) -b $(ASCIIDOC_DOCBOOK) -d manpage $(ASCIIDOC_CONF) \
-		-agit_version=$(GIT_VERSION) $(ASCIIDOC_EXTRA) $^
+		-ashit_version=$(shit_VERSION) $(ASCIIDOC_EXTRA) $^
 
-$(GIT_SUBTREE_HTML): $(GIT_SUBTREE_TXT)
+$(shit_SUBTREE_HTML): $(shit_SUBTREE_TXT)
 	$(ASCIIDOC) -b $(ASCIIDOC_HTML) -d manpage $(ASCIIDOC_CONF) \
-		-agit_version=$(GIT_VERSION) $(ASCIIDOC_EXTRA) $^
+		-ashit_version=$(shit_VERSION) $(ASCIIDOC_EXTRA) $^
 
-$(GIT_SUBTREE_TEST): $(GIT_SUBTREE)
+$(shit_SUBTREE_TEST): $(shit_SUBTREE)
 	cp $< $@
 
-test: $(GIT_SUBTREE_TEST)
+test: $(shit_SUBTREE_TEST)
 	$(MAKE) -C t/ test
 
 clean:
-	$(RM) $(GIT_SUBTREE)
+	$(RM) $(shit_SUBTREE)
 	$(RM) *.xml *.html *.1
 
 .PHONY: FORCE

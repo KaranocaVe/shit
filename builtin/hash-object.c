@@ -1,5 +1,5 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  * Copyright (C) Junio C Hamano, 2005
@@ -87,9 +87,9 @@ static void hash_stdin_paths(const char *type, int no_filters, unsigned flags,
 int cmd_hash_object(int argc, const char **argv, const char *prefix)
 {
 	static const char * const hash_object_usage[] = {
-		N_("git hash-object [-t <type>] [-w] [--path=<file> | --no-filters]\n"
+		N_("shit hash-object [-t <type>] [-w] [--path=<file> | --no-filters]\n"
 		   "                [--stdin [--literally]] [--] <file>..."),
-		N_("git hash-object [-t <type>] [-w] --stdin-paths [--no-filters]"),
+		N_("shit hash-object [-t <type>] [-w] --stdin-paths [--no-filters]"),
 		NULL
 	};
 	const char *type = blob_type;
@@ -97,7 +97,7 @@ int cmd_hash_object(int argc, const char **argv, const char *prefix)
 	int stdin_paths = 0;
 	int no_filters = 0;
 	int literally = 0;
-	int nongit = 0;
+	int nonshit = 0;
 	unsigned flags = HASH_FORMAT_CHECK;
 	const char *vpath = NULL;
 	char *vpath_free = NULL;
@@ -108,7 +108,7 @@ int cmd_hash_object(int argc, const char **argv, const char *prefix)
 		OPT_COUNTUP( 0 , "stdin", &hashstdin, N_("read the object from stdin")),
 		OPT_BOOL( 0 , "stdin-paths", &stdin_paths, N_("read file names from stdin")),
 		OPT_BOOL( 0 , "no-filters", &no_filters, N_("store file as is without filters")),
-		OPT_BOOL( 0, "literally", &literally, N_("just hash any random garbage to create corrupt objects for debugging Git")),
+		OPT_BOOL( 0, "literally", &literally, N_("just hash any random garbage to create corrupt objects for debugging shit")),
 		OPT_STRING( 0 , "path", &vpath, N_("file"), N_("process file as it were from this path")),
 		OPT_END()
 	};
@@ -119,16 +119,16 @@ int cmd_hash_object(int argc, const char **argv, const char *prefix)
 			     hash_object_usage, 0);
 
 	if (flags & HASH_WRITE_OBJECT)
-		prefix = setup_git_directory();
+		prefix = setup_shit_directory();
 	else
-		prefix = setup_git_directory_gently(&nongit);
+		prefix = setup_shit_directory_gently(&nonshit);
 
 	if (vpath && prefix) {
 		vpath_free = prefix_filename(prefix, vpath);
 		vpath = vpath_free;
 	}
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 
 	if (stdin_paths) {
 		if (hashstdin)

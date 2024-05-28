@@ -1,10 +1,10 @@
-From:	Junio C Hamano <gitster@pobox.com>
-To:	git@vger.kernel.org
+From:	Junio C Hamano <shitster@pobox.com>
+To:	shit@vger.kernel.org
 Cc:	Petr Baudis <pasky@suse.cz>, Linus Torvalds <torvalds@osdl.org>
-Subject: Re: sending changesets from the middle of a git tree
+Subject: Re: sending changesets from the middle of a shit tree
 Date:	Sun, 14 Aug 2005 18:37:39 -0700
 Abstract: In this article, JC talks about how he rebases the
- public "seen" branch using the core Git tools when he updates
+ public "seen" branch using the core shit tools when he updates
  the "master" branch, and how "rebase" works.  Also discussed
  is how this applies to individual developers who sends patches
  upstream.
@@ -23,15 +23,15 @@ Petr Baudis <pasky@suse.cz> writes:
 >> > Junio, maybe you want to talk about how you move patches from your
 >> > "seen" branch to the real branches.
 >>
-> Actually, wouldn't this be also precisely for what StGIT is intended to?
+> Actually, wouldn't this be also precisely for what Stshit is intended to?
 --------------------------------------
 
 Exactly my feeling.  I was sort of waiting for Catalin to speak
 up.  With its basing philosophical ancestry on quilt, this is
-the kind of task StGIT is designed to do.
+the kind of task Stshit is designed to do.
 
 I just have done a simpler one, this time using only the core
-Git tools.
+shit tools.
 
 I had a handful of commits that were ahead of master in 'seen', and I
 wanted to add some documentation bypassing my usual habit of
@@ -43,10 +43,10 @@ ancestry graph looked like this:
 
 So I started from master, made a bunch of edits, and committed:
 
-    $ git checkout master
-    $ cd Documentation; ed git.txt ...
-    $ cd ..; git add Documentation/*.txt
-    $ git commit -s
+    $ shit checkout master
+    $ cd Documentation; ed shit.txt ...
+    $ cd ..; shit add Documentation/*.txt
+    $ shit commit -s
 
 After the commit, the ancestry graph would look like this:
 
@@ -66,16 +66,16 @@ at "master" branch being the "maintainer" branch, and "seen"
 branch being the "contributor" branch.  Your work started at the
 tip of the "maintainer" branch some time ago, you made a lot of
 progress in the meantime, and now the maintainer branch has some
-other commits you do not have yet.  And "git rebase" was written
+other commits you do not have yet.  And "shit rebase" was written
 with the explicit purpose of helping to maintain branches like
 "seen".  You _could_ merge master to 'seen' and keep going, but if you
 eventually want to cherrypick and merge some but not necessarily
 all changes back to the master branch, it often makes later
 operations for _you_ easier if you rebase (i.e. carry forward
-your changes) "seen" rather than merge.  So I ran "git rebase":
+your changes) "seen" rather than merge.  So I ran "shit rebase":
 
-    $ git checkout seen
-    $ git rebase master seen
+    $ shit checkout seen
+    $ shit rebase master seen
 
 What this does is to pick all the commits since the current
 branch (note that I now am on "seen" branch) forked from the
@@ -90,13 +90,13 @@ committed to create #1' commit with the commit information (log,
 author and date) taken from commit #1.  On top of that #2' and #3'
 commits are made similarly out of #2 and #3 commits.
 
-Old #3 is not recorded in any of the .git/refs/heads/ file
+Old #3 is not recorded in any of the .shit/refs/heads/ file
 anymore, so after doing this you will have dangling commit if
 you ran fsck-cache, which is normal.  After testing "seen", you
-can run "git prune" to get rid of those original three commits.
+can run "shit prune" to get rid of those original three commits.
 
-While I am talking about "git rebase", I should talk about how
-to do cherrypicking using only the core Git tools.
+While I am talking about "shit rebase", I should talk about how
+to do cherrypicking using only the core shit tools.
 
 Let's go back to the earlier picture, with different labels.
 
@@ -110,11 +110,11 @@ You would want changes #2 and #3 incorporated in the upstream,
 while you feel that #1 may need further improvements.  So you
 prepare #2 and #3 for e-mail submission.
 
-    $ git format-patch master^^ master
+    $ shit format-patch master^^ master
 
 This creates two files, 0001-XXXX.patch and 0002-XXXX.patch.  Send
 them out "To: " your project maintainer and "Cc: " your mailing
-list.  You could use contributed script git-send-email if
+list.  You could use contributed script shit-send-email if
 your host has necessary perl modules for this, but your usual
 MUA would do as long as it does not corrupt whitespaces in the
 patch.
@@ -136,16 +136,16 @@ information, they are different objects from #2 and #3 commits.
 
 You fetch from upstream, but not merge.
 
-    $ git fetch upstream
+    $ shit fetch upstream
 
-This leaves the updated upstream head in .git/FETCH_HEAD but
-does not touch your .git/HEAD or .git/refs/heads/master.
-You run "git rebase" now.
+This leaves the updated upstream head in .shit/FETCH_HEAD but
+does not touch your .shit/HEAD or .shit/refs/heads/master.
+You run "shit rebase" now.
 
-    $ git rebase FETCH_HEAD master
+    $ shit rebase FETCH_HEAD master
 
 Earlier, I said that rebase applies all the commits from your
-branch on top of the upstream head.  Well, I lied.  "git rebase"
+branch on top of the upstream head.  Well, I lied.  "shit rebase"
 is a bit smarter than that and notices that #2 and #3 need not
 be applied, so it only applies #1.  The commit ancestry graph
 becomes something like this:
@@ -157,7 +157,7 @@ becomes something like this:
                                                 *upstream
                                                 head
 
-Again, "git prune" would discard the disused commits #1-#3 and
+Again, "shit prune" would discard the disused commits #1-#3 and
 you continue on starting from the new "master" head, which is
 the #1' commit.
 

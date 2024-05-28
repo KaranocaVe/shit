@@ -6,7 +6,7 @@ test_description='Tests listing object info performance'
 test_perf_large_repo
 
 test_perf 'cat-file --batch-check' '
-	git cat-file --batch-all-objects --batch-check
+	shit cat-file --batch-all-objects --batch-check
 '
 
 test_done

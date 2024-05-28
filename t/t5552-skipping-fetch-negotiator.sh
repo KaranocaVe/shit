@@ -5,16 +5,16 @@ test_description='test skipping fetch negotiator'
 
 test_expect_success 'fetch.negotiationalgorithm config' '
 	test_when_finished "rm -rf repo" &&
-	git init repo &&
-	cat >repo/.git/config <<-\EOF &&
+	shit init repo &&
+	cat >repo/.shit/config <<-\EOF &&
 	[fetch]
 	negotiationAlgorithm
 	EOF
 	cat >expect <<-\EOF &&
 	error: missing value for '\''fetch.negotiationalgorithm'\''
-	fatal: bad config variable '\''fetch.negotiationalgorithm'\'' in file '\''.git/config'\'' at line 2
+	fatal: bad config variable '\''fetch.negotiationalgorithm'\'' in file '\''.shit/config'\'' at line 2
 	EOF
-	test_expect_code 128 git -C repo fetch >out 2>actual &&
+	test_expect_code 128 shit -C repo fetch >out 2>actual &&
 	test_must_be_empty out &&
 	test_cmp expect actual
 '
@@ -22,10 +22,10 @@ test_expect_success 'fetch.negotiationalgorithm config' '
 have_sent () {
 	while test "$#" -ne 0
 	do
-		grep "fetch> have $(git -C client rev-parse $1)" trace
+		grep "fetch> have $(shit -C client rev-parse $1)" trace
 		if test $? -ne 0
 		then
-			echo "No have $(git -C client rev-parse $1) ($1)"
+			echo "No have $(shit -C client rev-parse $1) ($1)"
 			return 1
 		fi
 		shift
@@ -35,7 +35,7 @@ have_sent () {
 have_not_sent () {
 	while test "$#" -ne 0
 	do
-		grep "fetch> have $(git -C client rev-parse $1)" trace
+		grep "fetch> have $(shit -C client rev-parse $1)" trace
 		if test $? -eq 0
 		then
 			return 1
@@ -51,17 +51,17 @@ have_not_sent () {
 trace_fetch () {
 	client=$1; shift
 	server=$1; shift
-	GIT_TRACE_PACKET="$(pwd)/trace" \
-	git -C "$client" fetch \
-	  --upload-pack 'unset GIT_TRACE_PACKET; git-upload-pack' \
+	shit_TRACE_PACKET="$(pwd)/trace" \
+	shit -C "$client" fetch \
+	  --upload-pack 'unset shit_TRACE_PACKET; shit-upload-pack' \
 	  "$server" "$@"
 }
 
 test_expect_success 'commits with no parents are sent regardless of skip distance' '
-	git init server &&
+	shit init server &&
 	test_commit -C server to_fetch &&
 
-	git init client &&
+	shit init client &&
 	for i in $(test_seq 7)
 	do
 		test_commit -C client c$i || return 1
@@ -78,15 +78,15 @@ test_expect_success 'commits with no parents are sent regardless of skip distanc
 
 test_expect_success 'when two skips collide, favor the larger one' '
 	rm -rf server client trace &&
-	git init server &&
+	shit init server &&
 	test_commit -C server to_fetch &&
 
-	git init client &&
+	shit init client &&
 	for i in $(test_seq 11)
 	do
 		test_commit -C client c$i || return 1
 	done &&
-	git -C client checkout c5 &&
+	shit -C client checkout c5 &&
 	test_commit -C client c5side &&
 
 	# Before reaching c5, we send "c5side" (skip 1) and "c11" (skip 1) "c9"
@@ -101,19 +101,19 @@ test_expect_success 'when two skips collide, favor the larger one' '
 
 test_expect_success 'use ref advertisement to filter out commits' '
 	rm -rf server client trace &&
-	git init server &&
+	shit init server &&
 	test_commit -C server c1 &&
 	test_commit -C server c2 &&
 	test_commit -C server c3 &&
-	git -C server tag -d c1 c2 c3 &&
+	shit -C server tag -d c1 c2 c3 &&
 
-	git clone server client &&
+	shit clone server client &&
 	test_commit -C client c4 &&
 	test_commit -C client c5 &&
-	git -C client checkout c4^^ &&
+	shit -C client checkout c4^^ &&
 	test_commit -C client c2side &&
 
-	git -C server checkout --orphan anotherbranch &&
+	shit -C server checkout --orphan anotherbranch &&
 	test_commit -C server to_fetch &&
 
 	# The server advertising "c3" (as "refs/heads/main") means that we do
@@ -124,8 +124,8 @@ test_expect_success 'use ref advertisement to filter out commits' '
 	# The ref advertisement itself is filtered when protocol v2 is used, so
 	# use v0.
 	(
-		GIT_TEST_PROTOCOL_VERSION=0 &&
-		export GIT_TEST_PROTOCOL_VERSION &&
+		shit_TEST_PROTOCOL_VERSION=0 &&
+		export shit_TEST_PROTOCOL_VERSION &&
 		trace_fetch client origin to_fetch
 	) &&
 	have_sent c5 c4^ c2side &&
@@ -134,10 +134,10 @@ test_expect_success 'use ref advertisement to filter out commits' '
 
 test_expect_success 'handle clock skew' '
 	rm -rf server client trace &&
-	git init server &&
+	shit init server &&
 	test_commit -C server to_fetch &&
 
-	git init client &&
+	shit init client &&
 
 	# 2 regular commits
 	test_tick=2000000000 &&
@@ -146,7 +146,7 @@ test_expect_success 'handle clock skew' '
 
 	# 4 old commits
 	test_tick=1000000000 &&
-	git -C client checkout c1 &&
+	shit -C client checkout c1 &&
 	test_commit -C client old1 &&
 	test_commit -C client old2 &&
 	test_commit -C client old3 &&
@@ -164,28 +164,28 @@ test_expect_success 'handle clock skew' '
 
 test_expect_success 'do not send "have" with ancestors of commits that server ACKed' '
 	rm -rf server client trace &&
-	git init server &&
+	shit init server &&
 	test_commit -C server to_fetch &&
 
-	git init client &&
+	shit init client &&
 	for i in $(test_seq 8)
 	do
-		git -C client checkout --orphan b$i &&
+		shit -C client checkout --orphan b$i &&
 		test_commit -C client b$i.c0 || return 1
 	done &&
 	for j in $(test_seq 19)
 	do
 		for i in $(test_seq 8)
 		do
-			git -C client checkout b$i &&
+			shit -C client checkout b$i &&
 			test_commit -C client b$i.c$j || return 1
 		done
 	done &&
 
 	# Copy this branch over to the server and add a commit on it so that it
 	# is reachable but not advertised.
-	git -C server fetch --no-tags "$(pwd)/client" b1:refs/heads/b1 &&
-	git -C server checkout b1 &&
+	shit -C server fetch --no-tags "$(pwd)/client" b1:refs/heads/b1 &&
+	shit -C server checkout b1 &&
 	test_commit -C server commit-on-b1 &&
 
 	test_config -C client fetch.negotiationalgorithm skipping &&
@@ -196,8 +196,8 @@ test_expect_success 'do not send "have" with ancestors of commits that server AC
 	(
 		# Force protocol v0, in which local transport is stateful (in
 		# protocol v2 it is stateless).
-		GIT_TEST_PROTOCOL_VERSION=0 &&
-		export GIT_TEST_PROTOCOL_VERSION &&
+		shit_TEST_PROTOCOL_VERSION=0 &&
+		export shit_TEST_PROTOCOL_VERSION &&
 		trace_fetch client "$(pwd)/server" to_fetch
 	) &&
 	grep "  fetch" trace &&
@@ -210,8 +210,8 @@ test_expect_success 'do not send "have" with ancestors of commits that server AC
 
 	# While fetch-pack is processing the first response, it should read that
 	# the server ACKs b1.c19 and b1.c17.
-	grep "fetch< ACK $(git -C client rev-parse b1.c19) common" trace &&
-	grep "fetch< ACK $(git -C client rev-parse b1.c17) common" trace &&
+	grep "fetch< ACK $(shit -C client rev-parse b1.c19) common" trace &&
+	grep "fetch< ACK $(shit -C client rev-parse b1.c17) common" trace &&
 
 	# fetch-pack should thus not send any more commits in the b1 branch, but
 	# should still send the others (in this test, just check b2).

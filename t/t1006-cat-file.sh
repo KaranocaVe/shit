@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git cat-file'
+test_description='shit cat-file'
 
 . ./test-lib.sh
 
@@ -18,7 +18,7 @@ for switches in \
 	'--batch-all-objects -e'
 do
 	test_expect_success "usage: cmdmode $switches" '
-		test_cmdmode_usage git cat-file $switches
+		test_cmdmode_usage shit cat-file $switches
 	'
 done
 
@@ -30,7 +30,7 @@ test_incompatible_usage () {
 for opt in --batch --batch-check
 do
 	test_expect_success "usage: incompatible options: --path with $opt" '
-		test_incompatible_usage git cat-file --path=foo $opt
+		test_incompatible_usage shit cat-file --path=foo $opt
 	'
 done
 
@@ -45,14 +45,14 @@ cw_modes="--textconv --filters"
 for opt in $cw_modes
 do
 	test_expect_success "usage: $opt requires another option" '
-		test_missing_usage git cat-file $opt
+		test_missing_usage shit cat-file $opt
 	'
 done
 
 for opt in $short_modes
 do
 	test_expect_success "usage: $opt requires another option" '
-		test_missing_usage git cat-file $opt
+		test_missing_usage shit cat-file $opt
 	'
 
 	for opt2 in --batch \
@@ -61,7 +61,7 @@ do
 		"--path=foo HEAD:some-path.txt"
 	do
 		test_expect_success "usage: incompatible options: $opt and $opt2" '
-			test_incompatible_usage git cat-file $opt $opt2
+			test_incompatible_usage shit cat-file $opt $opt2
 		'
 	done
 done
@@ -75,13 +75,13 @@ for opt in $short_modes $cw_modes
 do
 	args="one two three"
 	test_expect_success "usage: too many arguments: $opt $args" '
-		test_too_many_arguments git cat-file $opt $args
+		test_too_many_arguments shit cat-file $opt $args
 	'
 
 	for opt2 in --buffer --follow-symlinks
 	do
 		test_expect_success "usage: incompatible arguments: $opt with batch option $opt2" '
-			test_incompatible_usage git cat-file $opt $opt2
+			test_incompatible_usage shit cat-file $opt $opt2
 		'
 	done
 done
@@ -93,8 +93,8 @@ for opt in --buffer \
 	-Z
 do
 	test_expect_success "usage: bad option combination: $opt without batch mode" '
-		test_incompatible_usage git cat-file $opt &&
-		test_incompatible_usage git cat-file $opt commit HEAD
+		test_incompatible_usage shit cat-file $opt &&
+		test_incompatible_usage shit cat-file $opt commit HEAD
 	'
 done
 
@@ -121,56 +121,56 @@ run_tests () {
 $content"
 
     test_expect_success "$type exists" '
-	git cat-file -e $oid
+	shit cat-file -e $oid
     '
 
     test_expect_success "Type of $type is correct" '
 	echo $type >expect &&
-	git cat-file -t $oid >actual &&
+	shit cat-file -t $oid >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "Size of $type is correct" '
 	echo $size >expect &&
-	git cat-file -s $oid >actual &&
+	shit cat-file -s $oid >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "Type of $type is correct using --allow-unknown-type" '
 	echo $type >expect &&
-	git cat-file -t --allow-unknown-type $oid >actual &&
+	shit cat-file -t --allow-unknown-type $oid >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "Size of $type is correct using --allow-unknown-type" '
 	echo $size >expect &&
-	git cat-file -s --allow-unknown-type $oid >actual &&
+	shit cat-file -s --allow-unknown-type $oid >actual &&
 	test_cmp expect actual
     '
 
     test -z "$content" ||
     test_expect_success "Content of $type is correct" '
 	echo_without_newline "$content" >expect &&
-	git cat-file $type $oid >actual &&
+	shit cat-file $type $oid >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "Pretty content of $type is correct" '
 	echo_without_newline "$pretty_content" >expect &&
-	git cat-file -p $oid >actual &&
+	shit cat-file -p $oid >actual &&
 	test_cmp expect actual
     '
 
     test -z "$content" ||
     test_expect_success "--batch output of $type is correct" '
 	echo "$batch_output" >expect &&
-	echo $oid | git cat-file --batch >actual &&
+	echo $oid | shit cat-file --batch >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "--batch-check output of $type is correct" '
 	echo "$oid $type $size" >expect &&
-	echo_without_newline $oid | git cat-file --batch-check >actual &&
+	echo_without_newline $oid | shit cat-file --batch-check >actual &&
 	test_cmp expect actual
     '
 
@@ -179,34 +179,34 @@ $content"
 	test -z "$content" ||
 		test_expect_success "--batch-command $opt output of $type content is correct" '
 		echo "$batch_output" >expect &&
-		test_write_lines "contents $oid" | git cat-file --batch-command $opt >actual &&
+		test_write_lines "contents $oid" | shit cat-file --batch-command $opt >actual &&
 		test_cmp expect actual
 	'
 
 	test_expect_success "--batch-command $opt output of $type info is correct" '
 		echo "$oid $type $size" >expect &&
 		test_write_lines "info $oid" |
-		git cat-file --batch-command $opt >actual &&
+		shit cat-file --batch-command $opt >actual &&
 		test_cmp expect actual
 	'
     done
 
     test_expect_success "custom --batch-check format" '
 	echo "$type $oid" >expect &&
-	echo $oid | git cat-file --batch-check="%(objecttype) %(objectname)" >actual &&
+	echo $oid | shit cat-file --batch-check="%(objecttype) %(objectname)" >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "custom --batch-command format" '
 	echo "$type $oid" >expect &&
-	echo "info $oid" | git cat-file --batch-command="%(objecttype) %(objectname)" >actual &&
+	echo "info $oid" | shit cat-file --batch-command="%(objecttype) %(objectname)" >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success '--batch-check with %(rest)' '
 	echo "$type this is some extra content" >expect &&
 	echo "$oid    this is some extra content" |
-		git cat-file --batch-check="%(objecttype) %(rest)" >actual &&
+		shit cat-file --batch-check="%(objecttype) %(rest)" >actual &&
 	test_cmp expect actual
     '
 
@@ -216,7 +216,7 @@ $content"
 		echo "$size" &&
 		echo "$content"
 	} >expect &&
-	echo $oid | git cat-file --batch="%(objectsize)" >actual &&
+	echo $oid | shit cat-file --batch="%(objectsize)" >actual &&
 	test_cmp expect actual
     '
 
@@ -226,21 +226,21 @@ $content"
 		echo "$type" &&
 		echo "$content"
 	} >expect &&
-	echo $oid | git cat-file --batch="%(objecttype)" >actual &&
+	echo $oid | shit cat-file --batch="%(objecttype)" >actual &&
 	test_cmp expect actual
     '
 }
 
 hello_content="Hello World"
 hello_size=$(strlen "$hello_content")
-hello_oid=$(echo_without_newline "$hello_content" | git hash-object --stdin)
+hello_oid=$(echo_without_newline "$hello_content" | shit hash-object --stdin)
 
 test_expect_success "setup" '
-	git config core.repositoryformatversion 1 &&
-	git config extensions.objectformat $test_hash_algo &&
-	git config extensions.compatobjectformat $test_compat_hash_algo &&
+	shit config core.repositoryformatversion 1 &&
+	shit config extensions.objectformat $test_hash_algo &&
+	shit config extensions.compatobjectformat $test_compat_hash_algo &&
 	echo_without_newline "$hello_content" > hello &&
-	git update-index --add hello
+	shit update-index --add hello
 '
 
 run_blob_tests () {
@@ -251,34 +251,34 @@ run_blob_tests () {
     test_expect_success '--batch-command --buffer with flush for blob info' '
 	echo "$oid blob $hello_size" >expect &&
 	test_write_lines "info $oid" "flush" |
-	GIT_TEST_CAT_FILE_NO_FLUSH_ON_EXIT=1 \
-	git cat-file --batch-command --buffer >actual &&
+	shit_TEST_CAT_FILE_NO_FLUSH_ON_EXIT=1 \
+	shit cat-file --batch-command --buffer >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success '--batch-command --buffer without flush for blob info' '
 	touch output &&
 	test_write_lines "info $oid" |
-	GIT_TEST_CAT_FILE_NO_FLUSH_ON_EXIT=1 \
-	git cat-file --batch-command --buffer >>output &&
+	shit_TEST_CAT_FILE_NO_FLUSH_ON_EXIT=1 \
+	shit cat-file --batch-command --buffer >>output &&
 	test_must_be_empty output
     '
 }
 
-hello_compat_oid=$(git rev-parse --output-object-format=$test_compat_hash_algo $hello_oid)
+hello_compat_oid=$(shit rev-parse --output-object-format=$test_compat_hash_algo $hello_oid)
 run_blob_tests $hello_oid
 run_blob_tests $hello_compat_oid
 
 test_expect_success '--batch-check without %(rest) considers whole line' '
 	echo "$hello_oid blob $hello_size" >expect &&
-	git update-index --add --cacheinfo 100644 $hello_oid "white space" &&
-	test_when_finished "git update-index --remove \"white space\"" &&
-	echo ":white space" | git cat-file --batch-check >actual &&
+	shit update-index --add --cacheinfo 100644 $hello_oid "white space" &&
+	test_when_finished "shit update-index --remove \"white space\"" &&
+	echo ":white space" | shit cat-file --batch-check >actual &&
 	test_cmp expect actual
 '
 
-tree_oid=$(git write-tree)
-tree_compat_oid=$(git rev-parse --output-object-format=$test_compat_hash_algo $tree_oid)
+tree_oid=$(shit write-tree)
+tree_compat_oid=$(shit rev-parse --output-object-format=$test_compat_hash_algo $tree_oid)
 tree_size=$(($(test_oid rawsz) + 13))
 tree_compat_size=$(($(test_oid --hash=compat rawsz) + 13))
 tree_pretty_content="100644 blob $hello_oid	hello${LF}"
@@ -288,19 +288,19 @@ run_tests 'tree' $tree_oid $tree_size "" "$tree_pretty_content"
 run_tests 'tree' $tree_compat_oid $tree_compat_size "" "$tree_compat_pretty_content"
 
 commit_message="Initial commit"
-commit_oid=$(echo_without_newline "$commit_message" | git commit-tree $tree_oid)
-commit_compat_oid=$(git rev-parse --output-object-format=$test_compat_hash_algo $commit_oid)
+commit_oid=$(echo_without_newline "$commit_message" | shit commit-tree $tree_oid)
+commit_compat_oid=$(shit rev-parse --output-object-format=$test_compat_hash_algo $commit_oid)
 commit_size=$(($(test_oid hexsz) + 137))
 commit_compat_size=$(($(test_oid --hash=compat hexsz) + 137))
 commit_content="tree $tree_oid
-author $GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL> $GIT_AUTHOR_DATE
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+author $shit_AUTHOR_NAME <$shit_AUTHOR_EMAIL> $shit_AUTHOR_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 
 $commit_message"
 
 commit_compat_content="tree $tree_compat_oid
-author $GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL> $GIT_AUTHOR_DATE
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+author $shit_AUTHOR_NAME <$shit_AUTHOR_EMAIL> $shit_AUTHOR_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 
 $commit_message"
 
@@ -309,7 +309,7 @@ run_tests 'commit' $commit_compat_oid $commit_compat_size "$commit_compat_conten
 
 tag_header_without_oid="type blob
 tag hellotag
-tagger $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL>"
+tagger $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL>"
 tag_header_without_timestamp="object $hello_oid
 $tag_header_without_oid"
 tag_compat_header_without_timestamp="object $hello_compat_oid
@@ -322,10 +322,10 @@ tag_compat_content="$tag_compat_header_without_timestamp 0 +0000
 
 $tag_description"
 
-tag_oid=$(echo_without_newline "$tag_content" | git hash-object -t tag --stdin -w)
+tag_oid=$(echo_without_newline "$tag_content" | shit hash-object -t tag --stdin -w)
 tag_size=$(strlen "$tag_content")
 
-tag_compat_oid=$(git rev-parse --output-object-format=$test_compat_hash_algo $tag_oid)
+tag_compat_oid=$(shit rev-parse --output-object-format=$test_compat_hash_algo $tag_oid)
 tag_compat_size=$(strlen "$tag_compat_content")
 
 run_tests 'tag' $tag_oid $tag_size "$tag_content" "$tag_content"
@@ -333,7 +333,7 @@ run_tests 'tag' $tag_compat_oid $tag_compat_size "$tag_compat_content" "$tag_com
 
 test_expect_success "Reach a blob from a tag pointing to it" '
 	echo_without_newline "$hello_content" >expect &&
-	git cat-file blob $tag_oid >actual &&
+	shit cat-file blob $tag_oid >actual &&
 	test_cmp expect actual
 '
 
@@ -344,24 +344,24 @@ do
 	for opt in t s e p
 	do
 	test_expect_success "Passing -$opt with --$batch fails" '
-	    test_must_fail git cat-file --$batch -$opt $oid
+	    test_must_fail shit cat-file --$batch -$opt $oid
 	'
 
 	test_expect_success "Passing --$batch with -$opt fails" '
-	    test_must_fail git cat-file -$opt --$batch $oid
+	    test_must_fail shit cat-file -$opt --$batch $oid
 	'
 	done
 
 	test_expect_success "Passing <type> with --$batch fails" '
-	test_must_fail git cat-file --$batch blob $oid
+	test_must_fail shit cat-file --$batch blob $oid
 	'
 
 	test_expect_success "Passing --$batch with <type> fails" '
-	test_must_fail git cat-file blob --$batch $oid
+	test_must_fail shit cat-file blob --$batch $oid
 	'
 
 	test_expect_success "Passing oid with --$batch fails" '
-	test_must_fail git cat-file --$batch $oid
+	test_must_fail shit cat-file --$batch $oid
 	'
     done
 done
@@ -371,7 +371,7 @@ do
     for opt in t s e p
     do
 	test_expect_success "Passing -$opt with --follow-symlinks fails" '
-	    test_must_fail git cat-file --follow-symlinks -$opt $oid
+	    test_must_fail shit cat-file --follow-symlinks -$opt $oid
 	'
     done
 done
@@ -383,7 +383,7 @@ test_expect_success "--batch-check for a non-existent named object" '
 	EOF
 
 	printf "foobar42\nfoobar84" >in &&
-	git cat-file --batch-check <in >actual &&
+	shit cat-file --batch-check <in >actual &&
 	test_cmp expect actual
 '
 
@@ -394,7 +394,7 @@ test_expect_success "--batch-check for a non-existent hash" '
 	EOF
 
 	printf "0000000000000000000000000000000000000042\n0000000000000000000000000000000000000084" >in &&
-	git cat-file --batch-check <in >actual &&
+	shit cat-file --batch-check <in >actual &&
 	test_cmp expect actual
 '
 
@@ -406,7 +406,7 @@ test_expect_success "--batch for an existent and a non-existent hash" '
 	EOF
 
 	printf "$tag_oid\n0000000000000000000000000000000000000000" >in &&
-	git cat-file --batch <in >actual &&
+	shit cat-file --batch <in >actual &&
 	test_cmp expect actual
 '
 
@@ -416,13 +416,13 @@ test_expect_success "--batch-check for an empty line" '
 	EOF
 
 	echo >in &&
-	git cat-file --batch-check <in >actual &&
+	shit cat-file --batch-check <in >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'empty --batch-check notices missing object' '
 	echo "$ZERO_OID missing" >expect &&
-	echo "$ZERO_OID" | git cat-file --batch-check="" >actual &&
+	echo "$ZERO_OID" | shit cat-file --batch-check="" >actual &&
 	test_cmp expect actual
 '
 
@@ -457,20 +457,20 @@ deadbeef
     test_expect_success '--batch with multiple oids gives correct format' '
 	tr "\0" "\n" <batch_output >expect &&
 	echo_without_newline "$batch_input" >in &&
-	git cat-file --batch <in >actual &&
+	shit cat-file --batch <in >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success '--batch, -z with multiple oids gives correct format' '
 	echo_without_newline_nul "$batch_input" >in &&
 	tr "\0" "\n" <batch_output >expect &&
-	git cat-file --batch -z <in >actual &&
+	shit cat-file --batch -z <in >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success '--batch, -Z with multiple oids gives correct format' '
 	echo_without_newline_nul "$batch_input" >in &&
-	git cat-file --batch -Z <in >actual &&
+	shit cat-file --batch -Z <in >actual &&
 	test_cmp batch_output actual
     '
 
@@ -493,20 +493,20 @@ deadbeef
     test_expect_success "--batch-check with multiple oids gives correct format" '
 	tr "\0" "\n" <batch_check_output >expect &&
 	echo_without_newline "$batch_check_input" >in &&
-	git cat-file --batch-check <in >actual &&
+	shit cat-file --batch-check <in >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "--batch-check, -z with multiple oids gives correct format" '
 	tr "\0" "\n" <batch_check_output >expect &&
 	echo_without_newline_nul "$batch_check_input" >in &&
-	git cat-file --batch-check -z <in >actual &&
+	shit cat-file --batch-check -z <in >actual &&
 	test_cmp expect actual
     '
 
     test_expect_success "--batch-check, -Z with multiple oids gives correct format" '
 	echo_without_newline_nul "$batch_check_input" >in &&
-	git cat-file --batch-check -Z <in >actual &&
+	shit cat-file --batch-check -Z <in >actual &&
 	test_cmp batch_check_output actual
     '
 
@@ -526,18 +526,18 @@ info deadbeef"
 	EOF
 
 	echo "$batch_command_multiple_info" >in &&
-	git cat-file --batch-command --buffer <in >actual &&
+	shit cat-file --batch-command --buffer <in >actual &&
 
 	test_cmp expect actual &&
 
 	echo "$batch_command_multiple_info" | tr "\n" "\0" >in &&
-	git cat-file --batch-command --buffer -z <in >actual &&
+	shit cat-file --batch-command --buffer -z <in >actual &&
 
 	test_cmp expect actual &&
 
 	echo "$batch_command_multiple_info" | tr "\n" "\0" >in &&
 	tr "\n" "\0" <expect >expect_nul &&
-	git cat-file --batch-command --buffer -Z <in >actual &&
+	shit cat-file --batch-command --buffer -Z <in >actual &&
 
 	test_cmp expect_nul actual
     '
@@ -560,17 +560,17 @@ flush"
 	tr "\0" "\n" <expect_nul >expect &&
 
 	echo "$batch_command_multiple_contents" >in &&
-	git cat-file --batch-command --buffer <in >actual &&
+	shit cat-file --batch-command --buffer <in >actual &&
 
 	test_cmp expect actual &&
 
 	echo "$batch_command_multiple_contents" | tr "\n" "\0" >in &&
-	git cat-file --batch-command --buffer -z <in >actual &&
+	shit cat-file --batch-command --buffer -z <in >actual &&
 
 	test_cmp expect actual &&
 
 	echo "$batch_command_multiple_contents" | tr "\n" "\0" >in &&
-	git cat-file --batch-command --buffer -Z <in >actual &&
+	shit cat-file --batch-command --buffer -Z <in >actual &&
 
 	test_cmp expect_nul actual
     '
@@ -583,30 +583,30 @@ batch_tests $hello_compat_oid $tree_compat_oid $tree_compat_size $commit_compat_
 
 test_expect_success FUNNYNAMES 'setup with newline in input' '
 	touch -- "newline${LF}embedded" &&
-	git add -- "newline${LF}embedded" &&
-	git commit -m "file with newline embedded" &&
+	shit add -- "newline${LF}embedded" &&
+	shit commit -m "file with newline embedded" &&
 	test_tick &&
 
 	printf "HEAD:newline${LF}embedded" >in
 '
 
 test_expect_success FUNNYNAMES '--batch-check, -z with newline in input' '
-	git cat-file --batch-check -z <in >actual &&
-	echo "$(git rev-parse "HEAD:newline${LF}embedded") blob 0" >expect &&
+	shit cat-file --batch-check -z <in >actual &&
+	echo "$(shit rev-parse "HEAD:newline${LF}embedded") blob 0" >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success FUNNYNAMES '--batch-check, -Z with newline in input' '
-	git cat-file --batch-check -Z <in >actual &&
-	printf "%s\0" "$(git rev-parse "HEAD:newline${LF}embedded") blob 0" >expect &&
+	shit cat-file --batch-check -Z <in >actual &&
+	printf "%s\0" "$(shit rev-parse "HEAD:newline${LF}embedded") blob 0" >expect &&
 	test_cmp expect actual
 '
 
 test_expect_success 'setup blobs which are likely to delta' '
 	test-tool genrandom foo 10240 >foo &&
 	{ cat foo && echo plus; } >foo-plus &&
-	git add foo foo-plus &&
-	git commit -m foo &&
+	shit add foo foo-plus &&
+	shit commit -m foo &&
 	cat >blobs <<-\EOF
 	HEAD:foo
 	HEAD:foo-plus
@@ -618,7 +618,7 @@ test_expect_success 'confirm that neither loose blob is a delta' '
 	$ZERO_OID
 	$ZERO_OID
 	EOF
-	git cat-file --batch-check="%(deltabase)" <blobs >actual &&
+	shit cat-file --batch-check="%(deltabase)" <blobs >actual &&
 	test_cmp expect actual
 '
 
@@ -628,11 +628,11 @@ test_expect_success 'confirm that neither loose blob is a delta' '
 # asking for the base of both, and checking whether either
 # oid appears in the output.
 test_expect_success '%(deltabase) reports packed delta bases' '
-	git repack -ad &&
-	git cat-file --batch-check="%(deltabase)" <blobs >actual &&
+	shit repack -ad &&
+	shit cat-file --batch-check="%(deltabase)" <blobs >actual &&
 	{
-		grep "$(git rev-parse HEAD:foo)" actual ||
-		grep "$(git rev-parse HEAD:foo-plus)" actual
+		grep "$(shit rev-parse HEAD:foo)" actual ||
+		grep "$(shit rev-parse HEAD:foo-plus)" actual
 	}
 '
 
@@ -640,12 +640,12 @@ test_expect_success 'setup bogus data' '
 	bogus_short_type="bogus" &&
 	bogus_short_content="bogus" &&
 	bogus_short_size=$(strlen "$bogus_short_content") &&
-	bogus_short_oid=$(echo_without_newline "$bogus_short_content" | git hash-object -t $bogus_short_type --literally -w --stdin) &&
+	bogus_short_oid=$(echo_without_newline "$bogus_short_content" | shit hash-object -t $bogus_short_type --literally -w --stdin) &&
 
 	bogus_long_type="abcdefghijklmnopqrstuvwxyz1234679" &&
 	bogus_long_content="bogus" &&
 	bogus_long_size=$(strlen "$bogus_long_content") &&
-	bogus_long_oid=$(echo_without_newline "$bogus_long_content" | git hash-object -t $bogus_long_type --literally -w --stdin)
+	bogus_long_oid=$(echo_without_newline "$bogus_long_content" | shit hash-object -t $bogus_long_type --literally -w --stdin)
 '
 
 for arg1 in '' --allow-unknown-type
@@ -665,9 +665,9 @@ do
 
 			if test "$arg1" = "--allow-unknown-type"
 			then
-				git cat-file $arg1 $arg2 $bogus_short_oid
+				shit cat-file $arg1 $arg2 $bogus_short_oid
 			else
-				test_must_fail git cat-file $arg1 $arg2 $bogus_short_oid >out 2>actual &&
+				test_must_fail shit cat-file $arg1 $arg2 $bogus_short_oid >out 2>actual &&
 				test_must_be_empty out &&
 				test_cmp expect actual
 			fi
@@ -683,15 +683,15 @@ do
 			else
 				cat >expect <<-EOF
 				error: header for $bogus_long_oid too long, exceeds 32 bytes
-				fatal: git cat-file: could not get object info
+				fatal: shit cat-file: could not get object info
 				EOF
 			fi &&
 
 			if test "$arg1" = "--allow-unknown-type"
 			then
-				git cat-file $arg1 $arg2 $bogus_short_oid
+				shit cat-file $arg1 $arg2 $bogus_short_oid
 			else
-				test_must_fail git cat-file $arg1 $arg2 $bogus_long_oid >out 2>actual &&
+				test_must_fail shit cat-file $arg1 $arg2 $bogus_long_oid >out 2>actual &&
 				test_must_be_empty out &&
 				test_cmp expect actual
 			fi
@@ -701,7 +701,7 @@ do
 			cat >expect.err <<-EOF &&
 			fatal: Not a valid object name $(test_oid deadbeef_short)
 			EOF
-			test_must_fail git cat-file $arg1 $arg2 $(test_oid deadbeef_short) >out 2>err.actual &&
+			test_must_fail shit cat-file $arg1 $arg2 $(test_oid deadbeef_short) >out 2>err.actual &&
 			test_must_be_empty out &&
 			test_cmp expect.err err.actual
 		'
@@ -714,10 +714,10 @@ do
 				EOF
 			else
 				cat >expect.err <<-\EOF
-				fatal: git cat-file: could not get object info
+				fatal: shit cat-file: could not get object info
 				EOF
 			fi &&
-			test_must_fail git cat-file $arg1 $arg2 $(test_oid deadbeef) >out 2>err.actual &&
+			test_must_fail shit cat-file $arg1 $arg2 $(test_oid deadbeef) >out 2>err.actual &&
 			test_must_be_empty out &&
 			test_cmp expect.err err.actual
 		'
@@ -725,23 +725,23 @@ do
 done
 
 test_expect_success '-e is OK with a broken object without --allow-unknown-type' '
-	git cat-file -e $bogus_short_oid
+	shit cat-file -e $bogus_short_oid
 '
 
 test_expect_success '-e can not be combined with --allow-unknown-type' '
-	test_expect_code 128 git cat-file -e --allow-unknown-type $bogus_short_oid
+	test_expect_code 128 shit cat-file -e --allow-unknown-type $bogus_short_oid
 '
 
 test_expect_success '-p cannot print a broken object even with --allow-unknown-type' '
-	test_must_fail git cat-file -p $bogus_short_oid &&
-	test_expect_code 128 git cat-file -p --allow-unknown-type $bogus_short_oid
+	test_must_fail shit cat-file -p $bogus_short_oid &&
+	test_expect_code 128 shit cat-file -p --allow-unknown-type $bogus_short_oid
 '
 
 test_expect_success '<type> <hash> does not work with objects of broken types' '
 	cat >err.expect <<-\EOF &&
 	fatal: invalid object type "bogus"
 	EOF
-	test_must_fail git cat-file $bogus_short_type $bogus_short_oid 2>err.actual &&
+	test_must_fail shit cat-file $bogus_short_type $bogus_short_oid 2>err.actual &&
 	test_cmp err.expect err.actual
 '
 
@@ -752,95 +752,95 @@ test_expect_success 'broken types combined with --batch and --batch-check' '
 	fatal: invalid object type
 	EOF
 
-	test_must_fail git cat-file --batch <bogus-oid 2>err.actual &&
+	test_must_fail shit cat-file --batch <bogus-oid 2>err.actual &&
 	test_cmp err.expect err.actual &&
 
-	test_must_fail git cat-file --batch-check <bogus-oid 2>err.actual &&
+	test_must_fail shit cat-file --batch-check <bogus-oid 2>err.actual &&
 	test_cmp err.expect err.actual
 '
 
 test_expect_success 'the --batch and --batch-check options do not combine with --allow-unknown-type' '
-	test_expect_code 128 git cat-file --batch --allow-unknown-type <bogus-oid &&
-	test_expect_code 128 git cat-file --batch-check --allow-unknown-type <bogus-oid
+	test_expect_code 128 shit cat-file --batch --allow-unknown-type <bogus-oid &&
+	test_expect_code 128 shit cat-file --batch-check --allow-unknown-type <bogus-oid
 '
 
 test_expect_success 'the --allow-unknown-type option does not consider replacement refs' '
 	cat >expect <<-EOF &&
 	$bogus_short_type
 	EOF
-	git cat-file -t --allow-unknown-type $bogus_short_oid >actual &&
+	shit cat-file -t --allow-unknown-type $bogus_short_oid >actual &&
 	test_cmp expect actual &&
 
-	# Create it manually, as "git replace" will die on bogus
+	# Create it manually, as "shit replace" will die on bogus
 	# types.
-	head=$(git rev-parse --verify HEAD) &&
+	head=$(shit rev-parse --verify HEAD) &&
 	test_when_finished "test-tool ref-store main delete-refs 0 msg refs/replace/$bogus_short_oid" &&
 	test-tool ref-store main update-ref msg "refs/replace/$bogus_short_oid" $head $ZERO_OID REF_SKIP_OID_VERIFICATION &&
 
 	cat >expect <<-EOF &&
 	commit
 	EOF
-	git cat-file -t --allow-unknown-type $bogus_short_oid >actual &&
+	shit cat-file -t --allow-unknown-type $bogus_short_oid >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success "Type of broken object is correct" '
 	echo $bogus_short_type >expect &&
-	git cat-file -t --allow-unknown-type $bogus_short_oid >actual &&
+	shit cat-file -t --allow-unknown-type $bogus_short_oid >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success "Size of broken object is correct" '
 	echo $bogus_short_size >expect &&
-	git cat-file -s --allow-unknown-type $bogus_short_oid >actual &&
+	shit cat-file -s --allow-unknown-type $bogus_short_oid >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'clean up broken object' '
-	rm .git/objects/$(test_oid_to_path $bogus_short_oid)
+	rm .shit/objects/$(test_oid_to_path $bogus_short_oid)
 '
 
 test_expect_success "Type of broken object is correct when type is large" '
 	echo $bogus_long_type >expect &&
-	git cat-file -t --allow-unknown-type $bogus_long_oid >actual &&
+	shit cat-file -t --allow-unknown-type $bogus_long_oid >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success "Size of large broken object is correct when type is large" '
 	echo $bogus_long_size >expect &&
-	git cat-file -s --allow-unknown-type $bogus_long_oid >actual &&
+	shit cat-file -s --allow-unknown-type $bogus_long_oid >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'clean up broken object' '
-	rm .git/objects/$(test_oid_to_path $bogus_long_oid)
+	rm .shit/objects/$(test_oid_to_path $bogus_long_oid)
 '
 
 test_expect_success 'cat-file -t and -s on corrupt loose object' '
-	git init --bare corrupt-loose.git &&
+	shit init --bare corrupt-loose.shit &&
 	(
-		cd corrupt-loose.git &&
+		cd corrupt-loose.shit &&
 
 		# Setup and create the empty blob and its path
-		empty_path=$(git rev-parse --git-path objects/$(test_oid_to_path "$EMPTY_BLOB")) &&
-		empty_blob=$(git hash-object -w --stdin </dev/null) &&
+		empty_path=$(shit rev-parse --shit-path objects/$(test_oid_to_path "$EMPTY_BLOB")) &&
+		empty_blob=$(shit hash-object -w --stdin </dev/null) &&
 
 		# Create another blob and its path
 		echo other >other.blob &&
-		other_blob=$(git hash-object -w --stdin <other.blob) &&
-		other_path=$(git rev-parse --git-path objects/$(test_oid_to_path "$other_blob")) &&
+		other_blob=$(shit hash-object -w --stdin <other.blob) &&
+		other_path=$(shit rev-parse --shit-path objects/$(test_oid_to_path "$other_blob")) &&
 
 		# Before the swap the size is 0
 		cat >out.expect <<-EOF &&
 		0
 		EOF
-		git cat-file -s "$EMPTY_BLOB" >out.actual 2>err.actual &&
+		shit cat-file -s "$EMPTY_BLOB" >out.actual 2>err.actual &&
 		test_must_be_empty err.actual &&
 		test_cmp out.expect out.actual &&
 
 		# Swap the two to corrupt the repository
 		mv -f "$other_path" "$empty_path" &&
-		test_must_fail git fsck 2>err.fsck &&
+		test_must_fail shit fsck 2>err.fsck &&
 		grep "hash-path mismatch" err.fsck &&
 
 		# confirm that cat-file is reading the new swapped-in
@@ -848,7 +848,7 @@ test_expect_success 'cat-file -t and -s on corrupt loose object' '
 		cat >out.expect <<-EOF &&
 		blob
 		EOF
-		git cat-file -t "$EMPTY_BLOB" >out.actual 2>err.actual &&
+		shit cat-file -t "$EMPTY_BLOB" >out.actual 2>err.actual &&
 		test_must_be_empty err.actual &&
 		test_cmp out.expect out.actual &&
 
@@ -856,14 +856,14 @@ test_expect_success 'cat-file -t and -s on corrupt loose object' '
 		cat >out.expect <<-EOF &&
 		6
 		EOF
-		git cat-file -s "$EMPTY_BLOB" >out.actual 2>err.actual &&
+		shit cat-file -s "$EMPTY_BLOB" >out.actual 2>err.actual &&
 		test_must_be_empty err.actual &&
 		test_cmp out.expect out.actual &&
 
 		# So far "cat-file" has been happy to spew the found
 		# content out as-is. Try to make it zlib-invalid.
 		mv -f other.blob "$empty_path" &&
-		test_must_fail git fsck 2>err.fsck &&
+		test_must_fail shit fsck 2>err.fsck &&
 		cat >expect <<-EOF &&
 		error: inflate: data stream error (incorrect header check)
 		error: unable to unpack header of ./$empty_path
@@ -874,7 +874,7 @@ test_expect_success 'cat-file -t and -s on corrupt loose object' '
 	)
 '
 
-# Tests for git cat-file --follow-symlinks
+# Tests for shit cat-file --follow-symlinks
 test_expect_success 'prep for symlink tests' '
 	echo_without_newline "$hello_content" >morx &&
 	test_ln_s_add morx same-dir-link &&
@@ -908,191 +908,191 @@ test_expect_success 'prep for symlink tests' '
 	test_ln_s_add subdirlink/../../morx up-two-down-file &&
 	test_ln_s_add loop1 loop2 &&
 	test_ln_s_add loop2 loop1 &&
-	git add morx dir/subdir/ind2 dir/ind1 &&
-	git commit -am "test" &&
+	shit add morx dir/subdir/ind2 dir/ind1 &&
+	shit commit -am "test" &&
 	echo $hello_oid blob $hello_size >found
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for non-links' '
-	echo HEAD:morx | git cat-file --batch-check --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for non-links' '
+	echo HEAD:morx | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual &&
 	echo HEAD:nope missing >expect &&
-	echo HEAD:nope | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:nope | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for in-repo, same-dir links' '
-	echo HEAD:same-dir-link | git cat-file --batch-check --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for in-repo, same-dir links' '
+	echo HEAD:same-dir-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for in-repo, links to dirs' '
-	echo HEAD:link-to-dir/ind1 | git cat-file --batch-check --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for in-repo, links to dirs' '
+	echo HEAD:link-to-dir/ind1 | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual
 '
 
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for broken in-repo, same-dir links' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for broken in-repo, same-dir links' '
 	echo dangling 25 >expect &&
 	echo HEAD:broken-same-dir-link >>expect &&
-	echo HEAD:broken-same-dir-link | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:broken-same-dir-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks -Z works for broken in-repo, same-dir links' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks -Z works for broken in-repo, same-dir links' '
 	printf "HEAD:broken-same-dir-link\0" >in &&
 	printf "dangling 25\0HEAD:broken-same-dir-link\0" >expect &&
-	git cat-file --batch-check --follow-symlinks -Z <in >actual &&
+	shit cat-file --batch-check --follow-symlinks -Z <in >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for same-dir links-to-links' '
-	echo HEAD:link-to-link | git cat-file --batch-check --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for same-dir links-to-links' '
+	echo HEAD:link-to-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for parent-dir links' '
-	echo HEAD:dir/parent-dir-link | git cat-file --batch-check --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for parent-dir links' '
+	echo HEAD:dir/parent-dir-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual &&
 	echo notdir 29 >expect &&
 	echo HEAD:dir/parent-dir-link/nope >>expect &&
-	echo HEAD:dir/parent-dir-link/nope | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/parent-dir-link/nope | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks -Z works for parent-dir links' '
-	echo HEAD:dir/parent-dir-link | git cat-file --batch-check --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch-check --follow-symlinks -Z works for parent-dir links' '
+	echo HEAD:dir/parent-dir-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual &&
 	printf "notdir 29\0HEAD:dir/parent-dir-link/nope\0" >expect &&
 	printf "HEAD:dir/parent-dir-link/nope\0" >in &&
-	git cat-file --batch-check --follow-symlinks -Z <in >actual &&
+	shit cat-file --batch-check --follow-symlinks -Z <in >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for .. links' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for .. links' '
 	echo dangling 22 >expect &&
 	echo HEAD:dir/link-dir/nope >>expect &&
-	echo HEAD:dir/link-dir/nope | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/link-dir/nope | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
-	echo HEAD:dir/link-dir/morx | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/link-dir/morx | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual &&
 	echo dangling 27 >expect &&
 	echo HEAD:dir/broken-link-in-dir >>expect &&
-	echo HEAD:dir/broken-link-in-dir | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/broken-link-in-dir | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for ../.. links' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for ../.. links' '
 	echo notdir 41 >expect &&
 	echo HEAD:dir/subdir/grandparent-dir-link/nope >>expect &&
-	echo HEAD:dir/subdir/grandparent-dir-link/nope | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/subdir/grandparent-dir-link/nope | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
-	echo HEAD:dir/subdir/grandparent-dir-link | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/subdir/grandparent-dir-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual &&
-	echo HEAD:dir/subdir/parent-dir-link-to-link | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/subdir/parent-dir-link-to-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for dir/ links' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for dir/ links' '
 	echo dangling 17 >expect &&
 	echo HEAD:dirlink/morx >>expect &&
-	echo HEAD:dirlink/morx | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dirlink/morx | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
 	echo $hello_oid blob $hello_size >expect &&
-	echo HEAD:dirlink/ind1 | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dirlink/ind1 | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for dir/subdir links' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for dir/subdir links' '
 	echo dangling 20 >expect &&
 	echo HEAD:subdirlink/morx >>expect &&
-	echo HEAD:subdirlink/morx | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:subdirlink/morx | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
-	echo HEAD:subdirlink/ind2 | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:subdirlink/ind2 | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for dir ->subdir links' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for dir ->subdir links' '
 	echo notdir 27 >expect &&
 	echo HEAD:dir/link-to-child/morx >>expect &&
-	echo HEAD:dir/link-to-child/morx | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/link-to-child/morx | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
-	echo HEAD:dir/link-to-child | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/link-to-child | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual &&
-	echo HEAD:link-to-down-link | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:link-to-down-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for out-of-repo symlinks' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for out-of-repo symlinks' '
 	echo symlink 8 >expect &&
 	echo ../fleem >>expect &&
-	echo HEAD:out-of-repo-link | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:out-of-repo-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
 	echo symlink 2 >expect &&
 	echo .. >>expect &&
-	echo HEAD:out-of-repo-link-dir | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:out-of-repo-link-dir | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for out-of-repo symlinks in dirs' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for out-of-repo symlinks in dirs' '
 	echo symlink 9 >expect &&
 	echo ../escape >>expect &&
-	echo HEAD:dir/out-of-repo-link | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/out-of-repo-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
 	echo symlink 2 >expect &&
 	echo .. >>expect &&
-	echo HEAD:dir/out-of-repo-link-dir | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/out-of-repo-link-dir | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for out-of-repo symlinks in subdirs' '
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for out-of-repo symlinks in subdirs' '
 	echo symlink 15 >expect &&
 	echo ../great-escape >>expect &&
-	echo HEAD:dir/subdir/out-of-repo-link | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/subdir/out-of-repo-link | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
 	echo symlink 2 >expect &&
 	echo .. >>expect &&
-	echo HEAD:dir/subdir/out-of-repo-link-dir | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/subdir/out-of-repo-link-dir | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
 	echo symlink 3 >expect &&
 	echo ../ >>expect &&
-	echo HEAD:dir/subdir/out-of-repo-link-dir-trailing | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:dir/subdir/out-of-repo-link-dir-trailing | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlinks works for symlinks with internal ..' '
-	echo HEAD: | git cat-file --batch-check >expect &&
-	echo HEAD:up-down | git cat-file --batch-check --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch-check --follow-symlinks works for symlinks with internal ..' '
+	echo HEAD: | shit cat-file --batch-check >expect &&
+	echo HEAD:up-down | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
-	echo HEAD:up-down-trailing | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:up-down-trailing | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
-	echo HEAD:up-down-file | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:up-down-file | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual &&
 	echo symlink 7 >expect &&
 	echo ../morx >>expect &&
-	echo HEAD:up-up-down-file | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:up-up-down-file | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual &&
-	echo HEAD:up-two-down-file | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:up-two-down-file | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp found actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlink breaks loops' '
+test_expect_success 'shit cat-file --batch-check --follow-symlink breaks loops' '
 	echo loop 10 >expect &&
 	echo HEAD:loop1 >>expect &&
-	echo HEAD:loop1 | git cat-file --batch-check --follow-symlinks >actual &&
+	echo HEAD:loop1 | shit cat-file --batch-check --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch-check --follow-symlink -Z breaks loops' '
+test_expect_success 'shit cat-file --batch-check --follow-symlink -Z breaks loops' '
 	printf "loop 10\0HEAD:loop1\0" >expect &&
 	printf "HEAD:loop1\0" >in &&
-	git cat-file --batch-check --follow-symlinks -Z <in >actual &&
+	shit cat-file --batch-check --follow-symlinks -Z <in >actual &&
 	test_cmp expect actual
 '
 
-test_expect_success 'git cat-file --batch --follow-symlink returns correct sha and mode' '
-	echo HEAD:morx | git cat-file --batch >expect &&
-	echo HEAD:morx | git cat-file --batch --follow-symlinks >actual &&
+test_expect_success 'shit cat-file --batch --follow-symlink returns correct sha and mode' '
+	echo HEAD:morx | shit cat-file --batch >expect &&
+	echo HEAD:morx | shit cat-file --batch --follow-symlinks >actual &&
 	test_cmp expect actual
 '
 
@@ -1101,25 +1101,25 @@ test_expect_success 'cat-file --batch-all-objects shows all objects' '
 	# also make sure that there are some packed and some loose
 	# objects, some referenced and some not, some duplicates, and that
 	# there are some available only via alternates.
-	git init all-one &&
+	shit init all-one &&
 	(
 		cd all-one &&
 		echo content >file &&
-		git add file &&
-		git commit -qm base &&
-		git rev-parse HEAD HEAD^{tree} HEAD:file &&
-		git repack -ad &&
-		echo not-cloned | git hash-object -w --stdin
+		shit add file &&
+		shit commit -qm base &&
+		shit rev-parse HEAD HEAD^{tree} HEAD:file &&
+		shit repack -ad &&
+		echo not-cloned | shit hash-object -w --stdin
 	) >expect.unsorted &&
-	git clone -s all-one all-two &&
+	shit clone -s all-one all-two &&
 	(
 		cd all-two &&
-		echo local-unref | git hash-object -w --stdin
+		echo local-unref | shit hash-object -w --stdin
 	) >>expect.unsorted &&
-	git -C all-two rev-parse HEAD:file |
-		git -C all-two pack-objects .git/objects/pack/pack &&
+	shit -C all-two rev-parse HEAD:file |
+		shit -C all-two pack-objects .shit/objects/pack/pack &&
 	sort <expect.unsorted >expect &&
-	git -C all-two cat-file --batch-all-objects \
+	shit -C all-two cat-file --batch-all-objects \
 				--batch-check="%(objectname)" >actual &&
 	test_cmp expect actual
 '
@@ -1129,31 +1129,31 @@ test_expect_success 'cat-file --batch-all-objects shows all objects' '
 # produces the same objects as the ordered case, but that at least exercises
 # the code.
 test_expect_success 'cat-file --unordered works' '
-	git -C all-two cat-file --batch-all-objects --unordered \
+	shit -C all-two cat-file --batch-all-objects --unordered \
 				--batch-check="%(objectname)" >actual.unsorted &&
 	sort <actual.unsorted >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'set up object list for --batch-all-objects tests' '
-	git -C all-two cat-file --batch-all-objects --batch-check="%(objectname)" >objects
+	shit -C all-two cat-file --batch-all-objects --batch-check="%(objectname)" >objects
 '
 
 test_expect_success 'cat-file --batch="%(objectname)" with --batch-all-objects will work' '
-	git -C all-two cat-file --batch="%(objectname)" <objects >expect &&
-	git -C all-two cat-file --batch-all-objects --batch="%(objectname)" >actual &&
+	shit -C all-two cat-file --batch="%(objectname)" <objects >expect &&
+	shit -C all-two cat-file --batch-all-objects --batch="%(objectname)" >actual &&
 	cmp expect actual
 '
 
 test_expect_success 'cat-file --batch="%(rest)" with --batch-all-objects will work' '
-	git -C all-two cat-file --batch="%(rest)" <objects >expect &&
-	git -C all-two cat-file --batch-all-objects --batch="%(rest)" >actual &&
+	shit -C all-two cat-file --batch="%(rest)" <objects >expect &&
+	shit -C all-two cat-file --batch-all-objects --batch="%(rest)" >actual &&
 	cmp expect actual
 '
 
 test_expect_success 'cat-file --batch="batman" with --batch-all-objects will work' '
-	git -C all-two cat-file --batch="batman" <objects >expect &&
-	git -C all-two cat-file --batch-all-objects --batch="batman" >actual &&
+	shit -C all-two cat-file --batch="batman" <objects >expect &&
+	shit -C all-two cat-file --batch-all-objects --batch="batman" >actual &&
 	cmp expect actual
 '
 
@@ -1161,7 +1161,7 @@ test_expect_success 'cat-file %(objectsize:disk) with --batch-all-objects' '
 	# our state has both loose and packed objects,
 	# so find both for our expected output
 	{
-		find .git/objects/?? -type f |
+		find .shit/objects/?? -type f |
 		awk -F/ "{ print \$0, \$3\$4 }" |
 		while read path oid
 		do
@@ -1170,10 +1170,10 @@ test_expect_success 'cat-file %(objectsize:disk) with --batch-all-objects' '
 			return 1
 		done &&
 		rawsz=$(test_oid rawsz) &&
-		find .git/objects/pack -name "*.idx" |
+		find .shit/objects/pack -name "*.idx" |
 		while read idx
 		do
-			git show-index <"$idx" >idx.raw &&
+			shit show-index <"$idx" >idx.raw &&
 			sort -nr <idx.raw >idx.sorted &&
 			packsz=$(test_file_size "${idx%.idx}.pack") &&
 			end=$((packsz - rawsz)) &&
@@ -1188,26 +1188,26 @@ test_expect_success 'cat-file %(objectsize:disk) with --batch-all-objects' '
 		done
 	} >expect.raw &&
 	sort <expect.raw >expect &&
-	git cat-file --batch-all-objects \
+	shit cat-file --batch-all-objects \
 		--batch-check="%(objectname) %(objectsize:disk)" >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'set up replacement object' '
-	orig=$(git rev-parse HEAD) &&
-	git cat-file commit $orig >orig &&
+	orig=$(shit rev-parse HEAD) &&
+	shit cat-file commit $orig >orig &&
 	{
 		cat orig &&
 		echo extra
 	} >fake &&
-	fake=$(git hash-object -t commit -w fake) &&
-	orig_size=$(git cat-file -s $orig) &&
-	fake_size=$(git cat-file -s $fake) &&
-	git replace $orig $fake
+	fake=$(shit hash-object -t commit -w fake) &&
+	orig_size=$(shit cat-file -s $orig) &&
+	fake_size=$(shit cat-file -s $fake) &&
+	shit replace $orig $fake
 '
 
 test_expect_success 'cat-file --batch respects replace objects' '
-	git cat-file --batch >actual <<-EOF &&
+	shit cat-file --batch >actual <<-EOF &&
 	$orig
 	EOF
 	{
@@ -1219,14 +1219,14 @@ test_expect_success 'cat-file --batch respects replace objects' '
 '
 
 test_expect_success 'cat-file --batch-check respects replace objects' '
-	git cat-file --batch-check >actual <<-EOF &&
+	shit cat-file --batch-check >actual <<-EOF &&
 	$orig
 	EOF
 	echo "$orig commit $fake_size" >expect &&
 	test_cmp expect actual
 '
 
-# Pull the entry for object with oid "$1" out of the output of
+# poop the entry for object with oid "$1" out of the output of
 # "cat-file --batch", including its object content (which requires
 # parsing and reading a set amount of bytes, hence perl).
 extract_batch_output () {
@@ -1242,7 +1242,7 @@ extract_batch_output () {
 }
 
 test_expect_success 'cat-file --batch-all-objects --batch ignores replace' '
-	git cat-file --batch-all-objects --batch >actual.raw &&
+	shit cat-file --batch-all-objects --batch >actual.raw &&
 	extract_batch_output $orig <actual.raw >actual &&
 	{
 		echo "$orig commit $orig_size" &&
@@ -1253,44 +1253,44 @@ test_expect_success 'cat-file --batch-all-objects --batch ignores replace' '
 '
 
 test_expect_success 'cat-file --batch-all-objects --batch-check ignores replace' '
-	git cat-file --batch-all-objects --batch-check >actual.raw &&
+	shit cat-file --batch-all-objects --batch-check >actual.raw &&
 	grep ^$orig actual.raw >actual &&
 	echo "$orig commit $orig_size" >expect &&
 	test_cmp expect actual
 '
 test_expect_success 'batch-command empty command' '
 	echo "" >cmd &&
-	test_expect_code 128 git cat-file --batch-command <cmd 2>err &&
+	test_expect_code 128 shit cat-file --batch-command <cmd 2>err &&
 	grep "^fatal:.*empty command in input.*" err
 '
 
 test_expect_success 'batch-command whitespace before command' '
 	echo " info deadbeef" >cmd &&
-	test_expect_code 128 git cat-file --batch-command <cmd 2>err &&
+	test_expect_code 128 shit cat-file --batch-command <cmd 2>err &&
 	grep "^fatal:.*whitespace before command.*" err
 '
 
 test_expect_success 'batch-command unknown command' '
 	echo unknown_command >cmd &&
-	test_expect_code 128 git cat-file --batch-command <cmd 2>err &&
+	test_expect_code 128 shit cat-file --batch-command <cmd 2>err &&
 	grep "^fatal:.*unknown command.*" err
 '
 
 test_expect_success 'batch-command missing arguments' '
 	echo "info" >cmd &&
-	test_expect_code 128 git cat-file --batch-command <cmd 2>err &&
+	test_expect_code 128 shit cat-file --batch-command <cmd 2>err &&
 	grep "^fatal:.*info requires arguments.*" err
 '
 
 test_expect_success 'batch-command flush with arguments' '
 	echo "flush arg" >cmd &&
-	test_expect_code 128 git cat-file --batch-command --buffer <cmd 2>err &&
+	test_expect_code 128 shit cat-file --batch-command --buffer <cmd 2>err &&
 	grep "^fatal:.*flush takes no arguments.*" err
 '
 
 test_expect_success 'batch-command flush without --buffer' '
 	echo "flush" >cmd &&
-	test_expect_code 128 git cat-file --batch-command <cmd 2>err &&
+	test_expect_code 128 shit cat-file --batch-command <cmd 2>err &&
 	grep "^fatal:.*flush is only for --buffer mode.*" err
 '
 

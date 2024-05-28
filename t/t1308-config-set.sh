@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='Test git config-set API in different settings'
+test_description='Test shit config-set API in different settings'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -24,7 +24,7 @@ check_config () {
 }
 
 test_expect_success 'setup default config' '
-	cat >.git/config <<-\EOF
+	cat >.shit/config <<-\EOF
 	[case]
 		penguin = very blue
 		Movie = BadPhysics
@@ -162,7 +162,7 @@ test_expect_success 'find integer value for a key' '
 '
 
 test_expect_success 'parse integer value during iteration' '
-	check_config git_config_int lamb.chop 65
+	check_config shit_config_int lamb.chop 65
 '
 
 test_expect_success 'find string value for a key' '
@@ -172,7 +172,7 @@ test_expect_success 'find string value for a key' '
 
 test_expect_success 'check line error when NULL string is queried' '
 	test_expect_code 128 test-tool config get_string case.foo 2>result &&
-	test_grep "fatal: .*case\.foo.*\.git/config.*line 7" result
+	test_grep "fatal: .*case\.foo.*\.shit/config.*line 7" result
 '
 
 test_expect_success 'find integer if value is non parse-able' '
@@ -180,8 +180,8 @@ test_expect_success 'find integer if value is non parse-able' '
 '
 
 test_expect_success 'non parse-able integer value during iteration' '
-	check_config expect_code 128 git_config_int lamb.head 2>result &&
-	grep "fatal: bad numeric config value .* in file \.git/config" result
+	check_config expect_code 128 shit_config_int lamb.head 2>result &&
+	grep "fatal: bad numeric config value .* in file \.shit/config" result
 '
 
 test_expect_success 'find bool value for the entered key' '
@@ -204,7 +204,7 @@ test_NULL_in_multi () {
 		config="$file" &&
 		if test -z "$config"
 		then
-			config=.git/config &&
+			config=.shit/config &&
 			test_when_finished "mv $config.old $config" &&
 			mv "$config" "$config".old
 		fi &&
@@ -271,13 +271,13 @@ test_expect_success 'find value from a configset' '
 		baz = ball
 	EOF
 	echo silk >expect &&
-	test-tool config configset_get_value my.new config2 .git/config >actual &&
+	test-tool config configset_get_value my.new config2 .shit/config >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'find value with highest priority from a configset' '
 	echo hask >expect &&
-	test-tool config configset_get_value case.baz config2 .git/config >actual &&
+	test-tool config configset_get_value case.baz config2 .shit/config >actual &&
 	test_cmp expect actual
 '
 
@@ -289,7 +289,7 @@ test_expect_success 'find value_list for a key from a configset' '
 	bat
 	hask
 	EOF
-	test-tool config configset_get_value_multi case.baz config2 .git/config >actual &&
+	test-tool config configset_get_value_multi case.baz config2 .shit/config >actual &&
 	test_cmp expect actual
 '
 
@@ -309,20 +309,20 @@ test_expect_success 'proper error on directory "files"' '
 '
 
 test_expect_success POSIXPERM,SANITY 'proper error on non-accessible files' '
-	chmod -r .git/config &&
-	test_when_finished "chmod +r .git/config" &&
-	echo "Error (-1) reading configuration file .git/config." >expect &&
-	test_expect_code 2 test-tool config configset_get_value foo.bar .git/config 2>output &&
+	chmod -r .shit/config &&
+	test_when_finished "chmod +r .shit/config" &&
+	echo "Error (-1) reading configuration file .shit/config." >expect &&
+	test_expect_code 2 test-tool config configset_get_value foo.bar .shit/config 2>output &&
 	grep "^warning:" output &&
 	grep "^Error" output >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'proper error on error in default config files' '
-	cp .git/config .git/config.old &&
-	test_when_finished "mv .git/config.old .git/config" &&
-	echo "[" >>.git/config &&
-	echo "fatal: bad config line 36 in file .git/config" >expect &&
+	cp .shit/config .shit/config.old &&
+	test_when_finished "mv .shit/config.old .shit/config" &&
+	echo "[" >>.shit/config &&
+	echo "fatal: bad config line 36 in file .shit/config" >expect &&
 	test_expect_code 128 test-tool config get_value foo.bar 2>actual &&
 	test_cmp expect actual
 '
@@ -335,54 +335,54 @@ test_expect_success 'proper error on error in custom config files' '
 '
 
 test_expect_success 'check line errors for malformed values' '
-	mv .git/config .git/config.old &&
-	test_when_finished "mv .git/config.old .git/config" &&
-	cat >.git/config <<-\EOF &&
+	mv .shit/config .shit/config.old &&
+	test_when_finished "mv .shit/config.old .shit/config" &&
+	cat >.shit/config <<-\EOF &&
 	[alias]
 		br
 	EOF
-	test_expect_code 128 git br 2>result &&
+	test_expect_code 128 shit br 2>result &&
 	test_grep "missing value for .alias\.br" result &&
-	test_grep "fatal: .*\.git/config" result &&
+	test_grep "fatal: .*\.shit/config" result &&
 	test_grep "fatal: .*line 2" result
 '
 
 test_expect_success 'error on modifying repo config without repo' '
-	nongit test_must_fail git config a.b c 2>err &&
-	test_grep "not in a git directory" err
+	nonshit test_must_fail shit config a.b c 2>err &&
+	test_grep "not in a shit directory" err
 '
 
 cmdline_config="'foo.bar=from-cmdline'"
 test_expect_success 'iteration shows correct origins' '
-	printf "[ignore]\n\tthis = please\n[foo]bar = from-repo\n" >.git/config &&
-	printf "[foo]\n\tbar = from-home\n" >.gitconfig &&
+	printf "[ignore]\n\tthis = please\n[foo]bar = from-repo\n" >.shit/config &&
+	printf "[foo]\n\tbar = from-home\n" >.shitconfig &&
 	if test_have_prereq MINGW
 	then
 		# Use Windows path (i.e. *not* $HOME)
-		HOME_GITCONFIG=$(pwd)/.gitconfig
+		HOME_shitCONFIG=$(pwd)/.shitconfig
 	else
 		# Do not get fooled by symbolic links, i.e. $HOME != $(pwd)
-		HOME_GITCONFIG=$HOME/.gitconfig
+		HOME_shitCONFIG=$HOME/.shitconfig
 	fi &&
 	cat >expect <<-EOF &&
 	key=foo.bar
 	value=from-home
 	origin=file
-	name=$HOME_GITCONFIG
+	name=$HOME_shitCONFIG
 	lno=2
 	scope=global
 
 	key=ignore.this
 	value=please
 	origin=file
-	name=.git/config
+	name=.shit/config
 	lno=2
 	scope=local
 
 	key=foo.bar
 	value=from-repo
 	origin=file
-	name=.git/config
+	name=.shit/config
 	lno=3
 	scope=local
 
@@ -393,7 +393,7 @@ test_expect_success 'iteration shows correct origins' '
 	lno=-1
 	scope=command
 	EOF
-	GIT_CONFIG_PARAMETERS=$cmdline_config test-tool config iterate >actual &&
+	shit_CONFIG_PARAMETERS=$cmdline_config test-tool config iterate >actual &&
 	test_cmp expect actual
 '
 

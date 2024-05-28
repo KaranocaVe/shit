@@ -1,15 +1,15 @@
 require 'asciidoctor'
 require 'asciidoctor/extensions'
 
-module Git
+module shit
   module Documentation
-    class LinkGitProcessor < Asciidoctor::Extensions::InlineMacroProcessor
+    class LinkshitProcessor < Asciidoctor::Extensions::InlineMacroProcessor
       use_dsl
 
       named :chrome
 
       def process(parent, target, attrs)
-        prefix = parent.document.attr('git-relative-html-prefix')
+        prefix = parent.document.attr('shit-relative-html-prefix')
         if parent.document.doctype == 'book'
           "<ulink url=\"#{prefix}#{target}.html\">" \
           "#{target}(#{attrs[1]})</ulink>"
@@ -43,6 +43,6 @@ module Git
 end
 
 Asciidoctor::Extensions.register do
-  inline_macro Git::Documentation::LinkGitProcessor, :linkgit
-  postprocessor Git::Documentation::DocumentPostProcessor
+  inline_macro shit::Documentation::LinkshitProcessor, :linkshit
+  postprocessor shit::Documentation::DocumentPostProcessor
 end

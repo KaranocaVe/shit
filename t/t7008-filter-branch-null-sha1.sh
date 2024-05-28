@@ -12,15 +12,15 @@ test_expect_success 'setup: base commits' '
 
 test_expect_success 'setup: a commit with a bogus null sha1 in the tree' '
 	{
-		git ls-tree HEAD &&
+		shit ls-tree HEAD &&
 		printf "160000 commit $ZERO_OID\\tbroken\\n"
 	} >broken-tree &&
 	echo "add broken entry" >msg &&
 
-	tree=$(git mktree <broken-tree) &&
+	tree=$(shit mktree <broken-tree) &&
 	test_tick &&
-	commit=$(git commit-tree $tree -p HEAD <msg) &&
-	git update-ref HEAD "$commit"
+	commit=$(shit commit-tree $tree -p HEAD <msg) &&
+	shit update-ref HEAD "$commit"
 '
 
 # we have to make one more commit on top removing the broken
@@ -29,27 +29,27 @@ test_expect_success 'setup: a commit with a bogus null sha1 in the tree' '
 # writing a null sha1 into the index.
 test_expect_success 'setup: bring HEAD and index in sync' '
 	test_tick &&
-	git commit -a -m "back to normal"
+	shit commit -a -m "back to normal"
 '
 
 test_expect_success 'noop filter-branch complains' '
-	test_must_fail git filter-branch \
+	test_must_fail shit filter-branch \
 		--force --prune-empty \
 		--index-filter "true"
 '
 
 test_expect_success 'filter commands are still checked' '
-	test_must_fail git filter-branch \
+	test_must_fail shit filter-branch \
 		--force --prune-empty \
-		--index-filter "git rm --cached --ignore-unmatch three.t"
+		--index-filter "shit rm --cached --ignore-unmatch three.t"
 '
 
 test_expect_success 'removing the broken entry works' '
 	echo three >expect &&
-	git filter-branch \
+	shit filter-branch \
 		--force --prune-empty \
-		--index-filter "git rm --cached --ignore-unmatch broken" &&
-	git log -1 --format=%s >actual &&
+		--index-filter "shit rm --cached --ignore-unmatch broken" &&
+	shit log -1 --format=%s >actual &&
 	test_cmp expect actual
 '
 

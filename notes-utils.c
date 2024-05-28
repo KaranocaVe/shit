@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "commit.h"
 #include "environment.h"
@@ -100,7 +100,7 @@ static int notes_rewrite_config(const char *k, const char *v,
 {
 	struct notes_rewrite_cfg *c = cb;
 	if (starts_with(k, "notes.rewrite.") && !strcmp(k+14, c->cmd)) {
-		c->enabled = git_config_bool(k, v);
+		c->enabled = shit_config_bool(k, v);
 		return 0;
 	} else if (!c->mode_from_env && !strcmp(k, "notes.rewritemode")) {
 		if (!v)
@@ -131,8 +131,8 @@ static int notes_rewrite_config(const char *k, const char *v,
 struct notes_rewrite_cfg *init_copy_notes_for_rewrite(const char *cmd)
 {
 	struct notes_rewrite_cfg *c = xmalloc(sizeof(struct notes_rewrite_cfg));
-	const char *rewrite_mode_env = getenv(GIT_NOTES_REWRITE_MODE_ENVIRONMENT);
-	const char *rewrite_refs_env = getenv(GIT_NOTES_REWRITE_REF_ENVIRONMENT);
+	const char *rewrite_mode_env = getenv(shit_NOTES_REWRITE_MODE_ENVIRONMENT);
+	const char *rewrite_refs_env = getenv(shit_NOTES_REWRITE_REF_ENVIRONMENT);
 	c->cmd = cmd;
 	c->enabled = 1;
 	c->combine = combine_notes_concatenate;
@@ -149,14 +149,14 @@ struct notes_rewrite_cfg *init_copy_notes_for_rewrite(const char *cmd)
 			 * the environment variable, the second %s is
 			 * its value.
 			 */
-			error(_("Bad %s value: '%s'"), GIT_NOTES_REWRITE_MODE_ENVIRONMENT,
+			error(_("Bad %s value: '%s'"), shit_NOTES_REWRITE_MODE_ENVIRONMENT,
 					rewrite_mode_env);
 	}
 	if (rewrite_refs_env) {
 		c->refs_from_env = 1;
 		string_list_add_refs_from_colon_sep(c->refs, rewrite_refs_env);
 	}
-	git_config(notes_rewrite_config, c);
+	shit_config(notes_rewrite_config, c);
 	if (!c->enabled || !c->refs->nr) {
 		string_list_clear(c->refs, 0);
 		free(c->refs);

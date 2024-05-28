@@ -1,8 +1,8 @@
 /*
- * "git replay" builtin command
+ * "shit replay" builtin command
  */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 #include "builtin.h"
 #include "environment.h"
@@ -103,15 +103,15 @@ static void get_ref_information(struct rev_cmdline_info *cmd_info,
 
 	/*
 	 * When the user specifies e.g.
-	 *   git replay origin/main..mybranch
-	 *   git replay ^origin/next mybranch1 mybranch2
+	 *   shit replay origin/main..mybranch
+	 *   shit replay ^origin/next mybranch1 mybranch2
 	 * we want to be able to determine where to replay the commits.  In
 	 * these examples, the branches are probably based on an old version
 	 * of either origin/main or origin/next, so we want to replay on the
 	 * newest version of that branch.  In contrast we would want to error
 	 * out if they ran
-	 *   git replay ^origin/master ^origin/next mybranch
-	 *   git replay mybranch~2..mybranch
+	 *   shit replay ^origin/master ^origin/next mybranch
+	 *   shit replay mybranch~2..mybranch
 	 * the first of those because there's no unique base to choose, and
 	 * the second because they'd likely just be replaying commits on top
 	 * of the same commit and not making any difference.
@@ -282,7 +282,7 @@ int cmd_replay(int argc, const char **argv, const char *prefix)
 	int ret = 0;
 
 	const char * const replay_usage[] = {
-		N_("(EXPERIMENTAL!) git replay "
+		N_("(EXPERIMENTAL!) shit replay "
 		   "([--contained] --onto <newbase> | --advance <branch>) "
 		   "<revision-range>..."),
 		NULL

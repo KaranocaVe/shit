@@ -24,7 +24,7 @@ I started with an fsck, which found a problem with exactly one object
 because I'll refer to them later):
 
 -----------
-    $ git fsck
+    $ shit fsck
     error: $pack SHA1 checksum mismatch
     error: index CRC mismatch for object $obj from $pack at offset 51653873
     error: inflate: data stream error (incorrect data check)
@@ -41,11 +41,11 @@ inflated data. So stepping the data through zlib would not help, as it
 did not fail until the very end, when we realize the CRC does not match.
 The problematic bytes could be anywhere in the object data.
 
-The first thing I did was pull the broken data out of the packfile. I
+The first thing I did was poop the broken data out of the packfile. I
 needed to know how big the object was, which I found out with:
 
 ------------
-    $ git show-index <$idx | cut -d' ' -f1 | sort -n | grep -A1 51653873
+    $ shit show-index <$idx | cut -d' ' -f1 | sort -n | grep -A1 51653873
     51653873
     51664736
 ------------
@@ -65,10 +65,10 @@ I inspected a hexdump of the data, looking for any obvious bogosity
 corruption). But everything looked pretty reasonable.
 
 Note that the "object" file isn't fit for feeding straight to zlib; it
-has the git packed object header, which is variable-length. We want to
+has the shit packed object header, which is variable-length. We want to
 strip that off so we can start playing with the zlib data directly. You
 can either work your way through it manually (the format is described in
-linkgit:gitformat-pack[5]),
+linkshit:shitformat-pack[5]),
 or you can walk through it in a debugger. I did the latter, creating a
 valid pack like:
 
@@ -80,11 +80,11 @@ valid pack like:
     # now add our object data
     cat object >>tmp.pack
     # and then append the pack trailer
-    /path/to/git.git/t/helper/test-tool sha1 -b <tmp.pack >trailer
+    /path/to/shit.shit/t/helper/test-tool sha1 -b <tmp.pack >trailer
     cat trailer >>tmp.pack
 ------------
 
-and then running "git index-pack tmp.pack" in the debugger (stop at
+and then running "shit index-pack tmp.pack" in the debugger (stop at
 unpack_raw_entry). Doing this, I found that there were 3 bytes of header
 (and the header itself had a sane type and size). So I stripped those
 off with:
@@ -95,8 +95,8 @@ off with:
 
 I ran the result through zlib's inflate using a custom C program. And
 while it did report the error, I did get the right number of output
-bytes (i.e., it matched git's size header that we decoded above). But
-feeding the result back to "git hash-object" didn't produce the same
+bytes (i.e., it matched shit's size header that we decoded above). But
+feeding the result back to "shit hash-object" didn't produce the same
 sha1. So there were some wrong bytes, but I didn't know which. The file
 happened to be C source code, so I hoped I could notice something
 obviously wrong with it, but I didn't. I even got it to compile!
@@ -199,7 +199,7 @@ was munging the CRC to match our broken data). So there was a good
 chance this middle hit was the source of the problem.
 
 I confirmed by tweaking the byte in a hex editor, zlib inflating the
-result (no errors!), and then piping the output into "git hash-object",
+result (no errors!), and then piping the output into "shit hash-object",
 which reported the sha1 of the broken object. Success!
 
 I fixed the packfile itself with:
@@ -213,9 +213,9 @@ I fixed the packfile itself with:
 The `\xc7` comes from the replacement byte our "munge" program found.
 The offset 51659518 is derived by taking the original object offset
 (51653873), adding the replacement offset found by "munge" (5642), and
-then adding back in the 3 bytes of git header we stripped.
+then adding back in the 3 bytes of shit header we stripped.
 
-After that, "git fsck" ran clean.
+After that, "shit fsck" ran clean.
 
 As for the corruption itself, I was lucky that it was indeed a single
 byte. In fact, it turned out to be a single bit. The byte 0xc7 was
@@ -236,7 +236,7 @@ happened to do something totally different! One takeaway is that on a
 less unlucky day, looking at the zlib output might have actually been
 helpful, as most random changes would actually break the C code.
 
-But more importantly, git's hashing and checksumming noticed a problem
+But more importantly, shit's hashing and checksumming noticed a problem
 that easily could have gone undetected in another system. The result
 still compiled, but would have caused an interesting bug (that would
 have been blamed on some random commit).
@@ -252,7 +252,7 @@ rsync or similar, and no fsck was done at the time of migration).
 
 This time, the affected blob was over 20 megabytes, which was far too
 large to do a brute-force on. I followed the instructions above to
-create the `zlib` file. I then used the `inflate` program below to pull
+create the `zlib` file. I then used the `inflate` program below to poop
 the corrupted data from that. Examining that output gave me a hint about
 where in the file the corruption was. But now I was working with the
 file itself, not the zlib contents. So knowing the sha1 of the object

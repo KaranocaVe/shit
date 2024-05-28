@@ -1,9 +1,9 @@
 /*
- * GIT - The information manager from hell
+ * shit - The information manager from hell
  *
  * Copyright (C) Linus Torvalds, 2005
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "bulk-checkin.h"
 #include "config.h"
 #include "date.h"
@@ -67,7 +67,7 @@
 #define CACHE_EXT_INDEXENTRYOFFSETTABLE 0x49454F54 /* "IEOT" */
 #define CACHE_EXT_SPARSE_DIRECTORIES 0x73646972 /* "sdir" */
 
-/* changes that can be kept in $GIT_DIR/index (basically all extensions) */
+/* changes that can be kept in $shit_DIR/index (basically all extensions) */
 #define EXTMASK (RESOLVE_UNDO_CHANGED | CACHE_TREE_CHANGED | \
 		 CE_ENTRY_ADDED | CE_ENTRY_REMOVED | CE_ENTRY_CHANGED | \
 		 SPLIT_INDEX_ORDERED | UNTRACKED_CHANGED | FSMONITOR_CHANGED)
@@ -179,7 +179,7 @@ void rename_index_entry_at(struct index_state *istate, int nr, const char *new_n
 
 /*
  * This only updates the "non-critical" parts of the directory
- * cache, ie the parts that aren't tracked by GIT, and only used
+ * cache, ie the parts that aren't tracked by shit, and only used
  * to validate the cache.
  */
 void fill_stat_cache_info(struct index_state *istate, struct cache_entry *ce, struct stat *st)
@@ -204,7 +204,7 @@ static unsigned int st_mode_from_ce(const struct cache_entry *ce)
 		return has_symlinks ? S_IFLNK : (S_IFREG | 0644);
 	case S_IFREG:
 		return (ce->ce_mode & (trust_executable_bit ? 0755 : 0644)) | S_IFREG;
-	case S_IFGITLINK:
+	case S_IFshitLINK:
 		return S_IFDIR | 0755;
 	case S_IFDIR:
 		return ce->ce_mode;
@@ -227,7 +227,7 @@ static int ce_compare_data(struct index_state *istate,
 			   struct stat *st)
 {
 	int match = -1;
-	int fd = git_open_cloexec(ce->name, O_RDONLY);
+	int fd = shit_open_cloexec(ce->name, O_RDONLY);
 
 	if (fd >= 0) {
 		struct object_id oid;
@@ -259,19 +259,19 @@ static int ce_compare_link(const struct cache_entry *ce, size_t expected_size)
 	return match;
 }
 
-static int ce_compare_gitlink(const struct cache_entry *ce)
+static int ce_compare_shitlink(const struct cache_entry *ce)
 {
 	struct object_id oid;
 
 	/*
-	 * We don't actually require that the .git directory
-	 * under GITLINK directory be a valid git directory. It
+	 * We don't actually require that the .shit directory
+	 * under shitLINK directory be a valid shit directory. It
 	 * might even be missing (in case nobody populated that
 	 * sub-project).
 	 *
 	 * If so, we consider it always to match.
 	 */
-	if (resolve_gitlink_ref(ce->name, "HEAD", &oid) < 0)
+	if (resolve_shitlink_ref(ce->name, "HEAD", &oid) < 0)
 		return 0;
 	return !oideq(&oid, &ce->oid);
 }
@@ -290,8 +290,8 @@ static int ce_modified_check_fs(struct index_state *istate,
 			return DATA_CHANGED;
 		break;
 	case S_IFDIR:
-		if (S_ISGITLINK(ce->ce_mode))
-			return ce_compare_gitlink(ce) ? DATA_CHANGED : 0;
+		if (S_ISshitLINK(ce->ce_mode))
+			return ce_compare_shitlink(ce) ? DATA_CHANGED : 0;
 		/* else fallthrough */
 	default:
 		return TYPE_CHANGED;
@@ -321,11 +321,11 @@ static int ce_match_stat_basic(const struct cache_entry *ce, struct stat *st)
 		    (has_symlinks || !S_ISREG(st->st_mode)))
 			changed |= TYPE_CHANGED;
 		break;
-	case S_IFGITLINK:
-		/* We ignore most of the st_xxx fields for gitlinks */
+	case S_IFshitLINK:
+		/* We ignore most of the st_xxx fields for shitlinks */
 		if (!S_ISDIR(st->st_mode))
 			changed |= TYPE_CHANGED;
-		else if (ce_compare_gitlink(ce))
+		else if (ce_compare_shitlink(ce))
 			changed |= DATA_CHANGED;
 		return changed;
 	default:
@@ -361,7 +361,7 @@ static int is_racy_stat(const struct index_state *istate,
 int is_racy_timestamp(const struct index_state *istate,
 			     const struct cache_entry *ce)
 {
-	return (!S_ISGITLINK(ce->ce_mode) &&
+	return (!S_ISshitLINK(ce->ce_mode) &&
 		is_racy_stat(istate, &ce->ce_stat_data));
 }
 
@@ -410,7 +410,7 @@ int ie_match_stat(struct index_state *istate,
 
 	/*
 	 * Within 1 second of this sequence:
-	 * 	echo xyzzy >file && git-update-index --add file
+	 * 	echo xyzzy >file && shit-update-index --add file
 	 * running this command:
 	 * 	echo frotz >file
 	 * would give a falsely clean cache entry.  The mtime and
@@ -418,7 +418,7 @@ int ie_match_stat(struct index_state *istate,
 	 *
 	 * We could detect this at update-index time (the cache entry
 	 * being registered/updated records the same time as "now")
-	 * and delay the return from git-update-index, but that would
+	 * and delay the return from shit-update-index, but that would
 	 * effectively mean we can make at most one commit per second,
 	 * which is not acceptable.  Instead, we check cache entries
 	 * whose mtime are the same as the index file timestamp more
@@ -459,13 +459,13 @@ int ie_modified(struct index_state *istate,
 	 * blob changed.  We have to actually go to the filesystem to
 	 * see if the contents match, and if so, should answer "unchanged".
 	 *
-	 * The logic does not apply to gitlinks, as ce_match_stat_basic()
+	 * The logic does not apply to shitlinks, as ce_match_stat_basic()
 	 * already has checked the actual HEAD from the filesystem in the
 	 * subproject.  If ie_match_stat() already said it is different,
 	 * then we know it is.
 	 */
 	if ((changed & DATA_CHANGED) &&
-	    (S_ISGITLINK(ce->ce_mode) || ce->ce_stat_data.sd_size != 0))
+	    (S_ISshitLINK(ce->ce_mode) || ce->ce_stat_data.sd_size != 0))
 		return changed;
 
 	changed_fs = ce_modified_check_fs(istate, ce, st);
@@ -707,11 +707,11 @@ int add_to_index(struct index_state *istate, const char *path, struct stat *st, 
 		hash_flags |= HASH_RENORMALIZE;
 
 	if (!S_ISREG(st_mode) && !S_ISLNK(st_mode) && !S_ISDIR(st_mode))
-		return error(_("%s: can only add regular files, symbolic links or git-directories"), path);
+		return error(_("%s: can only add regular files, symbolic links or shit-directories"), path);
 
 	namelen = strlen(path);
 	if (S_ISDIR(st_mode)) {
-		if (resolve_gitlink_ref(path, "HEAD", &oid) < 0)
+		if (resolve_shitlink_ref(path, "HEAD", &oid) < 0)
 			return error(_("'%s' does not have a commit checked out"), path);
 		while (namelen && path[namelen-1] == '/')
 			namelen--;
@@ -739,7 +739,7 @@ int add_to_index(struct index_state *istate, const char *path, struct stat *st, 
 	}
 
 	/* When core.ignorecase=true, determine if a directory of the same name but differing
-	 * case already exists within the Git repository.  If it does, ensure the directory
+	 * case already exists within the shit repository.  If it does, ensure the directory
 	 * case of the file being added to the repository matches (is folded into) the existing
 	 * entry's directory case.
 	 */
@@ -753,7 +753,7 @@ int add_to_index(struct index_state *istate, const char *path, struct stat *st, 
 		    !ce_stage(alias) &&
 		    !ie_match_stat(istate, alias, st, ce_option)) {
 			/* Nothing changed, really */
-			if (!S_ISGITLINK(alias->ce_mode))
+			if (!S_ISshitLINK(alias->ce_mode))
 				ce_mark_uptodate(alias);
 			alias->ce_flags |= CE_ADDED;
 
@@ -919,7 +919,7 @@ int ce_same_name(const struct cache_entry *a, const struct cache_entry *b)
 /*
  * We fundamentally don't like some paths: we don't want
  * dot or dot-dot anywhere, and for obvious reasons don't
- * want to recurse into ".git" either.
+ * want to recurse into ".shit" either.
  *
  * Also, we don't want double slashes or slashes at the
  * end that can make pathnames ambiguous.
@@ -938,12 +938,12 @@ static int verify_dotfile(const char *rest, unsigned mode)
 
 	switch (*rest) {
 	/*
-	 * ".git" followed by NUL or slash is bad. Note that we match
+	 * ".shit" followed by NUL or slash is bad. Note that we match
 	 * case-insensitively here, even if ignore_case is not set.
-	 * This outlaws ".GIT" everywhere out of an abundance of caution,
+	 * This outlaws ".shit" everywhere out of an abundance of caution,
 	 * since there's really no good reason to allow it.
 	 *
-	 * Once we've seen ".git", we can also find ".gitmodules", etc (also
+	 * Once we've seen ".shit", we can also find ".shitmodules", etc (also
 	 * case-insensitively).
 	 */
 	case 'g':
@@ -987,22 +987,22 @@ static enum verify_path_result verify_path_internal(const char *path,
 inside:
 			if (protect_hfs) {
 
-				if (is_hfs_dotgit(path))
+				if (is_hfs_dotshit(path))
 					return PATH_INVALID;
 				if (S_ISLNK(mode)) {
-					if (is_hfs_dotgitmodules(path))
+					if (is_hfs_dotshitmodules(path))
 						return PATH_INVALID;
 				}
 			}
 			if (protect_ntfs) {
-#if defined GIT_WINDOWS_NATIVE || defined __CYGWIN__
+#if defined shit_WINDOWS_NATIVE || defined __CYGWIN__
 				if (c == '\\')
 					return PATH_INVALID;
 #endif
-				if (is_ntfs_dotgit(path))
+				if (is_ntfs_dotshit(path))
 					return PATH_INVALID;
 				if (S_ISLNK(mode)) {
-					if (is_ntfs_dotgitmodules(path))
+					if (is_ntfs_dotshitmodules(path))
 						return PATH_INVALID;
 				}
 			}
@@ -1019,10 +1019,10 @@ inside:
 				return S_ISDIR(mode) ? PATH_DIR_WITH_SEP :
 						       PATH_INVALID;
 		} else if (c == '\\' && protect_ntfs) {
-			if (is_ntfs_dotgit(path))
+			if (is_ntfs_dotshit(path))
 				return PATH_INVALID;
 			if (S_ISLNK(mode)) {
-				if (is_ntfs_dotgitmodules(path))
+				if (is_ntfs_dotshitmodules(path))
 					return PATH_INVALID;
 			}
 		}
@@ -1214,7 +1214,7 @@ static int has_dir_name(struct index_state *istate,
 /* We may be in a situation where we already have path/file and path
  * is being added, or we already have path and path/file is being
  * added.  Either one would result in a nonsense tree that has path
- * twice when git-write-tree tries to write it out.  Prevent it.
+ * twice when shit-write-tree tries to write it out.  Prevent it.
  *
  * If ok-to-replace is specified, we remove the conflicting entries
  * from the cache so the caller should recompute the insert position.
@@ -1345,7 +1345,7 @@ int add_index_entry(struct index_state *istate, struct cache_entry *ce, int opti
  * file that hasn't been changed but where the stat entry is
  * out of date.
  *
- * For example, you'd want to do this after doing a "git-read-tree",
+ * For example, you'd want to do this after doing a "shit-read-tree",
  * to link up the stat cache details with the proper files.
  */
 static struct cache_entry *refresh_cache_ent(struct index_state *istate,
@@ -1425,7 +1425,7 @@ static struct cache_entry *refresh_cache_ent(struct index_state *istate,
 			 * because CE_UPTODATE flag is in-core only;
 			 * we are not going to write this change out.
 			 */
-			if (!S_ISGITLINK(ce->ce_mode)) {
+			if (!S_ISshitLINK(ce->ce_mode)) {
 				ce_mark_uptodate(ce);
 				mark_fsmonitor_valid(istate, ce);
 			}
@@ -1543,7 +1543,7 @@ int refresh_index(struct index_state *istate, unsigned int flags,
 		int t2_did_scan = 0;
 
 		ce = istate->cache[i];
-		if (ignore_submodules && S_ISGITLINK(ce->ce_mode))
+		if (ignore_submodules && S_ISshitLINK(ce->ce_mode))
 			continue;
 		if (ignore_skip_worktree && ce_skip_worktree(ce))
 			continue;
@@ -1639,7 +1639,7 @@ struct cache_entry *refresh_cache_entry(struct index_state *istate,
 
 static unsigned int get_index_format_default(struct repository *r)
 {
-	char *envversion = getenv("GIT_INDEX_VERSION");
+	char *envversion = getenv("shit_INDEX_VERSION");
 	char *endp;
 	unsigned int version = INDEX_FORMAT_DEFAULT;
 
@@ -1659,7 +1659,7 @@ static unsigned int get_index_format_default(struct repository *r)
 	version = strtoul(envversion, &endp, 10);
 	if (*endp ||
 	    version < INDEX_FORMAT_LB || INDEX_FORMAT_UB < version) {
-		warning(_("GIT_INDEX_VERSION set, but the value is invalid.\n"
+		warning(_("shit_INDEX_VERSION set, but the value is invalid.\n"
 			  "Using version %i"), INDEX_FORMAT_DEFAULT);
 		version = INDEX_FORMAT_DEFAULT;
 	}
@@ -1689,7 +1689,7 @@ struct ondisk_cache_entry {
 	 * if (flags & CE_EXTENDED)
 	 *	uint16_t flags2;
 	 */
-	unsigned char data[GIT_MAX_RAWSZ + 2 * sizeof(uint16_t)];
+	unsigned char data[shit_MAX_RAWSZ + 2 * sizeof(uint16_t)];
 	char name[FLEX_ARRAY];
 };
 
@@ -1710,8 +1710,8 @@ int verify_ce_order;
 
 static int verify_hdr(const struct cache_header *hdr, unsigned long size)
 {
-	git_hash_ctx c;
-	unsigned char hash[GIT_MAX_RAWSZ];
+	shit_hash_ctx c;
+	unsigned char hash[shit_MAX_RAWSZ];
 	int hdr_version;
 	unsigned char *start, *end;
 	struct object_id oid;
@@ -1940,7 +1940,7 @@ static void tweak_untracked_cache(struct index_state *istate)
 
 static void tweak_split_index(struct index_state *istate)
 {
-	switch (git_config_get_split_index()) {
+	switch (shit_config_get_split_index()) {
 	case -1: /* unset: do nothing */
 		break;
 	case 0: /* false */
@@ -1994,7 +1994,7 @@ static struct index_entry_offset_table *read_ieot_extension(const char *mmap, si
 static void write_ieot_extension(struct strbuf *sb, struct index_entry_offset_table *ieot);
 
 static size_t read_eoie_extension(const char *mmap, size_t mmap_size);
-static void write_eoie_extension(struct strbuf *sb, git_hash_ctx *eoie_context, size_t offset);
+static void write_eoie_extension(struct strbuf *sb, shit_hash_ctx *eoie_context, size_t offset);
 
 struct load_index_extensions
 {
@@ -2261,7 +2261,7 @@ int do_read_index(struct index_state *istate, const char *path, int must_exist)
 
 	src_offset = sizeof(*hdr);
 
-	if (git_config_get_index_threads(&nr_threads))
+	if (shit_config_get_index_threads(&nr_threads))
 		nr_threads = 1;
 
 	/* TODO: does creating more threads than cores help? */
@@ -2357,14 +2357,14 @@ static void freshen_shared_index(const char *shared_index, int warn)
 }
 
 int read_index_from(struct index_state *istate, const char *path,
-		    const char *gitdir)
+		    const char *shitdir)
 {
 	struct split_index *split_index;
 	int ret;
 	char *base_oid_hex;
 	char *base_path;
 
-	/* istate->initialized covers both .git/index and .git/sharedindex.xxx */
+	/* istate->initialized covers both .shit/index and .shit/sharedindex.xxx */
 	if (istate->initialized)
 		return istate->cache_nr;
 
@@ -2394,7 +2394,7 @@ int read_index_from(struct index_state *istate, const char *path,
 	index_state_init(split_index->base, istate->repo);
 
 	base_oid_hex = oid_to_hex(&split_index->base_oid);
-	base_path = xstrfmt("%s/sharedindex.%s", gitdir, base_oid_hex);
+	base_path = xstrfmt("%s/sharedindex.%s", shitdir, base_oid_hex);
 	if (file_exists(base_path)) {
 		trace2_region_enter_printf("index", "shared/do_read_index",
 					the_repository, "%s", base_path);
@@ -2556,7 +2556,7 @@ int repo_index_has_changes(struct repository *repo,
 }
 
 static int write_index_ext_header(struct hashfile *f,
-				  git_hash_ctx *eoie_f,
+				  shit_hash_ctx *eoie_f,
 				  unsigned int ext,
 				  unsigned int sz)
 {
@@ -2581,10 +2581,10 @@ static void ce_smudge_racily_clean_entry(struct index_state *istate,
 	 * everything else as they are.  We are called for entries whose
 	 * ce_stat_data.sd_mtime match the index file mtime.
 	 *
-	 * Note that this actually does not do much for gitlinks, for
+	 * Note that this actually does not do much for shitlinks, for
 	 * which ce_match_stat_basic() always goes to the actual
 	 * contents.  The caller checks with is_racy_timestamp() which
-	 * always says "no" for gitlinks, so we are not called for them ;-)
+	 * always says "no" for shitlinks, so we are not called for them ;-)
 	 */
 	struct stat st;
 
@@ -2598,11 +2598,11 @@ static void ce_smudge_racily_clean_entry(struct index_state *istate,
 		 * that it can break with this sequence:
 		 *
 		 * $ echo xyzzy >frotz
-		 * $ git-update-index --add frotz
+		 * $ shit-update-index --add frotz
 		 * $ : >frotz
 		 * $ sleep 3
 		 * $ echo filfre >nitfol
-		 * $ git-update-index --add nitfol
+		 * $ shit-update-index --add nitfol
 		 *
 		 * but it does not.  When the second update-index runs,
 		 * it notices that the entry "frotz" has the same timestamp
@@ -2710,7 +2710,7 @@ static int verify_index_from(const struct index_state *istate, const char *path)
 	int fd;
 	ssize_t n;
 	struct stat st;
-	unsigned char hash[GIT_MAX_RAWSZ];
+	unsigned char hash[shit_MAX_RAWSZ];
 
 	if (!istate->initialized)
 		return 0;
@@ -2773,7 +2773,7 @@ static int record_eoie(void)
 {
 	int val;
 
-	if (!git_config_get_bool("index.recordendofindexentries", &val))
+	if (!shit_config_get_bool("index.recordendofindexentries", &val))
 		return val;
 
 	/*
@@ -2781,14 +2781,14 @@ static int record_eoie(void)
 	 * used for threading is written by default if the user
 	 * explicitly requested threaded index reads.
 	 */
-	return !git_config_get_index_threads(&val) && val != 1;
+	return !shit_config_get_index_threads(&val) && val != 1;
 }
 
 static int record_ieot(void)
 {
 	int val;
 
-	if (!git_config_get_bool("index.recordoffsettable", &val))
+	if (!shit_config_get_bool("index.recordoffsettable", &val))
 		return val;
 
 	/*
@@ -2796,7 +2796,7 @@ static int record_ieot(void)
 	 * written by default if the user explicitly requested
 	 * threaded index reads.
 	 */
-	return !git_config_get_index_threads(&val) && val != 1;
+	return !shit_config_get_index_threads(&val) && val != 1;
 }
 
 enum write_extensions {
@@ -2821,7 +2821,7 @@ static int do_write_index(struct index_state *istate, struct tempfile *tempfile,
 {
 	uint64_t start = getnanotime();
 	struct hashfile *f;
-	git_hash_ctx *eoie_c = NULL;
+	shit_hash_ctx *eoie_c = NULL;
 	struct cache_header hdr;
 	int i, err = 0, removed, extended, hdr_version;
 	struct cache_entry **cache = istate->cache;
@@ -2869,7 +2869,7 @@ static int do_write_index(struct index_state *istate, struct tempfile *tempfile,
 
 	hashwrite(f, &hdr, sizeof(hdr));
 
-	if (!HAVE_THREADS || git_config_get_index_threads(&nr_threads))
+	if (!HAVE_THREADS || shit_config_get_index_threads(&nr_threads))
 		nr_threads = 1;
 
 	if (nr_threads != 1 && record_ieot()) {
@@ -2918,7 +2918,7 @@ static int do_write_index(struct index_state *istate, struct tempfile *tempfile,
 			static int allow = -1;
 
 			if (allow < 0)
-				allow = git_env_bool("GIT_ALLOW_NULL_SHA1", 0);
+				allow = shit_env_bool("shit_ALLOW_NULL_SHA1", 0);
 			if (allow)
 				warning(msg, ce->name);
 			else
@@ -3178,7 +3178,7 @@ static unsigned long get_shared_index_expire_date(void)
 	static int shared_index_expire_date_prepared;
 
 	if (!shared_index_expire_date_prepared) {
-		git_config_get_expiry("splitindex.sharedindexexpire",
+		shit_config_get_expiry("splitindex.sharedindexexpire",
 				      &shared_index_expire);
 		shared_index_expire_date = approxidate(shared_index_expire);
 		shared_index_expire_date_prepared = 1;
@@ -3207,10 +3207,10 @@ static int should_delete_shared_index(const char *shared_index_path)
 static int clean_shared_index_files(const char *current_hex)
 {
 	struct dirent *de;
-	DIR *dir = opendir(get_git_dir());
+	DIR *dir = opendir(get_shit_dir());
 
 	if (!dir)
-		return error_errno(_("unable to open git dir: %s"), get_git_dir());
+		return error_errno(_("unable to open shit dir: %s"), get_shit_dir());
 
 	while ((de = readdir(dir)) != NULL) {
 		const char *sha1_hex;
@@ -3219,7 +3219,7 @@ static int clean_shared_index_files(const char *current_hex)
 			continue;
 		if (!strcmp(sha1_hex, current_hex))
 			continue;
-		shared_index_path = git_path("%s", de->d_name);
+		shared_index_path = shit_path("%s", de->d_name);
 		if (should_delete_shared_index(shared_index_path) > 0 &&
 		    unlink(shared_index_path))
 			warning_errno(_("unable to unlink: %s"), shared_index_path);
@@ -3255,7 +3255,7 @@ static int write_shared_index(struct index_state *istate,
 		return ret;
 	}
 	ret = rename_tempfile(temp,
-			      git_path("sharedindex.%s", oid_to_hex(&si->base->oid)));
+			      shit_path("sharedindex.%s", oid_to_hex(&si->base->oid)));
 	if (!ret) {
 		oidcpy(&si->base_oid, &si->base->oid);
 		clean_shared_index_files(oid_to_hex(&si->base->oid));
@@ -3269,7 +3269,7 @@ static const int default_max_percent_split_change = 20;
 static int too_many_not_shared_entries(struct index_state *istate)
 {
 	int i, not_shared = 0;
-	int max_split = git_config_get_max_percent_split_change();
+	int max_split = shit_config_get_max_percent_split_change();
 
 	switch (max_split) {
 	case -1:
@@ -3300,7 +3300,7 @@ int write_locked_index(struct index_state *istate, struct lock_file *lock,
 	int new_shared_index, ret, test_split_index_env;
 	struct split_index *si = istate->split_index;
 
-	if (git_env_bool("GIT_TEST_CHECK_CACHE_TREE", 0))
+	if (shit_env_bool("shit_TEST_CHECK_CACHE_TREE", 0))
 		cache_tree_verify(the_repository, istate);
 
 	if ((flags & SKIP_IF_UNCHANGED) && !istate->cache_changed) {
@@ -3312,7 +3312,7 @@ int write_locked_index(struct index_state *istate, struct lock_file *lock,
 	if (istate->fsmonitor_last_update)
 		fill_fsmonitor_bitmap(istate);
 
-	test_split_index_env = git_env_bool("GIT_TEST_SPLIT_INDEX", 0);
+	test_split_index_env = shit_env_bool("shit_TEST_SPLIT_INDEX", 0);
 
 	if ((!si && !test_split_index_env) ||
 	    alternate_index_output ||
@@ -3341,8 +3341,8 @@ int write_locked_index(struct index_state *istate, struct lock_file *lock,
 		struct tempfile *temp;
 		int saved_errno;
 
-		/* Same initial permissions as the main .git/index file */
-		temp = mks_tempfile_sm(git_path("sharedindex_XXXXXX"), 0, 0666);
+		/* Same initial permissions as the main .shit/index file */
+		temp = mks_tempfile_sm(shit_path("sharedindex_XXXXXX"), 0, 0666);
 		if (!temp) {
 			ret = do_write_locked_index(istate, lock, flags,
 						    ~WRITE_SPLIT_INDEX_EXTENSION);
@@ -3363,7 +3363,7 @@ int write_locked_index(struct index_state *istate, struct lock_file *lock,
 
 	/* Freshen the shared index only if the split-index was written */
 	if (!ret && !new_shared_index && !is_null_oid(&si->base_oid)) {
-		const char *shared_index = git_path("sharedindex.%s",
+		const char *shared_index = shit_path("sharedindex.%s",
 						    oid_to_hex(&si->base_oid));
 		freshen_shared_index(shared_index, 1);
 	}
@@ -3514,7 +3514,7 @@ int should_validate_cache_entries(void)
 	static int validate_index_cache_entries = -1;
 
 	if (validate_index_cache_entries < 0) {
-		if (getenv("GIT_TEST_VALIDATE_INDEX_CACHE_ENTRIES"))
+		if (getenv("shit_TEST_VALIDATE_INDEX_CACHE_ENTRIES"))
 			validate_index_cache_entries = 1;
 		else
 			validate_index_cache_entries = 0;
@@ -3523,7 +3523,7 @@ int should_validate_cache_entries(void)
 	return validate_index_cache_entries;
 }
 
-#define EOIE_SIZE (4 + GIT_SHA1_RAWSZ) /* <4-byte offset> + <20-byte hash> */
+#define EOIE_SIZE (4 + shit_SHA1_RAWSZ) /* <4-byte offset> + <20-byte hash> */
 #define EOIE_SIZE_WITH_HEADER (4 + 4 + EOIE_SIZE) /* <4-byte signature> + <4-byte length> + EOIE_SIZE */
 
 static size_t read_eoie_extension(const char *mmap, size_t mmap_size)
@@ -3540,8 +3540,8 @@ static size_t read_eoie_extension(const char *mmap, size_t mmap_size)
 	const char *index, *eoie;
 	uint32_t extsize;
 	size_t offset, src_offset;
-	unsigned char hash[GIT_MAX_RAWSZ];
-	git_hash_ctx c;
+	unsigned char hash[shit_MAX_RAWSZ];
+	shit_hash_ctx c;
 
 	/* ensure we have an index big enough to contain an EOIE extension */
 	if (mmap_size < sizeof(struct cache_header) + EOIE_SIZE_WITH_HEADER + the_hash_algo->rawsz)
@@ -3612,10 +3612,10 @@ static size_t read_eoie_extension(const char *mmap, size_t mmap_size)
 	return offset;
 }
 
-static void write_eoie_extension(struct strbuf *sb, git_hash_ctx *eoie_context, size_t offset)
+static void write_eoie_extension(struct strbuf *sb, shit_hash_ctx *eoie_context, size_t offset)
 {
 	uint32_t buffer;
-	unsigned char hash[GIT_MAX_RAWSZ];
+	unsigned char hash[shit_MAX_RAWSZ];
 
 	/* offset */
 	put_be32(&buffer, offset);
@@ -3708,7 +3708,7 @@ void prefetch_cache_entries(const struct index_state *istate,
 	for (i = 0; i < istate->cache_nr; i++) {
 		struct cache_entry *ce = istate->cache[i];
 
-		if (S_ISGITLINK(ce->ce_mode) || !must_prefetch(ce))
+		if (S_ISshitLINK(ce->ce_mode) || !must_prefetch(ce))
 			continue;
 		if (!oid_object_info_extended(the_repository, &ce->oid,
 					      NULL,

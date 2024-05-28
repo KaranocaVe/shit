@@ -1,17 +1,17 @@
-git-fsmonitor{litdd}daemon(1)
+shit-fsmonitor{litdd}daemon(1)
 =============================
 
 NAME
 ----
-git-fsmonitor--daemon - A Built-in Filesystem Monitor
+shit-fsmonitor--daemon - A Built-in Filesystem Monitor
 
 SYNOPSIS
 --------
 [verse]
-'git fsmonitor{litdd}daemon' start
-'git fsmonitor{litdd}daemon' run
-'git fsmonitor{litdd}daemon' stop
-'git fsmonitor{litdd}daemon' status
+'shit fsmonitor{litdd}daemon' start
+'shit fsmonitor{litdd}daemon' run
+'shit fsmonitor{litdd}daemon' stop
+'shit fsmonitor{litdd}daemon' status
 
 DESCRIPTION
 -----------
@@ -19,11 +19,11 @@ DESCRIPTION
 A daemon to watch the working directory for file and directory
 changes using platform-specific filesystem notification facilities.
 
-This daemon communicates directly with commands like `git status`
+This daemon communicates directly with commands like `shit status`
 using the link:technical/api-simple-ipc.html[simple IPC] interface
-instead of the slower linkgit:githooks[5] interface.
+instead of the slower linkshit:shithooks[5] interface.
 
-This daemon is built into Git so that no third-party tools are
+This daemon is built into shit so that no third-party tools are
 required.
 
 OPTIONS
@@ -48,16 +48,16 @@ REMARKS
 
 This daemon is a long running process used to watch a single working
 directory and maintain a list of the recently changed files and
-directories.  Performance of commands such as `git status` can be
+directories.  Performance of commands such as `shit status` can be
 increased if they just ask for a summary of changes to the working
 directory and can avoid scanning the disk.
 
-When `core.fsmonitor` is set to `true` (see linkgit:git-config[1])
-commands, such as `git status`, will ask the daemon for changes and
+When `core.fsmonitor` is set to `true` (see linkshit:shit-config[1])
+commands, such as `shit status`, will ask the daemon for changes and
 automatically start it (if necessary).
 
 For more information see the "File System Monitor" section in
-linkgit:git-update-index[1].
+linkshit:shit-update-index[1].
 
 CAVEATS
 -------
@@ -76,21 +76,21 @@ repositories; this may be overridden by setting `fsmonitor.allowRemote` to
 correctly with all network-mounted repositories, so such use is considered
 experimental.
 
-On Mac OS, the inter-process communication (IPC) between various Git
+On Mac OS, the inter-process communication (IPC) between various shit
 commands and the fsmonitor daemon is done via a Unix domain socket (UDS) -- a
 special type of file -- which is supported by native Mac OS filesystems,
 but not on network-mounted filesystems, NTFS, or FAT32.  Other filesystems
 may or may not have the needed support; the fsmonitor daemon is not guaranteed
 to work with these filesystems and such use is considered experimental.
 
-By default, the socket is created in the `.git` directory.  However, if the
-`.git` directory is on a network-mounted filesystem, it will instead be
-created at `$HOME/.git-fsmonitor-*` unless `$HOME` itself is on a
+By default, the socket is created in the `.shit` directory.  However, if the
+`.shit` directory is on a network-mounted filesystem, it will instead be
+created at `$HOME/.shit-fsmonitor-*` unless `$HOME` itself is on a
 network-mounted filesystem, in which case you must set the configuration
 variable `fsmonitor.socketDir` to the path of a directory on a Mac OS native
 filesystem in which to create the socket file.
 
-If none of the above directories (`.git`, `$HOME`, or `fsmonitor.socketDir`)
+If none of the above directories (`.shit`, `$HOME`, or `fsmonitor.socketDir`)
 is on a native Mac OS file filesystem the fsmonitor daemon will report an
 error that will cause the daemon and the currently running command to exit.
 
@@ -101,6 +101,6 @@ include::includes/cmd-config-section-all.txt[]
 
 include::config/fsmonitor--daemon.txt[]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,4 +1,4 @@
-Git v2.31.8 Release Notes
+shit v2.31.8 Release Notes
 =========================
 
 This release merges the fixes that appear in v2.30.9 to address the

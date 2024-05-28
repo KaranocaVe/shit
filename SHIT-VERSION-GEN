@@ -1,0 +1,40 @@
+#!/bin/sh
+
+GVF=shit-VERSION-FILE
+DEF_VER=v2.45.shit
+
+LF='
+'
+
+# First see if there is a version file (included in release tarballs),
+# then try shit-describe, then default.
+if test -f version
+then
+	VN=$(cat version) || VN="$DEF_VER"
+elif { test -d "${shit_DIR:-.shit}" || test -f .shit; } &&
+	VN=$(shit describe --match "v[0-9]*" HEAD 2>/dev/null) &&
+	case "$VN" in
+	*$LF*) (exit 1) ;;
+	v[0-9]*)
+		shit update-index -q --refresh
+		test -z "$(shit diff-index --name-only HEAD --)" ||
+		VN="$VN-dirty" ;;
+	esac
+then
+	VN=$(echo "$VN" | sed -e 's/-/./g');
+else
+	VN="$DEF_VER"
+fi
+
+VN=$(expr "$VN" : v*'\(.*\)')
+
+if test -r $GVF
+then
+	VC=$(sed -e 's/^shit_VERSION = //' <$GVF)
+else
+	VC=unset
+fi
+test "$VN" = "$VC" || {
+	echo >&2 "shit_VERSION = $VN"
+	echo "shit_VERSION = $VN" >$GVF
+}

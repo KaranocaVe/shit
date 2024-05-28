@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "commit-graph.h"
 #include "repository.h"
 
@@ -15,7 +15,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 	/*
 	 * Initialize the_repository with commit-graph settings that would
-	 * normally be read from the repository's gitdir. We want to avoid
+	 * normally be read from the repository's shitdir. We want to avoid
 	 * touching the disk to keep the individual fuzz-test cases as fast as
 	 * possible.
 	 */

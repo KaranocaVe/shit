@@ -7,9 +7,9 @@
 #include "repository.h"
 
 static const char * const builtin_range_diff_usage[] = {
-N_("git range-diff [<options>] <old-base>..<old-tip> <new-base>..<new-tip>"),
-N_("git range-diff [<options>] <old-tip>...<new-tip>"),
-N_("git range-diff [<options>] <base> <old-tip> <new-tip>"),
+N_("shit range-diff [<options>] <old-base>..<old-tip> <new-base>..<new-tip>"),
+N_("shit range-diff [<options>] <old-tip>...<new-tip>"),
+N_("shit range-diff [<options>] <base> <old-tip> <new-tip>"),
 NULL
 };
 
@@ -30,7 +30,7 @@ int cmd_range_diff(int argc, const char **argv, const char *prefix)
 		OPT_BOOL(0, "no-dual-color", &simple_color,
 			    N_("use simple diff colors")),
 		OPT_PASSTHRU_ARGV(0, "notes", &other_arg,
-				  N_("notes"), N_("passed to 'git log'"),
+				  N_("notes"), N_("passed to 'shit log'"),
 				  PARSE_OPT_OPTARG),
 		OPT_BOOL(0, "left-only", &left_only,
 			 N_("only emit output related to the first range")),
@@ -44,7 +44,7 @@ int cmd_range_diff(int argc, const char **argv, const char *prefix)
 	struct object_id oid;
 	const char *three_dots = NULL;
 
-	git_config(git_diff_ui_config, NULL);
+	shit_config(shit_diff_ui_config, NULL);
 
 	repo_diff_setup(the_repository, &diffopt);
 
@@ -87,7 +87,7 @@ int cmd_range_diff(int argc, const char **argv, const char *prefix)
 		strbuf_addf(&range1, "%s..%s", argv[0], argv[1]);
 		strbuf_addf(&range2, "%s..%s", argv[0], argv[2]);
 
-		strvec_pushv(&other_arg, argv +
+		strvec_defecatev(&other_arg, argv +
 			     (dash_dash < 0 ? 3 : dash_dash));
 	} else if (dash_dash == 2 ||
 		   (dash_dash < 0 && argc > 1 &&
@@ -107,7 +107,7 @@ int cmd_range_diff(int argc, const char **argv, const char *prefix)
 		strbuf_addstr(&range1, argv[0]);
 		strbuf_addstr(&range2, argv[1]);
 
-		strvec_pushv(&other_arg, argv +
+		strvec_defecatev(&other_arg, argv +
 			     (dash_dash < 0 ? 2 : dash_dash));
 	} else if (dash_dash == 1 ||
 		   (dash_dash < 0 && argc > 0 &&
@@ -138,7 +138,7 @@ int cmd_range_diff(int argc, const char **argv, const char *prefix)
 		strbuf_addf(&range1, "%s..%.*s", b, a_len, a);
 		strbuf_addf(&range2, "%.*s..%s", a_len, a, b);
 
-		strvec_pushv(&other_arg, argv +
+		strvec_defecatev(&other_arg, argv +
 			     (dash_dash < 0 ? 1 : dash_dash));
 	} else
 		usage_msg_opt(_("need two commit ranges"),

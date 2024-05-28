@@ -26,7 +26,7 @@ const struct object_id *do_lookup_replace_object(struct repository *r,
  * Return 1 if and only if all of the following are true:
  *
  *  a. disable_replace_refs() has not been called.
- *  b. GIT_NO_REPLACE_OBJECTS is unset or zero.
+ *  b. shit_NO_REPLACE_OBJECTS is unset or zero.
  *  c. the given repository does not have core.useReplaceRefs=false.
  */
 int replace_refs_enabled(struct repository *r);

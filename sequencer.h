@@ -9,7 +9,7 @@ struct commit;
 struct index_state;
 struct repository;
 
-const char *git_path_commit_editmsg(void);
+const char *shit_path_commit_editmsg(void);
 const char *rebase_path_todo(void);
 const char *rebase_path_todo_backup(void);
 const char *rebase_path_dropped(void);
@@ -264,10 +264,10 @@ int sequencer_get_last_command(struct repository* r,
 int sequencer_determine_whence(struct repository *r, enum commit_whence *whence);
 
 /**
- * Append the set of ref-OID pairs that are currently stored for the 'git
+ * Append the set of ref-OID pairs that are currently stored for the 'shit
  * rebase --update-refs' feature if such a rebase is currently happening.
  *
- * Localized to a worktree's git dir.
+ * Localized to a worktree's shit dir.
  */
 int sequencer_get_update_refs_state(const char *wt_dir, struct string_list *refs);
 

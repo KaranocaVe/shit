@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "copy.h"
 #include "path.h"
 #include "gettext.h"

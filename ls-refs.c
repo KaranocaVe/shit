@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "environment.h"
 #include "gettext.h"
 #include "hash.h"
@@ -127,7 +127,7 @@ static void send_possibly_unborn_head(struct ls_refs_data *data)
 	int flag;
 	int oid_is_null;
 
-	strbuf_addf(&namespaced, "%sHEAD", get_git_namespace());
+	strbuf_addf(&namespaced, "%sHEAD", get_shit_namespace());
 	if (!refs_resolve_ref_unsafe(get_main_ref_store(the_repository), namespaced.buf, 0, &oid, &flag))
 		return; /* bad ref */
 	oid_is_null = is_null_oid(&oid);
@@ -159,7 +159,7 @@ int ls_refs(struct repository *r, struct packet_reader *request)
 	strbuf_init(&data.buf, 0);
 	strvec_init(&data.hidden_refs);
 
-	git_config(ls_refs_config, &data);
+	shit_config(ls_refs_config, &data);
 
 	while (packet_reader_read(request) == PACKET_READ_NORMAL) {
 		const char *arg = request->line;
@@ -171,7 +171,7 @@ int ls_refs(struct repository *r, struct packet_reader *request)
 			data.symrefs = 1;
 		else if (skip_prefix(arg, "ref-prefix ", &out)) {
 			if (data.prefixes.nr < TOO_MANY_PREFIXES)
-				strvec_push(&data.prefixes, out);
+				strvec_defecate(&data.prefixes, out);
 		}
 		else if (!strcmp("unborn", arg))
 			data.unborn = !!unborn_config(r);
@@ -192,9 +192,9 @@ int ls_refs(struct repository *r, struct packet_reader *request)
 
 	send_possibly_unborn_head(&data);
 	if (!data.prefixes.nr)
-		strvec_push(&data.prefixes, "");
+		strvec_defecate(&data.prefixes, "");
 	refs_for_each_fullref_in_prefixes(get_main_ref_store(r),
-					  get_git_namespace(), data.prefixes.v,
+					  get_shit_namespace(), data.prefixes.v,
 					  hidden_refs_to_excludes(&data.hidden_refs),
 					  send_ref, &data);
 	packet_fflush(stdout);

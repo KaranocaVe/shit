@@ -5,7 +5,7 @@ sendemail.identity::
 	the value of `sendemail.identity`.
 
 sendemail.smtpEncryption::
-	See linkgit:git-send-email[1] for description.  Note that this
+	See linkshit:shit-send-email[1] for description.  Note that this
 	setting is not subject to the 'identity' mechanism.
 
 sendemail.smtpSSLCertPath::
@@ -27,7 +27,7 @@ sendemail.multiEdit::
 sendemail.confirm::
 	Sets the default for whether to confirm before sending. Must be
 	one of 'always', 'never', 'cc', 'compose', or 'auto'. See `--confirm`
-	in the linkgit:git-send-email[1] documentation for the meaning of these
+	in the linkshit:shit-send-email[1] documentation for the meaning of these
 	values.
 
 sendemail.aliasesFile::
@@ -78,7 +78,7 @@ sendemail.transferEncoding::
 sendemail.validate::
 sendemail.xmailer::
 	These configuration variables all provide a default for
-	linkgit:git-send-email[1] command-line options. See its
+	linkshit:shit-send-email[1] command-line options. See its
 	documentation for details.
 
 sendemail.signedOffCc (deprecated)::
@@ -88,13 +88,13 @@ sendemail.smtpBatchSize::
 	Number of messages to be sent per connection, after that a relogin
 	will happen.  If the value is 0 or undefined, send all messages in
 	one connection.
-	See also the `--batch-size` option of linkgit:git-send-email[1].
+	See also the `--batch-size` option of linkshit:shit-send-email[1].
 
 sendemail.smtpReloginDelay::
 	Seconds to wait before reconnecting to the smtp server.
-	See also the `--relogin-delay` option of linkgit:git-send-email[1].
+	See also the `--relogin-delay` option of linkshit:shit-send-email[1].
 
 sendemail.forbidSendmailVariables::
-	To avoid common misconfiguration mistakes, linkgit:git-send-email[1]
+	To avoid common misconfiguration mistakes, linkshit:shit-send-email[1]
 	will abort with a warning if any configuration options for "sendmail"
 	exist. Set this variable to bypass the check.

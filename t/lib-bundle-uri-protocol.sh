@@ -1,7 +1,7 @@
 # Set up and run tests of the 'bundle-uri' command in protocol v2
 #
 # The test that includes this script should set BUNDLE_URI_PROTOCOL
-# to one of "file", "git", or "http".
+# to one of "file", "shit", or "http".
 
 BUNDLE_URI_TEST_PARENT=
 BUNDLE_URI_TEST_URI=
@@ -13,13 +13,13 @@ file)
 	BUNDLE_URI_BUNDLE_URI="$BUNDLE_URI_REPO_URI/fake.bdl"
 	test_set_prereq BUNDLE_URI_FILE
 	;;
-git)
-	. "$TEST_DIRECTORY"/lib-git-daemon.sh
-	start_git_daemon --export-all --enable=receive-pack
-	BUNDLE_URI_PARENT="$GIT_DAEMON_DOCUMENT_ROOT_PATH/parent"
-	BUNDLE_URI_REPO_URI="$GIT_DAEMON_URL/parent"
+shit)
+	. "$TEST_DIRECTORY"/lib-shit-daemon.sh
+	start_shit_daemon --export-all --enable=receive-pack
+	BUNDLE_URI_PARENT="$shit_DAEMON_DOCUMENT_ROOT_PATH/parent"
+	BUNDLE_URI_REPO_URI="$shit_DAEMON_URL/parent"
 	BUNDLE_URI_BUNDLE_URI="https://example.com/fake.bdl"
-	test_set_prereq BUNDLE_URI_GIT
+	test_set_prereq BUNDLE_URI_shit
 	;;
 http)
 	. "$TEST_DIRECTORY"/lib-httpd.sh
@@ -35,15 +35,15 @@ http)
 esac
 
 test_expect_success "setup protocol v2 $BUNDLE_URI_PROTOCOL:// tests" '
-	git init "$BUNDLE_URI_PARENT" &&
+	shit init "$BUNDLE_URI_PARENT" &&
 	test_commit -C "$BUNDLE_URI_PARENT" one &&
-	git -C "$BUNDLE_URI_PARENT" config uploadpack.advertiseBundleURIs true
+	shit -C "$BUNDLE_URI_PARENT" config uploadpack.advertiseBundleURIs true
 '
 
 case "$BUNDLE_URI_PROTOCOL" in
 http)
 	test_expect_success "setup config for $BUNDLE_URI_PROTOCOL:// tests" '
-		git -C "$BUNDLE_URI_PARENT" config http.receivepack true
+		shit -C "$BUNDLE_URI_PARENT" config http.receivepack true
 	'
 	;;
 *)
@@ -53,11 +53,11 @@ BUNDLE_URI_BUNDLE_URI_ESCAPED=$(echo "$BUNDLE_URI_BUNDLE_URI" | test_uri_escape)
 
 test_expect_success "connect with $BUNDLE_URI_PROTOCOL:// using protocol v2: no bundle-uri" '
 	test_when_finished "rm -f log" &&
-	test_when_finished "git -C \"$BUNDLE_URI_PARENT\" config uploadpack.advertiseBundleURIs true" &&
-	git -C "$BUNDLE_URI_PARENT" config uploadpack.advertiseBundleURIs false &&
+	test_when_finished "shit -C \"$BUNDLE_URI_PARENT\" config uploadpack.advertiseBundleURIs true" &&
+	shit -C "$BUNDLE_URI_PARENT" config uploadpack.advertiseBundleURIs false &&
 
-	GIT_TRACE_PACKET="$PWD/log" \
-	git \
+	shit_TRACE_PACKET="$PWD/log" \
+	shit \
 		-c protocol.version=2 \
 		ls-remote --symref "$BUNDLE_URI_REPO_URI" \
 		>actual 2>err &&
@@ -71,8 +71,8 @@ test_expect_success "connect with $BUNDLE_URI_PROTOCOL:// using protocol v2: no 
 test_expect_success "connect with $BUNDLE_URI_PROTOCOL:// using protocol v2: have bundle-uri" '
 	test_when_finished "rm -f log" &&
 
-	GIT_TRACE_PACKET="$PWD/log" \
-	git \
+	shit_TRACE_PACKET="$PWD/log" \
+	shit \
 		-c protocol.version=2 \
 		ls-remote --symref "$BUNDLE_URI_REPO_URI" \
 		>actual 2>err &&
@@ -87,8 +87,8 @@ test_expect_success "connect with $BUNDLE_URI_PROTOCOL:// using protocol v2: hav
 test_expect_success "clone with $BUNDLE_URI_PROTOCOL:// using protocol v2: request bundle-uris" '
 	test_when_finished "rm -rf log* cloned*" &&
 
-	GIT_TRACE_PACKET="$PWD/log" \
-	git \
+	shit_TRACE_PACKET="$PWD/log" \
+	shit \
 		-c transfer.bundleURI=false \
 		-c protocol.version=2 \
 		clone "$BUNDLE_URI_REPO_URI" cloned \
@@ -103,8 +103,8 @@ test_expect_success "clone with $BUNDLE_URI_PROTOCOL:// using protocol v2: reque
 	# Client did not issue bundle-uri command
 	! grep "> command=bundle-uri" log &&
 
-	GIT_TRACE_PACKET="$PWD/log" \
-	git \
+	shit_TRACE_PACKET="$PWD/log" \
+	shit \
 		-c transfer.bundleURI=true \
 		-c protocol.version=2 \
 		clone "$BUNDLE_URI_REPO_URI" cloned2 \
@@ -119,8 +119,8 @@ test_expect_success "clone with $BUNDLE_URI_PROTOCOL:// using protocol v2: reque
 	# Client issued bundle-uri command
 	grep "> command=bundle-uri" log &&
 
-	GIT_TRACE_PACKET="$PWD/log3" \
-	git \
+	shit_TRACE_PACKET="$PWD/log3" \
+	shit \
 		-c transfer.bundleURI=true \
 		-c protocol.version=2 \
 		clone --bundle-uri="$BUNDLE_URI_BUNDLE_URI" \
@@ -141,7 +141,7 @@ test_expect_success "clone with $BUNDLE_URI_PROTOCOL:// using protocol v2: reque
 #
 # This test can be removed when transfer.bundleURI is enabled by default.
 test_expect_success 'enable transfer.bundleURI for remaining tests' '
-	git config --global transfer.bundleURI true
+	shit config --global transfer.bundleURI true
 '
 
 test_expect_success "test bundle-uri with $BUNDLE_URI_PROTOCOL:// using protocol v2" '

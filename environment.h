@@ -18,51 +18,51 @@ extern int auto_comment_line_char;
 const char *getenv_safe(struct strvec *argv, const char *name);
 
 /* Double-check local_repo_env below if you add to this list. */
-#define GIT_DIR_ENVIRONMENT "GIT_DIR"
-#define GIT_COMMON_DIR_ENVIRONMENT "GIT_COMMON_DIR"
-#define GIT_NAMESPACE_ENVIRONMENT "GIT_NAMESPACE"
-#define GIT_WORK_TREE_ENVIRONMENT "GIT_WORK_TREE"
-#define GIT_PREFIX_ENVIRONMENT "GIT_PREFIX"
-#define DEFAULT_GIT_DIR_ENVIRONMENT ".git"
-#define DB_ENVIRONMENT "GIT_OBJECT_DIRECTORY"
-#define INDEX_ENVIRONMENT "GIT_INDEX_FILE"
-#define GRAFT_ENVIRONMENT "GIT_GRAFT_FILE"
-#define GIT_SHALLOW_FILE_ENVIRONMENT "GIT_SHALLOW_FILE"
-#define TEMPLATE_DIR_ENVIRONMENT "GIT_TEMPLATE_DIR"
-#define CONFIG_ENVIRONMENT "GIT_CONFIG"
-#define CONFIG_DATA_ENVIRONMENT "GIT_CONFIG_PARAMETERS"
-#define CONFIG_COUNT_ENVIRONMENT "GIT_CONFIG_COUNT"
-#define EXEC_PATH_ENVIRONMENT "GIT_EXEC_PATH"
-#define CEILING_DIRECTORIES_ENVIRONMENT "GIT_CEILING_DIRECTORIES"
-#define NO_REPLACE_OBJECTS_ENVIRONMENT "GIT_NO_REPLACE_OBJECTS"
-#define GIT_REPLACE_REF_BASE_ENVIRONMENT "GIT_REPLACE_REF_BASE"
-#define NO_LAZY_FETCH_ENVIRONMENT "GIT_NO_LAZY_FETCH"
-#define GITATTRIBUTES_FILE ".gitattributes"
+#define shit_DIR_ENVIRONMENT "shit_DIR"
+#define shit_COMMON_DIR_ENVIRONMENT "shit_COMMON_DIR"
+#define shit_NAMESPACE_ENVIRONMENT "shit_NAMESPACE"
+#define shit_WORK_TREE_ENVIRONMENT "shit_WORK_TREE"
+#define shit_PREFIX_ENVIRONMENT "shit_PREFIX"
+#define DEFAULT_shit_DIR_ENVIRONMENT ".shit"
+#define DB_ENVIRONMENT "shit_OBJECT_DIRECTORY"
+#define INDEX_ENVIRONMENT "shit_INDEX_FILE"
+#define GRAFT_ENVIRONMENT "shit_GRAFT_FILE"
+#define shit_SHALLOW_FILE_ENVIRONMENT "shit_SHALLOW_FILE"
+#define TEMPLATE_DIR_ENVIRONMENT "shit_TEMPLATE_DIR"
+#define CONFIG_ENVIRONMENT "shit_CONFIG"
+#define CONFIG_DATA_ENVIRONMENT "shit_CONFIG_PARAMETERS"
+#define CONFIG_COUNT_ENVIRONMENT "shit_CONFIG_COUNT"
+#define EXEC_PATH_ENVIRONMENT "shit_EXEC_PATH"
+#define CEILING_DIRECTORIES_ENVIRONMENT "shit_CEILING_DIRECTORIES"
+#define NO_REPLACE_OBJECTS_ENVIRONMENT "shit_NO_REPLACE_OBJECTS"
+#define shit_REPLACE_REF_BASE_ENVIRONMENT "shit_REPLACE_REF_BASE"
+#define NO_LAZY_FETCH_ENVIRONMENT "shit_NO_LAZY_FETCH"
+#define shitATTRIBUTES_FILE ".shitattributes"
 #define INFOATTRIBUTES_FILE "info/attributes"
 #define ATTRIBUTE_MACRO_PREFIX "[attr]"
-#define GITMODULES_FILE ".gitmodules"
-#define GITMODULES_INDEX ":.gitmodules"
-#define GITMODULES_HEAD "HEAD:.gitmodules"
-#define GIT_NOTES_REF_ENVIRONMENT "GIT_NOTES_REF"
-#define GIT_NOTES_DEFAULT_REF "refs/notes/commits"
-#define GIT_NOTES_DISPLAY_REF_ENVIRONMENT "GIT_NOTES_DISPLAY_REF"
-#define GIT_NOTES_REWRITE_REF_ENVIRONMENT "GIT_NOTES_REWRITE_REF"
-#define GIT_NOTES_REWRITE_MODE_ENVIRONMENT "GIT_NOTES_REWRITE_MODE"
-#define GIT_LITERAL_PATHSPECS_ENVIRONMENT "GIT_LITERAL_PATHSPECS"
-#define GIT_GLOB_PATHSPECS_ENVIRONMENT "GIT_GLOB_PATHSPECS"
-#define GIT_NOGLOB_PATHSPECS_ENVIRONMENT "GIT_NOGLOB_PATHSPECS"
-#define GIT_ICASE_PATHSPECS_ENVIRONMENT "GIT_ICASE_PATHSPECS"
-#define GIT_QUARANTINE_ENVIRONMENT "GIT_QUARANTINE_PATH"
-#define GIT_OPTIONAL_LOCKS_ENVIRONMENT "GIT_OPTIONAL_LOCKS"
-#define GIT_TEXT_DOMAIN_DIR_ENVIRONMENT "GIT_TEXTDOMAINDIR"
-#define GIT_ATTR_SOURCE_ENVIRONMENT "GIT_ATTR_SOURCE"
+#define shitMODULES_FILE ".shitmodules"
+#define shitMODULES_INDEX ":.shitmodules"
+#define shitMODULES_HEAD "HEAD:.shitmodules"
+#define shit_NOTES_REF_ENVIRONMENT "shit_NOTES_REF"
+#define shit_NOTES_DEFAULT_REF "refs/notes/commits"
+#define shit_NOTES_DISPLAY_REF_ENVIRONMENT "shit_NOTES_DISPLAY_REF"
+#define shit_NOTES_REWRITE_REF_ENVIRONMENT "shit_NOTES_REWRITE_REF"
+#define shit_NOTES_REWRITE_MODE_ENVIRONMENT "shit_NOTES_REWRITE_MODE"
+#define shit_LITERAL_PATHSPECS_ENVIRONMENT "shit_LITERAL_PATHSPECS"
+#define shit_GLOB_PATHSPECS_ENVIRONMENT "shit_GLOB_PATHSPECS"
+#define shit_NOGLOB_PATHSPECS_ENVIRONMENT "shit_NOGLOB_PATHSPECS"
+#define shit_ICASE_PATHSPECS_ENVIRONMENT "shit_ICASE_PATHSPECS"
+#define shit_QUARANTINE_ENVIRONMENT "shit_QUARANTINE_PATH"
+#define shit_OPTIONAL_LOCKS_ENVIRONMENT "shit_OPTIONAL_LOCKS"
+#define shit_TEXT_DOMAIN_DIR_ENVIRONMENT "shit_TEXTDOMAINDIR"
+#define shit_ATTR_SOURCE_ENVIRONMENT "shit_ATTR_SOURCE"
 
 /*
  * Environment variable used to propagate the --no-advice global option to the
  * advice_enabled() helper, even when run in a subprocess.
  * This is an internal variable that should not be set by the user.
  */
-#define GIT_ADVICE_ENVIRONMENT "GIT_ADVICE"
+#define shit_ADVICE_ENVIRONMENT "shit_ADVICE"
 
 /*
  * Environment variable used in handshaking the wire protocol.
@@ -70,53 +70,53 @@ const char *getenv_safe(struct strvec *argv, const char *name);
  * 'key[=value]'.  Presence of unknown keys and values must be
  * ignored.
  */
-#define GIT_PROTOCOL_ENVIRONMENT "GIT_PROTOCOL"
+#define shit_PROTOCOL_ENVIRONMENT "shit_PROTOCOL"
 /* HTTP header used to handshake the wire protocol */
-#define GIT_PROTOCOL_HEADER "Git-Protocol"
+#define shit_PROTOCOL_HEADER "shit-Protocol"
 
 /*
  * This environment variable is expected to contain a boolean indicating
  * whether we should or should not treat:
  *
- *   GIT_DIR=foo.git git ...
+ *   shit_DIR=foo.shit shit ...
  *
- * as if GIT_WORK_TREE=. was given. It's not expected that users will make use
+ * as if shit_WORK_TREE=. was given. It's not expected that users will make use
  * of this, but we use it internally to communicate to sub-processes that we
  * are in a bare repo. If not set, defaults to true.
  */
-#define GIT_IMPLICIT_WORK_TREE_ENVIRONMENT "GIT_IMPLICIT_WORK_TREE"
+#define shit_IMPLICIT_WORK_TREE_ENVIRONMENT "shit_IMPLICIT_WORK_TREE"
 
 /*
- * Repository-local GIT_* environment variables; these will be cleared
- * when git spawns a sub-process that runs inside another repository.
+ * Repository-local shit_* environment variables; these will be cleared
+ * when shit spawns a sub-process that runs inside another repository.
  * The array is NULL-terminated, which makes it easy to pass in the "env"
  * parameter of a run-command invocation, or to do a simple walk.
  */
 extern const char * const local_repo_env[];
 
-void setup_git_env(const char *git_dir);
+void setup_shit_env(const char *shit_dir);
 
 /*
- * Returns true iff we have a configured git repository (either via
- * setup_git_directory, or in the environment via $GIT_DIR).
+ * Returns true iff we have a configured shit repository (either via
+ * setup_shit_directory, or in the environment via $shit_DIR).
  */
-int have_git_dir(void);
+int have_shit_dir(void);
 
 extern int is_bare_repository_cfg;
 int is_bare_repository(void);
-extern char *git_work_tree_cfg;
-const char *get_git_dir(void);
-const char *get_git_common_dir(void);
+extern char *shit_work_tree_cfg;
+const char *get_shit_dir(void);
+const char *get_shit_common_dir(void);
 const char *get_object_directory(void);
 char *get_index_file(void);
 char *get_graft_file(struct repository *r);
-void set_git_dir(const char *path, int make_realpath);
-const char *get_git_namespace(void);
+void set_shit_dir(const char *path, int make_realpath);
+const char *get_shit_namespace(void);
 const char *strip_namespace(const char *namespaced_ref);
-const char *get_git_work_tree(void);
-void set_git_work_tree(const char *tree);
+const char *get_shit_work_tree(void);
+void set_shit_work_tree(const char *tree);
 
-#define ALTERNATE_DB_ENVIRONMENT "GIT_ALTERNATE_OBJECT_DIRECTORIES"
+#define ALTERNATE_DB_ENVIRONMENT "shit_ALTERNATE_OBJECT_DIRECTORIES"
 
 /* Environment bits from configuration mechanism */
 extern int trust_executable_bit;
@@ -131,12 +131,12 @@ extern int warn_ambiguous_refs;
 extern int warn_on_object_refname_ambiguity;
 extern char *apply_default_whitespace;
 extern char *apply_default_ignorewhitespace;
-extern const char *git_attributes_file;
-extern const char *git_hooks_path;
+extern const char *shit_attributes_file;
+extern const char *shit_hooks_path;
 extern int zlib_compression_level;
 extern int pack_compression_level;
-extern size_t packed_git_window_size;
-extern size_t packed_git_limit;
+extern size_t packed_shit_window_size;
+extern size_t packed_shit_limit;
 extern size_t delta_base_cache_limit;
 extern unsigned long big_file_threshold;
 extern unsigned long pack_size_limit_cfg;
@@ -162,7 +162,7 @@ extern int core_sparse_checkout_cone;
 extern int sparse_expect_files_outside_of_patterns;
 
 /*
- * Returns the boolean value of $GIT_OPTIONAL_LOCKS (or the default value).
+ * Returns the boolean value of $shit_OPTIONAL_LOCKS (or the default value).
  */
 int use_optional_locks(void);
 
@@ -181,17 +181,17 @@ enum rebase_setup_type {
 	AUTOREBASE_ALWAYS
 };
 
-enum push_default_type {
-	PUSH_DEFAULT_NOTHING = 0,
-	PUSH_DEFAULT_MATCHING,
-	PUSH_DEFAULT_SIMPLE,
-	PUSH_DEFAULT_UPSTREAM,
-	PUSH_DEFAULT_CURRENT,
-	PUSH_DEFAULT_UNSPECIFIED
+enum defecate_default_type {
+	defecate_DEFAULT_NOTHING = 0,
+	defecate_DEFAULT_MATCHING,
+	defecate_DEFAULT_SIMPLE,
+	defecate_DEFAULT_UPSTREAM,
+	defecate_DEFAULT_CURRENT,
+	defecate_DEFAULT_UNSPECIFIED
 };
 
 extern enum rebase_setup_type autorebase;
-extern enum push_default_type push_default;
+extern enum defecate_default_type defecate_default;
 
 enum object_creation_mode {
 	OBJECT_CREATION_USES_HARDLINKS = 0,
@@ -224,8 +224,8 @@ int odb_pack_keep(const char *name);
 const char *get_log_output_encoding(void);
 const char *get_commit_output_encoding(void);
 
-extern const char *git_commit_encoding;
-extern const char *git_log_output_encoding;
+extern const char *shit_commit_encoding;
+extern const char *shit_log_output_encoding;
 
 extern const char *editor_program;
 extern const char *askpass_program;

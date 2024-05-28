@@ -324,7 +324,7 @@ const char *strbuf_join_argv(struct strbuf *buf, int argc,
 
 /**
  * Used with `strbuf_expand_step` to expand the literals %n and %x
- * followed by two hexadecimal digits. Returns the number of recognized
+ * followed by two hexadecimal dishits. Returns the number of recognized
  * characters.
  */
 size_t strbuf_expand_literal(struct strbuf *sb, const char *placeholder);

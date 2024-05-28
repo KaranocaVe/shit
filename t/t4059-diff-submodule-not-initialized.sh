@@ -25,33 +25,33 @@ add_file () {
 		for name
 		do
 			echo "$name" >"$name" &&
-			git add "$name" &&
+			shit add "$name" &&
 			test_tick &&
-			# "git commit -m" would break MinGW, as Windows refuse to pass
-			# $test_encoding encoded parameter to git.
+			# "shit commit -m" would break MinGW, as Windows refuse to pass
+			# $test_encoding encoded parameter to shit.
 			echo "Add $name ($added $name)" | iconv -f utf-8 -t $test_encoding |
-			git -c "i18n.commitEncoding=$test_encoding" commit -F -
+			shit -c "i18n.commitEncoding=$test_encoding" commit -F -
 		done >/dev/null &&
-		git rev-parse --short --verify HEAD
+		shit rev-parse --short --verify HEAD
 	)
 }
 
 commit_file () {
 	test_tick &&
-	git commit "$@" -m "Commit $*" >/dev/null
+	shit commit "$@" -m "Commit $*" >/dev/null
 }
 
 test_expect_success 'setup - submodules' '
 	test_create_repo sm2 &&
 	add_file . foo &&
 	add_file sm2 foo1 foo2 &&
-	smhead1=$(git -C sm2 rev-parse --short --verify HEAD)
+	smhead1=$(shit -C sm2 rev-parse --short --verify HEAD)
 '
 
-test_expect_success 'setup - git submodule add' '
-	git -c protocol.file.allow=always submodule add ./sm2 sm1 &&
-	commit_file sm1 .gitmodules &&
-	git diff-tree -p --no-commit-id --submodule=log HEAD -- sm1 >actual &&
+test_expect_success 'setup - shit submodule add' '
+	shit -c protocol.file.allow=always submodule add ./sm2 sm1 &&
+	commit_file sm1 .shitmodules &&
+	shit diff-tree -p --no-commit-id --submodule=log HEAD -- sm1 >actual &&
 	cat >expected <<-EOF &&
 	Submodule sm1 0000000...$smhead1 (new submodule)
 	EOF
@@ -60,7 +60,7 @@ test_expect_success 'setup - git submodule add' '
 
 test_expect_success 'submodule directory removed' '
 	rm -rf sm1 &&
-	git diff-tree -p --no-commit-id --submodule=log HEAD -- sm1 >actual &&
+	shit diff-tree -p --no-commit-id --submodule=log HEAD -- sm1 >actual &&
 	cat >expected <<-EOF &&
 	Submodule sm1 0000000...$smhead1 (new submodule)
 	EOF
@@ -68,10 +68,10 @@ test_expect_success 'submodule directory removed' '
 '
 
 test_expect_success 'setup - submodule multiple commits' '
-	git submodule update --checkout sm1 &&
+	shit submodule update --checkout sm1 &&
 	smhead2=$(add_file sm1 foo3 foo4) &&
 	commit_file sm1 &&
-	git diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
+	shit diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
 	cat >expected <<-EOF &&
 	Submodule sm1 $smhead1..$smhead2:
 	  > Add foo4 ($added foo4)
@@ -82,7 +82,7 @@ test_expect_success 'setup - submodule multiple commits' '
 
 test_expect_success 'submodule removed multiple commits' '
 	rm -rf sm1 &&
-	git diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
+	shit diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
 	cat >expected <<-EOF &&
 	Submodule sm1 $smhead1..$smhead2:
 	  > Add foo4 ($added foo4)
@@ -92,8 +92,8 @@ test_expect_success 'submodule removed multiple commits' '
 '
 
 test_expect_success 'submodule not initialized in new clone' '
-	git clone . sm3 &&
-	git -C sm3 diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
+	shit clone . sm3 &&
+	shit -C sm3 diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
 	cat >expected <<-EOF &&
 	Submodule sm1 $smhead1...$smhead2 (commits not present)
 	EOF
@@ -101,10 +101,10 @@ test_expect_success 'submodule not initialized in new clone' '
 '
 
 test_expect_success 'setup submodule moved' '
-	git submodule update --checkout sm1 &&
-	git mv sm1 sm4 &&
+	shit submodule update --checkout sm1 &&
+	shit mv sm1 sm4 &&
 	commit_file sm4 &&
-	git diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
+	shit diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
 	cat >expected <<-EOF &&
 	Submodule sm4 0000000...$smhead2 (new submodule)
 	EOF
@@ -115,7 +115,7 @@ test_expect_success 'submodule moved then removed' '
 	smhead3=$(add_file sm4 foo6 foo7) &&
 	commit_file sm4 &&
 	rm -rf sm4 &&
-	git diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
+	shit diff-tree -p --no-commit-id --submodule=log HEAD >actual &&
 	cat >expected <<-EOF &&
 	Submodule sm4 $smhead2..$smhead3:
 	  > Add foo7 ($added foo7)

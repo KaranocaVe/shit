@@ -15,7 +15,7 @@
  * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "../git-compat-util.h"
+#include "../shit-compat-util.h"
 
 #ifndef NS_INT16SZ
 #define NS_INT16SZ       2
@@ -52,32 +52,32 @@ static int inet_pton6(const char *src, unsigned char *dst);
 static int
 inet_pton4(const char *src, unsigned char *dst)
 {
-        static const char digits[] = "0123456789";
-        int saw_digit, octets, ch;
+        static const char dishits[] = "0123456789";
+        int saw_dishit, octets, ch;
         unsigned char tmp[NS_INADDRSZ], *tp;
 
-        saw_digit = 0;
+        saw_dishit = 0;
         octets = 0;
         *(tp = tmp) = 0;
         while ((ch = *src++) != '\0') {
                 const char *pch;
 
-                if ((pch = strchr(digits, ch)) != NULL) {
-                        unsigned int new = *tp * 10 + (pch - digits);
+                if ((pch = strchr(dishits, ch)) != NULL) {
+                        unsigned int new = *tp * 10 + (pch - dishits);
 
                         if (new > 255)
                                 return (0);
                         *tp = new;
-                        if (! saw_digit) {
+                        if (! saw_dishit) {
                                 if (++octets > 4)
                                         return (0);
-                                saw_digit = 1;
+                                saw_dishit = 1;
                         }
-                } else if (ch == '.' && saw_digit) {
+                } else if (ch == '.' && saw_dishit) {
                         if (octets == 4)
                                 return (0);
                         *++tp = 0;
-                        saw_digit = 0;
+                        saw_dishit = 0;
                 } else
                         return (0);
         }
@@ -105,11 +105,11 @@ inet_pton4(const char *src, unsigned char *dst)
 static int
 inet_pton6(const char *src, unsigned char *dst)
 {
-        static const char xdigits_l[] = "0123456789abcdef",
-                          xdigits_u[] = "0123456789ABCDEF";
+        static const char xdishits_l[] = "0123456789abcdef",
+                          xdishits_u[] = "0123456789ABCDEF";
         unsigned char tmp[NS_IN6ADDRSZ], *tp, *endp, *colonp;
-        const char *xdigits, *curtok;
-        int ch, saw_xdigit;
+        const char *xdishits, *curtok;
+        int ch, saw_xdishit;
         unsigned int val;
 
         memset((tp = tmp), '\0', NS_IN6ADDRSZ);
@@ -120,24 +120,24 @@ inet_pton6(const char *src, unsigned char *dst)
                 if (*++src != ':')
                         return (0);
         curtok = src;
-        saw_xdigit = 0;
+        saw_xdishit = 0;
         val = 0;
         while ((ch = *src++) != '\0') {
                 const char *pch;
 
-                if ((pch = strchr((xdigits = xdigits_l), ch)) == NULL)
-                        pch = strchr((xdigits = xdigits_u), ch);
+                if ((pch = strchr((xdishits = xdishits_l), ch)) == NULL)
+                        pch = strchr((xdishits = xdishits_u), ch);
                 if (pch != NULL) {
                         val <<= 4;
-                        val |= (pch - xdigits);
+                        val |= (pch - xdishits);
                         if (val > 0xffff)
                                 return (0);
-                        saw_xdigit = 1;
+                        saw_xdishit = 1;
                         continue;
                 }
                 if (ch == ':') {
                         curtok = src;
-                        if (!saw_xdigit) {
+                        if (!saw_xdishit) {
                                 if (colonp)
                                         return (0);
                                 colonp = tp;
@@ -147,19 +147,19 @@ inet_pton6(const char *src, unsigned char *dst)
                                 return (0);
                         *tp++ = (unsigned char) (val >> 8) & 0xff;
                         *tp++ = (unsigned char) val & 0xff;
-                        saw_xdigit = 0;
+                        saw_xdishit = 0;
                         val = 0;
                         continue;
                 }
                 if (ch == '.' && ((tp + NS_INADDRSZ) <= endp) &&
                     inet_pton4(curtok, tp) > 0) {
                         tp += NS_INADDRSZ;
-                        saw_xdigit = 0;
+                        saw_xdishit = 0;
                         break;  /* '\0' was seen by inet_pton4(). */
                 }
                 return (0);
         }
-        if (saw_xdigit) {
+        if (saw_xdishit) {
                 if (tp + NS_INT16SZ > endp)
                         return (0);
                 *tp++ = (unsigned char) (val >> 8) & 0xff;

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-test_description='git p4 handling of UTF-16 files without BOM'
+test_description='shit p4 handling of UTF-16 files without BOM'
 
-. ./lib-git-p4.sh
+. ./lib-shit-p4.sh
 
 UTF16="\227\000\227\000"
 
@@ -30,17 +30,17 @@ test_expect_success 'init depot with UTF-16 encoded file and artificially remove
 '
 
 test_expect_success 'clone depot with invalid UTF-16 file in verbose mode' '
-	git p4 clone --dest="$git" --verbose //depot &&
-	test_when_finished cleanup_git &&
+	shit p4 clone --dest="$shit" --verbose //depot &&
+	test_when_finished cleanup_shit &&
 	(
-		cd "$git" &&
+		cd "$shit" &&
 		printf "$UTF16" >expect &&
 		test_cmp_bin expect file1
 	)
 '
 
 test_expect_failure 'clone depot with invalid UTF-16 file in non-verbose mode' '
-	git p4 clone --dest="$git" //depot
+	shit p4 clone --dest="$shit" //depot
 '
 
 test_done

@@ -5,23 +5,23 @@
 # To build and test:
 #
 #   make
-#   bin-wrapper/git mw preview Some_page.mw
-#   bin-wrapper/git clone mediawiki::http://example.com/wiki/
+#   bin-wrapper/shit mw preview Some_page.mw
+#   bin-wrapper/shit clone mediawiki::http://example.com/wiki/
 #
-# To install, run Git's toplevel 'make install' then run:
+# To install, run shit's toplevel 'make install' then run:
 #
 #   make install
 
-GIT_MEDIAWIKI_PM=Git/Mediawiki.pm
-SCRIPT_PERL=git-remote-mediawiki.perl
-SCRIPT_PERL+=git-mw.perl
-GIT_ROOT_DIR=../..
-HERE=contrib/mw-to-git/
+shit_MEDIAWIKI_PM=shit/Mediawiki.pm
+SCRIPT_PERL=shit-remote-mediawiki.perl
+SCRIPT_PERL+=shit-mw.perl
+shit_ROOT_DIR=../..
+HERE=contrib/mw-to-shit/
 
 INSTALL = install
 
 SCRIPT_PERL_FULL=$(patsubst %,$(HERE)/%,$(SCRIPT_PERL))
-INSTLIBDIR=$(shell $(MAKE) -C $(GIT_ROOT_DIR)/ \
+INSTLIBDIR=$(shell $(MAKE) -C $(shit_ROOT_DIR)/ \
                 -s --no-print-directory prefix=$(prefix) \
                 perllibdir=$(perllibdir) perllibdir)
 DESTDIR_SQ = $(subst ','\'',$(DESTDIR))
@@ -35,20 +35,20 @@ test: all
 check: perlcritic test
 
 install_pm:
-	$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(INSTLIBDIR_SQ)/Git'
-	$(INSTALL) -m 644 $(GIT_MEDIAWIKI_PM) \
-		'$(DESTDIR_SQ)$(INSTLIBDIR_SQ)/$(GIT_MEDIAWIKI_PM)'
+	$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(INSTLIBDIR_SQ)/shit'
+	$(INSTALL) -m 644 $(shit_MEDIAWIKI_PM) \
+		'$(DESTDIR_SQ)$(INSTLIBDIR_SQ)/$(shit_MEDIAWIKI_PM)'
 
 build:
-	$(MAKE) -C $(GIT_ROOT_DIR) SCRIPT_PERL="$(SCRIPT_PERL_FULL)" \
+	$(MAKE) -C $(shit_ROOT_DIR) SCRIPT_PERL="$(SCRIPT_PERL_FULL)" \
                 build-perl-script
 
 install: install_pm
-	$(MAKE) -C $(GIT_ROOT_DIR) SCRIPT_PERL="$(SCRIPT_PERL_FULL)" \
+	$(MAKE) -C $(shit_ROOT_DIR) SCRIPT_PERL="$(SCRIPT_PERL_FULL)" \
                 install-perl-script
 
 clean:
-	$(MAKE) -C $(GIT_ROOT_DIR) SCRIPT_PERL="$(SCRIPT_PERL_FULL)" \
+	$(MAKE) -C $(shit_ROOT_DIR) SCRIPT_PERL="$(SCRIPT_PERL_FULL)" \
                 clean-perl-script
 
 perlcritic:

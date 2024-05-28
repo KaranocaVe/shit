@@ -32,12 +32,12 @@ test_set_editor () {
 	export EDITOR
 }
 
-# Like test_set_editor but sets GIT_SEQUENCE_EDITOR instead of EDITOR
+# Like test_set_editor but sets shit_SEQUENCE_EDITOR instead of EDITOR
 test_set_sequence_editor () {
 	FAKE_SEQUENCE_EDITOR="$1"
 	export FAKE_SEQUENCE_EDITOR
-	GIT_SEQUENCE_EDITOR='"$FAKE_SEQUENCE_EDITOR"'
-	export GIT_SEQUENCE_EDITOR
+	shit_SEQUENCE_EDITOR='"$FAKE_SEQUENCE_EDITOR"'
+	export shit_SEQUENCE_EDITOR
 }
 
 test_decode_color () {
@@ -137,9 +137,9 @@ test_tick () {
 	else
 		test_tick=$(($test_tick + 60))
 	fi
-	GIT_COMMITTER_DATE="$test_tick -0700"
-	GIT_AUTHOR_DATE="$test_tick -0700"
-	export GIT_COMMITTER_DATE GIT_AUTHOR_DATE
+	shit_COMMITTER_DATE="$test_tick -0700"
+	shit_AUTHOR_DATE="$test_tick -0700"
+	export shit_COMMITTER_DATE shit_AUTHOR_DATE
 }
 
 # Stop execution and start a shell. This is useful for debugging tests.
@@ -159,7 +159,7 @@ test_tick () {
 #	Invoke $SHELL instead of $TEST_SHELL_PATH.
 #   -h
 #	Use your original HOME instead of test-lib.sh's "$TRASH_DIRECTORY".
-#	This allows you to use your regular shell environment and Git aliases.
+#	This allows you to use your regular shell environment and shit aliases.
 #	CAUTION: running commands copied from a test script into the paused shell
 #	might result in files in your HOME being overwritten.
 #   -a
@@ -195,10 +195,10 @@ test_pause () {
 	TERM="$PAUSE_TERM" HOME="$PAUSE_HOME" "$PAUSE_SHELL" <&6 >&5 2>&7
 }
 
-# Wrap git with a debugger. Adding this to a command can make it easier
+# Wrap shit with a debugger. Adding this to a command can make it easier
 # to understand what is going on in a failing test.
 #
-# Usage: debug [options] <git command>
+# Usage: debug [options] <shit command>
 #   -d <debugger>
 #   --debugger=<debugger>
 #	Use <debugger> instead of GDB
@@ -209,11 +209,11 @@ test_pause () {
 #	running the test.
 #
 # Examples:
-#     debug git checkout master
-#     debug --debugger=nemiver git $ARGS
-#     debug -d "valgrind --tool=memcheck --track-origins=yes" git $ARGS
+#     debug shit checkout master
+#     debug --debugger=nemiver shit $ARGS
+#     debug -d "valgrind --tool=memcheck --track-origins=yes" shit $ARGS
 debug () {
-	GIT_DEBUGGER=1 &&
+	shit_DEBUGGER=1 &&
 	DEBUG_TERM=$TERM &&
 	while test $# != 0
 	do
@@ -222,11 +222,11 @@ debug () {
 			DEBUG_TERM="$USER_TERM"
 			;;
 		-d)
-			GIT_DEBUGGER="$2" &&
+			shit_DEBUGGER="$2" &&
 			shift
 			;;
 		--debugger=*)
-			GIT_DEBUGGER="${1#*=}"
+			shit_DEBUGGER="${1#*=}"
 			;;
 		*)
 			break
@@ -243,7 +243,7 @@ debug () {
 		test -f "$dotfile" && cp "$dotfile" "$HOME" || :
 	done &&
 
-	TERM="$DEBUG_TERM" GIT_DEBUGGER="${GIT_DEBUGGER}" "$@" <&6 >&5 2>&7 &&
+	TERM="$DEBUG_TERM" shit_DEBUGGER="${shit_DEBUGGER}" "$@" <&6 >&5 2>&7 &&
 
 	for dotfile in $dotfiles
 	do
@@ -254,7 +254,7 @@ debug () {
 # Usage: test_ref_exists [options] <ref>
 #
 #   -C <dir>:
-#      Run all git commands in directory <dir>
+#      Run all shit commands in directory <dir>
 #
 # This helper function checks whether a reference exists. Symrefs or object IDs
 # will not be resolved. Can be used to check references with bad names.
@@ -282,7 +282,7 @@ test_ref_exists () {
 		BUG "expected exactly one reference"
 	fi &&
 
-	git ${indir:+ -C "$indir"} show-ref --exists "$1"
+	shit ${indir:+ -C "$indir"} show-ref --exists "$1"
 }
 
 # Behaves the same as test_ref_exists, except that it checks for the absence of
@@ -308,7 +308,7 @@ test_ref_missing () {
 
 # Usage: test_commit [options] <message> [<file> [<contents> [<tag>]]]
 #   -C <dir>:
-#	Run all git commands in directory <dir>
+#	Run all shit commands in directory <dir>
 #   --notick
 #	Do not call test_tick before making a commit
 #   --append
@@ -320,9 +320,9 @@ test_ref_missing () {
 #       supports nothing but the FORMAT of printf(1), i.e. no custom
 #       ARGUMENT(s).
 #   --signoff
-#	Invoke "git commit" with --signoff
+#	Invoke "shit commit" with --signoff
 #   --author <author>
-#	Invoke "git commit" with --author <author>
+#	Invoke "shit commit" with --author <author>
 #   --no-tag
 #	Do not tag the resulting commit
 #   --annotate
@@ -364,8 +364,8 @@ test_commit () {
 			;;
 		--date)
 			notick=yes
-			GIT_COMMITTER_DATE="$2"
-			GIT_AUTHOR_DATE="$2"
+			shit_COMMITTER_DATE="$2"
+			shit_AUTHOR_DATE="$2"
 			shift
 			;;
 		-C)
@@ -392,26 +392,26 @@ test_commit () {
 	else
 		$echo "${3-$1}" >"$indir$file"
 	fi &&
-	git ${indir:+ -C "$indir"} add -- "$file" &&
+	shit ${indir:+ -C "$indir"} add -- "$file" &&
 	if test -z "$notick"
 	then
 		test_tick
 	fi &&
-	git ${indir:+ -C "$indir"} commit \
+	shit ${indir:+ -C "$indir"} commit \
 	    ${author:+ --author "$author"} \
 	    $signoff -m "$1" &&
 	case "$tag" in
 	none)
 		;;
 	light)
-		git ${indir:+ -C "$indir"} tag "${4:-$1}"
+		shit ${indir:+ -C "$indir"} tag "${4:-$1}"
 		;;
 	annotate)
 		if test -z "$notick"
 		then
 			test_tick
 		fi &&
-		git ${indir:+ -C "$indir"} tag -a -m "$1" "${4:-$1}"
+		shit ${indir:+ -C "$indir"} tag -a -m "$1" "${4:-$1}"
 		;;
 	esac
 }
@@ -423,8 +423,8 @@ test_merge () {
 	label="$1" &&
 	shift &&
 	test_tick &&
-	git merge -m "$label" "$@" &&
-	git tag "$label"
+	shit merge -m "$label" "$@" &&
+	shit tag "$label"
 }
 
 # Efficiently create <nr> commits, each with a unique number (from 1 to <nr>
@@ -432,7 +432,7 @@ test_merge () {
 #
 # Usage: test_commit_bulk [options] <nr>
 #   -C <dir>:
-#	Run all git commands in directory <dir>
+#	Run all shit commands in directory <dir>
 #   --ref=<n>:
 #	ref on which to create commits (default: HEAD)
 #   --start=<n>:
@@ -500,7 +500,7 @@ test_commit_bulk () {
 	total=$1
 
 	add_from=
-	if git -C "$indir" rev-parse --quiet --verify "$ref"
+	if shit -C "$indir" rev-parse --quiet --verify "$ref"
 	then
 		add_from=t
 	fi
@@ -510,13 +510,13 @@ test_commit_bulk () {
 		test_tick &&
 		echo "commit $ref"
 		printf 'author %s <%s> %s\n' \
-			"$GIT_AUTHOR_NAME" \
-			"$GIT_AUTHOR_EMAIL" \
-			"$GIT_AUTHOR_DATE"
+			"$shit_AUTHOR_NAME" \
+			"$shit_AUTHOR_EMAIL" \
+			"$shit_AUTHOR_DATE"
 		printf 'committer %s <%s> %s\n' \
-			"$GIT_COMMITTER_NAME" \
-			"$GIT_COMMITTER_EMAIL" \
-			"$GIT_COMMITTER_DATE"
+			"$shit_COMMITTER_NAME" \
+			"$shit_COMMITTER_EMAIL" \
+			"$shit_COMMITTER_DATE"
 		echo "data <<EOF"
 		printf "$message\n" $n
 		echo "EOF"
@@ -534,7 +534,7 @@ test_commit_bulk () {
 		total=$((total - 1))
 	done >"$tmpfile"
 
-	git -C "$indir" \
+	shit -C "$indir" \
 	    -c fastimport.unpacklimit=0 \
 	    fast-import <"$tmpfile" || return 1
 
@@ -545,7 +545,7 @@ test_commit_bulk () {
 	# tree, too.
 	if test "$ref" = "HEAD"
 	then
-		git -C "$indir" checkout -f HEAD || return 1
+		shit -C "$indir" checkout -f HEAD || return 1
 	fi
 
 }
@@ -556,7 +556,7 @@ test_commit_bulk () {
 
 test_chmod () {
 	chmod "$@" &&
-	git update-index --add "--chmod=$@"
+	shit update-index --add "--chmod=$@"
 }
 
 # Get the modebits from a file or directory, ignoring the setgid bit (g+s).
@@ -578,7 +578,7 @@ test_unconfig () {
 		config_dir=$1
 		shift
 	fi
-	git ${config_dir:+-C "$config_dir"} config --unset-all "$@"
+	shit ${config_dir:+-C "$config_dir"} config --unset-all "$@"
 	config_status=$?
 	case "$config_status" in
 	5) # ok, nothing to unset
@@ -588,7 +588,7 @@ test_unconfig () {
 	return $config_status
 }
 
-# Set git config, automatically unsetting it after the test is over.
+# Set shit config, automatically unsetting it after the test is over.
 test_config () {
 	config_dir=
 	if test "$1" = -C
@@ -607,12 +607,12 @@ test_config () {
 	fi
 
 	test_when_finished "test_unconfig ${config_dir:+-C '$config_dir'} ${is_worktree:+--worktree} '$1'" &&
-	git ${config_dir:+-C "$config_dir"} config ${is_worktree:+--worktree} "$@"
+	shit ${config_dir:+-C "$config_dir"} config ${is_worktree:+--worktree} "$@"
 }
 
 test_config_global () {
 	test_when_finished "test_unconfig --global '$1'" &&
-	git config --global "$@"
+	shit config --global "$@"
 }
 
 write_script () {
@@ -626,7 +626,7 @@ write_script () {
 # Usage: test_hook [options] <hook-name> <<-\EOF
 #
 #   -C <dir>:
-#	Run all git commands in directory <dir>
+#	Run all shit commands in directory <dir>
 #   --setup
 #	Setup a hook for subsequent tests, i.e. don't remove it in a
 #	"test_when_finished"
@@ -673,8 +673,8 @@ test_hook () {
 		shift
 	done &&
 
-	git_dir=$(git -C "$indir" rev-parse --absolute-git-dir) &&
-	hook_dir="$git_dir/hooks" &&
+	shit_dir=$(shit -C "$indir" rev-parse --absolute-shit-dir) &&
+	hook_dir="$shit_dir/hooks" &&
 	hook_file="$hook_dir/$1" &&
 	if test -n "$disable$remove"
 	then
@@ -716,7 +716,7 @@ test_unset_prereq () {
 }
 
 test_set_prereq () {
-	if test -n "$GIT_TEST_FAIL_PREREQS_INTERNAL"
+	if test -n "$shit_TEST_FAIL_PREREQS_INTERNAL"
 	then
 		case "$1" in
 		# The "!" case is handled below with
@@ -726,7 +726,7 @@ test_set_prereq () {
 		# List of things we can't easily pretend to not support
 		SYMLINKS)
 			;;
-		# Inspecting whether GIT_TEST_FAIL_PREREQS is on
+		# Inspecting whether shit_TEST_FAIL_PREREQS is on
 		# should be unaffected.
 		FAIL_PREREQS)
 			;;
@@ -829,9 +829,9 @@ test_have_prereq () {
 			prerequisite=${negative_prereq:+!}$prerequisite
 
 			# Abort if this prereq was marked as required
-			if test -n "$GIT_TEST_REQUIRE_PREREQ"
+			if test -n "$shit_TEST_REQUIRE_PREREQ"
 			then
-				case " $GIT_TEST_REQUIRE_PREREQ " in
+				case " $shit_TEST_REQUIRE_PREREQ " in
 				*" $prerequisite "*)
 					BAIL_OUT "required prereq $prerequisite failed"
 					;;
@@ -1035,7 +1035,7 @@ test_line_count () {
 # test_stdout_line_count checks that the output of a command has the number
 # of lines it ought to. For example:
 #
-# test_stdout_line_count = 3 git ls-files -u
+# test_stdout_line_count = 3 shit ls-files -u
 # test_stdout_line_count -gt 10 ls
 test_stdout_line_count () {
 	local ops val trashdir &&
@@ -1046,7 +1046,7 @@ test_stdout_line_count () {
 	ops="$1" &&
 	val="$2" &&
 	shift 2 &&
-	if ! trashdir="$(git rev-parse --git-dir)/trash"; then
+	if ! trashdir="$(shit rev-parse --shit-dir)/trash"; then
 		BUG "expect to be run inside a worktree"
 	fi &&
 	mkdir -p "$trashdir" &&
@@ -1097,7 +1097,7 @@ test_must_fail_acceptable () {
 	fi
 
 	case "$1" in
-	git|__git*|scalar|test-tool|test_terminal)
+	shit|__shit*|scalar|test-tool|test_terminal)
 		return 0
 		;;
 	*)
@@ -1112,10 +1112,10 @@ test_must_fail_acceptable () {
 #	test_expect_success 'complain and die' '
 #           do something &&
 #           do something else &&
-#	    test_must_fail git checkout ../outerspace
+#	    test_must_fail shit checkout ../outerspace
 #	'
 #
-# Writing this as "! git checkout ../outerspace" is wrong, because
+# Writing this as "! shit checkout ../outerspace" is wrong, because
 # the failure could be due to a segv.  We want a controlled failure.
 #
 # Accepts the following options:
@@ -1126,7 +1126,7 @@ test_must_fail_acceptable () {
 #     Currently recognized signal names are: sigpipe, success.
 #     (Don't use 'success', use 'test_might_fail' instead.)
 #
-# Do not use this to run anything but "git" and other specific testable
+# Do not use this to run anything but "shit" and other specific testable
 # commands (see test_must_fail_acceptable()).  We are not in the
 # business of vetting system supplied commands -- in other words, this
 # is wrong:
@@ -1149,7 +1149,7 @@ test_must_fail () {
 	esac
 	if ! test_must_fail_acceptable "$@"
 	then
-		echo >&7 "test_must_fail: only 'git' is allowed: $*"
+		echo >&7 "test_must_fail: only 'shit' is allowed: $*"
 		return 1
 	fi
 	"$@" 2>&7
@@ -1181,11 +1181,11 @@ test_must_fail () {
 # meant to be used in contexts like:
 #
 #	test_expect_success 'some command works without configuration' '
-#		test_might_fail git config --unset all.configuration &&
+#		test_might_fail shit config --unset all.configuration &&
 #		do something
 #	'
 #
-# Writing "git config --unset all.configuration || :" would be wrong,
+# Writing "shit config --unset all.configuration || :" would be wrong,
 # because we want to notice if it fails due to segv.
 #
 # Accepts the same options as test_must_fail.
@@ -1198,7 +1198,7 @@ test_might_fail () {
 # given command exited with a given exit code. Meant to be used as:
 #
 #	test_expect_success 'Merge with d/f conflicts' '
-#		test_expect_code 1 git merge "merge msg" B master
+#		test_expect_code 1 shit merge "merge msg" B master
 #	'
 
 test_expect_code () {
@@ -1230,13 +1230,13 @@ test_expect_code () {
 
 test_cmp () {
 	test "$#" -ne 2 && BUG "2 param"
-	eval "$GIT_TEST_CMP" '"$@"'
+	eval "$shit_TEST_CMP" '"$@"'
 }
 
 # Check that the given config key has the expected value.
 #
 #    test_cmp_config [-C <dir>] <expected-value>
-#                    [<git-config-options>...] <config-key>
+#                    [<shit-config-options>...] <config-key>
 #
 # for example to check that the value of core.bar is foo
 #
@@ -1252,7 +1252,7 @@ test_cmp_config () {
 	fi &&
 	printf "%s\n" "$1" >expect.config &&
 	shift &&
-	git $GD config "$@" >actual.config &&
+	shit $GD config "$@" >actual.config &&
 	test_cmp expect.config actual.config
 }
 
@@ -1332,8 +1332,8 @@ test_cmp_rev () {
 		BUG "test_cmp_rev requires two revisions, but got $#"
 	else
 		local r1 r2
-		r1=$(git rev-parse --verify "$1") &&
-		r2=$(git rev-parse --verify "$2") || return 1
+		r1=$(shit rev-parse --verify "$1") &&
+		r2=$(shit rev-parse --verify "$2") || return 1
 
 		if ! test "$r1" "$op" "$r2"
 		then
@@ -1376,7 +1376,7 @@ test_commit_message () {
 		BUG "Usage: test_commit_message <rev> [-m <message> | <file>]"
 		;;
 	esac
-	git show --no-patch --pretty=format:%B "$1" -- >actual.msg &&
+	shit show --no-patch --pretty=format:%B "$1" -- >actual.msg &&
 	test_cmp "$msg_file" actual.msg
 }
 
@@ -1387,7 +1387,7 @@ test_cmp_fspath () {
 		return 0
 	fi
 
-	if test true != "$(git config --get --type=bool core.ignorecase)"
+	if test true != "$(shit config --get --type=bool core.ignorecase)"
 	then
 		return 1
 	fi
@@ -1421,17 +1421,17 @@ test_seq () {
 # unconditionally at the end of the test to restore sanity:
 #
 #	test_expect_success 'test core.capslock' '
-#		git config core.capslock true &&
-#		test_when_finished "git config --unset core.capslock" &&
+#		shit config core.capslock true &&
+#		test_when_finished "shit config --unset core.capslock" &&
 #		hello world
 #	'
 #
 # That would be roughly equivalent to
 #
 #	test_expect_success 'test core.capslock' '
-#		git config core.capslock true &&
+#		shit config core.capslock true &&
 #		hello world
-#		git config --unset core.capslock
+#		shit config --unset core.capslock
 #	'
 #
 # except that the greeting and config --unset must both succeed for
@@ -1453,8 +1453,8 @@ test_when_finished () {
 # This function can be used to schedule some commands to be run
 # unconditionally at the end of the test script, e.g. to stop a daemon:
 #
-#	test_expect_success 'test git daemon' '
-#		git daemon &
+#	test_expect_success 'test shit daemon' '
+#		shit daemon &
 #		daemon_pid=$! &&
 #		test_atexit 'kill $daemon_pid' &&
 #		hello world
@@ -1478,28 +1478,28 @@ test_atexit () {
 		} && (exit \"\$eval_ret\"); eval_ret=\$?; $test_atexit_cleanup"
 }
 
-# Deprecated wrapper for "git init", use "git init" directly instead
+# Deprecated wrapper for "shit init", use "shit init" directly instead
 # Usage: test_create_repo <directory>
 test_create_repo () {
-	git init "$@"
+	shit init "$@"
 }
 
 # This function helps on symlink challenged file systems when it is not
 # important that the file system entry is a symbolic link.
-# Use test_ln_s_add instead of "ln -s x y && git add y" to add a
+# Use test_ln_s_add instead of "ln -s x y && shit add y" to add a
 # symbolic link entry y to the index.
 
 test_ln_s_add () {
 	if test_have_prereq SYMLINKS
 	then
 		ln -s "$1" "$2" &&
-		git update-index --add "$2"
+		shit update-index --add "$2"
 	else
 		printf '%s' "$1" >"$2" &&
-		ln_s_obj=$(git hash-object -w "$2") &&
-		git update-index --add --cacheinfo 120000 $ln_s_obj "$2" &&
+		ln_s_obj=$(shit hash-object -w "$2") &&
+		shit update-index --add --cacheinfo 120000 $ln_s_obj "$2" &&
 		# pick up stat info from the file
-		git update-index "$2"
+		shit update-index "$2"
 	fi
 }
 
@@ -1515,7 +1515,7 @@ perl () {
 # Given the name of an environment variable with a bool value, normalize
 # its value to a 0 (true) or 1 (false or empty string) return code.
 #
-#   test_bool_env GIT_TEST_HTTPD <default-value>
+#   test_bool_env shit_TEST_HTTPD <default-value>
 #
 # Return with code corresponding to the given default value if the variable
 # is unset.
@@ -1608,15 +1608,15 @@ test_copy_bytes () {
 	' - "$1"
 }
 
-# run "$@" inside a non-git directory
-nongit () {
+# run "$@" inside a non-shit directory
+nonshit () {
 	test -d non-repo ||
 	mkdir non-repo ||
 	return 1
 
 	(
-		GIT_CEILING_DIRECTORIES=$(pwd) &&
-		export GIT_CEILING_DIRECTORIES &&
+		shit_CEILING_DIRECTORIES=$(pwd) &&
+		export shit_CEILING_DIRECTORIES &&
 		cd non-repo &&
 		"$@" 2>&7
 	)
@@ -1655,7 +1655,7 @@ test_set_hash () {
 
 # Detect the hash algorithm in use.
 test_detect_hash () {
-	case "$GIT_TEST_DEFAULT_HASH" in
+	case "$shit_TEST_DEFAULT_HASH" in
 	"sha256")
 	    test_hash_algo=sha256
 	    test_compat_hash_algo=sha1
@@ -1669,7 +1669,7 @@ test_detect_hash () {
 
 # Detect the hash algorithm in use.
 test_detect_ref_format () {
-	echo "${GIT_TEST_DEFAULT_REF_FORMAT:-files}"
+	echo "${shit_TEST_DEFAULT_REF_FORMAT:-files}"
 }
 
 # Load common hash metadata and common placeholder object IDs for use with
@@ -1746,18 +1746,18 @@ test_oid () {
 }
 
 # Insert a slash into an object ID so it can be used to reference a location
-# under ".git/objects".  For example, "deadbeef..." becomes "de/adbeef..".
+# under ".shit/objects".  For example, "deadbeef..." becomes "de/adbeef..".
 test_oid_to_path () {
 	local basename="${1#??}"
 	echo "${1%$basename}/$basename"
 }
 
-# Parse oids from git ls-files --staged output
+# Parse oids from shit ls-files --staged output
 test_parse_ls_files_stage_oids () {
 	awk '{print $2}' -
 }
 
-# Parse oids from git ls-tree output
+# Parse oids from shit ls-tree output
 test_parse_ls_tree_oids () {
 	awk '{print $3}' -
 }
@@ -1797,7 +1797,7 @@ test_set_port () {
 
 	# Make sure that parallel '--stress' test jobs get different
 	# ports.
-	port=$(($port + ${GIT_TEST_STRESS_JOB_NR:-0}))
+	port=$(($port + ${shit_TEST_STRESS_JOB_NR:-0}))
 	eval $var=$port
 }
 
@@ -1812,7 +1812,7 @@ test_path_is_hidden () {
 }
 
 # Poor man's URI escaping. Good enough for the test suite whose trash
-# directory has a space in it. See 93c3fcbe4d4 (git-svn: attempt to
+# directory has a space in it. See 93c3fcbe4d4 (shit-svn: attempt to
 # mimic SVN 1.7 URL canonicalization, 2012-07-28) for prior art.
 test_uri_escape() {
 	sed 's/ /%20/g'
@@ -1823,11 +1823,11 @@ test_uri_escape() {
 #
 #	test_subcommand [!] <command> <args>... < <trace>
 #
-# For example, to look for an invocation of "git upload-pack
+# For example, to look for an invocation of "shit upload-pack
 # /path/to/repo"
 #
-#	GIT_TRACE2_EVENT=event.log git fetch ... &&
-#	test_subcommand git upload-pack "$PATH" <event.log
+#	shit_TRACE2_EVENT=event.log shit fetch ... &&
+#	test_subcommand shit upload-pack "$PATH" <event.log
 #
 # If the first parameter passed is !, this instead checks that
 # the given command was not called.
@@ -1854,13 +1854,13 @@ test_subcommand () {
 # Check that the given command was invoked as part of the
 # trace2-format trace on stdin.
 #
-#	test_region [!] <category> <label> git <command> <args>...
+#	test_region [!] <category> <label> shit <command> <args>...
 #
 # For example, to look for trace2_region_enter("index", "do_read_index", repo)
-# in an invocation of "git checkout HEAD~1", run
+# in an invocation of "shit checkout HEAD~1", run
 #
-#	GIT_TRACE2_EVENT="$(pwd)/trace.txt" GIT_TRACE2_EVENT_NESTING=10 \
-#		git checkout HEAD~1 &&
+#	shit_TRACE2_EVENT="$(pwd)/trace.txt" shit_TRACE2_EVENT_NESTING=10 \
+#		shit checkout HEAD~1 &&
 #	test_region index do_read_index <trace.txt
 #
 # If the first parameter passed is !, this instead checks that
@@ -1899,19 +1899,19 @@ test_region () {
 #	test_trace2_data <category> <key> <value>
 #
 # For example, to look for trace2_data_intmax("pack-objects", repo,
-# "reused", N) in an invocation of "git pack-objects", run:
+# "reused", N) in an invocation of "shit pack-objects", run:
 #
-#	GIT_TRACE2_EVENT="$(pwd)/trace.txt" git pack-objects ... &&
+#	shit_TRACE2_EVENT="$(pwd)/trace.txt" shit pack-objects ... &&
 #	test_trace2_data pack-objects reused N <trace2.txt
 test_trace2_data () {
 	grep -e '"category":"'"$1"'","key":"'"$2"'","value":"'"$3"'"'
 }
 
-# Given a GIT_TRACE2_EVENT log over stdin, writes to stdout a list of URLs
-# sent to git-remote-https child processes.
+# Given a shit_TRACE2_EVENT log over stdin, writes to stdout a list of URLs
+# sent to shit-remote-https child processes.
 test_remote_https_urls() {
-	grep -e '"event":"child_start".*"argv":\["git-remote-https",".*"\]' |
-		sed -e 's/{"event":"child_start".*"argv":\["git-remote-https","//g' \
+	grep -e '"event":"child_start".*"argv":\["shit-remote-https",".*"\]' |
+		sed -e 's/{"event":"child_start".*"argv":\["shit-remote-https","//g' \
 		    -e 's/"\]}//g'
 }
 
@@ -1945,21 +1945,21 @@ test_set_magic_mtime () {
 test_is_magic_mtime () {
 	local inc="${2:-0}" &&
 	local mtime=$((1234567890 + $inc)) &&
-	echo $mtime >.git/test-mtime-expect &&
-	test-tool chmtime --get "$1" >.git/test-mtime-actual &&
-	test_cmp .git/test-mtime-expect .git/test-mtime-actual
+	echo $mtime >.shit/test-mtime-expect &&
+	test-tool chmtime --get "$1" >.shit/test-mtime-actual &&
+	test_cmp .shit/test-mtime-expect .shit/test-mtime-actual
 	local ret=$?
-	rm -f .git/test-mtime-expect
-	rm -f .git/test-mtime-actual
+	rm -f .shit/test-mtime-expect
+	rm -f .shit/test-mtime-actual
 	return $ret
 }
 
-# Given two filenames, parse both using 'git config --list --file'
+# Given two filenames, parse both using 'shit config --list --file'
 # and compare the sorted output of those commands. Useful when
 # wanting to ignore whitespace differences and sorting concerns.
 test_cmp_config_output () {
-	git config --list --file="$1" >config-expect &&
-	git config --list --file="$2" >config-actual &&
+	shit config --list --file="$1" >config-expect &&
+	shit config --list --file="$2" >config-actual &&
 	sort config-expect >sorted-expect &&
 	sort config-actual >sorted-actual &&
 	test_cmp sorted-expect sorted-actual

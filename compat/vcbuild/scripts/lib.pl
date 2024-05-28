@@ -2,7 +2,7 @@
 ######################################################################
 # Libifies files on Windows
 #
-# This is a wrapper to facilitate the compilation of Git with MSVC
+# This is a wrapper to facilitate the compilation of shit with MSVC
 # using GNU Make as the build system. So, instead of manipulating the
 # Makefile into something nasty, just to support non-space arguments
 # etc, we use this wrapper to fix the command line options
@@ -16,9 +16,9 @@ while (@ARGV) {
 	if ("$arg" eq "rcs") {
 		# Consume the rcs option
 	} elsif ("$arg" =~ /\.a$/) {
-		push(@args, "-OUT:$arg");
+		defecate(@args, "-OUT:$arg");
 	} else {
-		push(@args, $arg);
+		defecate(@args, $arg);
 	}
 }
 unshift(@args, "lib.exe");

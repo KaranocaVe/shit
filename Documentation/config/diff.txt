@@ -1,16 +1,16 @@
 diff.autoRefreshIndex::
-	When using 'git diff' to compare with work tree
+	When using 'shit diff' to compare with work tree
 	files, do not consider stat-only changes as changed.
-	Instead, silently run `git update-index --refresh` to
+	Instead, silently run `shit update-index --refresh` to
 	update the cached stat information for paths whose
 	contents in the work tree match the contents in the
 	index.  This option defaults to true.  Note that this
-	affects only 'git diff' Porcelain, and not lower level
-	'diff' commands such as 'git diff-files'.
+	affects only 'shit diff' Porcelain, and not lower level
+	'diff' commands such as 'shit diff-files'.
 
 diff.dirstat::
 	A comma separated list of `--dirstat` parameters specifying the
-	default behavior of the `--dirstat` option to linkgit:git-diff[1]
+	default behavior of the `--dirstat` option to linkshit:shit-diff[1]
 	and friends. The defaults can be overridden on the command line
 	(using `--dirstat=<param1,param2,...>`). The fallback defaults
 	(when not changed by `diff.dirstat`) are `changes,noncumulative,3`.
@@ -73,74 +73,74 @@ diff.interHunkContext::
 diff.external::
 	If this config variable is set, diff generation is not
 	performed using the internal diff machinery, but using the
-	given command.  Can be overridden with the `GIT_EXTERNAL_DIFF'
+	given command.  Can be overridden with the `shit_EXTERNAL_DIFF'
 	environment variable.  The command is called with parameters
-	as described under "git Diffs" in linkgit:git[1].  Note: if
+	as described under "shit Diffs" in linkshit:shit[1].  Note: if
 	you want to use an external diff program only on a subset of
-	your files, you might want to use linkgit:gitattributes[5] instead.
+	your files, you might want to use linkshit:shitattributes[5] instead.
 
 diff.ignoreSubmodules::
 	Sets the default value of --ignore-submodules. Note that this
-	affects only 'git diff' Porcelain, and not lower level 'diff'
-	commands such as 'git diff-files'. 'git checkout'
-	and 'git switch' also honor
+	affects only 'shit diff' Porcelain, and not lower level 'diff'
+	commands such as 'shit diff-files'. 'shit checkout'
+	and 'shit switch' also honor
 	this setting when reporting uncommitted changes. Setting it to
-	'all' disables the submodule summary normally shown by 'git commit'
-	and 'git status' when `status.submoduleSummary` is set unless it is
+	'all' disables the submodule summary normally shown by 'shit commit'
+	and 'shit status' when `status.submoduleSummary` is set unless it is
 	overridden by using the --ignore-submodules command-line option.
-	The 'git submodule' commands are not affected by this setting.
+	The 'shit submodule' commands are not affected by this setting.
 	By default this is set to untracked so that any untracked
 	submodules are ignored.
 
 diff.mnemonicPrefix::
-	If set, 'git diff' uses a prefix pair that is different from the
+	If set, 'shit diff' uses a prefix pair that is different from the
 	standard "a/" and "b/" depending on what is being compared.  When
 	this configuration is in effect, reverse diff output also swaps
 	the order of the prefixes:
-`git diff`;;
+`shit diff`;;
 	compares the (i)ndex and the (w)ork tree;
-`git diff HEAD`;;
+`shit diff HEAD`;;
 	 compares a (c)ommit and the (w)ork tree;
-`git diff --cached`;;
+`shit diff --cached`;;
 	compares a (c)ommit and the (i)ndex;
-`git diff HEAD:file1 file2`;;
+`shit diff HEAD:file1 file2`;;
 	compares an (o)bject and a (w)ork tree entity;
-`git diff --no-index a b`;;
-	compares two non-git things (1) and (2).
+`shit diff --no-index a b`;;
+	compares two non-shit things (1) and (2).
 
 diff.noPrefix::
-	If set, 'git diff' does not show any source or destination prefix.
+	If set, 'shit diff' does not show any source or destination prefix.
 
 diff.srcPrefix::
-	If set, 'git diff' uses this source prefix. Defaults to "a/".
+	If set, 'shit diff' uses this source prefix. Defaults to "a/".
 
 diff.dstPrefix::
-	If set, 'git diff' uses this destination prefix. Defaults to "b/".
+	If set, 'shit diff' uses this destination prefix. Defaults to "b/".
 
 diff.relative::
-	If set to 'true', 'git diff' does not show changes outside of the directory
+	If set to 'true', 'shit diff' does not show changes outside of the directory
 	and show pathnames relative to the current directory.
 
 diff.orderFile::
 	File indicating how to order files within a diff.
-	See the '-O' option to linkgit:git-diff[1] for details.
+	See the '-O' option to linkshit:shit-diff[1] for details.
 	If `diff.orderFile` is a relative pathname, it is treated as
 	relative to the top of the working tree.
 
 diff.renameLimit::
 	The number of files to consider in the exhaustive portion of
-	copy/rename detection; equivalent to the 'git diff' option
+	copy/rename detection; equivalent to the 'shit diff' option
 	`-l`.  If not set, the default value is currently 1000.  This
 	setting has no effect if rename detection is turned off.
 
 diff.renames::
-	Whether and how Git detects renames.  If set to "false",
+	Whether and how shit detects renames.  If set to "false",
 	rename detection is disabled. If set to "true", basic rename
-	detection is enabled.  If set to "copies" or "copy", Git will
+	detection is enabled.  If set to "copies" or "copy", shit will
 	detect copies, as well.  Defaults to true.  Note that this
-	affects only 'git diff' Porcelain like linkgit:git-diff[1] and
-	linkgit:git-log[1], and not lower level commands such as
-	linkgit:git-diff-files[1].
+	affects only 'shit diff' Porcelain like linkshit:shit-diff[1] and
+	linkshit:shit-log[1], and not lower level commands such as
+	linkshit:shit-diff-files[1].
 
 diff.suppressBlankEmpty::
 	A boolean to inhibit the standard behavior of printing a space
@@ -150,7 +150,7 @@ diff.submodule::
 	Specify the format in which differences in submodules are
 	shown.  The "short" format just shows the names of the commits
 	at the beginning and end of the range. The "log" format lists
-	the commits in the range like linkgit:git-submodule[1] `summary`
+	the commits in the range like linkshit:shit-submodule[1] `summary`
 	does. The "diff" format shows an inline diff of the changed
 	contents of the submodule. Defaults to "short".
 
@@ -161,32 +161,32 @@ diff.wordRegex::
 	characters are *ignorable* whitespace.
 
 diff.<driver>.command::
-	The custom diff driver command.  See linkgit:gitattributes[5]
+	The custom diff driver command.  See linkshit:shitattributes[5]
 	for details.
 
 diff.<driver>.xfuncname::
 	The regular expression that the diff driver should use to
 	recognize the hunk header.  A built-in pattern may also be used.
-	See linkgit:gitattributes[5] for details.
+	See linkshit:shitattributes[5] for details.
 
 diff.<driver>.binary::
 	Set this option to true to make the diff driver treat files as
-	binary.  See linkgit:gitattributes[5] for details.
+	binary.  See linkshit:shitattributes[5] for details.
 
 diff.<driver>.textconv::
 	The command that the diff driver should call to generate the
 	text-converted version of a file.  The result of the
 	conversion is used to generate a human-readable diff.  See
-	linkgit:gitattributes[5] for details.
+	linkshit:shitattributes[5] for details.
 
 diff.<driver>.wordRegex::
 	The regular expression that the diff driver should use to
-	split words in a line.  See linkgit:gitattributes[5] for
+	split words in a line.  See linkshit:shitattributes[5] for
 	details.
 
 diff.<driver>.cachetextconv::
 	Set this option to true to make the diff driver cache the text
-	conversion outputs.  See linkgit:gitattributes[5] for details.
+	conversion outputs.  See linkshit:shitattributes[5] for details.
 
 include::../mergetools-diff.txt[]
 
@@ -223,11 +223,11 @@ diff.wsErrorHighlight::
 diff.colorMoved::
 	If set to either a valid `<mode>` or a true value, moved lines
 	in a diff are colored differently, for details of valid modes
-	see '--color-moved' in linkgit:git-diff[1]. If simply set to
+	see '--color-moved' in linkshit:shit-diff[1]. If simply set to
 	true the default color mode will be used. When set to false,
 	moved lines are not colored.
 
 diff.colorMovedWS::
 	When moved lines are colored using e.g. the `diff.colorMoved` setting,
 	this option controls the `<mode>` how spaces are treated.
-	For details of valid modes see '--color-moved-ws' in linkgit:git-diff[1].
+	For details of valid modes see '--color-moved-ws' in linkshit:shit-diff[1].

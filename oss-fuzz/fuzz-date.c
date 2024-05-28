@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "date.h"
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);

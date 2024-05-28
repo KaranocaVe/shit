@@ -1,15 +1,15 @@
 =head1 NAME
 
-Git - Perl interface to the Git version control system
+shit - Perl interface to the shit version control system
 
 =cut
 
 
-package Git;
+package shit;
 
 use 5.008001;
 use strict;
-use warnings $ENV{GIT_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
+use warnings $ENV{shit_PERL_FATAL_WARNINGS} ? qw(FATAL all) : ();
 
 BEGIN {
 
@@ -21,14 +21,14 @@ $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-  use Git;
+  use shit;
 
-  my $version = Git::command_oneline('version');
+  my $version = shit::command_oneline('version');
 
-  git_cmd_try { Git::command_noisy('update-server-info') }
+  shit_cmd_try { shit::command_noisy('update-server-info') }
               '%s failed w/ code %d';
 
-  my $repo = Git->repository (Directory => '/srv/git/cogito.git');
+  my $repo = shit->repository (Directory => '/srv/shit/coshito.shit');
 
 
   my @revs = $repo->command('rev-list', '--since=last monday', '--all');
@@ -51,13 +51,13 @@ require Exporter;
 
 @ISA = qw(Exporter);
 
-@EXPORT = qw(git_cmd_try);
+@EXPORT = qw(shit_cmd_try);
 
 # Methods which can be called as standalone functions as well:
 @EXPORT_OK = qw(command command_oneline command_noisy
                 command_output_pipe command_input_pipe command_close_pipe
                 command_bidi_pipe command_close_bidi_pipe
-                version exec_path html_path hash_object git_cmd_try
+                version exec_path html_path hash_object shit_cmd_try
                 remote_refs prompt
                 get_tz_offset get_record
                 credential credential_read credential_write
@@ -67,15 +67,15 @@ require Exporter;
 
 =head1 DESCRIPTION
 
-This module provides Perl scripts easy way to interface the Git version control
-system. The modules have an easy and well-tested way to call arbitrary Git
+This module provides Perl scripts easy way to interface the shit version control
+system. The modules have an easy and well-tested way to call arbitrary shit
 commands; in the future, the interface will also provide specialized methods
 for doing easily operations which are not totally trivial to do over
 the generic command interface.
 
 While some commands can be executed outside of any context (e.g. 'version'
 or 'init'), most operations require a repository context, which in practice
-means getting an instance of the Git object using the repository() constructor.
+means getting an instance of the shit object using the repository() constructor.
 (In the future, we will also get a new_repository() constructor.) All commands
 called as methods of the object are then executed in the context of the
 repository.
@@ -88,13 +88,13 @@ of your process.)
 
 TODO: In the future, we might also do
 
-	my $remoterepo = $repo->remote_repository (Name => 'cogito', Branch => 'master');
-	$remoterepo ||= Git->remote_repository ('http://git.or.cz/cogito.git/');
+	my $remoterepo = $repo->remote_repository (Name => 'coshito', Branch => 'master');
+	$remoterepo ||= shit->remote_repository ('http://shit.or.cz/coshito.shit/');
 	my @refs = $remoterepo->refs();
 
-Currently, the module merely wraps calls to external Git tools. In the future,
-it will provide a much faster way to interact with Git by linking directly
-to libgit. This should be completely opaque to the user, though (performance
+Currently, the module merely wraps calls to external shit tools. In the future,
+it will provide a much faster way to interact with shit by linking directly
+to libshit. This should be completely opaque to the user, though (performance
 increase notwithstanding).
 
 =cut
@@ -102,7 +102,7 @@ increase notwithstanding).
 
 sub carp { require Carp; goto &Carp::carp }
 sub croak { require Carp; goto &Carp::croak }
-use Git::LoadCPAN::Error qw(:try);
+use shit::LoadCPAN::Error qw(:try);
 }
 
 
@@ -120,7 +120,7 @@ Construct a new repository object.
 C<OPTIONS> are passed in a hash like fashion, using key and value pairs.
 Possible options are:
 
-B<Repository> - Path to the Git repository.
+B<Repository> - Path to the shit repository.
 
 B<WorkingCopy> - Path to the associated working copy; not strictly required
 as many commands will happily crunch on a bare repository.
@@ -128,13 +128,13 @@ as many commands will happily crunch on a bare repository.
 B<WorkingSubdir> - Subdirectory in the working copy to work inside.
 Just left undefined if you do not want to limit the scope of operations.
 
-B<Directory> - Path to the Git working directory in its usual setup.
-The C<.git> directory is searched in the directory and all the parent
+B<Directory> - Path to the shit working directory in its usual setup.
+The C<.shit> directory is searched in the directory and all the parent
 directories; if found, C<WorkingCopy> is set to the directory containing
-it and C<Repository> to the C<.git> directory itself. If no C<.git>
+it and C<Repository> to the C<.shit> directory itself. If no C<.shit>
 directory was found, the C<Directory> is assumed to be a bare repository,
 C<Repository> is set to point at it and C<WorkingCopy> is left undefined.
-If the C<$GIT_DIR> environment variable is set, things behave as expected
+If the C<$shit_DIR> environment variable is set, things behave as expected
 as well.
 
 You should not use both C<Directory> and either of C<Repository> and
@@ -146,7 +146,7 @@ field.
 
 Calling the constructor with no options whatsoever is equivalent to
 calling it with C<< Directory => '.' >>. In general, if you are building
-a standard porcelain command, simply doing C<< Git->repository() >> should
+a standard porcelain command, simply doing C<< shit->repository() >> should
 do the right thing and setup the object to reflect exactly where the user
 is right now.
 
@@ -176,7 +176,7 @@ sub repository {
 	if (defined $opts{Directory}) {
 		-d $opts{Directory} or throw Error::Simple("Directory not found: $opts{Directory} $!");
 
-		my $search = Git->repository(WorkingCopy => $opts{Directory});
+		my $search = shit->repository(WorkingCopy => $opts{Directory});
 
 		# This rev-parse will throw an exception if we're not in a
 		# repository, which is what we want, but it's kind of noisy.
@@ -186,11 +186,11 @@ sub repository {
 		my $out;
 		try {
 		  # Note that "--is-bare-repository" must come first, as
-		  # --git-dir output could contain newlines.
-		  $out = $search->command([qw(rev-parse --is-bare-repository --git-dir)],
+		  # --shit-dir output could contain newlines.
+		  $out = $search->command([qw(rev-parse --is-bare-repository --shit-dir)],
 			                  STDERR => 0);
-		} catch Git::Error::Command with {
-			throw Error::Simple("fatal: not a git repository: $opts{Directory}");
+		} catch shit::Error::Command with {
+			throw Error::Simple("fatal: not a shit repository: $opts{Directory}");
 		};
 
 		chomp $out;
@@ -202,7 +202,7 @@ sub repository {
 			File::Spec->file_name_is_absolute($dir) or $dir = $opts{Directory} . '/' . $dir;
 			$opts{Repository} = Cwd::abs_path($dir);
 
-			# If --git-dir went ok, this shouldn't die either.
+			# If --shit-dir went ok, this shouldn't die either.
 			my $prefix = $search->command_oneline('rev-parse', '--show-prefix');
 			$dir = Cwd::abs_path($opts{Directory}) . '/';
 			if ($prefix) {
@@ -235,7 +235,7 @@ sub repository {
 
 =item command ( [ COMMAND, ARGUMENTS... ], { Opt => Val ... } )
 
-Execute the given Git C<COMMAND> (specify it without the 'git-'
+Execute the given shit C<COMMAND> (specify it without the 'shit-'
 prefix), optionally with the specified extra C<ARGUMENTS>.
 
 The second more elaborate form can be used if you want to further adjust
@@ -248,7 +248,7 @@ you specify, but you must be extremely careful; if the error output is not
 very short and you want to read it in the same process as where you called
 C<command()>, you are set up for a nice deadlock!
 
-The method can be called without any instance or on a specified Git repository
+The method can be called without any instance or on a specified shit repository
 (in that case the command will be run in the repository context).
 
 In scalar context, it returns all the command output in a single string
@@ -273,7 +273,7 @@ sub command {
 		my $text = <$fh>;
 		try {
 			_cmd_close($ctx, $fh);
-		} catch Git::Error::Command with {
+		} catch shit::Error::Command with {
 			# Pepper with the output:
 			my $E = shift;
 			$E->{'-outputref'} = \$text;
@@ -286,7 +286,7 @@ sub command {
 		defined and chomp for @lines;
 		try {
 			_cmd_close($ctx, $fh);
-		} catch Git::Error::Command with {
+		} catch shit::Error::Command with {
 			my $E = shift;
 			$E->{'-outputref'} = \@lines;
 			throw $E;
@@ -313,7 +313,7 @@ sub command_oneline {
 	defined $line and chomp $line;
 	try {
 		_cmd_close($ctx, $fh);
-	} catch Git::Error::Command with {
+	} catch shit::Error::Command with {
 		# Pepper with the output:
 		my $E = shift;
 		$E->{'-outputref'} = \$line;
@@ -402,10 +402,10 @@ sub command_bidi_pipe {
 		shift;
 		require Cwd;
 		$cwd_save = Cwd::getcwd();
-		_setup_git_cmd_env($self);
+		_setup_shit_cmd_env($self);
 	}
 	require IPC::Open2;
-	$pid = IPC::Open2::open2($in, $out, 'git', @_);
+	$pid = IPC::Open2::open2($in, $out, 'shit', @_);
 	chdir($cwd_save) if $cwd_save;
 	return ($pid, $in, $out, join(' ', @_));
 }
@@ -448,7 +448,7 @@ sub command_close_bidi_pipe {
 	_cmd_close($ctx, (grep { defined } ($in, $out)));
 	waitpid $pid, 0;
 	if ($? >> 8) {
-		throw Git::Error::Command($ctx, $? >>8);
+		throw shit::Error::Command($ctx, $? >>8);
 	}
 }
 
@@ -460,7 +460,7 @@ capture the command output - the standard output is not redirected and goes
 to the standard output of the caller application.
 
 While the method is called command_noisy(), you might want to as well use
-it for the most silent Git commands which you know will never pollute your
+it for the most silent shit commands which you know will never pollute your
 stdout but you want to avoid the overhead of the pipe setup when calling them.
 
 The function returns only after the command has finished running.
@@ -478,28 +478,28 @@ sub command_noisy {
 		_cmd_exec($self, $cmd, @args);
 	}
 	if (waitpid($pid, 0) > 0 and $?>>8 != 0) {
-		throw Git::Error::Command(join(' ', $cmd, @args), $? >> 8);
+		throw shit::Error::Command(join(' ', $cmd, @args), $? >> 8);
 	}
 }
 
 
 =item version ()
 
-Return the Git version in use.
+Return the shit version in use.
 
 =cut
 
 sub version {
 	my $verstr = command_oneline('--version');
-	$verstr =~ s/^git version //;
+	$verstr =~ s/^shit version //;
 	$verstr;
 }
 
 
 =item exec_path ()
 
-Return path to the Git sub-command executables (the same as
-C<git --exec-path>). Useful mostly only internally.
+Return path to the shit sub-command executables (the same as
+C<shit --exec-path>). Useful mostly only internally.
 
 =cut
 
@@ -508,8 +508,8 @@ sub exec_path { command_oneline('--exec-path') }
 
 =item html_path ()
 
-Return path to the Git html documentation (the same as
-C<git --html-path>). Useful mostly only internally.
+Return path to the shit html documentation (the same as
+C<shit --html-path>). Useful mostly only internally.
 
 =cut
 
@@ -557,7 +557,7 @@ sub get_record {
 
 Query user C<PROMPT> and return answer from user.
 
-Honours GIT_ASKPASS and SSH_ASKPASS environment variables for querying
+Honours shit_ASKPASS and SSH_ASKPASS environment variables for querying
 the user. If no *_ASKPASS variable is set or an error occurred,
 the terminal is tried as a fallback.
 If C<ISPASSWORD> is set and true, the terminal disables echo.
@@ -567,8 +567,8 @@ If C<ISPASSWORD> is set and true, the terminal disables echo.
 sub prompt {
 	my ($prompt, $isPassword) = @_;
 	my $ret;
-	if (exists $ENV{'GIT_ASKPASS'}) {
-		$ret = _prompt($ENV{'GIT_ASKPASS'}, $prompt);
+	if (exists $ENV{'shit_ASKPASS'}) {
+		$ret = _prompt($ENV{'shit_ASKPASS'}, $prompt);
 	}
 	if (!defined $ret && exists $ENV{'SSH_ASKPASS'}) {
 		$ret = _prompt($ENV{'SSH_ASKPASS'}, $prompt);
@@ -608,7 +608,7 @@ sub _prompt {
 
 =item repo_path ()
 
-Return path to the git repository. Must be called on a repository instance.
+Return path to the shit repository. Must be called on a repository instance.
 
 =cut
 
@@ -733,7 +733,7 @@ sub config_regexp {
 		unshift @cmd, $self if $self;
 		my @matches = command(@cmd);
 		return @matches;
-	} catch Git::Error::Command with {
+	} catch shit::Error::Command with {
 		my $E = shift;
 		if ($E->value() == 1) {
 			my @matches = ();
@@ -758,7 +758,7 @@ sub _config_common {
 		} else {
 			return command_oneline(@cmd, '--get', $var);
 		}
-	} catch Git::Error::Command with {
+	} catch shit::Error::Command with {
 		my $E = shift;
 		if ($E->value() == 1) {
 			# Key not found.
@@ -810,12 +810,12 @@ This function returns a hashref of refs stored in a given remote repository.
 The hash is in the format C<refname =\> hash>. For tags, the C<refname> entry
 contains the tag object while a C<refname^{}> entry gives the tagged objects.
 
-C<REPOSITORY> has the same meaning as the appropriate C<git-ls-remote>
+C<REPOSITORY> has the same meaning as the appropriate C<shit-ls-remote>
 argument; either a URL or a remote name (if called on a repository instance).
 C<GROUPS> is an optional arrayref that can contain 'tags' to return all the
 tags and/or 'heads' to return all the heads. C<REFGLOB> is an optional array
 of strings containing a shell-like glob to further limit the refs returned in
-the hash; the meaning is again the same as the appropriate C<git-ls-remote>
+the hash; the meaning is again the same as the appropriate C<shit-ls-remote>
 argument.
 
 This function may or may not be called on a repository instance. In the former
@@ -830,29 +830,29 @@ sub remote_refs {
 	if (ref $groups eq 'ARRAY') {
 		foreach (@$groups) {
 			if ($_ eq 'heads') {
-				push (@args, '--heads');
+				defecate (@args, '--heads');
 			} elsif ($_ eq 'tags') {
-				push (@args, '--tags');
+				defecate (@args, '--tags');
 			} else {
 				# Ignore unknown groups for future
 				# compatibility
 			}
 		}
 	}
-	push (@args, $repo);
+	defecate (@args, $repo);
 	if (ref $refglobs eq 'ARRAY') {
-		push (@args, @$refglobs);
+		defecate (@args, @$refglobs);
 	}
 
 	my @self = $self ? ($self) : (); # Ultra trickery
-	my ($fh, $ctx) = Git::command_output_pipe(@self, 'ls-remote', @args);
+	my ($fh, $ctx) = shit::command_output_pipe(@self, 'ls-remote', @args);
 	my %refs;
 	while (<$fh>) {
 		chomp;
 		my ($hash, $ref) = split(/\t/, $_, 2);
 		$refs{$ref} = $hash;
 	}
-	Git::command_close_pipe(@self, $fh, $ctx);
+	shit::command_close_pipe(@self, $fh, $ctx);
 	return \%refs;
 }
 
@@ -862,10 +862,10 @@ sub remote_refs {
 =item ident_person ( TYPE | IDENTSTR | IDENTARRAY )
 
 This suite of functions retrieves and parses ident information, as stored
-in the commit and tag objects or produced by C<var GIT_type_IDENT> (thus
+in the commit and tag objects or produced by C<var shit_type_IDENT> (thus
 C<TYPE> can be either I<author> or I<committer>; case is insignificant).
 
-The C<ident> method retrieves the ident information from C<git var>
+The C<ident> method retrieves the ident information from C<shit var>
 and either returns it as a scalar string or as an array with the fields parsed.
 Alternatively, it can take a prepared ident string (e.g. from the commit
 object) and just parse it.
@@ -886,7 +886,7 @@ sub ident {
 	my ($self, $type) = _maybe_self(@_);
 	my $identstr;
 	if (lc $type eq lc 'committer' or lc $type eq lc 'author') {
-		my @cmd = ('var', 'GIT_'.uc($type).'_IDENT');
+		my @cmd = ('var', 'shit_'.uc($type).'_IDENT');
 		unshift @cmd, $self if $self;
 		$identstr = command_oneline(@cmd);
 	} else {
@@ -910,7 +910,7 @@ sub ident_person {
 Compute the SHA1 object id of the given C<FILENAME> considering it is
 of the C<TYPE> object type (C<blob>, C<commit>, C<tree>).
 
-The method can be called without any instance or on a specified Git repository,
+The method can be called without any instance or on a specified shit repository,
 it makes zero difference.
 
 The function returns the SHA1 hash.
@@ -1002,7 +1002,7 @@ sub cat_blob {
 	}
 
 	if ($description !~ /^[0-9a-fA-F]{40}(?:[0-9a-fA-F]{24})? \S+ (\d+)$/) {
-		carp "Unexpected result returned from git cat-file";
+		carp "Unexpected result returned from shit cat-file";
 		return -1;
 	}
 
@@ -1081,7 +1081,7 @@ sub credential_read {
 		if ($_ eq '') {
 			last;
 		} elsif (!/^([^=]+)=(.*)$/) {
-			throw Error::Simple("unable to parse git credential data:\n$_");
+			throw Error::Simple("unable to parse shit credential data:\n$_");
 		}
 		$credential{$1} = $2;
 	}
@@ -1141,7 +1141,7 @@ sub _credential_run {
 		%$credential = credential_read $reader;
 	}
 	if (<$reader>) {
-		throw Error::Simple("unexpected output from git credential $op response:\n$_\n");
+		throw Error::Simple("unexpected output from shit credential $op response:\n$_\n");
 	}
 
 	command_close_bidi_pipe($pid, $reader, undef, $ctx);
@@ -1151,15 +1151,15 @@ sub _credential_run {
 
 =item credential( CREDENTIAL_HASHREF, CODE )
 
-Executes C<git credential> for a given set of credentials and specified
+Executes C<shit credential> for a given set of credentials and specified
 operation.  In both forms C<CREDENTIAL_HASHREF> needs to be a reference to
 a hash which stores credentials.  Under certain conditions the hash can
 change.
 
 In the first form, C<OPERATION> can be C<'fill'>, C<'approve'> or C<'reject'>,
-and function will execute corresponding C<git credential> sub-command.  If
+and function will execute corresponding C<shit credential> sub-command.  If
 it's omitted C<'fill'> is assumed.  In case of C<'fill'> the values stored in
-C<CREDENTIAL_HASHREF> will be changed to the ones returned by the C<git
+C<CREDENTIAL_HASHREF> will be changed to the ones returned by the C<shit
 credential fill> command.  The usual usage would look something like:
 
 	my %cred = (
@@ -1167,25 +1167,25 @@ credential fill> command.  The usual usage would look something like:
 		'host' => 'example.com',
 		'username' => 'bob'
 	);
-	Git::credential \%cred;
+	shit::credential \%cred;
 	if (try_to_authenticate($cred{'username'}, $cred{'password'})) {
-		Git::credential \%cred, 'approve';
+		shit::credential \%cred, 'approve';
 		... do more stuff ...
 	} else {
-		Git::credential \%cred, 'reject';
+		shit::credential \%cred, 'reject';
 	}
 
 In the second form, C<CODE> needs to be a reference to a subroutine.  The
-function will execute C<git credential fill> to fill the provided credential
+function will execute C<shit credential fill> to fill the provided credential
 hash, then call C<CODE> with C<CREDENTIAL_HASHREF> as the sole argument.  If
-C<CODE>'s return value is defined, the function will execute C<git credential
-approve> (if return value yields true) or C<git credential reject> (if return
+C<CODE>'s return value is defined, the function will execute C<shit credential
+approve> (if return value yields true) or C<shit credential reject> (if return
 value is false).  If the return value is undef, nothing at all is executed;
 this is useful, for example, if the credential could neither be verified nor
 rejected due to an unrelated network error.  The return value is the same as
 what C<CODE> returns.  With this form, the usage might look as follows:
 
-	if (Git::credential {
+	if (shit::credential {
 		'protocol' => 'https',
 		'host' => 'example.com',
 		'username' => 'bob'
@@ -1337,7 +1337,7 @@ sub _temp_cache {
 
 		require File::Temp;
 		($$temp_fd, $fname) = File::Temp::tempfile(
-			"Git_${n}_XXXXXX", UNLINK => 1, DIR => $tmpdir,
+			"shit_${n}_XXXXXX", UNLINK => 1, DIR => $tmpdir,
 			) or throw Error::Simple("couldn't open new temp file");
 
 		$$temp_fd->autoflush;
@@ -1485,7 +1485,7 @@ See the L<Error> module on how to catch those. Most exceptions are mere
 L<Error::Simple> instances.
 
 However, the C<command()>, C<command_oneline()> and C<command_noisy()>
-functions suite can throw C<Git::Error::Command> exceptions as well: those are
+functions suite can throw C<shit::Error::Command> exceptions as well: those are
 thrown when the external command returns an error code and contain the error
 code as well as access to the captured command's output. The exception class
 provides the usual C<stringify> and C<value> (command's exit code) methods and
@@ -1502,9 +1502,9 @@ use C<command_close_pipe()>, which can throw the exception.
 =cut
 
 {
-	package Git::Error::Command;
+	package shit::Error::Command;
 
-	@Git::Error::Command::ISA = qw(Error);
+	@shit::Error::Command::ISA = qw(Error);
 
 	sub new {
 		my $self = shift;
@@ -1515,9 +1515,9 @@ use C<command_close_pipe()>, which can throw the exception.
 
 		local $Error::Depth = $Error::Depth + 1;
 
-		push(@args, '-cmdline', $cmdline);
-		push(@args, '-value', $value);
-		push(@args, '-outputref', $outputref);
+		defecate(@args, '-cmdline', $cmdline);
+		defecate(@args, '-value', $value);
+		defecate(@args, '-outputref', $outputref);
 
 		$self->SUPER::new(-text => 'command returned error', @args);
 	}
@@ -1547,9 +1547,9 @@ use C<command_close_pipe()>, which can throw the exception.
 
 =over 4
 
-=item git_cmd_try { CODE } ERRMSG
+=item shit_cmd_try { CODE } ERRMSG
 
-This magical statement will automatically catch any C<Git::Error::Command>
+This magical statement will automatically catch any C<shit::Error::Command>
 exceptions thrown by C<CODE> and make your program die with C<ERRMSG>
 on its lips; the message will have %s substituted for the command line
 and %d for the exit status. This statement is useful mostly for producing
@@ -1561,7 +1561,7 @@ Note that this is the only auto-exported function.
 
 =cut
 
-sub git_cmd_try(&$) {
+sub shit_cmd_try(&$) {
 	my ($code, $errmsg) = @_;
 	my @result;
 	my $err;
@@ -1572,7 +1572,7 @@ sub git_cmd_try(&$) {
 		} else {
 			$result[0] = &$code;
 		}
-	} catch Git::Error::Command with {
+	} catch shit::Error::Command with {
 		my $E = shift;
 		$err = $errmsg;
 		$err =~ s/\%s/$E->cmdline()/ge;
@@ -1602,7 +1602,7 @@ either version 2, or (at your option) any later version.
 # the method was called upon an instance and (undef, @args) if
 # it was called directly.
 sub _maybe_self {
-	UNIVERSAL::isa($_[0], 'Git') ? @_ : (undef, @_);
+	UNIVERSAL::isa($_[0], 'shit') ? @_ : (undef, @_);
 }
 
 # Check if the command id is something reasonable.
@@ -1636,7 +1636,7 @@ sub _command_common_pipe {
 		# a handle class, not scalar. It is not known if
 		# it is something specific to ActiveState Perl or
 		# just a Perl quirk.
-		tie (*ACPIPE, 'Git::activestate_pipe', $cmd, @args);
+		tie (*ACPIPE, 'shit::activestate_pipe', $cmd, @args);
 		$fh = *ACPIPE;
 
 	} else {
@@ -1658,35 +1658,35 @@ sub _command_common_pipe {
 }
 
 # When already in the subprocess, set up the appropriate state
-# for the given repository and execute the git command.
+# for the given repository and execute the shit command.
 sub _cmd_exec {
 	my ($self, @args) = @_;
-	_setup_git_cmd_env($self);
-	_execv_git_cmd(@args);
+	_setup_shit_cmd_env($self);
+	_execv_shit_cmd(@args);
 	die qq[exec "@args" failed: $!];
 }
 
-# set up the appropriate state for git command
-sub _setup_git_cmd_env {
+# set up the appropriate state for shit command
+sub _setup_shit_cmd_env {
 	my $self = shift;
 	if ($self) {
-		$self->repo_path() and $ENV{'GIT_DIR'} = $self->repo_path();
+		$self->repo_path() and $ENV{'shit_DIR'} = $self->repo_path();
 		$self->repo_path() and $self->wc_path()
-			and $ENV{'GIT_WORK_TREE'} = $self->wc_path();
+			and $ENV{'shit_WORK_TREE'} = $self->wc_path();
 		$self->wc_path() and chdir($self->wc_path());
 		$self->wc_subdir() and chdir($self->wc_subdir());
 	}
 }
 
-# Execute the given Git command ($_[0]) with arguments ($_[1..])
+# Execute the given shit command ($_[0]) with arguments ($_[1..])
 # by searching for it at proper places.
-sub _execv_git_cmd { exec('git', @_); }
+sub _execv_shit_cmd { exec('shit', @_); }
 
 sub _is_sig {
 	my ($v, $n) = @_;
 
 	# We are avoiding a "use POSIX qw(SIGPIPE SIGABRT)" in the hot
-	# Git.pm codepath.
+	# shit.pm codepath.
 	require POSIX;
 	no strict 'refs';
 	$v == *{"POSIX::$n"}->();
@@ -1703,7 +1703,7 @@ sub _cmd_close {
 			carp "error closing pipe: $!";
 		} elsif ($? >> 8) {
 			# The caller should pepper this.
-			throw Git::Error::Command($ctx, $? >> 8);
+			throw shit::Error::Command($ctx, $? >> 8);
 		} elsif ($? & 127 && _is_sig($? & 127, "SIGPIPE")) {
 			# we might e.g. closed a live stream; the command
 			# dying of SIGPIPE would drive us here.
@@ -1727,7 +1727,7 @@ sub DESTROY {
 
 # Pipe implementation for ActiveState Perl.
 
-package Git::activestate_pipe;
+package shit::activestate_pipe;
 
 sub TIEHANDLE {
 	my ($class, @params) = @_;
@@ -1736,7 +1736,7 @@ sub TIEHANDLE {
 	# but I have no ActiveState clue... --pasky
 	# Let's just hope ActiveState Perl does at least the quoting
 	# correctly.
-	my @data = qx{git @params};
+	my @data = qx{shit @params};
 	bless { i => 0, data => \@data }, $class;
 }
 

@@ -1,225 +1,225 @@
 #!/bin/sh
 
-test_description='check handling of disallowed .gitmodule urls'
+test_description='check handling of disallowed .shitmodule urls'
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
 test_expect_success 'setup' '
-	git config --global protocol.file.allow always
+	shit config --global protocol.file.allow always
 '
 
 test_expect_success 'create submodule with protected dash in url' '
-	git init upstream &&
-	git -C upstream commit --allow-empty -m base &&
+	shit init upstream &&
+	shit -C upstream commit --allow-empty -m base &&
 	mv upstream ./-upstream &&
-	git submodule add ./-upstream sub &&
-	git add sub .gitmodules &&
-	git commit -m submodule
+	shit submodule add ./-upstream sub &&
+	shit add sub .shitmodules &&
+	shit commit -m submodule
 '
 
 test_expect_success 'clone can recurse submodule' '
 	test_when_finished "rm -rf dst" &&
-	git clone --recurse-submodules . dst &&
+	shit clone --recurse-submodules . dst &&
 	echo base >expect &&
-	git -C dst/sub log -1 --format=%s >actual &&
+	shit -C dst/sub log -1 --format=%s >actual &&
 	test_cmp expect actual
 '
 
 test_expect_success 'fsck accepts protected dash' '
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	git push dst HEAD
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	shit defecate dst HEAD
 '
 
-test_expect_success 'remove ./ protection from .gitmodules url' '
-	perl -i -pe "s{\./}{}" .gitmodules &&
-	git commit -am "drop protection"
+test_expect_success 'remove ./ protection from .shitmodules url' '
+	perl -i -pe "s{\./}{}" .shitmodules &&
+	shit commit -am "drop protection"
 '
 
 test_expect_success 'clone rejects unprotected dash' '
 	test_when_finished "rm -rf dst" &&
-	test_must_fail git clone --recurse-submodules . dst 2>err &&
+	test_must_fail shit clone --recurse-submodules . dst 2>err &&
 	test_grep ignoring err
 '
 
 test_expect_success 'fsck rejects unprotected dash' '
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'trailing backslash is handled correctly' '
-	git init testmodule &&
+	shit init testmodule &&
 	test_commit -C testmodule c &&
-	git submodule add ./testmodule &&
+	shit submodule add ./testmodule &&
 	: ensure that the name ends in a double backslash &&
 	sed -e "s|\\(submodule \"testmodule\\)\"|\\1\\\\\\\\\"|" \
 		-e "s|url = .*|url = \" --should-not-be-an-option\"|" \
-		<.gitmodules >.new &&
-	mv .new .gitmodules &&
-	git commit -am "Add testmodule" &&
-	test_must_fail git clone --verbose --recurse-submodules . dolly 2>err &&
+		<.shitmodules >.new &&
+	mv .new .shitmodules &&
+	shit commit -am "Add testmodule" &&
+	test_must_fail shit clone --verbose --recurse-submodules . dolly 2>err &&
 	test_grep ! "unknown option" err
 '
 
 test_expect_success 'fsck rejects missing URL scheme' '
-	git checkout --orphan missing-scheme &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan missing-scheme &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-		url = http::one.example.com/foo.git
+		url = http::one.example.com/foo.shit
 	EOF
-	git add .gitmodules &&
+	shit add .shitmodules &&
 	test_tick &&
-	git commit -m "gitmodules with missing URL scheme" &&
+	shit commit -m "shitmodules with missing URL scheme" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'fsck rejects relative URL resolving to missing scheme' '
-	git checkout --orphan relative-missing-scheme &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan relative-missing-scheme &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-		url = "..\\../.\\../:one.example.com/foo.git"
+		url = "..\\../.\\../:one.example.com/foo.shit"
 	EOF
-	git add .gitmodules &&
+	shit add .shitmodules &&
 	test_tick &&
-	git commit -m "gitmodules with relative URL that strips off scheme" &&
+	shit commit -m "shitmodules with relative URL that strips off scheme" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'fsck rejects empty URL scheme' '
-	git checkout --orphan empty-scheme &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan empty-scheme &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-		url = http::://one.example.com/foo.git
+		url = http::://one.example.com/foo.shit
 	EOF
-	git add .gitmodules &&
+	shit add .shitmodules &&
 	test_tick &&
-	git commit -m "gitmodules with empty URL scheme" &&
+	shit commit -m "shitmodules with empty URL scheme" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'fsck rejects relative URL resolving to empty scheme' '
-	git checkout --orphan relative-empty-scheme &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan relative-empty-scheme &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-		url = ../../../:://one.example.com/foo.git
+		url = ../../../:://one.example.com/foo.shit
 	EOF
-	git add .gitmodules &&
+	shit add .shitmodules &&
 	test_tick &&
-	git commit -m "relative gitmodules URL resolving to empty scheme" &&
+	shit commit -m "relative shitmodules URL resolving to empty scheme" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'fsck rejects empty hostname' '
-	git checkout --orphan empty-host &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan empty-host &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-		url = http:///one.example.com/foo.git
+		url = http:///one.example.com/foo.shit
 	EOF
-	git add .gitmodules &&
+	shit add .shitmodules &&
 	test_tick &&
-	git commit -m "gitmodules with extra slashes" &&
+	shit commit -m "shitmodules with extra slashes" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'fsck rejects relative url that produced empty hostname' '
-	git checkout --orphan messy-relative &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan messy-relative &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-		url = ../../..//one.example.com/foo.git
+		url = ../../..//one.example.com/foo.shit
 	EOF
-	git add .gitmodules &&
+	shit add .shitmodules &&
 	test_tick &&
-	git commit -m "gitmodules abusing relative_path" &&
+	shit commit -m "shitmodules abusing relative_path" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'fsck permits embedded newline with unrecognized scheme' '
-	git checkout --orphan newscheme &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan newscheme &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
 		url = "data://acjbkd%0akajfdickajkd"
 	EOF
-	git add .gitmodules &&
-	git commit -m "gitmodules with unrecognized scheme" &&
+	shit add .shitmodules &&
+	shit commit -m "shitmodules with unrecognized scheme" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	git push dst HEAD
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	shit defecate dst HEAD
 '
 
 test_expect_success 'fsck rejects embedded newline in url' '
-	# create an orphan branch to avoid existing .gitmodules objects
-	git checkout --orphan newline &&
-	cat >.gitmodules <<-\EOF &&
+	# create an orphan branch to avoid existing .shitmodules objects
+	shit checkout --orphan newline &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-	url = "https://one.example.com?%0ahost=two.example.com/foo.git"
+	url = "https://one.example.com?%0ahost=two.example.com/foo.shit"
 	EOF
-	git add .gitmodules &&
-	git commit -m "gitmodules with newline" &&
+	shit add .shitmodules &&
+	shit commit -m "shitmodules with newline" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_expect_success 'fsck rejects embedded newline in relative url' '
-	git checkout --orphan relative-newline &&
-	cat >.gitmodules <<-\EOF &&
+	shit checkout --orphan relative-newline &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-		url = "./%0ahost=two.example.com/foo.git"
+		url = "./%0ahost=two.example.com/foo.shit"
 	EOF
-	git add .gitmodules &&
-	git commit -m "relative url with newline" &&
+	shit add .shitmodules &&
+	shit commit -m "relative url with newline" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
-test_expect_success 'fsck rejects embedded newline in git url' '
-	git checkout --orphan git-newline &&
-	cat >.gitmodules <<-\EOF &&
+test_expect_success 'fsck rejects embedded newline in shit url' '
+	shit checkout --orphan shit-newline &&
+	cat >.shitmodules <<-\EOF &&
 	[submodule "foo"]
-	url = "git://example.com:1234/repo%0a.git"
+	url = "shit://example.com:1234/repo%0a.shit"
 	EOF
-	git add .gitmodules &&
-	git commit -m "git url with newline" &&
+	shit add .shitmodules &&
+	shit commit -m "shit url with newline" &&
 	test_when_finished "rm -rf dst" &&
-	git init --bare dst &&
-	git -C dst config transfer.fsckObjects true &&
-	test_must_fail git push dst HEAD 2>err &&
-	grep gitmodulesUrl err
+	shit init --bare dst &&
+	shit -C dst config transfer.fsckObjects true &&
+	test_must_fail shit defecate dst HEAD 2>err &&
+	grep shitmodulesUrl err
 '
 
 test_done

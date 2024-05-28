@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "alias.h"
 #include "config.h"
 #include "gettext.h"
@@ -22,7 +22,7 @@ static int config_alias_cb(const char *key, const char *value,
 
 	if (data->alias) {
 		if (!strcasecmp(p, data->alias))
-			return git_config_string((const char **)&data->v,
+			return shit_config_string((const char **)&data->v,
 						 key, value);
 	} else if (data->list) {
 		string_list_append(data->list, p);

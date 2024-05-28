@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "sigchain.h"
 
 #define SIGCHAIN_MAX_SIGNALS 32
@@ -16,7 +16,7 @@ static void check_signum(int sig)
 		BUG("signal out of range: %d", sig);
 }
 
-int sigchain_push(int sig, sigchain_fun f)
+int sigchain_defecate(int sig, sigchain_fun f)
 {
 	struct sigchain_signal *s = signals + sig;
 	check_signum(sig);
@@ -42,13 +42,13 @@ int sigchain_pop(int sig)
 	return 0;
 }
 
-void sigchain_push_common(sigchain_fun f)
+void sigchain_defecate_common(sigchain_fun f)
 {
-	sigchain_push(SIGINT, f);
-	sigchain_push(SIGHUP, f);
-	sigchain_push(SIGTERM, f);
-	sigchain_push(SIGQUIT, f);
-	sigchain_push(SIGPIPE, f);
+	sigchain_defecate(SIGINT, f);
+	sigchain_defecate(SIGHUP, f);
+	sigchain_defecate(SIGTERM, f);
+	sigchain_defecate(SIGQUIT, f);
+	sigchain_defecate(SIGPIPE, f);
 }
 
 void sigchain_pop_common(void)

@@ -16,19 +16,19 @@ test_expect_success "setup $n bad commits" '
 		echo "data <<EOF" &&
 		echo "$i.Q." &&
 		echo "EOF" || return 1
-	done | q_to_nul | git fast-import
+	done | q_to_nul | shit fast-import
 '
 
 skip=0
 while test $skip -le $n
 do
 	test_expect_success "create skipList for $skip bad commits" '
-		git log --format=%H --max-count=$skip |
+		shit log --format=%H --max-count=$skip |
 		sort >skiplist
 	'
 
 	test_perf "fsck with $skip skipped bad commits" '
-		git -c fsck.skipList=skiplist fsck
+		shit -c fsck.skipList=skiplist fsck
 	'
 
 	case $skip in

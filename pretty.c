@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "config.h"
 #include "commit.h"
 #include "environment.h"
@@ -56,7 +56,7 @@ static void save_user_format(struct rev_info *rev, const char *cp, int is_tforma
 	rev->commit_format = CMIT_FMT_USERFORMAT;
 }
 
-static int git_pretty_formats_config(const char *var, const char *value,
+static int shit_pretty_formats_config(const char *var, const char *value,
 				     const struct config_context *ctx UNUSED,
 				     void *cb UNUSED)
 {
@@ -90,7 +90,7 @@ static int git_pretty_formats_config(const char *var, const char *value,
 
 	commit_format->name = xstrdup(name);
 	commit_format->format = CMIT_FMT_USERFORMAT;
-	if (git_config_string(&fmt, var, value))
+	if (shit_config_string(&fmt, var, value))
 		return -1;
 
 	if (skip_prefix(fmt, "format:", &fmt))
@@ -118,8 +118,8 @@ static void setup_commit_formats(void)
 		{ "reference",	CMIT_FMT_USERFORMAT,	1,	0,
 			0, DATE_SHORT, "%C(auto)%h (%s, %ad)" },
 		/*
-		 * Please update $__git_log_pretty_formats in
-		 * git-completion.bash when you add new formats.
+		 * Please update $__shit_log_pretty_formats in
+		 * shit-completion.bash when you add new formats.
 		 */
 	};
 	commit_formats_len = ARRAY_SIZE(builtin_formats);
@@ -128,7 +128,7 @@ static void setup_commit_formats(void)
 	COPY_ARRAY(commit_formats, builtin_formats,
 		   ARRAY_SIZE(builtin_formats));
 
-	git_config(git_pretty_formats_config, NULL);
+	shit_config(shit_pretty_formats_config, NULL);
 }
 
 static struct cmt_fmt_map *find_commit_format_recursive(const char *sought,
@@ -351,7 +351,7 @@ static int is_rfc2047_special(char ch, enum rfc2047_type type)
 	 *
 	 *    In this case the set of characters that may be used in a "Q"-encoded
 	 *    'encoded-word' is restricted to: <upper and lower case ASCII
-	 *    letters, decimal digits, "!", "*", "+", "-", "/", "=", and "_"
+	 *    letters, decimal dishits, "!", "*", "+", "-", "/", "=", and "_"
 	 *    (underscore, ASCII 95.)>.  An 'encoded-word' that appears within a
 	 *    'phrase' MUST be separated from any adjacent 'word', 'text' or
 	 *    'special' by 'linear-white-space'.
@@ -452,7 +452,7 @@ static inline void strbuf_add_with_color(struct strbuf *sb, const char *color,
 	strbuf_addstr(sb, color);
 	strbuf_add(sb, buf, buflen);
 	if (*color)
-		strbuf_addstr(sb, GIT_COLOR_RESET);
+		strbuf_addstr(sb, shit_COLOR_RESET);
 }
 
 static void append_line_with_color(struct strbuf *sb, struct grep_opt *opt,
@@ -1086,13 +1086,13 @@ static size_t parse_color(struct strbuf *sb, /* in UTF-8 */
 	 * they cannot support things like "auto" or "always" at all).
 	 */
 	if (skip_prefix(placeholder + 1, "red", &rest))
-		basic_color = GIT_COLOR_RED;
+		basic_color = shit_COLOR_RED;
 	else if (skip_prefix(placeholder + 1, "green", &rest))
-		basic_color = GIT_COLOR_GREEN;
+		basic_color = shit_COLOR_GREEN;
 	else if (skip_prefix(placeholder + 1, "blue", &rest))
-		basic_color = GIT_COLOR_BLUE;
+		basic_color = shit_COLOR_BLUE;
 	else if (skip_prefix(placeholder + 1, "reset", &rest))
-		basic_color = GIT_COLOR_RESET;
+		basic_color = shit_COLOR_RESET;
 
 	if (basic_color && want_color(c->pretty_ctx->color))
 		strbuf_addstr(sb, basic_color);
@@ -1228,7 +1228,7 @@ static int match_placeholder_bool_arg(const char *to_parse, const char *candidat
 	}
 
 	strval = xstrndup(argval, arglen);
-	v = git_parse_maybe_bool(strval);
+	v = shit_parse_maybe_bool(strval);
 	free(strval);
 
 	if (v == -1)
@@ -1347,9 +1347,9 @@ static size_t parse_describe_args(const char *start, struct strvec *args)
 			case DESCRIBE_ARG_BOOL:
 				if (match_placeholder_bool_arg(arg, option[i].name, &arg, &optval)) {
 					if (optval)
-						strvec_pushf(args, "--%s", option[i].name);
+						strvec_defecatef(args, "--%s", option[i].name);
 					else
-						strvec_pushf(args, "--no-%s", option[i].name);
+						strvec_defecatef(args, "--no-%s", option[i].name);
 					found = 1;
 				}
 				break;
@@ -1362,7 +1362,7 @@ static size_t parse_describe_args(const char *start, struct strvec *args)
 					strtol(argval, &endptr, 10);
 					if (endptr - argval != arglen)
 						return 0;
-					strvec_pushf(args, "--%s=%.*s", option[i].name, (int)arglen, argval);
+					strvec_defecatef(args, "--%s=%.*s", option[i].name, (int)arglen, argval);
 					found = 1;
 				}
 				break;
@@ -1371,7 +1371,7 @@ static size_t parse_describe_args(const char *start, struct strvec *args)
 								&argval, &arglen)) {
 					if (!arglen)
 						return 0;
-					strvec_pushf(args, "--%s=%.*s", option[i].name, (int)arglen, argval);
+					strvec_defecatef(args, "--%s=%.*s", option[i].name, (int)arglen, argval);
 					found = 1;
 				}
 				break;
@@ -1444,7 +1444,7 @@ static size_t format_commit_one(struct strbuf *sb, /* in UTF-8 */
 		if (starts_with(placeholder + 1, "(auto)")) {
 			c->auto_color = want_color(c->pretty_ctx->color);
 			if (c->auto_color && sb->len)
-				strbuf_addstr(sb, GIT_COLOR_RESET);
+				strbuf_addstr(sb, shit_COLOR_RESET);
 			return 7; /* consumed 7 bytes, "C(auto)" */
 		} else {
 			int ret = parse_color(sb, placeholder, c);
@@ -1510,8 +1510,8 @@ static size_t format_commit_one(struct strbuf *sb, /* in UTF-8 */
 			describe_status->max_invocations--;
 		}
 
-		cmd.git_cmd = 1;
-		strvec_push(&cmd.args, "describe");
+		cmd.shit_cmd = 1;
+		strvec_defecate(&cmd.args, "describe");
 
 		if (*arg == ':') {
 			arg++;
@@ -1523,7 +1523,7 @@ static size_t format_commit_one(struct strbuf *sb, /* in UTF-8 */
 			return 0;
 		}
 
-		strvec_push(&cmd.args, oid_to_hex(&commit->object.oid));
+		strvec_defecate(&cmd.args, oid_to_hex(&commit->object.oid));
 		pipe_command(&cmd, NULL, 0, &out, 0, &err, 0);
 		strbuf_rtrim(&out);
 		strbuf_addbuf(sb, &out);
@@ -2055,7 +2055,7 @@ static void pp_header(struct pretty_print_context *pp,
 		if (!parents_shown) {
 			unsigned num = commit_list_count(commit->parents);
 			/* with enough slop */
-			strbuf_grow(sb, num * (GIT_MAX_HEXSZ + 10) + 20);
+			strbuf_grow(sb, num * (shit_MAX_HEXSZ + 10) + 20);
 			add_merge_info(pp, sb, commit);
 			parents_shown = 1;
 		}

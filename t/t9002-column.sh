@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test_description='git column'
+test_description='shit column'
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
 
@@ -21,7 +21,7 @@ EOF
 '
 
 test_expect_success 'never' '
-	git column --indent=Z --mode=never <lista >actual &&
+	shit column --indent=Z --mode=never <lista >actual &&
 	test_cmp lista actual
 '
 
@@ -39,7 +39,7 @@ Znine
 Zten
 Zeleven
 EOF
-	git column --indent=Z --mode=plain <lista >actual &&
+	shit column --indent=Z --mode=plain <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -57,7 +57,7 @@ nineZ
 tenZ
 elevenZ
 EOF
-	git column --nl="Z$LF" --mode=plain <lista >actual &&
+	shit column --nl="Z$LF" --mode=plain <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -65,7 +65,7 @@ test_expect_success '80 columns' '
 	cat >expected <<\EOF &&
 one    two    three  four   five   six    seven  eight  nine   ten    eleven
 EOF
-	COLUMNS=80 git column --mode=column <lista >actual &&
+	COLUMNS=80 shit column --mode=column <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -84,12 +84,12 @@ eleven
 EOF
 
 test_expect_success COLUMNS_CAN_BE_1 'COLUMNS = 1' '
-	COLUMNS=1 git column --mode=column <lista >actual &&
+	COLUMNS=1 shit column --mode=column <lista >actual &&
 	test_cmp expected actual
 '
 
 test_expect_success 'width = 1' '
-	git column --mode=column --width=1 <lista >actual &&
+	shit column --mode=column --width=1 <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -105,7 +105,7 @@ four   ten
 five   eleven
 six
 EOF
-	git column --mode=column <lista >actual &&
+	shit column --mode=column <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -118,7 +118,7 @@ four   ten
 five   eleven
 six
 EOF
-	git column --mode=column,nodense < lista > actual &&
+	shit column --mode=column,nodense < lista > actual &&
 	test_cmp expected actual
 '
 
@@ -129,7 +129,7 @@ two   six   ten
 three seven eleven
 four  eight
 EOF
-	git column --mode=column,dense < lista > actual &&
+	shit column --mode=column,dense < lista > actual &&
 	test_cmp expected actual
 '
 
@@ -142,7 +142,7 @@ four    ten
 five    eleven
 six
 EOF
-	git column --mode=column --padding 2 <lista >actual &&
+	shit column --mode=column --padding 2 <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -155,7 +155,7 @@ test_expect_success '20 columns, indented' '
   five   eleven
   six
 EOF
-	git column --mode=column --indent="  " <lista >actual &&
+	shit column --mode=column --indent="  " <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -168,7 +168,7 @@ seven  eight
 nine   ten
 eleven
 EOF
-	git column --mode=row <lista >actual &&
+	shit column --mode=row <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -181,7 +181,7 @@ seven  eight
 nine   ten
 eleven
 EOF
-	git column --mode=row,nodense <lista >actual &&
+	shit column --mode=row,nodense <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -192,7 +192,7 @@ four  five   six
 seven eight  nine
 ten   eleven
 EOF
-	git column --mode=row,dense <lista >actual &&
+	shit column --mode=row,dense <lista >actual &&
 	test_cmp expected actual
 '
 
@@ -203,7 +203,7 @@ EOF
 	cat >expected <<\EOF &&
 fatal: --padding must be non-negative
 EOF
-	test_must_fail git column --mode=column --padding=-1 <input >actual 2>&1 &&
+	test_must_fail shit column --mode=column --padding=-1 <input >actual 2>&1 &&
 	test_cmp expected actual
 '
 

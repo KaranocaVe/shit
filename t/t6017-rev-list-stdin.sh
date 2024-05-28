@@ -5,8 +5,8 @@
 
 test_description='log family learns --stdin'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
@@ -18,8 +18,8 @@ check () {
 			printf "%s\n" $i
 		done >input &&
 		test_expect_success "check $cmd $*" '
-			git $cmd $(cat input) >expect &&
-			git $cmd --stdin <input >actual &&
+			shit $cmd $(cat input) >expect &&
+			shit $cmd --stdin <input >actual &&
 			sed -e "s/^/input /" input &&
 			sed -e "s/^/output /" expect &&
 			test_cmp expect actual
@@ -36,21 +36,21 @@ test_expect_success setup '
 			for j in $them
 			do
 				echo $i.$j >file-$j &&
-				git add file-$j || exit
+				shit add file-$j || exit
 			done &&
 			test_tick &&
-			git commit -m $i || exit
+			shit commit -m $i || exit
 		done &&
 		for i in $them
 		do
-			git checkout -b side-$i main~$i &&
+			shit checkout -b side-$i main~$i &&
 			echo updated $i >file-$i &&
-			git add file-$i &&
+			shit add file-$i &&
 			test_tick &&
-			git commit -m side-$i || exit
+			shit commit -m side-$i || exit
 		done &&
 
-		git update-ref refs/heads/-dashed-branch HEAD
+		shit update-ref refs/heads/-dashed-branch HEAD
 	)
 '
 
@@ -82,7 +82,7 @@ test_expect_success 'not only --stdin' '
 	--
 	file-2
 	EOF
-	git log --pretty=tformat:%s --name-only --stdin main -- file-1 \
+	shit log --pretty=tformat:%s --name-only --stdin main -- file-1 \
 		<input >actual &&
 	test_cmp expect actual
 '
@@ -97,7 +97,7 @@ test_expect_success 'pseudo-opt with missing value' '
 	fatal: Option ${SQ}--glob${SQ} requires a value
 	EOF
 
-	test_must_fail git rev-list --stdin <input 2>error &&
+	test_must_fail shit rev-list --stdin <input 2>error &&
 	test_cmp expect error
 '
 
@@ -111,7 +111,7 @@ test_expect_success 'pseudo-opt with invalid value' '
 	fatal: invalid option ${SQ}--no-walk=garbage${SQ} in --stdin mode
 	EOF
 
-	test_must_fail git rev-list --stdin <input 2>error &&
+	test_must_fail shit rev-list --stdin <input 2>error &&
 	test_cmp expect error
 '
 
@@ -124,7 +124,7 @@ test_expect_success 'unknown option without --end-of-options' '
 	fatal: invalid option ${SQ}-dashed-branch${SQ} in --stdin mode
 	EOF
 
-	test_must_fail git rev-list --stdin <input 2>error &&
+	test_must_fail shit rev-list --stdin <input 2>error &&
 	test_cmp expect error
 '
 
@@ -132,9 +132,9 @@ test_expect_success '--not on command line does not influence revisions read via
 	cat >input <<-EOF &&
 	refs/heads/main
 	EOF
-	git rev-list refs/heads/main >expect &&
+	shit rev-list refs/heads/main >expect &&
 
-	git rev-list refs/heads/main --not --stdin <input >actual &&
+	shit rev-list refs/heads/main --not --stdin <input >actual &&
 	test_cmp expect actual
 '
 
@@ -142,9 +142,9 @@ test_expect_success '--not via stdin does not influence revisions from command l
 	cat >input <<-EOF &&
 	--not
 	EOF
-	git rev-list refs/heads/main >expect &&
+	shit rev-list refs/heads/main >expect &&
 
-	git rev-list refs/heads/main --stdin refs/heads/main <input >actual &&
+	shit rev-list refs/heads/main --stdin refs/heads/main <input >actual &&
 	test_cmp expect actual
 '
 

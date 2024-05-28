@@ -1,5 +1,5 @@
 /*
- * A git credential helper that interface with Windows' Credential Manager
+ * A shit credential helper that interface with Windows' Credential Manager
  *
  */
 #include <windows.h>
@@ -126,7 +126,7 @@ static int match_cred(const CREDENTIALW *cred, int match_password)
 	if (wusername && wcscmp(wusername, cred->UserName ? cred->UserName : L""))
 		return 0;
 
-	return match_part(&target, L"git", L":") &&
+	return match_part(&target, L"shit", L":") &&
 		match_part(&target, protocol, L"://") &&
 		match_part_last(&target, wusername, L"@") &&
 		match_part(&target, host, L"/") &&
@@ -146,7 +146,7 @@ static void get_credential(void)
 	WCHAR *part;
 	WCHAR *remaining_parts;
 
-	if (!CredEnumerateW(L"git:*", 0, &num_creds, &creds))
+	if (!CredEnumerateW(L"shit:*", 0, &num_creds, &creds))
 		return;
 
 	/* search for the first credential that matches username */
@@ -174,7 +174,7 @@ static void get_credential(void)
 			}
 			for (int j = 0; j < creds[i]->AttributeCount; j++) {
 				attr = creds[i]->Attributes + j;
-				if (!wcscmp(attr->Keyword, L"git_password_expiry_utc")) {
+				if (!wcscmp(attr->Keyword, L"shit_password_expiry_utc")) {
 					write_item("password_expiry_utc", (LPCWSTR)attr->Value,
 					attr->ValueSize / sizeof(WCHAR));
 					break;
@@ -207,14 +207,14 @@ static void store_credential(void)
 	cred.Flags = 0;
 	cred.Type = CRED_TYPE_GENERIC;
 	cred.TargetName = target;
-	cred.Comment = L"saved by git-credential-wincred";
+	cred.Comment = L"saved by shit-credential-wincred";
 	cred.CredentialBlobSize = wcslen(secret) * sizeof(WCHAR);
 	cred.CredentialBlob = (LPVOID)_wcsdup(secret);
 	cred.Persist = CRED_PERSIST_LOCAL_MACHINE;
 	cred.AttributeCount = 0;
 	cred.Attributes = NULL;
 	if (password_expiry_utc != NULL) {
-		expiry_attr.Keyword = L"git_password_expiry_utc";
+		expiry_attr.Keyword = L"shit_password_expiry_utc";
 		expiry_attr.Value = (LPVOID)password_expiry_utc;
 		expiry_attr.ValueSize = (wcslen(password_expiry_utc)) * sizeof(WCHAR);
 		expiry_attr.Flags = 0;
@@ -236,7 +236,7 @@ static void erase_credential(void)
 	DWORD num_creds;
 	int i;
 
-	if (!CredEnumerateW(L"git:*", 0, &num_creds, &creds))
+	if (!CredEnumerateW(L"shit:*", 0, &num_creds, &creds))
 		return;
 
 	for (i = 0; i < num_creds; ++i) {
@@ -301,7 +301,7 @@ static void read_credential(void)
 			oauth_refresh_token = utf8_to_utf16_dup(v);
 		/*
 		 * Ignore other lines; we don't know what they mean, but
-		 * this future-proofs us when later versions of git do
+		 * this future-proofs us when later versions of shit do
 		 * learn new lines, and the helpers are updated to match.
 		 */
 	}
@@ -312,12 +312,12 @@ static void read_credential(void)
 int main(int argc, char *argv[])
 {
 	const char *usage =
-	    "usage: git credential-wincred <get|store|erase>\n";
+	    "usage: shit credential-wincred <get|store|erase>\n";
 
 	if (!argv[1])
 		die("%s", usage);
 
-	/* git use binary pipes to avoid CRLF-issues */
+	/* shit use binary pipes to avoid CRLF-issues */
 	_setmode(_fileno(stdin), _O_BINARY);
 	_setmode(_fileno(stdout), _O_BINARY);
 
@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
 		return 0;
 
 	/* prepare 'target', the unique key for the credential */
-	wcscpy(target, L"git:");
+	wcscpy(target, L"shit:");
 	wcsncat(target, protocol, ARRAY_SIZE(target));
 	wcsncat(target, L"://", ARRAY_SIZE(target));
 	if (wusername) {

@@ -1,16 +1,16 @@
-git-cherry-pick(1)
+shit-cherry-pick(1)
 ==================
 
 NAME
 ----
-git-cherry-pick - Apply the changes introduced by some existing commits
+shit-cherry-pick - Apply the changes introduced by some existing commits
 
 SYNOPSIS
 --------
 [verse]
-'git cherry-pick' [--edit] [-n] [-m <parent-number>] [-s] [-x] [--ff]
+'shit cherry-pick' [--edit] [-n] [-m <parent-number>] [-s] [-x] [--ff]
 		  [-S[<keyid>]] <commit>...
-'git cherry-pick' (--continue | --skip | --abort | --quit)
+'shit cherry-pick' (--continue | --skip | --abort | --quit)
 
 DESCRIPTION
 -----------
@@ -30,12 +30,12 @@ happens:
    in the index file and in your working tree.
 4. For conflicting paths, the index file records up to three
    versions, as described in the "TRUE MERGE" section of
-   linkgit:git-merge[1].  The working tree files will include
+   linkshit:shit-merge[1].  The working tree files will include
    a description of the conflict bracketed by the usual
    conflict markers `<<<<<<<` and `>>>>>>>`.
 5. No other modifications are made.
 
-See linkgit:git-merge[1] for some hints on resolving such
+See linkshit:shit-merge[1] for some hints on resolving such
 conflicts.
 
 OPTIONS
@@ -43,21 +43,21 @@ OPTIONS
 <commit>...::
 	Commits to cherry-pick.
 	For a more complete list of ways to spell commits, see
-	linkgit:gitrevisions[7].
+	linkshit:shitrevisions[7].
 	Sets of commits can be passed but no traversal is done by
 	default, as if the `--no-walk` option was specified, see
-	linkgit:git-rev-list[1]. Note that specifying a range will
+	linkshit:shit-rev-list[1]. Note that specifying a range will
 	feed all <commit>... arguments to a single revision walk
 	(see a later example that uses 'maint master..next').
 
 -e::
 --edit::
-	With this option, 'git cherry-pick' will let you edit the commit
+	With this option, 'shit cherry-pick' will let you edit the commit
 	message prior to committing.
 
 --cleanup=<mode>::
 	This option determines how the commit message will be cleaned up before
-	being passed on to the commit machinery. See linkgit:git-commit[1] for more
+	being passed on to the commit machinery. See linkshit:shit-commit[1] for more
 	details. In particular, if the '<mode>' is given a value of `scissors`,
 	scissors will be appended to `MERGE_MSG` before being passed on in the case
 	of a conflict.
@@ -105,7 +105,7 @@ effect to your index in a row.
 -s::
 --signoff::
 	Add a `Signed-off-by` trailer at the end of the commit message.
-	See the signoff option in linkgit:git-commit[1] for more information.
+	See the signoff option in linkshit:shit-commit[1] for more information.
 
 -S[<keyid>]::
 --gpg-sign[=<keyid>]::
@@ -123,7 +123,7 @@ effect to your index in a row.
 
 --allow-empty::
 	By default, cherry-picking an empty commit will fail,
-	indicating that an explicit invocation of `git commit
+	indicating that an explicit invocation of `shit commit
 	--allow-empty` is required. This option overrides that
 	behavior, allowing empty commits to be preserved automatically
 	in a cherry-pick. Note that when "--ff" is in effect, empty
@@ -164,13 +164,13 @@ fail unless one of `--empty=keep` or `--allow-empty` are specified.
 
 --strategy=<strategy>::
 	Use the given merge strategy.  Should only be used once.
-	See the MERGE STRATEGIES section in linkgit:git-merge[1]
+	See the MERGE STRATEGIES section in linkshit:shit-merge[1]
 	for details.
 
 -X<option>::
 --strategy-option=<option>::
 	Pass the merge strategy-specific option through to the
-	merge strategy.  See linkgit:git-merge[1] for details.
+	merge strategy.  See linkshit:shit-merge[1] for details.
 
 include::rerere-options.txt[]
 
@@ -180,19 +180,19 @@ include::sequencer.txt[]
 
 EXAMPLES
 --------
-`git cherry-pick master`::
+`shit cherry-pick master`::
 
 	Apply the change introduced by the commit at the tip of the
 	master branch and create a new commit with this change.
 
-`git cherry-pick ..master`::
-`git cherry-pick ^HEAD master`::
+`shit cherry-pick ..master`::
+`shit cherry-pick ^HEAD master`::
 
 	Apply the changes introduced by all commits that are ancestors
 	of master but not of HEAD to produce new commits.
 
-`git cherry-pick maint next ^master`::
-`git cherry-pick maint master..next`::
+`shit cherry-pick maint next ^master`::
+`shit cherry-pick maint master..next`::
 
 	Apply the changes introduced by all commits that are
 	ancestors of maint or next, but not master or any of its
@@ -200,20 +200,20 @@ EXAMPLES
 	everything between `master` and `next`; specifically,
 	`maint` will not be used if it is included in `master`.
 
-`git cherry-pick master~4 master~2`::
+`shit cherry-pick master~4 master~2`::
 
 	Apply the changes introduced by the fifth and third last
 	commits pointed to by master and create 2 new commits with
 	these changes.
 
-`git cherry-pick -n master~1 next`::
+`shit cherry-pick -n master~1 next`::
 
 	Apply to the working tree and the index the changes introduced
 	by the second last commit pointed to by master and by the last
 	commit pointed to by next, but do not create any commit with
 	these changes.
 
-`git cherry-pick --ff ..next`::
+`shit cherry-pick --ff ..next`::
 
 	If history is linear and HEAD is an ancestor of next, update
 	the working tree and advance the HEAD pointer to match next.
@@ -221,7 +221,7 @@ EXAMPLES
 	are in next but not HEAD to the current branch, creating a new
 	commit for each new change.
 
-`git rev-list --reverse master -- README | git cherry-pick -n --stdin`::
+`shit rev-list --reverse master -- README | shit cherry-pick -n --stdin`::
 
 	Apply the changes introduced by all commits on the master
 	branch that touched README to the working tree and index,
@@ -233,12 +233,12 @@ the code the patch applies to has changed too much, and then tries
 again, this time exercising more care about matching up context lines.
 
 ------------
-$ git cherry-pick topic^             <1>
-$ git diff                           <2>
-$ git cherry-pick --abort            <3>
-$ git cherry-pick -Xpatience topic^  <4>
+$ shit cherry-pick topic^             <1>
+$ shit diff                           <2>
+$ shit cherry-pick --abort            <3>
+$ shit cherry-pick -Xpatience topic^  <4>
 ------------
-<1> apply the change that would be shown by `git show topic^`.
+<1> apply the change that would be shown by `shit show topic^`.
     In this example, the patch does not apply cleanly, so
     information about the conflict is written to the index and
     working tree and no new commit results.
@@ -252,8 +252,8 @@ $ git cherry-pick -Xpatience topic^  <4>
 
 SEE ALSO
 --------
-linkgit:git-revert[1]
+linkshit:shit-revert[1]
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

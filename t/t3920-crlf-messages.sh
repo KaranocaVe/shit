@@ -15,9 +15,9 @@ create_crlf_ref () {
 	grep 'Body' .crlf-orig-$branch.txt | append_cr >.crlf-body-$branch.txt &&
 	LIB_CRLF_BRANCHES="${LIB_CRLF_BRANCHES} ${branch}" &&
 	test_tick &&
-	hash=$(git commit-tree HEAD^{tree} -p HEAD -F .crlf-message-${branch}.txt) &&
-	git branch ${branch} ${hash} &&
-	git tag tag-${branch} ${branch} -F .crlf-message-${branch}.txt --cleanup=verbatim
+	hash=$(shit commit-tree HEAD^{tree} -p HEAD -F .crlf-message-${branch}.txt) &&
+	shit branch ${branch} ${hash} &&
+	shit tag tag-${branch} ${branch} -F .crlf-message-${branch}.txt --cleanup=verbatim
 }
 
 create_crlf_refs () {
@@ -74,7 +74,7 @@ test_crlf_subject_body_and_contents() {
 				cat .crlf-${file}-\"\${ref}\".txt >>expect &&
 				printf \"\n\" >>expect || return 1
 			done &&
-			git $command_and_args --format=\"%${atom}\" >actual &&
+			shit $command_and_args --format=\"%${atom}\" >actual &&
 			test_cmp expect actual
 		"
 	done
@@ -94,9 +94,9 @@ test_expect_success 'branch: --verbose works with messages using CRLF' '
 		cat .crlf-subject-${branch}.txt >>expect &&
 		printf "\n" >>expect || return 1
 	done &&
-	git branch -v >tmp &&
+	shit branch -v >tmp &&
 	# Remove first two columns, and the line for the currently checked out branch
-	current=$(git branch --show-current) &&
+	current=$(shit branch --show-current) &&
 	awk "/$current/ { next } { \$1 = \$2 = \"\" } 1" <tmp >actual &&
 	test_cmp expect actual
 '
@@ -112,8 +112,8 @@ test_expect_success 'log: --oneline works with messages using CRLF' '
 	do
 		cat .crlf-subject-${branch}.txt >expect &&
 		printf "\n" >>expect &&
-		git log --oneline -1 ${branch} >tmp-branch &&
-		git log --oneline -1 tag-${branch} >tmp-tag &&
+		shit log --oneline -1 ${branch} >tmp-branch &&
+		shit log --oneline -1 tag-${branch} >tmp-tag &&
 		cut -d" " -f2- <tmp-branch >actual-branch &&
 		cut -d" " -f2- <tmp-tag >actual-tag &&
 		test_cmp expect actual-branch &&

@@ -1,4 +1,4 @@
-Git v1.7.6.6 Release Notes
+shit v1.7.6.6 Release Notes
 ==========================
 
 Fixes since v1.7.6.5

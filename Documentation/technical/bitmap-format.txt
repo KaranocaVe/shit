@@ -1,4 +1,4 @@
-GIT bitmap v1 format
+shit bitmap v1 format
 ====================
 
 == Pack and multi-pack bitmaps
@@ -46,7 +46,7 @@ MIDXs, both the bit-cache and rev-cache extensions are required.
 	2-byte version number (network byte order): ::
 
 	    The current implementation only supports version 1
-	    of the bitmap index (the same one as JGit).
+	    of the bitmap index (the same one as Jshit).
 
 	2-byte flags (network byte order): ::
 
@@ -61,7 +61,7 @@ MIDXs, both the bit-cache and rev-cache extensions are required.
 	    every single object in the packfile/MIDX can find its
 	    parent links inside the same packfile/MIDX). This is a
 	    requirement for the bitmap index format, also present in
-	    JGit, that greatly reduces the complexity of the
+	    Jshit, that greatly reduces the complexity of the
 	    implementation.
 
 	    ** {empty}
@@ -96,7 +96,7 @@ Type indexes are serialized after the hash cache in the shape
 of four EWAH bitmaps stored consecutively (see Appendix A for
 the serialization format of an EWAH bitmap).
 +
-There is a bitmap for each Git object type, stored in the following
+There is a bitmap for each shit object type, stored in the following
 order:
 +
     - Commits
@@ -156,7 +156,7 @@ in the index.
 == Appendix A: Serialization format for an EWAH bitmap
 
 Ewah bitmaps are serialized in the same protocol as the JAVAEWAH
-library, making them backwards compatible with the JGit
+library, making them backwards compatible with the Jshit
 implementation:
 
 	- 4-byte number of bits of the resulting UNCOMPRESSED bitmap

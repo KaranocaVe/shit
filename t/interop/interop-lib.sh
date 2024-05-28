@@ -1,7 +1,7 @@
 # Interoperability testing framework. Each script should source
 # this after setting default $VERSION_A and $VERSION_B variables.
 
-. ../../GIT-BUILD-OPTIONS
+. ../../shit-BUILD-OPTIONS
 INTEROP_ROOT=$(pwd)
 BUILD_ROOT=$INTEROP_ROOT/build
 
@@ -14,11 +14,11 @@ build_version () {
 
 	if test "$1" = "."
 	then
-		git rev-parse --show-toplevel
+		shit rev-parse --show-toplevel
 		return 0
 	fi
 
-	sha1=$(git rev-parse "$1^{tree}") || return 1
+	sha1=$(shit rev-parse "$1^{tree}") || return 1
 	dir=$BUILD_ROOT/$sha1
 
 	if test -e "$dir/.built"
@@ -31,7 +31,7 @@ build_version () {
 
 	mkdir -p "$dir" || return 1
 
-	(cd "$(git rev-parse --show-cdup)" && git archive --format=tar "$sha1") |
+	(cd "$(shit rev-parse --show-cdup)" && shit archive --format=tar "$sha1") |
 	(cd "$dir" && tar x) ||
 	return 1
 
@@ -45,42 +45,42 @@ build_version () {
 
 	(
 		cd "$dir" &&
-		make $GIT_INTEROP_MAKE_OPTS >&2 &&
+		make $shit_INTEROP_MAKE_OPTS >&2 &&
 		touch .built
 	) || return 1
 
 	echo "$dir"
 }
 
-# Old versions of git don't have bin-wrappers, so let's give a rough emulation.
-wrap_git () {
+# Old versions of shit don't have bin-wrappers, so let's give a rough emulation.
+wrap_shit () {
 	write_script "$1" <<-EOF
-	GIT_EXEC_PATH="$2"
-	export GIT_EXEC_PATH
+	shit_EXEC_PATH="$2"
+	export shit_EXEC_PATH
 	PATH="$2:\$PATH"
-	export GIT_EXEC_PATH
-	exec git "\$@"
+	export shit_EXEC_PATH
+	exec shit "\$@"
 	EOF
 }
 
 generate_wrappers () {
 	mkdir -p .bin &&
-	wrap_git .bin/git.a "$DIR_A" &&
-	wrap_git .bin/git.b "$DIR_B" &&
-	write_script .bin/git <<-\EOF &&
-	echo >&2 fatal: test tried to run generic git: $*
+	wrap_shit .bin/shit.a "$DIR_A" &&
+	wrap_shit .bin/shit.b "$DIR_B" &&
+	write_script .bin/shit <<-\EOF &&
+	echo >&2 fatal: test tried to run generic shit: $*
 	exit 1
 	EOF
 	PATH=$(pwd)/.bin:$PATH
 }
 
-VERSION_A=${GIT_TEST_VERSION_A:-$VERSION_A}
-VERSION_B=${GIT_TEST_VERSION_B:-$VERSION_B}
+VERSION_A=${shit_TEST_VERSION_A:-$VERSION_A}
+VERSION_B=${shit_TEST_VERSION_B:-$VERSION_B}
 
 if ! DIR_A=$(build_version "$VERSION_A") ||
    ! DIR_B=$(build_version "$VERSION_B")
 then
-	echo >&2 "fatal: unable to build git versions"
+	echo >&2 "fatal: unable to build shit versions"
 	exit 1
 fi
 

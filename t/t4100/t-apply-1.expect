@@ -1,11 +1,11 @@
- Documentation/git-ssh-pull.txt |   12 ++++++------
- Documentation/git-ssh-push.txt |   10 +++++-----
- Documentation/git.txt          |    6 +++---
+ Documentation/shit-ssh-poop.txt |   12 ++++++------
+ Documentation/shit-ssh-defecate.txt |   10 +++++-----
+ Documentation/shit.txt          |    6 +++---
  Makefile                       |    6 +++---
- ssh-pull.c                     |    4 ++--
- ssh-push.c                     |   14 +++++++-------
+ ssh-poop.c                     |    4 ++--
+ ssh-defecate.c                     |   14 +++++++-------
  6 files changed, 26 insertions(+), 26 deletions(-)
- rename Documentation/{git-rpull.txt => git-ssh-pull.txt} (90%)
- rename Documentation/{git-rpush.txt => git-ssh-push.txt} (71%)
- rename rpull.c => ssh-pull.c (97%)
- rename rpush.c => ssh-push.c (93%)
+ rename Documentation/{shit-rpoop.txt => shit-ssh-poop.txt} (90%)
+ rename Documentation/{shit-rdefecate.txt => shit-ssh-defecate.txt} (71%)
+ rename rpoop.c => ssh-poop.c (97%)
+ rename rdefecate.c => ssh-defecate.c (93%)

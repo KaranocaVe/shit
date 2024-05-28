@@ -1,22 +1,22 @@
-git-remote-persistent-https
+shit-remote-persistent-https
 
-The git-remote-persistent-https binary speeds up SSL operations
-by running a daemon job (git-remote-persistent-https--proxy) that
+The shit-remote-persistent-https binary speeds up SSL operations
+by running a daemon job (shit-remote-persistent-https--proxy) that
 keeps a connection open to a server.
 
 
 PRE-BUILT BINARIES
 
 Darwin amd64:
-https://commondatastorage.googleapis.com/git-remote-persistent-https/darwin_amd64.tar.gz
+https://commondatastorage.googleapis.com/shit-remote-persistent-https/darwin_amd64.tar.gz
 
 Linux amd64:
-https://commondatastorage.googleapis.com/git-remote-persistent-https/linux_amd64.tar.gz
+https://commondatastorage.googleapis.com/shit-remote-persistent-https/linux_amd64.tar.gz
 
 
 INSTALLING
 
-Move all of the git-remote-persistent-http* binaries to a directory
+Move all of the shit-remote-persistent-http* binaries to a directory
 in PATH.
 
 
@@ -25,9 +25,9 @@ USAGE
 HTTPS requests can be delegated to the proxy by using the
 "persistent-https" scheme, e.g.
 
-git clone persistent-https://kernel.googlesource.com/pub/scm/git/git
+shit clone persistent-https://kernel.googlesource.com/pub/scm/shit/shit
 
-Likewise, .gitconfig can be updated as follows to rewrite https urls
+Likewise, .shitconfig can be updated as follows to rewrite https urls
 to use persistent-https:
 
 [url "persistent-https"]
@@ -37,7 +37,7 @@ to use persistent-https:
 
 You may also want to allow the use of the persistent-https helper for
 submodule URLs (since any https URLs pointing to submodules will be
-rewritten, and Git's out-of-the-box defaults forbid submodules from
+rewritten, and shit's out-of-the-box defaults forbid submodules from
 using unknown remote helpers):
 
 [protocol "persistent-https"]
@@ -53,9 +53,9 @@ using unknown remote helpers):
 LOCATION
 
 The source is available in the contrib/persistent-https directory of
-the Git source repository. The Git source repository is available at
-git://git.kernel.org/pub/scm/git/git.git/
-https://kernel.googlesource.com/pub/scm/git/git
+the shit source repository. The shit source repository is available at
+shit://shit.kernel.org/pub/scm/shit/shit.shit/
+https://kernel.googlesource.com/pub/scm/shit/shit
 
 
 PREREQUISITES

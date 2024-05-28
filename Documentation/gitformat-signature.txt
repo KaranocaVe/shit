@@ -1,9 +1,9 @@
-gitformat-signature(5)
+shitformat-signature(5)
 ======================
 
 NAME
 ----
-gitformat-signature - Git cryptographic signature formats
+shitformat-signature - shit cryptographic signature formats
 
 SYNOPSIS
 --------
@@ -14,8 +14,8 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-Git uses cryptographic signatures in various places, currently objects (tags,
-commits, mergetags) and transactions (pushes). In every case, the command which
+shit uses cryptographic signatures in various places, currently objects (tags,
+commits, mergetags) and transactions (defecatees). In every case, the command which
 is about to create an object or transaction determines a payload from that,
 calls an external program to obtain a detached signature for the payload
 (`gpg -bsa` in the case of PGP signatures), and embeds the signature into the
@@ -23,7 +23,7 @@ object or transaction.
 
 Signatures begin with an "ASCII Armor" header line and end with a tail line,
 which differ depending on signature type (as selected by `gpg.format`, see
-linkgit:git-config[1]). These are, for `gpg.format` values:
+linkshit:shit-config[1]). These are, for `gpg.format` values:
 
 `gpg` (PGP)::
 	`-----BEGIN PGP SIGNATURE-----` and `-----END PGP SIGNATURE-----`.
@@ -57,7 +57,7 @@ on the type of the object resp. transaction.
 
 == Tag signatures
 
-- created by: `git tag -s`
+- created by: `shit tag -s`
 - payload: annotated tag object
 - embedding: append the signature to the unsigned tag object
 - example: tag `signedtag` with subject `signed tag`
@@ -84,7 +84,7 @@ lZyI6HWixKJkWw8lE9aAOD9TmTW9sFJwcVAzmAuFX2kUreDUKMZduGcoRYGpD7E=
 -----END PGP SIGNATURE-----
 ----
 
-- verify with: `git verify-tag [-v]` or `git tag -v`
+- verify with: `shit verify-tag [-v]` or `shit tag -v`
 
 ----
 gpg: Signature made Wed Jun 15 10:56:46 2016 CEST using RSA key ID B7227189
@@ -104,7 +104,7 @@ signed tag message body
 
 == Commit signatures
 
-- created by: `git commit -S`
+- created by: `shit commit -S`
 - payload: commit object
 - embedding: header entry `gpgsig`
   (content is preceded by a space)
@@ -132,7 +132,7 @@ signed commit
 signed commit message body
 ----
 
-- verify with: `git verify-commit [-v]` (or `git show --show-signature`)
+- verify with: `shit verify-commit [-v]` (or `shit show --show-signature`)
 
 ----
 gpg: Signature made Wed Jun 15 10:58:57 2016 CEST using RSA key ID B7227189
@@ -152,7 +152,7 @@ signed commit message body
 
 == Mergetag signatures
 
-- created by: `git merge` on signed tag
+- created by: `shit merge` on signed tag
 - payload/embedding: the whole signed tag object is embedded into
   the (merge) commit object as header entry `mergetag`
 - example: merge of the signed tag `signedtag` as above
@@ -197,7 +197,7 @@ signed tag message body
 ----
 
 - verify with: verification is embedded in merge commit message by default,
-  alternatively with `git show --show-signature`:
+  alternatively with `shit show --show-signature`:
 
 ----
 commit 9863f0c76ff78712b6800e199a46aa56afbcbd49
@@ -224,6 +224,6 @@ Date:   Wed Jun 15 09:13:29 2016 +0000
     # Primary key fingerprint: D4BE 2231 1AD3 131E 5EDA  29A4 6109 2E85 B722 7189
 ----
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Build and test Git inside container
+# Build and test shit inside container
 #
 # Usage:
 #   run-docker-build.sh <host-user-id>
@@ -54,12 +54,12 @@ command $switch_cmd su -m -l $CI_USER -c "
 	set -ex
 	export DEVELOPER='$DEVELOPER'
 	export DEFAULT_TEST_TARGET='$DEFAULT_TEST_TARGET'
-	export GIT_PROVE_OPTS='$GIT_PROVE_OPTS'
-	export GIT_TEST_OPTS='$GIT_TEST_OPTS'
-	export GIT_TEST_CLONE_2GB='$GIT_TEST_CLONE_2GB'
+	export shit_PROVE_OPTS='$shit_PROVE_OPTS'
+	export shit_TEST_OPTS='$shit_TEST_OPTS'
+	export shit_TEST_CLONE_2GB='$shit_TEST_CLONE_2GB'
 	export MAKEFLAGS='$MAKEFLAGS'
 	export cache_dir='$cache_dir'
-	cd /usr/src/git
+	cd /usr/src/shit
 	test -n '$cache_dir' && ln -s '$cache_dir/.prove' t/.prove
 	make
 	make test

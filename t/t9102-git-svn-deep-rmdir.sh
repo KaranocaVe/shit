@@ -1,7 +1,7 @@
 #!/bin/sh
-test_description='git svn rmdir'
+test_description='shit svn rmdir'
 
-. ./lib-git-svn.sh
+. ./lib-shit-svn.sh
 
 test_expect_success 'initialize repo' '
 	mkdir import &&
@@ -11,20 +11,20 @@ test_expect_success 'initialize repo' '
 		mkdir -p deeply/nested/directory/number/2 &&
 		echo foo >deeply/nested/directory/number/1/file &&
 		echo foo >deeply/nested/directory/number/2/another &&
-		svn_cmd import -m "import for git svn" . "$svnrepo"
+		svn_cmd import -m "import for shit svn" . "$svnrepo"
 	)
 	'
 
-test_expect_success 'mirror via git svn' '
-	git svn init "$svnrepo" &&
-	git svn fetch &&
-	git checkout -f -b test-rmdir remotes/git-svn
+test_expect_success 'mirror via shit svn' '
+	shit svn init "$svnrepo" &&
+	shit svn fetch &&
+	shit checkout -f -b test-rmdir remotes/shit-svn
 	'
 
 test_expect_success 'Try a commit on rmdir' '
-	git rm -f deeply/nested/directory/number/2/another &&
-	git commit -a -m "remove another" &&
-	git svn set-tree --rmdir HEAD &&
+	shit rm -f deeply/nested/directory/number/2/another &&
+	shit commit -a -m "remove another" &&
+	shit svn set-tree --rmdir HEAD &&
 	svn_cmd ls -R "$svnrepo" | grep ^deeply/nested/directory/number/1
 	'
 

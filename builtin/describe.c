@@ -27,9 +27,9 @@
 define_commit_slab(commit_names, struct commit_name *);
 
 static const char * const describe_usage[] = {
-	N_("git describe [--all] [--tags] [--contains] [--abbrev=<n>] [<commit-ish>...]"),
-	N_("git describe [--all] [--tags] [--contains] [--abbrev=<n>] --dirty[=<mark>]"),
-	N_("git describe <blob>"),
+	N_("shit describe [--all] [--tags] [--contains] [--abbrev=<n>] [<commit-ish>...]"),
+	N_("shit describe [--all] [--tags] [--contains] [--abbrev=<n>] --dirty[=<mark>]"),
+	N_("shit describe <blob>"),
 	NULL
 };
 
@@ -511,7 +511,7 @@ static void describe_blob(struct object_id oid, struct strbuf *dst)
 	struct strvec args = STRVEC_INIT;
 	struct process_commit_data pcd = { *null_oid(), oid, dst, &revs};
 
-	strvec_pushl(&args, "internal: The first arg is not parsed",
+	strvec_defecatel(&args, "internal: The first arg is not parsed",
 		     "--objects", "--in-commit-order", "--reverse", "HEAD",
 		     NULL);
 
@@ -597,7 +597,7 @@ int cmd_describe(int argc, const char **argv, const char *prefix)
 		OPT_END(),
 	};
 
-	git_config(git_default_config, NULL);
+	shit_config(shit_default_config, NULL);
 	argc = parse_options(argc, argv, prefix, options, describe_usage, 0);
 	if (abbrev < 0)
 		abbrev = DEFAULT_ABBREV;
@@ -617,22 +617,22 @@ int cmd_describe(int argc, const char **argv, const char *prefix)
 		struct strvec args;
 
 		strvec_init(&args);
-		strvec_pushl(&args, "name-rev",
+		strvec_defecatel(&args, "name-rev",
 			     "--peel-tag", "--name-only", "--no-undefined",
 			     NULL);
 		if (always)
-			strvec_push(&args, "--always");
+			strvec_defecate(&args, "--always");
 		if (!all) {
-			strvec_push(&args, "--tags");
+			strvec_defecate(&args, "--tags");
 			for_each_string_list_item(item, &patterns)
-				strvec_pushf(&args, "--refs=refs/tags/%s", item->string);
+				strvec_defecatef(&args, "--refs=refs/tags/%s", item->string);
 			for_each_string_list_item(item, &exclude_patterns)
-				strvec_pushf(&args, "--exclude=refs/tags/%s", item->string);
+				strvec_defecatef(&args, "--exclude=refs/tags/%s", item->string);
 		}
 		if (argc)
-			strvec_pushv(&args, argv);
+			strvec_defecatev(&args, argv);
 		else
-			strvec_push(&args, "HEAD");
+			strvec_defecate(&args, "HEAD");
 		return cmd_name_rev(args.nr, args.v, prefix);
 	}
 
@@ -645,8 +645,8 @@ int cmd_describe(int argc, const char **argv, const char *prefix)
 	if (argc == 0) {
 		if (broken) {
 			struct child_process cp = CHILD_PROCESS_INIT;
-			strvec_pushv(&cp.args, diff_index_args);
-			cp.git_cmd = 1;
+			strvec_defecatev(&cp.args, diff_index_args);
+			cp.shit_cmd = 1;
 			cp.no_stdin = 1;
 			cp.no_stdout = 1;
 
@@ -682,7 +682,7 @@ int cmd_describe(int argc, const char **argv, const char *prefix)
 				repo_update_index_if_able(the_repository, &index_lock);
 
 			repo_init_revisions(the_repository, &revs, prefix);
-			strvec_pushv(&args, diff_index_args);
+			strvec_defecatev(&args, diff_index_args);
 			if (setup_revisions(args.nr, args.v, &revs, NULL) != 1)
 				BUG("malformed internal diff-index command line");
 			run_diff_index(&revs, 0);

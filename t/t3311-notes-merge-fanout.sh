@@ -12,12 +12,12 @@ verify_notes () {
 	commit="$2"
 	if test -f "expect_notes_$notes_ref"
 	then
-		git -c core.notesRef="refs/notes/$notes_ref" notes |
+		shit -c core.notesRef="refs/notes/$notes_ref" notes |
 			sort >"output_notes_$notes_ref" &&
 		test_cmp "expect_notes_$notes_ref" "output_notes_$notes_ref" ||
 			return 1
 	fi &&
-	git -c core.notesRef="refs/notes/$notes_ref" log --format="%H %s%n%N" \
+	shit -c core.notesRef="refs/notes/$notes_ref" log --format="%H %s%n%N" \
 		"$commit" >"output_log_$notes_ref" &&
 	test_cmp "expect_log_$notes_ref" "output_log_$notes_ref"
 }
@@ -25,8 +25,8 @@ verify_notes () {
 verify_fanout () {
 	notes_ref="$1"
 	# Expect entire notes tree to have a fanout == 1
-	git rev-parse --quiet --verify "refs/notes/$notes_ref" >/dev/null &&
-	git ls-tree -r --name-only "refs/notes/$notes_ref" |
+	shit rev-parse --quiet --verify "refs/notes/$notes_ref" >/dev/null &&
+	shit ls-tree -r --name-only "refs/notes/$notes_ref" |
 	while read path
 	do
 		echo "$path" | grep "^../[0-9a-f]*$" || {
@@ -39,8 +39,8 @@ verify_fanout () {
 verify_no_fanout () {
 	notes_ref="$1"
 	# Expect entire notes tree to have a fanout == 0
-	git rev-parse --quiet --verify "refs/notes/$notes_ref" >/dev/null &&
-	git ls-tree -r --name-only "refs/notes/$notes_ref" |
+	shit rev-parse --quiet --verify "refs/notes/$notes_ref" >/dev/null &&
+	shit ls-tree -r --name-only "refs/notes/$notes_ref" |
 	while read path
 	do
 		echo "$path" | grep -v "^../.*" || {
@@ -52,14 +52,14 @@ verify_no_fanout () {
 
 # Set up a notes merge scenario with different kinds of conflicts
 test_expect_success 'setup a few initial commits with notes (notes ref: x)' '
-	git config core.notesRef refs/notes/x &&
+	shit config core.notesRef refs/notes/x &&
 	for i in 1 2 3 4 5
 	do
 		test_commit "commit$i" >/dev/null &&
-		git notes add -m "notes for commit$i" || return 1
+		shit notes add -m "notes for commit$i" || return 1
 	done &&
 
-	git log --format=oneline &&
+	shit log --format=oneline &&
 
 	test_oid_cache <<-EOF
 	hash05a sha1:aed91155c7a72c2188e781fdf40e0f3761b299db
@@ -80,11 +80,11 @@ test_expect_success 'setup a few initial commits with notes (notes ref: x)' '
 	EOF
 '
 
-commit_sha1=$(git rev-parse commit1^{commit})
-commit_sha2=$(git rev-parse commit2^{commit})
-commit_sha3=$(git rev-parse commit3^{commit})
-commit_sha4=$(git rev-parse commit4^{commit})
-commit_sha5=$(git rev-parse commit5^{commit})
+commit_sha1=$(shit rev-parse commit1^{commit})
+commit_sha2=$(shit rev-parse commit2^{commit})
+commit_sha3=$(shit rev-parse commit3^{commit})
+commit_sha4=$(shit rev-parse commit4^{commit})
+commit_sha5=$(shit rev-parse commit5^{commit})
 
 cat <<EOF | sort >expect_notes_x
 $(test_oid hash05a) $commit_sha5
@@ -122,19 +122,19 @@ num=300
 cp expect_log_x expect_log_y
 
 test_expect_success 'Add a few hundred commits w/notes to trigger fanout (x -> y)' '
-	git update-ref refs/notes/y refs/notes/x &&
-	git config core.notesRef refs/notes/y &&
+	shit update-ref refs/notes/y refs/notes/x &&
+	shit config core.notesRef refs/notes/y &&
 	test_commit_bulk --start=6 --id=commit $((num - 5)) &&
 	i=0 &&
 	while test $i -lt $((num - 5))
 	do
-		git notes add -m "notes for commit$i" HEAD~$i || return 1
+		shit notes add -m "notes for commit$i" HEAD~$i || return 1
 		i=$((i + 1))
 	done &&
-	test "$(git rev-parse refs/notes/y)" != "$(git rev-parse refs/notes/x)" &&
+	test "$(shit rev-parse refs/notes/y)" != "$(shit rev-parse refs/notes/x)" &&
 	# Expected number of commits and notes
-	test $(git rev-list HEAD | wc -l) = $num &&
-	test $(git notes list | wc -l) = $num &&
+	test $(shit rev-list HEAD | wc -l) = $num &&
+	test $(shit notes list | wc -l) = $num &&
 	# 5 first notes unchanged
 	verify_notes y commit5
 '
@@ -142,16 +142,16 @@ test_expect_success 'Add a few hundred commits w/notes to trigger fanout (x -> y
 test_expect_success 'notes tree has fanout (y)' 'verify_fanout y'
 
 test_expect_success 'No-op merge (already included) (x => y)' '
-	git update-ref refs/notes/m refs/notes/y &&
-	git config core.notesRef refs/notes/m &&
-	git notes merge x &&
-	test "$(git rev-parse refs/notes/m)" = "$(git rev-parse refs/notes/y)"
+	shit update-ref refs/notes/m refs/notes/y &&
+	shit config core.notesRef refs/notes/m &&
+	shit notes merge x &&
+	test "$(shit rev-parse refs/notes/m)" = "$(shit rev-parse refs/notes/y)"
 '
 
 test_expect_success 'Fast-forward merge (y => x)' '
-	git update-ref refs/notes/m refs/notes/x &&
-	git notes merge y &&
-	test "$(git rev-parse refs/notes/m)" = "$(git rev-parse refs/notes/y)"
+	shit update-ref refs/notes/m refs/notes/x &&
+	shit notes merge y &&
+	test "$(shit rev-parse refs/notes/m)" = "$(shit rev-parse refs/notes/y)"
 '
 
 cat <<EOF | sort >expect_notes_z
@@ -179,12 +179,12 @@ notes for commit1
 EOF
 
 test_expect_success 'change some of the initial 5 notes (x -> z)' '
-	git update-ref refs/notes/z refs/notes/x &&
-	git config core.notesRef refs/notes/z &&
-	git notes add -f -m "new notes for commit2" commit2 &&
-	git notes append -m "appended notes for commit3" commit3 &&
-	git notes remove commit4 &&
-	git notes remove commit5 &&
+	shit update-ref refs/notes/z refs/notes/x &&
+	shit config core.notesRef refs/notes/z &&
+	shit notes add -f -m "new notes for commit2" commit2 &&
+	shit notes append -m "appended notes for commit3" commit3 &&
+	shit notes remove commit4 &&
+	shit notes remove commit5 &&
 	verify_notes z commit5
 '
 
@@ -193,9 +193,9 @@ test_expect_success 'notes tree has no fanout (z)' 'verify_no_fanout z'
 cp expect_log_z expect_log_m
 
 test_expect_success 'successful merge without conflicts (y => z)' '
-	git update-ref refs/notes/m refs/notes/z &&
-	git config core.notesRef refs/notes/m &&
-	git notes merge y &&
+	shit update-ref refs/notes/m refs/notes/z &&
+	shit config core.notesRef refs/notes/m &&
+	shit notes merge y &&
 	verify_notes m commit5 &&
 	# x/y/z unchanged
 	verify_notes x commit5 &&
@@ -223,12 +223,12 @@ other notes for commit1
 EOF
 
 test_expect_success 'introduce conflicting changes (y -> w)' '
-	git update-ref refs/notes/w refs/notes/y &&
-	git config core.notesRef refs/notes/w &&
-	git notes add -f -m "other notes for commit1" commit1 &&
-	git notes add -f -m "other notes for commit3" commit3 &&
-	git notes add -f -m "other notes for commit4" commit4 &&
-	git notes remove commit5 &&
+	shit update-ref refs/notes/w refs/notes/y &&
+	shit config core.notesRef refs/notes/w &&
+	shit notes add -f -m "other notes for commit1" commit1 &&
+	shit notes add -f -m "other notes for commit3" commit3 &&
+	shit notes add -f -m "other notes for commit4" commit4 &&
+	shit notes remove commit5 &&
 	verify_notes w commit5
 '
 
@@ -250,9 +250,9 @@ other notes for commit1
 EOF
 
 test_expect_success 'successful merge using "ours" strategy (z => w)' '
-	git update-ref refs/notes/m refs/notes/w &&
-	git config core.notesRef refs/notes/m &&
-	git notes merge -s ours z &&
+	shit update-ref refs/notes/m refs/notes/w &&
+	shit config core.notesRef refs/notes/m &&
+	shit notes merge -s ours z &&
 	verify_notes m commit5 &&
 	# w/x/y/z unchanged
 	verify_notes w commit5 &&
@@ -282,8 +282,8 @@ other notes for commit1
 EOF
 
 test_expect_success 'successful merge using "theirs" strategy (z => w)' '
-	git update-ref refs/notes/m refs/notes/w &&
-	git notes merge -s theirs z &&
+	shit update-ref refs/notes/m refs/notes/w &&
+	shit notes merge -s theirs z &&
 	verify_notes m commit5 &&
 	# w/x/y/z unchanged
 	verify_notes w commit5 &&
@@ -316,8 +316,8 @@ other notes for commit1
 EOF
 
 test_expect_success 'successful merge using "union" strategy (z => w)' '
-	git update-ref refs/notes/m refs/notes/w &&
-	git notes merge -s union z &&
+	shit update-ref refs/notes/m refs/notes/w &&
+	shit notes merge -s union z &&
 	verify_notes m commit5 &&
 	# w/x/y/z unchanged
 	verify_notes w commit5 &&
@@ -348,8 +348,8 @@ other notes for commit1
 EOF
 
 test_expect_success 'successful merge using "cat_sort_uniq" strategy (z => w)' '
-	git update-ref refs/notes/m refs/notes/w &&
-	git notes merge -s cat_sort_uniq z &&
+	shit update-ref refs/notes/m refs/notes/w &&
+	shit notes merge -s cat_sort_uniq z &&
 	verify_notes m commit5 &&
 	# w/x/y/z unchanged
 	verify_notes w commit5 &&
@@ -371,8 +371,8 @@ test_expect_success 'notes tree still has fanout after merge (m)' 'verify_fanout
 # 5      | deleted   | deleted   | no, deleted
 
 test_expect_success 'fails to merge using "manual" strategy (z => w)' '
-	git update-ref refs/notes/m refs/notes/w &&
-	test_must_fail git notes merge z
+	shit update-ref refs/notes/m refs/notes/w &&
+	test_must_fail shit notes merge z
 '
 
 test_expect_success 'notes tree still has fanout after merge (m)' 'verify_fanout m'
@@ -397,14 +397,14 @@ other notes for commit4
 EOF
 
 test_expect_success 'verify conflict entries (with no fanout)' '
-	ls .git/NOTES_MERGE_WORKTREE >output_conflicts &&
+	ls .shit/NOTES_MERGE_WORKTREE >output_conflicts &&
 	test_cmp expect_conflicts output_conflicts &&
 	( for f in $(cat expect_conflicts); do
-		test_cmp "expect_conflict_$f" ".git/NOTES_MERGE_WORKTREE/$f" ||
+		test_cmp "expect_conflict_$f" ".shit/NOTES_MERGE_WORKTREE/$f" ||
 		exit 1
 	done ) &&
 	# Verify that current notes tree (pre-merge) has not changed (m == w)
-	test "$(git rev-parse refs/notes/m)" = "$(git rev-parse refs/notes/w)"
+	test "$(shit rev-parse refs/notes/m)" = "$(shit rev-parse refs/notes/w)"
 '
 
 cat >expect_log_m <<EOF
@@ -427,12 +427,12 @@ other notes for commit1
 EOF
 
 test_expect_success 'resolve and finalize merge (z => w)' '
-	cat >.git/NOTES_MERGE_WORKTREE/$commit_sha3 <<EOF &&
+	cat >.shit/NOTES_MERGE_WORKTREE/$commit_sha3 <<EOF &&
 other notes for commit3
 
 appended notes for commit3
 EOF
-	git notes merge --commit &&
+	shit notes merge --commit &&
 	verify_notes m commit5 &&
 	# w/x/y/z unchanged
 	verify_notes w commit5 &&

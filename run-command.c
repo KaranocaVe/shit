@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "run-command.h"
 #include "environment.h"
 #include "exec-cmd.h"
@@ -100,7 +100,7 @@ static void mark_child_for_cleanup(pid_t pid, struct child_process *process)
 
 	if (!installed_child_cleanup_handler) {
 		atexit(cleanup_children_on_exit);
-		sigchain_push_common(cleanup_children_on_signal);
+		sigchain_defecate_common(cleanup_children_on_signal);
 		installed_child_cleanup_handler = 1;
 	}
 }
@@ -134,10 +134,10 @@ int is_executable(const char *name)
 	    !S_ISREG(st.st_mode))
 		return 0;
 
-#if defined(GIT_WINDOWS_NATIVE)
+#if defined(shit_WINDOWS_NATIVE)
 	/*
 	 * On Windows there is no executable bit. The file extension
-	 * indicates whether it can be run as an executable, and Git
+	 * indicates whether it can be run as an executable, and shit
 	 * has special-handling to detect scripts and launch them
 	 * through the indicated script interpreter. We test for the
 	 * file extension first because virus scanners may make
@@ -229,7 +229,7 @@ int exists_in_PATH(const char *command)
 
 int sane_execvp(const char *file, char * const argv[])
 {
-#ifndef GIT_WINDOWS_NATIVE
+#ifndef shit_WINDOWS_NATIVE
 	/*
 	 * execvp() doesn't return, so we all we can do is tell trace2
 	 * what we are about to do and let it leave a hint in the log
@@ -244,7 +244,7 @@ int sane_execvp(const char *file, char * const argv[])
 	if (!execvp(file, argv))
 		return 0; /* cannot happen ;-) */
 
-#ifndef GIT_WINDOWS_NATIVE
+#ifndef shit_WINDOWS_NATIVE
 	{
 		int ec = errno;
 		trace2_exec_result(exec_id, ec);
@@ -278,28 +278,28 @@ static const char **prepare_shell_cmd(struct strvec *out, const char **argv)
 		BUG("shell command is empty");
 
 	if (strcspn(argv[0], "|&;<>()$`\\\"' \t\n*?[#~=%") != strlen(argv[0])) {
-#ifndef GIT_WINDOWS_NATIVE
-		strvec_push(out, SHELL_PATH);
+#ifndef shit_WINDOWS_NATIVE
+		strvec_defecate(out, SHELL_PATH);
 #else
-		strvec_push(out, "sh");
+		strvec_defecate(out, "sh");
 #endif
-		strvec_push(out, "-c");
+		strvec_defecate(out, "-c");
 
 		/*
 		 * If we have no extra arguments, we do not even need to
 		 * bother with the "$@" magic.
 		 */
 		if (!argv[1])
-			strvec_push(out, argv[0]);
+			strvec_defecate(out, argv[0]);
 		else
-			strvec_pushf(out, "%s \"$@\"", argv[0]);
+			strvec_defecatef(out, "%s \"$@\"", argv[0]);
 	}
 
-	strvec_pushv(out, argv);
+	strvec_defecatev(out, argv);
 	return out->v;
 }
 
-#ifndef GIT_WINDOWS_NATIVE
+#ifndef shit_WINDOWS_NATIVE
 static int child_notifier = -1;
 
 enum child_errcode {
@@ -407,14 +407,14 @@ static int prepare_cmd(struct strvec *out, const struct child_process *cmd)
 	 * Add SHELL_PATH so in the event exec fails with ENOEXEC we can
 	 * attempt to interpret the command with 'sh'.
 	 */
-	strvec_push(out, SHELL_PATH);
+	strvec_defecate(out, SHELL_PATH);
 
-	if (cmd->git_cmd) {
-		prepare_git_cmd(out, cmd->args.v);
+	if (cmd->shit_cmd) {
+		prepare_shit_cmd(out, cmd->args.v);
 	} else if (cmd->use_shell) {
 		prepare_shell_cmd(out, cmd->args.v);
 	} else {
-		strvec_pushv(out, cmd->args.v);
+		strvec_defecatev(out, cmd->args.v);
 	}
 
 	/*
@@ -530,7 +530,7 @@ static void atfork_parent(struct atfork_state *as)
 		"restoring signal mask");
 #endif
 }
-#endif /* GIT_WINDOWS_NATIVE */
+#endif /* shit_WINDOWS_NATIVE */
 
 static inline void set_cloexec(int fd)
 {
@@ -650,8 +650,8 @@ static void trace_run_command(const struct child_process *cp)
 		strbuf_addch(&buf, ';');
 	}
 	trace_add_env(&buf, cp->env.v);
-	if (cp->git_cmd)
-		strbuf_addstr(&buf, " git");
+	if (cp->shit_cmd)
+		strbuf_addstr(&buf, " shit");
 	sq_quote_argv_pretty(&buf, cp->args.v);
 
 	trace_printf("%s", buf.buf);
@@ -729,7 +729,7 @@ fail_pipe:
 	if (cmd->close_object_store)
 		close_object_store(the_repository->objects);
 
-#ifndef GIT_WINDOWS_NATIVE
+#ifndef shit_WINDOWS_NATIVE
 {
 	int notify_pipe[2];
 	int null_fd = -1;
@@ -908,8 +908,8 @@ end_of_spawn:
 	else if (cmd->out > 1)
 		fhout = dup(cmd->out);
 
-	if (cmd->git_cmd)
-		cmd->args.v = prepare_git_cmd(&nargv, sargv);
+	if (cmd->shit_cmd)
+		cmd->args.v = prepare_shit_cmd(&nargv, sargv);
 	else if (cmd->use_shell)
 		cmd->args.v = prepare_shell_cmd(&nargv, sargv);
 
@@ -1071,38 +1071,38 @@ static struct {
 	void (**handlers)(void);
 	size_t nr;
 	size_t alloc;
-} git_atexit_hdlrs;
+} shit_atexit_hdlrs;
 
-static int git_atexit_installed;
+static int shit_atexit_installed;
 
-static void git_atexit_dispatch(void)
+static void shit_atexit_dispatch(void)
 {
 	size_t i;
 
-	for (i=git_atexit_hdlrs.nr ; i ; i--)
-		git_atexit_hdlrs.handlers[i-1]();
+	for (i=shit_atexit_hdlrs.nr ; i ; i--)
+		shit_atexit_hdlrs.handlers[i-1]();
 }
 
-static void git_atexit_clear(void)
+static void shit_atexit_clear(void)
 {
-	free(git_atexit_hdlrs.handlers);
-	memset(&git_atexit_hdlrs, 0, sizeof(git_atexit_hdlrs));
-	git_atexit_installed = 0;
+	free(shit_atexit_hdlrs.handlers);
+	memset(&shit_atexit_hdlrs, 0, sizeof(shit_atexit_hdlrs));
+	shit_atexit_installed = 0;
 }
 
 #undef atexit
-int git_atexit(void (*handler)(void))
+int shit_atexit(void (*handler)(void))
 {
-	ALLOC_GROW(git_atexit_hdlrs.handlers, git_atexit_hdlrs.nr + 1, git_atexit_hdlrs.alloc);
-	git_atexit_hdlrs.handlers[git_atexit_hdlrs.nr++] = handler;
-	if (!git_atexit_installed) {
-		if (atexit(&git_atexit_dispatch))
+	ALLOC_GROW(shit_atexit_hdlrs.handlers, shit_atexit_hdlrs.nr + 1, shit_atexit_hdlrs.alloc);
+	shit_atexit_hdlrs.handlers[shit_atexit_hdlrs.nr++] = handler;
+	if (!shit_atexit_installed) {
+		if (atexit(&shit_atexit_dispatch))
 			return -1;
-		git_atexit_installed = 1;
+		shit_atexit_installed = 1;
 	}
 	return 0;
 }
-#define atexit git_atexit
+#define atexit shit_atexit
 
 static int process_is_async;
 int in_async(void)
@@ -1186,7 +1186,7 @@ int start_async(struct async *async)
 			close(fdin[1]);
 		if (need_out)
 			close(fdout[0]);
-		git_atexit_clear();
+		shit_atexit_clear();
 		process_is_async = 1;
 		exit(!!async->proc(proc_in, proc_out, async->data));
 	}
@@ -1454,9 +1454,9 @@ int pipe_command(struct child_process *cmd,
 }
 
 enum child_state {
-	GIT_CP_FREE,
-	GIT_CP_WORKING,
-	GIT_CP_WAIT_CLEANUP,
+	shit_CP_FREE,
+	shit_CP_WORKING,
+	shit_CP_WAIT_CLEANUP,
 };
 
 struct parallel_processes {
@@ -1490,7 +1490,7 @@ static void kill_children(const struct parallel_processes *pp,
 			  int signo)
 {
 	for (size_t i = 0; i < opts->processes; i++)
-		if (pp->children[i].state == GIT_CP_WORKING)
+		if (pp->children[i].state == shit_CP_WORKING)
 			kill(pp->children[i].process.pid, signo);
 }
 
@@ -1540,7 +1540,7 @@ static void pp_init(struct parallel_processes *pp,
 	pp_sig->pp = pp;
 	pp_sig->opts = opts;
 	pp_for_signal = pp_sig;
-	sigchain_push_common(handle_children_on_signal);
+	sigchain_defecate_common(handle_children_on_signal);
 }
 
 static void pp_cleanup(struct parallel_processes *pp,
@@ -1579,7 +1579,7 @@ static int pp_start_one(struct parallel_processes *pp,
 	int code;
 
 	for (i = 0; i < opts->processes; i++)
-		if (pp->children[i].state == GIT_CP_FREE)
+		if (pp->children[i].state == shit_CP_FREE)
 			break;
 	if (i == opts->processes)
 		BUG("bookkeeping is hard");
@@ -1627,7 +1627,7 @@ static int pp_start_one(struct parallel_processes *pp,
 	}
 
 	pp->nr_processes++;
-	pp->children[i].state = GIT_CP_WORKING;
+	pp->children[i].state = shit_CP_WORKING;
 	if (pp->pfd)
 		pp->pfd[i].fd = pp->children[i].process.err;
 	return 0;
@@ -1646,13 +1646,13 @@ static void pp_buffer_stderr(struct parallel_processes *pp,
 
 	/* Buffer output from all pipes. */
 	for (size_t i = 0; i < opts->processes; i++) {
-		if (pp->children[i].state == GIT_CP_WORKING &&
+		if (pp->children[i].state == shit_CP_WORKING &&
 		    pp->pfd[i].revents & (POLLIN | POLLHUP)) {
 			int n = strbuf_read_once(&pp->children[i].err,
 						 pp->children[i].process.err, 0);
 			if (n == 0) {
 				close(pp->children[i].process.err);
-				pp->children[i].state = GIT_CP_WAIT_CLEANUP;
+				pp->children[i].state = shit_CP_WAIT_CLEANUP;
 			} else if (n < 0)
 				if (errno != EAGAIN)
 					die_errno("read");
@@ -1664,7 +1664,7 @@ static void pp_output(const struct parallel_processes *pp)
 {
 	size_t i = pp->output_owner;
 
-	if (pp->children[i].state == GIT_CP_WORKING &&
+	if (pp->children[i].state == shit_CP_WORKING &&
 	    pp->children[i].err.len) {
 		strbuf_write(&pp->children[i].err, stderr);
 		strbuf_reset(&pp->children[i].err);
@@ -1680,7 +1680,7 @@ static int pp_collect_finished(struct parallel_processes *pp,
 
 	while (pp->nr_processes > 0) {
 		for (i = 0; i < opts->processes; i++)
-			if (pp->children[i].state == GIT_CP_WAIT_CLEANUP)
+			if (pp->children[i].state == shit_CP_WAIT_CLEANUP)
 				break;
 		if (i == opts->processes)
 			break;
@@ -1700,7 +1700,7 @@ static int pp_collect_finished(struct parallel_processes *pp,
 			break;
 
 		pp->nr_processes--;
-		pp->children[i].state = GIT_CP_FREE;
+		pp->children[i].state = shit_CP_FREE;
 		if (pp->pfd)
 			pp->pfd[i].fd = -1;
 		child_process_init(&pp->children[i].process);
@@ -1729,7 +1729,7 @@ static int pp_collect_finished(struct parallel_processes *pp,
 			 * running process time.
 			 */
 			for (i = 0; i < n; i++)
-				if (pp->children[(pp->output_owner + i) % n].state == GIT_CP_WORKING)
+				if (pp->children[(pp->output_owner + i) % n].state == shit_CP_WORKING)
 					break;
 			pp->output_owner = (pp->output_owner + i) % n;
 		}
@@ -1774,7 +1774,7 @@ void run_processes_parallel(const struct run_process_parallel_opts *opts)
 			break;
 		if (opts->ungroup) {
 			for (size_t i = 0; i < opts->processes; i++)
-				pp.children[i].state = GIT_CP_WAIT_CLEANUP;
+				pp.children[i].state = shit_CP_WAIT_CLEANUP;
 		} else {
 			pp_buffer_stderr(&pp, opts, output_timeout);
 			pp_output(&pp);
@@ -1797,14 +1797,14 @@ int prepare_auto_maintenance(int quiet, struct child_process *maint)
 {
 	int enabled;
 
-	if (!git_config_get_bool("maintenance.auto", &enabled) &&
+	if (!shit_config_get_bool("maintenance.auto", &enabled) &&
 	    !enabled)
 		return 0;
 
-	maint->git_cmd = 1;
+	maint->shit_cmd = 1;
 	maint->close_object_store = 1;
-	strvec_pushl(&maint->args, "maintenance", "run", "--auto", NULL);
-	strvec_push(&maint->args, quiet ? "--quiet" : "--no-quiet");
+	strvec_defecatel(&maint->args, "maintenance", "run", "--auto", NULL);
+	strvec_defecate(&maint->args, quiet ? "--quiet" : "--no-quiet");
 
 	return 1;
 }
@@ -1817,16 +1817,16 @@ int run_auto_maintenance(int quiet)
 	return run_command(&maint);
 }
 
-void prepare_other_repo_env(struct strvec *env, const char *new_git_dir)
+void prepare_other_repo_env(struct strvec *env, const char *new_shit_dir)
 {
 	const char * const *var;
 
 	for (var = local_repo_env; *var; var++) {
 		if (strcmp(*var, CONFIG_DATA_ENVIRONMENT) &&
 		    strcmp(*var, CONFIG_COUNT_ENVIRONMENT))
-			strvec_push(env, *var);
+			strvec_defecate(env, *var);
 	}
-	strvec_pushf(env, "%s=%s", GIT_DIR_ENVIRONMENT, new_git_dir);
+	strvec_defecatef(env, "%s=%s", shit_DIR_ENVIRONMENT, new_shit_dir);
 }
 
 enum start_bg_result start_bg_command(struct child_process *cmd,

@@ -44,14 +44,14 @@ do
 			mv "$trash_dir" failed-test-artifacts
 			continue
 			;;
-		github-actions)
+		shithub-actions)
 			mkdir -p failed-test-artifacts
-			echo "FAILED_TEST_ARTIFACTS=t/failed-test-artifacts" >>$GITHUB_ENV
+			echo "FAILED_TEST_ARTIFACTS=t/failed-test-artifacts" >>$shitHUB_ENV
 			cp "${TEST_EXIT%.exit}.out" failed-test-artifacts/
 			tar czf failed-test-artifacts/"$test_name".trash.tar.gz "$trash_dir"
 			continue
 			;;
-		gitlab-ci)
+		shitlab-ci)
 			mkdir -p failed-test-artifacts
 			cp "${TEST_EXIT%.exit}.out" failed-test-artifacts/
 			tar czf failed-test-artifacts/"$test_name".trash.tar.gz "$trash_dir"

@@ -1,4 +1,4 @@
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "commit.h"
 #include "editor.h"
 #include "environment.h"
@@ -13,9 +13,9 @@
 #include "object-name.h"
 
 static const char edit_todo_list_advice[] =
-N_("You can fix this with 'git rebase --edit-todo' "
-"and then run 'git rebase --continue'.\n"
-"Or you can abort the rebase with 'git rebase"
+N_("You can fix this with 'shit rebase --edit-todo' "
+"and then run 'shit rebase --continue'.\n"
+"Or you can abort the rebase with 'shit rebase"
 " --abort'.\n");
 
 enum missing_commit_check_level {
@@ -28,7 +28,7 @@ static enum missing_commit_check_level get_missing_commit_check_level(void)
 {
 	const char *value;
 
-	if (git_config_get_value("rebase.missingcommitscheck", &value) ||
+	if (shit_config_get_value("rebase.missingcommitscheck", &value) ||
 			!strcasecmp("ignore", value))
 		return MISSING_COMMIT_CHECK_IGNORE;
 	if (!strcasecmp("warn", value))
@@ -54,7 +54,7 @@ void append_todo_help(int command_count,
 "                   keep only this commit's message; -c is same as -C but\n"
 "                   opens the editor\n"
 "x, exec <command> = run command (the rest of the line) using shell\n"
-"b, break = stop here (continue rebase later with 'git rebase --continue')\n"
+"b, break = stop here (continue rebase later with 'shit rebase --continue')\n"
 "d, drop <commit> = remove commit\n"
 "l, label <label> = label current HEAD with a name\n"
 "t, reset <label> = reset HEAD to a label\n"
@@ -93,7 +93,7 @@ void append_todo_help(int command_count,
 		msg = _("\nYou are editing the todo file "
 			"of an ongoing interactive rebase.\n"
 			"To continue rebase after editing, run:\n"
-			"    git rebase --continue\n\n");
+			"    shit rebase --continue\n\n");
 	else
 		msg = _("\nHowever, if you remove everything, "
 			"the rebase will be aborted.\n\n");
@@ -180,14 +180,14 @@ int todo_list_check(struct todo_list *old_todo, struct todo_list *new_todo)
 	if (check_level == MISSING_COMMIT_CHECK_IGNORE)
 		goto leave_check;
 
-	/* Mark the commits in git-rebase-todo as seen */
+	/* Mark the commits in shit-rebase-todo as seen */
 	for (i = 0; i < new_todo->nr; i++) {
 		struct commit *commit = new_todo->items[i].commit;
 		if (commit)
 			*commit_seen_at(&commit_seen, commit) = 1;
 	}
 
-	/* Find commits in git-rebase-todo.backup yet unseen */
+	/* Find commits in shit-rebase-todo.backup yet unseen */
 	for (i = old_todo->nr - 1; i >= 0; i--) {
 		struct todo_item *item = old_todo->items + i;
 		struct commit *commit = item->commit;
@@ -217,7 +217,7 @@ int todo_list_check(struct todo_list *old_todo, struct todo_list *new_todo)
 
 	fprintf(stderr, _("To avoid this message, use \"drop\" to "
 		"explicitly remove a commit.\n\n"
-		"Use 'git config rebase.missingCommitsCheck' to change "
+		"Use 'shit config rebase.missingCommitsCheck' to change "
 		"the level of warnings.\n"
 		"The possible behaviours are: ignore, warn, error.\n\n"));
 

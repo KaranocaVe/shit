@@ -1,0 +1,8 @@
+.DS_Store
+config.mak
+shit Gui.app*
+shit-gui.tcl
+shit-VERSION-FILE
+shit-GUI-VARS
+shit-gui
+lib/tclIndex

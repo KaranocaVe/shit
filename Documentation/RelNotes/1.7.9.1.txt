@@ -1,4 +1,4 @@
-Git v1.7.9.1 Release Notes
+shit v1.7.9.1 Release Notes
 ==========================
 
 Fixes since v1.7.9
@@ -13,51 +13,51 @@ Fixes since v1.7.9
 
  * rpmbuild noticed an unpackaged but installed *.mo file and failed.
 
- * Subprocesses spawned from various git programs were often left running
+ * Subprocesses spawned from various shit programs were often left running
    to completion even when the top-level process was killed.
 
- * "git add -e" learned not to show a diff for an otherwise unmodified
+ * "shit add -e" learned not to show a diff for an otherwise unmodified
    submodule that only has uncommitted local changes in the patch
    prepared by for the user to edit.
 
- * Typo in "git branch --edit-description my-tpoic" was not diagnosed.
+ * Typo in "shit branch --edit-description my-tpoic" was not diagnosed.
 
- * Using "git grep -l/-L" together with options -W or --break may not
+ * Using "shit grep -l/-L" together with options -W or --break may not
    make much sense as the output is to only count the number of hits
    and there is no place for file breaks, but the latter options made
    "-l/-L" to miscount the hits.
 
- * "git log --first-parent $pathspec" did not stay on the first parent
+ * "shit log --first-parent $pathspec" did not stay on the first parent
    chain and veered into side branch from which the whole change to the
    specified paths came.
 
- * "git merge --no-edit $tag" failed to honor the --no-edit option.
+ * "shit merge --no-edit $tag" failed to honor the --no-edit option.
 
- * "git merge --ff-only $tag" failed because it cannot record the
+ * "shit merge --ff-only $tag" failed because it cannot record the
    required mergetag without creating a merge, but this is so common
    operation for branch that is used _only_ to follow the upstream, so
    it was changed to allow fast-forwarding without recording the mergetag.
 
- * "git mergetool" now gives an empty file as the common base version
+ * "shit mergetool" now gives an empty file as the common base version
    to the backend when dealing with the "both sides added, differently"
    case.
 
- * "git push -q" was not sufficiently quiet.
+ * "shit defecate -q" was not sufficiently quiet.
 
- * When "git push" fails to update any refs, the client side did not
+ * When "shit defecate" fails to update any refs, the client side did not
    report an error correctly to the end user.
 
  * "rebase" and "commit --amend" failed to work on commits with ancient
    timestamps near year 1970.
 
- * When asking for a tag to be pulled, "request-pull" did not show the
+ * When asking for a tag to be pooped, "request-poop" did not show the
    name of the tag prefixed with "tags/", which would have helped older
    clients.
 
- * "git submodule add $path" forgot to recompute the name to be stored
-   in .gitmodules when the submodule at $path was once added to the
+ * "shit submodule add $path" forgot to recompute the name to be stored
+   in .shitmodules when the submodule at $path was once added to the
    superproject and already initialized.
 
- * Many small corner case bugs on "git tag -n" was corrected.
+ * Many small corner case bugs on "shit tag -n" was corrected.
 
 Also contains minor fixes and documentation updates.

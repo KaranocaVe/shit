@@ -1,7 +1,7 @@
 /*
- * This file has been copied from commit e7ac713d^ in the GNU grep git
+ * This file has been copied from commit e7ac713d^ in the GNU grep shit
  * repository. A few small changes have been made to adapt the code to
- * Git.
+ * shit.
  */
 
 /* kwset.c - search for any of a set of keywords.
@@ -32,7 +32,7 @@
    String Matching:  An Aid to Bibliographic Search," CACM June 1975,
    Vol. 18, No. 6, which describes the failure function used below. */
 
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
 #include "kwset.h"
 #include "compat/obstack.h"

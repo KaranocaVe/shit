@@ -1,8 +1,8 @@
 /*
- * decorate.c - decorate a git object with some arbitrary
+ * decorate.c - decorate a shit object with some arbitrary
  * data.
  */
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 #include "object.h"
 #include "decorate.h"
 

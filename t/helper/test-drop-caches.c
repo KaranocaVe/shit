@@ -1,7 +1,7 @@
 #include "test-tool.h"
-#include "git-compat-util.h"
+#include "shit-compat-util.h"
 
-#if defined(GIT_WINDOWS_NATIVE)
+#if defined(shit_WINDOWS_NATIVE)
 #include "lazyload.h"
 #include <winnt.h>
 

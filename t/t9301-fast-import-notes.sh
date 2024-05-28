@@ -3,9 +3,9 @@
 # Copyright (c) 2009 Johan Herland
 #
 
-test_description='test git fast-import of notes objects'
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+test_description='test shit fast-import of notes objects'
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 TEST_PASSES_SANITIZE_LEAK=true
 . ./test-lib.sh
@@ -14,7 +14,7 @@ TEST_PASSES_SANITIZE_LEAK=true
 test_tick
 cat >input <<INPUT_END
 commit refs/heads/main
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 first commit
 COMMIT
@@ -35,7 +35,7 @@ file baz/xyzzy in first commit
 EOF
 
 commit refs/heads/main
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 second commit
 COMMIT
@@ -51,7 +51,7 @@ file baz/xyzzy in second commit
 EOF
 
 commit refs/heads/main
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 third commit
 COMMIT
@@ -62,7 +62,7 @@ file foo in third commit
 EOF
 
 commit refs/heads/main
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 fourth commit
 COMMIT
@@ -76,19 +76,19 @@ INPUT_END
 
 test_expect_success 'set up main branch' '
 
-	git fast-import <input &&
-	git whatchanged main
+	shit fast-import <input &&
+	shit whatchanged main
 '
 
-commit4=$(git rev-parse refs/heads/main)
-commit3=$(git rev-parse "$commit4^")
-commit2=$(git rev-parse "$commit4~2")
-commit1=$(git rev-parse "$commit4~3")
+commit4=$(shit rev-parse refs/heads/main)
+commit3=$(shit rev-parse "$commit4^")
+commit2=$(shit rev-parse "$commit4~2")
+commit1=$(shit rev-parse "$commit4~3")
 
 test_tick
 cat >input <<INPUT_END
 commit refs/notes/test
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 first notes commit
 COMMIT
@@ -116,8 +116,8 @@ EXPECT_END
 
 test_expect_success 'add notes with simple M command' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/test git log | grep "^    " > actual &&
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/test shit log | grep "^    " > actual &&
 	test_cmp expect actual
 
 '
@@ -126,7 +126,7 @@ test_tick
 cat >input <<INPUT_END
 feature notes
 commit refs/notes/test
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 second notes commit
 COMMIT
@@ -157,8 +157,8 @@ EXPECT_END
 
 test_expect_success 'add notes with simple N command' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/test git log | grep "^    " > actual &&
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/test shit log | grep "^    " > actual &&
 	test_cmp expect actual
 
 '
@@ -166,7 +166,7 @@ test_expect_success 'add notes with simple N command' '
 test_tick
 cat >input <<INPUT_END
 commit refs/notes/test
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 third notes commit
 COMMIT
@@ -207,8 +207,8 @@ EXPECT_END
 
 test_expect_success 'update existing notes with N command' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/test git log | grep "^    " > actual &&
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/test shit log | grep "^    " > actual &&
 	test_cmp expect actual
 
 '
@@ -216,7 +216,7 @@ test_expect_success 'update existing notes with N command' '
 test_tick
 cat >input <<INPUT_END
 commit refs/notes/test
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 fourth notes commit
 COMMIT
@@ -281,8 +281,8 @@ EXPECT_END
 
 test_expect_success 'add concatenation notes with M command' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/test git log | grep "^    " > actual &&
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/test shit log | grep "^    " > actual &&
 	test_cmp expect actual
 
 '
@@ -290,7 +290,7 @@ test_expect_success 'add concatenation notes with M command' '
 test_tick
 cat >input <<INPUT_END
 commit refs/notes/test
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 fifth notes commit
 COMMIT
@@ -309,8 +309,8 @@ EXPECT_END
 
 test_expect_success 'verify that deleteall also removes notes' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/test git log | grep "^    " > actual &&
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/test shit log | grep "^    " > actual &&
 	test_cmp expect actual
 
 '
@@ -318,7 +318,7 @@ test_expect_success 'verify that deleteall also removes notes' '
 test_tick
 cat >input <<INPUT_END
 commit refs/notes/test
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 sixth notes commit
 COMMIT
@@ -357,8 +357,8 @@ EXPECT_END
 
 test_expect_success 'verify that later N commands override earlier M commands' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/test git log | grep "^    " > actual &&
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/test shit log | grep "^    " > actual &&
 	test_cmp expect actual
 
 '
@@ -376,7 +376,7 @@ fast_import_commits () {
 		cat >>"$my_append_to_file" <<INPUT_END
 commit $my_ref
 mark :$my_i
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 commit #$my_i
 COMMIT
@@ -400,7 +400,7 @@ fast_import_notes () {
 	test_tick
 	cat >>"$my_append_to_file" <<INPUT_END
 commit $my_notes_ref
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 committing $my_num_commits notes
 COMMIT
@@ -432,7 +432,7 @@ fast_import_notes "refs/notes/many_notes" $num_commits input
 test_tick
 cat >>input <<INPUT_END
 commit refs/notes/many_notes
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 committing some non-notes to the notes tree
 COMMIT
@@ -466,8 +466,8 @@ done
 
 test_expect_success 'add lots of commits and notes' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/many_notes git log refs/heads/many_commits |
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/many_notes shit log refs/heads/many_commits |
 	    grep "^    " > actual &&
 	test_cmp expect actual
 
@@ -477,7 +477,7 @@ test_expect_success 'verify that lots of notes trigger a fanout scheme' '
 	hexsz=$(test_oid hexsz) &&
 
 	# None of the entries in the top-level notes tree should be a full SHA1
-	git ls-tree --name-only refs/notes/many_notes |
+	shit ls-tree --name-only refs/notes/many_notes |
 	while read path
 	do
 		if test $(expr length "$path") -ge $hexsz
@@ -492,7 +492,7 @@ test_expect_success 'verify that lots of notes trigger a fanout scheme' '
 SP=" "
 cat >>input <<INPUT_END
 commit refs/heads/other_commits
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 commit #$(($num_commit + 1))
 COMMIT
@@ -504,12 +504,12 @@ file contents in commit #$(($num_commit + 1))
 EOF
 
 commit refs/notes/other_notes
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 committing one more note on a tree imported from a previous notes tree
 COMMIT
 
-M 040000 $(git log --no-walk --format=%T refs/notes/many_notes)$SP
+M 040000 $(shit log --no-walk --format=%T refs/notes/many_notes)$SP
 N inline :$(($num_commit + 1))
 data <<EOF
 note for commit #$(($num_commit + 1))
@@ -517,10 +517,10 @@ EOF
 INPUT_END
 
 test_expect_success 'verify that importing a notes tree respects the fanout scheme' '
-	git fast-import <input &&
+	shit fast-import <input &&
 
 	# None of the entries in the top-level notes tree should be a full SHA1
-	git ls-tree --name-only refs/notes/other_notes |
+	shit ls-tree --name-only refs/notes/other_notes |
 	while read path
 	do
 		if test $(expr length "$path") -ge $hexsz
@@ -544,11 +544,11 @@ EOF
 
 test_expect_success 'verify that non-notes are untouched by a fanout change' '
 
-	git cat-file -p refs/notes/many_notes:foobar/non-note.txt > actual &&
+	shit cat-file -p refs/notes/many_notes:foobar/non-note.txt > actual &&
 	test_cmp expect_non-note1 actual &&
-	git cat-file -p refs/notes/many_notes:deadbeef > actual &&
+	shit cat-file -p refs/notes/many_notes:deadbeef > actual &&
 	test_cmp expect_non-note2 actual &&
-	git cat-file -p refs/notes/many_notes:de/adbeef > actual &&
+	shit cat-file -p refs/notes/many_notes:de/adbeef > actual &&
 	test_cmp expect_non-note3 actual
 
 '
@@ -557,7 +557,7 @@ test_expect_success 'verify that non-notes are untouched by a fanout change' '
 test_tick
 cat >input <<INPUT_END
 commit refs/notes/many_notes
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 changing notes for the top three commits
 COMMIT
@@ -585,8 +585,8 @@ done
 
 test_expect_success 'change a few existing notes' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/many_notes git log -n3 refs/heads/many_commits |
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/many_notes shit log -n3 refs/heads/many_commits |
 	    grep "^    " > actual &&
 	test_cmp expect actual
 
@@ -595,7 +595,7 @@ test_expect_success 'change a few existing notes' '
 test_expect_success 'verify that changing notes respect existing fanout' '
 
 	# None of the entries in the top-level notes tree should be a full SHA1
-	git ls-tree --name-only refs/notes/many_notes |
+	shit ls-tree --name-only refs/notes/many_notes |
 	while read path
 	do
 		if test $(expr length "$path") -ge $hexsz
@@ -610,7 +610,7 @@ remaining_notes=10
 test_tick
 cat >input <<INPUT_END
 commit refs/notes/many_notes
-committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
+committer $shit_COMMITTER_NAME <$shit_COMMITTER_EMAIL> $shit_COMMITTER_DATE
 data <<COMMIT
 removing all notes but $remaining_notes
 COMMIT
@@ -618,7 +618,7 @@ from refs/notes/many_notes^0
 INPUT_END
 
 i=$(($num_commits - $remaining_notes))
-for sha1 in $(git rev-list -n $i refs/heads/many_commits)
+for sha1 in $(shit rev-list -n $i refs/heads/many_commits)
 do
 	cat >>input <<INPUT_END
 N $ZERO_OID $sha1
@@ -643,8 +643,8 @@ done
 
 test_expect_success 'remove lots of notes' '
 
-	git fast-import <input &&
-	GIT_NOTES_REF=refs/notes/many_notes git log refs/heads/many_commits |
+	shit fast-import <input &&
+	shit_NOTES_REF=refs/notes/many_notes shit log refs/heads/many_commits |
 	    grep "^    " > actual &&
 	test_cmp expect actual
 
@@ -652,7 +652,7 @@ test_expect_success 'remove lots of notes' '
 
 test_expect_success 'verify that removing notes trigger fanout consolidation' '
 	# All entries in the top-level notes tree should be a full SHA1
-	git ls-tree --name-only -r refs/notes/many_notes |
+	shit ls-tree --name-only -r refs/notes/many_notes |
 	while read path
 	do
 		# Explicitly ignore the non-note paths
@@ -670,11 +670,11 @@ test_expect_success 'verify that removing notes trigger fanout consolidation' '
 
 test_expect_success 'verify that non-notes are untouched by a fanout change' '
 
-	git cat-file -p refs/notes/many_notes:foobar/non-note.txt > actual &&
+	shit cat-file -p refs/notes/many_notes:foobar/non-note.txt > actual &&
 	test_cmp expect_non-note1 actual &&
-	git cat-file -p refs/notes/many_notes:deadbeef > actual &&
+	shit cat-file -p refs/notes/many_notes:deadbeef > actual &&
 	test_cmp expect_non-note2 actual &&
-	git cat-file -p refs/notes/many_notes:de/adbeef > actual &&
+	shit cat-file -p refs/notes/many_notes:de/adbeef > actual &&
 	test_cmp expect_non-note3 actual
 
 '
@@ -693,7 +693,7 @@ do
 	i=$(($i + 1))
 	fast_import_notes "refs/notes/more_notes_$i" $num_commits input
 done
-# Trigger branch reloading in git-fast-import by repeating the note creation
+# Trigger branch reloading in shit-fast-import by repeating the note creation
 i=0
 while test $i -lt $num_notes_refs
 do
@@ -718,8 +718,8 @@ done
 
 test_expect_success "add notes to $num_commits commits in each of $num_notes_refs refs" '
 
-	git fast-import --active-branches=5 <input &&
-	GIT_NOTES_REF=refs/notes/more_notes_1 git log refs/heads/more_commits |
+	shit fast-import --active-branches=5 <input &&
+	shit_NOTES_REF=refs/notes/more_notes_1 shit log refs/heads/more_commits |
 	    grep "^    " > actual &&
 	test_cmp expect actual
 

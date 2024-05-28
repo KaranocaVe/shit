@@ -66,7 +66,7 @@ void tr2tls_unset_self(void);
 /*
  * Begin a new nested region and remember the start time.
  */
-void tr2tls_push_self(uint64_t us_now);
+void tr2tls_defecate_self(uint64_t us_now);
 
 /*
  * End the innermost nested region.
@@ -76,7 +76,7 @@ void tr2tls_pop_self(void);
 /*
  * Pop any extra (above the first) open regions on the current
  * thread and discard.  During a thread-exit, we should only
- * have region[0] that was pushed in trace2_thread_start() if
+ * have region[0] that was defecateed in trace2_thread_start() if
  * the thread exits normally.
  */
 void tr2tls_pop_unwind_self(void);

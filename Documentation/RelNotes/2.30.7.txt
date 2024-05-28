@@ -1,4 +1,4 @@
-Git v2.30.7 Release Notes
+shit v2.30.7 Release Notes
 =========================
 
 This release addresses the security issues CVE-2022-41903 and
@@ -10,9 +10,9 @@ Fixes since v2.30.6
 
  * CVE-2022-41903:
 
-   git log has the ability to display commits using an arbitrary
+   shit log has the ability to display commits using an arbitrary
    format with its --format specifiers. This functionality is also
-   exposed to git archive via the export-subst gitattribute.
+   exposed to shit archive via the export-subst shitattribute.
 
    When processing the padding operators (e.g., %<(, %<|(, %>(,
    %>>(, or %><( ), an integer overflow can occur in
@@ -21,10 +21,10 @@ Fixes since v2.30.6
    memcpy() call.
 
    This overflow can be triggered directly by a user running a
-   command which invokes the commit formatting machinery (e.g., git
+   command which invokes the commit formatting machinery (e.g., shit
    log --format=...). It may also be triggered indirectly through
-   git archive via the export-subst mechanism, which expands format
-   specifiers inside of files within the repository during a git
+   shit archive via the export-subst mechanism, which expands format
+   specifiers inside of files within the repository during a shit
    archive.
 
    This integer overflow can result in arbitrary heap writes, which
@@ -32,19 +32,19 @@ Fixes since v2.30.6
 
 * CVE-2022-23521:
 
-    gitattributes are a mechanism to allow defining attributes for
-    paths. These attributes can be defined by adding a `.gitattributes`
+    shitattributes are a mechanism to allow defining attributes for
+    paths. These attributes can be defined by adding a `.shitattributes`
     file to the repository, which contains a set of file patterns and
     the attributes that should be set for paths matching this pattern.
 
-    When parsing gitattributes, multiple integer overflows can occur
+    When parsing shitattributes, multiple integer overflows can occur
     when there is a huge number of path patterns, a huge number of
     attributes for a single pattern, or when the declared attribute
     names are huge.
 
-    These overflows can be triggered via a crafted `.gitattributes` file
-    that may be part of the commit history. Git silently splits lines
-    longer than 2KB when parsing gitattributes from a file, but not when
+    These overflows can be triggered via a crafted `.shitattributes` file
+    that may be part of the commit history. shit silently splits lines
+    longer than 2KB when parsing shitattributes from a file, but not when
     parsing them from the index. Consequentially, the failure mode
     depends on whether the file exists in the working tree, the index or
     both.
@@ -52,14 +52,14 @@ Fixes since v2.30.6
     This integer overflow can result in arbitrary heap reads and writes,
     which may result in remote code execution.
 
-Credit for finding CVE-2022-41903 goes to Joern Schneeweisz of GitLab.
+Credit for finding CVE-2022-41903 goes to Joern Schneeweisz of shitLab.
 An initial fix was authored by Markus Vervier of X41 D-Sec. Credit for
 finding CVE-2022-23521 goes to Markus Vervier and Eric Sesterhenn of X41
 D-Sec. This work was sponsored by OSTIF.
 
 The proposed fixes have been polished and extended to cover additional
-findings by Patrick Steinhardt of GitLab, with help from others on the
-Git security mailing list.
+findings by Patrick Steinhardt of shitLab, with help from others on the
+shit security mailing list.
 
 Patrick Steinhardt (21):
       attr: fix overflow when upserting attribute with overly long name
@@ -71,7 +71,7 @@ Patrick Steinhardt (21):
       attr: harden allocation against integer overflows
       attr: fix silently splitting up lines longer than 2048 bytes
       attr: ignore attribute lines exceeding 2048 bytes
-      attr: ignore overly large gitattributes files
+      attr: ignore overly large shitattributes files
       pretty: fix out-of-bounds write caused by integer overflow
       pretty: fix out-of-bounds read when left-flushing with stealing
       pretty: fix out-of-bounds read when parsing invalid padding format

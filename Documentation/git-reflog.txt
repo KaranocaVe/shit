@@ -1,22 +1,22 @@
-git-reflog(1)
+shit-reflog(1)
 =============
 
 NAME
 ----
-git-reflog - Manage reflog information
+shit-reflog - Manage reflog information
 
 
 SYNOPSIS
 --------
 [verse]
-'git reflog' [show] [<log-options>] [<ref>]
-'git reflog list'
-'git reflog expire' [--expire=<time>] [--expire-unreachable=<time>]
+'shit reflog' [show] [<log-options>] [<ref>]
+'shit reflog list'
+'shit reflog expire' [--expire=<time>] [--expire-unreachable=<time>]
 	[--rewrite] [--updateref] [--stale-fix]
 	[--dry-run | -n] [--verbose] [--all [--single-worktree] | <refs>...]
-'git reflog delete' [--rewrite] [--updateref]
+'shit reflog delete' [--rewrite] [--updateref]
 	[--dry-run | -n] [--verbose] <ref>@{<specifier>}...
-'git reflog exists' <ref>
+'shit reflog exists' <ref>
 
 DESCRIPTION
 -----------
@@ -24,11 +24,11 @@ This command manages the information recorded in the reflogs.
 
 Reference logs, or "reflogs", record when the tips of branches and
 other references were updated in the local repository. Reflogs are
-useful in various Git commands, to specify the old value of a
+useful in various shit commands, to specify the old value of a
 reference. For example, `HEAD@{2}` means "where HEAD used to be two
 moves ago", `master@{one.week.ago}` means "where master used to point
 to one week ago in this local repository", and so on. See
-linkgit:gitrevisions[7] for more details.
+linkshit:shitrevisions[7] for more details.
 
 The command takes various subcommands, and different options
 depending on the subcommand:
@@ -37,8 +37,8 @@ The "show" subcommand (which is also the default, in the absence of
 any subcommands) shows the log of the reference provided in the
 command-line (or `HEAD`, by default). The reflog covers all recent
 actions, and in addition the `HEAD` reflog records branch switching.
-`git reflog show` is an alias for `git log -g --abbrev-commit
---pretty=oneline`; see linkgit:git-log[1] for more information.
+`shit reflog show` is an alias for `shit log -g --abbrev-commit
+--pretty=oneline`; see linkshit:shit-log[1] for more information.
 
 The "list" subcommand lists all refs which have a corresponding reflog.
 
@@ -46,10 +46,10 @@ The "expire" subcommand prunes older reflog entries. Entries older
 than `expire` time, or entries older than `expire-unreachable` time
 and not reachable from the current tip, are removed from the reflog.
 This is typically not used directly by end users -- instead, see
-linkgit:git-gc[1].
+linkshit:shit-gc[1].
 
 The "delete" subcommand deletes single entries from the reflog. Its
-argument must be an _exact_ entry (e.g. "`git reflog delete
+argument must be an _exact_ entry (e.g. "`shit reflog delete
 master@{2}`"). This subcommand is also typically not used directly by
 end users.
 
@@ -63,7 +63,7 @@ OPTIONS
 Options for `show`
 ~~~~~~~~~~~~~~~~~~
 
-`git reflog show` accepts any of the options accepted by `git log`.
+`shit reflog show` accepts any of the options accepted by `shit log`.
 
 
 Options for `expire`
@@ -112,8 +112,8 @@ Options for `expire`
 	a missing commit, tree, or blob object.
 +
 This computation involves traversing all the reachable objects, i.e. it
-has the same cost as 'git prune'.  It is primarily intended to fix
-corruption caused by garbage collecting using older versions of Git,
+has the same cost as 'shit prune'.  It is primarily intended to fix
+corruption caused by garbage collecting using older versions of shit,
 which didn't protect objects referred to by reflogs.
 
 -n::
@@ -128,11 +128,11 @@ which didn't protect objects referred to by reflogs.
 Options for `delete`
 ~~~~~~~~~~~~~~~~~~~~
 
-`git reflog delete` accepts options `--updateref`, `--rewrite`, `-n`,
+`shit reflog delete` accepts options `--updateref`, `--rewrite`, `-n`,
 `--dry-run`, and `--verbose`, with the same meanings as when they are
 used with `expire`.
 
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

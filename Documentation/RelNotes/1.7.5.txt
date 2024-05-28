@@ -1,4 +1,4 @@
-Git v1.7.5 Release Notes
+shit v1.7.5 Release Notes
 ========================
 
 Updates since v1.7.4
@@ -6,11 +6,11 @@ Updates since v1.7.4
 
  * Various MinGW portability fixes.
 
- * Various git-p4 enhancements (in contrib).
+ * Various shit-p4 enhancements (in contrib).
 
- * Various vcs-svn, git-svn and gitk enhancements and fixes.
+ * Various vcs-svn, shit-svn and shitk enhancements and fixes.
 
- * Various git-gui updates (0.14.0).
+ * Various shit-gui updates (0.14.0).
 
  * Update to more modern HP-UX port.
 
@@ -19,89 +19,89 @@ Updates since v1.7.4
    are being marked for l10n.
 
  * The bash completion script can now complete symmetric difference
-   for "git diff" command, e.g. "git diff ...bra<TAB>".
+   for "shit diff" command, e.g. "shit diff ...bra<TAB>".
 
  * The default minimum length of abbreviated and unique object names
    can now be configured by setting the core.abbrev configuration
    variable.
 
- * "git apply -v" reports offset lines when the patch does not apply at
+ * "shit apply -v" reports offset lines when the patch does not apply at
    the exact location recorded in the diff output.
 
- * "git config" used to be also known as "git repo-config", but the old
+ * "shit config" used to be also known as "shit repo-config", but the old
    name is now officially deprecated.
 
- * "git checkout --detach <commit>" is a more user friendly synonym for
-   "git checkout <commit>^0".
+ * "shit checkout --detach <commit>" is a more user friendly synonym for
+   "shit checkout <commit>^0".
 
- * "git checkout" performed on detached HEAD gives a warning and
+ * "shit checkout" performed on detached HEAD gives a warning and
    advice when the commit being left behind will become unreachable from
    any branch or tag.
 
- * "git cherry-pick" and "git revert" can be told to use a custom merge
-   strategy, similar to "git rebase".
+ * "shit cherry-pick" and "shit revert" can be told to use a custom merge
+   strategy, similar to "shit rebase".
 
- * "git cherry-pick" remembers which commit failed to apply when it is
+ * "shit cherry-pick" remembers which commit failed to apply when it is
    stopped by conflicts, making it unnecessary to use "commit -c $commit"
    to conclude it.
 
- * "git cvsimport" bails out immediately when the cvs server cannot be
+ * "shit cvsimport" bails out immediately when the cvs server cannot be
    reached, without spewing unnecessary error messages that complain about
    the server response it never got.
 
- * "git fetch" vs "git upload-pack" transfer learned 'no-done'
+ * "shit fetch" vs "shit upload-pack" transfer learned 'no-done'
    protocol extension to save one round-trip after the content
    negotiation is done. This saves one HTTP RPC, reducing the overall
    latency for a trivial fetch.
 
- * "git fetch" can be told to recursively fetch submodules on-demand.
+ * "shit fetch" can be told to recursively fetch submodules on-demand.
 
- * "git grep -f <filename>" learned to treat "-" as "read from the
+ * "shit grep -f <filename>" learned to treat "-" as "read from the
    standard input stream".
 
- * "git grep --no-index" did not honor pathspecs correctly, returning
+ * "shit grep --no-index" did not honor pathspecs correctly, returning
    paths outside the specified area.
 
- * "git init" learned the --separate-git-dir option to allow the git
+ * "shit init" learned the --separate-shit-dir option to allow the shit
    directory for a new repository created elsewhere and linked via the
-   gitdir mechanism. This is primarily to help submodule support later
+   shitdir mechanism. This is primarily to help submodule support later
    to switch between a branch of superproject that has the submodule
    and another that does not.
 
- * "git log" type commands now understand globbing pathspecs.  You
-   can say "git log -- '*.txt'" for example.
+ * "shit log" type commands now understand globbing pathspecs.  You
+   can say "shit log -- '*.txt'" for example.
 
- * "git log" family of commands learned --cherry and --cherry-mark
+ * "shit log" family of commands learned --cherry and --cherry-mark
    options that can be used to view two diverged branches while omitting
    or highlighting equivalent changes that appear on both sides of a
    symmetric difference (e.g. "log --cherry A...B").
 
- * A lazy "git merge" that didn't say what to merge used to be an error.
+ * A lazy "shit merge" that didn't say what to merge used to be an error.
    When run on a branch that has an upstream defined, however, the command
    now merges from the configured upstream.
 
- * "git mergetool" learned how to drive "beyond compare 3" as well.
+ * "shit mergetool" learned how to drive "beyond compare 3" as well.
 
- * "git rerere forget" without pathspec used to forget all the saved
+ * "shit rerere forget" without pathspec used to forget all the saved
    conflicts that relate to the current merge; it now requires you to
    give it pathspecs.
 
- * "git rev-list --objects $revs -- $pathspec" now limits the objects listed
+ * "shit rev-list --objects $revs -- $pathspec" now limits the objects listed
    in its output properly with the pathspec, in preparation for narrow
    clones.
 
- * "git push" with no parameters gives better advice messages when
-   "tracking" is used as the push.default semantics or there is no remote
+ * "shit defecate" with no parameters gives better advice messages when
+   "tracking" is used as the defecate.default semantics or there is no remote
    configured yet.
 
- * A possible value to the "push.default" configuration variable,
+ * A possible value to the "defecate.default" configuration variable,
    'tracking', gained a synonym that more naturally describes what it
    does, 'upstream'.
 
- * "git rerere" learned a new subcommand "remaining" that is similar to
+ * "shit rerere" learned a new subcommand "remaining" that is similar to
    "status" and lists the paths that had conflicts which are known to
    rerere, but excludes the paths that have already been marked as
-   resolved in the index from its output.  "git mergetool" has been
+   resolved in the index from its output.  "shit mergetool" has been
    updated to use this facility.
 
 Also contains various documentation updates.
@@ -113,20 +113,20 @@ Fixes since v1.7.4
 All of the fixes in the v1.7.4.X maintenance series are included in this
 release, unless otherwise noted.
 
- * "git fetch" from a client that is mostly following the remote
+ * "shit fetch" from a client that is mostly following the remote
    needlessly told all of its refs to the server for both sides to
    compute the set of objects that need to be transferred efficiently,
    instead of stopping when the server heard enough. In a project with
    many tags, this turns out to be extremely wasteful, especially over
    the smart HTTP transport (sp/maint-{upload,fetch}-pack-stop-early~1).
 
- * "git fetch" run from a repository that uses the same repository as
+ * "shit fetch" run from a repository that uses the same repository as
    its alternate object store as the repository it is fetching from
    did not tell the server that it already has access to objects
    reachable from the refs in their common alternate object store,
    causing it to fetch unnecessary objects (jc/maint-fetch-alt).
 
- * "git remote add --mirror" created a configuration that is suitable for
-   doing both a mirror fetch and a mirror push at the same time, which
+ * "shit remote add --mirror" created a configuration that is suitable for
+   doing both a mirror fetch and a mirror defecate at the same time, which
    made little sense.  We now warn and require the command line to specify
-   either --mirror=fetch or --mirror=push.
+   either --mirror=fetch or --mirror=defecate.

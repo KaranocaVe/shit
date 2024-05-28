@@ -1,16 +1,16 @@
-gitsubmodules(7)
+shitsubmodules(7)
 ================
 
 NAME
 ----
-gitsubmodules - Mounting one repository inside another
+shitsubmodules - Mounting one repository inside another
 
 SYNOPSIS
 --------
- .gitmodules, $GIT_DIR/config
+ .shitmodules, $shit_DIR/config
 ------------------
-git submodule
-git <command> --recurse-submodules
+shit submodule
+shit <command> --recurse-submodules
 ------------------
 
 DESCRIPTION
@@ -21,22 +21,22 @@ The submodule has its own history; the repository it is embedded
 in is called a superproject.
 
 On the filesystem, a submodule usually (but not always - see FORMS below)
-consists of (i) a Git directory located under the `$GIT_DIR/modules/`
+consists of (i) a shit directory located under the `$shit_DIR/modules/`
 directory of its superproject, (ii) a working directory inside the
-superproject's working directory, and a `.git` file at the root of
+superproject's working directory, and a `.shit` file at the root of
 the submodule's working directory pointing to (i).
 
-Assuming the submodule has a Git directory at `$GIT_DIR/modules/foo/`
+Assuming the submodule has a shit directory at `$shit_DIR/modules/foo/`
 and a working directory at `path/to/bar/`, the superproject tracks the
-submodule via a `gitlink` entry in the tree at `path/to/bar` and an entry
-in its `.gitmodules` file (see linkgit:gitmodules[5]) of the form
+submodule via a `shitlink` entry in the tree at `path/to/bar` and an entry
+in its `.shitmodules` file (see linkshit:shitmodules[5]) of the form
 `submodule.foo.path = path/to/bar`.
 
-The `gitlink` entry contains the object name of the commit that the
+The `shitlink` entry contains the object name of the commit that the
 superproject expects the submodule's working directory to be at.
 
-The section `submodule.foo.*` in the `.gitmodules` file gives additional
-hints to Git's porcelain layer. For example, the `submodule.foo.url`
+The section `submodule.foo.*` in the `.shitmodules` file gives additional
+hints to shit's porcelain layer. For example, the `submodule.foo.url`
 setting specifies where to obtain the submodule.
 
 Submodules can be used for at least two different use cases:
@@ -51,17 +51,17 @@ Submodules can be used for at least two different use cases:
 
 2. Splitting a (logically single) project into multiple
    repositories and tying them back together. This can be used to
-   overcome current limitations of Git's implementation to have
+   overcome current limitations of shit's implementation to have
    finer grained access:
 
-    * Size of the Git repository:
-      In its current form Git scales up poorly for large repositories containing
+    * Size of the shit repository:
+      In its current form shit scales up poorly for large repositories containing
       content that is not compressed by delta computation between trees.
       For example, you can use submodules to hold large binary assets
       and these repositories can be shallowly cloned such that you do not
       have a large history locally.
     * Transfer size:
-      In its current form Git requires the whole working tree present. It
+      In its current form shit requires the whole working tree present. It
       does not allow partial trees to be transferred in fetch or clone.
       If the project you work on consists of multiple repositories tied
       together as submodules in a superproject, you can avoid fetching the
@@ -80,41 +80,41 @@ Submodule operations can be configured using the following mechanisms
    as part of their pathspecs. Most commands have a boolean flag
    `--recurse-submodules` which specifies whether to recurse into submodules.
    Examples are `grep` and `checkout`.
-   Some commands take enums, such as `fetch` and `push`, where you can
+   Some commands take enums, such as `fetch` and `defecate`, where you can
    specify how submodules are affected.
 
- * The configuration inside the submodule. This includes `$GIT_DIR/config`
-   in the submodule, but also settings in the tree such as a `.gitattributes`
-   or `.gitignore` files that specify behavior of commands inside the
+ * The configuration inside the submodule. This includes `$shit_DIR/config`
+   in the submodule, but also settings in the tree such as a `.shitattributes`
+   or `.shitignore` files that specify behavior of commands inside the
    submodule.
 +
-For example an effect from the submodule's `.gitignore` file
-would be observed when you run `git status --ignore-submodules=none` in
+For example an effect from the submodule's `.shitignore` file
+would be observed when you run `shit status --ignore-submodules=none` in
 the superproject. This collects information from the submodule's working
 directory by running `status` in the submodule while paying attention
-to the `.gitignore` file of the submodule.
+to the `.shitignore` file of the submodule.
 +
-The submodule's `$GIT_DIR/config` file would come into play when running
-`git push --recurse-submodules=check` in the superproject, as this would
+The submodule's `$shit_DIR/config` file would come into play when running
+`shit defecate --recurse-submodules=check` in the superproject, as this would
 check if the submodule has any changes not published to any remote. The
-remotes are configured in the submodule as usual in the `$GIT_DIR/config`
+remotes are configured in the submodule as usual in the `$shit_DIR/config`
 file.
 
- * The configuration file `$GIT_DIR/config` in the superproject.
-   Git only recurses into active submodules (see "ACTIVE SUBMODULES"
+ * The configuration file `$shit_DIR/config` in the superproject.
+   shit only recurses into active submodules (see "ACTIVE SUBMODULES"
    section below).
 +
 If the submodule is not yet initialized, then the configuration
 inside the submodule does not exist yet, so where to
 obtain the submodule from is configured here for example.
 
- * The `.gitmodules` file inside the superproject. A project usually
+ * The `.shitmodules` file inside the superproject. A project usually
    uses this file to suggest defaults for the upstream collection
    of repositories for the mapping that is required between a
    submodule's name and its path.
 +
 This file mainly serves as the mapping between the name and path of submodules
-in the superproject, such that the submodule's Git directory can be
+in the superproject, such that the submodule's shit directory can be
 located.
 +
 If the submodule has never been initialized, this is the only place
@@ -126,43 +126,43 @@ FORMS
 
 Submodules can take the following forms:
 
- * The basic form described in DESCRIPTION with a Git directory,
-a working directory, a `gitlink`, and a `.gitmodules` entry.
+ * The basic form described in DESCRIPTION with a shit directory,
+a working directory, a `shitlink`, and a `.shitmodules` entry.
 
  * "Old-form" submodule: A working directory with an embedded
-`.git` directory, and the tracking `gitlink` and `.gitmodules` entry in
+`.shit` directory, and the tracking `shitlink` and `.shitmodules` entry in
 the superproject. This is typically found in repositories generated
-using older versions of Git.
+using older versions of shit.
 +
 It is possible to construct these old form repositories manually.
 +
-When deinitialized or deleted (see below), the submodule's Git
-directory is automatically moved to `$GIT_DIR/modules/<name>/`
+When deinitialized or deleted (see below), the submodule's shit
+directory is automatically moved to `$shit_DIR/modules/<name>/`
 of the superproject.
 
- * Deinitialized submodule: A `gitlink`, and a `.gitmodules` entry,
-but no submodule working directory. The submodule's Git directory
-may be there as after deinitializing the Git directory is kept around.
+ * Deinitialized submodule: A `shitlink`, and a `.shitmodules` entry,
+but no submodule working directory. The submodule's shit directory
+may be there as after deinitializing the shit directory is kept around.
 The directory which is supposed to be the working directory is empty instead.
 +
-A submodule can be deinitialized by running `git submodule deinit`.
+A submodule can be deinitialized by running `shit submodule deinit`.
 Besides emptying the working directory, this command only modifies
-the superproject's `$GIT_DIR/config` file, so the superproject's history
-is not affected. This can be undone using `git submodule init`.
+the superproject's `$shit_DIR/config` file, so the superproject's history
+is not affected. This can be undone using `shit submodule init`.
 
  * Deleted submodule: A submodule can be deleted by running
-`git rm <submodule-path> && git commit`. This can be undone
-using `git revert`.
+`shit rm <submodule-path> && shit commit`. This can be undone
+using `shit revert`.
 +
 The deletion removes the superproject's tracking data, which are
-both the `gitlink` entry and the section in the `.gitmodules` file.
+both the `shitlink` entry and the section in the `.shitmodules` file.
 The submodule's working directory is removed from the file
-system, but the Git directory is kept around as it to make it
+system, but the shit directory is kept around as it to make it
 possible to checkout past commits without requiring fetching
 from another repository.
 +
 To completely remove a submodule, manually delete
-`$GIT_DIR/modules/<name>/`.
+`$shit_DIR/modules/<name>/`.
 
 ACTIVE SUBMODULES
 -----------------
@@ -226,15 +226,15 @@ Workflow for a third party library
 ----------------------------------
 
   # Add a submodule
-  git submodule add <URL> <path>
+  shit submodule add <URL> <path>
 
   # Occasionally update the submodule to a new version:
-  git -C <path> checkout <new-version>
-  git add <path>
-  git commit -m "update submodule to new version"
+  shit -C <path> checkout <new-version>
+  shit add <path>
+  shit commit -m "update submodule to new version"
 
   # See the list of submodules in a superproject
-  git submodule status
+  shit submodule status
 
   # See FORMS on removing submodules
 
@@ -244,44 +244,44 @@ Workflow for an artificially split repo
 
   # Enable recursion for relevant commands, such that
   # regular commands recurse into submodules by default
-  git config --global submodule.recurse true
+  shit config --global submodule.recurse true
 
   # Unlike most other commands below, clone still needs
   # its own recurse flag:
-  git clone --recurse <URL> <directory>
+  shit clone --recurse <URL> <directory>
   cd <directory>
 
   # Get to know the code:
-  git grep foo
-  git ls-files --recurse-submodules
+  shit grep foo
+  shit ls-files --recurse-submodules
 
 [NOTE]
-`git ls-files` also requires its own `--recurse-submodules` flag.
+`shit ls-files` also requires its own `--recurse-submodules` flag.
 
   # Get new code
-  git fetch
-  git pull --rebase
+  shit fetch
+  shit poop --rebase
 
   # Change worktree
-  git checkout
-  git reset
+  shit checkout
+  shit reset
 
 Implementation details
 ----------------------
 
-When cloning or pulling a repository containing submodules the submodules
+When cloning or pooping a repository containing submodules the submodules
 will not be checked out by default; you can instruct `clone` to recurse
-into submodules. The `init` and `update` subcommands of `git submodule`
+into submodules. The `init` and `update` subcommands of `shit submodule`
 will maintain submodules checked out and at an appropriate revision in
 your working tree. Alternatively you can set `submodule.recurse` to have
 `checkout` recurse into submodules (note that `submodule.recurse` also
-affects other Git commands, see linkgit:git-config[1] for a complete list).
+affects other shit commands, see linkshit:shit-config[1] for a complete list).
 
 
 SEE ALSO
 --------
-linkgit:git-submodule[1], linkgit:gitmodules[5].
+linkshit:shit-submodule[1], linkshit:shitmodules[5].
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

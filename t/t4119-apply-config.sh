@@ -3,7 +3,7 @@
 # Copyright (c) 2007 Junio C Hamano
 #
 
-test_description='git apply --whitespace=strip and configuration file.
+test_description='shit apply --whitespace=strip and configuration file.
 
 '
 
@@ -15,9 +15,9 @@ test_expect_success setup '
 	mkdir sub &&
 	echo A >sub/file1 &&
 	cp sub/file1 saved &&
-	git add sub/file1 &&
+	shit add sub/file1 &&
 	echo "B " >sub/file1 &&
-	git diff >patch.file
+	shit diff >patch.file
 '
 
 # Also handcraft GNU diff output; note this has trailing whitespace.
@@ -53,9 +53,9 @@ test_expect_success 'apply --whitespace=strip' '
 
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
-	git apply --whitespace=strip patch.file &&
+	shit apply --whitespace=strip patch.file &&
 	check_result sub/file1
 '
 
@@ -63,10 +63,10 @@ test_expect_success 'apply --whitespace=strip from config' '
 
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
-	git config apply.whitespace strip &&
-	git apply patch.file &&
+	shit config apply.whitespace strip &&
+	shit apply patch.file &&
 	check_result sub/file1
 '
 
@@ -75,105 +75,105 @@ D=$(pwd)
 test_expect_success 'apply --whitespace=strip in subdir' '
 
 	cd "$D" &&
-	git config --unset-all apply.whitespace &&
+	shit config --unset-all apply.whitespace &&
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
 	cd sub &&
-	git apply --whitespace=strip ../patch.file &&
+	shit apply --whitespace=strip ../patch.file &&
 	check_result file1
 '
 
 test_expect_success 'apply --whitespace=strip from config in subdir' '
 
 	cd "$D" &&
-	git config apply.whitespace strip &&
+	shit config apply.whitespace strip &&
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
 	cd sub &&
-	git apply ../patch.file &&
+	shit apply ../patch.file &&
 	check_result file1
 '
 
 test_expect_success 'same in subdir but with traditional patch input' '
 
 	cd "$D" &&
-	git config apply.whitespace strip &&
+	shit config apply.whitespace strip &&
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
 	cd sub &&
-	git apply ../gpatch.file &&
+	shit apply ../gpatch.file &&
 	check_result file1
 '
 
 test_expect_success 'same but with traditional patch input of depth 1' '
 
 	cd "$D" &&
-	git config apply.whitespace strip &&
+	shit config apply.whitespace strip &&
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
 	cd sub &&
-	git apply ../gpatch-sub.file &&
+	shit apply ../gpatch-sub.file &&
 	check_result file1
 '
 
 test_expect_success 'same but with traditional patch input of depth 2' '
 
 	cd "$D" &&
-	git config apply.whitespace strip &&
+	shit config apply.whitespace strip &&
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
 	cd sub &&
-	git apply ../gpatch-ab-sub.file &&
+	shit apply ../gpatch-ab-sub.file &&
 	check_result file1
 '
 
 test_expect_success 'same but with traditional patch input of depth 1' '
 
 	cd "$D" &&
-	git config apply.whitespace strip &&
+	shit config apply.whitespace strip &&
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
-	git apply -p0 gpatch-sub.file &&
+	shit apply -p0 gpatch-sub.file &&
 	check_result sub/file1
 '
 
 test_expect_success 'same but with traditional patch input of depth 2' '
 
 	cd "$D" &&
-	git config apply.whitespace strip &&
+	shit config apply.whitespace strip &&
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
-	git apply gpatch-ab-sub.file &&
+	shit apply gpatch-ab-sub.file &&
 	check_result sub/file1
 '
 
 test_expect_success 'in subdir with traditional patch input' '
 	cd "$D" &&
-	git config apply.whitespace strip &&
-	cat >.gitattributes <<-EOF &&
+	shit config apply.whitespace strip &&
+	cat >.shitattributes <<-EOF &&
 	/* whitespace=blank-at-eol
 	sub/* whitespace=-blank-at-eol
 	EOF
 	rm -f sub/file1 &&
 	cp saved sub/file1 &&
-	git update-index --refresh &&
+	shit update-index --refresh &&
 
 	cd sub &&
-	git apply ../gpatch.file &&
+	shit apply ../gpatch.file &&
 	echo "B " >expect &&
 	test_cmp expect file1
 '

@@ -2,8 +2,8 @@
 #
 # Copyright (c) 2009 Robert Zeh
 
-test_description='git svn creates empty directories, calls git gc, makes sure they are still empty'
-. ./lib-git-svn.sh
+test_description='shit svn creates empty directories, calls shit gc, makes sure they are still empty'
+. ./lib-shit-svn.sh
 
 test_expect_success 'initialize repo' '
 	for i in a b c d d/e d/e/f "weird file name"
@@ -12,20 +12,20 @@ test_expect_success 'initialize repo' '
 	done
 '
 
-test_expect_success 'clone' 'git svn clone "$svnrepo" cloned'
+test_expect_success 'clone' 'shit svn clone "$svnrepo" cloned'
 
-test_expect_success 'git svn gc runs' '
+test_expect_success 'shit svn gc runs' '
 	(
 		cd cloned &&
-		git svn gc
+		shit svn gc
 	)
 '
 
-test_expect_success 'git svn mkdirs recreates empty directories after git svn gc' '
+test_expect_success 'shit svn mkdirs recreates empty directories after shit svn gc' '
 	(
 		cd cloned &&
 		rm -r * &&
-		git svn mkdirs &&
+		shit svn mkdirs &&
 		for i in a b c d d/e d/e/f "weird file name"
 		do
 			if ! test -d "$i"

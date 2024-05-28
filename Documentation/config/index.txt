@@ -2,7 +2,7 @@ index.recordEndOfIndexEntries::
 	Specifies whether the index file should include an "End Of Index
 	Entry" section. This reduces index load time on multiprocessor
 	machines but produces a message "ignoring EOIE extension" when
-	reading the index using Git versions before 2.20. Defaults to
+	reading the index using shit versions before 2.20. Defaults to
 	'true' if index.threads has been explicitly enabled, 'false'
 	otherwise.
 
@@ -10,7 +10,7 @@ index.recordOffsetTable::
 	Specifies whether the index file should include an "Index Entry
 	Offset Table" section. This reduces index load time on
 	multiprocessor machines but produces a message "ignoring IEOT
-	extension" when reading the index using Git versions before 2.20.
+	extension" when reading the index using shit versions before 2.20.
 	Defaults to 'true' if index.threads has been explicitly enabled,
 	'false' otherwise.
 
@@ -22,7 +22,7 @@ index.sparse::
 index.threads::
 	Specifies the number of threads to spawn when loading the index.
 	This is meant to reduce index load time on multiprocessor machines.
-	Specifying 0 or 'true' will cause Git to auto-detect the number of
+	Specifying 0 or 'true' will cause shit to auto-detect the number of
 	CPUs and set the number of threads accordingly. Specifying 1 or
 	'false' will disable multithreading. Defaults to 'true'.
 
@@ -33,11 +33,11 @@ index.version::
 
 index.skipHash::
 	When enabled, do not compute the trailing hash for the index file.
-	This accelerates Git commands that manipulate the index, such as
-	`git add`, `git commit`, or `git status`. Instead of storing the
+	This accelerates shit commands that manipulate the index, such as
+	`shit add`, `shit commit`, or `shit status`. Instead of storing the
 	checksum, write a trailing set of bytes with value zero, indicating
 	that the computation was skipped.
 +
-If you enable `index.skipHash`, then Git clients older than 2.13.0 will
-refuse to parse the index and Git clients older than 2.40.0 will report an
-error during `git fsck`.
+If you enable `index.skipHash`, then shit clients older than 2.13.0 will
+refuse to parse the index and shit clients older than 2.40.0 will report an
+error during `shit fsck`.

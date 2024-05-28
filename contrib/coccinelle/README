@@ -44,7 +44,7 @@ that might be useful to developers.
    This allows to expose plans of pending large scale refactorings without
    impacting the bad pattern checks.
 
-== Git-specific tips & things to know about how we run "spatch":
+== shit-specific tips & things to know about how we run "spatch":
 
  * The "make coccicheck" will piggy-back on
    "COMPUTE_HEADER_DEPENDENCIES". If you've built a given object file
@@ -95,7 +95,7 @@ that might be useful to developers.
 
 == Authoring and reviewing coccinelle changes
 
-* When a .cocci is made, both the Git changes and .cocci file should be
+* When a .cocci is made, both the shit changes and .cocci file should be
   reviewed. When reviewing such a change, do your best to understand the .cocci
   changes (e.g. by asking the author to explain the change) and be explicit
   about your understanding of the changes. This helps us decide whether input

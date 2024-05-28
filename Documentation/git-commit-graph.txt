@@ -1,16 +1,16 @@
-git-commit-graph(1)
+shit-commit-graph(1)
 ===================
 
 NAME
 ----
-git-commit-graph - Write and verify Git commit-graph files
+shit-commit-graph - Write and verify shit commit-graph files
 
 
 SYNOPSIS
 --------
 [verse]
-'git commit-graph verify' [--object-dir <dir>] [--shallow] [--[no-]progress]
-'git commit-graph write' [--object-dir <dir>] [--append]
+'shit commit-graph verify' [--object-dir <dir>] [--shallow] [--[no-]progress]
+'shit commit-graph write' [--object-dir <dir>] [--append]
 			[--split[=<strategy>]] [--reachable | --stdin-packs | --stdin-commits]
 			[--changed-paths] [--[no-]max-new-filters <n>] [--[no-]progress]
 			<split-options>
@@ -27,11 +27,11 @@ OPTIONS
 --object-dir::
 	Use given directory for the location of packfiles and commit-graph
 	file. This parameter exists to specify the location of an alternate
-	that only has the objects directory, not a full `.git` directory. The
+	that only has the objects directory, not a full `.shit` directory. The
 	commit-graph file is expected to be in the `<dir>/info` directory and
 	the packfiles are expected to be in `<dir>/pack`. If the directory
 	could not be made into an absolute path, or does not match any known
-	object directory, `git commit-graph ...` will exit with non-zero
+	object directory, `shit commit-graph ...` will exit with non-zero
 	status.
 
 --[no-]progress::
@@ -67,7 +67,7 @@ existing commit-graph file.
 With the `--changed-paths` option, compute and write information about the
 paths changed between a commit and its first parent. This operation can
 take a while on large repositories. It provides significant performance gains
-for getting history of a directory or a file with `git log -- <path>`. If
+for getting history of a directory or a file with `shit log -- <path>`. If
 this option is given, future commit-graph writes will automatically assume
 that this option was intended. Use `--no-changed-paths` to stop storing this
 data.
@@ -118,31 +118,31 @@ a chain of split commit-graphs.
 EXAMPLES
 --------
 
-* Write a commit-graph file for the packed commits in your local `.git`
+* Write a commit-graph file for the packed commits in your local `.shit`
   directory.
 +
 ------------------------------------------------
-$ git commit-graph write
+$ shit commit-graph write
 ------------------------------------------------
 
 * Write a commit-graph file, extending the current commit-graph file
   using commits in `<pack-index>`.
 +
 ------------------------------------------------
-$ echo <pack-index> | git commit-graph write --stdin-packs
+$ echo <pack-index> | shit commit-graph write --stdin-packs
 ------------------------------------------------
 
 * Write a commit-graph file containing all reachable commits.
 +
 ------------------------------------------------
-$ git show-ref -s | git commit-graph write --stdin-commits
+$ shit show-ref -s | shit commit-graph write --stdin-commits
 ------------------------------------------------
 
 * Write a commit-graph file containing all commits in the current
   commit-graph file along with those reachable from `HEAD`.
 +
 ------------------------------------------------
-$ git rev-parse HEAD | git commit-graph write --stdin-commits --append
+$ shit rev-parse HEAD | shit commit-graph write --stdin-commits --append
 ------------------------------------------------
 
 CONFIGURATION
@@ -156,8 +156,8 @@ include::config/commitgraph.txt[]
 FILE FORMAT
 -----------
 
-see linkgit:gitformat-commit-graph[5].
+see linkshit:shitformat-commit-graph[5].
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

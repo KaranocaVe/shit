@@ -1,23 +1,23 @@
-git-stripspace(1)
+shit-stripspace(1)
 =================
 
 NAME
 ----
-git-stripspace - Remove unnecessary whitespace
+shit-stripspace - Remove unnecessary whitespace
 
 
 SYNOPSIS
 --------
 [verse]
-'git stripspace' [-s | --strip-comments]
-'git stripspace' [-c | --comment-lines]
+'shit stripspace' [-s | --strip-comments]
+'shit stripspace' [-c | --comment-lines]
 
 DESCRIPTION
 -----------
 
 Read text, such as commit messages, notes, tags and branch
 descriptions, from the standard input and clean it in the manner
-used by Git.
+used by shit.
 
 With no arguments, this will:
 
@@ -30,7 +30,7 @@ In the case where the input consists entirely of whitespace characters, no
 output will be produced.
 
 *NOTE*: This is intended for cleaning metadata. Prefer the `--whitespace=fix`
-mode of linkgit:git-apply[1] for correcting whitespace of patches or files in
+mode of linkshit:shit-apply[1] for correcting whitespace of patches or files in
 the repository.
 
 OPTIONS
@@ -64,7 +64,7 @@ Given the following noisy input with '$' indicating the end of a line:
 |  $
 ---------
 
-Use 'git stripspace' with no arguments to obtain:
+Use 'shit stripspace' with no arguments to obtain:
 
 ---------
 |A brief introduction$
@@ -78,7 +78,7 @@ Use 'git stripspace' with no arguments to obtain:
 |The end.$
 ---------
 
-Use 'git stripspace --strip-comments' to obtain:
+Use 'shit stripspace --strip-comments' to obtain:
 
 ---------
 |A brief introduction$
@@ -89,6 +89,6 @@ Use 'git stripspace --strip-comments' to obtain:
 |The end.$
 ---------
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

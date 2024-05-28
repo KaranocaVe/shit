@@ -31,11 +31,11 @@ struct object_context {
  * more calls to repo_find_unique_abbrev are made.
  *
  * The `_r` variant writes to a buffer supplied by the caller, which must be at
- * least `GIT_MAX_HEXSZ + 1` bytes. The return value is the number of bytes
+ * least `shit_MAX_HEXSZ + 1` bytes. The return value is the number of bytes
  * written (excluding the NUL terminator).
  *
  * Note that while this version avoids the static buffer, it is not fully
- * reentrant, as it calls into other non-reentrant git code.
+ * reentrant, as it calls into other non-reentrant shit code.
  */
 const char *repo_find_unique_abbrev(struct repository *r, const struct object_id *oid, int len);
 int repo_find_unique_abbrev_r(struct repository *r, char *hex, const struct object_id *oid, int len);
@@ -68,7 +68,7 @@ enum get_oid_result get_oid_with_context(struct repository *repo, const char *st
 
 typedef int each_abbrev_fn(const struct object_id *oid, void *);
 int repo_for_each_abbrev(struct repository *r, const char *prefix,
-			 const struct git_hash_algo *algo, each_abbrev_fn, void *);
+			 const struct shit_hash_algo *algo, each_abbrev_fn, void *);
 
 int set_disambiguate_hint_config(const char *var, const char *value);
 
@@ -106,7 +106,7 @@ struct interpret_branch_name_options {
 	unsigned allowed;
 
 	/*
-	 * If ^{upstream} or ^{push} (or equivalent) is requested, and the
+	 * If ^{upstream} or ^{defecate} (or equivalent) is requested, and the
 	 * branch in question does not have such a reference, return -1 instead
 	 * of die()-ing.
 	 */

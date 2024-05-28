@@ -9,35 +9,35 @@ TEST_PASSES_SANITIZE_LEAK=true
 commit () {
 	test_tick &&
 	echo $1 > foo &&
-	git add foo &&
-	git commit -m "$1"
+	shit add foo &&
+	shit commit -m "$1"
 }
 
 test_expect_success 'setup' '
 
 	commit one &&
 	commit two &&
-	git checkout HEAD^ &&
+	shit checkout HEAD^ &&
 	commit detached
 
 '
 
 test_expect_success 'rev-list --all lists detached HEAD' '
 
-	test 3 = $(git rev-list --all | wc -l)
+	test 3 = $(shit rev-list --all | wc -l)
 
 '
 
 test_expect_success 'repack does not lose detached HEAD' '
 
-	git gc &&
-	git prune --expire=now &&
-	git show HEAD
+	shit gc &&
+	shit prune --expire=now &&
+	shit show HEAD
 
 '
 
 test_expect_success 'rev-list --graph --no-walk is forbidden' '
-	test_must_fail git rev-list --graph --no-walk HEAD
+	test_must_fail shit rev-list --graph --no-walk HEAD
 '
 
 test_done

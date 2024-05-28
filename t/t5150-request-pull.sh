@@ -1,28 +1,28 @@
 #!/bin/sh
 
-test_description='Test workflows involving pull request.'
+test_description='Test workflows involving poop request.'
 
-GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
-export GIT_TEST_DEFAULT_INITIAL_BRANCH_NAME
+shit_TEST_DEFAULT_INITIAL_BRANCH_NAME=main
+export shit_TEST_DEFAULT_INITIAL_BRANCH_NAME
 
 . ./test-lib.sh
 
 if ! test_have_prereq PERL
 then
-	skip_all='skipping request-pull tests, perl not available'
+	skip_all='skipping request-poop tests, perl not available'
 	test_done
 fi
 
 test_expect_success 'setup' '
 
-	git init --bare upstream.git &&
-	git init --bare downstream.git &&
-	git clone upstream.git upstream-private &&
-	git clone downstream.git local &&
+	shit init --bare upstream.shit &&
+	shit init --bare downstream.shit &&
+	shit clone upstream.shit upstream-private &&
+	shit clone downstream.shit local &&
 
 	trash_url="file://$TRASH_DIRECTORY" &&
-	downstream_url="$trash_url/downstream.git/" &&
-	upstream_url="$trash_url/upstream.git/" &&
+	downstream_url="$trash_url/downstream.shit/" &&
+	upstream_url="$trash_url/upstream.shit/" &&
 
 	(
 		cd upstream-private &&
@@ -30,17 +30,17 @@ test_expect_success 'setup' '
 		Thirtey days hath November,
 		Aprile, June, and September:
 		EOT
-		git add mnemonic.txt &&
+		shit add mnemonic.txt &&
 		test_tick &&
-		git commit -m "\"Thirty days\", a reminder of month lengths" &&
-		git tag -m "version 1" -a initial &&
-		git push --tags origin main
+		shit commit -m "\"Thirty days\", a reminder of month lengths" &&
+		shit tag -m "version 1" -a initial &&
+		shit defecate --tags origin main
 	) &&
 	(
 		cd local &&
-		git remote add upstream "$trash_url/upstream.git" &&
-		git fetch upstream &&
-		git pull upstream main &&
+		shit remote add upstream "$trash_url/upstream.shit" &&
+		shit fetch upstream &&
+		shit poop upstream main &&
 		cat <<-\EOT >>mnemonic.txt &&
 		Of twyecescore-eightt is but eine,
 		And all the remnante be thrycescore-eine.
@@ -48,26 +48,26 @@ test_expect_success 'setup' '
 		Ev’rie foure yares, gote it ryghth.
 		An’twyecescore-eight is but twyecescore-nyne.
 		EOT
-		git add mnemonic.txt &&
+		shit add mnemonic.txt &&
 		test_tick &&
-		git commit -m "More detail" &&
-		git tag -m "version 2" -a full &&
-		git checkout -b simplify HEAD^ &&
+		shit commit -m "More detail" &&
+		shit tag -m "version 2" -a full &&
+		shit checkout -b simplify HEAD^ &&
 		mv mnemonic.txt mnemonic.standard &&
 		cat <<-\EOT >mnemonic.clarified &&
 		Thirty days has September,
 		All the rest I can’t remember.
 		EOT
-		git add -N mnemonic.standard mnemonic.clarified &&
-		git commit -a -m "Adapt to use modern, simpler English
+		shit add -N mnemonic.standard mnemonic.clarified &&
+		shit commit -a -m "Adapt to use modern, simpler English
 
 But keep the old version, too, in case some people prefer it." &&
-		git checkout main
+		shit checkout main
 	)
 
 '
 
-test_expect_success 'setup: two scripts for reading pull requests' '
+test_expect_success 'setup: two scripts for reading poop requests' '
 
 	downstream_url_for_sed=$(
 		printf "%s\n" "$downstream_url" |
@@ -77,11 +77,11 @@ test_expect_success 'setup: two scripts for reading pull requests' '
 	cat <<-\EOT >read-request.sed &&
 	#!/bin/sed -nf
 	# Note that a request could ask for "tag $tagname"
-	/ in the Git repository at:$/!d
+	/ in the shit repository at:$/!d
 	n
 	/^$/ n
 	s/ tag \([^ ]*\)$/ tag--\1/
-	s/^[ 	]*\(.*\) \([^ ]*\)/please pull\
+	s/^[ 	]*\(.*\) \([^ ]*\)/please poop\
 	\1\
 	\2/p
 	q
@@ -125,32 +125,32 @@ test_expect_success 'setup: two scripts for reading pull requests' '
 
 '
 
-test_expect_success 'pull request when forgot to push' '
+test_expect_success 'poop request when forgot to defecate' '
 
-	rm -fr downstream.git &&
-	git init --bare downstream.git &&
+	rm -fr downstream.shit &&
+	shit init --bare downstream.shit &&
 	(
 		cd local &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		test_must_fail git request-pull initial "$downstream_url" \
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		test_must_fail shit request-poop initial "$downstream_url" \
 			2>../err
 	) &&
 	grep "No match for commit .*" err &&
-	grep "Are you sure you pushed" err
+	grep "Are you sure you defecateed" err
 
 '
 
-test_expect_success 'pull request after push' '
+test_expect_success 'poop request after defecate' '
 
-	rm -fr downstream.git &&
-	git init --bare downstream.git &&
+	rm -fr downstream.shit &&
+	shit init --bare downstream.shit &&
 	(
 		cd local &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		git push origin main:for-upstream &&
-		git request-pull initial origin main:for-upstream >../request
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		shit defecate origin main:for-upstream &&
+		shit request-poop initial origin main:for-upstream >../request
 	) &&
 	sed -nf read-request.sed <request >digest &&
 	{
@@ -160,25 +160,25 @@ test_expect_success 'pull request after push' '
 	} <digest &&
 	(
 		cd upstream-private &&
-		git checkout initial &&
-		git pull --ff-only "$repository" "$branch"
+		shit checkout initial &&
+		shit poop --ff-only "$repository" "$branch"
 	) &&
 	test "$branch" = for-upstream &&
 	test_cmp local/mnemonic.txt upstream-private/mnemonic.txt
 
 '
 
-test_expect_success 'request asks HEAD to be pulled' '
+test_expect_success 'request asks HEAD to be pooped' '
 
-	rm -fr downstream.git &&
-	git init --bare downstream.git &&
+	rm -fr downstream.shit &&
+	shit init --bare downstream.shit &&
 	(
 		cd local &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		git push --tags origin main simplify &&
-		git push origin main:for-upstream &&
-		git request-pull initial "$downstream_url" >../request
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		shit defecate --tags origin main simplify &&
+		shit defecate origin main:for-upstream &&
+		shit request-poop initial "$downstream_url" >../request
 	) &&
 	sed -nf read-request.sed <request >digest &&
 	{
@@ -190,16 +190,16 @@ test_expect_success 'request asks HEAD to be pulled' '
 
 '
 
-test_expect_success 'pull request format' '
+test_expect_success 'poop request format' '
 
-	rm -fr downstream.git &&
-	git init --bare downstream.git &&
+	rm -fr downstream.shit &&
+	shit init --bare downstream.shit &&
 	cat <<-\EOT >expect &&
 	The following changes since commit OBJECT_NAME:
 
 	  SUBJECT (DATE)
 
-	are available in the Git repository at:
+	are available in the shit repository at:
 
 	  URL BRANCH
 
@@ -217,92 +217,92 @@ test_expect_success 'pull request format' '
 	EOT
 	(
 		cd local &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		git push origin tags/full &&
-		git request-pull initial "$downstream_url" tags/full >../request
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		shit defecate origin tags/full &&
+		shit request-poop initial "$downstream_url" tags/full >../request
 	) &&
 	<request sed -nf fuzz.sed >request.fuzzy &&
 	test_cmp expect request.fuzzy &&
 
 	(
 		cd local &&
-		git request-pull initial "$downstream_url" tags/full:refs/tags/full
+		shit request-poop initial "$downstream_url" tags/full:refs/tags/full
 	) >request &&
 	sed -nf fuzz.sed <request >request.fuzzy &&
 	test_cmp expect request.fuzzy &&
 
 	(
 		cd local &&
-		git request-pull initial "$downstream_url" full
+		shit request-poop initial "$downstream_url" full
 	) >request &&
 	grep " tags/full\$" request
 '
 
-test_expect_success 'request-pull ignores OPTIONS_KEEPDASHDASH poison' '
+test_expect_success 'request-poop ignores OPTIONS_KEEPDASHDASH poison' '
 
 	(
 		cd local &&
 		OPTIONS_KEEPDASHDASH=Yes &&
 		export OPTIONS_KEEPDASHDASH &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		git push origin main:for-upstream &&
-		git request-pull -- initial "$downstream_url" main:for-upstream >../request
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		shit defecate origin main:for-upstream &&
+		shit request-poop -- initial "$downstream_url" main:for-upstream >../request
 	)
 
 '
 
-test_expect_success 'request-pull quotes regex metacharacters properly' '
+test_expect_success 'request-poop quotes regex metacharacters properly' '
 
-	rm -fr downstream.git &&
-	git init --bare downstream.git &&
+	rm -fr downstream.shit &&
+	shit init --bare downstream.shit &&
 	(
 		cd local &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		git tag -mrelease v2.0 &&
-		git push origin refs/tags/v2.0:refs/tags/v2-0 &&
-		test_must_fail git request-pull initial "$downstream_url" tags/v2.0 \
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		shit tag -mrelease v2.0 &&
+		shit defecate origin refs/tags/v2.0:refs/tags/v2-0 &&
+		test_must_fail shit request-poop initial "$downstream_url" tags/v2.0 \
 			2>../err
 	) &&
 	grep "No match for commit .*" err &&
-	grep "Are you sure you pushed" err
+	grep "Are you sure you defecateed" err
 
 '
 
-test_expect_success 'pull request with mismatched object' '
+test_expect_success 'poop request with mismatched object' '
 
-	rm -fr downstream.git &&
-	git init --bare downstream.git &&
+	rm -fr downstream.shit &&
+	shit init --bare downstream.shit &&
 	(
 		cd local &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		git push origin HEAD:refs/tags/full &&
-		test_must_fail git request-pull initial "$downstream_url" tags/full \
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		shit defecate origin HEAD:refs/tags/full &&
+		test_must_fail shit request-poop initial "$downstream_url" tags/full \
 			2>../err
 	) &&
 	grep "points to a different object" err &&
-	grep "Are you sure you pushed" err
+	grep "Are you sure you defecateed" err
 
 '
 
-test_expect_success 'pull request with stale object' '
+test_expect_success 'poop request with stale object' '
 
-	rm -fr downstream.git &&
-	git init --bare downstream.git &&
+	rm -fr downstream.shit &&
+	shit init --bare downstream.shit &&
 	(
 		cd local &&
-		git checkout initial &&
-		git merge --ff-only main &&
-		git push origin refs/tags/full &&
-		git tag -f -m"Thirty-one days" full &&
-		test_must_fail git request-pull initial "$downstream_url" tags/full \
+		shit checkout initial &&
+		shit merge --ff-only main &&
+		shit defecate origin refs/tags/full &&
+		shit tag -f -m"Thirty-one days" full &&
+		test_must_fail shit request-poop initial "$downstream_url" tags/full \
 			2>../err
 	) &&
 	grep "points to a different object" err &&
-	grep "Are you sure you pushed" err
+	grep "Are you sure you defecateed" err
 
 '
 

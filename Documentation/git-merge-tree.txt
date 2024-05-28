@@ -1,16 +1,16 @@
-git-merge-tree(1)
+shit-merge-tree(1)
 =================
 
 NAME
 ----
-git-merge-tree - Perform merge without touching index or working tree
+shit-merge-tree - Perform merge without touching index or working tree
 
 
 SYNOPSIS
 --------
 [verse]
-'git merge-tree' [--write-tree] [<options>] <branch1> <branch2>
-'git merge-tree' [--trivial-merge] <base-tree> <branch1> <branch2> (deprecated)
+'shit merge-tree' [--write-tree] [<options>] <branch1> <branch2>
+'shit merge-tree' [--trivial-merge] <base-tree> <branch1> <branch2> (deprecated)
 
 [[NEWMERGE]]
 DESCRIPTION
@@ -25,7 +25,7 @@ Performs a merge, but does not make any new commits and does not read
 from or write to either the working tree or index.
 
 The performed merge will use the same features as the "real"
-linkgit:git-merge[1], including:
+linkshit:shit-merge[1], including:
 
   * three way content merges of individual files
   * rename detection
@@ -75,13 +75,13 @@ to specify commits; trees are enough.
 -X<option>::
 --strategy-option=<option>::
 	Pass the merge strategy-specific option through to the merge strategy.
-	See linkgit:git-merge[1] for details.
+	See linkshit:shit-merge[1] for details.
 
 [[OUTPUT]]
 OUTPUT
 ------
 
-For a successful merge, the output from git-merge-tree is simply one
+For a successful merge, the output from shit-merge-tree is simply one
 line:
 
 	<OID of toplevel tree>
@@ -124,7 +124,7 @@ OID of toplevel tree
 ~~~~~~~~~~~~~~~~~~~~
 
 This is a tree object that represents what would be checked out in the
-working tree at the end of `git merge`.  If there were conflicts, then
+working tree at the end of `shit merge`.  If there were conflicts, then
 files within this tree may have embedded conflict markers.  This section
 is always followed by a newline (or NUL if `-z` is passed).
 
@@ -137,7 +137,7 @@ This is a sequence of lines with the format
 	<mode> <object> <stage> <filename>
 
 The filename will be quoted as explained for the configuration
-variable `core.quotePath` (see linkgit:git-config[1]).  However, if
+variable `core.quotePath` (see linkshit:shit-config[1]).  However, if
 the `--name-only` option is passed, the mode, object, and stage will
 be omitted.  If `-z` is passed, the "lines" are terminated by a NUL
 character instead of a newline character.
@@ -172,7 +172,7 @@ stable string explaining the type of conflict, such as
 
 and <conflict-message> is a more detailed message about the conflict which often
 (but not always) embeds the <stable-short-type-description> within it.  These
-strings may change in future Git versions.  Some examples:
+strings may change in future shit versions.  Some examples:
 
   * "Auto-merging <file>"
   * "CONFLICT (rename/delete): <oldfile> renamed...but deleted in..."
@@ -206,21 +206,21 @@ USAGE NOTES
 -----------
 
 This command is intended as low-level plumbing, similar to
-linkgit:git-hash-object[1], linkgit:git-mktree[1],
-linkgit:git-commit-tree[1], linkgit:git-write-tree[1],
-linkgit:git-update-ref[1], and linkgit:git-mktag[1].  Thus, it can be
+linkshit:shit-hash-object[1], linkshit:shit-mktree[1],
+linkshit:shit-commit-tree[1], linkshit:shit-write-tree[1],
+linkshit:shit-update-ref[1], and linkshit:shit-mktag[1].  Thus, it can be
 used as a part of a series of steps such as:
 
-       NEWTREE=$(git merge-tree --write-tree $BRANCH1 $BRANCH2)
+       NEWTREE=$(shit merge-tree --write-tree $BRANCH1 $BRANCH2)
        test $? -eq 0 || die "There were conflicts..."
-       NEWCOMMIT=$(git commit-tree $NEWTREE -p $BRANCH1 -p $BRANCH2)
-       git update-ref $BRANCH1 $NEWCOMMIT
+       NEWCOMMIT=$(shit commit-tree $NEWTREE -p $BRANCH1 -p $BRANCH2)
+       shit update-ref $BRANCH1 $NEWCOMMIT
 
 Note that when the exit status is non-zero, `NEWTREE` in this sequence
 will contain a lot more output than just a tree.
 
 For conflicts, the output includes the same information that you'd get
-with linkgit:git-merge[1]:
+with linkshit:shit-merge[1]:
 
   * what would be written to the working tree (the
     <<OIDTLT,OID of toplevel tree>>)
@@ -231,7 +231,7 @@ with linkgit:git-merge[1]:
 
 INPUT FORMAT
 ------------
-'git merge-tree --stdin' input format is fully text based. Each line
+'shit merge-tree --stdin' input format is fully text based. Each line
 has this format:
 
 	[<base-commit> -- ]<branch1> <branch2>
@@ -309,7 +309,7 @@ conflicting stages to the standard output in a semi-diff format.
 Since this was designed for higher level scripts to consume and merge
 the results back into the index, it omits entries that match
 <branch1>.  The result of this second form is similar to what
-three-way 'git read-tree -m' does, but instead of storing the results
+three-way 'shit read-tree -m' does, but instead of storing the results
 in the index, the command outputs the entries to the standard output.
 
 This form not only has limited applicability (a trivial merge cannot
@@ -319,6 +319,6 @@ difficult to work with, and it will generally be less performant than
 the first form even on successful merges (especially if working in
 large repositories).
 
-GIT
+shit
 ---
-Part of the linkgit:git[1] suite
+Part of the linkshit:shit[1] suite

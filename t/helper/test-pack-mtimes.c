@@ -6,7 +6,7 @@
 #include "pack-mtimes.h"
 #include "setup.h"
 
-static void dump_mtimes(struct packed_git *p)
+static void dump_mtimes(struct packed_shit *p)
 {
 	uint32_t i;
 	if (load_pack_mtimes(p) < 0)
@@ -28,9 +28,9 @@ static const char *pack_mtimes_usage = "\n"
 int cmd__pack_mtimes(int argc, const char **argv)
 {
 	struct strbuf buf = STRBUF_INIT;
-	struct packed_git *p;
+	struct packed_shit *p;
 
-	setup_git_directory();
+	setup_shit_directory();
 
 	if (argc != 2)
 		usage(pack_mtimes_usage);

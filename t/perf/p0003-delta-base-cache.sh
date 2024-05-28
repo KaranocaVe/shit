@@ -21,11 +21,11 @@ test_perf_large_repo
 
 # puts mostly trees into the delta base cache
 test_perf 'log --raw' '
-	git log --raw >/dev/null
+	shit log --raw >/dev/null
 '
 
 test_perf 'log -S' '
-	git log --raw -Sfoo >/dev/null
+	shit log --raw -Sfoo >/dev/null
 '
 
 test_done
